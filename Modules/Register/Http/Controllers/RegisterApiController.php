@@ -67,6 +67,9 @@ class RegisterApiController extends Controller
     {
 
         try {
+
+            \DB::beginTransaction();
+
             if (!$files = $this->verifyFiles($request['document'])) {
                 return response()->json(
                     [
@@ -96,6 +99,8 @@ class RegisterApiController extends Controller
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
             $this->sendWelcomeEmail($requestData);
 
+            \DB::commit();
+
             return response()->json(
                 [
                     'success' => 'true',
@@ -105,9 +110,10 @@ class RegisterApiController extends Controller
             );
 
         } catch (Exception $ex) {
+           \DB::rollback();
             report($ex);
-
-            return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
+            return response()->json(['success' => 'false', 'message' => 'revise os dados informados',
+                'mensagem_de_erro' => $ex->getMessage() ], 403);
         }
     }
 
@@ -759,7 +765,7 @@ class RegisterApiController extends Controller
         $requestData['invites_amount'] = self::INVITES_AMOUNT;
         $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
 
-        if (!stristr($requestData['date_birth'], '-')) {
+        if (isset($requestData['date_birth']) && !stristr($requestData['date_birth'], '-')) {
             $requestData['date_birth'] = null;
         }
 
@@ -806,7 +812,7 @@ class RegisterApiController extends Controller
         $companyModel->create(
             [
                 'user_id' => $user->account_owner_id,
-                'fantasy_name' => ($requestData['company_type'] == $companyModel->present()
+                'fantasy_name' => (isset($requestData['company_type']) ?? $requestData['company_type'] == $companyModel->present()
                         ->getCompanyType('physical person')) ? $user->name : $requestData['fantasy_name'],
                 'company_document' => ($requestData['company_type'] == $companyModel->present()
                         ->getCompanyType(
