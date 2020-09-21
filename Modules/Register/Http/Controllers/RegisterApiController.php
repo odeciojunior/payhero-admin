@@ -105,7 +105,7 @@ class RegisterApiController extends Controller
             );
 
         } catch (Exception $ex) {
-           // report($ex);
+            report($ex);
 
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
         }
