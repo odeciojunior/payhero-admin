@@ -15,20 +15,20 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'             => 'required|unique:users|max:200',
             'name'              => 'required',
-            'cellphone'         => 'required',
             'document'          => 'required',
-            'date_birth'        => 'nullable',
+            'email'             => 'required|unique:users|max:200',
+            'cellphone'         => 'required',
             'password'          => 'required',
             'zip_code'          => 'required',
             'street'            => 'required',
             'number'            => 'required',
-            'neighborhood'      => 'required',
             'complement'        => 'nullable',
+            'neighborhood'      => 'required',
             'city'              => 'required',
             'state'             => 'required',
-            'company_document'  => 'nullable',
+            'country'           => 'required',
+            'date_birth'        => 'nullable',
             'fantasy_name'      => 'nullable',
             'support_email'     => 'nullable',
             'support_telephone' => 'nullable',
@@ -41,12 +41,18 @@ class RegisterRequest extends FormRequest
             'account'       => 'required',
             'account_digit' => 'nullable',
 
+            'company_document'     => 'nullable',
+            'zip_code_company'     => 'nullable',
+            'complement_company'   => 'nullable',
+            'city_company'         => 'nullable',
+            'state_company'        => 'nullable',
+            'neighborhood_company' => 'nullable',
             'street_company'       => 'nullable',
             'number_company'       => 'nullable',
-            'neighborhood_company' => 'nullable',
-            'complement_company'   => 'nullable',
-            'state_company'        => 'nullable',
-            'city_company'         => 'nullable',
+
+
+            'privacy_terms'       => 'required',
+            'use_terms'           => 'required',
         ];
     }
 
