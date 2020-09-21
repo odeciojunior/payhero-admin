@@ -105,7 +105,7 @@ class RegisterApiController extends Controller
                 [
                     'success' => 'true',
                     'message' => 'Arquivos Enviado com Sucesso',
-                    'access_token' => $user->id,
+                    'access_token' => base64_encode(bcrypt($user->id)),
                 ]
             );
 
