@@ -801,6 +801,8 @@ class RegisterApiController extends Controller
         $supportEmail = $requestData['support_email'] ?? null;
         $supportPhone = $requestData['support_telephone'] ?? null;
 
+        $companyPresenter = $companyModel->present();
+
         $companyModel->create(
             [
                 'user_id' => $user->account_owner_id,
@@ -810,7 +812,7 @@ class RegisterApiController extends Controller
                         ->getCompanyType(
                             'physical person'
                         )) ? $requestData['document'] : $requestData['company_document'],
-                'company_type' => $requestData['company_type'],
+                'company_type' => $companyPresenter->getCompanyType($requestData['company_type']),
                 'support_email' => $supportEmail,
                 'support_telephone' => $supportPhone,
                 'street' => $streetCompany,
