@@ -159,18 +159,6 @@ class TrackingService
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
 
-            //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
-            $sale = $productPlanSale->sale;
-            $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingCode) {
-                $query->where('tracking_code', $trackingCode);
-            })->where('id', '!=', $sale->id)
-                ->where('id', '!=', $sale->upsell_id)
-                ->exists();
-
-            if ($exists) {
-                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
-            }
-
             $apiResult = $trackingService->sendTrackingToApi($trackingCode);
 
             if (!empty($apiResult)) {
@@ -187,6 +175,18 @@ class TrackingService
             } else {
                 $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('unknown_carrier');
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
+            }
+
+            //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
+            $sale = $productPlanSale->sale;
+            $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingCode, $productPlanSale) {
+                $query->where('tracking_code', $trackingCode);
+            })->where('id', '!=', $sale->id)
+                ->where('id', '!=', $sale->upsell_id)
+                ->exists();
+
+            if ($exists) {
+                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
             }
 
             return Tracking::updateOrCreate([
