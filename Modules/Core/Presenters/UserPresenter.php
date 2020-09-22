@@ -10,9 +10,9 @@ use Laracasts\Presenter\Presenter;
  */
 class UserPresenter extends Presenter
 {
+    const USUARIO_DOCUMENTO = 1;
     const USUARIO_RESIDENCIA = 2;
-    const RG_FRENTE = 3;
-    const RG_VERSO = 4;
+    const USUARIO_CPF = 3;
     const USUARIO_EXTRATO = 5;
     const EMPRESA_EXTRATO = 1;
     const EMPRESA_RESINDENCIA = 2;
@@ -162,17 +162,17 @@ class UserPresenter extends Presenter
             //USUARIO
             case 'USUARIO_RESIDENCIA':
                 return self::USUARIO_RESIDENCIA;
-            case 'RG_FRENTE':
-                return self::RG_FRENTE;
-            case 'RG_VERSO':
-                return self::RG_VERSO;
+            case 'USUARIO_DOCUMENTO':
+                return self::USUARIO_DOCUMENTO;
+            case 'USUARIO_CPF':
+                return self::USUARIO_CPF;
             case 'USUARIO_EXTRATO':
                 return self::USUARIO_EXTRATO;
 
             //EMPRESA
             case 'EMPRESA_EXTRATO':
                 return self::EMPRESA_EXTRATO;
-            case 'EMPRESA_RESINDENCIA':
+            case 'EMPRESA_RESIDENCIA':
                 return self::EMPRESA_RESINDENCIA;
             case 'EMPRESA_CCMEI':
                 return self::EMPRESA_CCMEI;

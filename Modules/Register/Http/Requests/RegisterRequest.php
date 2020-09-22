@@ -16,7 +16,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name'              => 'required|max:200',
-            'document'          => 'required|min:11|max:11',
+            'document'          => 'required|unique:users|min:11|max:11',
             'email'             => 'required|unique:users|max:200',
             'cellphone'         => 'required',
             'password'          => 'required',
@@ -75,6 +75,7 @@ class RegisterRequest extends FormRequest
         return [
             'name.required'             => 'Precisamos do seu nome para continuar.',
             'document.required'         => 'Precisamos do seu CPF para continuar.',
+            'document.unique'           => 'CPF informado ja esta sendo utilizado.',
             'email.required'            => 'Precisamos do seu email para continuar.',
             'email.unique'              => 'Email informado ja esta sendo utilizado.',
             'cellphone.required'        => 'Precisamos do seu celular para continuar.',

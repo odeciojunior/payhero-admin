@@ -121,17 +121,20 @@ class RegisterApiController extends Controller
     {
         $companyModel = new Company();
         $companyPresent = $companyModel->present();
-        $is_physical_person = $companyPresent->getCompanyType($company_type) == $companyPresent->getCompanyType('physical person') ? 1 : 2;
+        $is_physical_person = $companyPresent->getCompanyType($company_type);
 
         $sDrive = Storage::disk('s3');
         $documentCpf = preg_replace('/[^0-9]/', '', $document);
         $files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents');
 
-        if ($is_physical_person === 1 && !count($files) === 5) {
+        $filesPhysicalPerson  = !preg_grep('/USUARIO_CPF/', $files) ? 4 : 5;
+        $filesJuridicalPerson = !preg_grep('/USUARIO_CPF/', $files) ? 5 : 6;
+
+        if ($is_physical_person == 1 && !count($files) == $filesPhysicalPerson) {
             return false;
         }
 
-        if ($is_physical_person === 2 && !count($files) === 7) {
+        if ($is_physical_person == 2 && !count($files) == $filesJuridicalPerson) {
             return false;
         }
             return $files;
@@ -263,7 +266,7 @@ class RegisterApiController extends Controller
     {
         $dataForm = Validator::make($request->all(), [
             'fileToUpload' => 'required|mimes:jpeg,jpg,png,doc,pdf',
-            'document_type' =>'required|in:RG_FRENTE,RG_VERSO,USUARIO_RESIDENCIA,USUARIO_EXTRATO,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
+            'document_type' =>'required|in:USUARIO_DOCUMENTO,USUARIO_CPF,USUARIO_RESIDENCIA,USUARIO_EXTRATO,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
             'fileToUpload.required' => 'Precisamos do arquivo para continuar',
@@ -332,7 +335,7 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Usuário
                  */
-                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'RG_FRENTE', 'RG_VERSO', 'USUARIO_EXTRATO'])) {
+                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO', 'USUARIO_CPF', 'USUARIO_EXTRATO'])) {
                     $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents/' . $fileName;
                     if ($sDrive->exists($amazonPathUser)) {
                         $sDrive->delete($amazonPathUser);
