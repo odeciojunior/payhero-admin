@@ -557,7 +557,7 @@ class RegisterApiController extends Controller
     {
         $message = "Código de verificação CloudFox - " . $token;
         $smsService = new SmsService();
-        $smsService->sendSms($phone, $message, ' ', 'aws-sns');
+        $smsService->sendSms($phone, $message, ' ', 'DisparoPro');
     }
 
     /**
