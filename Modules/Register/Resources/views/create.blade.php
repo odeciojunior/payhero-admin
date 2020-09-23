@@ -89,24 +89,10 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="input-holder d-flex flex-column">
-                            <label for="fileDoc">Documento</label>
-                            <input style="display: block !important;" type="file" name="fileToUpload" id="personal_document" placeholder="Insira o documento" required>
-                            <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="input-holder d-flex flex-column">
                             <label for="lastname">Sobrenome</label>
                             <input type="text" name="lastname" id="lastname" placeholder="Digite seu sobrenome"
                                    required>
                             <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é obrigatório</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="input-holder d-flex flex-column">
-                            <label for="fileDoc">Documento</label>
-                            <input style="display: block !important;" type="file" name="fileToUpload" id="address_document" placeholder="Insira o documento" required>
-                            <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CountryService;
 use Modules\Core\Services\FoxUtils;
@@ -543,7 +544,7 @@ class ProfileApiController
             $user = auth()->user();
 
             if (Gate::allows('uploadDocuments', [$user])) {
-                $digitalOceanFileService = app(DigitalOceanFileService::class);
+                $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
                 $userDocument = new UserDocument();
                 $userModel = new User();
 
@@ -551,7 +552,7 @@ class ProfileApiController
 
                 $document = $request->file('file');
 
-                $digitalOceanPath = $digitalOceanFileService->uploadFile(
+                $amazonPath = $amazonFileService->uploadFile(
                     'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
                     $document,
                     null,
@@ -565,7 +566,7 @@ class ProfileApiController
                 $documentSaved = $userDocument->create(
                     [
                         'user_id' => auth()->user()->account_owner_id,
-                        'document_url' => $digitalOceanPath,
+                        'document_url' => $amazonPath,
                         'document_type_enum' => $documentType,
                         'status' => $userDocument->present()
                             ->getTypeEnum('analyzing'),
@@ -727,9 +728,24 @@ class ProfileApiController
     {
         try {
             $digitalOceanFileService = app(DigitalOceanFileService::class);
+            $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
             $data = $request->all();
             if (!empty($data['document_url'])) {
-                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['document_url'], 180);
+                $temporaryUrl = '';
+
+                // Gera o Link temporário de acordo com o driver
+                if (strstr($data['url'], 'digitaloceanspaces')) {
+                    $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['url'], 180);
+                }
+
+                if (strstr($data['url'], 'amazonaws')) {
+                    $temporaryUrl = $amazonFileService->disk('s3_documents')->getTemporaryUrlFile($data['url'], 180);
+                }
+
+                // Validacao
+                if (empty($temporaryUrl)) {
+                    return response()->json(['message' => 'Erro ao acessar documentos do usuário!'], 400);
+                }
 
                 return response()->json(['data' => $temporaryUrl], 200);
             }

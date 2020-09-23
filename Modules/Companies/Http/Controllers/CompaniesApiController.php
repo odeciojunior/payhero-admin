@@ -9,8 +9,8 @@ use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Services\BankService;
@@ -281,7 +281,7 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $digitalOceanFileService = app()->make(DigitalOceanFileService::class);
+            $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
 
             $companyDocumentModel = new CompanyDocument();
             $dataForm = $request->validated();
@@ -289,7 +289,7 @@ class CompaniesApiController extends Controller
             $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document = $request->file('file');
-                $digitalOceanPath = $digitalOceanFileService->uploadFile(
+                $amazonPath = $amazonFileService->uploadFile(
                     'uploads/user/'.Hashids::encode(
                         auth()->user()->account_owner_id
                     ).'/companies/'.Hashids::encode($company->id).'/private/documents',
@@ -310,7 +310,7 @@ class CompaniesApiController extends Controller
                 $companyDocumentModel->create(
                     [
                         'company_id' => $company->id,
-                        'document_url' => $digitalOceanPath,
+                        'document_url' => $amazonPath,
                         'document_type_enum' => $documentType,
                         'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
                     ]
@@ -390,9 +390,24 @@ class CompaniesApiController extends Controller
     {
         try {
             $digitalOceanFileService = app(DigitalOceanFileService::class);
+            $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
             $data = $request->all();
             if (!empty($data['document_url'])) {
-                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['document_url'], 180);
+                $temporaryUrl = '';
+
+                // Gera o Link temporário de acordo com o driver
+                if (strstr($data['url'], 'digitaloceanspaces')) {
+                    $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['url'], 180);
+                }
+
+                if (strstr($data['url'], 'amazonaws')) {
+                    $temporaryUrl = $amazonFileService->disk('s3_documents')->getTemporaryUrlFile($data['url'], 180);
+                }
+
+                // Validacao
+                if (empty($temporaryUrl)) {
+                    return response()->json(['message' => 'Erro ao acessar documentos do usuário!'], 400);
+                }
 
                 return response()->json(['data' => $temporaryUrl], 200);
             }

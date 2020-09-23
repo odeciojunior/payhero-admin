@@ -12,8 +12,6 @@ class UserPresenter extends Presenter
 {
     const USUARIO_DOCUMENTO = 1;
     const USUARIO_RESIDENCIA = 2;
-    const USUARIO_CPF = 3;
-    const USUARIO_EXTRATO = 5;
     const EMPRESA_EXTRATO = 1;
     const EMPRESA_RESINDENCIA = 2;
     const EMPRESA_CCMEI = 3;
@@ -159,17 +157,13 @@ class UserPresenter extends Presenter
     public function getDocumentTypeRegistered($document_type)
     {
         switch ($document_type) {
-            //USUARIO
-            case 'USUARIO_RESIDENCIA':
-                return self::USUARIO_RESIDENCIA;
+            // USUARIO
             case 'USUARIO_DOCUMENTO':
                 return self::USUARIO_DOCUMENTO;
-            case 'USUARIO_CPF':
-                return self::USUARIO_CPF;
-            case 'USUARIO_EXTRATO':
-                return self::USUARIO_EXTRATO;
+            case 'USUARIO_RESIDENCIA':
+                return self::USUARIO_RESIDENCIA;
 
-            //EMPRESA
+            // EMPRESA
             case 'EMPRESA_EXTRATO':
                 return self::EMPRESA_EXTRATO;
             case 'EMPRESA_RESIDENCIA':

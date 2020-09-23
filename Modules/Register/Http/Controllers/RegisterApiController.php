@@ -10,14 +10,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Jenssegers\Agent\Facades\Agent;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Entities\UserTerms;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Services\IpService;
 use Modules\Core\Services\SmsService;
 use Modules\Register\Entities\RegistrationToken;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
@@ -34,6 +38,7 @@ use Modules\Core\Services\UserService;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
 use Modules\Register\Http\Requests\ValidatePhoneNumberTokenRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class RegisterApiController
@@ -84,6 +89,16 @@ class RegisterApiController extends Controller
             $user = $this->createUserAndAssignRole($requestData, $userModel);
             $this->createCompanyToUser($requestData, $companyModel, $user);
 
+            if (!$this->acceptedTerms($user)) {
+                DB::rollback();
+                return response()->json(
+                    [
+                        'success' => 'false',
+                        'message' => 'Ocorreu um erro, tente novamente!'
+                    ]
+                );
+            }
+
             if (!empty($user)) {
                 $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
             }
@@ -92,7 +107,7 @@ class RegisterApiController extends Controller
                 return response()->json(
                     [
                         'success' => 'false',
-                        'message' => 'Não foi Possivel enviar os arquivos ao servidor.'
+                        'message' => 'Não foi possivel enviar os arquivos ao servidor.'
                     ]
                 );
             }
@@ -122,23 +137,21 @@ class RegisterApiController extends Controller
     {
         $companyModel = new Company();
         $companyPresent = $companyModel->present();
-        $is_physical_person = $companyPresent->getCompanyType($company_type);
+        $is_physical_person = $companyPresent->getCompanyType($company_type) == 'physical person' ? 1 : 2;
 
-        $sDrive = Storage::disk('s3');
+        $sDrive = Storage::disk('s3_documents');
         $documentCpf = preg_replace('/[^0-9]/', '', $document);
         $files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents');
 
-        $filesPhysicalPerson  = !preg_grep('/USUARIO_CPF/', $files) ? 4 : 5;
-        $filesJuridicalPerson = !preg_grep('/USUARIO_CPF/', $files) ? 5 : 6;
-
-        if ($is_physical_person == 1 && !count($files) == $filesPhysicalPerson) {
+        if ($is_physical_person == 1 && !count($files) == 3) {
             return false;
         }
 
-        if ($is_physical_person == 2 && !count($files) == $filesJuridicalPerson) {
+        if ($is_physical_person == 2 && !count($files) == 5 ) {
             return false;
         }
-            return $files;
+
+        return $files;
     }
 
     /**
@@ -267,7 +280,7 @@ class RegisterApiController extends Controller
     {
         $dataForm = Validator::make($request->all(), [
             'fileToUpload' => 'required|mimes:jpeg,jpg,png,doc,pdf',
-            'document_type' =>'required|in:USUARIO_DOCUMENTO,USUARIO_CPF,USUARIO_RESIDENCIA,USUARIO_EXTRATO,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
+            'document_type' =>'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
             'fileToUpload.required' => 'Precisamos do arquivo para continuar',
@@ -278,7 +291,7 @@ class RegisterApiController extends Controller
         ])->validate();
 
         try {
-            $sDrive = Storage::disk('s3');
+            $sDrive = Storage::disk('s3_documents');
 
             $document = $dataForm['fileToUpload'];
             $documentCpf = preg_replace('/[^0-9]/', '', $dataForm['document']);
@@ -320,7 +333,7 @@ class RegisterApiController extends Controller
         $userDocument = new UserDocument();
         $companyDocumentModel = new CompanyDocument();
 
-        $sDrive = Storage::disk('s3');
+        $sDrive = Storage::disk('s3_documents');
         $company = $companyModel->where('user_id', $user->id)->first();
 
         try {
@@ -336,8 +349,8 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Usuário
                  */
-                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO', 'USUARIO_CPF', 'USUARIO_EXTRATO'])) {
-                    $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents/' . $fileName;
+                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO', 'USUARIO_EXTRATO'])) {
+                    $amazonPathUser = 'uploads/register/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
                     if ($sDrive->exists($amazonPathUser)) {
                         $sDrive->delete($amazonPathUser);
                     }
@@ -841,6 +854,87 @@ class RegisterApiController extends Controller
                 'account_digit' => $requestData['account_digit'],
             ]
         );
+    }
+
+    public function acceptedTerms($user = null)
+    {
+        try {
+            $userTermsModel = new UserTerms();
+
+            $userIdRegistered = $user->id ?? User::find(3190);
+
+            if (empty($userIdRegistered)) {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente!',
+                    ],
+                    400
+                );
+            }
+
+            $userTerm = $userTermsModel->whereNotNull('accepted_at')
+                ->where(
+                    [
+                        ['user_id', $userIdRegistered],
+                        ['term_version', 'v1'],
+                    ]
+                )->first();
+
+            if (!empty($userTerm)) {
+                return true; // Salvo com Sucesso
+            }
+
+            $geoIp = null;
+            try {
+                $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
+            } catch (Exception $e) {
+                report($e);
+            }
+
+            $operationalSystem = Agent::platform();
+            $browser = Agent::browser();
+
+            $deviceData = [
+                'operational_system' => Agent::platform(),
+                'operation_system_version' => Agent::version($operationalSystem),
+                'browser' => Agent::browser(),
+                'browser_version' => Agent::version($browser),
+                'is_mobile' => Agent::isMobile(),
+                'ip' => @$geoIp['ip'],
+                'country' => @$geoIp['country'],
+                'city' => @$geoIp['city'],
+                'state' => @$geoIp['state'],
+                'state_name' => @$geoIp['state_name'],
+                'zip_code' => @$geoIp['postal_code'],
+                'currency' => @$geoIp['currency'],
+                'lat' => @$geoIp['lat'],
+                'lon' => @$geoIp['lon'],
+            ];
+
+            $userTermsCreated = $userTermsModel->create(
+                [
+                    'user_id' => $userIdRegistered,
+                    'term_version' => 'v1',
+                    'device_data' => json_encode($deviceData, true),
+                    'accepted_at' => Carbon::now(),
+                ]
+            );
+
+            if ($userTermsCreated) {
+               return true; // Salvo com Sucesso
+            }
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente!',
+                ],
+                400
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return false;
+        }
     }
 
     /**
