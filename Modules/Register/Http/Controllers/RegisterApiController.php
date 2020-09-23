@@ -312,8 +312,10 @@ class RegisterApiController extends Controller
             );
             return response()->json(
                 [
-                    'message' => 'Arquivo enviado com sucesso.',
-                    'path' => $urlPath
+                    'message'  => 'Arquivo enviado com sucesso.',
+                    'path'     => $urlPath,
+                    'fileName' => $document->getClientOriginalName(),
+                    'fileType' => $document->extension()
                 ],
                 200
             );
