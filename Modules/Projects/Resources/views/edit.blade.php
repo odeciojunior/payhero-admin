@@ -295,7 +295,7 @@
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="default_currency">Tipo de checkout</label>
                                 <select name='checkout_type' class='form-control select-pad' id="checkout_type">
-                                    <option value='1'>Checkout de 3 etapas (recomendado)</option>
+                                    <option value='1'>Checkout de 3 etapas</option>
                                     <option value='2'>Checkout de 1 etapa</option>
                                     <option value='' disabled>Checkout selecionado por IA - inteligência artificial (em breve)</option>
                                 </select>
