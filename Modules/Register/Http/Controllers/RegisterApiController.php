@@ -352,7 +352,7 @@ class RegisterApiController extends Controller
                  * Uploud Usuário
                  */
                 if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO', 'USUARIO_EXTRATO'])) {
-                    $amazonPathUser = 'uploads/register/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
+                    $amazonPathUser = 'uploads/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
                     if ($sDrive->exists($amazonPathUser)) {
                         $sDrive->delete($amazonPathUser);
                     }
@@ -397,7 +397,7 @@ class RegisterApiController extends Controller
                  * Uploud Empresa
                  */
                 if (in_array($fileTypeName, ['EMPRESA_EXTRATO', 'EMPRESA_RESIDENCIA', 'EMPRESA_CCMEI'])) {
-                    $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
+                    $amazonPathCompanies = 'uploads/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
                     $sDrive->move(
                         $file,
                         $amazonPathCompanies
