@@ -185,8 +185,11 @@ class TrackingService
                 ->where('id', '!=', $sale->upsell_id)
                 ->where('customer_id', '!=', $sale->customer_id)
                 ->where('delivery_id', '!=', $sale->delivery_id)
-                ->where('status', $salesModel->present()->getStatus('approved'))
-                ->exists();
+                ->whereIn('status', [
+                        $salesModel->present()->getStatus('approved'),
+                        $salesModel->present()->getStatus('in_dispute'),
+                    ]
+                )->exists();
 
             if ($exists) {
                 $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
