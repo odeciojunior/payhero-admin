@@ -183,6 +183,8 @@ class TrackingService
                 $query->where('tracking_code', $trackingCode);
             })->where('id', '!=', $sale->id)
                 ->where('id', '!=', $sale->upsell_id)
+                ->where('customer_id', '!=', $sale->customer_id)
+                ->where('delivery_id', '!=', $sale->delivery_id)
                 ->exists();
 
             if ($exists) {
