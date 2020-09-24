@@ -77,7 +77,7 @@ class RegisterApiController extends Controller
 
             \DB::beginTransaction();
 
-            if (!$files = $this->verifyFiles($request['document'],$request['company_type'] )) {
+            if (!$files = $this->verifyFiles($request['document'], $request['company_type'])) {
                 return response()->json(
                     [
                         'success' => 'false',
@@ -126,14 +126,14 @@ class RegisterApiController extends Controller
             );
 
         } catch (Exception $ex) {
-           \DB::rollback();
+            \DB::rollback();
             report($ex);
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados',
-                'mensagem_de_erro' => $ex->getMessage() ], 403);
+                'mensagem_de_erro' => $ex->getMessage()], 403);
         }
     }
 
-    public function verifyFiles ($document, $company_type)
+    public function verifyFiles($document, $company_type)
     {
         $companyModel = new Company();
         $companyPresent = $companyModel->present();
@@ -147,7 +147,7 @@ class RegisterApiController extends Controller
             return false;
         }
 
-        if ($is_physical_person == 2 && !count($files) == 5 ) {
+        if ($is_physical_person == 2 && !count($files) == 5) {
             return false;
         }
 
@@ -201,36 +201,12 @@ class RegisterApiController extends Controller
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
 
-        $data = $request->validated();
-        $companyService = new CompanyService();
+        return response()->json(
+            [
+                'cnpj_exist' => 'false',
+            ]
+        );
 
-        $isAValidCNPJ = $companyService->verifyIsValidCNPJ($data['company_document']);
-
-        if (!$isAValidCNPJ) {
-            return response()->json(
-                [
-                    'cnpj_exist' => 'FALSE',
-                    'message' => 'CNPJ com formato inválido',
-                ], 403
-            );
-        }
-
-        $cnpj = $companyService->verifyCnpj($data['company_document']);
-
-        if ($cnpj) {
-            return response()->json(
-                [
-                    'cnpj_exist' => 'true',
-                    'message' => 'Esse CNPJ já está cadastrado na plataforma',
-                ], 403
-            );
-        } else {
-            return response()->json(
-                [
-                    'cnpj_exist' => 'false',
-                ]
-            );
-        }
     }
 
     /**
@@ -280,7 +256,7 @@ class RegisterApiController extends Controller
     {
         $dataForm = Validator::make($request->all(), [
             'fileToUpload' => 'required|mimes:jpeg,jpg,png,doc,pdf',
-            'document_type' =>'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
+            'document_type' => 'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
             'fileToUpload.required' => 'Precisamos do arquivo para continuar',
@@ -312,8 +288,8 @@ class RegisterApiController extends Controller
             );
             return response()->json(
                 [
-                    'message'  => 'Arquivo enviado com sucesso.',
-                    'path'     => $urlPath,
+                    'message' => 'Arquivo enviado com sucesso.',
+                    'path' => $urlPath,
                     'fileName' => $document->getClientOriginalName(),
                     'fileType' => $document->extension()
                 ],
@@ -928,7 +904,7 @@ class RegisterApiController extends Controller
             );
 
             if ($userTermsCreated) {
-               return true; // Salvo com Sucesso
+                return true; // Salvo com Sucesso
             }
 
             return response()->json(
