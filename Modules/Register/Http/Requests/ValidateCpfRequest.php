@@ -26,6 +26,7 @@ class ValidateCpfRequest extends FormRequest
     {
         return [
             'document.required' => 'Precisamos do seu CPF para continuar',
+            'document.unique'     => 'CPF já cadastrado.',
         ];
     }
 

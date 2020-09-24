@@ -14,7 +14,7 @@ class ValidateCnpjRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_document'  => 'required',
+            'company_document' => 'required|unique:companies,company_document,NULL,id,deleted_at,NULL',
         ];
     }
 
@@ -26,7 +26,8 @@ class ValidateCnpjRequest extends FormRequest
     {
         return [
             // Coloque aqui as mensagens de erro da validação
-            'company_document.required'     => 'Precisamos do seu CPF para continuar'
+            'company_document.required'     => 'Precisamos do seu CNPJ para continuar',
+            'company_document.unique'     => 'CNPJ já cadastrado',
         ];
     }
 
