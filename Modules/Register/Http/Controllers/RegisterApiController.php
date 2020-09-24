@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -56,6 +55,8 @@ class RegisterApiController extends Controller
     const PERCENTAGE_ANTECIPABLE = '100';
     const INVITES_AMOUNT = 1;
     const BOLETO_RELEASE_MONEY_DAYS = 0;
+    const VERIFIED_EMAIL = 1;
+    const VERIFIED_CELLPHONE = 1;
 
     /**
      * @param RegisterRequest $request
@@ -90,7 +91,6 @@ class RegisterApiController extends Controller
             $this->createCompanyToUser($requestData, $companyModel, $user);
 
             if (!$this->acceptedTerms($user)) {
-                DB::rollback();
                 return response()->json(
                     [
                         'success' => 'false',
@@ -790,6 +790,8 @@ class RegisterApiController extends Controller
         $requestData['percentage_antecipable'] = self::PERCENTAGE_ANTECIPABLE;
         $requestData['invites_amount'] = self::INVITES_AMOUNT;
         $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
+        $requestData['email_verified'] = self::VERIFIED_EMAIL;
+        $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
 
         if (isset($requestData['date_birth']) && !stristr($requestData['date_birth'], '-')) {
             $requestData['date_birth'] = null;
@@ -823,6 +825,8 @@ class RegisterApiController extends Controller
      */
     private function createCompanyToUser($requestData, Company $companyModel, User $user): void
     {
+        $companyService = app(CompanyService::class);
+        $companyName = $requestData['company_document'] ? $companyService->getNameCompanyByApiCNPJ($requestData['company_document']) : null;
 
         $streetCompany = $requestData['street_company'] ?? null;
         $numberCompany = $requestData['number_company'] ?? null;
@@ -833,12 +837,13 @@ class RegisterApiController extends Controller
         $supportEmail = $requestData['support_email'] ?? null;
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
-        $is_physical_person = $companyModel->present()->getCompanyType('physical person') == 1;
+        $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
+        $fantasy_name = $is_physical_person ? $user->name : $companyName['nome'];
 
         $companyModel->create(
             [
                 'user_id' => $user->account_owner_id,
-                'fantasy_name' => $is_physical_person ? $user->name : $requestData['fantasy_name'],
+                'fantasy_name' => $fantasy_name,
                 'company_document' => $is_physical_person ? $requestData['document'] : $requestData['company_document'],
                 'company_type' => $is_physical_person ? 1 : 2,
                 'support_email' => $supportEmail,

@@ -51,7 +51,6 @@ class RegisterRequest extends FormRequest
             'street_company'       => 'nullable',
             'number_company'       => 'nullable',
 
-
             'privacy_terms'       => 'required',
             'use_terms'           => 'required',
         ];
