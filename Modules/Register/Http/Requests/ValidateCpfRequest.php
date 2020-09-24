@@ -14,7 +14,7 @@ class ValidateCpfRequest extends FormRequest
     public function rules()
     {
         return [
-            'document'          => 'required',
+            'document' => 'required|min:11|max:11|unique:users,document,NULL,id,deleted_at,NULL',
         ];
     }
 
@@ -25,9 +25,10 @@ class ValidateCpfRequest extends FormRequest
     public function messages()
     {
         return [
-            'document.required'     => 'Precisamos do seu CPF para continuar',
+            'document.required' => 'Precisamos do seu CPF para continuar',
         ];
     }
+
     /**
      * Determine if the user is authorized to make this request.
      *
