@@ -15,9 +15,13 @@ class CreateUnderAttacksTable extends Migration
     {
         Schema::create('under_attacks', function (Blueprint $table) {
             $table->id();
-            $table->string('cloudflare_domain_id')->index();
-            $table->string('domain');
+            $table->integer('domain_id')->unsigned();
+            $table->timestamp('removed_at')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('under_attacks', function(Blueprint $table) {
+            $table->foreign('domain_id')->references('id')->on('domains');
         });
     }
 
