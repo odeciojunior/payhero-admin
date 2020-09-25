@@ -57,6 +57,8 @@ class SalesRecoveryService
      * @param string|null $dateStart
      * @param string|null $dateEnd
      * @param string|null $customer
+     * @param string|null $customerDocument
+     * @param string|null $plan
      * @return mixed
      * @throws PresenterException
      */
@@ -66,7 +68,9 @@ class SalesRecoveryService
         string $projectId,
         string $dateStart = null,
         string $dateEnd = null,
-        string $customer = null
+        string $customer = null,
+        string $customerDocument = null,
+        string $plan = null
     ) {
         $salesModel = new Sale();
         $userProjectsModel = new UserProject();
@@ -96,7 +100,16 @@ class SalesRecoveryService
             $customerSearch = $customerModel->where('name', 'like', '%' . $customer . '%')->pluck('id')->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
-
+        if (!empty($customerDocument)) {
+            $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($customerDocument))->pluck('id');
+            $salesExpired->whereIn('sales.customer_id', $customerSearch);
+        }
+        if (!empty($plan)) {
+            $planId = current(Hashids::decode($plan));
+            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
+                $query->where('plan_id', $planId);
+            });
+        }
         if (!empty($projectId)) {
             $salesExpired->where('sales.project_id', $projectId);
         } else {
