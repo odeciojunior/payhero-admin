@@ -182,6 +182,7 @@ class CompaniesApiController extends Controller
                 || strlen($requestData['state_fiscal_document_number']) < 5
                 || $requestData['state_fiscal_document_number'] == 'n/e'
                 || $requestData['state_fiscal_document_number'] == 'Não Possui'
+                || $requestData['state_fiscal_document_number'] == 'isento'
             ) {
                 $requestData['state_fiscal_document_number'] = 'ISENTO';
             }
@@ -193,13 +194,13 @@ class CompaniesApiController extends Controller
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
             }
 
-            /*if (empty($company->subseller_getnet_id)) {
-                $result = $companyService->createCompanyGetnet($company);
-            } elseif (($dataUpdate == true)
-                || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
-            ) {
-                $result = $companyService->updateCompanyGetnet($company);
-            }*/
+            if (empty($company->subseller_getnet_id)) {
+                if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
+                    $companyService->createCompanyPfGetnet($company);
+                } else {
+                    $companyService->createCompanyPjGetnet($company);
+                }
+            }
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\FoxUtils;
+use Modules\Reports\Transformers\PendingBalanceResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\UserProject;
@@ -25,6 +26,9 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Reports\Exports\Reports\ReportExport;
 use Modules\Reports\Transformers\ReportCouponResource;
+use Spatie\Activitylog\Models\Activity;
+use Modules\Core\Services\SaleService;
+use Modules\Reports\Transformers\TransactionBlockedResource;
 
 class ReportsApiController extends Controller
 {
@@ -691,6 +695,90 @@ class ReportsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(null);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function pendingBalance(Request $request)
+    {
+        try {
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela saldo pendente');
+
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $sales = $saleService->getPendingBalance($data);
+
+            return PendingBalanceResource::collection($sales);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar saldo pendente ReportsApiController - pendingBalance');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
+        }
+    }
+
+    public function resumePendingBalance (Request $request)
+    {
+        try {
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $resume = $saleService->getResumePending($data);
+
+            return response()->json($resume);
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir resumo dos saldos pendete ReportsApiController - resumePendingBalance');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
+        }
+    }
+
+    public function blockedBalance(Request $request)
+    {
+        try {
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela saldo bloqueado');
+
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $sales = $saleService->getPaginetedBlocked($data);
+
+            return TransactionBlockedResource::collection($sales);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar vendas bloqueadas ReportsApiController - blockedBalance');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
+        }
+    }
+
+    public function resumeBlockedBalance(Request $request)
+    {
+        try {
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $resume = $saleService->getResumeBlocked($data);
+
+            return response()->json($resume);
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir resumo das venda bloqueadas ReportsApiController - resumeBlockedBalance');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
     }
 }

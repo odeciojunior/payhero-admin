@@ -54,21 +54,6 @@ class TrackingService
     }
 
     /**
-     * @param $apiTracking
-     * @return mixed
-     */
-    public function deleteTrackingApi($apiTracking)
-    {
-        $trackingmoreService = new TrackingmoreService();
-
-        $carrierCode = $apiTracking->carrier_code;
-
-        $trackingNumber = $apiTracking->tracking_number;
-
-        return $trackingmoreService->delete($carrierCode, $trackingNumber);
-    }
-
-    /**
      * @param $status
      * @return int|mixed
      * @throws PresenterException
@@ -156,37 +141,23 @@ class TrackingService
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
      * @param  bool  $logging
-     * @param  bool  $forceUpdate
      * @return mixed
      */
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false,
-        $forceUpdate = false
+        $logging = false
     ) {
         try {
             $trackingService = new TrackingService();
             $trackingModel = new Tracking();
+            $salesModel = new Sale();
 
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
             $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('valid');
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
-
-            //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
-            $sale = $productPlanSale->sale;
-            $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
-                ->where('sale_id', '!=', $sale->id)
-                ->whereHas('sale', function ($query) use ($sale) {
-                    $query->where('upsell_id', '!=', $sale->id)
-                        ->where('upsell_id', '!=', $sale->upsell_id);
-                })->exists();
-
-            if ($exists) {
-                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
-            }
 
             $apiResult = $trackingService->sendTrackingToApi($trackingCode);
 
@@ -206,31 +177,35 @@ class TrackingService
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
             }
 
-            $tracking = $productPlanSale->tracking;
+            //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
+            $sale = $productPlanSale->sale;
+            $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingCode, $productPlanSale) {
+                $query->where('tracking_code', $trackingCode);
+            })->where('id', '!=', $sale->id)
+                ->where('id', '!=', $sale->upsell_id)
+                ->where('customer_id', '!=', $sale->customer_id)
+                ->where('delivery_id', '!=', $sale->delivery_id)
+                ->whereIn('status', [
+                        $salesModel->present()->getStatus('approved'),
+                        $salesModel->present()->getStatus('in_dispute'),
+                    ]
+                )->exists();
 
-            if (!empty($tracking)) {
-                if (($tracking->tracking_code != $trackingCode) || $forceUpdate) {
-                    $tracking->update([
-                        'tracking_code' => $trackingCode,
-                        'tracking_status_enum' => $statusEnum,
-                        'system_status_enum' => $systemStatusEnum,
-                    ]);
-                }
-            } else { //senao cria o tracking
-                $tracking = $trackingModel->firstOrNew([
-                    'sale_id' => $productPlanSale->sale_id,
-                    'product_id' => $productPlanSale->product_id,
-                    'product_plan_sale_id' => $productPlanSale->id,
-                    'amount' => $productPlanSale->amount,
-                    'delivery_id' => $productPlanSale->sale->delivery->id,
-                    'tracking_code' => $trackingCode,
-                    'tracking_status_enum' => $statusEnum,
-                    'system_status_enum' => $systemStatusEnum,
-                ]);
-                $tracking->save();
+            if ($exists) {
+                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
             }
 
-            return $tracking;
+            return Tracking::updateOrCreate([
+                'sale_id' => $productPlanSale->sale_id,
+                'product_id' => $productPlanSale->product_id,
+                'product_plan_sale_id' => $productPlanSale->id,
+                'amount' => $productPlanSale->amount,
+                'delivery_id' => $productPlanSale->sale->delivery->id,
+            ], [
+                'tracking_code' => $trackingCode,
+                'tracking_status_enum' => $statusEnum,
+                'system_status_enum' => $systemStatusEnum,
+            ]);
         } catch (\Exception $e) {
             report($e);
             return null;

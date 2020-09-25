@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
@@ -34,29 +37,13 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        /*$users = User::with([
-            'companies' => function ($q) {
-                $q->where('company_type', 2)
-                    ->where('bank_document_status', 3)
-                    ->where('address_document_status', 3)
-                    ->where('contract_document_status', 3)
-                    ->where('subseller_getnet_id', null);
-            }
-        ])->whereHas('sales', function (Builder $query) {
-            $query->whereDate('created_at', '>=', '2020-05-01');
-        })->get();
-
-        $companyService = new CompanyService();
-        foreach ($users as $user) {
-            $companies = $user->companies;
-            foreach ($companies as $company) {
-                if (FoxUtils::isEmpty($company->subseller_getnet_id) && !$companyService->verifyFieldsEmpty($company)) {
-                    $companyService->createCompanyGetnet($company);
-                }
-            }
+        $products = Product::where('type_enum', 2)->whereNull('status_enum')->get();
+        foreach ($products as $product) {
+            $product->update([
+                                 'status_enum' => 1,
+                             ]);
         }
-
-        $this->line('Terminou!!!');*/
+        dd('feitoo');
     }
 }
 

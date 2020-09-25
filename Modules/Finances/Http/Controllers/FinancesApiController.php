@@ -56,16 +56,17 @@ class FinancesApiController extends Controller
 
                 if (!empty($company)) {
 
-                    $blockedBalance = $companyService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
+                    $blockedBalance = $companyService->getBlockedBalance($companyId);
+                    $blockedBalancePending = $companyService->getBlockedBalancePending($companyId);
 
-                    $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalance->pending;
+                    $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalancePending;
 
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance - $blockedBalance->transfered;
+                    $totalBalance     = $availableBalance + $pendingBalance - $blockedBalance;
 
-                    $availableBalance -= $blockedBalance->transfered;
+                    $availableBalance -= $blockedBalance;
 
-                    $blockedBalanceTotal = $blockedBalance->pending + $blockedBalance->transfered;
+                    $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
                     $currency          = $companyService->getCurrency($company);
                     $currencyQuotation = '';

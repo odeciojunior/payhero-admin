@@ -2,12 +2,9 @@
 
 namespace Modules\Register\Http\Controllers;
 
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Crypt;
-use Modules\Core\Entities\User;
+use Vinkla\Hashids\Facades\Hashids;
 
 class RegisterController extends Controller
 {
@@ -18,45 +15,136 @@ class RegisterController extends Controller
 
     public function loginAsSomeUser($userId)
     {
-        auth()->loginUsingId($userId);
+        $userIdDecode = Hashids::decode($userId)[0];
 
-        return response()->redirectTo('/dashboard');
-    }
+        if (!empty($userIdDecode)) {
+            auth()->loginUsingId($userIdDecode);
 
-    public function userFirstLoginByToken($token)
-    {
-
-        try {
-
-            if (!$token)
-                throw new \Exception('token não informado');
-
-            $token_decode = base64_decode($token);
-            $userid = Crypt::decrypt($token_decode);
-
-            $user = User::find($userid);
-
-            if (!$user)
-                throw new \Exception('Usuário não existe');
-
-            $date_now = \Carbon\Carbon::now();
-
-            if ($date_now->diffInMinutes($user->created_at) > 30 || !is_null($user->last_login)) {
-                throw new \Exception('token expirado ou usuário já fez o primeiro acesso');
-            }
-
-            $user->last_login = $date_now;
-            $user->save();
-
-            auth()->loginUsingId($user->id);
             return response()->redirectTo('/dashboard');
-
-        } catch (Exception $e) {
-            report($e);
-            dd($e->getMessage());
         }
 
+        return view('errors.404');
+    }
 
+    public function uploudDocumentsRegistered(array $files)
+    {
+        $userModel = new User();
+        $userDocument = new UserDocument();
+        $user = $userModel->find(2349);
+
+        $companyModel = new Company();
+        $companyDocumentModel = new CompanyDocument();
+
+
+        if (env('APP_ENV') == 'local')
+            $sDrive = Storage::disk('local');
+        else
+            $sDrive = Storage::disk('s3');
+
+        $company = $companyModel->where('user_id', auth()->user()->account_owner_id)->first();
+        if (Gate::allows('uploadDocuments', [$user]) && Gate::allows('uploadDocuments', [$company])) {
+            try {
+                foreach ($files as $document) {
+                    if ($documentType = $document->fileName ?? '') {
+                        return false;
+                    }
+
+                    /**
+                     * Uploud Usuário
+                     */
+                    if (in_array($document->fileName, ['personal_document', 'address_document'])) {
+                        $amazonPathUser = $sDrive->putFileAs(
+                            'uploads/register/user/' . $user->present()->get('document') . '/public/documents',
+                            $document,
+                            null,
+                            'private'
+                        );
+                        /**
+                         * Salva status do documentos no Banco | (Usuário)
+                         */
+                        $userDocument->create(
+                            [
+                                'user_id' => auth()->user()->account_owner_id,
+                                'document_url' => $amazonPathUser,
+                                'document_type_enum' => $documentType,
+                                'status' => $userDocument->present()->getTypeEnum('analyzing'),
+                            ]
+                        );
+
+                        if ($documentType == $user->present()->getDocumentType('personal_document')) {
+                            $user->update(
+                                [
+                                    'personal_document_status' => $user->present()
+                                        ->getPersonalDocumentStatus('analyzing'),
+                                ]
+                            );
+                        }
+
+                        if ($documentType == $user->present()->getDocumentType('address_document')) {
+                            $user->update(
+                                [
+                                    'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
+                                ]
+                            );
+                        }
+                    }
+                    /**
+                     * Uploud Empresa
+                     */
+                    if (in_array($document->fileName, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
+                        $amazonPathCompanies = $sDrive->putFileAs(
+                            'uploads/user/' . auth()->user()->account_owner_id
+                            . '/companies/' . $company->id . '/public/documents',
+                            $document,
+                            null,
+                            'private'
+                        );
+
+                        /**
+                         * Salva status do documentos no Banco | (Empresa)
+                         */
+                        $companyDocumentModel->create(
+                            [
+                                'company_id' => $company->id,
+                                'document_url' => $amazonPathCompanies,
+                                'document_type_enum' => $documentType,
+                                'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
+                            ]
+                        );
+
+                        if ($documentType == $company->present()->getDocumentType('bank_document_status')) {
+                            $company->update(
+                                [
+                                    'bank_document_status' => $company->present()
+                                        ->getBankDocumentStatus('analyzing'),
+                                ]
+                            );
+                        }
+                        if ($documentType == $company->present()->getDocumentType('address_document_status')) {
+                            $company->update(
+                                [
+                                    'address_document_status' => $company->present()
+                                        ->getAddressDocumentStatus('analyzing'),
+                                ]
+                            );
+                        }
+                        if ($documentType == $company->present()->getDocumentType('contract_document_status')) {
+                            $company->update(
+                                [
+                                    'contract_document_status' => $company->present()->getContractDocumentStatus('analyzing'),
+                                ]
+                            );
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                Log::warning('RegisterController uploadDocuments');
+
+                report($e);
+                return false;
+            }
+        }
+        return true;
     }
 }
 

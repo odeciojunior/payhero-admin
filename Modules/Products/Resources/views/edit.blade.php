@@ -65,7 +65,7 @@
                                         <div class="row">
                                             <div class="form-group col-lg-12">
                                                 <label for="name">Nome</label>
-                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto" >
+                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto">
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="description">Descrição</label>
@@ -91,12 +91,12 @@
                                                 </div>
                                             </div>
                                             <div class='col-lg-6'></div>
-{{--                                            <div class="form-group col-lg-6">--}}
-{{--                                                <label for="category">Categoria</label>--}}
-{{--                                                <select name="category" class="form-control select-pad" id='select-categories'>--}}
-{{--                                                    <option value="">Selecione</option>--}}
-{{--                                                </select>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="form-group col-lg-6">--}}
+                                            {{--                                                <label for="category">Categoria</label>--}}
+                                            {{--                                                <select name="category" class="form-control select-pad" id='select-categories'>--}}
+                                            {{--                                                    <option value="">Selecione</option>--}}
+                                            {{--                                                </select>--}}
+                                            {{--                                            </div>--}}
                                             <div class='form-group col-lg-6'>
                                                 <label for="category">Moeda de custo:</label>
                                                 <select name="currency_type_enum" class="form-control select-pad" id='select-currency'>
@@ -116,24 +116,22 @@
                                             <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
                                                 <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
                                                 <div class="d-flex input-group">
-                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#" >
+                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#">
                                                 </div>
                                             </div>
-{{--                                            <div class="form-group col-lg-4">--}}
-{{--                                                <label for="price">Preço--}}
-{{--                                                    <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>--}}
-{{--                                                </label>--}}
-{{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="form-group col-lg-4">--}}
+                                            {{--                                                <label for="price">Preço--}}
+                                            {{--                                                    <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>--}}
+                                            {{--                                                </label>--}}
+                                            {{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
+                                            {{--                                            </div>--}}
                                             <div id="div_next_step" class="form-group col-lg-12 justify-content-between mt-10">
-
                                                 <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
                                                 <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class='col-lg-12'>
@@ -142,7 +140,6 @@
                                         </a>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="tab-pane fade p-30" id="nav-logistic" role="tabpanel" aria-labelledby="nav-logistic-tab">
                                 <div class="row mt50">
@@ -170,12 +167,12 @@
                                             </div>
                                             <div class="form-group col-lg-6 mt-0">
                                                 <p class="info pt-5 mb-5" style="font-size: 10px;">
-                                                    <i class="icon wb-info-circle" aria-hidden="true"></i>
-                                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
+                                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Clique
+                                                    <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a>
+                                                    para consultar as regras de dimensões dos Correios.
                                                 </p>
                                                 <p class="info pt-5" style="font-size: 10px;">
-                                                    <i class="icon wb-info-circle" aria-hidden="true"></i>
-                                                    Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
+                                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
                                                 </p>
                                             </div>
                                             <div class="form-group col-lg-12 text-right btnSave">
@@ -189,7 +186,6 @@
                     </div>
                 </div>
             </form>
-
             <!-- Modal padrão para excluir -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -213,11 +209,28 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Produto digital -->
+            <div id="modal-plan-already-created" class="modal fade" role="dialog" data-backdrop="static">
+                <div class="modal-dialog p-2">
+                    <!-- Modal content-->
+                    <div class="modal-content p-4">
+{{--                        <h4 class="modal-title font-size-20 text-center">Encontramos dados que precisam ser atualizados!</h4>--}}
+                        <i class="material-icons gradient text-center" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                        <span class="py-1 text-center">
+                        Impossível alterar pois já existe um plano cadastrado com esse produto, você precisa excluir o plano para depois alterá-lo para Digital.
+                    </span>
+                        <div class="modal-body p-2 text-center">
+                            <a class='btn btn-close-modal-plan mt-10 btn-success text-white' data-dismiss="modal">
+                                <b>Fechar</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=11') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=12') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

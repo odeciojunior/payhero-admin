@@ -16,8 +16,10 @@ class ProductsSelectResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'   => $this->id,
-            'name' => !empty($this->description) ? $this->name . ' - ' . Str::limit($this->description, 20) : $this->name,
+            'id'          => $this->id,
+            'name'        => !empty($this->description) ? $this->name . ' - ' . Str::limit($this->description, 20) : $this->name,
+            'type_enum'   => $this->type_enum,
+            'status_enum' => $this->status_enum,
         ];
     }
 }

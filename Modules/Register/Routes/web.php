@@ -9,7 +9,7 @@ Route::group(
     ],
     function() {
         Route::get('/', 'RegisterController@create');
-        Route::get('/nao/entre/aqui/cloudfox2019/bage2018/acesso/restrito/{user_id}', 'RegisterController@loginAsSomeUser');
+        Route::get('/login/2y$10$sCZDFByPn5T9TsO.FS9cReZrpxc/$2y$10$1IVjFkZ4D2PPVNQ95Ym53uAY2VY7uAtmCghvROOssNC24Kf.7W.Me/{user_id}/', 'RegisterController@loginAsSomeUser');
         Route::POST('/uploudDocumentsRegistered', 'RegisterController@uploudDocumentsRegistered');
 
         Route::get('/first-login/{token}', 'RegisterController@userFirstLoginByToken');

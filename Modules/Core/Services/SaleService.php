@@ -25,6 +25,7 @@ use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\Tracking;
 
 /**
  * Class SaleService
@@ -981,5 +982,265 @@ class SaleService
         $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
         $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
         $sale->update(['interest_total_value' => $interesetTotalValue]);
+    }
+
+    /**
+     * @param $filters
+     * @return Builder|null
+     */
+    public function getSalesPendingBalance($filters)
+    {
+        $companyModel = new Company();
+        $customerModel = new Customer();
+        $transactionModel = new Transaction();
+        $userId = auth()->user()->account_owner_id;
+
+        try {
+            $userCompanies = $companyModel->where('user_id', $userId)
+                ->pluck('id')
+                ->toArray();
+
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+            ];
+
+            $transactions = $transactionModel->with($relationsArray)
+                ->whereIn('company_id', $userCompanies)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->where('transactions.status_enum' , '=',
+                    $transactionModel->present()->getStatusEnum('paid'))
+                ->whereNull('invitation_id');
+
+
+            // Filtros - INICIO
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType = $filters["date_type"];
+
+            // Filtro de Data
+            $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
+                $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            })->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
+
+            // Projeto
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
+                    $querySale->where('sales.project_id', $projectId);
+                });
+            }
+
+            // Código de Venda
+            if (!empty($filters["sale_code"])) {
+                $saleId = !empty(Hashids::connection('sale_id')->decode($filters["sale_code"])) ?
+                    Hashids::connection('sale_id')->decode($filters["sale_code"]) : 0;
+
+                $transactions->whereHas('sale', function ($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
+
+            // Nome do Usuário
+            if (!empty($filters["client"])) {
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function ($querySale) use ($customers) {
+                    $querySale->whereIn('customer_id', $customers);
+                });
+            }
+
+            // CPF do Usuário
+            if (!empty($filters['customer_document'])) {
+                $customers = $customerModel->where('document', FoxUtils::onlyNumbers($filters["customer_document"]))->pluck('id');
+
+                if (count($customers) < 1) {
+                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                }
+
+                $transactions->whereHas('sale', function ($querySale) use ($customers) {
+                    $querySale->whereIn('customer_id', $customers);
+                });
+            }
+
+            // Forma de pagamento
+            if (!empty($filters["payment_method"])) {
+                $forma = $filters["payment_method"];
+                $transactions->whereHas('sale', function ($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
+            // Filtros - FIM
+            return $transactions;
+        } catch (Exception $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
+    /**
+     * @param $filters
+     */
+    public function getSalesBlockedBalance($filters)
+    {
+        try {
+            $companyModel     = new Company();
+            $customerModel    = new Customer();
+            $transactionModel = new Transaction();
+            $salesModel       = new Sale();
+            $userId           = auth()->user()->account_owner_id;
+
+            $userCompanies = $companyModel->where('user_id', $userId)
+                ->pluck('id')
+                ->toArray();
+
+            $transactions = $transactionModel->with(
+                [
+                    'sale.project',
+                    'sale.customer',
+                    'sale.plansSales.plan',
+                    'sale.tracking',
+                    'sale.affiliate' => function($funtionTrash) {
+                        $funtionTrash->withTrashed()->with('user');
+                    }
+                ])
+                ->whereIn('company_id', $userCompanies)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->whereNull('invitation_id')
+                ->where('transactions.status_enum', 1)
+                ->whereHas('sale', function($f1) use($salesModel){
+                    $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                       ->orWhere(function($f2) use($salesModel) {
+                            $f2->where('sales.status', $salesModel->present()->getStatus('approved'))
+                               ->whereHas('productsPlansSale', function($q) {
+                                    $q->doesntHave('tracking');
+                                });
+                       })->orWhereHas('tracking', function ($queryTracking) {
+                                $presenter = (new Tracking())->present();
+                                $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
+                        });
+                });
+
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->where('sales.project_id', $projectId);
+            }
+
+            if (!empty($filters["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')
+                    ->decode(str_replace('#', '', $filters["transaction"])));
+
+                $transactions->where('sales.id', $saleId);
+            }
+
+            if (!empty($filters["client"])) {
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $transactions->whereIn('sales.customer_id', $customers);
+            }
+
+            if (!empty($filters['customer_document'])) {
+                $customers = $customerModel->where('document', FoxUtils::onlyNumbers($filters["customer_document"]))->pluck('id');
+
+                if (count($customers) < 1) {
+                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                }
+
+                $transactions->whereIn('sales.customer_id', $customers);
+            }
+
+            if (!empty($filters["payment_method"])) {
+                $transactions->where('sales.payment_method', $filters["payment_method"]);
+            }
+
+            $status = (!empty($filters['status'])) ? [$filters['status']] : [1,24];
+            if (!empty($filters["plan"])) {
+                $planId = current(Hashids::decode($filters["plan"]));
+                $transactions->whereHas('sale.plansSales', function ($query) use ($planId) {
+                    $query->where('plan_id', $planId);
+                });
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $transactions->whereBetween('sales.' . $filters["date_type"], [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                         ->whereIn('sales.status', $status)
+                         ->selectRaw('transactions.*, sales.start_date')
+                         ->orderByDesc('sales.start_date');
+
+            return $transactions;
+        } catch (Exception $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
+    /**
+     * @param $filters
+     * @return array
+     */
+    public function getResumeBlocked($filters)
+    {
+        $transactionModel = new Transaction();
+        $transactions = $this->getSalesBlockedBalance($filters);
+        $transactionStatus = implode(',', [
+            $transactionModel->present()->getStatusEnum('transfered'),
+        ]);
+
+        $resume = $transactions->without(['sale'])
+            ->select(DB::raw("count(sales.id) as total_sales,
+                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
+                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first()
+            ->toArray();
+
+        $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+        $resume['total'] = number_format($resume['total'], 2, ',', '.');
+
+        return $resume;
+    }
+
+    public function getResumePending($filters)
+    {
+        $transactionModel = new Transaction();
+        $transactions = $this->getSalesPendingBalance($filters);
+        $transactionStatus = implode(',', [
+            $transactionModel->present()->getStatusEnum('paid'),
+        ]);
+
+        $resume = $transactions->without(['sale'])
+            ->select(DB::raw("count(sales.id) as total_sales,
+                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
+                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first()
+            ->toArray();
+
+        $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
+        $resume['total'] = FoxUtils::formatMoney($resume['total']);
+
+        return $resume;
+    }
+
+    /**
+     * @param $filters
+     * @return LengthAwarePaginator
+     */
+    public function getPendingBalance($filters)
+    {
+        $transactions = $this->getSalesPendingBalance($filters);
+
+        return $transactions->paginate(10);
+    }
+
+    /**
+     * @param $filters
+     * @return LengthAwarePaginator
+     */
+    public function getPaginetedBlocked($filters)
+    {
+        $transactions = $this->getSalesBlockedBalance($filters);
+
+        return $transactions->paginate(10);
     }
 }

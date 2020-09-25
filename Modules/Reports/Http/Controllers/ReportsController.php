@@ -44,4 +44,14 @@ class ReportsController extends Controller
     {
         return view('reports::coupons');
     }
+
+    public function pending()
+    {
+        return view('reports::pending');
+    }
+
+    public function blockedbalance()
+    {
+        return view('reports::blockedbalance');
+    }
 }
