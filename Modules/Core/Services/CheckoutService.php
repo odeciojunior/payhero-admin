@@ -34,10 +34,12 @@ class CheckoutService
      * @param string|null $dateStart
      * @param string|null $dateEnd
      * @param string|null $client
+     * @param string|null $customerDocument
+     * @param string|null $plan
      * @return mixed
      * @throws PresenterException
      */
-    public function getAbandonedCart(string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
+    public function getAbandonedCart(string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null, string $customerDocument = null, string $plan = null)
     {
         $checkoutModel  = new Checkout();
         $domainModel    = new Domain();
@@ -57,6 +59,20 @@ class CheckoutService
 
         if (!empty($client)) {
             $abandonedCarts->where('client_name', 'like', '%' . $client . '%');
+        }
+
+        if (!empty($customerDocument)) {
+            $document = $customerDocument;
+            $abandonedCarts->whereHas('logs', function($query) use ($document) {
+                $query->where('document', $document);
+            });
+        }
+
+        if (!empty($plan)) {
+            $planId = current(Hashids::decode($plan));
+            $abandonedCarts->whereHas('checkoutPlans', function($query) use ($planId) {
+                $query->where('plan_id', $planId);
+            });
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {
@@ -95,7 +111,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount, $partialValues = [],$refundObservation)
+    public function cancelPayment($sale, $refundAmount, $partialValues = [], $refundObservation)
     {
         try {
             $saleService      = new SaleService();
@@ -125,7 +141,7 @@ class CheckoutService
             ];
             $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if (($response->status ?? '') == 'success') {
-                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues,$refundObservation);
+                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues, $refundObservation);
                 if ($checkUpdate) {
                     $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)
@@ -185,32 +201,31 @@ class CheckoutService
 
         try {
             $saleIdDecode = current(Hashids::connection('sale_id')->decode($saleId));
-            $saleModel = new Sale();
-            $sale      = $saleModel::with('project.domains')->where('id', $saleIdDecode)->first();
+            $saleModel    = new Sale();
+            $sale         = $saleModel::with('project.domains')->where('id', $saleIdDecode)->first();
 
             $billets = RegeneratedBillet::where('sale_id', $saleIdDecode)
                                         ->orWhere('owner_id', $sale->owner_id)
                                         ->limit(6)
                                         ->get();
 
-            if($billets->where('sale_id', $saleIdDecode)->count() > 1) {
+            if ($billets->where('sale_id', $saleIdDecode)->count() > 1) {
                 return [
-                    'status'   => 'error',
-                    'error'    => 'error',
-                    'message'  => 'Só é permitido regerar 4 boletos por venda',
+                    'status'  => 'error',
+                    'error'   => 'error',
+                    'message' => 'Só é permitido regerar 4 boletos por venda',
                 ];
             }
 
-            if($billets->where('created_at', '>', Carbon::now()->subMinute())->count() > 1) {
+            if ($billets->where('created_at', '>', Carbon::now()->subMinute())->count() > 1) {
                 return [
-                    'status'   => 'error',
-                    'error'    => 'error',
-                    'message'  => 'Aguarde um instante, só é permitido regerar 2 boletos por minuto',
+                    'status'  => 'error',
+                    'error'   => 'error',
+                    'message' => 'Aguarde um instante, só é permitido regerar 2 boletos por minuto',
                 ];
             }
 
-
-            $domain    = $sale->project->domains->where('status', 3)->first();
+            $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
                 $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
@@ -238,15 +253,15 @@ class CheckoutService
                                                         ]));
                 if ($check) {
                     RegeneratedBillet::create([
-                        'sale_id'                      => $saleIdDecode,
-                        'billet_link'                  => $dataUpdate['boleto_link'],
-                        'billet_digitable_line'        => $dataUpdate['boleto_digitable_line'],
-                        'billet_due_date'              => $dataUpdate['boleto_due_date'],
-                        'gateway_transaction_id'       => $dataUpdate['gateway_transaction_id'],
-                        'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
-                        'gateway_id'                   => $dataUpdate['gateway_id'],
-                        'owner_id'                     => $sale->owner_id,
-                    ]);
+                                                  'sale_id'                      => $saleIdDecode,
+                                                  'billet_link'                  => $dataUpdate['boleto_link'],
+                                                  'billet_digitable_line'        => $dataUpdate['boleto_digitable_line'],
+                                                  'billet_due_date'              => $dataUpdate['boleto_due_date'],
+                                                  'gateway_transaction_id'       => $dataUpdate['gateway_transaction_id'],
+                                                  'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
+                                                  'gateway_id'                   => $dataUpdate['gateway_id'],
+                                                  'owner_id'                     => $sale->owner_id,
+                                              ]);
 
                     $transactionModel = new Transaction();
                     $sale             = $saleModel::with('project.domains')
