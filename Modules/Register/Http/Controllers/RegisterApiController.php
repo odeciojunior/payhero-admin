@@ -90,12 +90,12 @@ class RegisterApiController extends Controller
             $user = $this->createUserAndAssignRole($requestData, $userModel);
             $this->createCompanyToUser($requestData, $companyModel, $user);
 
-            if ($this->verifyTokenValidate($user)) {
+            if (!$this->verifyTokenValidate($user)) {
                 return response()->json(
                     [
                         'success' => 'false',
                         'message' => 'Favor confirme seu email e/ou seu celular para podermos finalizar o cadastro.'
-                    ]
+                    ], 400
                 );
             }
 
@@ -104,7 +104,7 @@ class RegisterApiController extends Controller
                     [
                         'success' => 'false',
                         'message' => 'Ocorreu um erro, tente novamente!'
-                    ]
+                    ] , 400
                 );
             }
 
@@ -217,10 +217,24 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
+        $requestData = current(preg_replace('/[^0-9]/', '',$request->validated()));
+        $companyService = new CompanyService();
+
+        if (empty($companyService->getNameCompanyByApiCNPJ($requestData))) {
+            return response()->json(
+                [
+                    'cnpj_exist' => 'false',
+                    'exist' => 'false',
+                    'message' => 'CNPJ não existe',
+                ], 403
+            );
+        }
+
 
         return response()->json(
             [
                 'cnpj_exist' => 'false',
+                'exist' => 'true',
             ]
         );
 
