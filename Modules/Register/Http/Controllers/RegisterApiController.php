@@ -219,13 +219,24 @@ class RegisterApiController extends Controller
     {
         $requestData = current(preg_replace('/[^0-9]/', '',$request->validated()));
         $companyService = new CompanyService();
+        $company = $companyService->getNameCompanyByApiCNPJ($requestData);
 
-        if (empty($companyService->getNameCompanyByApiCNPJ($requestData))) {
+        if (empty($company)) {
             return response()->json(
                 [
                     'cnpj_exist' => 'false',
-                    'exist' => 'false',
-                    'message' => 'CNPJ não existe',
+                    'status' => 'ERROR',
+                    'message' => 'CNPJ inválido',
+                ], 403
+            );
+        }
+
+        if ($company['status'] != 'OK') {
+            return response()->json(
+                [
+                    'cnpj_exist' => 'false',
+                    'status' => $company['status'],
+                    'message' => 'CNPJ rejeitado pela Receita Federal',
                 ], 403
             );
         }
@@ -234,6 +245,7 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
+                'status' => $company['status'],
                 'exist' => 'true',
             ]
         );
