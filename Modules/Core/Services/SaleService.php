@@ -1100,6 +1100,7 @@ class SaleService
                     'sale.project',
                     'sale.customer',
                     'sale.plansSales.plan',
+                    'sale.tracking',
                     'sale.affiliate' => function($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     }
@@ -1115,7 +1116,10 @@ class SaleService
                                ->whereHas('productsPlansSale', function($q) {
                                     $q->doesntHave('tracking');
                                 });
-                       });
+                       })->orWhereHas('tracking', function ($queryTracking) {
+                                $presenter = (new Tracking())->present();
+                                $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
+                        });
                 });
 
             if (!empty($filters["project"])) {

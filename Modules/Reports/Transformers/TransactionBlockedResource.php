@@ -41,6 +41,8 @@ class TransactionBlockedResource extends JsonResource
 
         if($sale->status == 24) {
             $data['reason_blocked'] = 'Em disputa';
+        } elseif($sale->tracking->count()){
+            $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
         } else {
             $data['reason_blocked'] = 'Sem rastreio';
         }
