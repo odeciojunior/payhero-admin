@@ -90,6 +90,15 @@ class RegisterApiController extends Controller
             $user = $this->createUserAndAssignRole($requestData, $userModel);
             $this->createCompanyToUser($requestData, $companyModel, $user);
 
+            if ($this->verifyTokenValidate($user)) {
+                return response()->json(
+                    [
+                        'success' => 'false',
+                        'message' => 'Favor confirme seu email e/ou seu celular para podermos finalizar o cadastro.'
+                    ]
+                );
+            }
+
             if (!$this->acceptedTerms($user)) {
                 return response()->json(
                     [
@@ -115,7 +124,15 @@ class RegisterApiController extends Controller
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
             $this->sendWelcomeEmail($requestData);
 
-            \DB::commit();
+
+            if (env('APP_ENV') == 'production'){
+                return response()->json([
+                    'success' => 'false',
+                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
+                ], 202);
+            } else {
+                \DB::commit();
+            }
 
             return response()->json(
                 [
@@ -839,7 +856,24 @@ class RegisterApiController extends Controller
         );
     }
 
-    public function acceptedTerms($user = null)
+    public function verifyTokenValidate($user)
+    {
+        $userModel = new User();
+        $user = $userModel->find(3191);
+        $tokenModel = new RegistrationToken();
+        $cellphoneUser =  preg_replace("/[^0-9]/", "",$user->cellphone);
+
+        $email = ($tokenModel->where('type_data', $user->email)->pluck('validated')->first());
+        $cellphone = ($tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first());
+
+        if (empty($email) || empty($cellphone)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function acceptedTerms($user)
     {
         try {
             $userTermsModel = new UserTerms();

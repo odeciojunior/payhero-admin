@@ -22,7 +22,7 @@ class RegisterRequest extends FormRequest
             'password'          => 'required',
             'zip_code'          => 'required',
             'street'            => 'required',
-            'number'            => 'required',
+            'number'            => 'nullable',
             'complement'        => 'nullable|max:200',
             'neighborhood'      => 'required|max:200',
             'city'              => 'required',
