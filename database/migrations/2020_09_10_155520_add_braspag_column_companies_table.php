@@ -17,7 +17,7 @@ class AddBraspagColumnCompaniesTable extends Migration
             'companies',
             function (Blueprint $table) {
                 $table->unsignedInteger('braspag_status')->nullable()->after('document_number');
-                $table->char('braspag_merchant_id', 36)->nullable();
+                $table->char('braspag_merchant_id')->nullable();
             }
         );
     }

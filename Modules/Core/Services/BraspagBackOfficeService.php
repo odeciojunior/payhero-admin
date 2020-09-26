@@ -3,9 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Traits\BraspagPrepareCompanyData;
 
 /**
@@ -16,15 +14,13 @@ class BraspagBackOfficeService extends BraspagService
 {
     use BraspagPrepareCompanyData;
 
+    const HOMOLOG_MERCHANT_ID = 'eb25ce51-f685-41c5-a76a-d8ed09f373c9';
 
-    /**
-     * @var string
-     */
-    private $urlCredentialAcessToken = '/oauth2/token';
-    /**
-     * @var string
-     */
-    private $postFieldsAcessToken;
+    const HOMOLOG_CLIENT_SECRET = 'yFFWG75RNkfte0WIgRPUlnHdSAKtJ3GYnaNdH8GVVAE=';
+
+    const PRODUCTION_MERCHANT_ID = '';
+
+    const PRODUCTION_CLIENT_SECRET = '';
 
     public $authorizationToken;
 
@@ -35,17 +31,12 @@ class BraspagBackOfficeService extends BraspagService
     {
         try {
             if (FoxUtils::isProduction()) {
-                $gateway = Gateway::where("name", "braspag_production")->first();
-
+                $this->authorizationToken = base64_encode(self::PRODUCTION_MERCHANT_ID.':'.self::PRODUCTION_CLIENT_SECRET);
             } else {
-                $gateway = Gateway::where("name", "braspag_sandbox")->first();
-
+                $this->authorizationToken = base64_encode(self::HOMOLOG_MERCHANT_ID.':'.self::HOMOLOG_CLIENT_SECRET);
             }
-            $this->postFieldsAcessToken = 'braspag_type=client_credentials';
-            $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, "decrypt"), true);
-            $this->authorizationToken = base64_encode($configs['public_token'].':'.$configs['private_token']);
+            $this->setAccessToken();
 
-            $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
         } catch (Exception $e) {
             report($e);
         }
@@ -55,26 +46,16 @@ class BraspagBackOfficeService extends BraspagService
 
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getMerchantId()
     {
         if (FoxUtils::isProduction()) {
-            return env('BRASPAG_MERCHANT_ID_PRODUCTION');
+            return self::PRODUCTION_MERCHANT_ID;
         }
-
-        return env('BRASPAG_MERCHANT_ID_SANDBOX');
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getAuthorizationHeader()
-    {
-        return [
-            'authorization: Bearer '.$this->accessToken,
-            'Content-Type: application/json',
-        ];
+        else{
+            return self::HOMOLOG_MERCHANT_ID;
+        }
     }
 
     public function checkPjCompanyRegister($cnpj)

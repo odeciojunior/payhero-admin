@@ -18,27 +18,57 @@ class BraspagService
     {
     }
 
+    /**
+     * @return string
+     */
     public function getUrlApi()
     {
         if (FoxUtils::isProduction()) {
             return "https://splitonboarding.braspag.com.br/";
         }
-        return 'https://splitonboardingsandbox.braspag.com.br/';
+        else{
+            return 'https://splitonboardingsandbox.braspag.com.br/';
+        }
     }
+
+    /**
+     * @return string
+     */
+    public function getAuthApi()
+    {
+        if (FoxUtils::isProduction()) {
+            return "https://auth.braspag.com.br/";
+        }
+        else{
+            return 'https://authsandbox.braspag.com.br/';
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getAuthorizationHeader()
+    {
+        return [
+            'authorization: Bearer '.$this->accessToken,
+            'Content-Type: application/json',
+        ];
+    }
+
 
     /**
      * @param $url
      * @param $postFields
      * @throws Exception
      */
-    public function setAccessToken($url, $postFields)
+    public function setAccessToken($url = 'oauth2/token', $postFields = 'grant_type=client_credentials')
     {
         $headers = [
             'content-type: application/x-www-form-urlencoded',
             'authorization: Basic '.$this->authorizationToken,
         ];
 
-        $curl = curl_init($this->getUrlApi().$url);
+        $curl = curl_init($this->getAuthApi().$url);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);

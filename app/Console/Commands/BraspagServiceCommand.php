@@ -32,47 +32,39 @@ class BraspagServiceCommand extends Command
      */
     protected $description = 'Command description';
 
-    // /**
-    //  * Create a new command instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function __construct()
-    // {
-    //     parent::__construct();
-    // }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
 
-        //$braspagService = new BraspagService();
-        $users = User::with([
-            'companies' => function ($q) {
-                $q->where('bank_document_status', 3)
-                    ->where('address_document_status', 3)
-                    ->where('contract_document_status', 3)
-                    ->where('braspag_merchant_id', null);
-            }
-        ])->whereHas('sales', function (Builder $query) {
-            $query->whereDate('created_at', '>=', '2020-05-01');
-        })->get();
+        $braspagService = new BraspagBackOfficeService();
 
         $companyServiceBraspag = new CompanyServiceBraspag();
-        foreach ($users as $user) {
-            foreach($user->companies as $company){
 
-                if (FoxUtils::isEmpty($company->braspag_merchant_id) && !$companyServiceBraspag->verifyFieldsEmpty($company)) {
-                    $companyServiceBraspag->createCompanyBraspag($company);
-                }
 
-            }
-        }
+        //$braspagService = new BraspagService();
+        // $users = User::with([
+        //     'companies' => function ($q) {
+        //         $q->where('bank_document_status', 3)
+        //             ->where('address_document_status', 3)
+        //             ->where('contract_document_status', 3)
+        //             ->where('braspag_merchant_id', null);
+        //     }
+        // ])->whereHas('sales', function (Builder $query) {
+        //     $query->whereDate('created_at', '>=', '2020-05-01');
+        // })->get();
 
-        $this->line('Terminou!!!');
+        // $companyServiceBraspag = new CompanyServiceBraspag();
+
+        // foreach ($users as $user) {
+        //     foreach($user->companies as $company){
+
+        //         if (FoxUtils::isEmpty($company->braspag_merchant_id) && !$companyServiceBraspag->verifyFieldsEmpty($company)) {
+        //             $companyServiceBraspag->createCompanyBraspag($company);
+        //         }
+
+        //     }
+        // }
+
+        // $this->line('Terminou!!!');
     }
 }
