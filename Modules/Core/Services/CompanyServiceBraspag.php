@@ -124,24 +124,18 @@ class CompanyServiceBraspag
                 $result = $braspagService->createPjCompany($company);
             }
 
-            if (empty($result) || empty(json_decode($result)->MerchantId)) {
-                return [
-                    'message' => 'error',
-                    'data' => '',
-                ];
+            if (empty($result) || empty(json_decode(json_encode($result))->MerchantId)) {
+                throw new Exception("Erro ao cadastrar empresa {$company->fantasy_name} na braspag");
             }
 
             $company->update(
                 [
-                    'braspag_merchant_id' => json_decode($result)->MerchantId,
-                    'braspag_status' => $company->present()->getStatusBraspag(json_decode($result)->Analysis->Status),
+                    'braspag_merchant_id' => json_decode(json_encode($result))->MerchantId,
+                    'braspag_status' => $company->present()->getStatusBraspag(json_decode(json_encode($result))->Analysis->Status) ?? '',
                 ]
             );
 
-            return [
-                'message' => 'success',
-                'data' => '',
-            ];
+            return true;
         } catch (Exception $e) {
             report($e);
 

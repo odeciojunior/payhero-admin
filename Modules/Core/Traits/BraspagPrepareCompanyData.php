@@ -26,7 +26,7 @@ trait BraspagPrepareCompanyData
         return [
             'CorporateName' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'FancyName' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'DocumentNumber' => $company->company_document,
+            'DocumentNumber' => FoxUtils::onlyNumbers($company->company_document),
             'DocumentType' => 'CPF',
             'MerchantCategoryCode'=> '5719',
             'ContactName' => $user->name,
@@ -37,23 +37,23 @@ trait BraspagPrepareCompanyData
                 'Bank' => $company->bank,
                 'BankAccountType' => $company->present()->getAccountType() == 'C' ? 'CheckingAccount' : 'SavingsAccount',
                 'Number' => $company->account,
-                'Operation' => '',
-                'VerifierDigit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
+                // 'Operation' => '',
+                'VerifierDigit' => empty($company->account_digit) ? 'x' : $company->account_digit,
                 'AgencyNumber' =>$company->agency,
-                'AgencyDigit' => FoxUtils::isEmpty($company->braspaagency_digitg_merchant_id) ? 'x' : $company->account_digit,
+                'AgencyDigit' => empty($company->agency_digit) ? 'x' : $company->agency_digit,
                 'DocumentNumber' => $company->company_document,
                 'DocumentType' => 'CPF'
             ],
             'Address' => [
-                'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'Number' => $company->number ?? '',
-                'Complement' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
+                'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->street)),
+                'Number' => $user->number ?? '',
+                'Complement' => empty($user->complement) ? '' : FoxUtils::removeAccents(
+                    FoxUtils::removeSpecialChars($user->complement)
                 ),
-                'Neighborhood' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-                'City' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                'State' => $company->state,
-                'ZipCode' => FoxUtils::onlyNumbers($company->zip_code)
+                'Neighborhood' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->neighborhood)),
+                'City' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->city)),
+                'State' => $user->state,
+                'ZipCode' => FoxUtils::onlyNumbers($user->zip_code)
             ],
             'Agreement' => [
                 'Fee' => 100,
@@ -108,7 +108,7 @@ trait BraspagPrepareCompanyData
                 'Bank' => $company->bank,
                 'BankAccountType' => $company->present()->getAccountType() == 'C' ? 'CheckingAccount' : 'SavingsAccount',
                 'Number' => $company->account,
-                'Operation' => '',
+                // 'Operation' => '', o que é operation ??
                 'VerifierDigit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 'AgencyNumber' =>$company->agency,
                 'AgencyDigit' => FoxUtils::isEmpty($company->braspaagency_digitg_merchant_id) ? 'x' : $company->account_digit,

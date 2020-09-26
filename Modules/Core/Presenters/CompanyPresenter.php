@@ -359,7 +359,7 @@ class CompanyPresenter extends Presenter
                 case 3:
                     return 'Rejected';
                 case 4:
-                    return 'UnderAnalysis';
+                    return 'Under analysis';
             }
 
             return '';
@@ -371,7 +371,7 @@ class CompanyPresenter extends Presenter
                     return 2;
                 case 'Rejected':
                     return 3;
-                case 'UnderAnalysis':
+                case 'Under analysis':
                     return 4;
             }
 

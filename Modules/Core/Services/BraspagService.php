@@ -104,7 +104,8 @@ class BraspagService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        $this->saveRequests($url, $result, $httpStatus, $data, $companyId);
+        $this->saveRequests($this->getUrlApi().$url, json_decode($result), $httpStatus, $data, $companyId);
+
         return $result;
     }
 
