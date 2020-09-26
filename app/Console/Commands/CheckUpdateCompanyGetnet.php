@@ -5,17 +5,16 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
-class UpdateCompanyGetnet extends Command
+class CheckUpdateCompanyGetnet extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:updateCompanyGetnet';
+    protected $signature = 'command:checkUpdateCompanyGetnet';
 
     /**
      * The console command description.
@@ -51,7 +50,7 @@ class UpdateCompanyGetnet extends Command
 
                 $result = json_decode($result);
 
-                if (!empty($result) && $company->subseller_getnet_id == $result->subseller_id) {
+                if (!empty($result) && !empty($result->subseller_id) && $company->subseller_getnet_id == $result->subseller_id) {
                     if ($result->enabled == 'S' && $result->status == 'Aprovado Transacionar' && $result->capture_payments_enabled == 'S') {
                         $company->update([
                             'get_net_status' => 4 // approved

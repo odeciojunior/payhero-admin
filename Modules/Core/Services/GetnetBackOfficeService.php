@@ -3,7 +3,6 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
@@ -15,38 +14,22 @@ class GetnetBackOfficeService extends GetnetService
 {
     use GetnetPrepareCompanyData;
 
-    /**
-     * @var string
-     */
-    private $urlCredentialAcessToken = 'credenciamento/auth/oauth/v2/token';
-    /**
-     * @var string
-     */
-    private $postFieldsAcessToken;
+    private $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
+
+    public $postFieldsAccessToken;
 
     public $authorizationToken;
 
-    /**
-     * GetnetBackOfficeService constructor.
-     */
+    private $sellerId;
+
     public function __construct()
     {
         try {
-            if (FoxUtils::isProduction()) {
-                $this->authorizationToken = base64_encode(
-                    getenv('GET_NET_CLIENT_ID_PRODUCTION').':'.getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
-                );
+            $this->setAuthorizationToken();
 
-                $this->postFieldsAcessToken = 'scope=oob&grant_type=client_credentials';
-            } else {
-                $this->authorizationToken = base64_encode(
-                    getenv('GET_NET_CLIENT_ID_SANDBOX').':'.getenv('GET_NET_CLIENT_SECRET_SANDBOX')
-                );
+            $this->setAccessToken($this->urlCredentialAccessToken, $this->postFieldsAccessToken);
 
-                $this->postFieldsAcessToken = 'scope=mgm&grant_type=client_credentials';
-            }
-
-            $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
+            $this->setSellerId();
         } catch (Exception $e) {
             report($e);
         }
@@ -54,10 +37,23 @@ class GetnetBackOfficeService extends GetnetService
         parent::__construct();
     }
 
+    private function setAuthorizationToken()
+    {
+        if (FoxUtils::isProduction()) {
+            $this->authorizationToken = base64_encode(
+                getenv('GET_NET_CLIENT_ID_PRODUCTION').':'.getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
+            );
 
-    /**
-     * @return mixed
-     */
+            $this->postFieldsAccessToken = 'scope=oob&grant_type=client_credentials';
+        } else {
+            $this->authorizationToken = base64_encode(
+                getenv('GET_NET_CLIENT_ID_SANDBOX').':'.getenv('GET_NET_CLIENT_SECRET_SANDBOX')
+            );
+
+            $this->postFieldsAccessToken = 'scope=mgm&grant_type=client_credentials';
+        }
+    }
+
     public function getMerchantId()
     {
         if (FoxUtils::isProduction()) {
@@ -67,15 +63,21 @@ class GetnetBackOfficeService extends GetnetService
         return env('GET_NET_MERCHANT_ID_SANDBOX');
     }
 
-    /**
-     * @return string[]
-     */
     public function getAuthorizationHeader()
     {
         return [
             'authorization: Bearer '.$this->accessToken,
             'Content-Type: application/json',
         ];
+    }
+
+    public function setSellerId()
+    {
+        if (FoxUtils::isProduction()) {
+            $this->sellerId = getenv('GET_NET_SELLER_ID_PRODUCTION');
+        } else {
+            $this->sellerId = getenv('GET_NET_SELLER_ID_SANDBOX');
+        }
     }
 
     /**
@@ -87,14 +89,8 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatement($subsellerId = null, $pagination = null)
     {
-        if (FoxUtils::isProduction()) {
-            $sellerId = getenv('GET_NET_SELLER_ID_PRODUCTION');
-        } else {
-            $sellerId = getenv('GET_NET_SELLER_ID_SANDBOX');
-        }
-
         $queryParameters = [
-            'seller_id' => $sellerId,
+            'seller_id' => $this->sellerId,
             'transaction_date_init' => '2020-06-01',
             'transaction_date_end' => '2020-07-10'
         ];
@@ -117,7 +113,7 @@ class GetnetBackOfficeService extends GetnetService
     {
         $url = 'v1/mgm/pf/callback/'.$this->getMerchantId().'/'.$cpf;
 
-        return $this->sendCurl($url, 'GET',null,  $companyId);
+        return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPf()
@@ -176,7 +172,7 @@ class GetnetBackOfficeService extends GetnetService
     {
         $url = 'v1/mgm/pj/callback/'.$this->getMerchantId().'/'.$cnpj;
 
-        return $this->sendCurl($url, 'GET',null,  $companyId);
+        return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPj()

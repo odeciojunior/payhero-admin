@@ -1442,38 +1442,43 @@ class ShopifyService
             ];
         }
 
-        $address = $delivery->street . ' - ' . $delivery->number;
-        if ($delivery->complement != '') {
-            $address .= ' - ' . $delivery->complement;
-        }
-        $address .= ' - ' . $delivery->neighborhood;
+        $address = "-";
+        $shippingAddress = [];
+        if( !empty($delivery)) {
+            $address = $delivery->street . ' - ' . $delivery->number;
 
-        $shippingAddress = [
-            "address1"      => $address,
-            "address2"      => "",
-            "city"          => $delivery->city,
-            "company"       => $client->document,
-            "country"       => "Brasil",
-            "first_name"    => $delivery->present()->getReceiverFirstName(),
-            "last_name"     => $delivery->present()->getReceiverLastName(),
-            "phone"         => $client->present()->getTelephoneShopify(),
-            "province"      => $delivery->state,
-            "zip"           => FoxUtils::formatCEP($delivery->zip_code),
-            "name"          => $client->name,
-            "country_code"  => "BR",
-            "province_code" => $delivery->state,
-        ];
+            if (!empty($delivery->complement)) {
+                $address .= ' - ' . $delivery->complement;
+            }
+            $address .= ' - ' . $delivery->neighborhood;
+
+            $shippingAddress = [
+                "address1"      => $address,
+                "address2"      => "",
+                "city"          => $delivery->city ?? "-",
+                "company"       => $client->document,
+                "country"       => "Brasil",
+                "first_name"    => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+                "last_name"     => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
+                "phone"         => $client->present()->getTelephoneShopify(),
+                "province"      => $delivery->state ?? "-",
+                "zip"           => empty($delivery) ? "-" : FoxUtilsService::formatCEP($delivery->zip_code),
+                "name"          => $client->name,
+                "country_code"  => "BR",
+                "province_code" => $delivery->state ?? "-",
+            ];
+        }
 
         // Endereço de Faturamento
         $billingAddress = [
-            "first_name" => $delivery->present()->getReceiverFirstName(),
-            "last_name"  => $delivery->present()->getReceiverLastName(),
+            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+            "last_name"  => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
             "address1"   => $address,
             "phone"      => $client->present()->getTelephoneShopify(),
-            "city"       => $delivery->city,
-            "province"   => $delivery->state,
+            "city"       => $delivery->city ?? "-",
+            "province"   => $delivery->state ?? "-",
             "country"    => "Brasil",
-            "zip"        => FoxUtils::formatCEP($delivery->zip_code),
+            "zip"        => empty($delivery) ? "-" : FoxUtilsService::formatCEP($delivery->zip_code),
         ];
 
         $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
@@ -1494,8 +1499,8 @@ class ShopifyService
             "currency"                => "BRL",
             "email"                   => $client->email,
             "phone"                   => $client->present()->getTelephoneShopify(),
-            "first_name"              => $delivery->present()->getReceiverFirstName(),
-            "last_name"               => $delivery->present()->getReceiverLastName(),
+            "first_name"              => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+            "last_name"               => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
             "buyer_accepts_marketing" => false,
             "line_items"              => $items,
             "shipping_address"        => $shippingAddress,

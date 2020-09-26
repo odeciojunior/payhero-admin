@@ -5,6 +5,32 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <style>
+            .select2-selection--single {
+                border: 1px solid #dddddd !important;
+                border-radius: .215rem !important;
+                height: 43px !important;
+            }
+            .select2-selection__rendered {
+                color: #707070 !important;
+                font-size: 16px !important;
+                font-family: 'Muli', sans-serif;
+                line-height: 43px !important;
+                padding-left: 14px !important;
+                padding-right: 38px !important;
+            }
+            .select2-selection__arrow {
+                height: 43px !important;
+                right: 10px !important;
+            }
+            .select2-selection__arrow b {
+                border-color: #8f9ca2 transparent transparent transparent !important;
+            }
+            .select2-container--open .select2-selection__arrow b {
+                border-color: transparent transparent #8f9ca2 transparent !important;
+            }
+        </style>
     @endpush
 
     <!-- Page -->
@@ -35,16 +61,23 @@
             <div id='project-not-empty' style='display:none'>
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
-                            <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad"> </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
+
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="3">Cartão Recusado</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label for="project">Projeto</label>
+                            <select name='select_project' id="project" class="form-control select-pad"> </select>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label for="plan">Plano</label>
+                            <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                <option value="">Todos planos</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -55,7 +88,12 @@
                             <label for="client-name">Nome do Cliente</label>
                             <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12 text-right">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label for="client-cpf">CPF do Cliente</label>
+                            <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
+                        </div>
+                        <div class='col-3'></div>
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right">
                             <label></label>
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top:7px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
@@ -294,9 +332,10 @@
     <!-- End Modal -->
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=5') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=6') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush
 

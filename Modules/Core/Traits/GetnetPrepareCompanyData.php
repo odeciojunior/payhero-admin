@@ -220,6 +220,38 @@ trait GetnetPrepareCompanyData
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
+        $stateFiscal = [
+            'SERVIÇO É ISENTO',
+            'SEM INSCRIÇÃO',
+            'INSENTO',
+            'n/e',
+            'Não Possui',
+            'Nao possui',
+            'nao possui',
+            'não possui',
+            'não se aplica',
+            'nao tem',
+            'Não tem',
+            'não',
+            '00000000',
+            '000000000000',
+            '000',
+            'ISENTO',
+            'isento',
+            'Isento',
+            'Insento',
+            'Isenta',
+            'Não Contribuinte'
+        ];
+
+        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 4
+            || in_array($company->state_fiscal_document_number, $stateFiscal)
+        ) {
+            $stateFiscalNumber = 'ISENTO';
+        } else {
+            $stateFiscalNumber = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
+        }
+
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
@@ -242,7 +274,7 @@ trait GetnetPrepareCompanyData
             'economic_activity_classification_code' => FoxUtils::onlyNumbers(
                 $company->economic_activity_classification_code
             ),
-            'state_fiscal_document_number' => $company->state_fiscal_document_number,
+            'state_fiscal_document_number' => $stateFiscalNumber,
             'federal_registration_status' => 'active',
             'email' => $company->support_email,
             'business_address' => [

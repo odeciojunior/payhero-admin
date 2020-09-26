@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\FoxUtils;
+use Modules\Reports\Transformers\PendingBalanceResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\UserProject;
@@ -120,11 +121,11 @@ class ReportsApiController extends Controller
                     $salesDetails->whereBetween('start_date',
                         [$requestStartDate.' 00:00:00', $requestEndDate.' 23:59:59']);
                 }
-//                $salesDetails->where(function ($q1) {
-//                    $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
-//                        $querySaleLog->whereIn('status_enum', collect([20, 7]));
-//                    })->orWhere('sales.status', '<>', 4);
-//                });
+                $salesDetails->where(function ($q1) {
+                    $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
+                        $querySaleLog->whereIn('status_enum', collect([20, 7]));
+                    })->orWhere('sales.status', '<>', 4);
+                });
                 $details = $salesDetails->first();
                 $contSales = $details->contSales;
                 $countSalesAproved = $details->contSalesAproved;
@@ -697,6 +698,50 @@ class ReportsApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function pendingBalance(Request $request)
+    {
+        try {
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela saldo pendente');
+
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $sales = $saleService->getPendingBalance($data);
+
+            return PendingBalanceResource::collection($sales);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar saldo pendente ReportsApiController - pendingBalance');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
+        }
+    }
+
+    public function resumePendingBalance (Request $request)
+    {
+        try {
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $resume = $saleService->getResumePending($data);
+
+            return response()->json($resume);
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir resumo dos saldos pendete ReportsApiController - resumePendingBalance');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
+        }
+    }
+
     public function blockedBalance(Request $request)
     {
         try {
@@ -722,7 +767,6 @@ class ReportsApiController extends Controller
     public function resumeBlockedBalance(Request $request)
     {
         try {
-
             $saleService = new SaleService();
 
             $data = $request->all();
