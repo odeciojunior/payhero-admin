@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Traits;
 
+use Exception;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\FoxUtils;
@@ -35,18 +37,8 @@ trait BraspagPrepareCompanyData
             'Address' => $address,
             'BankAccount' => $this->getBankData($company),
             'Agreement' => [
-                'Fee' => 100,
-                'MerchantDiscountRates' => [
-                    [
-                        'PaymentArrangement' => [
-                            'Product' => 'DebitCard',
-                            'Brand' => 'Master'
-                        ],
-                        'InitialInstallmentNumber' => 1,
-                        'FinalInstallmentNumber' => 1,
-                        'Percent' => 6.5
-                    ],
-                ],
+                "Fee" => 100,
+                "MdrPercentage" => $user->credit_card_tax,
             ],
             'Notification' => [
                 'Url' => 'https://app.cloudfox.net/postback/braspag',
@@ -57,26 +49,50 @@ trait BraspagPrepareCompanyData
                     ],
                 ],
             ],
-            'Attachments' => $this->getAttachments($company)
+            'Attachments' => [$this->getAttachments($company)]
         ];
     }
 
     private function getAttachments($company)
     {
-        $document = CompanyDocument::where('company_id', $company->id)
-            ->where('bank_document_status', 3)
-            ->latest()
-            ->fisrt();
-        
-        $imageBin = base64_encode($document->document_url);
-        return [
-            "AttachmentType" => "ProofOfBankDomicile",
-            "File" => [
-                "Name" => "comprovante",
-                "FileType" => "png",
-                "Data" => ''
-            ]
-        ];
+        try {
+            $document = CompanyDocument::where('company_id', $company->id)
+                ->where('document_type_enum', 1)
+                ->where('status', 3)
+                ->latest()
+                ->first();
+
+            $documentUrl = explode('https://cloudfox.nyc3.digitaloceanspaces.com/', $document->document_url);
+
+            $fileExists = Storage::disk('openSpaces')->exists($documentUrl[1]);
+
+            if (!$fileExists) {
+                $fileExists = Storage::disk('downloadSpaces')->exists($documentUrl[1]);
+
+                if (!$fileExists) {
+                    return [];
+                }
+
+                $typeFile = explode('.', $documentUrl[1]);
+                $file = Storage::disk('downloadSpaces')->download($documentUrl[1]);
+            } else {
+                $typeFile = explode('.', $documentUrl[1]);
+                $file = Storage::disk('openSpaces')->download($documentUrl[1]);
+            }
+
+
+            $imageBin = base64_encode($file);
+            return [
+                "AttachmentType" => "ProofOfBankDomicile",
+                "File" => [
+                    "Name" => "Comprovante bancario",
+                    "FileType" => $typeFile[1],
+                    "Data" => $imageBin
+                ]
+            ];
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     private function getBankData($company)
