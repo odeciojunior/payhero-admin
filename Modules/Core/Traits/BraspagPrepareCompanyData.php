@@ -7,22 +7,21 @@ use Modules\Core\Services\FoxUtils;
 
 trait BraspagPrepareCompanyData
 {
-    private function getPrepareDateCreateCompany(Company $company)
+    public function getPrepareDateCreateCompany(Company $company)
     {
         $user = $company->user;
 
         if ($company->company_type == $company->present()->getCompanyType('physical person')) {
-            $address = $this->getAddressPfCompanyBraspag($user);
+            $address = $this->getAddressCompanyBraspag($user);
             $documentType = 'Cpf';
         } else {
-            $address = $this->getAddressPjCompanyBraspag($company);
+            $address = $this->getAddressCompanyBraspag($company);
             $documentType = 'Cnpj';
         }
 
-
         return [
             'CorporateName' => FoxUtils::getPortionOfString(
-                FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)), 0,100),
+                FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)), 0, 100),
             'FancyName' => FoxUtils::getPortionOfString(
                 FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)), 0, 50),
             'DocumentType' => $documentType,
@@ -33,16 +32,7 @@ trait BraspagPrepareCompanyData
             'MailAddress' => FoxUtils::getPortionOfString($user->email, 0, 50),
             'Website' => $company->business_website ?? null,
             'Address' => $address,
-            'BankAccount' => [
-                'Bank' => $company->bank,
-                'BankAccountType' => $company->present()->getAccountType() == 'C' ? 'CheckingAccount' : 'SavingsAccount',
-                'Number' => $company->account,
-                'VerifierDigit' => empty($company->account_digit) ? 'x' : $company->account_digit,
-                'AgencyNumber' => $company->agency,
-                'AgencyDigit' => empty($company->agency_digit) ? 'x' : $company->agency_digit,
-                'DocumentNumber' => $company->company_document,
-                'DocumentType' => $company->company_type == 1 ? 'Cpf' : 'Cnpj',
-            ],
+            'BankAccount' => $this->getBankData($company),
             'Agreement' => [
                 'Fee' => 100,
                 'MerchantDiscountRates' => [
@@ -69,31 +59,44 @@ trait BraspagPrepareCompanyData
         ];
     }
 
-    private function getAddressPfCompanyBraspag($user){
+    private function getBankData($company)
+    {
+        switch ($company->agency_digit) {
+            case 'x':
+            case 'X':
+            case '-':
+            case '':
+            case null:
+                $agencyDigit = 'x';
+                break;
+            default:
+                $agencyDigit = $company->agency_digit;
+        }
+
         return [
-            'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->street)),
-            'Number' => $user->number ?? '',
-            'Complement' => empty($user->complement) ? '' : FoxUtils::removeAccents(
-                FoxUtils::removeSpecialChars($user->complement)
-            ),
-            'Neighborhood' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->neighborhood)),
-            'City' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->city)),
-            'State' => $user->state,
-            'ZipCode' => FoxUtils::onlyNumbers($user->zip_code)
+            'Bank' => $company->bank,
+            'BankAccountType' => $company->present()->getAccountType() == 'C' ? 'CheckingAccount' : 'SavingsAccount',
+            'Number' => $company->account,
+            'VerifierDigit' => empty($company->account_digit) ? 'x' : $company->account_digit,
+            'AgencyNumber' => $company->agency,
+            'AgencyDigit' => $agencyDigit,
+            'DocumentNumber' => FoxUtils::onlyNumbers($company->company_document),
+            'DocumentType' => $company->company_type == 1 ? 'Cpf' : 'Cnpj',
         ];
     }
 
-    private function getAddressPjCompanyBraspag($company){
+    private function getAddressCompanyBraspag($model)
+    {
         return [
-            'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-            'Number' => $company->number ?? '',
-            'Complement' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                FoxUtils::removeSpecialChars($company->complement)
+            'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($model->street)),
+            'Number' => $model->number ?? '',
+            'Complement' => empty($model->complement) ? '' : FoxUtils::removeAccents(
+                FoxUtils::removeSpecialChars($model->complement)
             ),
-            'Neighborhood' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-            'City' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-            'State' => $company->state,
-            'ZipCode' => FoxUtils::onlyNumbers($company->zip_code)
+            'Neighborhood' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($model->neighborhood)),
+            'City' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($model->city)),
+            'State' => FoxUtils::getFormatState($model->state),
+            'ZipCode' => FoxUtils::onlyNumbers($model->zip_code)
         ];
     }
 }

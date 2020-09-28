@@ -14,29 +14,19 @@ class BraspagBackOfficeService extends BraspagService
 {
     use BraspagPrepareCompanyData;
 
-    const HOMOLOG_MERCHANT_ID = 'eb25ce51-f685-41c5-a76a-d8ed09f373c9';
+    public $merchantId;
 
-    const HOMOLOG_CLIENT_SECRET = 'yFFWG75RNkfte0WIgRPUlnHdSAKtJ3GYnaNdH8GVVAE=';
-
-    const PRODUCTION_MERCHANT_ID = '';
-
-    const PRODUCTION_CLIENT_SECRET = '';
+    public $clientSecret;
 
     public $authorizationToken;
 
-    /**
-     * GetnetBackOfficeService constructor.
-     */
+    public $dataCreateCompany = null;
+
     public function __construct()
     {
         try {
-            if (FoxUtils::isProduction()) {
-                $this->authorizationToken = base64_encode(self::PRODUCTION_MERCHANT_ID.':'.self::PRODUCTION_CLIENT_SECRET);
-            } else {
-                $this->authorizationToken = base64_encode(self::HOMOLOG_MERCHANT_ID.':'.self::HOMOLOG_CLIENT_SECRET);
-            }
+            $this->setCredentials();
             $this->setAccessToken();
-
         } catch (Exception $e) {
             report($e);
         }
@@ -44,23 +34,22 @@ class BraspagBackOfficeService extends BraspagService
         parent::__construct();
     }
 
-
-    /**
-     * @return string
-     */
-    public function getMerchantId()
+    public function setCredentials()
     {
         if (FoxUtils::isProduction()) {
-            return self::PRODUCTION_MERCHANT_ID;
+            $this->merchantId = getenv('BRASPAG_PRODUCTION_MERCHANT_ID');
+            $this->clientSecret = getenv('BRASPAG_PRODUCTION_CLIENT_SECRET');
+        } else {
+            $this->merchantId = getenv('BRASPAG_HOMOLOG_MERCHANT_ID');
+            $this->clientSecret = getenv('BRASPAG_HOMOLOG_CLIENT_SECRET');
         }
-        else{
-            return self::HOMOLOG_MERCHANT_ID;
-        }
+
+        $this->authorizationToken = base64_encode($this->merchantId.':'.$this->clientSecret);
     }
 
     public function checkPjCompanyRegister($cnpj)
     {
-        $url = 'api/subordinates/'.$this->getMerchantId();
+        $url = 'api/subordinates/'.$this->merchantId;
 
         return $this->sendCurl($url, 'GET');
     }
@@ -78,9 +67,6 @@ class BraspagBackOfficeService extends BraspagService
         $url = 'api/subordinates';
         $data = $this->getPrepareDateCreateCompany($company);
 
-        return $this->sendCurl($url, 'POST', $data,$company->id);
+        return $this->sendCurl($url, 'POST', $data, $company->id);
     }
-
-
-
 }

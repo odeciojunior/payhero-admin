@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\User;
 
 //use Modules\Core\Services\AwsSns;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CompanyServiceBraspag;
 
 //CompanyService;
@@ -47,7 +48,8 @@ class BraspagServiceCommand extends Command
                 $q->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
                     ->where('contract_document_status', 3)
-                    ->where('braspag_merchant_id', null);
+                    ->where('braspag_merchant_id', null)
+                    ->where('braspag_merchant_homolog_id', null);
             }
         ])->whereHas('sales', function (Builder $query) {
             $query->whereDate('created_at', '>=', '2020-05-01');
@@ -60,7 +62,7 @@ class BraspagServiceCommand extends Command
                 $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
 
                 if ((FoxUtils::isEmpty($company->braspag_merchant_id) || FoxUtils::isEmpty($company->braspag_merchant_homoloh_id))
-                    && !$companyServiceBraspag->verifyFieldsEmpty($company)
+                    && !(new CompanyService())->verifyFieldsEmpty($company)
                 ) {
                     $companyServiceBraspag->createCompanyBraspag($company);
                 }
