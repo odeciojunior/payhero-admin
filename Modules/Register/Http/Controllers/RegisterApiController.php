@@ -224,8 +224,6 @@ class RegisterApiController extends Controller
         if (empty($company)) {
             return response()->json(
                 [
-                    'cnpj_exist' => 'false',
-                    'status' => 'ERROR',
                     'message' => 'CNPJ inválido',
                 ], 403
             );
@@ -234,8 +232,6 @@ class RegisterApiController extends Controller
         if ($company['status'] != 'OK') {
             return response()->json(
                 [
-                    'cnpj_exist' => 'false',
-                    'status' => $company['status'],
                     'message' => 'CNPJ rejeitado pela Receita Federal',
                 ], 403
             );
@@ -245,9 +241,7 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
-                'status' => $company['status'],
-                'exist' => 'true',
-            ]
+            ], 200
         );
 
     }
@@ -630,7 +624,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToEmail->number_wrong_attempts) . ' tentativas.',
+                        'message' => 'O código informado está errado, você tem mais ' . (4 - $existCodeToEmail->number_wrong_attempts) . ' tentativas.',
                     ],
                     400
                 );
@@ -750,7 +744,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToPhone->number_wrong_attempts) . ' tentativas.',
+                        'message' => 'O código informado está errado, você tem mais ' . (4 - $existCodeToPhone->number_wrong_attempts) . ' tentativas.',
                     ],
                     400
                 );
