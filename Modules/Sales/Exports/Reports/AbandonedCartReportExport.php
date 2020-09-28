@@ -58,6 +58,20 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $abandonedCarts->where('client_name', 'like', '%' . $this->filters['client'] . '%');
         }
 
+        if (!empty($this->filters['client_document'])) {
+            $document = $this->filters['client_document'];
+            $abandonedCarts->whereHas('logs', function($query) use ($document) {
+                $query->where('document', $document);
+            });
+        }
+
+        if (!empty($this->filters['plan'])) {
+            $planId = current(Hashids::decode($this->filters['plan']));
+            $abandonedCarts->whereHas('checkoutPlans', function($query) use ($planId) {
+                $query->where('plan_id', $planId);
+            });
+        }
+
         if (!empty($startDate) && !empty($endDate)) {
             $abandonedCarts->whereBetween('checkouts.created_at', [$startDate, $endDate]);
         } else {

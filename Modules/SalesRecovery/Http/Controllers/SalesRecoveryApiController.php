@@ -135,6 +135,16 @@ class SalesRecoveryApiController extends Controller
                 $client = $data['client'];
             }
 
+            $clientDocument = null;
+            if (!empty($data['client_document'])) {
+                $clientDocument = $data['client_document'];
+            }
+
+            $plan = null;
+            if (!empty($data['plan'])) {
+                $plan = $data['plan'];
+            }
+
             $dateStart = null;
             $dateEnd   = null;
 
@@ -147,7 +157,7 @@ class SalesRecoveryApiController extends Controller
             $paymentMethod = 1;
             $status        = [3];
 
-            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client);
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client, $clientDocument, $plan);
 
             return SalesRecoveryCardRefusedResource::collection($sales);
         } catch (Exception $e) {
@@ -175,6 +185,16 @@ class SalesRecoveryApiController extends Controller
             $client = $data['client'];
         }
 
+        $clientDocument = null;
+        if (!empty($data['client_document'])) {
+            $clientDocument = $data['client_document'];
+        }
+
+        $plan = null;
+        if (!empty($data['plan'])) {
+            $plan = $data['plan'];
+        }
+
         $dateStart = null;
         $dateEnd   = null;
 
@@ -187,7 +207,7 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = 2;
         $status        = [5];
 
-        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client);
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client, $clientDocument, $plan);
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
@@ -310,11 +330,12 @@ class SalesRecoveryApiController extends Controller
                                     ], 400);
         }
     }
+
     public function export(Request $request)
     {
         try {
             $dataRequest = $request->all();
-            $user = auth()->user();
+            $user        = auth()->user();
 
             if ($dataRequest['status'] == 1) {
                 $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
@@ -329,7 +350,6 @@ class SalesRecoveryApiController extends Controller
 
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             }
-
 
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
