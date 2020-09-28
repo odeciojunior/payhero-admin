@@ -50,7 +50,7 @@ class CheckUpdateCompanyGetnet extends Command
 
                 $result = json_decode($result);
 
-                if (!empty($result) && $company->subseller_getnet_id == $result->subseller_id) {
+                if (!empty($result) && !empty($result->subseller_id) && $company->subseller_getnet_id == $result->subseller_id) {
                     if ($result->enabled == 'S' && $result->status == 'Aprovado Transacionar' && $result->capture_payments_enabled == 'S') {
                         $company->update([
                             'get_net_status' => 4 // approved
