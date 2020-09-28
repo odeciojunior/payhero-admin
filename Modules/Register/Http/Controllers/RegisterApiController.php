@@ -104,7 +104,7 @@ class RegisterApiController extends Controller
                     [
                         'success' => 'false',
                         'message' => 'Ocorreu um erro, tente novamente!'
-                    ] , 400
+                    ], 400
                 );
             }
 
@@ -125,7 +125,7 @@ class RegisterApiController extends Controller
             $this->sendWelcomeEmail($requestData);
 
 
-            if (env('APP_ENV') == 'production'){
+            if (env('APP_ENV') == 'production') {
                 return response()->json([
                     'success' => 'false',
                     'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
@@ -217,7 +217,7 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
-        $requestData = current(preg_replace('/[^0-9]/', '',$request->validated()));
+        $requestData = current(preg_replace('/[^0-9]/', '', $request->validated()));
         $companyService = new CompanyService();
         $company = $companyService->getNameCompanyByApiCNPJ($requestData);
 
@@ -477,6 +477,18 @@ class RegisterApiController extends Controller
         $email = $data["email"];
 
         $verifyIfExistCode = RegistrationToken::where('type', 'email')->where('type_data', $email)->first();
+
+        if ($verifyIfExistCode && $verifyIfExistCode->validated) {
+
+            return response()->json(
+                [
+                    "message" => "Email já se encontra validado",
+                ],
+                409
+            );
+
+        }
+
         $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
         if ($verifyIfExistCode) {
@@ -666,7 +678,19 @@ class RegisterApiController extends Controller
             $cellphone = $data["cellphone"];
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
-            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->first();
+            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->orderByDesc('id')->first();
+
+            if ($verifyIfExistCode && $verifyIfExistCode->validated) {
+
+                return response()->json(
+                    [
+                        "message" => "telefone já se encontra validado",
+                    ],
+                    409
+                );
+
+            }
+
             $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
             if ($verifyIfExistCode) {
@@ -881,7 +905,7 @@ class RegisterApiController extends Controller
         $userModel = new User();
         $user = $userModel->find(3191);
         $tokenModel = new RegistrationToken();
-        $cellphoneUser =  preg_replace("/[^0-9]/", "",$user->cellphone);
+        $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
         $email = ($tokenModel->where('type_data', $user->email)->pluck('validated')->first());
         $cellphone = ($tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first());
