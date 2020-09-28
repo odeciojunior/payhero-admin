@@ -3,6 +3,7 @@
 namespace Modules\Core\Traits;
 
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\FoxUtils;
 
 trait BraspagPrepareCompanyData
@@ -55,6 +56,25 @@ trait BraspagPrepareCompanyData
                         'Value' => '729b6ae8730a46d9b63ee288e22ead44'
                     ],
                 ],
+            ],
+            'Attachments' => $this->getAttachments($company)
+        ];
+    }
+
+    private function getAttachments($company)
+    {
+        $document = CompanyDocument::where('company_id', $company->id)
+            ->where('bank_document_status', 3)
+            ->latest()
+            ->fisrt();
+        
+        $imageBin = base64_encode($document->document_url);
+        return [
+            "AttachmentType" => "ProofOfBankDomicile",
+            "File" => [
+                "Name" => "comprovante",
+                "FileType" => "png",
+                "Data" => ''
             ]
         ];
     }
