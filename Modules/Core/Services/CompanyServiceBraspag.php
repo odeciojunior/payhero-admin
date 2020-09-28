@@ -128,12 +128,23 @@ class CompanyServiceBraspag
                 throw new Exception("Erro ao cadastrar empresa {$company->fantasy_name} na braspag");
             }
 
-            $company->update(
-                [
-                    'braspag_merchant_id' => json_decode(json_encode($result))->MerchantId,
-                    'braspag_status' => $company->present()->getStatusBraspag(json_decode(json_encode($result))->Analysis->Status) ?? '',
-                ]
-            );
+
+            if (FoxUtils::isProduction()) {
+                $company->update(
+                    [
+                        'braspag_merchant_id' => json_decode(json_encode($result))->MerchantId,
+                        'braspag_status' => $company->present()->getStatusBraspag(json_decode(json_encode($result))->Analysis->Status) ?? '',
+                    ]
+                );
+            }else{
+                $company->update(
+                    [
+                        'braspag_merchant_homolog_id' => json_decode(json_encode($result))->MerchantId,
+                        'braspag_status' => $company->present()->getStatusBraspag(json_decode(json_encode($result))->Analysis->Status) ?? '',
+                    ]
+                );
+            }
+
 
             return true;
         } catch (Exception $e) {

@@ -68,7 +68,7 @@ class BraspagBackOfficeService extends BraspagService
     public function createPfCompany(Company $company)
     {
         $url = 'api/subordinates';
-        $data = $this->getPrepareDataCreatePfCompany($company);
+        $data = $this->getPrepareDateCreateCompany($company);
 
         return $this->sendCurl($url, 'POST', $data, $company->id);
     }
@@ -76,7 +76,7 @@ class BraspagBackOfficeService extends BraspagService
     public function createPjCompany(Company $company)
     {
         $url = 'api/subordinates';
-        $data = $this->getPrepareDataCreatePjCompany($company);
+        $data = $this->getPrepareDateCreateCompany($company);
 
         return $this->sendCurl($url, 'POST', $data,$company->id);
     }

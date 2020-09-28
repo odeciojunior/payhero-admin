@@ -143,6 +143,7 @@ class Company extends Model
         'updated_at',
         'braspag_status',
         'braspag_merchant_id ',
+        'braspag_merchant_homolog_id'
     ];
     /**
      * @var bool

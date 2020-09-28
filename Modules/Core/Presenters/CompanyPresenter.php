@@ -6,21 +6,10 @@ use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 
-/**
- * Class CompanyPresenter
- * @package Modules\Core\Presenters
- */
 class CompanyPresenter extends Presenter
 {
-    /**
-     * @var Company
-     */
     protected $entity;
 
-    /**
-     * @param  int|string  $addressDocumentStatus
-     * @return int|string
-     */
     public function getAddressDocumentStatus($addressDocumentStatus = null)
     {
         $status = $addressDocumentStatus ?? $this->entity->address_document_status;
@@ -53,10 +42,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param  int|string  $bankStatus
-     * @return int|string
-     */
     public function getBankDocumentStatus($bankStatus = null)
     {
         /** @var Company $company */
@@ -91,10 +76,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param  int|string  $contractDocumentStatus
-     * @return int|string
-     */
     public function getContractDocumentStatus($contractDocumentStatus = null)
     {
         $status = $contractDocumentStatus ?? $this->entity->contract_document_status;
@@ -127,10 +108,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param $type
-     * @return int|string
-     */
     public function getDocumentType($type)
     {
         if (is_numeric($type)) {
@@ -158,10 +135,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param $status
-     * @return int|string
-     */
     public function getStatus($status)
     {
         if (is_numeric($status)) {
@@ -193,10 +166,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param $status
-     * @return int|string
-     */
     public function getCompanyType($status)
     {
         if (is_numeric($status)) {
@@ -220,9 +189,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @return bool
-     */
     public function allStatusPending()
     {
         return $this->entity->bank_document_status == 3 &&
@@ -230,11 +196,6 @@ class CompanyPresenter extends Presenter
             $this->entity->contract_document_status == 3;
     }
 
-    /**
-     * @param  null  $federalRegistrationStatus
-     * @return int|string
-     * Situação do subseller na receita federal
-     */
     public function getFederalRegistrationStatus($federalRegistrationStatus = null)
     {
         $company = $this->entity;
@@ -297,10 +258,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param  null  $status
-     * @return int|string
-     */
     public function getStatusGetnet($status = null)
     {
         $company = $this->entity;
@@ -342,10 +299,6 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    /**
-     * @param null $status
-     * @return int|string
-     */
     public function getStatusBraspag($status = null)
     {
         $company = $this->entity;
@@ -378,6 +331,7 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
     public function formatCellPhoneBraspag($number)
     {
         $number = FoxUtils::onlyNumbers($number);

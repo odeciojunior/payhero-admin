@@ -3,13 +3,19 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
 //use Modules\Core\Entities\Project;//
 //use Modules\Core\Entities\Tracking;//
 use Modules\Core\Entities\User;
+
 //use Modules\Core\Services\AwsSns;
-use Modules\Core\Services\CompanyServiceBraspag; //CompanyService;
+use Modules\Core\Services\CompanyServiceBraspag;
+
+//CompanyService;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\BraspagBackOfficeService; //GetnetBackOfficeService;
+use Modules\Core\Services\BraspagBackOfficeService;
+
+//GetnetBackOfficeService;
 //use Modules\Core\Services\TrackingmoreService;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Core\Entities\Company;
@@ -36,7 +42,6 @@ class BraspagServiceCommand extends Command
 
     public function handle()
     {
-
         $users = User::with([
             'companies' => function ($q) {
                 $q->where('bank_document_status', 3)
@@ -51,13 +56,14 @@ class BraspagServiceCommand extends Command
         $companyServiceBraspag = new CompanyServiceBraspag();
 
         foreach ($users as $user) {
-            foreach($user->companies as $company){
+            foreach ($user->companies as $company) {
                 $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
 
-                if (FoxUtils::isEmpty($company->braspag_merchant_id) && !$companyServiceBraspag->verifyFieldsEmpty($company)) {
+                if ((FoxUtils::isEmpty($company->braspag_merchant_id) || FoxUtils::isEmpty($company->braspag_merchant_homoloh_id))
+                    && !$companyServiceBraspag->verifyFieldsEmpty($company)
+                ) {
                     $companyServiceBraspag->createCompanyBraspag($company);
                 }
-
             }
         }
 

@@ -519,6 +519,11 @@ class FoxUtils
         $number = self::onlyNumbers($number);
         return substr($number, 2);
     }
+
+    public static function getPortionOfString($string, $start, $length = null)
+    {
+        return $length != null ? substr($string, $start, $length) : substr($string, $start);
+    }
 }
 
 
