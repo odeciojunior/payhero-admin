@@ -142,7 +142,7 @@ class Company extends Model
         'created_at',
         'updated_at',
         'braspag_status',
-        'braspag_merchant_id ',
+        'braspag_merchant_id',
         'braspag_merchant_homolog_id'
     ];
     /**

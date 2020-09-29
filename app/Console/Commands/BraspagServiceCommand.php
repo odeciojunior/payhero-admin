@@ -43,32 +43,36 @@ class BraspagServiceCommand extends Command
 
     public function handle()
     {
-        /*$users = User::with([
-            'companies' => function ($q) {
-                $q->where('bank_document_status', 3)
-                    ->where('address_document_status', 3)
-                    ->where('contract_document_status', 3)
-                    ->where('braspag_merchant_id', null);
-            }
-        ])->whereHas('sales', function (Builder $query) {
-            $query->whereDate('created_at', '>=', '2020-05-01');
-        })->get();
+        // $users = User::with([
+        //     'companies' => function ($q) {
+        //         $q->where('bank_document_status', 3)
+        //             ->where('address_document_status', 3)
+        //             ->where('contract_document_status', 3)
+        //             ->where('braspag_merchant_id', null);
+        //     }
+        // ])->whereHas('sales', function (Builder $query) {
+        //     $query->whereDate('created_at', '>=', '2020-05-01');
+        // })->get();
 
-        $companyServiceBraspag = new CompanyServiceBraspag();
+        // $companyServiceBraspag = new CompanyServiceBraspag();
 
-        foreach ($users as $user) {
-            foreach ($user->companies as $company) {
-                $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
+        // foreach ($users as $user) {
+        //     foreach ($user->companies as $company) {
+        //         if(in_array($company->id, [28, 1806, 2696])){
+        //             continue;
+        //         }
+        //         $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
 
-                if (FoxUtils::isEmpty($company->braspag_merchant_id)
-                    && !(new CompanyService())->verifyFieldsEmpty($company)
-                ) {
-                    $companyServiceBraspag->createCompanyBraspag($company);
-                }
-            }
-        }*/
+        //         if (FoxUtils::isEmpty($company->braspag_merchant_id)
+        //             && !(new CompanyService())->verifyFieldsEmpty($company)
+        //         ) {
+        //             $companyServiceBraspag->createCompanyBraspag($company);
+        //         }
+        //     }
+        // }
 
-        $company = Company::where('company_document', 10779726600)->first();
+        // 28 1806 2696
+        $company = Company::find(2878);
 
         $companyServiceBraspag = new CompanyServiceBraspag();
         if ((empty($company->braspag_merchant_id))
