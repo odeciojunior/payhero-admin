@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Jenssegers\Agent\Facades\Agent;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\UserTerms;
@@ -77,6 +79,24 @@ class RegisterApiController extends Controller
 
             \DB::beginTransaction();
 
+            $requestData = $this->createAndPassDefaultValuesToRequest($request);
+            $user = $this->createUserAndAssignRole($requestData, $userModel);
+            $this->createCompanyToUser($requestData, $companyModel, $user);
+
+            /**
+             *  VALIDAÇÕES
+             */
+
+            if ($requestData['parameter'])
+                if (!$invitation = $this->verifyInvitation($user,$requestData)) {
+                    return response()->json(
+                        [
+                            'success' => 'false',
+                            'message' => $invitation['message']
+                        ]
+                    );
+                }
+
             if (!$files = $this->verifyFiles($request['document'], $request['company_type'])) {
                 return response()->json(
                     [
@@ -85,10 +105,6 @@ class RegisterApiController extends Controller
                     ]
                 );
             }
-
-            $requestData = $this->createAndPassDefaultValuesToRequest($request);
-            $user = $this->createUserAndAssignRole($requestData, $userModel);
-            $this->createCompanyToUser($requestData, $companyModel, $user);
 
             if (!$this->verifyTokenValidate($user)) {
                 return response()->json(
@@ -150,6 +166,130 @@ class RegisterApiController extends Controller
         }
     }
 
+    /**
+     * @param $user
+     * @param $requestData
+     * @return bool|string[]
+     */
+    public function verifyInvitation($user, $requestData)
+    {
+
+        $inviteModel = new Invitation();
+        $companyModel = new Company();
+
+        $parameter = $requestData['parameter'];
+        $companyId = Hashids::decode($parameter);
+        $company   = $companyModel->where('id', $companyId)->first();
+
+        $withoutInvite = false;
+
+        try {
+
+            if ($parameter == 'nw2usr3cfx') {
+                $withoutInvite = true;
+            } else if (strlen($parameter) > 15) {
+
+                $inviteId = substr($parameter, 0, 15);
+                $inviteId = Hashids::decode($inviteId);
+                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)
+                    ->first();
+
+                if (!isset($invite->id) || (isset($invite->id) && $invite->status != 2))
+                    return [
+                        'message' => 'Convite inválido!'
+                    ];
+
+            } else {
+
+                if (isset($company->id)) {
+
+                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
+                    $companyService = new CompanyService();
+
+                    if (!$companyService->isDocumentValidated($company->id)) {
+
+                        return [
+                            'message' => 'Convite indisponivel!'
+                        ];
+
+                    }
+
+                    if ($invitesSent >= $company->user->invites_amount) {
+
+                        return [
+                            'message' => 'Convite indisponivel, limite atingido!'
+                        ];
+
+                    }
+
+                } else {
+
+                    return [
+                        'message' => 'Link convite inválido'
+                    ];
+                }
+            }
+
+            if ($withoutInvite == false) {
+
+                if (!isset($invite))
+                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
+
+                if ($invite) {
+
+                    $invite->update(
+                        [
+                            'user_invited'    => $user->account_owner_id,
+                            'status'          => '1',
+                            'register_date'   => Carbon::now()->format('Y-m-d'),
+                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                            'email_invited'   => $requestData['email'],
+                        ]
+                    );
+
+                    if (empty($invite->invite) && isset($company->id)) {
+
+                        $invite->update(
+                            [
+                                'invite' => $company->user_id,
+                            ]
+                        );
+                    }
+
+                } else {
+
+                    if ($company) {
+
+                        $inviteModel->create(
+                            [
+                                'invite'          => $company->user_id,
+                                'user_invited'    => $user->account_owner_id,
+                                'status'          => '1',
+                                'company_id'      => $company->id,
+                                'register_date'   => Carbon::now()->format('Y-m-d'),
+                                'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                'email_invited'   => $requestData['email'],
+                            ]
+                        );
+                    }
+                }
+            }
+
+            return true;
+
+        } catch (Exception $e) {
+            report($e);
+
+            return false;
+        }
+    }
+
+    /**
+     * @param $document
+     * @param $company_type
+     * @return array|false
+     * @throws PresenterException
+     */
     public function verifyFiles($document, $company_type)
     {
         $companyModel = new Company();
@@ -213,7 +353,6 @@ class RegisterApiController extends Controller
     /**
      * @param ValidateCnpjRequest $request
      * @return JsonResponse
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
@@ -342,6 +481,11 @@ class RegisterApiController extends Controller
         }
     }
 
+    /**
+     * @param array $files
+     * @param User $user
+     * @return bool
+     */
     public function uploadDocumentsRegistered(array $files, User $user)
     {
         $companyModel = new Company();
@@ -523,6 +667,7 @@ class RegisterApiController extends Controller
 
     /**
      * @param $email
+     * @return RegistrationToken
      * @throws Exception
      */
     private function createRegistrationTokenEmail($email): RegistrationToken
@@ -542,7 +687,8 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param $email
+     * @param $phone
+     * @return RegistrationToken
      * @throws Exception
      */
     private function createRegistrationTokenSms($phone): RegistrationToken
@@ -562,6 +708,11 @@ class RegisterApiController extends Controller
         return $registration_token;
     }
 
+    /**
+     * @param $email
+     * @param $token
+     * @return mixed
+     */
     private function sendRegistrationTokenEmail($email, $token)
     {
 
@@ -580,6 +731,10 @@ class RegisterApiController extends Controller
 
     }
 
+    /**
+     * @param $phone
+     * @param $token
+     */
     private function sendRegistrationTokenSms($phone, $token)
     {
         $message = "Código de verificação CloudFox - " . $token;
@@ -588,7 +743,7 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param ValidateEmailRequest $request
+     * @param ValidateEmailTokenRequest $request
      * @return JsonResponse
      */
     public function matchEmailVerifyCode(ValidateEmailTokenRequest $request)
@@ -612,7 +767,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+            if ($existCodeToEmail->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
@@ -720,7 +875,7 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param ValidatePhoneNumberRequest $request
+     * @param ValidatePhoneNumberTokenRequest $request
      * @return JsonResponse
      */
     public function matchCellphoneVerifyCode(ValidatePhoneNumberTokenRequest $request)
@@ -745,7 +900,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+            if ($existCodeToPhone->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
@@ -858,7 +1013,7 @@ class RegisterApiController extends Controller
      * @param $requestData
      * @param Company $companyModel
      * @param User $user
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     * @throws PresenterException
      */
     private function createCompanyToUser($requestData, Company $companyModel, User $user): void
     {
@@ -900,6 +1055,10 @@ class RegisterApiController extends Controller
         );
     }
 
+    /**
+     * @param $user
+     * @return bool
+     */
     public function verifyTokenValidate($user)
     {
         $userModel = new User();
@@ -917,6 +1076,10 @@ class RegisterApiController extends Controller
         return true;
     }
 
+    /**
+     * @param $user
+     * @return bool|JsonResponse
+     */
     public function acceptedTerms($user)
     {
         try {

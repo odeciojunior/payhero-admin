@@ -5,6 +5,7 @@ namespace Modules\Register\Http\Controllers;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
@@ -42,12 +43,12 @@ class RegisterController extends Controller
 
     /**
      * @param Request $request
-     * @return Application|Factory|View
+     * @return Application|Factory|JsonResponse|View
      */
     public function createInvitation(Request $request)
     {
-
-        $companyId = current(Hashids::decode($request->segment(2)));
+        $companyIdRequest  = preg_replace( '/i=/','',$request->segment(2));
+        $companyId = current(Hashids::decode($companyIdRequest));
 
         if (!empty($companyId)) {
             $invitation = Invitation::where(['company_id' => $companyId])->first();
@@ -56,11 +57,15 @@ class RegisterController extends Controller
                 if (!empty($invitation))
                     return view('register::create');
 
-            return view('register::notInvite');
+            return response()->json([
+                'message' => 'Não Foi Possível acessar o convite'
+            ]);
 
         } else {
 
-            return view('register::notInvite');
+            return response()->json([
+                'message' => 'Não Foi Possível acessar o convite'
+            ]);
         }
 
     }

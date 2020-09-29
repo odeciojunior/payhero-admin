@@ -30,9 +30,13 @@ class EmailService
             $emailLayout = view(
                 'invites::email.invite',
                 [
-                    'link' => 'https://app.cloudfox.net/register/' . $parameter,
+                    'link' => env('ACCOUNT_URL') . '/signup/i=' . $parameter,
                 ]
             );
+
+            if (env('APP_ENV') == 'local')
+                $to = env('APP_EMAIL_TEST');
+
             $email = new Mail();
             $email->setFrom("noreply@cloudfox.net", "Cloudfox");
             $email->setSubject("Convite para o CloudFox");
