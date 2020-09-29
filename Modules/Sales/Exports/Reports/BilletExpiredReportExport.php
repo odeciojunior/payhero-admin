@@ -91,7 +91,16 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
             $salesExpired->whereIn('sales.project_id', $userProjects);
         }
-
+        if (!empty($this->filters['client_document'])) {
+            $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
+            $salesExpired->whereIn('sales.customer_id', $customerSearch);
+        }
+        if (!empty($this->filters['plan'])) {
+            $planId = current(Hashids::decode($this->filters['plan']));
+            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
+                $query->where('plan_id', $planId);
+            });
+        }
         if (!empty($startDate) && !empty($endDate)) {
             $salesExpired->whereBetween('sales.created_at', [$startDate, $endDate]);
         } else {

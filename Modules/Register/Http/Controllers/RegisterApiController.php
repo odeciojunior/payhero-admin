@@ -104,7 +104,7 @@ class RegisterApiController extends Controller
                     [
                         'success' => 'false',
                         'message' => 'Ocorreu um erro, tente novamente!'
-                    ] , 400
+                    ], 400
                 );
             }
 
@@ -125,7 +125,7 @@ class RegisterApiController extends Controller
             $this->sendWelcomeEmail($requestData);
 
 
-            if (env('APP_ENV') == 'production'){
+            if (env('APP_ENV') == 'production') {
                 return response()->json([
                     'success' => 'false',
                     'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
@@ -217,15 +217,13 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
-        $requestData = current(preg_replace('/[^0-9]/', '',$request->validated()));
+        $requestData = current(preg_replace('/[^0-9]/', '', $request->validated()));
         $companyService = new CompanyService();
         $company = $companyService->getNameCompanyByApiCNPJ($requestData);
 
         if (empty($company)) {
             return response()->json(
                 [
-                    'cnpj_exist' => 'false',
-                    'status' => 'ERROR',
                     'message' => 'CNPJ inválido',
                 ], 403
             );
@@ -234,8 +232,6 @@ class RegisterApiController extends Controller
         if ($company['status'] != 'OK') {
             return response()->json(
                 [
-                    'cnpj_exist' => 'false',
-                    'status' => $company['status'],
                     'message' => 'CNPJ rejeitado pela Receita Federal',
                 ], 403
             );
@@ -245,9 +241,7 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
-                'status' => $company['status'],
-                'exist' => 'true',
-            ]
+            ], 200
         );
 
     }
@@ -483,6 +477,18 @@ class RegisterApiController extends Controller
         $email = $data["email"];
 
         $verifyIfExistCode = RegistrationToken::where('type', 'email')->where('type_data', $email)->first();
+
+        if ($verifyIfExistCode && $verifyIfExistCode->validated) {
+
+            return response()->json(
+                [
+                    "message" => "Email já se encontra validado",
+                ],
+                409
+            );
+
+        }
+
         $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
         if ($verifyIfExistCode) {
@@ -630,7 +636,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToEmail->number_wrong_attempts) . ' tentativas.',
+                        'message' => 'O código informado está errado, você tem mais ' . (4 - $existCodeToEmail->number_wrong_attempts) . ' tentativas.',
                     ],
                     400
                 );
@@ -672,7 +678,19 @@ class RegisterApiController extends Controller
             $cellphone = $data["cellphone"];
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
-            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->first();
+            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->orderByDesc('id')->first();
+
+            if ($verifyIfExistCode && $verifyIfExistCode->validated) {
+
+                return response()->json(
+                    [
+                        "message" => "telefone já se encontra validado",
+                    ],
+                    409
+                );
+
+            }
+
             $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
             if ($verifyIfExistCode) {
@@ -750,7 +768,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToPhone->number_wrong_attempts) . ' tentativas.',
+                        'message' => 'O código informado está errado, você tem mais ' . (4 - $existCodeToPhone->number_wrong_attempts) . ' tentativas.',
                     ],
                     400
                 );
@@ -887,7 +905,7 @@ class RegisterApiController extends Controller
         $userModel = new User();
         $user = $userModel->find(3191);
         $tokenModel = new RegistrationToken();
-        $cellphoneUser =  preg_replace("/[^0-9]/", "",$user->cellphone);
+        $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
         $email = ($tokenModel->where('type_data', $user->email)->pluck('validated')->first());
         $cellphone = ($tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first());

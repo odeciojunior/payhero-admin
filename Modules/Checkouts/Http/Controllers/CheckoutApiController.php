@@ -31,10 +31,12 @@ class CheckoutApiController extends Controller
     {
         try {
             $requestValidate = $request->validate([
-                                                      'project'    => 'required|string',
-                                                      'status'     => 'required',
-                                                      'date_range' => 'required',
-                                                      'client'     => 'nullable|string',
+                                                      'project'         => 'required|string',
+                                                      'status'          => 'required',
+                                                      'date_range'      => 'required',
+                                                      'client'          => 'nullable|string',
+                                                      'client_document' => 'nullable|string',
+                                                      'plan'            => 'nullable|string',
                                                   ]);
 
             $checkoutService = new CheckoutService();
@@ -47,6 +49,16 @@ class CheckoutApiController extends Controller
                 $clientId = null;
             }
 
+            $clientDocument = null;
+            if (!empty($requestValidate['client_document'])) {
+                $clientDocument = $requestValidate['client_document'];
+            }
+
+            $plan = null;
+            if (!empty($requestValidate['plan'])) {
+                $plan = $requestValidate['plan'];
+            }
+
             $dateRange = FoxUtils::validateDateRange($requestValidate['date_range']);
             $startDate = null;
             $endDate   = null;
@@ -55,7 +67,7 @@ class CheckoutApiController extends Controller
                 $endDate   = $dateRange[1] . ' 23:59:59';
             }
 
-            $checkouts = $checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId);
+            $checkouts = $checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId, $clientDocument, $plan);
 
             return CheckoutIndexResource::collection($checkouts);
         } catch (Exception $e) {

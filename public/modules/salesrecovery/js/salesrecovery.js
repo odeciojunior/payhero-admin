@@ -23,7 +23,7 @@ $(document).ready(function () {
         var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $('#email_export').val();
 
-        if( email == '' || !regexEmail.test(email) ) {
+        if (email == '' || !regexEmail.test(email)) {
             alertCustom('error', 'Preencha o email corretamente');
             return false;
         } else {
@@ -111,9 +111,9 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at`;
+            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         } else {
-            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at`;
+            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         }
 
         if ($("#type_recovery option:selected").val() == 1) {
@@ -512,6 +512,8 @@ $(document).ready(function () {
             'status': $("#type_recovery option:selected").val(),
             'date_range': $("#date-range-sales-recovery").val(),
             'client': $("#client-name").val(),
+            'client_document': $("#client-cpf").val(),
+            'plan': $("#plan").val(),
             'date_type': 'created_at',
         };
 
@@ -549,6 +551,44 @@ $(document).ready(function () {
             }
         });
     }
+    //Search plan
+    $('#plan').select2({
+        placeholder: 'Nome do plano',
+        // multiple: true,
+        allowClear: true,
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            },
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: $("#project").val(),
+                };
+            },
+            method: "GET",
+            url: "/api/sales/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                    })
+                };
+            },
+        }
+    });
     function clearFields() {
         $("#status-checkout").removeClass('badge-success badge-danger');
         $("#client-whatsapp").attr('href', '');
