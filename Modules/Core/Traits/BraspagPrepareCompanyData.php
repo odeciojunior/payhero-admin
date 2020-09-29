@@ -74,10 +74,10 @@ trait BraspagPrepareCompanyData
                 }
 
                 $typeFile = explode('.', $documentUrl[1]);
-                $file = Storage::disk('downloadSpaces')->download($documentUrl[1]);
+                $file = Storage::disk('downloadSpaces')->get($documentUrl[1]);
             } else {
                 $typeFile = explode('.', $documentUrl[1]);
-                $file = Storage::disk('openSpaces')->download($documentUrl[1]);
+                $file = Storage::disk('openSpaces')->get($documentUrl[1]);
             }
 
 
@@ -85,7 +85,7 @@ trait BraspagPrepareCompanyData
             return [
                 "AttachmentType" => "ProofOfBankDomicile",
                 "File" => [
-                    "Name" => "Comprovante bancario",
+                    "Name" => "Comprovante",
                     "FileType" => $typeFile[1],
                     "Data" => $imageBin
                 ]

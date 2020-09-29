@@ -4,12 +4,9 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Traits\BraspagPrepareCompanyData;
 
-/**
- * Class BraspagService
- * @package Modules\Core\Services
- */
 class BraspagBackOfficeService extends BraspagService
 {
     use BraspagPrepareCompanyData;
@@ -19,8 +16,6 @@ class BraspagBackOfficeService extends BraspagService
     public $clientSecret;
 
     public $authorizationToken;
-
-    public $dataCreateCompany = null;
 
     public function __construct()
     {
@@ -37,14 +32,13 @@ class BraspagBackOfficeService extends BraspagService
     public function setCredentials()
     {
         if (FoxUtils::isProduction()) {
-            $this->merchantId = getenv('BRASPAG_PRODUCTION_MERCHANT_ID');
-            $this->clientSecret = getenv('BRASPAG_PRODUCTION_CLIENT_SECRET');
+            $gateway = Gateway::where("name", "braspag_production")->first();
         } else {
-            $this->merchantId = getenv('BRASPAG_HOMOLOG_MERCHANT_ID');
-            $this->clientSecret = getenv('BRASPAG_HOMOLOG_CLIENT_SECRET');
+            $gateway = Gateway::where("name", "braspag_sandbox")->first();
         }
 
-        $this->authorizationToken = base64_encode($this->merchantId.':'.$this->clientSecret);
+        $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, 'decrypt'), true);
+        $this->authorizationToken = base64_encode($configs['public_token'].':'.$configs['private_token']);
     }
 
     public function checkPjCompanyRegister($cnpj)

@@ -43,13 +43,12 @@ class BraspagServiceCommand extends Command
 
     public function handle()
     {
-        $users = User::with([
+        /*$users = User::with([
             'companies' => function ($q) {
                 $q->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
                     ->where('contract_document_status', 3)
-                    ->where('braspag_merchant_id', null)
-                    ->where('braspag_merchant_homolog_id', null);
+                    ->where('braspag_merchant_id', null);
             }
         ])->whereHas('sales', function (Builder $query) {
             $query->whereDate('created_at', '>=', '2020-05-01');
@@ -61,14 +60,22 @@ class BraspagServiceCommand extends Command
             foreach ($user->companies as $company) {
                 $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
 
-                if ((FoxUtils::isEmpty($company->braspag_merchant_id) || FoxUtils::isEmpty($company->braspag_merchant_homoloh_id))
+                if (FoxUtils::isEmpty($company->braspag_merchant_id)
                     && !(new CompanyService())->verifyFieldsEmpty($company)
                 ) {
                     $companyServiceBraspag->createCompanyBraspag($company);
                 }
             }
-        }
+        }*/
 
+        $company = Company::where('company_document', 10779726600)->first();
+
+        $companyServiceBraspag = new CompanyServiceBraspag();
+        if ((empty($company->braspag_merchant_id))
+            && !(new CompanyService())->verifyFieldsEmpty($company)
+        ) {
+            $companyServiceBraspag->createCompanyBraspag($company);
+        }
         $this->line('Terminou!!!');
     }
 }

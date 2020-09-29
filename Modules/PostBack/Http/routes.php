@@ -22,6 +22,8 @@ Route::group(
         Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
 
         Route::any('/getnet', 'PostBackGetnetController@postBackGetnet');
+
+        Route::any('/braspag', 'PostBackBraspagOfficeController@postBackBraspagOffice');
     }
 );
 
