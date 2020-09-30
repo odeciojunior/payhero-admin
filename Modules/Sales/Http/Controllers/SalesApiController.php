@@ -215,7 +215,7 @@ class SalesApiController extends Controller
             }
 
             if (in_array($sale->gateway->name,
-                ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
+                ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production', 'braspag_sandbox', 'braspag_production'])) {
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues, $refundObservation);
             } else {
