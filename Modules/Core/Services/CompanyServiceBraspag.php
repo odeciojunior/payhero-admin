@@ -5,13 +5,10 @@ namespace Modules\Core\Services;
 use Exception;
 use Modules\Core\Entities\Company;
 
-/**
- * Class CompaniesServiceBraspag
- * @package Modules\Core\Services
- */
 class CompanyServiceBraspag
 {
     private $braspagService;
+
     private $userService;
 
     public function __construct()
@@ -26,7 +23,7 @@ class CompanyServiceBraspag
             $user = $company->user;
 
             if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-                && (!$this->userService->verifyFieldsEmpty($user))
+                && (!$this->userService->verifyFieldsEmptyBraspag($user))
             ) {
                 $result = $this->braspagService->createPfCompany($company);
             } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
@@ -79,6 +76,4 @@ class CompanyServiceBraspag
             );
         }
     }
-
-
 }

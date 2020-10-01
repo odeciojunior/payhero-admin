@@ -43,12 +43,21 @@ class BraspagServiceCommand extends Command
 
     public function handle()
     {
-        /*$users = User::with([
+        /*$companyModel = new Company();
+
+        $companies = $companyModel->where('braspag_merchant_id', null)->whereHas('transactions', function ($query){
+            $query->where('created_at', '>', '20/09/20');
+        })->get(['id','fantasy_name'])->toArray();
+
+        dd($companies);*/
+
+        $users = User::with([
             'companies' => function ($q) {
                 $q->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
-                    ->where('contract_document_status', 3)
-                    ->where('braspag_merchant_id', null);
+                    ->where('contract_document_status', 3);
+
+                $q->where('braspag_merchant_id', null);
             }
         ])->whereHas('sales', function (Builder $query) {
             $query->whereDate('created_at', '>=', '2020-05-01');
@@ -58,24 +67,12 @@ class BraspagServiceCommand extends Command
 
         foreach ($users as $user) {
             foreach ($user->companies as $company) {
-                $this->line("Tentando cadastrar empresa {$company->fantasy_name}");
-
                 if (FoxUtils::isEmpty($company->braspag_merchant_id)
-                    && !(new CompanyService())->verifyFieldsEmpty($company)
+                    && !(new CompanyService())->verifyFieldsEmptyBraspag($company)
                 ) {
                     $companyServiceBraspag->createCompanyBraspag($company);
                 }
             }
-        }*/
-
-        $company = Company::where('company_document', 10779726600)->first();
-
-        $companyServiceBraspag = new CompanyServiceBraspag();
-        if ((empty($company->braspag_merchant_id))
-            && !(new CompanyService())->verifyFieldsEmpty($company)
-        ) {
-            $companyServiceBraspag->createCompanyBraspag($company);
         }
-        $this->line('Terminou!!!');
     }
 }
