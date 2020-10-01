@@ -15,7 +15,7 @@ class ValidateEmailRequest extends FormRequest
     {
         return [
             'email'     => 'required|max:200',
-            'firstname' => 'nullable',
+            'code' => 'nullable',
         ];
     }
 

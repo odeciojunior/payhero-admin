@@ -24,14 +24,11 @@ class AwsSns
         ]);
 
         try {
-                if(env('APP_ENV') == 'local') {
-                    Log::info("$message - número: $phone");
-                }else {
-                     $snsClient->publish([
-                    'Message' => $message,
-                    'PhoneNumber' => $phone
-                ]);
-            }
+
+            $snsClient->publish([
+                'Message' => $message,
+                'PhoneNumber' => $phone
+            ]);
 
 
         } catch (Exception $e) {

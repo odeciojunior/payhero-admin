@@ -4,7 +4,7 @@ namespace Modules\Register\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateCnpjRequest extends FormRequest
+class ValidateEmailTokenRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,8 @@ class ValidateCnpjRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_document' => 'required|unique:companies,company_document,NULL,id,deleted_at,NULL',
+            'email'     => 'required|max:200',
+            'code' => 'required|min:4|max:4',
         ];
     }
 
@@ -25,9 +26,10 @@ class ValidateCnpjRequest extends FormRequest
     public function messages()
     {
         return [
-            // Coloque aqui as mensagens de erro da validação
-            'company_document.required'     => 'Precisamos do seu CNPJ para continuar',
-            'company_document.unique'     => 'CNPJ já cadastrado',
+            'email.required'    => 'Precisamos do seu email para continuar',
+            'code.required'      => 'Precisamos do token',
+            'code.min'      => 'O token deve conter no mínimo 4 caracteres',
+            'code.max'      => 'O token deve conter no máximo 4 caracteres',
         ];
     }
 

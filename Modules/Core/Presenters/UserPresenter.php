@@ -10,6 +10,11 @@ use Laracasts\Presenter\Presenter;
  */
 class UserPresenter extends Presenter
 {
+    const USUARIO_DOCUMENTO = 1;
+    const USUARIO_RESIDENCIA = 2;
+    const EMPRESA_EXTRATO = 1;
+    const EMPRESA_RESINDENCIA = 2;
+    const EMPRESA_CCMEI = 3;
     /**
      * @return string
      */
@@ -118,7 +123,6 @@ class UserPresenter extends Presenter
             return '';
         }
     }
-
     /**
      * @param $type
      * @return int|string
@@ -144,5 +148,29 @@ class UserPresenter extends Presenter
 
             return '';
         }
+    }
+
+    /**
+     * @param $document_type
+     * @return int|string
+     */
+    public function getDocumentTypeRegistered($document_type)
+    {
+        switch ($document_type) {
+            // USUARIO
+            case 'USUARIO_DOCUMENTO':
+                return self::USUARIO_DOCUMENTO;
+            case 'USUARIO_RESIDENCIA':
+                return self::USUARIO_RESIDENCIA;
+
+            // EMPRESA
+            case 'EMPRESA_EXTRATO':
+                return self::EMPRESA_EXTRATO;
+            case 'EMPRESA_RESIDENCIA':
+                return self::EMPRESA_RESINDENCIA;
+            case 'EMPRESA_CCMEI':
+                return self::EMPRESA_CCMEI;
+        }
+            return '';
     }
 }

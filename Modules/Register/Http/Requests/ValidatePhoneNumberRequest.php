@@ -14,7 +14,7 @@ class ValidatePhoneNumberRequest extends FormRequest
     public function rules()
     {
         return [
-            'cellphone'         => 'required',
+            'cellphone' => 'required',
         ];
     }
 
@@ -25,7 +25,7 @@ class ValidatePhoneNumberRequest extends FormRequest
     public function messages()
     {
         return [
-            'cellphone.required'    => 'Precisamos do seu celular para continuar',
+            'cellphone.required' => 'Precisamos do seu celular para continuar',
         ];
     }
 
