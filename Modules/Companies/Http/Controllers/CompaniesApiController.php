@@ -548,4 +548,25 @@ class CompaniesApiController extends Controller
             return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
         }
     }
+
+    public function checkBraspagCompany()
+    {
+        try {
+            $user          = auth()->user();
+            $companyModel  = new Company();
+            $columnName    = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $hasMerchantId = $companyModel->whereNotNull($columnName)
+                                          ->where('user_id', $user->account_owner_id)->exists();
+
+            return response()->json(
+                [
+                    'has_merchant_id' => $hasMerchantId,
+                    'env' => env("APP_ENV", "local"),
+                ], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao verificar empresas'], 400);
+        }
+    }
 }

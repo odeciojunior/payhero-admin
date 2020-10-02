@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Braspag\BraspagPaymentService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Transfers\Transformers\TransfersResource;
@@ -104,6 +106,37 @@ class TransfersController extends Controller
                                 ]);
 
             return $return;
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getBraspagData(Request $request)
+    {
+        try {
+            $data                  = $request->all();
+            $user                  = auth()->user();
+            $companyModel          = new Company();
+            $braspagPaymentService = new BraspagPaymentService();
+            $columnName            = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $companyBraspag        = $companyModel->whereNotNull($columnName)
+                                                  ->where('user_id', $user->account_owner_id)->first();
+            $dateRange             = FoxUtils::validateDateRange($data["date_range"]);
+            $data['initial_date']  = $dateRange[0];
+            $data['final_date']    = $dateRange[1];
+            $data['merchant_id']   = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
+            $data['page_size']     = 10;
+            $data['page_index']    = 1;
+            $result                = $braspagPaymentService->getCompanyPaymentData($data, $companyBraspag->id);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);
