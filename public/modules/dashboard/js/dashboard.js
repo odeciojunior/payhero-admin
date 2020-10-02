@@ -138,6 +138,7 @@ $(document).ready(function () {
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
+                $('#info-total-balance').attr('title','Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance);
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);

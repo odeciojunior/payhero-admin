@@ -80,10 +80,11 @@
                 <div class="col-6 col-lg-3">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
-                            <div class="font-size-14 gray-600">
+                            <div class="font-size-14 gray-600 mr-auto">
                                 <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="30px">
                                 <span class="card-desc">Total</span>
                             </div>
+                            <i class="material-icons gray" data-toggle="tooltip" id="info-total-balance" data-placement="bottom">help</i>
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
@@ -297,7 +298,7 @@
     </div>
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=2') }}"></script>
     @endpush
 
 @endsection
