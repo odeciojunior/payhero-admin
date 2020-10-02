@@ -144,7 +144,7 @@ class DashboardApiController extends Controller
                         ->sum('t.value');
 
                     $availableBalance = $company->balance;
-                    $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
+                    $totalBalance = $availableBalance + $pendingBalance;
 
                     //Chargeback
                     $chargebackData = $saleModel->selectRaw(
