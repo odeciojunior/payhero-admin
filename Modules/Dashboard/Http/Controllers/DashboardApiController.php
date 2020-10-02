@@ -143,8 +143,8 @@ class DashboardApiController extends Controller
                         ->whereIn('t.status_enum', $statusArray)
                         ->sum('t.value');
 
-                    $availableBalance = $company->balance;
-                    $totalBalance = $availableBalance + $pendingBalance;
+                    $availableBalance = $company->balance - $blockedBalance;
+                    $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
 
                     //Chargeback
                     $chargebackData = $saleModel->selectRaw(
