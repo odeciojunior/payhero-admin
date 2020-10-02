@@ -9,7 +9,7 @@ use App\Traits\LogsActivity;
 /**
  * @property integer $id
  * @property integer $gateway_id
- * @property integer $card_flag_id
+ * @property integer $gateway_flag_id
  * @property int $installments
  * @property boolean $type_enum
  * @property float $percent
@@ -31,7 +31,7 @@ class GatewayFlagTax extends Model
      */
     protected $fillable = [
         'gateway_id',
-        'card_flag_id',
+        'gateway_flag_id',
         'installments',
         'type_enum',
         'percent',
