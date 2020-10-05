@@ -2,12 +2,11 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use App\Jobs\ProcessPostbackBraspagBackoffice;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\BraspagBackofficePostback;
-use Modules\Core\Events\ProcessPostbackBraspagBackOfficeEvent;
-use Modules\Core\Services\BraspagBackOfficeService;
 
 class PostBackBraspagOfficeController extends Controller
 {
@@ -28,7 +27,7 @@ class PostBackBraspagOfficeController extends Controller
             ]);
 
             if (!empty($requestData['MerchantId']) && !empty($requestData['Status'])) {
-                event(new ProcessPostbackBraspagBackOfficeEvent($requestData['MerchantId'], $requestData['Status']));
+                ProcessPostbackBraspagBackoffice::dispatch($requestData['MerchantId'], $requestData['Status']);
             }
         } catch (Exception $e) {
             report($e);
