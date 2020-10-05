@@ -136,7 +136,7 @@ class TransfersController extends Controller
             $data['merchant_id']   = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
             $data['page_size']     = 10;
             $data['page_index']    = 1;
-            $result                = $braspagPaymentService->getCompanyPaymentData($data, $companyBraspag->id);
+            $result                = $braspagPaymentService->getCompanyFinancialData($data, $companyBraspag->id);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);
