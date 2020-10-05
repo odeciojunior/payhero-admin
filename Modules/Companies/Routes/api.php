@@ -18,11 +18,15 @@ Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
 
     Route::post('/companies/consultcnpj', 'CompaniesApiController@consultCnpj');
 
+    Route::get('/companies/checkbraspagcompany', 'CompaniesApiController@checkBraspagCompany');
+
     Route::post('/companies/{companiId}/getdocuments', 'CompaniesApiController@getDocuments');
 
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')
          ->middleware('role:account_owner|admin');
 
     Route::post('/companies/updateorder', 'CompaniesApiController@updateOrder');
+
+
 });
 

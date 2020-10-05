@@ -13,4 +13,5 @@
 
 Route::prefix('transfers')->group(function() {
     Route::get('/', 'TransfersController@index');
+    Route::get('/getbraspagdata', 'TransfersController@getBraspagData');
 });

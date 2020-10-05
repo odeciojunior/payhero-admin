@@ -97,6 +97,8 @@ $(document).ready(function () {
 
     getCompanies();
 
+    checkBraspagCompany();
+
     //Verifica se o saque está liberado
     function checkAllowed() {
         $.ajax({
@@ -722,6 +724,85 @@ $(document).ready(function () {
             }
         });
     }
+
+    //atualiza a table de braspag
+    $(document).on("click", "#bt_filtro_braspag", function (e) {
+        e.preventDefault();
+        updateBraspagData();
+    });
+    function updateBraspagData(link = null){
+        loadOnTable('#table-braspag-body', '#braspagTable');
+        if (link == null) {
+            link = '/transfers/getbraspagdata?' + 'event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
+        } else {
+            link = '/transfers/getbraspagdata' + link + '&event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
+        }
+        $.ajax({
+            method: "GET",
+            url: link,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#braspagTable').addClass('table-striped');
+
+            }
+        });
+
+    }
+    function checkBraspagCompany() {
+        $.ajax({
+            method: "GET",
+            url: '/api/companies/checkbraspagcompany',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+            },
+            success: response => {
+                if (response.has_merchant_id && response.env == 'local') {
+                    $('#nav-braspag-tab').show();
+                }
+            }
+        });
+    }
+
+    $('#date_range_braspag').daterangepicker({
+        startDate: moment().startOf('week'),
+        endDate: moment(),
+        opens: 'center',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    });
 
     $("#bt_get_csv").on("click", function () {
         extractExport('csv');

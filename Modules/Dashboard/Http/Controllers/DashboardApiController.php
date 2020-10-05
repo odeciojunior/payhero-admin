@@ -259,6 +259,7 @@ class DashboardApiController extends Controller
                         'releases'               => $releases,
                         'trackings'              => $trackingsInfo,
                         'tickets'                => $tickets,
+                        'blocked_balance'        => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
                     ];
                 } else {
                     return [];

@@ -58,6 +58,9 @@
                             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-extract"
                                role="tab" aria-controls="nav-profile" aria-selected="true">Extrato
                             </a>
+                            <a class="nav-item nav-link" id="nav-braspag-tab" data-toggle="tab" href="#nav-braspag"
+                               role="tab" aria-controls="nav-braspag" aria-selected="true" style='display:none;'>Braspag
+                            </a>
                         </div>
                     </div>
                 </nav>
@@ -274,6 +277,59 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="nav-braspag" role="tabpanel" aria-labelledby="nav-braspag-tab">
+                            <div class="row justify-content-between">
+                                <div class="col-lg-12 mb-15">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label for="event_status">Status</label>
+                                                <select class="form-control select-pad" id="event_status" name='event_status'>
+                                                    <option value="">Selecione</option>
+                                                    <option value="Scheduled">Agendado</option>
+                                                    <option value="Pending">Pendente</option>
+                                                    <option value="Settled">Liquidado</option>
+                                                    <option value="Error">Erro</option>
+                                                    <option value="WaitingFoAdjustementDebit">Aguardando débito de ajuste</option>
+                                                    <option value="Anticipated">Antecipado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label for="date_range_braspag">Data</label>
+                                                <input name="date_range_braspag" id="date_range_braspag" class="select-pad" placeholder="Clique para editar..." readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-3"></div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
+                                            <button id="bt_filtro_braspag" class="btn btn-primary w-full">
+                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <table id='braspagTable' class="table table-striped table-condensed unify">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class='headCenter'>Evento</th>
+                                                <th scope="col" class='headCenter'>Produto</th>
+                                                <th scope="col" class='headCenter'>Bandeira/Emissor</th>
+                                                <th scope="col" class='headCenter'>Status</th>
+                                                <th scope="col" class='headCenter'>Valor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-braspag-body" class="custom-t-body">
+                                        </tbody>
+                                    </table>
+                                    <ul id="pagination-braspag" class="pagination-sm margin-chat-pagination"
+                                        style="margin-top:10px;position:relative;float:right">
+                                        {{--js carrega...--}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -331,7 +387,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=2') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=3') }}"></script>
     @endpush
 
 @endsection

@@ -41,11 +41,11 @@ class BraspagBackOfficeService extends BraspagService
         $this->authorizationToken = base64_encode($configs['public_token'].':'.$configs['private_token']);
     }
 
-    public function checkPjCompanyRegister($cnpj)
+    public function checkCompanyRegister($merchantId, $companyId)
     {
-        $url = 'api/subordinates/'.$this->merchantId;
+        $url = 'api/subordinates/'.$merchantId;
 
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function createPfCompany(Company $company)
