@@ -5,6 +5,7 @@ namespace Modules\Reports\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
+use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TransactionBlockedResource extends JsonResource
@@ -41,10 +42,10 @@ class TransactionBlockedResource extends JsonResource
 
         if($sale->status == 24) {
             $data['reason_blocked'] = 'Em disputa';
-        } elseif($sale->tracking->count()){
-            $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
-        } else {
+        } elseif(!$sale->tracking->count()){
             $data['reason_blocked'] = 'Sem rastreio';
+        } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('duplicated'))->count()) {
+            $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
         }
 
         if ($sale->owner_id == auth()->user()->account_owner_id) {
