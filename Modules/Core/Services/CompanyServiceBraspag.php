@@ -76,4 +76,24 @@ class CompanyServiceBraspag
             );
         }
     }
+
+    public static function processPostback(string $merchantId, string $status): void
+    {
+        $companyModel = new Company();
+
+        if (!FoxUtils::isProduction()) {
+            return;
+        }
+
+        $company = $companyModel->where('braspag_merchant_id', $merchantId)->first();
+
+        if (empty($company) || $companyModel->present()->getStatusBraspag($company->braspag_status) == $status) {
+            return;
+        }
+
+        $company->update([
+            "braspag_status" => $companyModel->present()->getStatusBraspag($status)
+        ]);
+    }
+
 }

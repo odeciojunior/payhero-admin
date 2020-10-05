@@ -122,6 +122,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Modules\Core\Events\UserRegisteredEvent' => [
             'Modules\Core\Listeners\SendEmailRegisteredListener',
+        ],
+        'Modules\Core\Events\ProcessPostbackBraspagBackOfficeEvent' => [
+            'Modules\Core\Listeners\ProcessPostbackBraspagBackOfficeListener',
         ]
     ];
 
