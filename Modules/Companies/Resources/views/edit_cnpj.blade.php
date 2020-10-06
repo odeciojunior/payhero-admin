@@ -44,30 +44,30 @@
                                     @method('PUT')
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
-                                        <div class="form-group col-xl-4">
-                                            <label for="fantasy_name">Nome da empresa</label>
-                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Nome da empresa" maxlength='250'>
+                                        <div class="form-group col-xl-6">
+                                            <label for="fantasy_name">Razão social</label>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão social" maxlength='250'>
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col-xl-6">
                                             {{--carrega no js--}}
                                             <label for="company_document" class='label-document'></label>
                                             <input name="company_document" value="" type="text" class="form-control" id="company_document">
                                         </div>
-                                        <div class="form-group col-xl-4">
-                                            <label for="business_website">Site</label>
-                                            <input name="business_website" value="" type="text" class="form-control" id="business_website" placeholder='Site' maxlength='60'>
-                                        </div>
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="business_website">Site</label>--}}
+{{--                                            <input name="business_website" value="" type="text" class="form-control" id="business_website" placeholder='Site' maxlength='60'>--}}
+{{--                                        </div>--}}
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-xl-4">
-                                            <label for="support_email">E-mail</label>
-                                            <input name="support_email" value="" type="text" class="form-control" id="support_email" placeholder='E-mail' maxlength='40'>
-                                        </div>
-                                        <div class="form-group col-xl-4">
-                                            <label for="support_telephone">Telefone</label>
-                                            <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>
-                                        </div>
-                                    </div>
+{{--                                    <div class="row">--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="support_email">E-mail</label>--}}
+{{--                                            <input name="support_email" value="" type="text" class="form-control" id="support_email" placeholder='E-mail' maxlength='40'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="support_telephone">Telefone</label>--}}
+{{--                                            <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     <h3 class="mb-15 mt-15">Informações de endereço</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
@@ -365,7 +365,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=13')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=14')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

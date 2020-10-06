@@ -318,22 +318,22 @@
                                     </div>
                                     {{--CARTAO DE CRÉDITO--}}
                                     {{--CARTAO DE DEBITO--}}
-                                    <div class='col-lg-12'>
-                                        <h6 class='title-pad'>Cartão de débito:</h6>
-                                    </div>
-                                    <div class='col'></div>
-                                    <div class='row mt-15 col-xl-12'>
-                                        <div class='form-group col-xl-5'>
-                                            <label for='debit-card-tax'>Por venda (porcentagem):</label>
-                                            <input id='debit-card-tax' disabled='disabled' class="form-control">
-                                        </div>
-                                        <div class='form-group col-xl-5'>
-                                            <div class='form-group'>
-                                                <label for='debit-card-release'>Dias para liberação:</label>
-                                                <input id='debit-card-release' disabled='disabled' class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
+{{--                                    <div class='col-lg-12'>--}}
+{{--                                        <h6 class='title-pad'>Cartão de débito:</h6>--}}
+{{--                                    </div>--}}
+{{--                                    <div class='col'></div>--}}
+{{--                                    <div class='row mt-15 col-xl-12'>--}}
+{{--                                        <div class='form-group col-xl-5'>--}}
+{{--                                            <label for='debit-card-tax'>Por venda (porcentagem):</label>--}}
+{{--                                            <input id='debit-card-tax' disabled='disabled' class="form-control">--}}
+{{--                                        </div>--}}
+{{--                                        <div class='form-group col-xl-5'>--}}
+{{--                                            <div class='form-group'>--}}
+{{--                                                <label for='debit-card-release'>Dias para liberação:</label>--}}
+{{--                                                <input id='debit-card-release' disabled='disabled' class="form-control">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     {{--CARTAO DE DEBITO--}}
                                     {{--BOLETO--}}
                                     <div class='col-lg-12'>
