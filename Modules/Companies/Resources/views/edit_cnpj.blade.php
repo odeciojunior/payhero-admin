@@ -45,13 +45,13 @@
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-6">
-                                            <label for="fantasy_name">Razão social</label>
-                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão social" maxlength='250'>
-                                        </div>
-                                        <div class="form-group col-xl-6">
                                             {{--carrega no js--}}
                                             <label for="company_document" class='label-document'></label>
                                             <input name="company_document" value="" type="text" class="form-control" id="company_document">
+                                        </div>
+                                        <div class="form-group col-xl-6">
+                                            <label for="fantasy_name">Razão social</label>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão social" maxlength='250'>
                                         </div>
 {{--                                        <div class="form-group col-xl-4">--}}
 {{--                                            <label for="business_website">Site</label>--}}
