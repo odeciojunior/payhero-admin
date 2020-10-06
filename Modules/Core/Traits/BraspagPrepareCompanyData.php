@@ -125,7 +125,7 @@ trait BraspagPrepareCompanyData
     {
         return [
             'Street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($model->street)),
-            'Number' => $model->number ?? '',
+            'Number' => $model->number ?? 'S/N',
             'Complement' => empty($model->complement) ? '' : FoxUtils::removeAccents(
                 FoxUtils::removeSpecialChars($model->complement)
             ),

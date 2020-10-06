@@ -1101,6 +1101,7 @@ class SaleService
                     'sale.customer',
                     'sale.plansSales.plan',
                     'sale.tracking',
+                    'sale.productsPlansSale',
                     'sale.affiliate' => function($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     }
@@ -1167,6 +1168,8 @@ class SaleService
                          ->whereIn('sales.status', $status)
                          ->selectRaw('transactions.*, sales.start_date')
                          ->orderByDesc('sales.start_date');
+
+            $sql = str_replace_array('?', $transactions->getBindings(), $transactions->toSql());
 
             return $transactions;
         } catch (Exception $e) {

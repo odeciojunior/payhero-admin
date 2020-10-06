@@ -9,6 +9,7 @@ use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
+ * @property integer $gateway_id
  * @property string $name
  * @property string $slug
  * @property boolean $card_flag_enum
@@ -32,6 +33,7 @@ class GatewayFlag extends Model
     protected $fillable = [
         'name',
         'slug',
+        'gateway_id',
         'card_flag_enum',
         'active_flag',
         'created_at',

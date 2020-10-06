@@ -272,6 +272,48 @@ class CompanyService
         return $pendingBalance;
     }
 
+    public function verifyFieldsEmptyBraspag(Company $company)
+    {
+        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
+            // informações basicas
+            if (empty($company->zip_code)) {
+                return true;
+            }
+            if (empty($company->street)) {
+                return true;
+            }
+            if (empty($company->neighborhood)) {
+                return true;
+            }
+            if (empty($company->state)) {
+                return true;
+            }
+            if (empty($company->city)) {
+                return true;
+            }
+            if (empty($company->country)) {
+                return true;
+            }
+        }
+
+        if (empty($company->fantasy_name)) {
+            return true;
+        }
+        if (empty($company->company_document)) {
+            return true;
+        }
+        if (empty($company->bank)) {
+            return true;
+        }
+        if (empty($company->agency)) {
+            return true;
+        }
+        if (empty($company->account)) {
+            return true;
+        }
+        return false;
+    }
+
     public function verifyFieldsEmpty(Company $company)
     {
         if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
@@ -295,7 +337,7 @@ class CompanyService
                 return true;
             }
             // informações complementares
-            if (empty($company->patrimony)) {
+            /*if (empty($company->patrimony)) {
                 return true;
             }
             if (empty($company->state_fiscal_document_number)) {
@@ -330,7 +372,7 @@ class CompanyService
             }
             if (empty($company->document_issuer_state)) {
                 return true;
-            }
+            }*/
         }
 
         if (empty($company->fantasy_name)) {
@@ -404,7 +446,6 @@ class CompanyService
             ]
         );
     }
-
 
     public function updateCompanyGetnet(Company $company)
     {

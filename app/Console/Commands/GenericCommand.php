@@ -37,13 +37,21 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $products = Product::where('type_enum', 2)->whereNull('status_enum')->get();
-        foreach ($products as $product) {
-            $product->update([
-                                 'status_enum' => 1,
-                             ]);
+        /*$companies = Company::whereHas('user', function ($q) {
+            $q->where('credit_card_release_money_days', '<', 15);
+        })->whereNotNull('braspag_merchant_id')->get();
+
+        $companiesVerified = [];
+
+        foreach ($companies as $company) {
+            $companiesVerified[] = [
+                "name" => FoxUtils::removeAccents($company->fantasy_name),
+                "braspag_merchant_id" => $company->braspag_merchant_id
+            ];
         }
-        dd('feitoo');
+
+
+        dd($companiesVerified);*/
     }
 }
 

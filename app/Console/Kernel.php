@@ -89,6 +89,14 @@ class Kernel extends ConsoleKernel
 
         //checks companies update on getnet
         $schedule->command('command:checkUpdateCompanyGetnet')->dailyAt('20:00');
+
+        // Check companies update status on braspag
+        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('08:00');
+        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('12:00');
+        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('20:00');
+
+        //check invites expired
+        $schedule->command('verify:inviteexpired')->dailyAt('01:00');
     }
 
     /**

@@ -117,12 +117,10 @@ class CompaniesApiController extends Controller
                 } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                     $companyResource = new CompanyCpfResource($company);
                 }
-                $unfilledFieldsArray = $companyService->unfilledFields($company);
                 return response()->json(
                     [
                         'company' => $companyResource,
                         'banks' => $banks,
-                        'unfilledFields' => $unfilledFieldsArray,
                     ],
                     Response::HTTP_OK
                 );
@@ -282,7 +280,7 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
+            $amazonFileService = app(AmazonFileService::class);
 
             $companyDocumentModel = new CompanyDocument();
             $dataForm = $request->validated();
@@ -290,6 +288,8 @@ class CompaniesApiController extends Controller
             $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document = $request->file('file');
+
+                $amazonFileService->setDisk('s3_documents');
                 $amazonPath = $amazonFileService->uploadFile(
                     'uploads/user/'.Hashids::encode(
                         auth()->user()->account_owner_id
@@ -391,7 +391,7 @@ class CompaniesApiController extends Controller
     {
         try {
             $digitalOceanFileService = app(DigitalOceanFileService::class);
-            $amazonFileService = app(AmazonFileService::class)->setDisk('s3_documents');
+            $amazonFileService = app(AmazonFileService::class);
             $data = $request->all();
             if (!empty($data['document_url'])) {
                 $temporaryUrl = '';
@@ -402,7 +402,8 @@ class CompaniesApiController extends Controller
                 }
 
                 if (strstr($data['url'], 'amazonaws')) {
-                    $temporaryUrl = $amazonFileService->disk('s3_documents')->getTemporaryUrlFile($data['url'], 180);
+                    $amazonFileService->setDisk('s3_documents');
+                    $temporaryUrl = $amazonFileService->getTemporaryUrlFile($data['url'], 180);
                 }
 
                 // Validacao
@@ -543,6 +544,27 @@ class CompaniesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
+        }
+    }
+
+    public function checkBraspagCompany()
+    {
+        try {
+            $user          = auth()->user();
+            $companyModel  = new Company();
+            $columnName    = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $hasMerchantId = $companyModel->whereNotNull($columnName)
+                                          ->where('user_id', $user->account_owner_id)->exists();
+
+            return response()->json(
+                [
+                    'has_merchant_id' => $hasMerchantId,
+                    'env' => env("APP_ENV", "local"),
+                ], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }
 }

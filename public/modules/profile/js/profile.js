@@ -35,7 +35,6 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 var countries = response.countries;
-                var unfilledFields = response.unfilledFields;
                 /**
                  * Dados Pessoais
                  */
@@ -93,31 +92,6 @@ $(document).ready(function () {
                 } else {
                     $('.div-birth-state').hide();
                 }
-                // for (let filled of unfilledFields) {
-                //     $(`#${filled}`).addClass('input-is-invalid');
-                // }
-                if (!isEmpty(unfilledFields)) {
-                    $('#profile_update_form input,#profile_update_form select').each(function () {
-                        let id = $(this).attr('id');
-                        let attr = $(this).attr('data-plugin');
-                        if (unfilledFields.includes(id)) {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
-                            } else {
-                                $(this).addClass('input-is-invalid');
-                            }
-                        } else {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
-                            } else {
-                                if ($(this).hasClass('input-is-invalid')) {
-                                    $(this).removeClass('input-is-invalid');
-                                }
-                            }
-                        }
-                    });
-                }
-
                 /**
                  * Dados Residenciais
                  */
