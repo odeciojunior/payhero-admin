@@ -312,18 +312,10 @@ class SendgridService
     public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
-            //Em produção valida o e-mail e local marreta e-mail de teste
-            if (env('APP_ENV') == 'production') {
-                if (!FoxUtils::validateEmail($toEmail)) {
-                    return false;
-                }
-            } else {
-                $toEmail = env('APP_EMAIL_TEST');
-                if (empty($toEmail)) {
-                    return false;
-                }
-            }
 
+            if (!FoxUtils::validateEmail($toEmail)) {
+                return false;
+            }
 
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);

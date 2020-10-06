@@ -141,14 +141,14 @@ class RegisterApiController extends Controller
             $this->sendWelcomeEmail($requestData);
 
 
-            if (env('APP_ENV') == 'production') {
-                return response()->json([
-                    'success' => 'false',
-                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
-                ], 202);
-            } else {
+//            if (env('APP_ENV') == 'production') {
+//                return response()->json([
+//                    'success' => 'false',
+//                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
+//                ], 202);
+//            } else {
                 \DB::commit();
-            }
+      //      }
 
             return response()->json(
                 [
