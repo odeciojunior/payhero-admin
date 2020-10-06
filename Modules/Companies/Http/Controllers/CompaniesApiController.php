@@ -117,12 +117,10 @@ class CompaniesApiController extends Controller
                 } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                     $companyResource = new CompanyCpfResource($company);
                 }
-                $unfilledFieldsArray = $companyService->unfilledFields($company);
                 return response()->json(
                     [
                         'company' => $companyResource,
                         'banks' => $banks,
-                        'unfilledFields' => $unfilledFieldsArray,
                     ],
                     Response::HTTP_OK
                 );

@@ -53,13 +53,11 @@ class ProfileApiController
                 $countryService = new CountryService();
                 $userService         = new UserService();
                 $countries = $countryService->getCountries();
-                $unfilledFieldsArray = $userService->unfilledFields($user);
 
                 return response()->json(
                     [
                         'user' => $userResource,
                         'countries' => $countries,
-                        'unfilledFields' => $unfilledFieldsArray,
                     ],
                     Response::HTTP_OK
                 );
@@ -124,35 +122,6 @@ class ProfileApiController
             )->save();
 
             $user->load('userInformation');
-
-            if (!empty($requestData['monthly_income'])) {
-                $requestData['monthly_income'] = preg_replace("/[^0-9]/", "", $requestData['monthly_income']);
-            }
-            if (!empty($requestData['document_number'])) {
-                $requestData['document_number'] = preg_replace("/[^0-9]/", "", $requestData['document_number']);
-            }
-            $user->userInformation->fill(
-                [
-                    'sex' => $requestData['sex'],
-                    'marital_status' => !empty($requestData['marital_status']) ?
-                        (new UserInformation())->present()->getMaritalStatus($requestData['marital_status']) : null,
-                    'nationality' => $requestData['nationality'],
-                    'mother_name' => $requestData['mother_name'],
-                    'father_name' => $requestData['father_name'],
-                    'spouse_name' => $requestData['spouse_name'],
-                    'birth_place' => $requestData['birth_place'],
-                    'birth_city' => $requestData['birth_city'],
-                    'birth_state' => $requestData['birth_state'],
-                    'birth_country' => $requestData['birth_country'],
-                    'monthly_income' => $requestData['monthly_income'],
-                    'document_issue_date' => $requestData['document_issue_date'],
-                    'document_expiration_date' => $requestData['document_expiration_date'],
-                    'document_issuer' => $requestData['document_issuer'],
-                    'document_issuer_state' => $requestData['document_issuer_state'],
-                    'document_number' => $requestData['document_number'],
-//                    'document_serial_number' => $requestData['document_serial_number'],
-                ]
-            )->save();
 
             $companyModel = new Company();
             $company = $companyModel->where('user_id', $user->id)

@@ -104,7 +104,6 @@ $(document).ready(function () {
             success: function success(response) {
                 var company = response.company;
                 var banks = response.banks;
-                var unfilledFields = response.unfilledFields;
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -156,28 +155,6 @@ $(document).ready(function () {
                     $("#active_flag").attr('checked', 'checked');
                 } else {
                     $("#active_flag").attr('checked', false);
-                }
-
-                if (!isEmpty(unfilledFields)) {
-                    $('form input, select').each(function () {
-                        let id = $(this).attr('id');
-                        let attr = $(this).attr('data-plugin');
-                        if (unfilledFields.includes(id)) {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
-                            } else {
-                                $(this).addClass('input-is-invalid');
-                            }
-                        } else {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
-                            } else {
-                                if ($(this).hasClass('input-is-invalid')) {
-                                    $(this).removeClass('input-is-invalid');
-                                }
-                            }
-                        }
-                    });
                 }
 
                 if (company.country === 'usa') {
