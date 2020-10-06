@@ -67,6 +67,7 @@ $(document).ready(function () {
         }
         if (companyStatusTranslated[company.contract_document_status] === 'Aprovado') {
             $("#company_document").attr('disabled', 'disabled');
+            $("#fantasy_name").attr('disabled', 'disabled');
             $("#details-document-person-juridic-contract").hide();
         } else {
             $("#company_document").removeAttr('disabled');
