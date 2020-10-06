@@ -172,29 +172,6 @@ class UserService
             return true;
         } elseif (empty($user->date_birth)) {
             return true;
-        } elseif (empty($userInformation->sex)) {
-            return true;
-        } elseif (empty($userInformation->marital_status)) {
-            return true;
-        } elseif (empty($userInformation->nationality)) {
-            return true;
-        } elseif ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
-            && empty($userInformation->spouse_name)) {
-            return true;
-        } elseif (empty($userInformation->birth_city)) {
-            return true;
-        } elseif (empty($userInformation->birth_country)) {
-            return true;
-        } elseif (empty($userInformation->monthly_income)) {
-            return true;
-        } elseif (empty($userInformation->document_number)) {
-            return true;
-        } elseif (empty($userInformation->document_issue_date)) {
-            return true;
-        } elseif (empty($userInformation->document_issuer)) {
-            return true;
-        } elseif (empty($userInformation->document_issuer_state)) {
-            return true;
         } else {
             return false;
         }
