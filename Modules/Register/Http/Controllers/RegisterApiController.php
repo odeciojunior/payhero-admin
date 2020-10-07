@@ -22,6 +22,7 @@ use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Services\IdwallService;
 use Modules\Core\Services\IpService;
 use Modules\Core\Services\SmsService;
 use Modules\Register\Entities\RegistrationToken;
@@ -388,6 +389,7 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
+                'protocol' => $company['result']['numero'],
             ], 200
         );
 
@@ -413,7 +415,7 @@ class RegisterApiController extends Controller
 
         }
 
-        if ($data['email'] == 'kim@mail.com' || $userModel->where('email', $data['email'])->count()) {
+        if ($userModel->where('email', $data['email'])->count()) {
 
             return response()->json(
                 [
@@ -1026,8 +1028,9 @@ class RegisterApiController extends Controller
      */
     private function createCompanyToUser($requestData, Company $companyModel, User $user): void
     {
-        $companyService = app(CompanyService::class);
-        $companyName = $requestData['company_document'] ? $companyService->getCompanyByIdwallCNPJ($requestData['company_document']) : null;
+        $companyService = new IdwallService();
+        $companyIdwall = $requestData['protocol'] ? $companyService->getReportByProtocolNumber($requestData['protocol']) : null;
+        $company = json_decode($companyIdwall, true);
 
         $streetCompany = $requestData['street_company'] ?? null;
         $numberCompany = $requestData['number_company'] ?? null;
@@ -1039,7 +1042,8 @@ class RegisterApiController extends Controller
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
-        $fantasy_name = $is_physical_person ? $user->name : $companyName['result']['cnpj']['nome_empresarial'];
+        $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
+        $idwallResult = $companyIdwall ?? null;
 
         $companyModel->create(
             [
@@ -1060,6 +1064,7 @@ class RegisterApiController extends Controller
                 'agency_digit' => $agencyDigit,
                 'account' => $requestData['account'],
                 'account_digit' => $requestData['account_digit'],
+                'id_wall_result' => $idwallResult,
             ]
         );
     }
@@ -1074,8 +1079,8 @@ class RegisterApiController extends Controller
         $tokenModel = new RegistrationToken();
         $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
-        $email = ($tokenModel->where('type_data', $user->email)->pluck('validated')->first());
-        $cellphone = ($tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first());
+        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->first();
+        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first();
 
         if (empty($email) || empty($cellphone)) {
             return false;
