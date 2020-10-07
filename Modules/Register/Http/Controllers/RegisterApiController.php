@@ -87,7 +87,7 @@ class RegisterApiController extends Controller
              *  VALIDAÇÕES
              */
 
-            if (empty($requestData['parameter'])) {
+            if (!empty($requestData['parameter'])) {
                 if ($invitation = $this->verifyInvitation($user,$requestData)) {
                     if ($invitation['success'] == 'false')
                         return response()->json(
@@ -140,8 +140,6 @@ class RegisterApiController extends Controller
             }
 
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
-            $this->sendWelcomeEmail($requestData);
-
 
             if (env('APP_ENV') == 'production') {
                 return response()->json([
@@ -150,6 +148,7 @@ class RegisterApiController extends Controller
                 ], 403);
             } else {
                 \DB::commit();
+                $this->sendWelcomeEmail($requestData);
 
                 return response()->json(
                     [
@@ -231,7 +230,7 @@ class RegisterApiController extends Controller
 
                     return [
                         'success' => 'false',
-                        'message' => 'Link convite inválido'
+                        'message' => 'Registro sem convite'
                     ];
                 }
             }
@@ -777,7 +776,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToEmail->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+            if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
@@ -910,7 +909,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToPhone->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+            if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
