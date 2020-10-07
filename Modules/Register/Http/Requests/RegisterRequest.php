@@ -50,6 +50,7 @@ class RegisterRequest extends FormRequest
             'neighborhood_company' => 'nullable',
             'street_company'       => 'nullable',
             'number_company'       => 'nullable',
+            'protocol'             => 'nullable',
 
             'privacy_terms'       => 'required',
             'use_terms'           => 'required',
