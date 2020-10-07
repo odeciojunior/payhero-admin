@@ -1068,10 +1068,9 @@ class RegisterApiController extends Controller
      * @param $user
      * @return bool
      */
-    public function verifyTokenValidate($user)
+    public function verifyTokenValidate(User $user)
     {
-        $userModel = new User();
-        $user = $userModel->find(3191);
+
         $tokenModel = new RegistrationToken();
         $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
