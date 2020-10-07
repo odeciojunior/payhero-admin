@@ -94,6 +94,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('08:00');
         $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('12:00');
         $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('20:00');
+
+        //check invites expired
+        $schedule->command('verify:inviteexpired')->dailyAt('01:00');
     }
 
     /**

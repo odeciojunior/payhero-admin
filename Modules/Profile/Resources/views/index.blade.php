@@ -125,173 +125,7 @@
                                                         para verificá-lo!
                                                     </small>
                                                 </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="document_number">Identidade (RG)</label>
-                                                        <input name="document_number" value="" type="text" class="input-pad" id="document_number" placeholder="Identidade (RG)">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="document_issue_date">Data de emissão identidade</label>
-                                                        <input name="document_issue_date" value="" type="date"
-                                                               class="input-pad" id="document_issue_date" onkeydown="return false">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="document_expiration_date">Data de expiração identidade</label>
-                                                        <input name="document_expiration_date" value="" type="date"
-                                                               class="input-pad" id="document_expiration_date" onkeydown="return false">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-6'>
-                                                    <div class="form-group">
-                                                        <label for="document_issuer_state">Estado emissor identidade</label>
-                                                        {{--                                                <input name="document_issuer_state" value="" type="text" class="input-pad" id="document_issuer_state" placeholder="Estado do emissor do documento">--}}
-                                                        <select id="document_issuer_state" name='document_issuer_state' class="select-pad">
-                                                            <option value="">Selecione</option>
-                                                            <option value="São Paulo">São Paulo</option>
-                                                            <option value="Minas Gerais">Minas Gerais</option>
-                                                            <option value="Rio de Janeiro">Rio de Janeiro</option>
-                                                            <option value="Bahia">Bahia</option>
-                                                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
-                                                            <option value="Paraná">Paraná</option>
-                                                            <option value="Pernambuco">Pernambuco</option>
-                                                            <option value="Ceará">Ceará</option>
-                                                            <option value="Pará">Pará</option>
-                                                            <option value="Maranhão">Maranhão</option>
-                                                            <option value="Santa Catarina">Santa Catarina</option>
-                                                            <option value="Goiás">Goiás</option>
-                                                            <option value="Paraíba">Paraíba</option>
-                                                            <option value="Espírito Santo">Espírito Santo</option>
-                                                            <option value="Amazonas">Amazonas</option>
-                                                            <option value="Alagoas">Alagoas</option>
-                                                            <option value="Piauí">Piauí</option>
-                                                            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
-                                                            <option value="Mato Grosso">Mato Grosso</option>
-                                                            <option value="Distrito Federal">Distrito Federal</option>
-                                                            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
-                                                            <option value="Sergipe">Sergipe</option>
-                                                            <option value="Rondônia">Rondônia</option>
-                                                            <option value="Tocantins">Tocantins</option>
-                                                            <option value="Acre">Acre</option>
-                                                            <option value="Amapá">Amapá</option>
-                                                            <option value="Roraima">Roraima</option>
-                                                            <option value="Bahia">Bahia</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-6'>
-                                                    <div class="form-group">
-                                                        <label for="document_issuer">Órgão emissor identidade</label>
-                                                        <input name="document_issuer" value="" type="text" class="input-pad" id="document_issuer" placeholder="Órgão emissor do documento">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <label for="sex">Sexo</label>
-                                                    <select id="sex" name='sex' class="select-pad">
-                                                        <option value="">Selecione</option>
-                                                        <option value="male">Masculino</option>
-                                                        <option value="female">Feminino</option>
-                                                    </select>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <label for="nationality">Nacionalidade</label>
-                                                    <select id="nationality" name='nationality' class="select-pad" style='width:100%' data-plugin="select2">
-                                                        <option value="">Selecione</option>
-                                                    </select>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <label for="marital_status">Estado Civil</label>
-                                                    <select id="marital_status" name='marital_status' class="form-control select-pad">
-                                                        <option value="">Selecione</option>
-                                                        <option value="married">Casado</option>
-                                                        <option value="single">Solteiro</option>
-                                                        <option value="divorced">Divorciado</option>
-                                                        <option value="separated">Separado</option>
-                                                        <option value="widowed">Viúvo</option>
-                                                    </select>
-                                                </div>
 
-                                                <div class="form-group col-lg-4 mt-10">
-                                                    <label for="mother_name">Nome completo da mãe</label>
-                                                    <input name="mother_name" value="" type="text" class="input-pad" id="mother_name" placeholder="Nome completo da mãe">
-                                                </div>
-                                                <div class="form-group col-lg-4 mt-10">
-                                                    <label for="father_name">Nome completo do pai</label>
-                                                    <input name="father_name" value="" type="text" class="input-pad" id="father_name" placeholder="Nome completo do pai">
-                                                </div>
-                                                <div class='col-lg-4 mt-10'>
-                                                    <div class="form-group spouse-name-div" style='display:none;'>
-                                                        <label for="spouse_name">Nome completo do cônjuge</label>
-                                                        <input name="spouse_name" value="" type="text" class="input-pad" id="spouse_name" placeholder="Nome completo do cônjuge">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="birth_country">País de nascimento</label>
-                                                        {{--                                                <input name="birth_country" value="" type="text" class="input-pad" id="birth_country" placeholder="País de nascimento">--}}
-                                                        <select id="birth_country" name='birth_country' class="select-pad" style='width:100%' data-plugin="select2">
-                                                            <option value="">Selecione</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4 div-birth-state'>
-                                                    <div class="form-group">
-                                                        <label for="birth_state">Estado de nascimento</label>
-                                                        {{--                                                <input name="birth_state" value="" type="text" class="input-pad" id="birth_state" placeholder="Estado de nascimento">--}}
-                                                        <select id="birth_state" name='birth_state' class="form-control select-pad">
-                                                            <option value="">Selecione</option>
-                                                            <option value="São Paulo">São Paulo</option>
-                                                            <option value="Minas Gerais">Minas Gerais</option>
-                                                            <option value="Rio de Janeiro">Rio de Janeiro</option>
-                                                            <option value="Bahia">Bahia</option>
-                                                            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
-                                                            <option value="Paraná">Paraná</option>
-                                                            <option value="Pernambuco">Pernambuco</option>
-                                                            <option value="Ceará">Ceará</option>
-                                                            <option value="Pará">Pará</option>
-                                                            <option value="Maranhão">Maranhão</option>
-                                                            <option value="Santa Catarina">Santa Catarina</option>
-                                                            <option value="Goiás">Goiás</option>
-                                                            <option value="Paraíba">Paraíba</option>
-                                                            <option value="Espírito Santo">Espírito Santo</option>
-                                                            <option value="Amazonas">Amazonas</option>
-                                                            <option value="Alagoas">Alagoas</option>
-                                                            <option value="Piauí">Piauí</option>
-                                                            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
-                                                            <option value="Mato Grosso">Mato Grosso</option>
-                                                            <option value="Distrito Federal">Distrito Federal</option>
-                                                            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
-                                                            <option value="Sergipe">Sergipe</option>
-                                                            <option value="Rondônia">Rondônia</option>
-                                                            <option value="Tocantins">Tocantins</option>
-                                                            <option value="Acre">Acre</option>
-                                                            <option value="Amapá">Amapá</option>
-                                                            <option value="Roraima">Roraima</option>
-                                                            <option value="Bahia">Bahia</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="birth_city">Cidade de nascimento</label>
-                                                        <input name="birth_city" value="" type="text" class="input-pad" id="birth_city" placeholder="Cidade de nascimento">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-8'>
-                                                    <div class="form-group">
-                                                        <label for="birth_place">Local de nascimento</label>
-                                                        <input name="birth_place" value="" type="text" class="input-pad" id="birth_place" placeholder="Local de nascimento">
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-4'>
-                                                    <div class="form-group">
-                                                        <label for="monthly_income">Renda mensal (em reais)</label>
-                                                        <input name="monthly_income" value="" type="text" class="input-pad" id="monthly_income" placeholder="Renda mensal (em reais)">
-                                                    </div>
-                                                </div>
 
                                             </div>
                                         </div>
@@ -484,22 +318,22 @@
                                     </div>
                                     {{--CARTAO DE CRÉDITO--}}
                                     {{--CARTAO DE DEBITO--}}
-                                    <div class='col-lg-12'>
-                                        <h6 class='title-pad'>Cartão de débito:</h6>
-                                    </div>
-                                    <div class='col'></div>
-                                    <div class='row mt-15 col-xl-12'>
-                                        <div class='form-group col-xl-5'>
-                                            <label for='debit-card-tax'>Por venda (porcentagem):</label>
-                                            <input id='debit-card-tax' disabled='disabled' class="form-control">
-                                        </div>
-                                        <div class='form-group col-xl-5'>
-                                            <div class='form-group'>
-                                                <label for='debit-card-release'>Dias para liberação:</label>
-                                                <input id='debit-card-release' disabled='disabled' class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
+{{--                                    <div class='col-lg-12'>--}}
+{{--                                        <h6 class='title-pad'>Cartão de débito:</h6>--}}
+{{--                                    </div>--}}
+{{--                                    <div class='col'></div>--}}
+{{--                                    <div class='row mt-15 col-xl-12'>--}}
+{{--                                        <div class='form-group col-xl-5'>--}}
+{{--                                            <label for='debit-card-tax'>Por venda (porcentagem):</label>--}}
+{{--                                            <input id='debit-card-tax' disabled='disabled' class="form-control">--}}
+{{--                                        </div>--}}
+{{--                                        <div class='form-group col-xl-5'>--}}
+{{--                                            <div class='form-group'>--}}
+{{--                                                <label for='debit-card-release'>Dias para liberação:</label>--}}
+{{--                                                <input id='debit-card-release' disabled='disabled' class="form-control">--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     {{--CARTAO DE DEBITO--}}
                                     {{--BOLETO--}}
                                     <div class='col-lg-12'>
@@ -874,7 +708,7 @@
     </style>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=12')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=13')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

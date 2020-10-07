@@ -213,7 +213,34 @@ class CompanyService
 
             return json_decode($response, true);
         } catch (Exception $e) {
-            return;
+            return false;
+        }
+    }
+
+    /**
+     * @param $cnpj
+     * @return false|mixed
+     */
+    public function getCompanyByIdwallCNPJ($cnpj)
+    {
+        try {
+            $idewallService = new IdwallService();
+            $companyStatus = json_decode($idewallService->getGenerateProtocolByCNPJ($cnpj), true);
+            $companyProtocol = $companyStatus['result']['numero'];
+
+            /**
+             * SLEEP É NECESSÁRIO PARA TER TEMPO DE PROCESSAR O RELATÓRIO
+             */
+            sleep(3);
+
+            if (!empty($companyProtocol) && $companyStatus['status_code'] == 200) {
+                $company = $idewallService->getReportByProtocolNumber($companyProtocol);
+                return json_decode($company, true);
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
         }
     }
 
