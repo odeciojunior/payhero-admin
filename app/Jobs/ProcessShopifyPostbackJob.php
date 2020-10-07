@@ -64,6 +64,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                 'productsPlansSale.product'
             ])->where('shopify_order', $shopifyOrder)
                 ->where('project_id', $projectId)
+                ->where('status', $salesModel->present()->getStatus('approved'))
                 ->get();
 
             foreach ($sales as $sale) {
