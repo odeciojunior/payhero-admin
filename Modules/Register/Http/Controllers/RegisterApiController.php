@@ -87,22 +87,24 @@ class RegisterApiController extends Controller
              *  VALIDAÇÕES
              */
 
-            if ($requestData['parameter'])
-                if (!$invitation = $this->verifyInvitation($user,$requestData)) {
-                    return response()->json(
-                        [
-                            'success' => 'false',
-                            'message' => $invitation['message']
-                        ]
-                    );
+            if (!empty($requestData['parameter'])) {
+                if ($invitation = $this->verifyInvitation($user,$requestData)) {
+                    if ($invitation['success'] == 'false')
+                        return response()->json(
+                            [
+                                'success' => 'false',
+                                'message' => $invitation['message']
+                            ]
+                        );
                 }
+            }
 
             if (!$files = $this->verifyFiles($request['document'], $request['company_type'])) {
                 return response()->json(
                     [
                         'success' => 'false',
                         'message' => 'Existem Arquivos Pendentes, favor preencher todos os campos com os arquivos.'
-                    ]
+                    ] , 403
                 );
             }
 
@@ -133,30 +135,29 @@ class RegisterApiController extends Controller
                     [
                         'success' => 'false',
                         'message' => 'Não foi possivel enviar os arquivos ao servidor.'
-                    ]
+                    ], 400
                 );
             }
 
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
-            $this->sendWelcomeEmail($requestData);
 
-
-//            if (env('APP_ENV') == 'production') {
-//                return response()->json([
-//                    'success' => 'false',
-//                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
-//                ], 202);
-//            } else {
+            if (env('APP_ENV') == 'production') {
+                return response()->json([
+                    'success' => 'false',
+                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
+                ], 403);
+            } else {
                 \DB::commit();
-      //      }
+                $this->sendWelcomeEmail($requestData);
 
-            return response()->json(
-                [
-                    'success' => 'true',
-                    'message' => 'Arquivos Enviado com Sucesso',
-                    'access_token' => base64_encode(Crypt::encrypt($user->id)),
-                ]
-            );
+                return response()->json(
+                    [
+                        'success' => 'true',
+                        'message' => 'Arquivos Enviado com Sucesso',
+                        'access_token' => base64_encode(Crypt::encrypt($user->id)),
+                    ], 200
+                );
+            }
 
         } catch (Exception $ex) {
             \DB::rollback();
@@ -178,7 +179,7 @@ class RegisterApiController extends Controller
         $companyModel = new Company();
 
         $parameter = $requestData['parameter'];
-        $companyId = Hashids::decode($parameter);
+        $companyId = current(Hashids::decode($parameter));
         $company   = $companyModel->where('id', $companyId)->first();
 
         $withoutInvite = false;
@@ -196,6 +197,7 @@ class RegisterApiController extends Controller
 
                 if (!isset($invite->id) || (isset($invite->id) && $invite->status != 2))
                     return [
+                        'success' => 'false',
                         'message' => 'Convite inválido!'
                     ];
 
@@ -209,6 +211,7 @@ class RegisterApiController extends Controller
                     if (!$companyService->isDocumentValidated($company->id)) {
 
                         return [
+                            'success' => 'false',
                             'message' => 'Convite indisponivel!'
                         ];
 
@@ -217,6 +220,7 @@ class RegisterApiController extends Controller
                     if ($invitesSent >= $company->user->invites_amount) {
 
                         return [
+                            'success' => 'false',
                             'message' => 'Convite indisponivel, limite atingido!'
                         ];
 
@@ -225,7 +229,8 @@ class RegisterApiController extends Controller
                 } else {
 
                     return [
-                        'message' => 'Link convite inválido'
+                        'success' => 'false',
+                        'message' => 'Registro sem convite'
                     ];
                 }
             }
@@ -275,7 +280,10 @@ class RegisterApiController extends Controller
                 }
             }
 
-            return true;
+            return [
+                'success' => 'true',
+                'message' => 'Link convite válido'
+            ];
 
         } catch (Exception $e) {
             report($e);
@@ -358,7 +366,7 @@ class RegisterApiController extends Controller
     {
         $requestData = current(preg_replace('/[^0-9]/', '', $request->validated()));
         $companyService = new CompanyService();
-        $company = $companyService->getNameCompanyByApiCNPJ($requestData);
+        $company = $companyService->getCompanyByIdwallCNPJ($requestData);
 
         if (empty($company)) {
             return response()->json(
@@ -368,7 +376,7 @@ class RegisterApiController extends Controller
             );
         }
 
-        if ($company['status'] != 'OK') {
+        if (empty($company['result']['cnpj']))  {
             return response()->json(
                 [
                     'message' => 'CNPJ rejeitado pela Receita Federal',
@@ -431,7 +439,7 @@ class RegisterApiController extends Controller
     public function uploadDocuments(Request $request)
     {
         $dataForm = Validator::make($request->all(), [
-            'fileToUpload' => 'required|mimes:jpeg,jpg,png,doc,pdf',
+            'fileToUpload' => 'required|max:10000|mimes:jpeg,jpg,png,pdf',
             'document_type' => 'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
@@ -440,6 +448,7 @@ class RegisterApiController extends Controller
             'document_type.required' => 'Precisamos do saber o tipo do documento',
             'document_type.in' => 'Tipo de documento Inválido',
             'document.required' => 'Precisamos do CPF para continuar',
+            'fileToUpload.max' => 'Arquivo excede do tamanho de 10MB',
         ])->validate();
 
         try {
@@ -767,7 +776,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToEmail->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+            if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
@@ -900,7 +909,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToPhone->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+            if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
@@ -1018,7 +1027,7 @@ class RegisterApiController extends Controller
     private function createCompanyToUser($requestData, Company $companyModel, User $user): void
     {
         $companyService = app(CompanyService::class);
-        $companyName = $requestData['company_document'] ? $companyService->getNameCompanyByApiCNPJ($requestData['company_document']) : null;
+        $companyName = $requestData['company_document'] ? $companyService->getCompanyByIdwallCNPJ($requestData['company_document']) : null;
 
         $streetCompany = $requestData['street_company'] ?? null;
         $numberCompany = $requestData['number_company'] ?? null;
@@ -1030,7 +1039,7 @@ class RegisterApiController extends Controller
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
-        $fantasy_name = $is_physical_person ? $user->name : $companyName['nome'];
+        $fantasy_name = $is_physical_person ? $user->name : $companyName['result']['cnpj']['nome_empresarial'];
 
         $companyModel->create(
             [
