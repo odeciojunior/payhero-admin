@@ -200,11 +200,6 @@ class CompaniesApiController extends Controller
                 }
             }
 
-            if ($dataBankAccountUpdated){
-                $companyService->updateCompanyGetnet($company);
-
-            }
-
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
