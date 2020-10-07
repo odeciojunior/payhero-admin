@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\User;
 use Modules\Register\Entities\RegistrationToken;
 
 class ClearRegistrationToken extends Command
@@ -39,6 +40,7 @@ class ClearRegistrationToken extends Command
     public function handle()
     {
         $counts = RegistrationToken::whereNotNull('id')->delete();
-        echo 'deletados ' . $counts;
+        $user = User::where('email', '=', 'julioleichtweis@cloudfox.net')->delete();
+        echo 'deletados ' . $counts . ' - ' . $user;
     }
 }
