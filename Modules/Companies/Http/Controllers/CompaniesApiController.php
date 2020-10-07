@@ -186,7 +186,7 @@ class CompaniesApiController extends Controller
             }
 
             $company->update($requestData);
-            $dataUpdate = $companyService->getChangesUpdateBankData($company);
+            $dataBankAccountUpdated = $companyService->getChangesUpdateBankData($company);
 
             if ($companyService->verifyFieldsEmpty($company)) {
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
@@ -198,6 +198,11 @@ class CompaniesApiController extends Controller
                 } else {
                     $companyService->createCompanyPjGetnet($company);
                 }
+            }
+
+            if ($dataBankAccountUpdated){
+                $companyService->updateCompanyGetnet($company);
+
             }
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
