@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
@@ -221,8 +222,10 @@ class DashboardApiController extends Controller
                                                ifnull(max(if(t.id is null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale")
                         ->join('sales as s', 's.id', '=', 'pps.sale_id')
                         ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
+                        ->leftJoin('products as p', 'p.id', '=', 'pps.product_id')
                         ->where('s.owner_id', $userId)
                         ->where('s.status', $saleModel->present()->getStatus('approved'))
+                        ->where('p.type_enum', (new Product)->present()->getType('physical'))
                         ->first();
 
                     $trackingsInfo->unknown_percentage = $trackingsInfo->total ? number_format($trackingsInfo->unknown / $trackingsInfo->total * 100, 2) : '0.00';

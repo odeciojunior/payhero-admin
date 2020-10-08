@@ -266,31 +266,6 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 ],
             ],
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'block_payments' => 'N',
-            'block_transactions' => 'N',
-            'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
-            'economic_activity_classification_code' => FoxUtils::onlyNumbers(
-                $company->economic_activity_classification_code
-            ),
-            'state_fiscal_document_number' => $stateFiscalNumber,
-            'federal_registration_status' => 'active',
-            'email' => $company->support_email,
-            'business_address' => [
-                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
-                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                'state' => $company->state,
-                'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
-            ],
-            'phone' => [
-                'area_code' => $telephone['dd'],
-                'phone_number' => $telephone['number']
-            ],
-
         ];
     }
 
