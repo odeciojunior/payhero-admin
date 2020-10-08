@@ -16,7 +16,8 @@ use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
 use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Transformers\ProductsResource;
-use Exception;
+use Modules\Products\Transformers\ProductsSaleResource;
+use Modules\Products\Transformers\ProductsSelectResource;
 use Intervention\Image\Facades\Image;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
@@ -25,10 +26,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Modules\Products\Transformers\ProductsSaleResource;
-use Modules\Products\Transformers\ProductsSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 
 /**
  * Class ProductsApiController
@@ -36,13 +36,8 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class ProductsApiController extends Controller
 {
-    /**
-     * @var DigitalOceanFileService
-     */
     private $digitalOceanFileService;
-    /**
-     * @var AmazonFileService
-     */
+
     private $amazonFileService;
 
     /**
@@ -70,19 +65,18 @@ class ProductsApiController extends Controller
     }
 
     /**
-     * @param IndexProductRequest $request
-     * @return AnonymousResourceCollection
      * Monta o select com opção Produtos Shopify e Meus Produtos
+     * @param  IndexProductRequest  $request
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(IndexProductRequest $request)
     {
         try {
-
             $productsModel = new Product();
 
             $filters = $request->validated();
 
-            activity()->on($productsModel)->tap(function(Activity $activity) {
+            activity()->on($productsModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos os produtos');
 
@@ -93,7 +87,7 @@ class ProductsApiController extends Controller
             }
 
             if (isset($filters['name'])) {
-                $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
+                $productsSearch->where('name', 'LIKE', '%'.$filters['name'].'%');
             }
 
             if (isset($filters['project']) && $filters['shopify'] == 1) {
@@ -103,68 +97,54 @@ class ProductsApiController extends Controller
 
             return ProductsResource::collection($productsSearch->orderBy('id', 'desc')->paginate(8));
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar buscar produtos - (ProductsApiController - index)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar buscar produtos, tente novamente mais tarde'], 400);
         }
     }
 
-    /**
-     * @return JsonResponse|CreateProductResource
-     */
     public function create()
     {
         try {
-            $categoryModel = new Category();
-
-            activity()->tap(function(Activity $activity) {
+            activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela cadastro de produto');
 
-            $categories = $categoryModel->all();
-            if (!empty($categories)) {
-                return CreateProductResource::make(['categories' => $categories]);
-            } else {
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
-                                        ], 400);
+            $categories = (new Category())->all();
+
+            if (empty($categories)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente  mais tarde!'], 400);
             }
+
+            return CreateProductResource::make(['categories' => $categories]);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar categorias (ProductsApiController - store)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente  mais tarde!'], 400);
         }
     }
 
-    /**
-     * @param CreateProductRequest $request
-     * @return JsonResponse
-     */
     public function store(CreateProductRequest $request)
     {
         try {
-            $productModel  = new Product();
+            $productModel = new Product();
             $categoryModel = new Category();
 
-            $data            = $request->validated();
+            $data = $request->validated();
             $data['shopify'] = 0;
-            $data['user']    = auth()->user()->account_owner_id;
-            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
+            $data['user'] = auth()->user()->account_owner_id;
+            $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
             $data['user_id'] = auth()->user()->account_owner_id;
             //            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
-            $data['name']               = FoxUtils::removeSpecialChars($data['name']);
-            $data['description']        = FoxUtils::removeSpecialChars($data['description']);
+            $data['name'] = FoxUtils::removeSpecialChars($data['name']);
+            $data['description'] = FoxUtils::removeSpecialChars($data['description']);
 
             $data['status_enum'] = $data['type_enum'] == 'digital' ? $productModel->present()->getStatus('analyzing') : null;
 
             $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
-            $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+            $category = $categoryModel->where('name', 'like', '%'.'Outros'.'%')->first();
             $data['category_id'] = $category->id;
 
             $product = $productModel->create($data);
@@ -172,7 +152,6 @@ class ProductsApiController extends Controller
             $productPhoto = $request->file('product_photo');
 
             if ($productPhoto != null) {
-
                 try {
                     $img = Image::make($productPhoto->getPathname());
                     $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
@@ -180,11 +159,12 @@ class ProductsApiController extends Controller
                     $img->save($productPhoto->getPathname());
 
                     $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/products', $productPhoto);
+                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/products',
+                            $productPhoto);
 
                     $product->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
+                        'photo' => $digitalOceanPath,
+                    ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
                     report($e);
@@ -194,11 +174,12 @@ class ProductsApiController extends Controller
                 try {
                     $this->getAmazonFileService()->changeDisk('s3_digital_product');
                     $amazonPath = $this->getAmazonFileService()
-                                       ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
+                        ->uploadFile('products/'.Hashids::encode($product->id), $data['digital_product_url'], null,
+                            false, 'private');
 
                     $product->update([
-                                         'digital_product_url' => $amazonPath,
-                                     ]);
+                        'digital_product_url' => $amazonPath,
+                    ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar anexo de produto digital');
                     report($e);
@@ -206,20 +187,17 @@ class ProductsApiController extends Controller
             }
 
             return response()->json([
-                                        'message' => 'Produto salvo com sucesso!',
-                                    ], 200);
+                'message' => 'Produto salvo com sucesso!',
+            ], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar salvar produto (ProductsApiController - store)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse|AnonymousResourceCollection
      * Traz a lista de produtos
      */
@@ -229,10 +207,10 @@ class ProductsApiController extends Controller
             $productsModel = new Product();
 
             $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id)
-                                            ->where('shopify', $request->input('shopify'));
+                ->where('shopify', $request->input('shopify'));
 
             if ($request->has('name') && !empty($request->input('name'))) {
-                $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
+                $productsSearch->where('name', 'LIKE', '%'.$request->nome.'%');
             }
 
             if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
@@ -242,300 +220,239 @@ class ProductsApiController extends Controller
 
             return ProductsResource::collection($productsSearch->orderBy('id', 'desc')->paginate(8));
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar produtos (ProductsController - index)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse|EditProductResource|void
-     */
     public function edit($id)
     {
         try {
-            $productModel  = new Product();
+            if (empty($id)) {
+                return response()->json(['message' => 'Produto não encontrado'], 400);
+            }
+
+            $productModel = new Product();
             $categoryModel = new Category();
 
-            $productId = current(Hashids::decode($id));
+            $product = $productModel->find(current(Hashids::decode($id)));
 
-            if ($productId) {
-                $product    = $productModel->find($productId);
-                $categories = $categoryModel->all();
-
-                activity()->on($productModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar produto ' . $product->name);
-
-                if (Gate::allows('edit', [$product])) {
-                    return EditProductResource::make([
-                                                         'product'    => $product,
-                                                         'categories' => $categories,
-                                                     ]);
-                } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                            ], 400);
-                }
-            } else {
-
-                return response()->json([
-                                            'message' => 'Produto não encontrado',
-                                        ], 400);
+            if (!Gate::allows('edit', [$product])) {
+                return response()->json(['message' => 'Sem permissão para editar este produto'], 400);
             }
+
+            activity()->on($productModel)->tap(function (Activity $activity) use ($id) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = current(Hashids::decode($id));
+            })->log('Visualizou tela editar produto '.$product->name);
+
+            $categories = $categoryModel->all();
+
+            return EditProductResource::make([
+                'product' => $product,
+                'categories' => $categories,
+            ]);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela de editar Produto (ProductsApiController - edit)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Produto não encontrado',
-                                    ], 400);
+            return response()->json(['message' => 'Produto não encontrado'], 400);
         }
     }
 
-    /**
-     * @param $id
-     * @param UpdateProductRequest $request
-     * @return JsonResponse
-     */
     public function update($id, UpdateProductRequest $request)
     {
         try {
-            $data          = $request->validated();
-            $productModel  = new Product();
+            $data = $request->validated();
+            $productModel = new Product();
             $categoryModel = new Category();
 
-            //            $category = $categoryModel->find(current(Hashids::decode($data['category'])));
-
-            $category         = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+            $category = $categoryModel->where('name', 'like', '%'.'Outros'.'%')->first();
             $data['category'] = $category->id;
 
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
-            $productId                  = current(Hashids::decode($id));
-            if (!empty($productId) && !empty($data['category'])) {
-                $product = $productModel->find($productId);
-                if (Gate::allows('update', [$product])) {
+            $productId = current(Hashids::decode($id));
 
-                    if (isset($data['cost'])) {
-                        $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
-                    }
-
-                    $data['name']        = FoxUtils::removeSpecialChars($data['name']);
-                    $data['description'] = FoxUtils::removeSpecialChars($data['description']);
-
-                    $data['status_enum'] = $data['type_enum'] == 'digital' ? $productModel->present()->getStatus('analyzing') : null;
-
-                    $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
-
-                    $product->update($data);
-
-                    $productPhoto = $request->file('product_photo');
-
-                    if ($productPhoto != null) {
-
-                        try {
-                            $this->getDigitalOceanFileService()->deleteFile($product->photo);
-
-                            $img = Image::make($productPhoto->getPathname());
-                            $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                            $img->resize(200, 200);
-                            $img->save($productPhoto->getPathname());
-
-                            $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/products', $productPhoto);
-
-                            $product->update([
-                                                 'photo' => $digitalOceanPath,
-                                             ]);
-                        } catch (Exception $e) {
-                            Log::warning('ProductsApiController - update- Erro ao enviar foto do produto');
-                            report($e);
-
-                            return response()->json([
-                                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                                    ], 400);
-                        }
-                    }
-                    if (!empty($data['digital_product_url'])) {
-                        try {
-                            $this->getAmazonFileService()->changeDisk('s3_digital_product');
-                            $amazonPath = $this->getAmazonFileService()
-                                               ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
-
-                            $product->update([
-                                                 'digital_product_url' => $amazonPath,
-                                             ]);
-                        } catch (Exception $e) {
-                            Log::warning('ProductController - update - Erro ao enviar anexo de produto digital');
-                            report($e);
-                        }
-                    }
-
-                    return response()->json([
-                                                'message' => 'Produto Atualizado com sucesso!',
-                                            ], 200);
-                } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                            ], 400);
-                }
-            } else {
+            if (empty($productId) && empty($data['category'])) {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
+                ], 400);
             }
+
+            $product = $productModel->find($productId);
+            if (!Gate::allows('update', [$product])) {
+                return response()->json(['message' => 'Sem permissão para atualizar este produto!'], 400);
+            }
+
+            if (isset($data['cost'])) {
+                $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
+            }
+
+            $data['name'] = FoxUtils::removeSpecialChars($data['name']);
+            $data['description'] = FoxUtils::removeSpecialChars($data['description']);
+
+            $data['status_enum'] = $data['type_enum'] == 'digital' ? $productModel->present()->getStatus('analyzing') : null;
+
+            $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
+
+            $product->update($data);
+
+            $productPhoto = $request->file('product_photo');
+
+            if ($productPhoto != null) {
+                try {
+                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+
+                    $img = Image::make($productPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/products',
+                            $productPhoto);
+
+                    $product->update(['photo' => $digitalOceanPath]);
+                } catch (Exception $e) {
+                    report($e);
+
+                    return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+                }
+            }
+
+            if (!empty($data['digital_product_url'])) {
+                try {
+                    $this->getAmazonFileService()->changeDisk('s3_digital_product');
+                    $amazonPath = $this->getAmazonFileService()
+                        ->uploadFile('products/'.Hashids::encode($product->id), $data['digital_product_url'],
+                            null, false, 'private');
+
+                    $product->update(['digital_product_url' => $amazonPath]);
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
+
+            return response()->json(['message' => 'Produto Atualizado com sucesso!'], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar atualizar o produto (ProductsApiController - update)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
     public function destroy($id)
     {
         try {
-            $productModel     = new Product();
+            $productModel = new Product();
             $productPlanModel = new ProductPlan();
 
-            $productId = current(Hashids::decode($id));
-
-            if ($productId) {
-                $product = $productModel->find($productId);
-                if (Gate::allows('destroy', [$product])) {
-                    $productPlan = $productPlanModel->where('product_id', $product->id)->count();
-                    if ($productPlan == 0) {
-                        if (!empty($product->photo)) {
-                            $this->getDigitalOceanFileService()->deleteFile($product->photo);
-                        }
-                        $product->delete();
-
-                        return response()->json([
-                                                    'message' => 'Produto excluido com sucesso',
-                                                ], 200);
-                    } else {
-                        return response()->json([
-                                                    'message' => 'Impossivel excluir, existem planos associados a este produto!',
-                                                ], 400);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                            ], 400);
-                }
-            } else {
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                        ], 400);
+            if (empty($id)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
             }
+
+            $product = $productModel->find(current(Hashids::decode($id)));
+
+            if (!Gate::allows('destroy', [$product])) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+
+            $productPlan = $productPlanModel->where('product_id', $product->id)->count();
+
+            if ($productPlan != 0) {
+                return response()->json([
+                    'message' => 'Impossivel excluir, existem planos associados a este produto!'
+                ], 400);
+            }
+
+            if (!empty($product->photo)) {
+                $this->getDigitalOceanFileService()->deleteFile($product->photo);
+            }
+
+            $product->delete();
+
+            return response()->json(['message' => 'Produto excluido com sucesso'], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar excluir produto (ProductsApiController - destroy)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
     }
 
     public function getProducts(Request $request)
     {
         try {
+            $data = $request->all();
 
-            if ($request->has('project') && !empty($request->input('project'))) {
-                $data           = $request->all();
-                $productService = new ProductService();
-
-                $projectId = current(Hashids::decode($data['project']));
-
-                $products = $productService->getProductsMyProject($projectId);
-
-                return ProductsSelectResource::collection($products);
-            } else {
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                        ], 400);
+            if (empty($data['project'])) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
             }
+
+            $productService = new ProductService();
+            $projectId = current(Hashids::decode($data['project']));
+            $products = $productService->getProductsMyProject($projectId);
+
+            return ProductsSelectResource::collection($products);
         } catch (Exception $e) {
-            Log::warning('Erro aos buscar produtos (ProductsApiController - getProducts)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
         }
     }
 
     public function getProductBySale($saleId)
     {
         try {
-            if ($saleId) {
-                $productService = new ProductService();
-
-                $products = $productService->getProductsBySale($saleId);
-
-                return ProductsSaleResource::collection($products);
-            } else {
+            if (empty($saleId)) {
                 return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
             }
+
+            $productService = new ProductService();
+
+            $products = $productService->getProductsBySale($saleId);
+
+            return ProductsSaleResource::collection($products);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar obter produtos (ProductsApiController - getProductBySale)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
         }
     }
+
     public function getSignedUrl(Request $request)
     {
         try {
             $requestData = $request->all();
 
-            if (!empty($requestData['digital_product_url'])) {
-                $signedUrl = FoxUtils::getAwsSignedUrl($requestData['digital_product_url'], $requestData['url_expiration_time']);
-
-                return response()->json([
-                                            'signed_url' => $signedUrl,
-                                        ]);
-            } else {
+            if (empty($requestData['digital_product_url'])) {
                 return response()->json(['message' => 'Url não encontrada'], 400);
             }
+
+            $signedUrl = FoxUtils::getAwsSignedUrl($requestData['digital_product_url'],
+                $requestData['url_expiration_time']);
+
+            return response()->json(['signed_url' => $signedUrl]);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao gerar url assinada do produto'], 400);
         }
     }
+
     public function verifyProductInPlan(Request $request)
     {
         try {
             $requestData = $request->all();
-            $productPlanModel  = new ProductPlan();
+            $productPlanModel = new ProductPlan();
 
             $productId = current(Hashids::decode($requestData['product_id']));
 
-            if ($productId) {
-                $productInPlan = $productPlanModel->where('product_id', $productId)->exists();
-
-                return response()->json(
-                    [
-                        'product_in_plan' => $productInPlan,
-                    ],
-                    200
-                );
-            } else {
+            if (empty($productId)) {
                 return response()->json(['message' => 'Produto não encontrado'], 400);
             }
 
+            $productInPlan = $productPlanModel->where('product_id', $productId)->exists();
+
+            return response()->json(['product_in_plan' => $productInPlan], 200);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar produto'], 400);
