@@ -134,7 +134,7 @@ class TransfersController extends Controller
             $data['initial_date']  = $dateRange[0];
             $data['final_date']    = $dateRange[1];
             $data['merchant_id']   = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
-            $data['page_size']     = 10;
+            $data['page_size']     = 25;
             $data['page_index']    = 1;
             $result                = $braspagPaymentService->getCompanyFinancialData($data, $companyBraspag->id);
         } catch (Exception $e) {

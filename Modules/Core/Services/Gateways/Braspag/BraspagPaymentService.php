@@ -66,7 +66,7 @@ class BraspagPaymentService extends BraspagService
 
     public function getCompanyFinancialData(array $filters, $companyId)
     {
-        $url = "https://splitsandbox.braspag.com.br/schedule-api/events?initialForecastedDate={$filters['initial_date']}&finalForecastedDate={$filters['final_date']}&pageIndex={$filters['page_index']}&merchantIds={$filters['merchant_id']}";
+        $url = "https://splitsandbox.braspag.com.br/schedule-api/events?initialForecastedDate={$filters['initial_date']}&finalForecastedDate={$filters['final_date']}&pageIndex={$filters['page_index']}&pageSize={$filters['page_size']}&merchantIds={$filters['merchant_id']}";
 
         return $this->sendCurlFinancialAgenda($url, 'GET', null, $companyId);
     }
