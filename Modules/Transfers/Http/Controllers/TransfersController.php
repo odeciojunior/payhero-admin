@@ -12,7 +12,9 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Braspag\BraspagPaymentService;
+use Modules\Transfers\Transformers\BraspagFinancialDataResource;
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Transfers\Transformers\TransfersResource;
 
@@ -123,22 +125,33 @@ class TransfersController extends Controller
     public function getBraspagData(Request $request)
     {
         try {
-            $data                  = $request->all();
-            $user                  = auth()->user();
-            $companyModel          = new Company();
-            $braspagPaymentService = new BraspagPaymentService();
-            $columnName            = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
-            $companyBraspag        = $companyModel->whereNotNull($columnName)
-                                                  ->where('user_id', $user->account_owner_id)->first();
-            $dateRange             = FoxUtils::validateDateRange($data["date_range"]);
-            $data['initial_date']  = $dateRange[0];
-            $data['final_date']    = $dateRange[1];
-            $data['merchant_id']   = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
-            $data['page_size']     = 25;
-            $data['page_index']    = 1;
-            $result                = $braspagPaymentService->getCompanyFinancialData($data, $companyBraspag->id);
+            //            'eb25ce51-f685-41c5-a76a-d8ed09f373c9'
+            $data                            = $request->all();
+            $user                            = auth()->user();
+            $companyModel                    = new Company();
+            $braspagPaymentService           = new BraspagPaymentService();
+            $columnName                      = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $companyBraspag                  = $companyModel->whereNotNull($columnName)
+                                                            ->where('user_id', $user->account_owner_id)->first();
+            $dateRange                       = FoxUtils::validateDateRange($data["date_range"]);
+            $data['initial_forecasted_date'] = $dateRange[0];
+            $data['final_forecasted_date']   = $dateRange[1];
+            $data['merchant_id']             = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
+            $data['page_size']               = 25;
+            $data['page_index']              = !empty($data['page']) ? intval($data['page']) : 1;
+            $result                          = $braspagPaymentService->getCompanyFinancialData($data, $companyBraspag->id);
+            $result                          = json_decode($result);
+
+            return response()->json(
+                [
+                    'page_count' => !property_exists($result, 'Errors') ? $result->PageCount : 0,
+                    'page_size'  => !property_exists($result, 'Errors') ? $result->PageSize : 25,
+                    'page_index' => !property_exists($result, 'Errors') ? $result->PageIndex : 1,
+                    'schedules'  => !property_exists($result, 'Errors') ? $result->Schedules : [],
+                ],
+                200
+            );
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);
 
             return response()->json([

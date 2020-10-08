@@ -1,5 +1,20 @@
 $(document).ready(function () {
-
+    var eventStatusBraspag = {
+        'Scheduled': 'Agendado',
+        'Pending': 'Pendente',
+        'Settled': 'Liquidado',
+        'Error': 'Erro',
+        'WaitingFoAdjustementDebit': 'Aguardando débito de ajuste',
+        'Anticipated': 'Antecipado',
+    };
+    var eventStatusBraspagBadge = {
+        'Scheduled': 'badge-primary',
+        'Pending': 'badge-info',
+        'Settled': 'badge-success',
+        'Error': 'badge-danger',
+        'WaitingFoAdjustementDebit': 'badge-warning',
+        'Anticipated': 'badge-secondary',
+    };
     //Comportamentos da tela
     $('#date_range').daterangepicker({
         startDate: moment().startOf('week'),
@@ -730,7 +745,7 @@ $(document).ready(function () {
         e.preventDefault();
         updateBraspagData();
     });
-    function updateBraspagData(link = null){
+    function updateBraspagData(link = null) {
         loadOnTable('#table-braspag-body', '#braspagTable');
         if (link == null) {
             link = '/transfers/getbraspagdata?' + 'event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
@@ -749,8 +764,28 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                $('#braspagTable').addClass('table-striped');
+                $('#table-braspag-body').html('');
+                let schedules = response.schedules;
+                if (!isEmpty(schedules)) {
+                    let data = '';
+                    for (let schedule of schedules) {
+                        data = `
+                        <tr>
+                            <td>${schedule.Event}</td>
+                            <td>${schedule.EventDescription}</td>
+                            <td>
+                                <span class='badge ${eventStatusBraspagBadge[schedule.EventStatus]}'>${eventStatusBraspag[schedule.EventStatus]}</span>
+                            </td>
 
+                        </tr>
+                        `;
+                        $('#table-braspag-body').append(data);
+                    }
+                    $('#braspagTable').addClass('table-striped');
+                } else {
+                    $("#table-braspag-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                }
+                paginationBraspag(response.page_count, response.page_index);
             }
         });
 
@@ -768,16 +803,17 @@ $(document).ready(function () {
             success: response => {
                 if (response.has_merchant_id && response.env == 'local') {
                     $('#nav-braspag-tab').show();
+                    updateBraspagData();
                 }
             }
         });
     }
 
     $('#date_range_braspag').daterangepicker({
-        startDate: moment().startOf('week'),
-        endDate: moment(),
+        startDate: moment().subtract(1, 'years'),
+        endDate: moment().add(1, 'years'),
         opens: 'center',
-        maxDate: moment().endOf("day"),
+        maxDate: moment().add(1, 'years').endOf("day"),
         alwaysShowCalendar: true,
         showCustomRangeLabel: 'Customizado',
         autoUpdateInput: true,
@@ -830,4 +866,77 @@ $(document).ready(function () {
             }
         }
     });
+
+    function paginationBraspag(pageCount, pageIndex) {
+
+        let paginationContainer = "#pagination-braspag";
+
+        $(paginationContainer).html("");
+
+        let currentPage = pageIndex;
+        let lastPage = pageCount;
+
+        if (lastPage === 1 || lastPage === 0) {
+            return false;
+        }
+
+        let first_page = `<button class='btn nav-btn first_page'>1</button>`;
+
+        $(paginationContainer).append(first_page);
+
+        if (currentPage === 1) {
+            $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
+        }
+
+        $(paginationContainer + ' .first_page').on("click", function () {
+            updateBraspagData('?page=1');
+        });
+
+        for (let x = 3; x > 0; x--) {
+
+            if (currentPage - x <= 1) {
+                continue;
+            }
+
+            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
+
+            $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+                updateBraspagData('?page=' + $(this).html());
+            });
+        }
+
+        if (currentPage !== 1 && currentPage !== lastPage) {
+            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
+
+            $(paginationContainer).append(current_page);
+
+            $(paginationContainer + " .current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        }
+        for (let x = 1; x < 4; x++) {
+
+            if (currentPage + x >= lastPage) {
+                continue;
+            }
+
+            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
+
+            $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
+                updateBraspagData('?page=' + $(this).html());
+            });
+        }
+
+        if (lastPage !== 1) {
+            var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
+
+            $(paginationContainer).append(last_page);
+
+            if (currentPage === lastPage) {
+                $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
+            }
+
+            $(paginationContainer + ' .last_page').on("click", function () {
+                updateBraspagData('?page=' + lastPage);
+            });
+        }
+    }
 });

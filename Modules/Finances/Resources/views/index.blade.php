@@ -290,7 +290,7 @@
                                                     <option value="Pending">Pendente</option>
                                                     <option value="Settled">Liquidado</option>
                                                     <option value="Error">Erro</option>
-                                                    <option value="WaitingFoAdjustementDebit">Aguardando débito de ajuste</option>
+{{--                                                    <option value="WaitingFoAdjustementDebit">Aguardando débito de ajuste</option>--}}
                                                     <option value="Anticipated">Antecipado</option>
                                                 </select>
                                             </div>
@@ -315,9 +315,9 @@
                                             <tr>
                                                 <th scope="col" class='headCenter'>Evento</th>
                                                 <th scope="col" class='headCenter'>Produto</th>
-                                                <th scope="col" class='headCenter'>Bandeira/Emissor</th>
+{{--                                                <th scope="col" class='headCenter'>Bandeira/Emissor</th>--}}
                                                 <th scope="col" class='headCenter'>Status</th>
-                                                <th scope="col" class='headCenter'>Valor</th>
+{{--                                                <th scope="col" class='headCenter'>Valor</th>--}}
                                             </tr>
                                         </thead>
                                         <tbody id="table-braspag-body" class="custom-t-body">
@@ -387,7 +387,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=4') }}"></script>
     @endpush
 
 @endsection
