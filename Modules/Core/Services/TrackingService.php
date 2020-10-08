@@ -195,17 +195,49 @@ class TrackingService
                 $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
             }
 
-            return Tracking::updateOrCreate([
+            $commonAttributes = [
                 'sale_id' => $productPlanSale->sale_id,
                 'product_id' => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
                 'amount' => $productPlanSale->amount,
                 'delivery_id' => $productPlanSale->sale->delivery->id,
-            ], [
+            ];
+
+            $newAttributes = [
                 'tracking_code' => $trackingCode,
                 'tracking_status_enum' => $statusEnum,
                 'system_status_enum' => $systemStatusEnum,
-            ]);
+            ];
+
+            $tracking = Tracking::where($commonAttributes)
+                ->first();
+
+            //atualiza e faz outras verificações caso já exista
+            if (!empty($tracking)) {
+                $oldTracking = (object) $tracking->getAttributes();
+                $statusDuplicated = $trackingModel->present()->getSystemStatusEnum('duplicated');
+
+                //atualiza
+                $tracking->update($newAttributes);
+
+                //verifica se existem duplicatas do antigo código
+                if ($oldTracking->tracking_code != $trackingCode
+                    && $oldTracking->system_status_enum != $statusDuplicated) {
+                    $duplicates = Tracking::with(['productPlanSale'])
+                        ->where('tracking_code', $oldTracking->tracking_code)
+                        ->where('system_status_enum', $statusDuplicated)
+                        ->orderBy('id')
+                        ->get();
+                    //caso existam recria/revalida os códigos
+                    foreach ($duplicates as $duplicate) {
+                        $this->createOrUpdateTracking($duplicate->tracking_code, $duplicate->productPlanSale);
+                    }
+                }
+            } else { //senão cria o tracking
+                $tracking = Tracking::create($commonAttributes + $newAttributes);
+            }
+
+            return $tracking;
         } catch (\Exception $e) {
             report($e);
             return null;
