@@ -336,7 +336,7 @@ class RegisterApiController extends Controller
             return response()->json(
                 [
                     'cpf_exist' => 'false',
-                    'message' => 'Cpf com formato inválido',
+                    'message' => 'CPF com formato inválido',
                 ], 403
             );
 
