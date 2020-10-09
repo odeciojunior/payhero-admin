@@ -114,6 +114,8 @@ $(document).ready(function () {
 
     checkBraspagCompany();
 
+    checkGetnetCompany();
+
     //Verifica se o saque está liberado
     function checkAllowed() {
         $.ajax({
@@ -804,6 +806,80 @@ $(document).ready(function () {
                 if (response.has_merchant_id && response.env == 'local') {
                     $('#nav-braspag-tab').show();
                     updateBraspagData();
+                }
+            }
+        });
+    }
+    //atualiza a table de braspag
+    $(document).on("click", "#bt_filtro_braspag", function (e) {
+        e.preventDefault();
+        updateBraspagData();
+    });
+
+    function updateGetnetData(link = null) {
+        loadOnTable('#table-getnet-body', '#getnetTable');
+        if (link == null) {
+            link = '/transfers/getgetnetdata?' + 'event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
+        } else {
+            link = '/transfers/getgetnetdata' + link + '&event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
+        }
+        $.ajax({
+            method: "GET",
+            url: link,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#table-getnet-body').html('');
+                // let schedules = response.schedules;
+                // if (!isEmpty(schedules)) {
+                //     let data = '';
+                //     for (let schedule of schedules) {
+                //         data = `
+                //         <tr>
+                //             <td>${schedule.Event}</td>
+                //             <td>${schedule.EventDescription}</td>
+                //             <td>
+                //                 <span class='badge ${eventStatusBraspagBadge[schedule.EventStatus]}'>${eventStatusBraspag[schedule.EventStatus]}</span>
+                //             </td>
+                //
+                //         </tr>
+                //         `;
+                //         $('#table-braspag-body').append(data);
+                //     }
+                //     $('#braspagTable').addClass('table-striped');
+                // } else {
+                //     $("#table-braspag-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                // }
+                // paginationBraspag(response.page_count, response.page_index);
+            }
+        });
+
+    }
+
+    //atualiza a table de getnet
+    $(document).on("click", "#bt_filtro_getnet", function (e) {
+        e.preventDefault();
+        updateGetnetData();
+    });
+    function checkGetnetCompany() {
+        $.ajax({
+            method: "GET",
+            url: '/api/companies/checkgetnetcompany',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+            },
+            success: response => {
+                if (response.has_subseller_id && response.env == 'local') {
+                    $('#nav-getnet-tab').show();
                 }
             }
         });

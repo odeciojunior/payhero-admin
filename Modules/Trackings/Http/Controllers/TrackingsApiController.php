@@ -17,7 +17,6 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Presenters\TrackingPresenter;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
@@ -134,7 +133,8 @@ class TrackingsApiController extends Controller
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
-            $tracking = $trackingModel->where('tracking_code', $trackingCode)
+            $tracking = $trackingModel->with(['productPlanSale'])
+                ->where('tracking_code', $trackingCode)
                 ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('ignored'))
                 ->first();
 
