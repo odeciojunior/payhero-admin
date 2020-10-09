@@ -196,9 +196,10 @@ class TrackingService
                     ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
         })->where('id', '!=', $sale->id)
             ->where('id', '!=', $sale->upsell_id)
-            ->where('customer_id', '!=', $sale->customer_id)
-            ->where('delivery_id', '!=', $sale->delivery_id)
-            ->whereIn('status', [
+            ->where(function ($query) use ($sale) {
+                $query->where('customer_id', '!=', $sale->customer_id)
+                    ->orWhere('delivery_id', '!=', $sale->delivery_id);
+            })->whereIn('status', [
                     $salesModel->present()->getStatus('approved'),
                     $salesModel->present()->getStatus('in_dispute'),
                 ]
@@ -223,8 +224,6 @@ class TrackingService
         $logging = false
     ) {
         try {
-            $trackingModel = new Tracking();
-
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
@@ -255,7 +254,6 @@ class TrackingService
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
                 $oldTracking = (object) $tracking->getAttributes();
-                $statusDuplicated = $trackingModel->present()->getSystemStatusEnum('duplicated');
 
                 //atualiza
                 $tracking->update($newAttributes);
@@ -264,7 +262,6 @@ class TrackingService
                 if ($oldTracking->tracking_code != $trackingCode) {
                     $duplicates = Tracking::with(['productPlanSale'])
                         ->where('tracking_code', $oldTracking->tracking_code)
-                        ->where('system_status_enum', $statusDuplicated)
                         ->orderBy('id')
                         ->get();
                     //caso existam recria/revalida os códigos
