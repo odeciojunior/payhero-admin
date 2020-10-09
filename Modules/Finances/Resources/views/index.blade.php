@@ -61,6 +61,9 @@
                             <a class="nav-item nav-link" id="nav-braspag-tab" data-toggle="tab" href="#nav-braspag"
                                role="tab" aria-controls="nav-braspag" aria-selected="true" style='display:none;'>Braspag
                             </a>
+                            <a class="nav-item nav-link" id="nav-getnet-tab" data-toggle="tab" href="#nav-getnet"
+                               role="tab" aria-controls="nav-getnet" aria-selected="true" style='display:none;'>Getnet
+                            </a>
                         </div>
                     </div>
                 </nav>
@@ -330,6 +333,42 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="nav-getnet" role="tabpanel" aria-labelledby="nav-getnet-tab">
+                            <div class="row justify-content-between">
+                                <div class="col-lg-12 mb-15">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+
+                                        </div>
+                                        <div class="col-3"></div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
+                                            <button id="bt_filtro_getnet" class="btn btn-primary w-full">
+                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <table id='getnetTable' class="table table-striped table-condensed unify">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class='headCenter'>Evento</th>
+                                                <th scope="col" class='headCenter'>Produto</th>
+                                                <th scope="col" class='headCenter'>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-getnet-body" class="custom-t-body">
+                                        </tbody>
+                                    </table>
+                                    <ul id="pagination-getnet" class="pagination-sm margin-chat-pagination"
+                                        style="margin-top:10px;position:relative;float:right">
+                                        {{--js carrega...--}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -387,7 +426,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=5') }}"></script>
     @endpush
 
 @endsection

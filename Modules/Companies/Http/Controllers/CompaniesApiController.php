@@ -567,4 +567,23 @@ class CompaniesApiController extends Controller
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }
+
+    public function checkGetnetCompany()
+    {
+        try {
+            $user          = auth()->user();
+            $companyModel  = new Company();
+            $hasSubsellerId = $companyModel->whereNotNull('subseller_getnet_id')
+                                           ->where('user_id', $user->account_owner_id)->exists();
+
+            return response()->json(
+                [
+                    'has_subseller_id' => $hasSubsellerId,
+                ], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao verificar empresas'], 400);
+        }
+    }
 }
