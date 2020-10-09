@@ -878,7 +878,7 @@ $(document).ready(function () {
             error: response => {
             },
             success: response => {
-                if (response.has_subseller_id) {
+                if (response.has_subseller_id && response.env == 'local') {
                     $('#nav-getnet-tab').show();
                 }
             }

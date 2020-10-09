@@ -579,6 +579,7 @@ class CompaniesApiController extends Controller
             return response()->json(
                 [
                     'has_subseller_id' => $hasSubsellerId,
+                    'env' => env("APP_ENV", "local"),
                 ], 200);
         } catch (Exception $e) {
             report($e);
