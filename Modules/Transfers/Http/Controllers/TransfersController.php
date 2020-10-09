@@ -174,23 +174,22 @@ class TransfersController extends Controller
             $getnetService = new GetnetBackOfficeService();
             $companyGetnet = $companyModel->whereNotNull('subseller_getnet_id')
                                           ->where('user_id', $user->account_owner_id)->first();
-            $result        = $getnetService->getStatement($companyGetnet->subseller_getnet_id);
-//            $result = $getnetService->getStatement();
-            dd($result);
+            //            $result        = $getnetService->getStatement($companyGetnet->subseller_getnet_id);
+            //            $result = $getnetService->getStatement();
+            //            dd($result);
 
-            $result = json_decode($result);
-//            return response()->json(
-//                [
-//                    'list_transactions' => $result->list_transactions,
-//                    'commission'        => $result->commission,
-//                    'adjustments'       => $result->adjustments,
-//                    'chargeback'        => $result->chargeback,
-//                ],
-//                200
-//            );
+            //            $result = json_decode($result);
+            //            return response()->json(
+            //                [
+            //                    'list_transactions' => $result->list_transactions,
+            //                    'commission'        => $result->commission,
+            //                    'adjustments'       => $result->adjustments,
+            //                    'chargeback'        => $result->chargeback,
+            //                ],
+            //                200
+            //            );
         } catch (Exception $e) {
             report($e);
-            dd($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
