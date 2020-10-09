@@ -99,7 +99,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');
 
         //Remove temporary files in regiter
-        $schedule->command('verify:deleteTemporaryFiles')->dailyAt('04:00');
+        $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
     }
 
     /**
