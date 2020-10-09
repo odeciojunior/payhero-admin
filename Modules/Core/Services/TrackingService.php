@@ -13,13 +13,14 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
 {
     /**
      * @param $trackingCode
-     * @return mixed
+     * @return mixed|null
      */
     public function sendTrackingToApi($trackingCode)
     {
@@ -33,36 +34,49 @@ class TrackingService
 
     /**
      * @param  Tracking  $tracking
-     * @return mixed|null
+     * @param  bool  $refresh
+     * @return mixed
      * @throws PresenterException
      */
-    public function findTrackingApi(Tracking $tracking)
+    public function findTrackingApi(Tracking $tracking, $refresh = false)
     {
+        $trackingModel = new Tracking();
         $trackingmoreService = new TrackingmoreService();
 
-        $apiTracking = $trackingmoreService->find($tracking->tracking_code);
+        $trackingCode = $tracking->tracking_code;
 
-        if (isset($apiTracking->status)) {
-            $status = $this->parseStatusApi($apiTracking->status);
-            if ($tracking->tracking_status_enum != $status) {
-                $tracking->tracking_status_enum = $status;
-                $tracking->save();
+        $apiTracking = $trackingmoreService->find($trackingCode);
+
+
+        $collection = $refresh
+            ? $trackingModel->with(['productPlanSale'])
+                ->where('tracking_code', $trackingCode)
+                ->where('id', '!=', $tracking->id)
+                ->get()
+            : collect();
+        $collection->push($tracking);
+
+        $status = $this->parseStatusApi($apiTracking->status);
+        foreach ($collection as $item) {
+            if (isset($apiTracking->status)) {
+                if ($item->tracking_status_enum != $status) {
+                    $item->tracking_status_enum = $status;
+                }
+            }
+            if ($refresh && !in_array($item->system_status_enum, [
+                $trackingModel->present()->getSystemStatusEnum('ignored'),
+                $trackingModel->present()->getSystemStatusEnum('checked_manually'),
+            ])) {
+                $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
+                    $item->productPlanSale);
+            }
+
+            if ($item->isDirty()) {
+                $item->save();
             }
         }
 
         return $apiTracking;
-    }
-
-    /**
-     * @param $status
-     * @return int|mixed
-     * @throws PresenterException
-     */
-    public function parseStatusApi($status)
-    {
-        $trackingmoreService = new TrackingmoreService();
-
-        return $trackingmoreService->parseStatus($status);
     }
 
     /**
@@ -83,7 +97,7 @@ class TrackingService
                 $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
 
                 if (!empty($event)) {
-                    $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
+                    $status_enum = $this->parseStatusApi($log->checkpoint_status ?? '');
                     $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                     //remove caracteres chineses e informações indesejadas
@@ -138,10 +152,71 @@ class TrackingService
     }
 
     /**
+     * @param $status
+     * @return int
+     * @throws PresenterException
+     */
+    public function parseStatusApi($status)
+    {
+        $trackingmoreService = new TrackingmoreService();
+
+        return $trackingmoreService->parseStatus($status);
+    }
+
+    /**
+     * @param  string  $trackingCode
+     * @param  stdClass|null  $apiResult
+     * @param  ProductPlanSale  $productPlanSale
+     * @return false|int|mixed|string
+     * @throws PresenterException
+     */
+    private function getSystemStatus(string $trackingCode, ?stdClass $apiResult, ProductPlanSale $productPlanSale)
+    {
+        $trackingModel = new Tracking();
+        $salesModel = new Sale();
+        $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('valid');
+        if (!empty($apiResult)) {
+            //verifica se a data de postagem na transportadora é menor que a data da venda
+            if (!empty($apiResult->origin_info->trackinfo ?? [])) {
+                $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
+                if ($postDate->lt($productPlanSale->created_at)) {
+                    $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('posted_before_sale');
+                }
+            } else {
+                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('no_tracking_info');
+            }
+        } else {
+            $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('unknown_carrier');
+        }
+
+        //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
+        $sale = $productPlanSale->sale;
+        $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingModel, $trackingCode, $productPlanSale) {
+            $query->where('tracking_code', $trackingCode)
+                    ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
+        })->where('id', '!=', $sale->id)
+            ->where('id', '!=', $sale->upsell_id)
+            ->where(function ($query) use ($sale) {
+                $query->where('customer_id', '!=', $sale->customer_id)
+                    ->orWhere('delivery_id', '!=', $sale->delivery_id);
+            })->whereIn('status', [
+                    $salesModel->present()->getStatus('approved'),
+                    $salesModel->present()->getStatus('in_dispute'),
+                ]
+            )->exists();
+
+        if ($exists) {
+            $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
+        }
+
+        return $systemStatusEnum;
+    }
+
+    /**
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
      * @param  bool  $logging
-     * @return mixed
+     * @return Tracking|null
      */
     public function createOrUpdateTracking(
         string $trackingCode,
@@ -149,51 +224,15 @@ class TrackingService
         $logging = false
     ) {
         try {
-            $trackingService = new TrackingService();
-            $trackingModel = new Tracking();
-            $salesModel = new Sale();
-
             $logging ? activity()->enableLogging() : activity()->disableLogging();
-
-            $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('valid');
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
 
-            $apiResult = $trackingService->sendTrackingToApi($trackingCode);
+            $apiResult = $this->sendTrackingToApi($trackingCode);
 
-            if (!empty($apiResult)) {
-                //verifica se a data de postagem na transportadora é menor que a data da venda
-                if (!empty($apiResult->origin_info->trackinfo ?? [])) {
-                    $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
-                    if ($postDate->lt($productPlanSale->created_at)) {
-                        $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('posted_before_sale');
-                    }
-                } else {
-                    $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('no_tracking_info');
-                }
-                $statusEnum = $trackingService->parseStatusApi($apiResult->status) ?? $trackingModel->present()->getTrackingStatusEnum('posted');
-            } else {
-                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('unknown_carrier');
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
-            }
+            $statusEnum = $this->parseStatusApi($apiResult->status ?? '');
 
-            //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
-            $sale = $productPlanSale->sale;
-            $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingCode, $productPlanSale) {
-                $query->where('tracking_code', $trackingCode);
-            })->where('id', '!=', $sale->id)
-                ->where('id', '!=', $sale->upsell_id)
-                ->where('customer_id', '!=', $sale->customer_id)
-                ->where('delivery_id', '!=', $sale->delivery_id)
-                ->whereIn('status', [
-                        $salesModel->present()->getStatus('approved'),
-                        $salesModel->present()->getStatus('in_dispute'),
-                    ]
-                )->exists();
-
-            if ($exists) {
-                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
-            }
+            $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
             $commonAttributes = [
                 'sale_id' => $productPlanSale->sale_id,
@@ -215,17 +254,14 @@ class TrackingService
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
                 $oldTracking = (object) $tracking->getAttributes();
-                $statusDuplicated = $trackingModel->present()->getSystemStatusEnum('duplicated');
 
                 //atualiza
                 $tracking->update($newAttributes);
 
                 //verifica se existem duplicatas do antigo código
-                if ($oldTracking->tracking_code != $trackingCode
-                    && $oldTracking->system_status_enum != $statusDuplicated) {
+                if ($oldTracking->tracking_code != $trackingCode) {
                     $duplicates = Tracking::with(['productPlanSale'])
                         ->where('tracking_code', $oldTracking->tracking_code)
-                        ->where('system_status_enum', $statusDuplicated)
                         ->orderBy('id')
                         ->get();
                     //caso existam recria/revalida os códigos
@@ -388,6 +424,7 @@ class TrackingService
 
         return $productPlanSales->orderBy('id', 'desc')->paginate(10);
     }
+
 
     /**
      * @param $filters

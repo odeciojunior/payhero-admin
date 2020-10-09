@@ -9,6 +9,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Gateway;
 
 /**
  * Class TransfersService
@@ -33,10 +34,13 @@ class TransfersService
             report($e);
         }
 
+        $gatewayIds = Gateway::whereIn('name', ['getnet_sandbox','getnet_production','braspag_sandbox','braspag_production'])
+            ->get()->pluck('id')->toArray();
 
         // Transações pagas
         if (empty($saleId)) {
-            $transactions = $transactionModel->where([
+            $transactions = $transactionModel->with('sale')
+            ->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
             ])->whereHas('productPlanSales', function ($query) {
@@ -51,7 +55,8 @@ class TransfersService
                 });
             });
         } else {
-            $transactions = $transactionModel->where([
+            $transactions = $transactionModel->with('sale')
+            ->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                 ['sale_id', $saleId]
@@ -73,24 +78,28 @@ class TransfersService
                 if(!empty($transaction->company_id)){
 
                     $company = $companyModel->find($transaction->company_id);
-    
-                    $transferModel->create([
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $company->user_id,
-                        'company_id' => $company->id,
-                        'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                        'value' => $transaction->value,
-                        'type' => 'in',
-                    ]);
-    
+
+                    if(!in_array($transaction->sale->gateway_id, $gatewayIds)) {
+
+                        $transferModel->create([
+                            'transaction_id' => $transaction->id,
+                            'user_id' => $company->user_id,
+                            'company_id' => $company->id,
+                            'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                            'value' => $transaction->value,
+                            'type' => 'in',
+                        ]);
+
+                        $company->update([
+                            'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
+                        ]);
+                    }
+
                     $transaction->update([
                         'status' => 'transfered',
                         'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
                     ]);
-    
-                    $company->update([
-                        'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
-                    ]);
+
                 }
             } catch (Exception $e) {
                 report($e);
@@ -99,7 +108,7 @@ class TransfersService
 
         // Trasações antecipadas
         if (empty($saleId)) {
-            $transactions = $transactionModel->with('anticipatedTransactions')
+            $transactions = $transactionModel->with('anticipatedTransactions','sale')
                 ->where([
                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                     ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
@@ -115,7 +124,7 @@ class TransfersService
                     });
                 });
         } else {
-            $transactions = $transactionModel->with('anticipatedTransactions')
+            $transactions = $transactionModel->with('anticipatedTransactions','sale')
                 ->where([
                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                     ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
@@ -139,24 +148,27 @@ class TransfersService
                 if(!empty($transaction->company_id)){
 
                     $company = $companyModel->find($transaction->company_id);
-    
-                    $transferModel->create([
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $company->user_id,
-                        'company_id' => $company->id,
-                        'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                        'value' => $transaction->value - $transaction->anticipatedTransactions()->first()->value,
-                        'type' => 'in',
-                    ]);
-    
+
+                    if(!in_array($transaction->sale->gateway_id, $gatewayIds)) {
+                        $transferModel->create([
+                            'transaction_id' => $transaction->id,
+                            'user_id' => $company->user_id,
+                            'company_id' => $company->id,
+                            'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                            'value' => $transaction->value - $transaction->anticipatedTransactions()->first()->value,
+                            'type' => 'in',
+                        ]);
+
+                        $company->update([
+                            'balance' => intval($company->balance) + intval($transaction->value - $transaction->anticipatedTransactions()->first()->value),
+                        ]);
+                    }
+
                     $transaction->update([
                         'status' => 'transfered',
                         'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
                     ]);
-    
-                    $company->update([
-                        'balance' => intval($company->balance) + intval($transaction->value - $transaction->anticipatedTransactions()->first()->value),
-                    ]);
+
                 }
             } catch (Exception $e) {
                 report($e);

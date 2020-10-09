@@ -197,11 +197,10 @@ class TrackingmoreService
     {
         $trackingModel = new Tracking();
 
-        $statusEnum = 0;
-
         switch ($status) {
             case 'pending':
             case 'notfound':
+            default:
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
                 break;
             case 'transit':
