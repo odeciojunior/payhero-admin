@@ -41,13 +41,13 @@ class GetnetBackOfficeService extends GetnetService
     {
         if (FoxUtils::isProduction()) {
             $this->authorizationToken = base64_encode(
-                getenv('GET_NET_CLIENT_ID_PRODUCTION').':'.getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
+                getenv('GET_NET_CLIENT_ID_PRODUCTION') . ':' . getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
             );
 
             $this->postFieldsAccessToken = 'scope=oob&grant_type=client_credentials';
         } else {
             $this->authorizationToken = base64_encode(
-                getenv('GET_NET_CLIENT_ID_SANDBOX').':'.getenv('GET_NET_CLIENT_SECRET_SANDBOX')
+                getenv('GET_NET_CLIENT_ID_SANDBOX') . ':' . getenv('GET_NET_CLIENT_SECRET_SANDBOX')
             );
 
             $this->postFieldsAccessToken = 'scope=mgm&grant_type=client_credentials';
@@ -66,7 +66,7 @@ class GetnetBackOfficeService extends GetnetService
     public function getAuthorizationHeader()
     {
         return [
-            'authorization: Bearer '.$this->accessToken,
+            'authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/json',
         ];
     }
@@ -83,8 +83,8 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
-     * @param $pagination  | Primeira chamada sempre se inicia com o número 1.
-     * @param  null  $subsellerId  |
+     * @param $pagination | Primeira chamada sempre se inicia com o número 1.
+     * @param null $subsellerId |
      * @return bool|string
      */
     public function getStatement($subsellerId = null, $pagination = null)
@@ -100,10 +100,10 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         if (is_null($pagination)) {
-            $url = 'v1/mgm/statement?'.http_build_query($queryParameters);
+            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
         } else {
             $queryParameters = $queryParameters + ['page' => $pagination];
-            $url = 'v1/mgm/paginatedstatement?'.http_build_query($queryParameters);
+            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
         }
 
         return $this->sendCurl($url, 'GET');
@@ -111,14 +111,14 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
-        $url = 'v1/mgm/pf/callback/'.$this->getMerchantId().'/'.$cpf;
+        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPf()
     {
-        $url = 'v1/mgm/pf/consult/paymentplans/'.$this->getMerchantId();
+        $url = 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
@@ -141,7 +141,7 @@ class GetnetBackOfficeService extends GetnetService
 
     public function disqualifyPfCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pf/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
+        $url = 'v1/mgm/pf/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }
@@ -163,21 +163,21 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkComplementPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/consult/'.$this->getMerchantId().'/'.$cnpj;
+        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
 
         return $this->sendCurl($url, 'GET');
     }
 
     public function checkPjCompanyRegister($cnpj, $companyId)
     {
-        $url = 'v1/mgm/pj/callback/'.$this->getMerchantId().'/'.$cnpj;
+        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPj()
     {
-        $url = 'v1/mgm/pj/consult/paymentplans/'.$this->getMerchantId();
+        $url = 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
@@ -208,7 +208,7 @@ class GetnetBackOfficeService extends GetnetService
 
     public function disqualifyPjCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pj/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
+        $url = 'v1/mgm/pj/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }
