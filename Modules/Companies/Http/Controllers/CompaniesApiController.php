@@ -5,25 +5,25 @@ namespace Modules\Companies\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Companies\Transformers\CompanyDocumentsResource;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Project;
-use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\FoxUtils;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Modules\Core\Services\BankService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Entities\CompanyDocument;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Companies\Transformers\CompanyCpfResource;
+use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompanyCpfResource;
+use Modules\Companies\Transformers\CompanyDocumentsResource;
+use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Project;
+use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\FoxUtils;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CompaniesController
@@ -156,7 +156,7 @@ class CompaniesApiController extends Controller
             }
 
             if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
-                $requestData['support_telephone'] = '+'.FoxUtils::onlyNumbers($requestData['support_telephone']);
+                $requestData['support_telephone'] = '+' . FoxUtils::onlyNumbers($requestData['support_telephone']);
             }
             if (!empty($requestData['company_document'])) {
                 $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
@@ -291,9 +291,9 @@ class CompaniesApiController extends Controller
 
                 $amazonFileService->setDisk('s3_documents');
                 $amazonPath = $amazonFileService->uploadFile(
-                    'uploads/user/'.Hashids::encode(
+                    'uploads/user/' . Hashids::encode(
                         auth()->user()->account_owner_id
-                    ).'/companies/'.Hashids::encode($company->id).'/private/documents',
+                    ) . '/companies/' . Hashids::encode($company->id) . '/private/documents',
                     $document,
                     null,
                     null,
@@ -550,11 +550,11 @@ class CompaniesApiController extends Controller
     public function checkBraspagCompany()
     {
         try {
-            $user          = auth()->user();
-            $companyModel  = new Company();
-            $columnName    = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $user = auth()->user();
+            $companyModel = new Company();
+            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
             $hasMerchantId = $companyModel->whereNotNull($columnName)
-                                          ->where('user_id', $user->account_owner_id)->exists();
+                ->where('user_id', $user->account_owner_id)->exists();
 
             return response()->json(
                 [
@@ -571,10 +571,10 @@ class CompaniesApiController extends Controller
     public function checkGetnetCompany()
     {
         try {
-            $user          = auth()->user();
-            $companyModel  = new Company();
+            $user = auth()->user();
+            $companyModel = new Company();
             $hasSubsellerId = $companyModel->whereNotNull('subseller_getnet_id')
-                                           ->where('user_id', $user->account_owner_id)->exists();
+                ->where('user_id', $user->account_owner_id)->exists();
 
             return response()->json(
                 [
