@@ -71,6 +71,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
+ * @property json id_wall_result
  * @method CompanyPresenter present()
  */
 class Company extends Model
@@ -144,7 +145,8 @@ class Company extends Model
         'updated_at',
         'braspag_status',
         'braspag_merchant_id',
-        'braspag_merchant_homolog_id'
+        'braspag_merchant_homolog_id',
+        'id_wall_result'
     ];
     /**
      * @var bool

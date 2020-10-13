@@ -22,6 +22,7 @@ use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Services\IdwallService;
 use Modules\Core\Services\IpService;
 use Modules\Core\Services\SmsService;
 use Modules\Register\Entities\RegistrationToken;
@@ -87,7 +88,7 @@ class RegisterApiController extends Controller
              *  VALIDAÇÕES
              */
 
-            if (empty($requestData['parameter'])) {
+            if (!empty($requestData['parameter'])) {
                 if ($invitation = $this->verifyInvitation($user,$requestData)) {
                     if ($invitation['success'] == 'false')
                         return response()->json(
@@ -140,16 +141,15 @@ class RegisterApiController extends Controller
             }
 
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
-            $this->sendWelcomeEmail($requestData);
 
-
-            if (env('APP_ENV') == 'local') {
+            if (env('APP_ENV') == 'production') {
                 return response()->json([
                     'success' => 'false',
                     'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
                 ], 403);
             } else {
                 \DB::commit();
+                $this->sendWelcomeEmail($requestData);
 
                 return response()->json(
                     [
@@ -231,7 +231,7 @@ class RegisterApiController extends Controller
 
                     return [
                         'success' => 'false',
-                        'message' => 'Link convite inválido'
+                        'message' => 'Registro sem convite'
                     ];
                 }
             }
@@ -336,7 +336,7 @@ class RegisterApiController extends Controller
             return response()->json(
                 [
                     'cpf_exist' => 'false',
-                    'message' => 'Cpf com formato inválido',
+                    'message' => 'CPF com formato inválido',
                 ], 403
             );
 
@@ -366,8 +366,8 @@ class RegisterApiController extends Controller
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
         $requestData = current(preg_replace('/[^0-9]/', '', $request->validated()));
-        $idwallService = new CompanyService();
-        $company = $idwallService->getCompanyByIdwallCNPJ($requestData);
+        $companyService = new CompanyService();
+        $company = $companyService->getCompanyByIdwallCNPJ($requestData);
 
         if (empty($company)) {
             return response()->json(
@@ -389,6 +389,7 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
+                'protocol' => $company['result']['numero'],
             ], 200
         );
 
@@ -414,7 +415,7 @@ class RegisterApiController extends Controller
 
         }
 
-        if ($data['email'] == 'kim@mail.com' || $userModel->where('email', $data['email'])->count()) {
+        if ($userModel->where('email', $data['email'])->count()) {
 
             return response()->json(
                 [
@@ -440,7 +441,7 @@ class RegisterApiController extends Controller
     public function uploadDocuments(Request $request)
     {
         $dataForm = Validator::make($request->all(), [
-            'fileToUpload' => 'required|max:100|mimes:jpeg,jpg,png,pdf',
+            'fileToUpload' => 'required|max:10000|mimes:jpeg,jpg,png,pdf',
             'document_type' => 'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
@@ -777,7 +778,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToEmail->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+            if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
@@ -910,7 +911,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if ($existCodeToPhone->number_wrong_attempts >= 4 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+            if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
@@ -1027,8 +1028,9 @@ class RegisterApiController extends Controller
      */
     private function createCompanyToUser($requestData, Company $companyModel, User $user): void
     {
-        $companyService = app(CompanyService::class);
-        $companyName = $requestData['company_document'] ? $companyService->getCompanyByIdwallCNPJ($requestData['company_document']) : null;
+        $companyService = new IdwallService();
+        $companyIdwall = $requestData['protocol'] ? $companyService->getReportByProtocolNumber($requestData['protocol']) : null;
+        $company = json_decode($companyIdwall, true);
 
         $streetCompany = $requestData['street_company'] ?? null;
         $numberCompany = $requestData['number_company'] ?? null;
@@ -1040,7 +1042,8 @@ class RegisterApiController extends Controller
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
-        $fantasy_name = $is_physical_person ? $user->name : $companyName['nome_empresarial'];
+        $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
+        $idwallResult = $companyIdwall ?? null;
 
         $companyModel->create(
             [
@@ -1061,6 +1064,7 @@ class RegisterApiController extends Controller
                 'agency_digit' => $agencyDigit,
                 'account' => $requestData['account'],
                 'account_digit' => $requestData['account_digit'],
+                'id_wall_result' => $idwallResult,
             ]
         );
     }
@@ -1069,15 +1073,14 @@ class RegisterApiController extends Controller
      * @param $user
      * @return bool
      */
-    public function verifyTokenValidate($user)
+    public function verifyTokenValidate(User $user)
     {
-        $userModel = new User();
-        $user = $userModel->find(3191);
+
         $tokenModel = new RegistrationToken();
         $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
-        $email = ($tokenModel->where('type_data', $user->email)->pluck('validated')->first());
-        $cellphone = ($tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first());
+        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->first();
+        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first();
 
         if (empty($email) || empty($cellphone)) {
             return false;
