@@ -1,20 +1,17 @@
 <?php
 
-namespace Modules\Activecampaign\Http\Controllers;
+namespace Modules\ActiveCampaign\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\ActivecampaignIntegration;
-use Modules\Core\Entities\ActivecampaignEvent;
-use Modules\Core\Services\ActiveCampaignService;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\ProjectService;
-use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 use Modules\ActiveCampaign\Transformers\ActivecampaignEventResource;
-use Modules\Projects\Transformers\ProjectsSelectResource;
+use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
+use Modules\Core\Entities\ActivecampaignEvent;
+use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Services\ActiveCampaignService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -40,7 +37,7 @@ class ActiveCampaignEventApiController extends Controller
             })->log('Visualizou tela todos os eventos do ActiveCampaign');
 
             $activecampaignIntegration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events')
-                                                                        ->where('id', $id)->first();
+                ->where('id', $id)->first();
 
             $events = $activecampaignIntegration->events ?? collect([]);
             foreach ($events as $key => $event) {
@@ -145,45 +142,45 @@ class ActiveCampaignEventApiController extends Controller
 
             if (!empty($integrationId)) {
                 $event = $activecampaignEventModel->where('activecampaign_integration_id', $integrationId)
-                                                  ->where('event_sale', $data['events'])->first();
+                    ->where('event_sale', $data['events'])->first();
                 if ($event) {
                     return response()->json([
-                                                'message' => 'Evento já cadastrado',
-                                            ], 400);
+                        'message' => 'Evento já cadastrado',
+                    ], 400);
                 }
 
                 $eventCreated = $activecampaignEventModel->create([
-                                                                      'event_sale'                    => $data['events'],
-                                                                      'add_tags'                      => $addTags ?? null,
-                                                                      'remove_tags'                   => $removeTags ?? null,
-                                                                      'add_list'                      => $addList ?? null,
-                                                                      'remove_list'                   => $removeList ?? null,
-                                                                      'activecampaign_integration_id' => $integrationId,
-                                                                  ]);
+                    'event_sale'                    => $data['events'],
+                    'add_tags'                      => $addTags ?? null,
+                    'remove_tags'                   => $removeTags ?? null,
+                    'add_list'                      => $addList ?? null,
+                    'remove_list'                   => $removeList ?? null,
+                    'activecampaign_integration_id' => $integrationId,
+                ]);
 
                 if ($eventCreated) {
                     return response()->json([
-                                                'message' => 'Evento criado com sucesso!',
-                                            ], 200);
+                        'message' => 'Evento criado com sucesso!',
+                    ], 200);
                 } else {
 
                     return response()->json([
-                                                'message' => 'Ocorreu um erro ao salvar o evento',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro ao salvar o evento',
+                    ], 400);
                 }
             } else {
 
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao salvar o evento',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao salvar o evento',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao salvar o evento ActiveCampaignEventController - store');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao salvar o evento',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao salvar o evento',
+            ], 400);
         }
     }
 
@@ -210,8 +207,8 @@ class ActiveCampaignEventApiController extends Controller
                 $event   = $activecampaignEventModel->where('id', $eventId)->first();
                 if ($event) {
                     $integration = $activecampaignIntegrationModel->where('user_id', auth()->id())
-                                                                  ->where('id', $event->activecampaign_integration_id)
-                                                                  ->first();
+                        ->where('id', $event->activecampaign_integration_id)
+                        ->first();
 
                     if ($activeCampaignService->setAccess($integration->api_url, $integration->api_key, $integration->id)) {
                         $tags  = $activeCampaignService->getTags();
@@ -228,22 +225,22 @@ class ActiveCampaignEventApiController extends Controller
                     return response()->json(['tags' => $tags, 'lists' => $lists, 'event' => $event], 200);
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                    ], 400);
                 }
             } else {
 
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Evento ActiveCampaign (ActiveCampaignEventController - edit)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ], 400);
         }
     }
 
@@ -311,28 +308,28 @@ class ActiveCampaignEventApiController extends Controller
 
             $activeCampaignEventUpdated = $activecampaignEventModel->where('id', $eventId)->first();
             $eventUpdate                = $activeCampaignEventUpdated->update([
-                                                                                  'add_tags'    => $addTags ?? null,
-                                                                                  'remove_tags' => $removeTags ?? null,
-                                                                                  'add_list'    => $addList ?? null,
-                                                                                  'remove_list' => $removeList ?? null,
-                                                                              ]);
+                'add_tags'    => $addTags ?? null,
+                'remove_tags' => $removeTags ?? null,
+                'add_list'    => $addList ?? null,
+                'remove_list' => $removeList ?? null,
+            ]);
 
             if ($eventUpdate) {
                 return response()->json([
-                                            'message' => 'Evento atualizado com sucesso!',
-                                        ], 200);
+                    'message' => 'Evento atualizado com sucesso!',
+                ], 200);
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao atualizar o evento',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao atualizar o evento',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar o evento ActiveCampaignEventController - update');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao atualizar o evento',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao atualizar o evento',
+            ], 400);
         }
     }
 
@@ -349,20 +346,20 @@ class ActiveCampaignEventApiController extends Controller
             $integrationDeleted       = $integration->delete();
             if ($integrationDeleted) {
                 return response()->json([
-                                            'message' => 'Evento Removido com sucesso!',
-                                        ], 200);
+                    'message' => 'Evento Removido com sucesso!',
+                ], 200);
             }
 
             return response()->json([
-                                        'message' => 'Erro ao tentar remover evento',
-                                    ], 400);
+                'message' => 'Erro ao tentar remover evento',
+            ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar remover Evento ActiveCampaign (ActiveCampaignEventController - destroy)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
+            ], 400);
         }
     }
 
@@ -378,7 +375,7 @@ class ActiveCampaignEventApiController extends Controller
             $activecampaignIntegrationModel = new ActivecampaignIntegration();
 
             $integration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events')
-                                                          ->where('id', $id)->first();
+                ->where('id', $id)->first();
 
             activity()->on($activecampaignIntegrationModel)->tap(function(Activity $activity) use ($id) {
                 $activity->log_name   = 'visualization';
