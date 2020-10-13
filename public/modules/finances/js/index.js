@@ -1,22 +1,5 @@
 $(document).ready(function () {
 
-    var eventStatusBraspag = {
-        'Scheduled': 'Agendado',
-        'Pending': 'Pendente',
-        'Settled': 'Liquidado',
-        'Error': 'Erro',
-        'WaitingFoAdjustementDebit': 'Aguardando débito de ajuste',
-        'Anticipated': 'Antecipado',
-    };
-    var eventStatusBraspagBadge = {
-        'Scheduled': 'badge-primary',
-        'Pending': 'badge-info',
-        'Settled': 'badge-success',
-        'Error': 'badge-danger',
-        'WaitingFoAdjustementDebit': 'badge-warning',
-        'Anticipated': 'badge-secondary',
-    };
-
     //Comportamentos da tela
     $('#date_range').daterangepicker({
         startDate: moment().startOf('week'),
@@ -92,7 +75,7 @@ $(document).ready(function () {
                         let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                         $("#transfers_company_select").append(data);
                         $("#extract_company_select").append(data);
-                        $("#getnet_company_select").append(data);
+                        $("#statement_company_select").append(data);
                     });
 
                     if (response.data[0].antecipation_enabled_flag) {
@@ -115,9 +98,7 @@ $(document).ready(function () {
 
     getCompanies();
 
-    checkBraspagCompany();
-
-    checkGetnetCompany();
+    checkStatementAvailable();
 
     //Verifica se o saque está liberado
     function checkAllowed() {
@@ -745,88 +726,12 @@ $(document).ready(function () {
         });
     }
 
-    //atualiza a table de braspag
-    $(document).on("click", "#bt_filtro_braspag", function (e) {
-        e.preventDefault();
-        updateBraspagData();
-    });
+    function updateAccountStatementData() {
 
-    function updateBraspagData(link = null) {
-        loadOnTable('#table-braspag-body', '#braspagTable');
-        if (link == null) {
-            link = '/transfers/getbraspagdata?' + 'event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
-        } else {
-            link = '/transfers/getbraspagdata' + link + '&event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
-        }
-        $.ajax({
-            method: "GET",
-            url: link,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                $('#table-braspag-body').html('');
-                let schedules = response.schedules;
-                if (!isEmpty(schedules)) {
-                    let data = '';
-                    for (let schedule of schedules) {
-                        data = `
-                        <tr>
-                            <td>${schedule.Event}</td>
-                            <td>${schedule.EventDescription}</td>
-                            <td>
-                                <span class='badge ${eventStatusBraspagBadge[schedule.EventStatus]}'>${eventStatusBraspag[schedule.EventStatus]}</span>
-                            </td>
+        loadOnTable('#table-statement-body', '#statementTable');
+        $('#table-statement-body').html('');
 
-                        </tr>
-                        `;
-                        $('#table-braspag-body').append(data);
-                    }
-                    $('#braspagTable').addClass('table-striped');
-                } else {
-                    $("#table-braspag-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
-                }
-                paginationBraspag(response.page_count, response.page_index);
-            }
-        });
-
-    }
-
-    function checkBraspagCompany() {
-        $.ajax({
-            method: "GET",
-            url: '/api/companies/checkbraspagcompany',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-            },
-            success: response => {
-                if (response.has_merchant_id && response.env == 'local') {
-                    $('#nav-braspag-tab').show();
-                    updateBraspagData();
-                }
-            }
-        });
-    }
-
-    //atualiza a table de braspag
-    $(document).on("click", "#bt_filtro_braspag", function (e) {
-        e.preventDefault();
-        updateBraspagData();
-    });
-
-    function updateGetnetData() {
-
-        loadOnTable('#table-getnet-body', '#getnetTable');
-
-        let link = '/transfers/getGetnetData?dateRange=' + $("#date_range_getnet").val() + '&company=' + $("#getnet_company_select").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val();
 
         $.ajax({
             method: "GET",
@@ -837,12 +742,14 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                errorAjaxResponse(response);
+                //console.log(response);
+                let error = 'Erro ao gerar o extrato';
+
+                errorAjaxResponse(error);
+                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
-                $('#table-getnet-body').html('');
 
-                console.log(response)
                 let items = response;
 
                 if (!isEmpty(items)) {
@@ -862,11 +769,11 @@ $(document).ready(function () {
                             <td>${item.installmentAmount}</td>
                         </tr>
                         `;
-                        $('#table-getnet-body').append(data);
+                        $('#table-statement-body').append(data);
                     }
-                    $('#getnetTable').addClass('table-striped');
+                    $('#statementTable').addClass('table-striped');
                 } else {
-                    $("#table-getnet-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                 }
                 //paginationGetNet(response.page_count, response.page_index);
             }
@@ -876,7 +783,7 @@ $(document).ready(function () {
 
     function paginationGetNet(pageCount, pageIndex) {
 
-        let paginationContainer = "#pagination-getnet";
+        let paginationContainer = "#pagination-statement";
 
         $(paginationContainer).html("");
 
@@ -896,7 +803,7 @@ $(document).ready(function () {
         }
 
         $(paginationContainer + ' .first_page').on("click", function () {
-            updateGetnetData('?page=1');
+            updateAccountStatementData('?page=1');
         });
 
         for (let x = 3; x > 0; x--) {
@@ -908,7 +815,7 @@ $(document).ready(function () {
             $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
             $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
-                updateGetnetData('?page=' + $(this).html());
+                updateAccountStatementData('?page=' + $(this).html());
             });
         }
 
@@ -928,7 +835,7 @@ $(document).ready(function () {
             $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
             $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
-                updateGetnetData('?page=' + $(this).html());
+                updateAccountStatementData('?page=' + $(this).html());
             });
         }
 
@@ -942,21 +849,21 @@ $(document).ready(function () {
             }
 
             $(paginationContainer + ' .last_page').on("click", function () {
-                updateGetnetData('?page=' + lastPage);
+                updateAccountStatementData('?page=' + lastPage);
             });
         }
     }
 
-    //atualiza a table de getnet
-    $(document).on("click", "#bt_filtro_getnet", function (e) {
+    //atualiza a table de statement
+    $(document).on("click", "#bt_filtro_statement", function (e) {
         e.preventDefault();
-        updateGetnetData();
+        updateAccountStatementData();
     });
 
-    function checkGetnetCompany() {
+    function checkStatementAvailable() {
         $.ajax({
             method: "GET",
-            url: '/api/companies/checkgetnetcompany',
+            url: '/api/companies/check-statement-available',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -965,47 +872,16 @@ $(document).ready(function () {
             },
             success: response => {
                 if (response.has_subseller_id) {
-                    $('#nav-getnet-tab').show();
-                    updateGetnetData();
+                    $('#nav-statement-tab').show();
+                    updateAccountStatementData();
                 }
             }
         });
     }
 
-    $('#date_range_getnet').daterangepicker({
+    $('#date_range_statement').daterangepicker({
         startDate: moment().subtract(1, 'month'),
         endDate: moment().add(0, 'days'),
-        opens: 'center',
-        maxDate: moment().add(1, 'years').endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
-        },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-    });
-
-    $('#date_range_braspag').daterangepicker({
-        startDate: moment().subtract(1, 'years'),
-        endDate: moment().add(1, 'years'),
         opens: 'center',
         maxDate: moment().add(1, 'years').endOf("day"),
         alwaysShowCalendar: true,
@@ -1061,77 +937,4 @@ $(document).ready(function () {
             }
         }
     });
-
-    function paginationBraspag(pageCount, pageIndex) {
-
-        let paginationContainer = "#pagination-braspag";
-
-        $(paginationContainer).html("");
-
-        let currentPage = pageIndex;
-        let lastPage = pageCount;
-
-        if (lastPage === 1 || lastPage === 0) {
-            return false;
-        }
-
-        let first_page = `<button class='btn nav-btn first_page'>1</button>`;
-
-        $(paginationContainer).append(first_page);
-
-        if (currentPage === 1) {
-            $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-
-        $(paginationContainer + ' .first_page').on("click", function () {
-            updateBraspagData('?page=1');
-        });
-
-        for (let x = 3; x > 0; x--) {
-
-            if (currentPage - x <= 1) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
-                updateBraspagData('?page=' + $(this).html());
-            });
-        }
-
-        if (currentPage !== 1 && currentPage !== lastPage) {
-            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
-
-            $(paginationContainer).append(current_page);
-
-            $(paginationContainer + " .current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-        for (let x = 1; x < 4; x++) {
-
-            if (currentPage + x >= lastPage) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
-                updateBraspagData('?page=' + $(this).html());
-            });
-        }
-
-        if (lastPage !== 1) {
-            var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
-
-            $(paginationContainer).append(last_page);
-
-            if (currentPage === lastPage) {
-                $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-
-            $(paginationContainer + ' .last_page').on("click", function () {
-                updateBraspagData('?page=' + lastPage);
-            });
-        }
-    }
 });

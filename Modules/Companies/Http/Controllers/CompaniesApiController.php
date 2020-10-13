@@ -568,13 +568,15 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function checkGetnetCompany()
+    public function checkStatementAvailable()
     {
         try {
             $user = auth()->user();
-            $companyModel = new Company();
-            $hasSubsellerId = $companyModel->whereNotNull('subseller_getnet_id')
-                ->where('user_id', $user->account_owner_id)->exists();
+
+            $hasSubsellerId = Company::whereNotNull('subseller_getnet_id')
+                ->whereGetNetStatus(10)
+                ->where('user_id', $user->account_owner_id)
+                ->exists();
 
             return response()->json(
                 [
@@ -582,8 +584,8 @@ class CompaniesApiController extends Controller
                     'env' => env("APP_ENV", "local"),
                 ], 200);
         } catch (Exception $e) {
-            report($e);
 
+            report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }

@@ -34,11 +34,9 @@ class GetNetStatementService
                 $transactionDate = $summary->transaction_date ?? '';
 
                 $installmentDate = $details[0]->installment_date ?? '';
-                $installmentAmount = $details[0]->installment_amount ?? '';
+                $installmentAmount = $details[0]->installment_amount ?? 0;
                 $paymentDate = $details[0]->payment_date ?? '';
-                $bank = $details[0]->bank ?? '';
-                $agency = $details[0]->agency ?? '';
-                $accountNumber = $details[0]->account_number ?? '';
+                $subSellerRateConfirmDate = $details[0]->subseller_rate_confirm_date ?? '';
                 $subSellerRateAmount = $details[0]->subseller_rate_amount ?? 0;
                 $subSellerRatePercentage = $details[0]->subseller_rate_percentage ?? 0;
 
@@ -59,35 +57,17 @@ class GetNetStatementService
                     }
                 }
 
-                /*$statement = new GetNetStatement();
-
-                $statement->setId($id)
-                    ->setOrderId($orderId)
-                    ->setTransactionDate($transactionDate)
-                    ->setInstallmentDate($installmentDate)
-                    ->setPaymentDate($paymentDate)
-                    ->setInstallmentAmount($installmentAmount)
-                    ->setSubSellerRateAmount($subSellerRateAmount)
-                    ->setSubSellerRatePercentage($subSellerRatePercentage)
-                    ->setBank($bank)
-                    ->setAgency($agency)
-                    ->setAccountNumber($accountNumber)
-                    ->setProduct('');*/
-
                 $statement = [
-                    'id' => $id,
-                    'orderId' => Hashids::connection('sale_id')->encode(737634),
-                    //'orderId' => $arrayOrderId[0],
+                    //'id' => $id,
+                    //'orderId' => Hashids::connection('sale_id')->encode(737634),
+                    'orderId' => $arrayOrderId[0],
                     'transactionDate' => $transactionDate,
                     'installmentDate' => $installmentDate,
                     'paymentDate' => $paymentDate,
-                    'installmentAmount' => FoxUtils::formatMoney($installmentAmount),
-                    'subSellerRateAmount' => $subSellerRateAmount,
+                    'installmentAmount' => FoxUtils::formatMoney($installmentAmount / 100),
+                    'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
                     'subSellerRatePercentage' => $subSellerRatePercentage,
-                    'bank' => $bank,
-                    'agency' => $agency,
-                    'accountNumber' => $accountNumber,
-                    'product' => '',
+                    'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                 ];
 
                 $this->data[] = $statement;

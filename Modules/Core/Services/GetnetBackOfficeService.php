@@ -84,11 +84,10 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
-     * @param $pagination | Primeira chamada sempre se inicia com o número 1.
-     * @param null $subSellerId |
+     * @param null $subSellerId
      * @return bool|string
      */
-    public function getStatement($subSellerId = null, $pagination = null)
+    public function getStatement($subSellerId = null)
     {
 
         try {
@@ -115,37 +114,26 @@ class GetnetBackOfficeService extends GetnetService
         $endDate .= ' 23:59:59';
 
         $queryParameters = [
-            'seller_id' => '9631d48b-8ec0-40fe-92f2-0352f32a0051',
-            //'seller_id' => $this->sellerId,
+            'seller_id' => $this->sellerId,                                             // [Required] Id do marketplace (SellerId)
             'transaction_date_init' => $startDate,                                      // Data de captura da transação Início.
-            'transaction_date_end' => $endDate,
-            /*'liquidation_date_init' => $startDate,
-            'liquidation_date_end' => $endDate,
-            'confirmation_date_init' => $startDate,
-            'confirmation_date_end' => $endDate,*/
+            'transaction_date_end' => $endDate,                                         // Data de captura da transação Fim.
+            /*'liquidation_date_init' => $startDate,                                    // Data Liquidação Inicial - Emissão do extrato somente com dados da liquidação do período informado.
+            'liquidation_date_end' => $endDate,                                         // Data Liquidação Final - Emissão do extrato somente com dados da liquidação do período informado.
+            'confirmation_date_init' => $startDate,                                     // Data de confirmação inicial da transação.
+            'confirmation_date_end' => $endDate,*/                                      // Data de confirmação da transação Fim.
             'page' => request('page') ?? 1,
         ];
 
-        //dd($queryParameters);
+        if (!empty($subSellerId)) {
 
-        ///$subSellerId = 700120538;
+            //$queryParameters['subseller_id'] = $subSellerId;
+        }
 
-        /*if (!is_null($subSellerId)) {
-            $queryParameters = $queryParameters + ['subseller_id' => $subSellerId];=
-        }*/
-
-        /*if (is_null($pagination)) {
-            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
-        } else {
-            $queryParameters = $queryParameters + ['page' => $pagination];
-            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
-        }*/
-        //https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
+        // https://developers.getnet.com.br/backoffice#tag/Statement
+        // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
-        //dd(urldecode($url));
 
         $data = $this->sendCurl($url, 'GET');
-        //dd($queryParameters, $data);
         return $data;
     }
 

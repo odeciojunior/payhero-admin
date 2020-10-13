@@ -13,7 +13,7 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Braspag\BraspagPaymentService;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Transfers\Transformers\BraspagFinancialDataResource;
+use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -161,38 +161,58 @@ class TransfersController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getGetnetData(Request $request)
+    public function accountStatementData()
     {
+
         try {
-            $data = $request->all();
-            $user = auth()->user();
-            $companyModel = new Company();
-            $getnetService = new GetnetBackOfficeService();
-            $companyGetnet = $companyModel->whereNotNull('subseller_getnet_id')
-                ->where('user_id', $user->account_owner_id)->first();
-            //            $result        = $getnetService->getStatement($companyGetnet->subseller_getnet_id);
-            //            $result = $getnetService->getStatement();
-            //            dd($result);
 
-            //            $result = json_decode($result);
-            //            return response()->json(
-            //                [
-            //                    'list_transactions' => $result->list_transactions,
-            //                    'commission'        => $result->commission,
-            //                    'adjustments'       => $result->adjustments,
-            //                    'chargeback'        => $result->chargeback,
-            //                ],
-            //                200
-            //            );
-        } catch (Exception $e) {
-            report($e);
+            $companyGetNet = Company::whereNotNull('subseller_getnet_id')
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->whereGetNetStatus(10)
+                ->whereId(Hashids::decode(request()->get('company')))
+                ->first();
 
-            return response()->json([
+            if ($companyGetNet) {
+
+                $result = (new GetnetBackOfficeService())->getStatement($companyGetNet->subseller_getnet_id);
+
+                $result = json_decode($result);
+                if (isset($result->errors)) {
+
+                    return response()->json($result->errors, 400);
+                } else {
+
+                    return response()->json((new GetNetStatementService())->performStatement($result));
+                }
+
+            } else {
+
+                return response()->json([]);
+            }
+
+
+        } catch (Exception $exception) {
+
+            report($exception);
+
+            $error = [
                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+            ];
+
+            if (!FoxUtils::isProduction()) {
+
+                $error += [
+                    'dev_message' => $exception->getMessage(),
+                    'dev_file' => $exception->getFile(),
+                    'dev_line' => $exception->getLine(),
+                    'dev_code' => $exception->getCode(),
+                    'dev_trace' => $exception->getTrace(),
+                ];
+            }
+
+            return response()->json($error, 400);
         }
     }
 }
