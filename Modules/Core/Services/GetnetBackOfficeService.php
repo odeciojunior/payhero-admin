@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Company;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
@@ -14,13 +15,13 @@ class GetnetBackOfficeService extends GetnetService
 {
     use GetnetPrepareCompanyData;
 
-    private $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
+    private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
 
-    public $postFieldsAccessToken;
+    public string $postFieldsAccessToken;
 
-    public $authorizationToken;
+    public string $authorizationToken;
 
-    private $sellerId;
+    private string $sellerId;
 
     public function __construct()
     {
@@ -84,29 +85,68 @@ class GetnetBackOfficeService extends GetnetService
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
      * @param $pagination | Primeira chamada sempre se inicia com o número 1.
-     * @param null $subsellerId |
+     * @param null $subSellerId |
      * @return bool|string
      */
-    public function getStatement($subsellerId = null, $pagination = null)
+    public function getStatement($subSellerId = null, $pagination = null)
     {
-        $queryParameters = [
-            'seller_id' => $this->sellerId,
-            'transaction_date_init' => '2020-06-01',
-            'transaction_date_end' => '2020-07-10'
-        ];
 
-        if (!is_null($subsellerId)) {
-            $queryParameters = $queryParameters + ['subseller_id' => $subsellerId];
+        try {
+
+            $dates = explode(' - ', request('dateRange') ?? '');
+
+            if (is_array($dates) && count($dates) == 2) {
+
+                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
+                $endDate = Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+            }
+        } catch (Exception $exception) {
+
         }
 
-        if (is_null($pagination)) {
+        if (!isset($startDate) || !isset($endDate)) {
+
+            $today = today()->format('Y-m-d');
+            $startDate = $today;
+            $endDate = $today;
+        }
+
+        $startDate .= ' 00:00:00';
+        $endDate .= ' 23:59:59';
+
+        $queryParameters = [
+            'seller_id' => '9631d48b-8ec0-40fe-92f2-0352f32a0051',
+            //'seller_id' => $this->sellerId,
+            'transaction_date_init' => $startDate,                                      // Data de captura da transação Início.
+            'transaction_date_end' => $endDate,
+            /*'liquidation_date_init' => $startDate,
+            'liquidation_date_end' => $endDate,
+            'confirmation_date_init' => $startDate,
+            'confirmation_date_end' => $endDate,*/
+            'page' => request('page') ?? 1,
+        ];
+
+        //dd($queryParameters);
+
+        ///$subSellerId = 700120538;
+
+        /*if (!is_null($subSellerId)) {
+            $queryParameters = $queryParameters + ['subseller_id' => $subSellerId];=
+        }*/
+
+        /*if (is_null($pagination)) {
             $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
         } else {
             $queryParameters = $queryParameters + ['page' => $pagination];
             $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
-        }
+        }*/
+        //https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
+        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        //dd(urldecode($url));
 
-        return $this->sendCurl($url, 'GET');
+        $data = $this->sendCurl($url, 'GET');
+        //dd($queryParameters, $data);
+        return $data;
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
