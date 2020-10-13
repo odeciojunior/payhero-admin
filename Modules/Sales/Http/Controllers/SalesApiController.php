@@ -199,7 +199,9 @@ class SalesApiController extends Controller
                 'cielo_sandbox',
                 'cielo_production',
                 'braspag_sandbox',
-                'braspag_production'
+                'braspag_production',
+                'getnet_sandbox',
+                'getnet_production'
             ])) {
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues, $refundObservation);
