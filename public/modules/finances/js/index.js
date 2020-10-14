@@ -87,6 +87,7 @@ $(document).ready(function () {
                     checkAllowed();
                     updateBalances();
                     updateTransfersTable();
+                    checkStatementAvailable();
                 } else {
                     $('.page-content').hide();
                     $('.content-error').show();
@@ -97,8 +98,6 @@ $(document).ready(function () {
     }
 
     getCompanies();
-
-    checkStatementAvailable();
 
     //Verifica se o saque está liberado
     function checkAllowed() {
@@ -728,8 +727,8 @@ $(document).ready(function () {
 
     function updateAccountStatementData() {
 
-        loadOnTable('#table-statement-body', '#statementTable');
         $('#table-statement-body').html('');
+        loadOnTable('#table-statement-body', '#statementTable');
 
         let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
 
@@ -749,6 +748,8 @@ $(document).ready(function () {
                 $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
+
+                $('#table-statement-body').html('');
 
                 let items = response;
 

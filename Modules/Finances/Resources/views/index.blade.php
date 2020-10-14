@@ -341,7 +341,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <table id='statementTable' class="table table-striped table-condensed unify">
+                                    <table id="statementTable" class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
                                             <th scope="col" class="headCenter" style="width:33%">Razão</th>
@@ -417,7 +417,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
     @endpush
 
 @endsection
