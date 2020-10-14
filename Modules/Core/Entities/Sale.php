@@ -290,4 +290,12 @@ class Sale extends Model
     {
         return $this->hasMany(Sale::class, 'upsell_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function saleGatewayRequests()
+    {
+        return $this->hasMany(SaleGatewayRequest::class);
+    }
 }
