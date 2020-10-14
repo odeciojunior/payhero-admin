@@ -311,7 +311,7 @@
                             <div class="row justify-content-between">
                                 <div class="col-lg-12 mb-15">
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="input-holder">
                                                 <label for="statement_company_select">Empresa</label>
                                                 <select class="form-control select-pad" name="company"
@@ -326,14 +326,14 @@
                                                        class="select-pad" placeholder="Clique para editar..." readonly>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="form-group">
                                                 <label for="date_range_statement">Venda</label>
                                                 <input name="statement_sale" id="statement_sale"
                                                        class="select-pad" placeholder="">
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-30">
                                             <button id="bt_filtro_statement" class="btn btn-primary w-full">
                                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                             </button>
