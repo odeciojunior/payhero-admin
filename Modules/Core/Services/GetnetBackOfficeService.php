@@ -126,7 +126,7 @@ class GetnetBackOfficeService extends GetnetService
 
         if (!empty($subSellerId)) {
 
-            //$queryParameters['subseller_id'] = $subSellerId;
+            $queryParameters['subseller_id'] = $subSellerId;
         }
 
         // https://developers.getnet.com.br/backoffice#tag/Statement
