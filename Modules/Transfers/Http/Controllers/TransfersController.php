@@ -171,7 +171,7 @@ class TransfersController extends Controller
             $companyGetNet = Company::whereNotNull('subseller_getnet_id')
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->whereGetNetStatus(10)
-                ->whereId(Hashids::decode(request()->get('company')))
+                ->whereId(current(Hashids::decode(request()->get('company'))))
                 ->first();
 
             if ($companyGetNet) {
