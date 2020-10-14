@@ -328,9 +328,9 @@
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="form-group">
-                                                <label for="date_range_statement">Venda</label>
+                                                <label for="date_range_statement">Transação</label>
                                                 <input name="statement_sale" id="statement_sale"
-                                                       class="select-pad" placeholder="">
+                                                       class="select-pad" placeholder="Transação">
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-3 mt-30">
