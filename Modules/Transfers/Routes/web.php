@@ -14,5 +14,5 @@
 Route::prefix('transfers')->group(function() {
     Route::get('/', 'TransfersController@index');
     Route::get('/getbraspagdata', 'TransfersController@getBraspagData');
-    Route::get('/getgetnetdata', 'TransfersController@getGetnetData');
+    Route::get('/account-statement-data', 'TransfersController@accountStatementData');
 });

@@ -5,7 +5,7 @@ namespace Modules\Companies\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class CompaniesDatabaseSeeder extends Seeder
+class EmpresasDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

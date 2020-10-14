@@ -35,10 +35,10 @@ class GetnetService
     {
         $headers = [
             'content-type: application/x-www-form-urlencoded',
-            'authorization: Basic '.$this->authorizationToken,
+            'authorization: Basic ' . $this->authorizationToken,
         ];
 
-        $curl = curl_init($this->getUrlApi().$url);
+        $curl = curl_init($this->getUrlApi() . $url);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -57,13 +57,13 @@ class GetnetService
     /**
      * @param $url
      * @param $method
-     * @param  null  $data
-     * @param  null  $companyId
+     * @param null $data
+     * @param null $companyId
      * @return bool|string
      */
     public function sendCurl($url, $method, $data = null, $companyId = null)
     {
-        $curl = curl_init($this->getUrlApi().$url);
+        $curl = curl_init($this->getUrlApi() . $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         if (!is_null($data)) {
