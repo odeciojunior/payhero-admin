@@ -5,7 +5,9 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class GetnetService
@@ -127,6 +129,26 @@ class GetnetBackOfficeService extends GetnetService
         if (!empty($subSellerId)) {
 
             $queryParameters['subseller_id'] = $subSellerId;
+        }
+
+        if (request('sale')) {
+
+            $sale = Sale::find(current(Hashids::connection('sale_id')->decode(request('sale'))));
+
+            if ($sale) {
+
+                try {
+
+                    $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+                    if (isset($gatewayResult->order_id)) {
+
+                        $queryParameters['order_id'] = $gatewayResult->order_id;
+                    }
+
+                } catch (Exception $exception) {
+
+                }
+            }
         }
 
         // https://developers.getnet.com.br/backoffice#tag/Statement

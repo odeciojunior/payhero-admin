@@ -731,7 +731,7 @@ $(document).ready(function () {
         loadOnTable('#table-statement-body', '#statementTable');
         $('#table-statement-body').html('');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
 
         $.ajax({
             method: "GET",
@@ -766,7 +766,7 @@ $(document).ready(function () {
                                 <small>(Data da venda: ${item.transactionDate})</small>
                              </td>
                             <td>${item.paymentDate}</td>
-                            <td>${item.installmentAmount}</td>
+                            <td>${item.subSellerRateAmount}</td>
                         </tr>
                         `;
                         $('#table-statement-body').append(data);
