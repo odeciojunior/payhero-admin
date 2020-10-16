@@ -770,14 +770,6 @@ $(document).ready(function () {
 
                     state.totalPage = Math.ceil(items.length / perPage);
 
-
-                    const html = {
-                        get(element) {
-                            return document.querySelector(element);
-                        }
-                    }
-
-
                     const controls = {
                         next() {
                             state.page++;
@@ -793,12 +785,11 @@ $(document).ready(function () {
                                 state.page++;
                             }
                         },
-                        goTo() {
+                        goTo(page) {
                             if (page < 1) {
                                 page = 1;
                             }
-
-                            state.page = page;
+                            state.page = +page;
 
                             if (page > state.totalPage) {
                                 state.page = state.totalPage;
@@ -810,11 +801,13 @@ $(document).ready(function () {
                                 controls.goTo(1);
                                 update();
                             }
+                            exec = false;
                             $('.first').on('click', function () {
                                 controls.goTo(1);
                                 update();
                             })
                             $('.last').on('click', function () {
+                                console.log(state.totalPage)
                                 controls.goTo(state.totalPage);
                                 update();
                             })
@@ -860,11 +853,35 @@ $(document).ready(function () {
                     }
 
                     const buttons = {
-                        create() {
+                        create(number) {
+                            const button = document.createElement('div');
+                            console.log(button);
+                            // button.classList.add('btn nav-btn');
+                            button.innerHTML = number;
+
+                            if (state.page == number) {
+                                button.classList.add('active');
+                            }
+
+                            button.addEventListener('click', (event) => {
+                                const page = event.target.innerText;
+
+                                controls.goTo(page);
+                                update();
+                            })
+
+                            button.classList.add('btn', 'nav-btn');
+
+                            $(".pagination .numbers").append(button);
 
                         },
                         update() {
                             $(".pagination .numbers").html('');
+                            const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+
+                            for (let page = maxLeft; page <= maxRight; page++) {
+                                buttons.create(page);
+                            }
                         },
                         calculateMaxVisible() {
                             let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
@@ -878,6 +895,10 @@ $(document).ready(function () {
                             if (maxRight > state.totalPage) {
                                 maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
                                 maxRight = state.totalPage;
+
+                                if (maxLeft < 1) {
+                                    maxLeft = 1;
+                                }
                             }
                             return {maxLeft, maxRight};
                         }
@@ -923,96 +944,6 @@ $(document).ready(function () {
                 paginationGetNet(response.page_count, response.page_index);
             }
         });
-
-    }
-
-    /*function setPagination(items) {
-
-        let perPage = 10;
-        const state = {
-            page: 1,
-            perPage,
-            totalPage: Math.ceil(items.length / perPage)
-        }
-
-        const html = {
-            get(element) {
-                return document.querySelector(element);
-            }
-        }
-
-
-        const controls = {
-            next() {
-                state.page++;
-
-                if (state.page > state.totalPage) {
-                    state.page--;
-                }
-            },
-            prev() {
-                state.page--;
-
-                if (state.page < 1) {
-                    state.page++;
-                }
-            },
-            goTo() {
-                if (page < 1) {
-                    page = 1;
-                }
-
-                state.page = page;
-
-                if (page > state.totalPage) {
-                    state.page = state.totalPage;
-                }
-            },
-            createListeners() {
-                html.get('.first').addEventListener('click', () => {
-                    controls.goTo(1);
-                    update();
-                })
-                html.get('.last').addEventListener('click', () => {
-                    controls.goTo(state.totalPage);
-                    update();
-                })
-                html.get('.next').addEventListener('click', () => {
-                    controls.next();
-                    update();
-                })
-                html.get('.prev').addEventListener('click', () => {
-                    controls.prev();
-                    update();
-                })
-
-
-            }
-        }
-
-        const list = {
-            create(item) {
-
-            },
-            update() {
-                let page = state.page - 1;
-            }
-        }
-
-
-        function update() {
-            console.log(state.page);
-        }
-
-        function init() {
-            controls.createListeners();
-        }
-
-        init();
-    }*/
-
-
-    function paginationGetNet() {
 
     }
 
@@ -1115,10 +1046,10 @@ $(document).ready(function () {
     }
 
     $('#date_range_statement').daterangepicker({
-        startDate: moment().subtract(1, 'month'),
-        endDate: moment().add(0, 'days'),
+        startDate: moment(),
+        endDate: moment(),
         opens: 'center',
-        maxDate: moment().add(1, 'years').endOf("day"),
+        maxDate: moment(),
         alwaysShowCalendar: true,
         showCustomRangeLabel: 'Customizado',
         autoUpdateInput: true,
@@ -1137,11 +1068,6 @@ $(document).ready(function () {
         },
         ranges: {
             'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
 

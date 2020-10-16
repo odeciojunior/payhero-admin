@@ -356,13 +356,21 @@
 
                                     <section id="paginate">
                                         <div class="pagination">
-                                            <div class="first"><button class='btn nav-btn first_page'>Primeiro</button></div>
-                                            <div class="prev"><button class='btn nav-btn first_page'>Anterior</button></div>
-                                            <div class="numbers">
-                                                <div></div>
+                                            {{--<div class="first">
+                                                <button class='btn nav-btn first_page'>Primeiro</button>
                                             </div>
-                                            <div class="next"><button class='btn nav-btn first_page'> proximo</button></div>
-                                            <div class="last"><button class='btn nav-btn first_page'> Ultimo</button></div>
+                                            <div class="prev">
+                                                <button class='btn nav-btn first_page'>Anterior</button>
+                                            </div>--}}
+                                            <div class="numbers">
+                                                <div style=""></div>
+                                            </div>
+                                           {{-- <div class="next">
+                                                <button class='btn nav-btn first_page'> proximo</button>
+                                            </div>
+                                            <div class="last">
+                                                <button class='btn nav-btn first_page'> Ultimo</button>
+                                            </div>--}}
                                         </div>
                                     </section>
 
