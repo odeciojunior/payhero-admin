@@ -725,6 +725,18 @@ $(document).ready(function () {
         });
     }
 
+    let perPage = 10;
+    const state = {
+        page: 1,
+        perPage,
+        totalPage: 0,
+        maxVisibleButtons: 5
+    }
+
+    let page = 0;
+    let start = 0;
+    let end = 0;
+
     function updateAccountStatementData() {
 
         $('#table-statement-body').html('');
@@ -751,38 +763,260 @@ $(document).ready(function () {
 
                 $('#table-statement-body').html('');
 
-                let items = response;
+                items = response;
 
                 if (!isEmpty(items)) {
 
-                    let data = '';
 
-                    for (let item of items) {
-                        data = `
-                        <tr>
-                            <td style="vertical-align: middle;">
-                                <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                    <span style="color:black;">#${item.orderId}</span>
-                                </a><br>
-                                <small>(Data da venda: ${item.transactionDate})</small>
-                             </td>
-                            <td>${item.paymentDate}</td>
-                            <td>${item.subSellerRateAmount}</td>
-                        </tr>
-                        `;
-                        $('#table-statement-body').append(data);
+                    state.totalPage = Math.ceil(items.length / perPage);
+
+
+                    const html = {
+                        get(element) {
+                            return document.querySelector(element);
+                        }
                     }
-                    $('#statementTable').addClass('table-striped');
+
+
+                    const controls = {
+                        next() {
+                            state.page++;
+
+                            if (state.page > state.totalPage) {
+                                state.page--;
+                            }
+                        },
+                        prev() {
+                            state.page--;
+
+                            if (state.page < 1) {
+                                state.page++;
+                            }
+                        },
+                        goTo() {
+                            if (page < 1) {
+                                page = 1;
+                            }
+
+                            state.page = page;
+
+                            if (page > state.totalPage) {
+                                state.page = state.totalPage;
+                            }
+                        },
+                        createListeners(exec = false) {
+
+                            if (exec) {
+                                controls.goTo(1);
+                                update();
+                            }
+                            $('.first').on('click', function () {
+                                controls.goTo(1);
+                                update();
+                            })
+                            $('.last').on('click', function () {
+                                controls.goTo(state.totalPage);
+                                update();
+                            })
+                            $('.next').on('click', function () {
+                                controls.next();
+                                update();
+                            })
+                            $('.prev').on('click', function () {
+                                controls.prev();
+                                update();
+                            })
+
+
+                        }
+                    }
+
+                    const list = {
+                        create(item) {
+                            let dataTable = `
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                            <span style="color:black;">#${item.orderId}</span>
+                                        </a><br>
+                                        <small>(Data da venda: ${item.transactionDate})</small>
+                                     </td>
+                                    <td>${item.paymentDate}</td>
+                                    <td>${item.subSellerRateAmount}</td>
+                                </tr>
+                            `;
+
+                            $('#table-statement-body').append(dataTable);
+                        },
+                        update() {
+                            page = state.page - 1;
+                            start = page * state.perPage;
+                            end = start + state.perPage;
+
+                            const paginatedItems = items.slice(start, end);
+                            $('#table-statement-body').html('');
+                            paginatedItems.forEach(list.create);
+                        }
+                    }
+
+                    const buttons = {
+                        create() {
+
+                        },
+                        update() {
+                            $(".pagination .numbers").html('');
+                        },
+                        calculateMaxVisible() {
+                            let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                            let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+
+                            if (maxLeft < 1) {
+                                maxLeft = 1;
+                                maxRight = state.maxVisibleButtons;
+                            }
+
+                            if (maxRight > state.totalPage) {
+                                maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
+                                maxRight = state.totalPage;
+                            }
+                            return {maxLeft, maxRight};
+                        }
+
+
+                    }
+
+
+                    function update() {
+                        list.update();
+                        buttons.update();
+                    }
+
+                    function init() {
+                        update();
+                        controls.createListeners(true);
+                    }
+
+                    init();
+
+                    // let data = '';
+
+                    /* for (let item of items) {
+                         data = `
+                         <tr>
+                             <td style="vertical-align: middle;">
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                     <span style="color:black;">#${item.orderId}</span>
+                                 </a><br>
+                                 <small>(Data da venda: ${item.transactionDate})</small>
+                              </td>
+                             <td>${item.paymentDate}</td>
+                             <td>${item.subSellerRateAmount}</td>
+                         </tr>
+                         `;
+                         // $('#table-statement-body').append(data);
+                     }
+                     $('#statementTable').addClass('table-striped');*/
+
                 } else {
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                 }
-                //paginationGetNet(response.page_count, response.page_index);
+                paginationGetNet(response.page_count, response.page_index);
             }
         });
 
     }
 
-    function paginationGetNet(pageCount, pageIndex) {
+    /*function setPagination(items) {
+
+        let perPage = 10;
+        const state = {
+            page: 1,
+            perPage,
+            totalPage: Math.ceil(items.length / perPage)
+        }
+
+        const html = {
+            get(element) {
+                return document.querySelector(element);
+            }
+        }
+
+
+        const controls = {
+            next() {
+                state.page++;
+
+                if (state.page > state.totalPage) {
+                    state.page--;
+                }
+            },
+            prev() {
+                state.page--;
+
+                if (state.page < 1) {
+                    state.page++;
+                }
+            },
+            goTo() {
+                if (page < 1) {
+                    page = 1;
+                }
+
+                state.page = page;
+
+                if (page > state.totalPage) {
+                    state.page = state.totalPage;
+                }
+            },
+            createListeners() {
+                html.get('.first').addEventListener('click', () => {
+                    controls.goTo(1);
+                    update();
+                })
+                html.get('.last').addEventListener('click', () => {
+                    controls.goTo(state.totalPage);
+                    update();
+                })
+                html.get('.next').addEventListener('click', () => {
+                    controls.next();
+                    update();
+                })
+                html.get('.prev').addEventListener('click', () => {
+                    controls.prev();
+                    update();
+                })
+
+
+            }
+        }
+
+        const list = {
+            create(item) {
+
+            },
+            update() {
+                let page = state.page - 1;
+            }
+        }
+
+
+        function update() {
+            console.log(state.page);
+        }
+
+        function init() {
+            controls.createListeners();
+        }
+
+        init();
+    }*/
+
+
+    function paginationGetNet() {
+
+    }
+
+    function paginationGetNets(pageCount, pageIndex) {
 
         let paginationContainer = "#pagination-statement";
 
