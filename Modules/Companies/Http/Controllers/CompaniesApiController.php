@@ -43,7 +43,6 @@ class CompaniesApiController extends Controller
 
             return $companyService->getCompaniesUser($paginate);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados companies CompaniesApiController - index');
             report($e);
 
             return response()->json(
@@ -156,7 +155,7 @@ class CompaniesApiController extends Controller
             }
 
             if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
-                $requestData['support_telephone'] = '+' . FoxUtils::onlyNumbers($requestData['support_telephone']);
+                $requestData['support_telephone'] = '+'.FoxUtils::onlyNumbers($requestData['support_telephone']);
             }
             if (!empty($requestData['company_document'])) {
                 $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
@@ -291,9 +290,9 @@ class CompaniesApiController extends Controller
 
                 $amazonFileService->setDisk('s3_documents');
                 $amazonPath = $amazonFileService->uploadFile(
-                    'uploads/user/' . Hashids::encode(
+                    'uploads/user/'.Hashids::encode(
                         auth()->user()->account_owner_id
-                    ) . '/companies/' . Hashids::encode($company->id) . '/private/documents',
+                    ).'/companies/'.Hashids::encode($company->id).'/private/documents',
                     $document,
                     null,
                     null,
@@ -574,7 +573,7 @@ class CompaniesApiController extends Controller
             $user = auth()->user();
 
             $hasSubsellerId = Company::whereNotNull('subseller_getnet_id')
-                ->whereGetNetStatus(10)
+                ->whereGetNetStatus(1)
                 ->where('user_id', $user->account_owner_id)
                 ->exists();
 
@@ -584,7 +583,6 @@ class CompaniesApiController extends Controller
                     'env' => env("APP_ENV", "local"),
                 ], 200);
         } catch (Exception $e) {
-
             report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
