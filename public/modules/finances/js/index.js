@@ -49,6 +49,8 @@ $(document).ready(function () {
         insertBefore: '.grad-border',
     };
 
+    $("#date_range_statement_unique").val(moment().format('YYYY-MM-DD'));
+
     //END - Comportamentos da tela
 
     //Obtém as empresas
@@ -725,12 +727,17 @@ $(document).ready(function () {
         });
     }
 
+
+    /*dateControl.value = moment();
+    console.log(dateControl.value)*/
+    // let dateControl = document.querySelector('input[type="date"]');
+
     let perPage = 10;
     const state = {
         page: 1,
         perPage,
         totalPage: 0,
-        maxVisibleButtons: 20
+        maxVisibleButtons: 100
     }
 
     let page = 0;
@@ -738,6 +745,7 @@ $(document).ready(function () {
     let end = 0;
 
     function updateAccountStatementData() {
+
 
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
@@ -755,7 +763,6 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                //console.log(response);
                 let error = 'Erro ao gerar o extrato';
 
                 errorAjaxResponse(error);
@@ -763,14 +770,13 @@ $(document).ready(function () {
             },
             success: response => {
 
-                $('#table-statement-body').html('');
+                updateClassHTML();
 
                 items = response;
 
                 if (!isEmpty(items)) {
 
                     $(".numbers").show();
-
 
                     state.totalPage = Math.ceil(items.length / perPage);
 
@@ -837,12 +843,11 @@ $(document).ready(function () {
                                         </a><br>
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
-                                    <td>${item.paymentDate}</td>
-                                    <td>${item.subSellerRateAmount}</td>
+                                    <td style="vertical-align: middle;">${item.paymentDate}</td>
+                                    <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
-
-                            $('#table-statement-body').append(dataTable);
+                            updateClassHTML(dataTable);
                         },
                         update() {
                             page = state.page - 1;
@@ -850,7 +855,7 @@ $(document).ready(function () {
                             end = start + state.perPage;
 
                             const paginatedItems = items.slice(start, end);
-                            $('#table-statement-body').html('');
+                            updateClassHTML();
                             paginatedItems.forEach(list.create);
                         }
                     }
@@ -858,8 +863,6 @@ $(document).ready(function () {
                     const buttons = {
                         create(number) {
                             const button = document.createElement('div');
-                            console.log(button);
-                            // button.classList.add('btn nav-btn');
                             button.innerHTML = number;
 
                             if (state.page == number) {
@@ -941,8 +944,18 @@ $(document).ready(function () {
                      }
                      $('#statementTable').addClass('table-striped');*/
 
+
                 } else {
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                }
+
+                function updateClassHTML(dataTable = 0) {
+                    if (dataTable.length > 0) {
+                        $('#table-statement-body').append(dataTable);
+                    } else {
+                        $('#table-statement-body').html('');
+                    }
+                    $("#statementTable").addClass('table-striped');
                 }
             }
         });

@@ -305,7 +305,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        {{-- extrato 2.0 --}}
                         <div class="tab-pane fade" id="nav-statement" role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-between">
@@ -342,7 +342,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <table id="statementTable" class="table table-striped table-condensed unify">
+                                    <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
                                         <tr>
                                             <th scope="col" class="headCenter" style="width:33%">Razão</th>
@@ -356,7 +356,7 @@
                                     </table>
 
                                     <section id="paginate">
-                                        <div class="pagination">
+                                        <div class="pagination" style="margin-top:10px;position:relative;float:right">
                                             {{--<div class="first">
                                                 <button class='btn nav-btn first_page'>Primeiro</button>
                                             </div>
@@ -441,7 +441,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection
