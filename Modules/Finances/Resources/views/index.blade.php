@@ -322,8 +322,9 @@
                                         <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="form-group">
                                                 <label for="date_range_statement">Data da venda</label>
-                                                <input name="date_range_statement" id="date_range_statement"
-                                                       class="select-pad" placeholder="Clique para editar..." readonly>
+                                                <input name="date_range_statement" type="date"
+                                                       id="date_range_statement_unique"
+                                                       class="select-pad" placeholder="Clique para editar...">
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-3">
@@ -365,12 +366,12 @@
                                             <div class="numbers">
                                                 <div style=""></div>
                                             </div>
-                                           {{-- <div class="next">
-                                                <button class='btn nav-btn first_page'> proximo</button>
-                                            </div>
-                                            <div class="last">
-                                                <button class='btn nav-btn first_page'> Ultimo</button>
-                                            </div>--}}
+                                            {{-- <div class="next">
+                                                 <button class='btn nav-btn first_page'> proximo</button>
+                                             </div>
+                                             <div class="last">
+                                                 <button class='btn nav-btn first_page'> Ultimo</button>
+                                             </div>--}}
                                         </div>
                                     </section>
 
@@ -440,7 +441,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection

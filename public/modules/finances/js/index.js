@@ -730,7 +730,7 @@ $(document).ready(function () {
         page: 1,
         perPage,
         totalPage: 0,
-        maxVisibleButtons: 5
+        maxVisibleButtons: 20
     }
 
     let page = 0;
@@ -742,7 +742,9 @@ $(document).ready(function () {
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+
+        $(".numbers").hide();
 
         $.ajax({
             method: "GET",
@@ -766,6 +768,8 @@ $(document).ready(function () {
                 items = response;
 
                 if (!isEmpty(items)) {
+
+                    $(".numbers").show();
 
 
                     state.totalPage = Math.ceil(items.length / perPage);
@@ -807,7 +811,6 @@ $(document).ready(function () {
                                 update();
                             })
                             $('.last').on('click', function () {
-                                console.log(state.totalPage)
                                 controls.goTo(state.totalPage);
                                 update();
                             })
@@ -941,83 +944,9 @@ $(document).ready(function () {
                 } else {
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                 }
-                paginationGetNet(response.page_count, response.page_index);
             }
         });
 
-    }
-
-    function paginationGetNets(pageCount, pageIndex) {
-
-        let paginationContainer = "#pagination-statement";
-
-        $(paginationContainer).html("");
-
-        let currentPage = pageIndex;
-        let lastPage = pageCount;
-
-        if (lastPage === 1 || lastPage === 0) {
-            return false;
-        }
-
-        let first_page = `<button class='btn nav-btn first_page'>1</button>`;
-
-        $(paginationContainer).append(first_page);
-
-        if (currentPage === 1) {
-            $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-
-        $(paginationContainer + ' .first_page').on("click", function () {
-            updateAccountStatementData('?page=1');
-        });
-
-        for (let x = 3; x > 0; x--) {
-
-            if (currentPage - x <= 1) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
-                updateAccountStatementData('?page=' + $(this).html());
-            });
-        }
-
-        if (currentPage !== 1 && currentPage !== lastPage) {
-            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
-
-            $(paginationContainer).append(current_page);
-
-            $(paginationContainer + " .current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-        for (let x = 1; x < 4; x++) {
-
-            if (currentPage + x >= lastPage) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
-                updateAccountStatementData('?page=' + $(this).html());
-            });
-        }
-
-        if (lastPage !== 1) {
-            var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
-
-            $(paginationContainer).append(last_page);
-
-            if (currentPage === lastPage) {
-                $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-
-            $(paginationContainer + ' .last_page').on("click", function () {
-                updateAccountStatementData('?page=' + lastPage);
-            });
-        }
     }
 
     //atualiza a table de statement
@@ -1050,8 +979,8 @@ $(document).ready(function () {
         endDate: moment(),
         opens: 'center',
         maxDate: moment(),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
+        alwaysShowCalendar: false,
+        showCustomRangeLabel: false,
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',

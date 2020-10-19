@@ -25,13 +25,12 @@ use Vinkla\Hashids\Facades\Hashids;
 class TransfersController extends Controller
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
-
             $transfersModel = new Transfer();
 
             activity()->on($transfersModel)->tap(function (Activity $activity) {
@@ -45,19 +44,22 @@ class TransfersController extends Controller
             $dateRange = FoxUtils::validateDateRange($data["date_range"]);
             if ($data['date_type'] == 'transaction_date') {
                 $dateType = 'transaction.created_at';
-            } else if ($data['date_type'] == 'transfer_date') {
-                $dateType = 'transfers.created_at';
             } else {
-                $dateType = 'sales.start_date';
+                if ($data['date_type'] == 'transfer_date') {
+                    $dateType = 'transfers.created_at';
+                } else {
+                    $dateType = 'sales.start_date';
+                }
             }
 
-            $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
+            $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id',
+                'transfers.transaction_id')
                 ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
                 ->where(function ($query) use ($companyId) {
                     $query->where('transfers.company_id', $companyId)
                         ->orWhere('transaction.company_id', $companyId);
                 })
-                ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                ->whereBetween($dateType, [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->whereNull('transfers.customer_id');
 
             $saleId = str_replace('#', '', $data['transaction']);
@@ -73,7 +75,7 @@ class TransfersController extends Controller
             }
 
             if (!empty($data['reason'])) {
-                $transfers->where('transfers.reason', 'like', '%' . $data['reason'] . '%');
+                $transfers->where('transfers.reason', 'like', '%'.$data['reason'].'%');
             }
 
             if (!empty($data['value'])) {
@@ -119,7 +121,7 @@ class TransfersController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function getBraspagData(Request $request)
@@ -165,36 +167,30 @@ class TransfersController extends Controller
      */
     public function accountStatementData()
     {
-
         try {
-
             $companyGetNet = Company::whereNotNull('subseller_getnet_id')
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->whereGetNetStatus(10)
                 ->whereId(current(Hashids::decode(request()->get('company'))))
                 ->first();
 
-            if ($companyGetNet) {
-
-                $result = (new GetnetBackOfficeService())->getStatement($companyGetNet->subseller_getnet_id);
-
-                $result = json_decode($result);
-                if (isset($result->errors)) {
-
-                    return response()->json($result->errors, 400);
-                } else {
-
-                    return response()->json((new GetNetStatementService())->performStatement($result));
-                }
-
-            } else {
-
+            if (empty($companyGetNet)) {
                 return response()->json([]);
             }
 
+            $subseller = $companyGetNet->subseller_getnet_homolog_id;
+            if (FoxUtils::isProduction()) {
+                $subseller = $companyGetNet->subseller_getnet_id;
+            }
 
+            $result = (new GetnetBackOfficeService())->getStatement($subseller);
+
+            $result = json_decode($result);
+            if (isset($result->errors)) {
+                return response()->json($result->errors, 400);
+            }
+            return response()->json((new GetNetStatementService())->performStatement($result));
         } catch (Exception $exception) {
-
             report($exception);
 
             $error = [
@@ -202,7 +198,6 @@ class TransfersController extends Controller
             ];
 
             if (!FoxUtils::isProduction()) {
-
                 $error += [
                     'dev_message' => $exception->getMessage(),
                     'dev_file' => $exception->getFile(),
