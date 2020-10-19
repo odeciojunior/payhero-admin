@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:DisableUserAntecipation')->dailyAt('02:00');
 
         //restart all shopify webhooks from shopify integrations
-        $schedule->command('restartShopifyWebhooks')->weekly();
+//        $schedule->command('restartShopifyWebhooks')->weekly();
 
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');

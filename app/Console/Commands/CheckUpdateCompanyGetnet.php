@@ -51,11 +51,11 @@ class CheckUpdateCompanyGetnet extends Command
                 $result = json_decode($result);
 
                 if (!empty($result) && !empty($result->subseller_id) && $company->subseller_getnet_id == $result->subseller_id) {
-                    if ($result->enabled == 'S' && $result->status == 'Aprovado Transacionar' && $result->capture_payments_enabled == 'S') {
+                    if ($result->enabled == 'S' && ($result->status == 'Aprovado Transacionar' || $result->status == 'Aprovado Transacionar e Antecipar') && $result->capture_payments_enabled == 'S') {
                         $company->update([
-                            'get_net_status' => 4 // approved
+                            'get_net_status' => 1 // approved
                         ]);
-                    } elseif ($result->enabled == 'N' && $result->status == 'Reprovado' && $result->capture_payments_enabled == 'N') {
+                    } elseif (($result->status == 'Reprovado' || $result->status == 'Rejeitado') && $result->capture_payments_enabled == 'N') {
                         $company->update([
                             'get_net_status' => 3 // reproved
                         ]);
