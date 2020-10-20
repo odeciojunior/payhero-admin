@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
 class CheckUpdateCompanyGetnet extends Command
@@ -38,13 +40,12 @@ class CheckUpdateCompanyGetnet extends Command
         try {
             $companies = Company::where('get_net_status', 2)->get();
             $getnet = new GetnetBackOfficeService();
+            $companyService = new CompanyService();
 
             foreach ($companies as $company) {
-                if ($company->company_type == 1) {
-                    // physical person
+                if ($company->company_type == 1) { // physical person
                     $result = $getnet->checkPfCompanyRegister($company->company_document, $company->id);
-                } else {
-                    // 'juridical person'
+                } else { // 'juridical person'
                     $result = $getnet->checkPjCompanyRegister($company->company_document, $company->id);
                 }
 
@@ -61,6 +62,7 @@ class CheckUpdateCompanyGetnet extends Command
                         ]);
                     }
                 }
+                $companyService->updateCaptureTransactionEnabled($company);
             }
         } catch (Exception $e) {
             report($e);

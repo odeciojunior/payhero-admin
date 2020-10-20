@@ -24,6 +24,7 @@ class CompaniesSelectResource extends JsonResource
             'name'                      => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
             'company_document_status'   => ($companyDocumentValidated) ? 'approved' : 'pending',
             'antecipation_enabled_flag' => $this->user->antecipation_enabled_flag,
+            'capture_transaction_enabled' => $this->capture_transaction_enabled,
             'active_flag'               => $this->active_flag,
         ];
     }

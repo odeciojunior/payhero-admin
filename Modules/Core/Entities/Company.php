@@ -51,6 +51,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $federal_registration_status
  * @property string $founding_date
  * @property int $subseller_getnet_id
+ * @property int $get_net_status
  * @property int $account_type
  * @property int $social_value
  * @property string $federal_registration_status_date
@@ -129,6 +130,7 @@ class Company extends Model
         'monthly_gross_income',
         'federal_registration_status',
         'get_net_status',
+        'capture_transaction_enabled',
         'founding_date',
         'subseller_getnet_id',
         'subseller_getnet_homolog_id',
