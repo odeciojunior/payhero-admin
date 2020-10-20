@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Project project
+ * @method ProjectNotificationPresenter present()
  */
 class ProjectNotification extends Model
 {

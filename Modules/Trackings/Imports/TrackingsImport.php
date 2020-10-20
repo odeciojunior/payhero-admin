@@ -3,19 +3,14 @@
 namespace Modules\Trackings\Imports;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
-use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -42,7 +37,6 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     {
         $saleModel = new Sale();
         $trackingService = new TrackingService();
-        $productService = new ProductService();
 
         foreach ($collection as $key => $value) {
             if ($key == 0) {
@@ -69,12 +63,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                 if (!empty($sale)) {
                     $productPlanSale = $sale->productsPlansSale->where('product_id', $productId)->first();
                     if (!empty($productPlanSale)) {
-
-                        $tracking = $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
-                        if(!empty($tracking)) {
-                            $saleProducts = $productService->getProductsBySale($sale);
-                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                        }
+                        $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
                     }
                 }
             }

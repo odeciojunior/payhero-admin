@@ -13,6 +13,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -271,6 +272,10 @@ class TrackingService
                 }
             } else { //senão cria o tracking
                 $tracking = Tracking::create($commonAttributes + $newAttributes);
+            }
+
+            if (!empty($tracking)) {
+                event(new TrackingCodeUpdatedEvent($tracking->id));
             }
 
             return $tracking;

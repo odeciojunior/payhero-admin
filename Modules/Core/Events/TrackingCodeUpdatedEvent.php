@@ -8,21 +8,15 @@ use Modules\Core\Entities\Tracking;
 
 class TrackingCodeUpdatedEvent
 {
-    public $sale;
-    public $tracking;
-    public $products;
+    public $trackingId;
 
     /**
      * TrackingCodeUpdatedEvent constructor.
-     * @param Sale $sale
-     * @param Tracking $tracking
-     * @param Collection $products
+     * @param int $trackingId
      */
-    public function __construct(Sale $sale, Tracking $tracking, Collection $products)
+    public function __construct(int $trackingId)
     {
-        $this->sale = $sale;
-        $this->tracking = $tracking;
-        $this->products = $products;
+        $this->trackingId = $trackingId;
     }
 
     /**
