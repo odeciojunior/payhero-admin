@@ -48,12 +48,14 @@ class CheckSaleReleasedListener implements ShouldQueue
         }
 
         if (!$hasInvalidOrNotInformedTracking) {
-            $result = $checkoutService->releasePaymentGetnet($sale->id);
+            $sale->has_valid_tracking = true;
+            $sale->save();
+            $checkoutService->releasePaymentGetnet($sale->id);
 
-            if (!empty($result) && $result->status == 'success') {
-                $sale->has_valid_tracking = true;
-                $sale->save();
-            }
+            //$result = $checkoutService->releasePaymentGetnet($sale->id);
+            //if (!empty($result) && $result->status == 'success') {
+            ////   faz alguma coisa com o resultado
+            //}
         }
     }
 }
