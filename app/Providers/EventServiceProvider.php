@@ -70,6 +70,9 @@ class EventServiceProvider extends ServiceProvider
             \Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener::class,
             \Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener::class,
         ],
+        \Modules\Core\Events\CheckSaleReleasedEvent::class => [
+            \Modules\Core\Listeners\CheckSaleReleasedListener::class
+        ],
         \Modules\Core\Events\ResetPasswordEvent::class => [
             \Modules\Core\Listeners\ResetPasswordSendEmailListener::class,
         ],
