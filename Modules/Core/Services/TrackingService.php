@@ -13,6 +13,8 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Events\CheckSaleReleasedEvent;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -47,7 +49,6 @@ class TrackingService
 
         $apiTracking = $trackingmoreService->find($trackingCode);
 
-
         $collection = $refresh
             ? $trackingModel->with(['productPlanSale'])
                 ->where('tracking_code', $trackingCode)
@@ -73,6 +74,7 @@ class TrackingService
 
             if ($item->isDirty()) {
                 $item->save();
+                event(new CheckSaleReleasedEvent($item->sale_id));
             }
         }
 
@@ -273,6 +275,11 @@ class TrackingService
                 $tracking = Tracking::create($commonAttributes + $newAttributes);
             }
 
+            if (!empty($tracking)) {
+                event(new TrackingCodeUpdatedEvent($tracking->id));
+                event(new CheckSaleReleasedEvent($productPlanSale->sale_id));
+            }
+
             return $tracking;
         } catch (\Exception $e) {
             report($e);
@@ -403,12 +410,9 @@ class TrackingService
             );
         }
 
-        $productPlanSales->whereHas(
-            'product',
-            function ($query) use ($filters) {
-                $query->where('type_enum', (new Product)->present()->getType('physical'));
-            }
-        );
+        $productPlanSales->whereHas('product', function ($query) {
+            $query->where('type_enum', (new Product)->present()->getType('physical'));
+        });
 
         return $productPlanSales;
     }

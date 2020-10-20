@@ -1,18 +1,20 @@
 <?php
 
+
 namespace Modules\Core\Events;
 
-class TrackingCodeUpdatedEvent
+
+class CheckSaleReleasedEvent
 {
-    public $trackingId;
+    public $saleId;
 
     /**
      * TrackingCodeUpdatedEvent constructor.
-     * @param int $trackingId
+     * @param int $saleId
      */
-    public function __construct(int $trackingId)
+    public function __construct(int $saleId)
     {
-        $this->trackingId = $trackingId;
+        $this->saleId = $saleId;
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Events\CheckSaleReleasedEvent;
 use Modules\Core\Services\TrackingmoreService;
 
 class PostBackTrackingmoreController extends Controller
@@ -37,8 +38,9 @@ class PostBackTrackingmoreController extends Controller
                 if($tracking->system_status_enum == $trackingModel->present()->getSystemStatusEnum('no_tracking_info')
                   && $trackingStatus != $trackingModel->present()->getTrackingStatusEnum('posted')){
                     $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
+                    $tracking->save();
+                    event(new CheckSaleReleasedEvent($tracking->sale_id));
                 }
-                $tracking->save();
             }
 
             return response()->json(['message' => 'Postback received!']);
