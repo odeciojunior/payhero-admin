@@ -235,6 +235,7 @@ class CompanyService
 
             if (!empty($companyProtocol) && $companyStatus['status_code'] == 200) {
                 $company = $idewallService->getReportByProtocolNumber($companyProtocol);
+
                 return json_decode($company, true);
             }
 

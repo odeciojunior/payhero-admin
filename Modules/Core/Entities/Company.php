@@ -71,6 +71,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
+ * @property json id_wall_result
  * @method CompanyPresenter present()
  */
 class Company extends Model
@@ -130,6 +131,7 @@ class Company extends Model
         'get_net_status',
         'founding_date',
         'subseller_getnet_id',
+        'subseller_getnet_homolog_id',
         'account_type',
         'social_value',
         'federal_registration_status_date',
@@ -143,7 +145,8 @@ class Company extends Model
         'updated_at',
         'braspag_status',
         'braspag_merchant_id',
-        'braspag_merchant_homolog_id'
+        'braspag_merchant_homolog_id',
+        'id_wall_result'
     ];
     /**
      * @var bool
@@ -165,17 +168,17 @@ class Company extends Model
     protected static $submitEmptyLogs = false;
 
     /**
-     * @param Activity $activity
-     * @param string $eventName
+     * @param  Activity  $activity
+     * @param  string  $eventName
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Empresa ' . $this->fantasy_name . ' foi deletedo.';
+            $activity->description = 'Empresa '.$this->fantasy_name.' foi deletedo.';
         } elseif ($eventName == 'updated') {
-            $activity->description = 'Empresa ' . $this->fantasy_name . ' foi atualizado.';
+            $activity->description = 'Empresa '.$this->fantasy_name.' foi atualizado.';
         } elseif ($eventName == 'created') {
-            $activity->description = 'Empresa ' . $this->fantasy_name . ' foi criado.';
+            $activity->description = 'Empresa '.$this->fantasy_name.' foi criado.';
         } else {
             $activity->description = $eventName;
         }

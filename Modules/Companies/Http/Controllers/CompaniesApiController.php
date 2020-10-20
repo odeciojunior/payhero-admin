@@ -5,25 +5,25 @@ namespace Modules\Companies\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Companies\Transformers\CompanyDocumentsResource;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Project;
-use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\FoxUtils;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Modules\Core\Services\BankService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Entities\CompanyDocument;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Companies\Transformers\CompanyCpfResource;
+use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompanyCpfResource;
+use Modules\Companies\Transformers\CompanyDocumentsResource;
+use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Project;
+use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\FoxUtils;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CompaniesController
@@ -43,7 +43,6 @@ class CompaniesApiController extends Controller
 
             return $companyService->getCompaniesUser($paginate);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados companies CompaniesApiController - index');
             report($e);
 
             return response()->json(
@@ -550,11 +549,11 @@ class CompaniesApiController extends Controller
     public function checkBraspagCompany()
     {
         try {
-            $user          = auth()->user();
-            $companyModel  = new Company();
-            $columnName    = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $user = auth()->user();
+            $companyModel = new Company();
+            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
             $hasMerchantId = $companyModel->whereNotNull($columnName)
-                                          ->where('user_id', $user->account_owner_id)->exists();
+                ->where('user_id', $user->account_owner_id)->exists();
 
             return response()->json(
                 [
@@ -564,6 +563,27 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
+            return response()->json(['message' => 'Erro ao verificar empresas'], 400);
+        }
+    }
+
+    public function checkStatementAvailable()
+    {
+        try {
+            $user = auth()->user();
+
+            $hasSubsellerId = Company::whereNotNull('subseller_getnet_id')
+                ->whereGetNetStatus(1)
+                ->where('user_id', $user->account_owner_id)
+                ->exists();
+
+            return response()->json(
+                [
+                    'has_subseller_id' => $hasSubsellerId,
+                    'env' => env("APP_ENV", "local"),
+                ], 200);
+        } catch (Exception $e) {
+            report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }

@@ -4,12 +4,10 @@ namespace Modules\Sales\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Plan;
@@ -68,8 +66,8 @@ class SalesApiController extends Controller
 
             activity()->on($saleModel)->tap(function (Activity $activity) use ($id) {
                 $activity->log_name = 'visualization';
-                $activity->subject_id = current(Hashids::decode($id));
-            })->log('Visualizou detalhes da venda #'.$id);
+                $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
+            })->log('Visualizou detalhes da venda #' . $id);
 
             $saleService = new SaleService();
 
@@ -93,11 +91,11 @@ class SalesApiController extends Controller
 
             activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
-            })->log('Exportou tabela '.$dataRequest['format'].' de vendas');
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
 
             $user = auth()->user();
 
-            $filename = 'sales_report_'.Hashids::encode($user->id).'.'.$dataRequest['format'];
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
@@ -170,7 +168,7 @@ class SalesApiController extends Controller
             activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId) {
                 $activity->log_name = 'estorno';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
-            })->log('Tentativa estorno transação: #'.$saleId);
+            })->log('Tentativa estorno transação: #' . $saleId);
 
             $pendingTransactions = $transactionModel->whereIn('company_id', $userCompanies)
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
@@ -188,7 +186,7 @@ class SalesApiController extends Controller
             activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId) {
                 $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
-            })->log('Estorno transação: #'.$saleId);
+            })->log('Estorno transação: #' . $saleId);
 
             $partialValues = [];
             if ($partial == true) {
@@ -201,7 +199,9 @@ class SalesApiController extends Controller
                 'cielo_sandbox',
                 'cielo_production',
                 'braspag_sandbox',
-                'braspag_production'
+                'braspag_production',
+                'getnet_sandbox',
+                'getnet_production'
             ])) {
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues, $refundObservation);
@@ -277,7 +277,7 @@ class SalesApiController extends Controller
                 activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId) {
                     $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
-                })->log('Gerou nova ordem no shopify para transação: #'.$saleId);
+                })->log('Gerou nova ordem no shopify para transação: #' . $saleId);
 
                 if (!FoxUtils::isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
@@ -320,7 +320,7 @@ class SalesApiController extends Controller
             activity()->on($saleModel)->tap(function (Activity $activity) use ($requestData) {
                 $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($requestData['sale_id']));
-            })->log('Processou boletos venda para transação: #'.$requestData['sale_id']);
+            })->log('Processou boletos venda para transação: #' . $requestData['sale_id']);
 
             event(new BilletPaidEvent($plan, $sale, $sale->customer));
 
@@ -347,7 +347,7 @@ class SalesApiController extends Controller
             activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId, $request) {
                 $activity->log_name = 'created';
                 $activity->subject_id = $saleId;
-            })->log('Reenviou email para a venda: #'.$request->input('sale'));
+            })->log('Reenviou email para a venda: #' . $request->input('sale'));
 
             EmailService::clientSale(
                 $sale->customer,
@@ -510,7 +510,7 @@ class SalesApiController extends Controller
             if ($projectId) {
                 $plans = null;
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%'.$data['search'].'%')
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
                         ->where('project_id', $projectId)->get();
                 } else {
                     $plans = $planModel->where('project_id', $projectId)->limit(10)->get();
@@ -522,7 +522,7 @@ class SalesApiController extends Controller
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
                 $plans = null;
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%'.$data['search'].'%')
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn('project_id', $userProjects)->get();
                 } else {
                     $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();

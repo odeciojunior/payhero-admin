@@ -20,6 +20,8 @@ Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
 
     Route::get('/companies/checkbraspagcompany', 'CompaniesApiController@checkBraspagCompany');
 
+    Route::get('/companies/check-statement-available', 'CompaniesApiController@checkStatementAvailable');
+
     Route::post('/companies/{companiId}/getdocuments', 'CompaniesApiController@getDocuments');
 
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')

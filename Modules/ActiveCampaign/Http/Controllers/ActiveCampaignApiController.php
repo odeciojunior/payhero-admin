@@ -1,23 +1,23 @@
 <?php
 
-namespace Modules\Activecampaign\Http\Controllers;
+namespace Modules\ActiveCampaign\Http\Controllers;
 
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\ProjectService;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Services\ActiveCampaignService;
+use Illuminate\Support\Facades\Log;
+use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\ActiveCampaignService;
+use Modules\Core\Services\ProjectService;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Spatie\Activitylog\Models\Activity;
-use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ActiveCampaignApiController extends Controller
 {

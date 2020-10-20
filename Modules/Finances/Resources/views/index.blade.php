@@ -21,12 +21,18 @@
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
                         <div class="p-2 align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
-                                <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
+                                 viewBox="0 0 24 24">
+                                <path
+                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                             </svg>
                             <div class="btn-group" role="group">
-                                <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                <button id="bt_get_xls" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                </button>
+                                <button id="bt_get_csv" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-right">.CSV
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -35,13 +41,15 @@
         </div>
         <div class="page-content container" style="display:none">
             <!-- Aviso de Exportação -->
-            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                 style="display:none;">
                 <div class="d-flex">
                     <i class="material-icons mr-10">info</i>
                     <div class="w-full">
                         <strong class="font-size-16">Exportando seu relatório</strong>
                         <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
-                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
+                            tempo, dependendo de quantos registros você estiver exportando.
                         </p>
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
@@ -58,8 +66,9 @@
                             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-extract"
                                role="tab" aria-controls="nav-profile" aria-selected="true">Extrato
                             </a>
-                            <a class="nav-item nav-link" id="nav-braspag-tab" data-toggle="tab" href="#nav-braspag"
-                               role="tab" aria-controls="nav-braspag" aria-selected="true" style='display:none;'>Braspag
+                            <a class="nav-item nav-link" id="nav-statement-tab" data-toggle="tab" href="#nav-statement"
+                               role="tab" aria-controls="nav-statement" aria-selected="true" style='display:none;'>Extrato
+                                2.0
                             </a>
                         </div>
                     </div>
@@ -71,8 +80,10 @@
                              aria-labelledby="nav-home-tab">
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-8 mb-3">
-                                    <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
-                                        <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais informações.
+                                    <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
+                                         role="alert" style='display:none;'>
+                                        <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
+                                        informações.
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
@@ -94,7 +105,8 @@
                                         <div class="col-sm-3">
                                             <div class="input-holder">
                                                 <label for="transfers_company_select"> Empresa</label>
-                                                <select style='border-radius:10px' class="form-control select-pad" name="company"
+                                                <select style='border-radius:10px' class="form-control select-pad"
+                                                        name="company"
                                                         id="transfers_company_select"> </select>
                                             </div>
                                         </div>
@@ -104,20 +116,24 @@
                                                  style='padding:0'>
                                                 <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
-                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
+                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
+                                                                    class="currency">$</span></span>
                                                 </div>
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"
-                                                       aria-describedby="basic-addon1" style='border-radius: 0 10px 10px 0'>
+                                                       aria-describedby="basic-addon1"
+                                                       style='border-radius: 0 10px 10px 0'>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 pt-1">
-                                            <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal" disabled>
+                                            <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
+                                                    data-toggle="modal" disabled>
                                                 <svg class="mr-2" style="fill: white; vertical-align: middle;"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      viewBox="0 0 24 24">
-                                                    <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                    <path
+                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                 </svg>
                                                 Sacar dinheiro
                                             </button>
@@ -136,7 +152,7 @@
                                         </div>
                                         <div class="col-sm-3 ">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo pendente </h6>
+                                                <h6 class="label-price mb-15"> Saldo Pendente </h6>
                                                 <h4 class="price saldoPendente">
                                                 </h4>
                                                 <div class="grad-border red"></div>
@@ -167,24 +183,29 @@
                                 <div class="col-12">
                                     <table id='withdrawalsTable' class="table table-striped table-condensed unify">
                                         <thead>
-                                            <tr>
-                                                <th scope="col">Conta</th>
-                                                <th scope="col">Solicitação</th>
-                                                <th scope="col">Liberação</th>
-                                                <th scope="col">Valor</th>
-                                                <th style="display: none" id="col_transferred_value" scope="col">Valor transferido</th>
-                                                <th scope="col">Status</th>
-                                            </tr>
+                                        <tr>
+                                            <th scope="col">Conta</th>
+                                            <th scope="col">Solicitação</th>
+                                            <th scope="col">Liberação</th>
+                                            <th scope="col">Valor</th>
+                                            <th style="display: none" id="col_transferred_value" scope="col">Valor
+                                                transferido
+                                            </th>
+                                            <th scope="col">Status</th>
+                                        </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
+                                        style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
                             </div>
                         </div>
+
+
                         <!-- EXTRATO -->
                         <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row justify-content-between">
@@ -198,7 +219,8 @@
                                         <div class="p-2">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo no período</h6>
-                                                <h4 id="available-in-period" style="font-weight: 700;font-size: 25px;display: inline;">
+                                                <h4 id="available-in-period"
+                                                    style="font-weight: 700;font-size: 25px;display: inline;">
                                                 </h4>
                                                 <div class="grad-border green"></div>
                                             </div>
@@ -216,11 +238,13 @@
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <label for="reason">Razão</label>
-                                            <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
+                                            <input type="text" id="reason" class="form-control select-pad"
+                                                   placeholder="Digite a razão. Ex.: Saque">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <label for="transaction">Transação/Antecipação</label>
-                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código">
+                                            <input type="text" id="transaction" class="form-control select-pad"
+                                                   placeholder="Digite o código">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
@@ -236,7 +260,9 @@
                                     <div class="row mt-20">
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <label for="transaction-value">Valor</label>
-                                            <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor">
+                                            <input type="text" id="transaction-value"
+                                                   class="form-control select-pad withdrawal-value"
+                                                   placeholder="Digite o valor">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
@@ -249,7 +275,8 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <input name="date_range" id="date_range" class="select-pad mt-30" placeholder="Clique para editar..." readonly>
+                                            <input name="date_range" id="date_range" class="select-pad mt-30"
+                                                   placeholder="Clique para editar..." readonly>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
                                             <button id="bt_filtro" class="btn btn-primary w-full">
@@ -261,11 +288,12 @@
                                 <div class="col-12 mt-3">
                                     <table id='transfersTable' class="table table-striped table-condensed unify">
                                         <thead>
-                                            <tr>
-                                                <th scope="col" class='headCenter' style='width:33%'>Razão</th>
-                                                <th scope="col" class='headCenter' style='width:33%'>Data da transferência</th>
-                                                <th scope="col" class='headCenter' style='width:34%'>Valor</th>
-                                            </tr>
+                                        <tr>
+                                            <th scope="col" class='headCenter' style='width:33%'>Razão</th>
+                                            <th scope="col" class='headCenter' style='width:33%'>Data da transferência
+                                            </th>
+                                            <th scope="col" class='headCenter' style='width:34%'>Valor</th>
+                                        </tr>
                                         </thead>
                                         <tbody id="table-transfers-body" class="custom-t-body">
                                         </tbody>
@@ -277,55 +305,81 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="nav-braspag" role="tabpanel" aria-labelledby="nav-braspag-tab">
+                        {{-- extrato 2.0 --}}
+                        <div class="tab-pane fade" id="nav-statement" role="tabpanel"
+                             aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-between">
                                 <div class="col-lg-12 mb-15">
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <div class="form-group">
-                                                <label for="event_status">Status</label>
-                                                <select class="form-control select-pad" id="event_status" name='event_status'>
-                                                    <option value="">Selecione</option>
-                                                    <option value="Scheduled">Agendado</option>
-                                                    <option value="Pending">Pendente</option>
-                                                    <option value="Settled">Liquidado</option>
-                                                    <option value="Error">Erro</option>
-{{--                                                    <option value="WaitingFoAdjustementDebit">Aguardando débito de ajuste</option>--}}
-                                                    <option value="Anticipated">Antecipado</option>
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <div class="input-holder">
+                                                <label for="statement_company_select">Empresa</label>
+                                                <select class="form-control select-pad" name="company"
+                                                        id="statement_company_select">
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="form-group">
-                                                <label for="date_range_braspag">Data</label>
-                                                <input name="date_range_braspag" id="date_range_braspag" class="select-pad" placeholder="Clique para editar..." readonly>
+                                                <label for="date_range_statement">Data da venda</label>
+                                                <input name="date_range_statement" type="date"
+                                                       id="date_range_statement_unique"
+                                                       class="select-pad" placeholder="Clique para editar...">
                                             </div>
                                         </div>
-                                        <div class="col-3"></div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
-                                            <button id="bt_filtro_braspag" class="btn btn-primary w-full">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <div class="form-group">
+                                                <label for="date_range_statement">Transação</label>
+                                                <input name="statement_sale" id="statement_sale"
+                                                       class="select-pad" placeholder="Transação">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-30">
+                                            <button id="bt_filtro_statement" class="btn btn-primary w-full">
                                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <table id='braspagTable' class="table table-striped table-condensed unify">
+                                    <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
-                                            <tr>
-                                                <th scope="col" class='headCenter'>Evento</th>
-                                                <th scope="col" class='headCenter'>Produto</th>
-{{--                                                <th scope="col" class='headCenter'>Bandeira/Emissor</th>--}}
-                                                <th scope="col" class='headCenter'>Status</th>
-{{--                                                <th scope="col" class='headCenter'>Valor</th>--}}
-                                            </tr>
+                                        <tr>
+                                            <th scope="col" class="headCenter" style="width:33%">Razão</th>
+                                            <th scope="col" class="headCenter" style="width:33%">Data da transferência
+                                            </th>
+                                            <th scope="col" class="headCenter" style="width:34%">Valor</th>
+                                        </tr>
                                         </thead>
-                                        <tbody id="table-braspag-body" class="custom-t-body">
+                                        <tbody id="table-statement-body" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-braspag" class="pagination-sm margin-chat-pagination"
+
+                                    <section id="paginate">
+                                        <div class="pagination" style="margin-top:10px;position:relative;float:right">
+                                            {{--<div class="first">
+                                                <button class='btn nav-btn first_page'>Primeiro</button>
+                                            </div>
+                                            <div class="prev">
+                                                <button class='btn nav-btn first_page'>Anterior</button>
+                                            </div>--}}
+                                            <div class="numbers">
+                                                <div style=""></div>
+                                            </div>
+                                            {{-- <div class="next">
+                                                 <button class='btn nav-btn first_page'> proximo</button>
+                                             </div>
+                                             <div class="last">
+                                                 <button class='btn nav-btn first_page'> Ultimo</button>
+                                             </div>--}}
+                                        </div>
+                                    </section>
+
+                                    <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
+
+
                                     </ul>
                                 </div>
                             </div>
@@ -387,12 +441,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection
-
-
-
-
-
