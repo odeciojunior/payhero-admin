@@ -252,8 +252,9 @@ $(() => {
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
 
+
         for (let company of companies) {
-            if (company.capture_transaction_enabled) {
+            if (company.id == userProject.company_id || company.capture_transaction_enabled) {
                 $('#update-project #companies').append(
                     `<option value="${company.id}" 
                     ${(company.id === userProject.company_id ? 'selected' : '')} 
