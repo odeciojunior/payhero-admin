@@ -375,6 +375,7 @@ $(() => {
         }
         $('#pre_selected_installment').val(project.pre_selected_installment);
         $('#required_email_checkout').val(project.required_email_checkout);
+        $('#document_type_checkout').val(project.document_type_checkout);
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
