@@ -59,7 +59,7 @@
     </div>
 
     @push('scripts')
-        <script src="{!! asset('modules/projects/js/create.js?v=2') !!}"></script>
+        <script src="{!! asset('modules/projects/js/create.js?v=1') !!}"></script>
     @endpush
 
 
