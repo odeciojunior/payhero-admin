@@ -49,7 +49,7 @@ class ProjectsResource extends JsonResource
                 $affiliate->id = $this->affiliate_id;
                 $affiliate->created_at = $this->affiliate_created_at;
                 $affiliate->percentage = $this->affiliate_percentage;
-                $affiliate->status_enum = $this->affiliate_status; 
+                $affiliate->status_enum = $this->affiliate_status;
             }
         } else {
             $affiliate  = $this->affiliates[0] ?? '';
@@ -104,6 +104,7 @@ class ProjectsResource extends JsonResource
             'billet_discount'                => $this->billet_discount,
             'pre_selected_installment'       => $this->pre_selected_installment,
             'required_email_checkout'        => $this->required_email_checkout,
+            'document_type_checkout'        => $this->document_type_checkout,
         ];
     }
 }

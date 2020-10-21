@@ -251,13 +251,21 @@ $(() => {
         $('#update-project #support_phone').val(project.support_phone);
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
+
         for (let company of companies) {
-            $('#update-project #companies').append(
-                `<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} ${(company.company_document_status == 'pending' ? 'disabled' : '')} ${(company.active_flag == 0 ? 'disabled' : '')}>
-                 ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
-              </option>
-              `)
+            if (company.capture_transaction_enabled) {
+                $('#update-project #companies').append(
+                    `<option value="${company.id}" 
+                    ${(company.id === userProject.company_id ? 'selected' : '')} 
+                    ${(company.company_document_status == 'pending' ? 'disabled' : '')} 
+                    ${(company.active_flag == 0 ? 'disabled' : '')}
+                >
+                    ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
+                </option>
+              `);
+            }
         }
+
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();
         if (project.boleto === 1) {
@@ -375,6 +383,7 @@ $(() => {
         }
         $('#pre_selected_installment').val(project.pre_selected_installment);
         $('#required_email_checkout').val(project.required_email_checkout);
+        $('#document_type_checkout').val(project.document_type_checkout);
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -953,6 +962,7 @@ $(() => {
             $('#discount-recovery-alert').hide('fast', 'linear')
         }
     }
+
     $('.discount-recovery').on("click", function () {
         recoveryDiscountColor()
     })
