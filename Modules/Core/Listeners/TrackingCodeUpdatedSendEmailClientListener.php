@@ -41,8 +41,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $tracking = $trackingModel->with([
                 'sale.project',
                 'sale.customer',
-                'productsPlansSale.tracking',
-                'productsPlansSale.product',
+                'sale.productsPlansSale.tracking',
+                'sale.productsPlansSale.product',
             ])->find($event->trackingId);
 
             $sale = $tracking->sale;

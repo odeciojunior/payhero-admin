@@ -5,6 +5,7 @@ namespace Modules\Core\Listeners;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\JsonResponse;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\ActiveCampaignService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -24,9 +25,18 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         try {
+            $trackingModel = new Tracking();
             $activeCampaignService = new ActiveCampaignService;
-            $sale                  = $event->sale;
-            $customer              = $event->sale->customer;
+
+            $tracking = $trackingModel->with([
+                'sale.project',
+                'sale.customer',
+                'sale.productsPlansSale.tracking',
+                'sale.productsPlansSale.product',
+            ])->find($event->trackingId);
+
+            $sale                  = $tracking->sale;
+            $customer              = $sale->customer;
 
             $dataCustom = [
                 'url_boleto' => $sale->boleto_link,

@@ -441,6 +441,17 @@
                                     não a informar email para finalizar a compra no checkout.
                                 </p>
                             </div>
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="document_type_checkout">Aceitar compras de</label>
+                                <select name='document_type_checkout' class='form-control select-pad' id="document_type_checkout">
+                                    <option value='1'>CPF</option>
+                                    <option value='2'>CNPJ</option>
+                                    <option value='3'>CPF/CNPJ</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento aceito no checkout.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
