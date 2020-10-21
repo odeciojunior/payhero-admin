@@ -17,13 +17,10 @@ class GetNetStatementService
 
     public function performStatement(stdClass $data)
     {
-
-        $transactions = $data->list_transactions ?? [];
+        $transactions = array_reverse($data->list_transactions) ?? [];
 
         $transactions = array_map(function ($item) {
-
             if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
-
                 $summary = $item->summary;
                 $details = $item->details;
 
@@ -41,23 +38,18 @@ class GetNetStatementService
                 $subSellerRatePercentage = $details[0]->subseller_rate_percentage ?? 0;
 
                 try {
-
-                    $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y H:i');
+                    $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
                 } catch (Exception $exception) {
-
                 }
 
                 foreach (['installmentDate', 'paymentDate'] as $date) {
-
                     try {
-
                         ${$date} = Carbon::parse(${$date})->format('d/m/Y');
                     } catch (Exception $exception) {
-
                     }
                 }
 
-                $statement = [
+                $statement = (object) [
                     //'id' => $id,
                     //'orderId' => Hashids::connection('sale_id')->encode(737634),
                     'orderId' => $arrayOrderId[0],

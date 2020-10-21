@@ -24,7 +24,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
                                  viewBox="0 0 24 24">
                                 <path
-                                    d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                             </svg>
                             <div class="btn-group" role="group">
                                 <button id="bt_get_xls" type="button"
@@ -117,7 +117,7 @@
                                                 <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
                                                               style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                class="currency">$</span></span>
+                                                                    class="currency">$</span></span>
                                                 </div>
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
@@ -133,7 +133,7 @@
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      viewBox="0 0 24 24">
                                                     <path
-                                                        d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                 </svg>
                                                 Sacar dinheiro
                                             </button>
@@ -305,7 +305,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        {{-- extrato 2.0 --}}
                         <div class="tab-pane fade" id="nav-statement" role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-between">
@@ -322,8 +322,9 @@
                                         <div class="col-sm-6 col-md-4 col-lg-3">
                                             <div class="form-group">
                                                 <label for="date_range_statement">Data da venda</label>
-                                                <input name="date_range_statement" id="date_range_statement"
-                                                       class="select-pad" placeholder="Clique para editar..." readonly>
+                                                <input name="date_range_statement" type="date"
+                                                       id="date_range_statement_unique"
+                                                       class="select-pad" placeholder="Clique para editar...">
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-3">
@@ -341,11 +342,13 @@
                                     </div>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <table id="statementTable" class="table table-striped table-condensed unify">
+                                    <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
                                         <tr>
                                             <th scope="col" class="headCenter" style="width:33%">Razão</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Data da transferência
+                                            <th scope="col" class="headCenter" style="width:33%">Status</th>
+                                            <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                                <i class="material-icons gray ml-5 font-size-18" data-toggle="tooltip" title="" data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
                                             </th>
                                             <th scope="col" class="headCenter" style="width:34%">Valor</th>
                                         </tr>
@@ -353,9 +356,32 @@
                                         <tbody id="table-statement-body" class="custom-t-body">
                                         </tbody>
                                     </table>
+
+                                    <section id="paginate">
+                                        <div class="pagination" style="margin-top:10px;position:relative;float:right">
+                                            {{--<div class="first">
+                                                <button class='btn nav-btn first_page'>Primeiro</button>
+                                            </div>
+                                            <div class="prev">
+                                                <button class='btn nav-btn first_page'>Anterior</button>
+                                            </div>--}}
+                                            <div class="numbers">
+                                                <div style=""></div>
+                                            </div>
+                                            {{-- <div class="next">
+                                                 <button class='btn nav-btn first_page'> proximo</button>
+                                             </div>
+                                             <div class="last">
+                                                 <button class='btn nav-btn first_page'> Ultimo</button>
+                                             </div>--}}
+                                        </div>
+                                    </section>
+
                                     <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
+
+
                                     </ul>
                                 </div>
                             </div>
@@ -417,7 +443,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=3') }}"></script>
     @endpush
 
 @endsection

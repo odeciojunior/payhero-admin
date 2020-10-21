@@ -17,9 +17,13 @@ $(document).ready(function () {
             loadOnAny('#card-project', true);
             if (!isEmpty(response)) {
                 $.each(response, (key, company) => {
-                    $('#company').append(`<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
-                        ${company.name}
-                    </option>`);
+                    if (company.capture_transaction_enabled){
+                        $('#company').append(
+                            `<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
+                                ${company.name}
+                            </option>`
+                        );
+                    }
                 });
                 $('.content-error').hide();
             } else {

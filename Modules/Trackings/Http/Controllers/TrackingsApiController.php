@@ -19,7 +19,6 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
-use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
@@ -135,7 +134,6 @@ class TrackingsApiController extends Controller
 
             $tracking = $trackingModel->with(['productPlanSale'])
                 ->where('tracking_code', $trackingCode)
-                ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('ignored'))
                 ->first();
 
             if (!empty($tracking)) {
@@ -319,16 +317,11 @@ class TrackingsApiController extends Controller
     public function notifyClient($trackingId)
     {
         try {
-            $trackingModel = new Tracking();
-            $productService = new ProductService();
-
             if (isset($trackingId)) {
-                $tracking = $trackingModel->with('sale')
-                    ->find(current(Hashids::decode($trackingId)));
+                $trackingId = current(Hashids::decode($trackingId));
 
-                if ($tracking && $tracking->sale) {
-                    $saleProducts = $productService->getProductsBySale($tracking->sale);
-                    event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+                if ($trackingId) {
+                    event(new TrackingCodeUpdatedEvent($trackingId));
 
                     return response()->json(['message' => 'Notificação enviada com sucesso']);
                 } else {

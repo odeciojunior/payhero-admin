@@ -567,20 +567,20 @@ class CompanyService
                 $query->whereHas('sale', function ($query) use ($salesModel) {
                     $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
                 })
-                ->orWhere(function ($queryTracking) use ($salesModel) {
-                    $queryTracking->whereHas('sale', function ($querySale) use ($salesModel) {
-                        $querySale->where('status', $salesModel->present()->getStatus('approved'))
-                            ->whereHas('productsPlansSale', function ($q) {
-                                $q->doesntHave('tracking');
-                            });
+                    ->orWhere(function ($queryTracking) use ($salesModel) {
+                        $queryTracking->whereHas('sale', function ($querySale) use ($salesModel) {
+                            $querySale->where('status', $salesModel->present()->getStatus('approved'))
+                                ->whereHas('productsPlansSale', function ($q) {
+                                    $q->doesntHave('tracking');
+                                });
+                        });
+                    })
+                    ->orWhereHas('sale', function ($querySale) {
+                        $querySale->whereHas('tracking', function ($queryTracking) {
+                            $presenter = (new Tracking())->present();
+                            $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
+                        });
                     });
-                })
-                ->orWhereHas('sale', function ($querySale) {
-                    $querySale->whereHas('tracking', function ($queryTracking) {
-                        $presenter = (new Tracking())->present();
-                        $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
-                    });
-                });
             })->sum('value');
     }
 
@@ -595,5 +595,22 @@ class CompanyService
             ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
             })->sum('value');
+    }
+
+    public function updateCaptureTransactionEnabled(Company $company): void
+    {
+        try {
+            if ($company->get_net_status == (new Company())->present()->getStatusGetnet('approved')) {
+                $company->update([
+                    'capture_transaction_enabled' => true
+                ]);
+            } else {
+                $company->update([
+                    'capture_transaction_enabled' => false
+                ]);
+            }
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

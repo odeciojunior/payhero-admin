@@ -62,7 +62,7 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.page-content', true);
-                if(response.pending === false) {
+                if (response.pending === false) {
                     $('#btn-integration-model').show();
                 } else {
                     $('#btn-integration-model').hide();
@@ -133,7 +133,9 @@ $(document).ready(function () {
 
             $("#select_companies").empty();
             $(data).each(function (index, data) {
-                $("#select_companies").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                if (data.capture_transaction_enabled) {
+                    $("#select_companies").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                }
             });
             $(".modal-title").html('Adicionar nova integração com Shopify');
             $("#bt_integration").addClass('btn-save');

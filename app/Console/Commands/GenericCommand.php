@@ -4,13 +4,10 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\User;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\CompanyServiceBraspag;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\CheckoutService;
 
 class GenericCommand extends Command
 {
@@ -21,28 +18,62 @@ class GenericCommand extends Command
     public function handle()
     {
         try {
-            $companyModel = new Company();
-            $getnet = new GetnetBackOfficeService();
+            $salesModel = new Sale();
+            $trackingPresenter = (new Tracking())->present();
+            $productPresenter = (new Product())->present();
+            $checkoutService = new CheckoutService();
 
-            $companies = $companyModel->whereHas('transactions', function ($query) {
-                $query->whereDate('created_at', '>=', '2020-05-01');
-            })->whereNull('subseller_getnet_homolog_id')->get();
+            $salesQuery = $salesModel::with([
+                'productsPlansSale.tracking',
+                'productsPlansSale.product',
+            ])->whereIn('status', [1, 4])
+                ->where('has_valid_tracking', false)
+                ->whereHas('productsPlansSale', function ($query) use ($productPresenter) {
+                    $query->whereHas('product', function ($query) use ($productPresenter) {
+                        $query->where('type_enum', $productPresenter->getType('physical'));
+                    });
+                })
+                ->where('start_date', '>=', '2020-10-16 00:00:00')
+                ->orderByDesc('id');
 
-            foreach ($companies as $company) {
-                if ($company->company_type == 1) {
-                    $result = $getnet->checkPfCompanyRegister($company->company_document, $company->id);
-                } else {
-                    $result = $getnet->checkPjCompanyRegister($company->company_document, $company->id);
-                }
+            $total = $salesQuery->count();
+            $count = 1;
 
-                if (!empty($result) && !empty(json_decode($result)->subseller_id)) {
-                    if (!FoxUtils::isProduction()) {
-                        $company->update([
-                            'subseller_getnet_homolog_id' => json_decode($result)->subseller_id
-                        ]);
+            $salesQuery->chunk(60,
+                function ($sales) use ($total, &$count, $checkoutService, $trackingPresenter, $productPresenter) {
+                    foreach ($sales as $sale) {
+                        $this->line("Verificando venda {$count} de {$total}: {$sale->id}...");
+                        try {
+                            foreach ($sale->productsPlansSale as $pps) {
+                                if ($pps->product->type_enum == $productPresenter->getType('physical')) {
+                                    $hasInvalidOrNotInformedTracking = is_null($pps->tracking) || !in_array($pps->tracking->system_status_enum,
+                                            [
+                                                $trackingPresenter->getSystemStatusEnum('valid'),
+                                                $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                                            ]);
+                                    if ($hasInvalidOrNotInformedTracking) {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!$hasInvalidOrNotInformedTracking) {
+                                $sale->has_valid_tracking = true;
+                                $sale->save();
+                                $checkoutService->releasePaymentGetnet($sale->id);
+
+                                $this->info("Venda liberada!");
+                            } else {
+                                $this->line("Venda ainda não liberada!");
+                            }
+                        } catch (Exception $e) {
+                            $this->error('ERROR:'.$e->getMessage());
+                        }
+                        $count++;
                     }
-                }
-            }
+                    $this->warn('Aguardando 60 segundos...');
+                    sleep(60);
+                });
         } catch (Exception $e) {
             report($e);
         }

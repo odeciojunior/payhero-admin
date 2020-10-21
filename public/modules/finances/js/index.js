@@ -49,6 +49,8 @@ $(document).ready(function () {
         insertBefore: '.grad-border',
     };
 
+    $("#date_range_statement_unique").val(moment().format('YYYY-MM-DD'));
+
     //END - Comportamentos da tela
 
     //Obtém as empresas
@@ -725,12 +727,32 @@ $(document).ready(function () {
         });
     }
 
+
+    /*dateControl.value = moment();
+    console.log(dateControl.value)*/
+    // let dateControl = document.querySelector('input[type="date"]');
+
+    let perPage = 10;
+    const state = {
+        page: 1,
+        perPage,
+        totalPage: 0,
+        maxVisibleButtons: 100
+    }
+
+    let page = 0;
+    let start = 0;
+    let end = 0;
+
     function updateAccountStatementData() {
+
 
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+
+        $(".numbers").hide();
 
         $.ajax({
             method: "GET",
@@ -741,7 +763,6 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                //console.log(response);
                 let error = 'Erro ao gerar o extrato';
 
                 errorAjaxResponse(error);
@@ -749,110 +770,202 @@ $(document).ready(function () {
             },
             success: response => {
 
-                $('#table-statement-body').html('');
+                updateClassHTML();
 
-                let items = response;
+                items = response;
 
                 if (!isEmpty(items)) {
 
-                    let data = '';
+                    $(".numbers").show();
 
-                    for (let item of items) {
-                        data = `
-                        <tr>
-                            <td style="vertical-align: middle;">
-                                <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                    <span style="color:black;">#${item.orderId}</span>
-                                </a><br>
-                                <small>(Data da venda: ${item.transactionDate})</small>
-                             </td>
-                            <td>${item.paymentDate}</td>
-                            <td>${item.subSellerRateAmount}</td>
-                        </tr>
-                        `;
-                        $('#table-statement-body').append(data);
+                    state.totalPage = Math.ceil(items.length / perPage);
+
+                    const controls = {
+                        next() {
+                            state.page++;
+
+                            if (state.page > state.totalPage) {
+                                state.page--;
+                            }
+                        },
+                        prev() {
+                            state.page--;
+
+                            if (state.page < 1) {
+                                state.page++;
+                            }
+                        },
+                        goTo(page) {
+                            if (page < 1) {
+                                page = 1;
+                            }
+                            state.page = +page;
+
+                            if (page > state.totalPage) {
+                                state.page = state.totalPage;
+                            }
+                        },
+                        createListeners(exec = false) {
+
+                            if (exec) {
+                                controls.goTo(1);
+                                update();
+                            }
+                            exec = false;
+                            $('.first').on('click', function () {
+                                controls.goTo(1);
+                                update();
+                            })
+                            $('.last').on('click', function () {
+                                controls.goTo(state.totalPage);
+                                update();
+                            })
+                            $('.next').on('click', function () {
+                                controls.next();
+                                update();
+                            })
+                            $('.prev').on('click', function () {
+                                controls.prev();
+                                update();
+                            })
+
+
+                        }
                     }
-                    $('#statementTable').addClass('table-striped');
+
+                    const list = {
+                        create(item) {
+                            let dataTable = `
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        Transação
+                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                            <span style="color:black;">#${item.orderId}</span>
+                                        </a><br>
+                                        <small>(Data da venda: ${item.transactionDate})</small>
+                                     </td>
+                                     <td>
+                                        ${item.has_valid_tracking 
+                                            ? '<span class="badge badge-sm badge-success p-2">Pago</span>' 
+                                            : '<span class="badge badge-sm badge-info p-2">Aguardando postagem válida</span>'}
+                                     </td>
+                                    <td style="vertical-align: middle;">${item.paymentDate}</td>
+                                    <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
+                                </tr>
+                            `;
+                            updateClassHTML(dataTable);
+                        },
+                        update() {
+                            page = state.page - 1;
+                            start = page * state.perPage;
+                            end = start + state.perPage;
+
+                            const paginatedItems = items.slice(start, end);
+                            updateClassHTML();
+                            paginatedItems.forEach(list.create);
+                        }
+                    }
+
+                    const buttons = {
+                        create(number) {
+                            const button = document.createElement('div');
+                            button.innerHTML = number;
+
+                            if (state.page == number) {
+                                button.classList.add('active');
+                            }
+
+                            button.addEventListener('click', (event) => {
+                                const page = event.target.innerText;
+
+                                controls.goTo(page);
+                                update();
+                            })
+
+                            button.classList.add('btn', 'nav-btn');
+
+                            $(".pagination .numbers").append(button);
+
+                        },
+                        update() {
+                            $(".pagination .numbers").html('');
+                            const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+
+                            for (let page = maxLeft; page <= maxRight; page++) {
+                                buttons.create(page);
+                            }
+                        },
+                        calculateMaxVisible() {
+                            let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                            let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+
+                            if (maxLeft < 1) {
+                                maxLeft = 1;
+                                maxRight = state.maxVisibleButtons;
+                            }
+
+                            if (maxRight > state.totalPage) {
+                                maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
+                                maxRight = state.totalPage;
+
+                                if (maxLeft < 1) {
+                                    maxLeft = 1;
+                                }
+                            }
+                            return {maxLeft, maxRight};
+                        }
+
+
+                    }
+
+
+                    function update() {
+                        list.update();
+                        buttons.update();
+                    }
+
+                    function init() {
+                        update();
+                        controls.createListeners(true);
+                    }
+
+                    init();
+
+                    // let data = '';
+
+                    /* for (let item of items) {
+                         data = `
+                         <tr>
+                             <td style="vertical-align: middle;">
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                     <span style="color:black;">#${item.orderId}</span>
+                                 </a><br>
+                                 <small>(Data da venda: ${item.transactionDate})</small>
+                              </td>
+                             <td>${item.paymentDate}</td>
+                             <td>${item.subSellerRateAmount}</td>
+                         </tr>
+                         `;
+                         // $('#table-statement-body').append(data);
+                     }
+                     $('#statementTable').addClass('table-striped');*/
+
+
                 } else {
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                 }
-                //paginationGetNet(response.page_count, response.page_index);
+
+                function updateClassHTML(dataTable = 0) {
+                    if (dataTable.length > 0) {
+                        $('#table-statement-body').append(dataTable);
+                    } else {
+                        $('#table-statement-body').html('');
+                    }
+                    $("#statementTable").addClass('table-striped');
+                }
             }
         });
 
-    }
-
-    function paginationGetNet(pageCount, pageIndex) {
-
-        let paginationContainer = "#pagination-statement";
-
-        $(paginationContainer).html("");
-
-        let currentPage = pageIndex;
-        let lastPage = pageCount;
-
-        if (lastPage === 1 || lastPage === 0) {
-            return false;
-        }
-
-        let first_page = `<button class='btn nav-btn first_page'>1</button>`;
-
-        $(paginationContainer).append(first_page);
-
-        if (currentPage === 1) {
-            $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-
-        $(paginationContainer + ' .first_page').on("click", function () {
-            updateAccountStatementData('?page=1');
-        });
-
-        for (let x = 3; x > 0; x--) {
-
-            if (currentPage - x <= 1) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
-                updateAccountStatementData('?page=' + $(this).html());
-            });
-        }
-
-        if (currentPage !== 1 && currentPage !== lastPage) {
-            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
-
-            $(paginationContainer).append(current_page);
-
-            $(paginationContainer + " .current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-        for (let x = 1; x < 4; x++) {
-
-            if (currentPage + x >= lastPage) {
-                continue;
-            }
-
-            $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
-
-            $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
-                updateAccountStatementData('?page=' + $(this).html());
-            });
-        }
-
-        if (lastPage !== 1) {
-            var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
-
-            $(paginationContainer).append(last_page);
-
-            if (currentPage === lastPage) {
-                $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-
-            $(paginationContainer + ' .last_page').on("click", function () {
-                updateAccountStatementData('?page=' + lastPage);
-            });
-        }
     }
 
     //atualiza a table de statement
@@ -881,12 +994,12 @@ $(document).ready(function () {
     }
 
     $('#date_range_statement').daterangepicker({
-        startDate: moment().subtract(1, 'month'),
-        endDate: moment().add(0, 'days'),
+        startDate: moment(),
+        endDate: moment(),
         opens: 'center',
-        maxDate: moment().add(1, 'years').endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
+        maxDate: moment(),
+        alwaysShowCalendar: false,
+        showCustomRangeLabel: false,
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',
@@ -903,11 +1016,6 @@ $(document).ready(function () {
         },
         ranges: {
             'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
 
