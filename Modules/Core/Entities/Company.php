@@ -83,18 +83,13 @@ class Company extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    /**
-     * @var string
-     */
     protected $presenter = CompanyPresenter::class;
     /**
      * The accessors to append to the model's array form.
      * @var array
      */
     protected $appends = ['id_code'];
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'user_id',
         'fantasy_name',
@@ -142,6 +137,10 @@ class Company extends Model
         'document_issuer',
         'document_issuer_state',
         'active_flag',
+        'gateway_tax',
+        'boleto_tax',
+        'credit_card_tax',
+        'installment_tax',
         'deleted_at',
         'created_at',
         'updated_at',
@@ -169,10 +168,6 @@ class Company extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @param  Activity  $activity
-     * @param  string  $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
@@ -186,73 +181,52 @@ class Company extends Model
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
+
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function affiliates()
     {
         return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
-    /**
-     * @return HasMany
-     */
     public function companyDocuments()
     {
         return $this->hasMany('Modules\Core\Entities\CompanyDocument');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function hotzappIntegrations()
     {
         return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function invitations()
     {
         return $this->hasMany('Modules\Core\Entities\Invitation');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function transactions()
     {
         return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function transfers()
     {
         return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 
-    /**
-     * @return HasMany
-     */
     public function usersProjects()
     {
         return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
-    /**
-     * @return HasMany
-     */
     public function withdrawals()
     {
         return $this->hasMany('Modules\Core\Entities\Withdrawal');
