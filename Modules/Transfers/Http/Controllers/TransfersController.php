@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Braspag\BraspagPaymentService;
@@ -184,12 +185,27 @@ class TransfersController extends Controller
             }
 
             $result = (new GetnetBackOfficeService())->getStatement($subseller);
-
             $result = json_decode($result);
+
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
             }
-            return response()->json((new GetNetStatementService())->performStatement($result));
+
+            $transactions = (new GetNetStatementService())->performStatement($result);
+            $transactions = collect($transactions);
+            $saleIds = $transactions->pluck('orderId')
+                ->map(function ($item) {
+                    return current(Hashids::connection('sale_id')->decode($item));
+                });
+            $sales = Sale::whereIn('id', $saleIds)
+                ->get();
+            foreach ($transactions as &$transaction){
+                $id = current(Hashids::connection('sale_id')->decode($transaction->orderId));
+                $sale = $sales->where('id', $id)->first();
+                $transaction->has_valid_tracking = $sale->has_valid_tracking;
+            }
+
+            return response()->json($transactions);
         } catch (Exception $exception) {
             report($exception);
 

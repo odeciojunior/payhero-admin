@@ -844,6 +844,11 @@ $(document).ready(function () {
                                         </a><br>
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
+                                     <td>
+                                        ${item.has_valid_tracking 
+                                            ? '<span class="badge badge-sm badge-success p-2">Pago</span>' 
+                                            : '<span class="badge badge-sm badge-info p-2">Aguardando postagem válida</span>'}
+                                     </td>
                                     <td style="vertical-align: middle;">${item.paymentDate}</td>
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
