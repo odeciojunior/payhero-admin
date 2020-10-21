@@ -31,31 +31,35 @@ class CheckSaleReleasedListener implements ShouldQueue
         $sale = $salesModel->with([
             'productsPlansSale.tracking',
             'productsPlansSale.product'
-        ])->find($event->saleId);
+        ])->whereIn('gateway_id', [14, 15])//getnet
+            ->find($event->saleId);
 
-        $hasInvalidOrNotInformedTracking = false;
+        if(!empty($sale)) {
+            $hasInvalidOrNotInformedTracking = false;
 
-        foreach ($sale->productsPlansSale as $pps) {
-            if ($pps->product->type_enum == $productPresenter->getType('physical')) {
-                $hasInvalidOrNotInformedTracking = is_null($pps->tracking) || !in_array($pps->tracking->system_status_enum,
-                        [
-                            $trackingPresenter->getSystemStatusEnum('valid'),
-                            $trackingPresenter->getSystemStatusEnum('ignored'),
-                            $trackingPresenter->getSystemStatusEnum('checked_manually'),
-                        ]);
-                if($hasInvalidOrNotInformedTracking) break;
+            foreach ($sale->productsPlansSale as $pps) {
+                if ($pps->product->type_enum == $productPresenter->getType('physical')) {
+                    $hasInvalidOrNotInformedTracking = is_null($pps->tracking) || !in_array($pps->tracking->system_status_enum,
+                            [
+                                $trackingPresenter->getSystemStatusEnum('valid'),
+                                $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                            ]);
+                    if ($hasInvalidOrNotInformedTracking) {
+                        break;
+                    }
+                }
             }
-        }
 
-        if (!$hasInvalidOrNotInformedTracking) {
-            $sale->has_valid_tracking = true;
-            $sale->save();
-            $checkoutService->releasePaymentGetnet($sale->id);
+            if (!$hasInvalidOrNotInformedTracking) {
+                $sale->has_valid_tracking = true;
+                $sale->save();
+                $checkoutService->releasePaymentGetnet($sale->id);
 
-            //$result = $checkoutService->releasePaymentGetnet($sale->id);
-            //if (!empty($result) && $result->status == 'success') {
-            ////   faz alguma coisa com o resultado
-            //}
+                //$result = $checkoutService->releasePaymentGetnet($sale->id);
+                //if (!empty($result) && $result->status == 'success') {
+                ////   faz alguma coisa com o resultado
+                //}
+            }
         }
     }
 }

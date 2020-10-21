@@ -134,7 +134,6 @@ class TrackingsApiController extends Controller
 
             $tracking = $trackingModel->with(['productPlanSale'])
                 ->where('tracking_code', $trackingCode)
-                ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('ignored'))
                 ->first();
 
             if (!empty($tracking)) {

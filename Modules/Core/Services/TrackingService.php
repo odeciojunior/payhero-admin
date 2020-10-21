@@ -65,7 +65,6 @@ class TrackingService
                 }
             }
             if ($refresh && !in_array($item->system_status_enum, [
-                $trackingModel->present()->getSystemStatusEnum('ignored'),
                 $trackingModel->present()->getSystemStatusEnum('checked_manually'),
             ])) {
                 $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
