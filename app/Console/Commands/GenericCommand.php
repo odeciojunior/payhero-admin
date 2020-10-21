@@ -49,7 +49,6 @@ class GenericCommand extends Command
                                     $hasInvalidOrNotInformedTracking = is_null($pps->tracking) || !in_array($pps->tracking->system_status_enum,
                                             [
                                                 $trackingPresenter->getSystemStatusEnum('valid'),
-                                                $trackingPresenter->getSystemStatusEnum('ignored'),
                                                 $trackingPresenter->getSystemStatusEnum('checked_manually'),
                                             ]);
                                     if ($hasInvalidOrNotInformedTracking) {
