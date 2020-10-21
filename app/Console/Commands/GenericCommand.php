@@ -33,12 +33,13 @@ class GenericCommand extends Command
                         $query->where('type_enum', $productPresenter->getType('physical'));
                     });
                 })
+                ->where('start_date', '>=', '2020-10-16 00:00:00')
                 ->orderByDesc('id');
 
             $total = $salesQuery->count();
             $count = 1;
 
-            $salesQuery->chunk(100,
+            $salesQuery->chunk(60,
                 function ($sales) use ($total, &$count, $checkoutService, $trackingPresenter, $productPresenter) {
                     foreach ($sales as $sale) {
                         $this->line("Verificando venda {$count} de {$total}: {$sale->id}...");
@@ -71,6 +72,8 @@ class GenericCommand extends Command
                         }
                         $count++;
                     }
+                    $this->warn('Aguardando 60 segundos...');
+                    sleep(60);
                 });
         } catch (Exception $e) {
             report($e);
