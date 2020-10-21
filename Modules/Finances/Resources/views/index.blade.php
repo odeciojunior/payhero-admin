@@ -348,6 +348,7 @@
                                             <th scope="col" class="headCenter" style="width:33%">Razão</th>
                                             <th scope="col" class="headCenter" style="width:33%">Status</th>
                                             <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                                <i class="material-icons gray ml-5 font-size-18" data-toggle="tooltip" title="" data-original-title="A comissão será transferida somente após informar um código de rastreio válido">help</i>
                                             </th>
                                             <th scope="col" class="headCenter" style="width:34%">Valor</th>
                                         </tr>
