@@ -587,4 +587,59 @@ class CompaniesApiController extends Controller
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }
+
+    public function updateTax(Request $request, $companyId)
+    {
+        try {
+            if (FoxUtils::isEmpty($request->get('gateway_release_payment')) || FoxUtils::isEmpty($companyId)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!']);
+            }
+
+            $gatewayTax = [
+                'plan-2' => [
+                    'gateway_tax' => '6.9',
+                    'gateway_release_money_days' => 2,
+                ],
+                'plan-15' => [
+                    'gateway_tax' => '6.5',
+                    'gateway_release_money_days' => 15,
+                ],
+                'plan-30' => [
+                    'gateway_tax' => '5.9',
+                    'gateway_release_money_days' => 30,
+                ],
+            ];
+
+            if (!array_key_exists($request->get('gateway_release_payment'), $gatewayTax)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+
+            $company = Company::find(current(Hashids::decode($companyId)));
+
+            if (FoxUtils::isEmpty($company)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+
+            /*  if (!$updateGetnet) {
+                  return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+              }*/
+
+            $companyUpdated = $company->update($gatewayTax[$request->get('gateway_release_payment')]);
+
+            if ($companyUpdated) {
+                return response()->json([
+                    'message' => 'Taxa atualizado com sucesso!',
+                    'data' => [
+                        'new_gateway_tax' => $gatewayTax[$request->get('gateway_release_payment')]['gateway_tax']
+                    ]
+                ], 200);
+            }
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+    }
 }
