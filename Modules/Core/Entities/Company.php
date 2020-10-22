@@ -141,6 +141,8 @@ class Company extends Model
         'boleto_tax',
         'credit_card_tax',
         'installment_tax',
+        'credit_card_release_money_days',
+        'boleto_release_money_days',
         'deleted_at',
         'created_at',
         'updated_at',

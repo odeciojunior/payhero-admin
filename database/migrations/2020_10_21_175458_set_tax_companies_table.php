@@ -22,6 +22,8 @@ class SetTaxCompaniesTable extends Migration
                     'boleto_tax' => $company->user->boleto_tax,
                     'credit_card_tax' => $company->user->credit_card_tax,
                     'installment_tax' => $company->user->installment_tax,
+                    'credit_card_release_money_days' => $company->user->credit_card_release_money_days,
+                    'boleto_release_money_days' => $company->user->boleto_release_money_days,
                 ]);
             }
         }
