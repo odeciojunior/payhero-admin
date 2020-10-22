@@ -52,6 +52,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $founding_date
  * @property int $subseller_getnet_id
  * @property int $get_net_status
+ * @property int $boleto_release_money
+ * @property int $credit_card_release_money
  * @property int $account_type
  * @property int $social_value
  * @property string $federal_registration_status_date
@@ -141,6 +143,7 @@ class Company extends Model
         'boleto_tax',
         'credit_card_tax',
         'installment_tax',
+        'gateway_release_money_days',
         'credit_card_release_money_days',
         'boleto_release_money_days',
         'deleted_at',
