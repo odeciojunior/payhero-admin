@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\IpService;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -130,6 +132,56 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         return $this->loggedOut($request) ?: redirect('/');
+    }
+
+    public function sendAuthenticated()
+    {
+        $user = auth()->user();
+
+        if (empty($user))
+            return \response()->json('Nenhum usuário autenticado', Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $userId = Hashids::connection('login')->encode($user->id);
+        $expiration = Hashids::encode(Carbon::now()->addMinute()->unix());
+        $urlAuth = env('ACCOUNT_FRONT_URL') . '/redirect/' . $userId . '/' . (string) $expiration;
+
+        return \response()->json(
+            [
+                'url' => $urlAuth
+            ], Response::HTTP_OK);
+    }
+
+    public function getAuthenticated(Request $request)
+    {
+
+        $dataForm = Validator::make($request->all(), [
+            'user' => 'required|string',
+            'expiration' => 'required|string',
+        ], [
+            'user.required' => 'Precisamos do usuário para continuar',
+            'expiration.required' => 'Precisamos da data de expiração para continuar',
+        ])->validate();
+
+        try {
+            $dateUnix = current(Hashids::decode($dataForm['expiration']));
+
+            if ($dateUnix <= Carbon::now()->unix())
+                throw new \Exception('Autenticação Expirada');
+
+
+            $user = User::find(current(Hashids::connection('login')->decode($dataForm['user'])));
+
+            if (!$user)
+                throw new \Exception('Usuário não existe');
+
+            auth()->loginUsingId($user->id);
+            return response()->redirectTo('/dashboard');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Não foi possivel autenticar o usuário.'
+            ]);
+        }
     }
 
     /**
