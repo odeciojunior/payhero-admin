@@ -18,10 +18,10 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/send-authenticated',
-            // headers: {
-            //     'Authorization': $('meta[name="access-token"]').attr('content'),
-            //     'Accept': 'application/json',
-            // },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: response => {
                 errorAjaxResponse(response);
             },

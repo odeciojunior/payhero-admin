@@ -35,6 +35,15 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
+     * Create a new controller instance.
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout', 'sendAuthenticated');
+    }
+
+    /**
      * @param Request $request
      * @return RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response|void
      * @throws ValidationException
@@ -195,14 +204,5 @@ class LoginController extends Controller
         } else {
             return '/sales';
         }
-    }
-
-    /**
-     * Create a new controller instance.
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
     }
 }
