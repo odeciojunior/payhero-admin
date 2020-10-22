@@ -50,7 +50,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $monthly_gross_income
  * @property int $federal_registration_status
  * @property string $founding_date
- * @property int $subseller_getnet_id
+ * @property string $subseller_getnet_id
+ * @property string $subseller_getnet_homolog_id
  * @property int $get_net_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money

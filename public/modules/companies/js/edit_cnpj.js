@@ -147,6 +147,8 @@ $(document).ready(function () {
                 if (company.capture_transaction_enabled) {
                     $("#tax-payment").val(company.gateway_tax + '%')
 
+                    $(".select-gateway-tax").html('');
+
                     $(".select-gateway-tax").append(`
                         <select id="gateway-release-payment" class="form-control col-md-6">
                             <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Apos postagem de rastreio valida (taxa de 6.9%)</option>
@@ -271,7 +273,7 @@ $(document).ready(function () {
                 });
 
                 // update tax payment after change select input
-                $("#credit-card-release").on("change", function () {
+                $("#gateway-release-payment").on("change", function () {
                     $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
                 })
 
@@ -298,6 +300,7 @@ $(document).ready(function () {
             success: function success(response) {
                 alertCustom('success', response.message);
                 $("#tax-payment").val(response.data.new_gateway_tax + '%');
+                initForm();
             }
         });
     });

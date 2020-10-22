@@ -416,16 +416,14 @@
                                                            class="form-control">
                                                 </div>
                                                 <div class='col form-group col-md-8'>
-                                                    <div class='form-group select-gateway-tax'>
-                                                        <label for='gateway-release-payment'>Dias para
-                                                            liberação:</label>
-
-
-                                                    </div>
+                                                    <label for='gateway-release-payment'>Dias para
+                                                        liberação:</label>
+                                                    <div class='form-group select-gateway-tax'></div>
                                                 </div>
                                             </div>
                                             <div class="form-group text-right mt-10">
-                                                <input id="update_payment_tax_cnpj" type="submit" class="btn btn-success"
+                                                <input id="update_payment_tax_cnpj" type="submit"
+                                                       class="btn btn-success"
                                                        value="Atualizar" style="width: auto;">
                                             </div>
                                         </div>
@@ -527,7 +525,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=14')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

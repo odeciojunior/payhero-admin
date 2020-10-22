@@ -44,13 +44,13 @@ class GetnetBackOfficeService extends GetnetService
     {
         if (FoxUtils::isProduction()) {
             $this->authorizationToken = base64_encode(
-                getenv('GET_NET_CLIENT_ID_PRODUCTION') . ':' . getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
+                getenv('GET_NET_CLIENT_ID_PRODUCTION').':'.getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
             );
 
             $this->postFieldsAccessToken = 'scope=oob&grant_type=client_credentials';
         } else {
             $this->authorizationToken = base64_encode(
-                getenv('GET_NET_CLIENT_ID_SANDBOX') . ':' . getenv('GET_NET_CLIENT_SECRET_SANDBOX')
+                getenv('GET_NET_CLIENT_ID_SANDBOX').':'.getenv('GET_NET_CLIENT_SECRET_SANDBOX')
             );
 
             $this->postFieldsAccessToken = 'scope=mgm&grant_type=client_credentials';
@@ -69,7 +69,7 @@ class GetnetBackOfficeService extends GetnetService
     public function getAuthorizationHeader()
     {
         return [
-            'authorization: Bearer ' . $this->accessToken,
+            'authorization: Bearer '.$this->accessToken,
             'Content-Type: application/json',
         ];
     }
@@ -86,30 +86,24 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
-     * @param null $subSellerId
+     * @param  null  $subSellerId
      * @return bool|string
      */
     public function getStatement($subSellerId = null)
     {
-
         try {
-
             $dates = explode(' - ', request('dateRange') ?? '');
 
             if (is_array($dates) && count($dates) == 1) {
-
 //                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
 //                $endDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
                 $startDate = $dates[0];
                 $endDate = $dates[0];
-
             }
         } catch (Exception $exception) {
-
         }
 
         if (!isset($startDate) || !isset($endDate)) {
-
             $today = today()->format('Y-m-d');
             $startDate = $today;
             $endDate = $today;
@@ -119,44 +113,41 @@ class GetnetBackOfficeService extends GetnetService
         $endDate .= ' 23:59:59';
 
         $queryParameters = [
-            'seller_id' => $this->sellerId,                                             // [Required] Id do marketplace (SellerId)
-            'transaction_date_init' => $startDate,                                      // Data de captura da transação Início.
-            'transaction_date_end' => $endDate,                                         // Data de captura da transação Fim.
+            'seller_id' => $this->sellerId,
+            // [Required] Id do marketplace (SellerId)
+            'transaction_date_init' => $startDate,
+            // Data de captura da transação Início.
+            'transaction_date_end' => $endDate,
+            // Data de captura da transação Fim.
             /*'liquidation_date_init' => $startDate,                                    // Data Liquidação Inicial - Emissão do extrato somente com dados da liquidação do período informado.
             'liquidation_date_end' => $endDate,                                         // Data Liquidação Final - Emissão do extrato somente com dados da liquidação do período informado.
             'confirmation_date_init' => $startDate,                                     // Data de confirmação inicial da transação.
-            'confirmation_date_end' => $endDate,*/                                      // Data de confirmação da transação Fim.
+            'confirmation_date_end' => $endDate,*/
+            // Data de confirmação da transação Fim.
             'page' => request('page') ?? 1,
         ];
 
         if (!empty($subSellerId)) {
-
             $queryParameters['subseller_id'] = $subSellerId;
         }
 
         if (request('sale')) {
-
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode(request('sale'))));
 
             if ($sale) {
-
                 try {
-
                     $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
                     if (isset($gatewayResult->order_id)) {
-
                         $queryParameters['order_id'] = $gatewayResult->order_id;
                     }
-
                 } catch (Exception $exception) {
-
                 }
             }
         }
 
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
-        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        $url = 'v1/mgm/statement?'.http_build_query($queryParameters);
 
         $data = $this->sendCurl($url, 'GET');
         return $data;
@@ -164,14 +155,14 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
-        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
+        $url = 'v1/mgm/pf/callback/'.$this->getMerchantId().'/'.$cpf;
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPf()
     {
-        $url = 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
+        $url = 'v1/mgm/pf/consult/paymentplans/'.$this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
@@ -194,17 +185,16 @@ class GetnetBackOfficeService extends GetnetService
 
     public function disqualifyPfCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pf/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
+        $url = 'v1/mgm/pf/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }
 
-    public function updatePfCompany(Company $company)
+    public function updatePfCompany(Company $company, $dataUpdate)
     {
-        $url = 'v1/mgm/pf/update-subseller';
-        $data = $this->getPrepareDataUpdatePfCompany($company);
+        $data = array_merge($this->getPrepareDataUpdatePfCompany($company), $dataUpdate);
 
-        return $this->sendCurl($url, 'PUT', $data, $company->id);
+        return $this->sendCurl('v1/mgm/pf/update-subseller', 'PUT', $data, $company->id);
     }
 
     public function checkPaymentPlans()
@@ -216,21 +206,21 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkComplementPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/consult/'.$this->getMerchantId().'/'.$cnpj;
 
         return $this->sendCurl($url, 'GET');
     }
 
     public function checkPjCompanyRegister($cnpj, $companyId)
     {
-        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/callback/'.$this->getMerchantId().'/'.$cnpj;
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
 
     public function checkAvailablePaymentPlansPj()
     {
-        $url = 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
+        $url = 'v1/mgm/pj/consult/paymentplans/'.$this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
@@ -251,17 +241,16 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'PUT', $data, $company->id);
     }
 
-    public function updatePjCompany(Company $company)
+    public function updatePjCompany(Company $company, $dataUpdate)
     {
-        $url = 'v1/mgm/pj/update-subseller';
-        $data = $this->getPrepareDataUpdatePjCompany($company);
+        $data = array_merge($this->getPrepareDataUpdatePjCompany($company), $dataUpdate);
 
-        return $this->sendCurl($url, 'PUT', $data, $company->id);
+        return $this->sendCurl('v1/mgm/pj/update-subseller', 'PUT', $data, $company->id);
     }
 
     public function disqualifyPjCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pj/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
+        $url = 'v1/mgm/pj/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }

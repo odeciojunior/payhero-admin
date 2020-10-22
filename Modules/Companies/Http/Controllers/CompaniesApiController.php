@@ -22,6 +22,7 @@ use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -620,9 +621,11 @@ class CompaniesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
             }
 
-            /*  if (!$updateGetnet) {
-                  return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
-              }*/
+            $updateGetnet = (new CompanyServiceGetnet($company))->updateTaxCompanyGetnet($gatewayTax[$request->get('gateway_release_payment')]);
+
+            if (!$updateGetnet) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
 
             $companyUpdated = $company->update($gatewayTax[$request->get('gateway_release_payment')]);
 

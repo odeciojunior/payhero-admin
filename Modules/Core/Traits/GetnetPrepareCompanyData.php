@@ -5,13 +5,9 @@ namespace Modules\Core\Traits;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 
-/**
- * Trait GetNetPrepareDataTrait
- * @package Modules\Core\Traits
- */
 trait GetnetPrepareCompanyData
 {
-    private $urlCallback = 'https://app.cloudfox.net/postback/getnet';
+    private string $urlCallback = 'https://app.cloudfox.net/postback/getnet';
 
     public function getPrepareDataCreatePfCompany(Company $company)
     {
@@ -100,13 +96,10 @@ trait GetnetPrepareCompanyData
 
     public function getPrepareDataUpdatePfCompany(Company $company)
     {
-        $user = $company->user;
-        $userInformation = $user->userInformation;
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
-            'email' => $user->email,
         ];
     }
 
@@ -217,58 +210,12 @@ trait GetnetPrepareCompanyData
 
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
-        $user = $company->user;
-        $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
-
-        $stateFiscal = [
-            'SERVIÇO É ISENTO',
-            'SEM INSCRIÇÃO',
-            'INSENTO',
-            'n/e',
-            'Não Possui',
-            'Nao possui',
-            'nao possui',
-            'não possui',
-            'não se aplica',
-            'nao tem',
-            'Não tem',
-            'não',
-            '00000000',
-            '000000000000',
-            '000',
-            'ISENTO',
-            'isento',
-            'Isento',
-            'Insento',
-            'Isenta',
-            'Não Contribuinte'
-        ];
-
-        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 4
-            || in_array($company->state_fiscal_document_number, $stateFiscal)
-        ) {
-            $stateFiscalNumber = 'ISENTO';
-        } else {
-            $stateFiscalNumber = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
-        }
-
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
             'legal_document_number' => $company->company_document,
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
-                ],
-            ],
         ];
     }
-
 
     private function getListCommissions($user)
     {
@@ -337,6 +284,33 @@ trait GetnetPrepareCompanyData
         }
 
         return $listCommissions;
+    }
+
+    public function setTaxPlans($releaseMoneyDays)
+    {
+        $paymentPlanId = $this->getPlans($releaseMoneyDays);
+
+        if (in_array($paymentPlanId, [3, 5, 8])) {
+            return ['payment_plan' => $paymentPlanId];
+        }
+
+        return null;
+    }
+
+    private function getPlans($releaseMoneyDays)
+    {
+        $plans = [
+            'plans' => [
+                'days' => [
+                    2 => 3,
+                    15 => 8,
+                    30 => 5
+                ],
+            ]
+        ];
+
+
+        return $plans['plans']['days'][$releaseMoneyDays];
     }
 }
 
