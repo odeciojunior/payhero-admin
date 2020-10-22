@@ -41,23 +41,23 @@ use Modules\Core\Services\ProjectNotificationService;
 class ProjectsApiController extends Controller
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
-            $projectModel   = new Project();
+            $projectModel = new Project();
             $projectService = new ProjectService();
-            $pagination     = $request->input('select') ?? false;
-            $affiliation    = true;
+            $pagination = $request->input('select') ?? false;
+            $affiliation = true;
 
             if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
                 $affiliation = false;
             }
 
             if (!$pagination) {
-                activity()->on($projectModel)->tap(function(Activity $activity) {
+                activity()->on($projectModel)->tap(function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os projetos');
             }
@@ -67,7 +67,8 @@ class ProjectsApiController extends Controller
             } else {
                 if (auth()->user()->deleted_project_filter) {
                     $projectStatus = [
-                        $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
+                        $projectModel->present()->getStatus('active'),
+                        $projectModel->present()->getStatus('disabled'),
                     ];
                 } else {
                     $projectStatus = [$projectModel->present()->getStatus('active')];
@@ -76,7 +77,6 @@ class ProjectsApiController extends Controller
 
             return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar acessar projetos'], 400);
@@ -89,7 +89,7 @@ class ProjectsApiController extends Controller
     public function create()
     {
         try {
-            activity()->tap(function(Activity $activity) {
+            activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela criar projeto');
 
@@ -97,113 +97,111 @@ class ProjectsApiController extends Controller
 
             return response()->json(CompaniesSelectResource::collection($user->companies));
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar pagina de criar Projeto (ProjectController - create)');
             report($e);
 
             return response()->json(['message' => 'Erro ao carregar empresas'], 400);
         }
     }
 
-    /**
-     * @param ProjectStoreRequest $request
-     * @return JsonResponse
-     */
     public function store(ProjectStoreRequest $request)
     {
         try {
             $requestValidated = $request->validated();
 
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
-            $shippingModel       = new Shipping();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $shippingModel = new Shipping();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
-            if (!empty($requestValidated)) {
-                $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
-
-                $project = $projectModel->create([
-                                                     'name'                       => $requestValidated['name'],
-                                                     'description'                => $requestValidated['description'],
-                                                     'installments_amount'        => 12,
-                                                     'installments_interest_free' => 1,
-                                                     'visibility'                 => 'private',
-                                                     'automatic_affiliation'      => 0,
-                                                     'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('active'),
-                                                     'checkout_type'              => 2 // checkout de 1 passo
-                                                 ]);
-                if (!empty($project)) {
-                    $shipping = $shippingModel->create([
-                                                           'project_id'   => $project->id,
-                                                           'name'         => 'Frete gratis',
-                                                           'information'  => 'de 15 até 30 dias',
-                                                           'value'        => '0,00',
-                                                           'type'         => 'static',
-                                                           'type_enum'    => $shippingModel->present()
-                                                                                           ->getTypeEnum('static'),
-                                                           'status'       => '1',
-                                                           'pre_selected' => '1',
-                                                       ]);
-
-                    if (!empty($shipping)) {
-                        $photo = $request->file('photo-main');
-                        if ($photo != null) {
-                            try {
-                                $img = Image::make($photo->getPathname());
-                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
-                                $img->save($photo->getPathname());
-
-                                $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
-                                $project->update(['photo' => $digitalOceanPath]);
-                            } catch (Exception $e) {
-                                Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
-                                report($e);
-                            }
-                        }
-
-                        $userProject = $userProjectModel->create([
-                                                                     'user_id'           => auth()->user()->account_owner_id,
-                                                                     'project_id'        => $project->id,
-                                                                     'company_id'        => $requestValidated['company'],
-                                                                     'type'              => 'producer',
-                                                                     'type_enum'         => $userProjectModel->present()
-                                                                                                             ->getTypeEnum('producer'),
-                                                                     'access_permission' => 1,
-                                                                     'edit_permission'   => 1,
-                                                                     'status'            => 'active',
-                                                                     'status_flag'       => $userProjectModel->present()
-                                                                                                             ->getStatusFlag('active'),
-                                                                 ]);
-
-                        $projectNotificationService = new ProjectNotificationService();
-                        $projectService             = new ProjectService();
-                        if (!empty($userProject)) {
-                            $projectNotificationService->createProjectNotificationDefault($project->id);
-                            $projectService->createUpsellConfig($project->id);
-
-                            return response()->json(['message', 'Projeto salvo com sucesso']);
-                        } else {
-                            $digitalOceanPath->deleteFile($project->photo);
-                            $shipping->delete();
-                            $project->delete();
-
-                            return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
-                        }
-                    } else {
-                        $project->delete();
-
-                        return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
-                    }
-                } else {
-                    return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
-                }
-            } else {
+            if (empty($requestValidated)) {
                 return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
             }
+
+            $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
+
+            $project = $projectModel->create([
+                'name' => $requestValidated['name'],
+                'description' => $requestValidated['description'],
+                'installments_amount' => 12,
+                'installments_interest_free' => 1,
+                'visibility' => 'private',
+                'automatic_affiliation' => 0,
+                'boleto' => 1,
+                'status' => $projectModel->present()->getStatus('active'),
+                'checkout_type' => 2 // checkout de 1 passo
+            ]);
+
+            if (empty($project)) {
+                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+            }
+
+            $shipping = $shippingModel->create([
+                'project_id' => $project->id,
+                'name' => 'Frete gratis',
+                'information' => 'de 15 até 30 dias',
+                'value' => '0,00',
+                'type' => 'static',
+                'type_enum' => $shippingModel->present()
+                    ->getTypeEnum('static'),
+                'status' => '1',
+                'pre_selected' => '1',
+            ]);
+
+            if (empty($shipping)) {
+                $project->delete();
+
+                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+            }
+
+            $photo = $request->file('photo-main');
+            if ($photo != null) {
+                try {
+                    $img = Image::make($photo->getPathname());
+                    $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'],
+                        $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                    $img->save($photo->getPathname());
+
+                    $digitalOceanPath = $digitalOceanService
+                        ->uploadFile("uploads/user/".Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/main',
+                            $photo);
+                    $project->update(['photo' => $digitalOceanPath]);
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
+
+            $userProject = $userProjectModel->create([
+                'user_id' => auth()->user()->account_owner_id,
+                'project_id' => $project->id,
+                'company_id' => $requestValidated['company'],
+                'type' => 'producer',
+                'type_enum' => $userProjectModel->present()
+                    ->getTypeEnum('producer'),
+                'access_permission' => 1,
+                'edit_permission' => 1,
+                'status' => 'active',
+                'status_flag' => $userProjectModel->present()
+                    ->getStatusFlag('active'),
+            ]);
+
+            if (empty($userProject)) {
+                if (!empty($digitalOceanPath)) {
+                    $digitalOceanPath->deleteFile($project->photo);
+                }
+                $shipping->delete();
+                $project->delete();
+
+                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+            }
+
+            $projectNotificationService = new ProjectNotificationService();
+            $projectService = new ProjectService();
+
+            $projectNotificationService->createProjectNotificationDefault($project->id);
+            $projectService->createUpsellConfig($project->id);
+
+            return response()->json(['message', 'Projeto salvo com sucesso']);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar salvar projeto - ProjectsController -store');
             report($e);
 
             return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
@@ -220,26 +218,26 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
 
             if (isset($id)) {
-                $userProjectModel        = new UserProject();
+                $userProjectModel = new UserProject();
                 $shopifyIntegrationModel = new ShopifyIntegration();
-                $projectUpsellModel      = new ProjectUpsellRule();
+                $projectUpsellModel = new ProjectUpsellRule();
 
                 $user = auth()->user()->load('companies');
 
                 $idProject = current(Hashids::decode($id));
-                $project   = $projectModel->find($idProject);
+                $project = $projectModel->find($idProject);
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
+                activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar configurações do projeto ' . $project->name);
+                })->log('Visualizou tela editar configurações do projeto '.$project->name);
 
                 $userProject = $userProjectModel->where('user_id', $user->account_owner_id)
-                                                ->where('project_id', $idProject)->first();
+                    ->where('project_id', $idProject)->first();
                 $userProject = new UserProjectResource($userProject);
 
                 $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->account_owner_id)
-                                                               ->where('project_id', $idProject)->get();
+                    ->where('project_id', $idProject)->get();
                 $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
 
                 $companies = CompaniesSelectResource::collection($user->companies);
@@ -254,14 +252,14 @@ class ProjectsApiController extends Controller
             }
 
             return response()->json([
-                                        'message' => 'Erro ao carregar configuracoes do projeto',
-                                    ], 400);
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                                        'message' => 'Erro ao carregar configuracoes do projeto',
-                                    ], 400);
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
         }
     }
 
@@ -273,17 +271,16 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-            $projectId    = current(Hashids::decode($id));
+            $projectId = current(Hashids::decode($id));
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name   = 'deleted';
+            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                $activity->log_name = 'deleted';
                 $activity->subject_id = $projectId;
             })->log('deleted');
 
             $project = $projectModel->where('id', $projectId)->first();
 
             if (Gate::allows('destroy', [$project])) {
-
                 $projectService = new ProjectService();
 
                 if ($projectId) {
@@ -302,190 +299,173 @@ class ProjectsApiController extends Controller
                 return response()->json('Sem permissão para remover projeto', 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProjectController - delete - Erro ao deletar project');
             report($e);
 
             return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
         }
     }
 
-    /**
-     * @param ProjectUpdateRequest $request
-     * @param $id
-     * @return JsonResponse
-     */
     public function update(ProjectUpdateRequest $request, $id)
     {
         try {
-
-            $requestValidated    = $request->validated();
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
+            $requestValidated = $request->validated();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
-            if ($requestValidated) {
+            if (!$requestValidated) {
+                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+            }
 
-                $project = $projectModel->find(current(Hashids::decode($id)));
+            $project = $projectModel->find(current(Hashids::decode($id)));
 
-                if (Gate::allows('update', [$project])) {
+            if (!Gate::allows('update', [$project])) {
+                return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
+            }
 
-                    if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
-                        $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
+            if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
+                $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
+            }
+
+            $requestValidated['status'] = 1;
+
+            $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
+
+            $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+
+            $projectUpdate = $project->fill($requestValidated)->save();
+            $projectChanges = $project->getChanges();
+            if (isset($projectChanges["support_phone"])) {
+                $project->fill(["support_phone_verified" => false])->save();
+            }
+            if (isset($projectChanges["contact"])) {
+                $project->fill(["contact_verified" => false])->save();
+            }
+            if (!$projectUpdate) {
+                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+            }
+
+            try {
+                $projectPhoto = $request->file('photo');
+                if ($projectPhoto != null) {
+                    $digitalOceanService->deleteFile($project->photo);
+                    $img = Image::make($projectPhoto->getPathname());
+                    if (!empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
+                        && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])) {
+                        $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'],
+                            $requestValidated['photo_x1'], $requestValidated['photo_y1']);
                     }
+                    $img->resize(300, 300);
+                    $img->save($projectPhoto->getPathname());
 
-                    $requestValidated['status'] = 1;
+                    $digitalOceanPath = $digitalOceanService
+                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/main',
+                            $projectPhoto);
+                    $project->update([
+                        'photo' => $digitalOceanPath,
+                    ]);
+                }
 
-                    $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
+                $projectLogo = $request->file('logo');
+                if ($projectLogo != null) {
+                    $digitalOceanService->deleteFile($project->logo);
+                    $img = Image::make($projectLogo->getPathname());
 
-                    $requestValidated['cost_currency_type'] = $project->present()
-                                                                      ->getCurrencyCost($requestValidated['cost_currency_type']);
+                    $img->resize(null, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
 
-                    $projectUpdate  = $project->fill($requestValidated)->save();
-                    $projectChanges = $project->getChanges();
-                    if (isset($projectChanges["support_phone"])) {
-                        $project->fill(["support_phone_verified" => false])->save();
-                    }
-                    if (isset($projectChanges["contact"])) {
-                        $project->fill(["contact_verified" => false])->save();
-                    }
-                    if ($projectUpdate) {
-                        try {
-                            $projectPhoto = $request->file('photo');
-                            if ($projectPhoto != null) {
-                                $digitalOceanService->deleteFile($project->photo);
-                                $img = Image::make($projectPhoto->getPathname());
-                                if (!empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
-                                    && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])) {
-                                    $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
-                                }
-                                $img->resize(300, 300);
-                                $img->save($projectPhoto->getPathname());
+                    $img->save($projectLogo->getPathname());
 
-                                $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
-                                $project->update([
-                                                     'photo' => $digitalOceanPath,
-                                                 ]);
-                            }
+                    $digitalOceanPathLogo = $digitalOceanService
+                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/logo',
+                            $projectLogo);
 
-                            $projectLogo = $request->file('logo');
-                            if ($projectLogo != null) {
+                    $project->update([
+                        'logo' => $digitalOceanPathLogo,
+                    ]);
+                }
+            } catch (Exception $e) {
+                report($e);
 
-                                $digitalOceanService->deleteFile($project->logo);
-                                $img = Image::make($projectLogo->getPathname());
+                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+            }
 
-                                $img->resize(null, 300, function($constraint) {
-                                    $constraint->aspectRatio();
-                                });
-
-                                $img->save($projectLogo->getPathname());
-
-                                $digitalOceanPathLogo = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
-
-                                $project->update([
-                                                     'logo' => $digitalOceanPathLogo,
-                                                 ]);
-                            }
-                        } catch (Exception $e) {
-                            Log::warning('ProjectController - update - Erro ao enviar foto');
-                            report($e);
-
-                            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
-                        }
-
-                        $userProject = $userProjectModel->where([
-                                                                    ['user_id', auth()->user()->account_owner_id],
-                                                                    ['project_id', $project->id],
-                                                                ])->first();
-                        if (!empty($requestValidated['company_id'])) {
-                            $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
-                            if ($userProject->company_id != $requestValidated['company_id']) {
-                                $userProject->update(['company_id' => $requestValidated['company_id']]);
-                            }
-                        }
-
-                        //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
-                        if (isset($projectChanges["discount_recovery_status"])) {
-                            $project->update([
-                                                 'discount_recovery_status' => $requestValidated['discount_recovery_status'],
-                                                 'discount_recovery_value'  => $requestValidated['discount_recovery_value'],
-                                             ]);
-                        } else {
-                            $project->update([
-                                                 'discount_recovery_status' => 0,
-                                             ]);
-                        }
-
-                        return response()->json(['message' => 'Projeto atualizado!'], 200);
-                    }
-
-                    return response()->json(['message', 'Erro ao atualizar projeto'], 400);
-                } else {
-                    return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
+            $userProject = $userProjectModel->where([
+                ['user_id', auth()->user()->account_owner_id],
+                ['project_id', $project->id],
+            ])->first();
+            if (!empty($requestValidated['company_id'])) {
+                $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+                if ($userProject->company_id != $requestValidated['company_id']) {
+                    $userProject->update(['company_id' => $requestValidated['company_id']]);
                 }
             }
 
-            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+            //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
+            if (isset($projectChanges["discount_recovery_status"])) {
+                $project->update([
+                    'discount_recovery_status' => $requestValidated['discount_recovery_status'],
+                    'discount_recovery_value' => $requestValidated['discount_recovery_value'],
+                ]);
+            } else {
+                $project->update([
+                    'discount_recovery_status' => 0,
+                ]);
+            }
+
+            return response()->json(['message' => 'Projeto atualizado!'], 200);
         } catch (Exception $e) {
-            Log::warning('ProjectController - update - Erro ao atualizar project');
             report($e);
 
             return response()->json(['message', 'Erro ao atualizar projeto'], 400);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse|ProjectsResource|ProjectsUpsellResource
-     */
     public function show($id)
     {
         try {
-
             if (empty($id)) {
                 return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
             }
 
-            $projectModel         = new Project();
-            $usersProjects        = new UserProject();
+            $projectModel = new Project();
+            $usersProjects = new UserProject();
             $usersProjectsPresent = $usersProjects->present();
-            $userId               = auth()->user()->account_owner_id;
-            $id                   = current(Hashids::decode($id));
+            $userId = auth()->user()->account_owner_id;
+            $id = current(Hashids::decode($id));
 
             $project = $projectModel->where('id', $id)
-                                    ->where('status', $projectModel->present()->getStatus('active'))
-                                    ->with([
-                                               'affiliates' => function($query) use ($userId) {
-                                                   $query->where('user_id', $userId);
-                                               },
-                                           ])
-                                    ->first();
+                ->where('status', $projectModel->present()->getStatus('active'))
+                ->with([
+                    'affiliates' => function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    }
+                ])->first();
 
             if (empty($project)) {
                 return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 403);
             }
 
-            $producer = User::whereHas('usersProjects', function($query) use ($project, $usersProjectsPresent) {
+            $producer = User::whereHas('usersProjects', function ($query) use ($project, $usersProjectsPresent) {
                 $query->where('project_id', $project->id)
-                      ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
+                    ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
             })->first();
 
-            $project->producer                       = $producer->name ?? '';
-            $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
+            $project->producer = $producer->name ?? '';
+            $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
             $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
-            $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';
-
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
-                $activity->log_name   = 'visualization';
-                $activity->subject_id = $id;
-            })->log('Visualizou o projeto ' . $project->name);
+            $project->debit_card_release_money_days = $producer->debit_card_release_money_days ?? '';
 
             if (Gate::allows('show', [$project])) {
+                activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = $id;
+                })->log('Visualizou o projeto '.$project->name);
+
                 return new ProjectsResource($project);
-            } else {
-                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
             }
+            return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
         } catch (Exception $e) {
             report($e);
 
@@ -499,9 +479,8 @@ class ProjectsApiController extends Controller
     public function getProjects()
     {
         try {
-
             $projectService = new ProjectService();
-            $projectModel   = new Project();
+            $projectModel = new Project();
 
             $projectStatus = [
                 $projectModel->present()->getStatus('active'),
@@ -509,18 +488,15 @@ class ProjectsApiController extends Controller
 
             return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, ao buscar dados das empresas',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, ao buscar dados das empresas'], 400);
         }
     }
 
     /**
      * @param $projectId
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function verifySupportphone($projectId, Request $request)
@@ -528,7 +504,7 @@ class ProjectsApiController extends Controller
         try {
             $projectModel = new Project();
 
-            $data         = $request->all();
+            $data = $request->all();
             $supportPhone = $data["support_phone"] ?? null;
             if (FoxUtils::isEmpty($supportPhone)) {
                 return response()->json(
@@ -538,11 +514,11 @@ class ProjectsApiController extends Controller
             }
             $project = $projectModel->find(Hashids::decode($projectId))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name   = 'visualization';
+            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
             })
-                      ->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
+                ->log('Visualizou tela envio de código para verificação de telefone contato do projeto '.$project->name);
 
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
@@ -551,7 +527,7 @@ class ProjectsApiController extends Controller
 
             $verifyCode = random_int(100000, 999999);
 
-            $message    = "Código de verificação CloudFox - " . $verifyCode;
+            $message = "Código de verificação CloudFox - ".$verifyCode;
             $smsService = new SmsService();
             $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
 
@@ -560,7 +536,7 @@ class ProjectsApiController extends Controller
                     "message" => "Mensagem enviada com sucesso!",
 
                 ], 200)
-                             ->withCookie("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
+                ->withCookie("supportphoneverifycode_".Hashids::encode(auth()->id()).$projectId, $verifyCode, 15);
         } catch (Exception $ex) {
             report($ex);
 
@@ -573,21 +549,21 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $projectId
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function matchSupportphoneVerifyCode($projectId, Request $request)
     {
         try {
             $projectModel = new Project();
-            $project      = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
+            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name   = 'updated';
+            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                $activity->log_name = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código telefone de contato do projeto ' . $project->name);
+            })->log('Validação código telefone de contato do projeto '.$project->name);
 
-            $data       = $request->all();
+            $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
                 return response()->json(
@@ -595,7 +571,7 @@ class ProjectsApiController extends Controller
                         'message' => 'Código de verificação não pode ser vazio!',
                     ], 400);
             }
-            $cookie = Cookie::get("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId);
+            $cookie = Cookie::get("supportphoneverifycode_".Hashids::encode(auth()->id()).$projectId);
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
@@ -609,7 +585,7 @@ class ProjectsApiController extends Controller
                 [
                     "message" => "Telefone verificado com sucesso!",
                 ], 200)
-                             ->withCookie(Cookie::forget("supportphoneverifycode_" . Hashids::encode(auth()->id())) . $projectId);
+                ->withCookie(Cookie::forget("supportphoneverifycode_".Hashids::encode(auth()->id())).$projectId);
         } catch (Exception $e) {
             report($e);
 
@@ -622,21 +598,21 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $projectId
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function verifyContact($projectId, Request $request)
     {
         try {
             $projectModel = new Project();
-            $project      = $projectModel->find(Hashids::decode($projectId))->first();
+            $project = $projectModel->find(Hashids::decode($projectId))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name   = 'visualization';
+            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $project->name);
+            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: '.$project->name);
 
-            $data    = $request->all();
+            $data = $request->all();
             $contact = $data["contact"] ?? null;
             if (FoxUtils::isEmpty($contact)) {
                 return response()->json(
@@ -659,7 +635,8 @@ class ProjectsApiController extends Controller
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                'noreply@cloudfox.net', 'cloudfox', $contact, auth()->user()->name, "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac", $data
+                'noreply@cloudfox.net', 'cloudfox', $contact, auth()->user()->name,
+                "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac", $data
             );
 
             return response()->json(
@@ -667,7 +644,7 @@ class ProjectsApiController extends Controller
                     "message" => "Email enviado com sucesso!",
 
                 ], 200)
-                             ->withCookie("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
+                ->withCookie("contactverifycode_".Hashids::encode(auth()->id()).$projectId, $verifyCode, 15);
         } catch (Exception $e) {
             report($e);
 
@@ -680,21 +657,21 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $projectId
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function matchContactVerifyCode($projectId, Request $request)
     {
         try {
             $projectModel = new Project();
-            $project      = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
+            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name   = 'updated';
+            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                $activity->log_name = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código email de contato do projeto: ' . $project->name);
+            })->log('Validação código email de contato do projeto: '.$project->name);
 
-            $data       = $request->all();
+            $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
                 return response()->json(
@@ -702,7 +679,7 @@ class ProjectsApiController extends Controller
                         'message' => 'Código de verificação não pode ser vazio!',
                     ], 400);
             }
-            $cookie = Cookie::get("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId);
+            $cookie = Cookie::get("contactverifycode_".Hashids::encode(auth()->id()).$projectId);
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
@@ -716,7 +693,7 @@ class ProjectsApiController extends Controller
                 [
                     "message" => "Email verificado com sucesso!",
                 ], 200)
-                             ->withCookie(Cookie::forget("contactverifycode_" . Hashids::encode(auth()->id())) . $projectId);
+                ->withCookie(Cookie::forget("contactverifycode_".Hashids::encode(auth()->id())).$projectId);
         } catch (Exception $e) {
             report($e);
 
@@ -730,10 +707,9 @@ class ProjectsApiController extends Controller
     public function updateOrder(Request $request)
     {
         try {
-
-            $orders    = $request->input('order');
-            $page      = $request->page ?? 1;
-            $paginate  = $request->paginate ?? 100;
+            $orders = $request->input('order');
+            $page = $request->page ?? 1;
+            $paginate = $request->paginate ?? 100;
             $initOrder = ($page * $paginate) - $paginate + 1;
 
             $projectIds = [];
@@ -743,15 +719,14 @@ class ProjectsApiController extends Controller
             }
 
             $projects = UserProject::whereIn('project_id', collect($projectIds))
-                                   ->where('user_id', auth()->user()->account_owner_id)
-                                   ->get();
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->get();
 
             $affiliates = Affiliate::whereIn('project_id', collect($projectIds))
-                                   ->where('user_id', auth()->user()->account_owner_id)
-                                   ->get();
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->get();
 
             foreach ($projectIds as $value) {
-
                 $project = $projects->firstWhere('project_id', $value);
                 if (isset($project->id)) {
                     $project->update(['order_priority' => $initOrder]);
@@ -775,11 +750,11 @@ class ProjectsApiController extends Controller
     public function updateConfig(Request $request)
     {
         try {
-            $data    = $request->all();
-            $user    = auth()->user();
+            $data = $request->all();
+            $user = auth()->user();
             $updated = $user->update([
-                                         'deleted_project_filter' => $data['deleted_project_filter'],
-                                     ]);
+                'deleted_project_filter' => $data['deleted_project_filter'],
+            ]);
             if ($updated) {
                 return response()->json(['message' => 'Configuração atualizada com sucesso'], 200);
             } else {
