@@ -40,7 +40,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout', 'sendAuthenticated');
+        $this->middleware('guest')->except('logout', 'sendAuthenticated', 'getAuthenticated');
     }
 
     /**
@@ -160,25 +160,16 @@ class LoginController extends Controller
             ], Response::HTTP_OK);
     }
 
-    public function getAuthenticated(Request $request)
+    public function getAuthenticated($user, $expiration)
     {
 
-        $dataForm = Validator::make($request->all(), [
-            'user' => 'required|string',
-            'expiration' => 'required|string',
-        ], [
-            'user.required' => 'Precisamos do usuário para continuar',
-            'expiration.required' => 'Precisamos da data de expiração para continuar',
-        ])->validate();
-
         try {
-            $dateUnix = current(Hashids::decode($dataForm['expiration']));
+            $dateUnix = current(Hashids::decode($expiration));
 
             if ($dateUnix <= Carbon::now()->unix())
                 throw new \Exception('Autenticação Expirada');
 
-
-            $user = User::find(current(Hashids::connection('login')->decode($dataForm['user'])));
+            $user = User::find(current(Hashids::connection('login')->decode($user)));
 
             if (!$user)
                 throw new \Exception('Usuário não existe');
