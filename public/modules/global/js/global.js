@@ -26,7 +26,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                $(this).attr('href', response)
+                $(this).attr('href', response.url)
             },
         });
     })
