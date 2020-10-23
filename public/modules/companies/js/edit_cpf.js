@@ -13,14 +13,20 @@ var companyStatusTranslated = {
 };
 
 var initForm = null;
+let companyIdCode = null;
+let gatewayTax = {
+    'plan-2': 6.9,
+    'plan-15': 6.5,
+    'plan-30': 5.9
+}
 
+
+let userIdCode = '';
 $(document).ready(function () {
 
     initForm = function () {
 
         var encodedId = extractIdFromPathName();
-
-        loadOnAny('#tab_user');
 
         $.ajax({
             method: "GET",
@@ -32,13 +38,11 @@ $(document).ready(function () {
             },
             error: function (response) {
                 errorAjaxResponse(response);
-                loadOnAny('#tab_user', true);
             },
             success: function success(response) {
                 if (response.company.country === 'usa') {
                     $('#rounting_number').val(response.company.bank).trigger('input');
                     $('#account_routing_number').val(response.company.account);
-                    //$('#swift-code-info').show();
                     $('#company_update_bank_form').hide();
                     $('#company_bank_routing_number_form').show();
                 } else {
@@ -51,6 +55,35 @@ $(document).ready(function () {
                     $("#account").val(response.company.account);
                     $("#account_digit").val(response.company.account_digit);
                     $('#account_type').val(response.company.account_type);
+                }
+                userIdCode = response.company.user_code;
+                getTax();
+                let company = response.company;
+                if (response.company.capture_transaction_enabled) {
+                    companyIdCode = company.id_code;
+
+                    $("#tax-payment").val(company.gateway_tax + '%')
+
+                    $(".select-gateway-tax").html('');
+
+                    $(".select-gateway-tax").append(`
+                        <select id="gateway-release-payment" class="form-control">
+                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Após postagem de rastreio válida (taxa de 6.9%)</option>
+                            <option value="plan-15" ${company.gateway_tax == 6.5 ? 'selected' : ''}>15 dias (taxa de 6.5%)</option>
+                            <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
+                        </select>
+                    `);
+                    $('#tab_tax_gateways .gateway-tax').removeAttr('hidden');
+                    $('#tab_tax_gateways .cielo-tax').hide();
+                } else {
+
+                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
+                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
+                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
+                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
+
+                    $('#tab_tax_gateways .cielo-tax').removeAttr('hidden');
+                    $('#tab_tax_gateways .gateway-tax').hide();
                 }
 
                 if (response.company.country === 'brazil') {
@@ -75,13 +108,6 @@ $(document).ready(function () {
                     getDocuments(encodedId);
                 });
 
-                // if (response.company.has_project) {
-                //     $('#active_flag').prop('disabled', true);
-                // } else {
-                //     $('#active_flag').prop('disabled', false);
-                // }
-                // $('#active_flag').val(response.company.active_flag);
-
                 if (response.company.has_project) {
                     $('#active_flag').attr('disabled', true);
                     $("#active_flag").css("cursor", "not-allowed");
@@ -98,18 +124,86 @@ $(document).ready(function () {
                     $("#active_flag").attr('checked', false);
                 }
 
-                loadOnAny('#tab_user', true);
+
+                // update tax payment after change select input
+                $("#gateway-release-payment").on("change", function () {
+                    $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
+                })
+
+                $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
+
             }
         });
     };
 
     initForm();
 
+    $("#update_payment_tax_cnpj").unbind('click');
+    $("#update_payment_tax_cnpj").on('click', function () {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "POST",
+            url: `/api/companies/${companyIdCode}/updatetax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                gateway_release_payment: $("#gateway-release-payment").val(),
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                $("#tax-payment").val(response.data.new_gateway_tax + '%');
+            }
+        });
+    });
+
+    function getTax() {
+        $.ajax({
+            method: "GET",
+            url: `/api/profile/${userIdCode}/tax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                setValuesHtml(response.data);
+            }
+        });
+    }
+
+    function setValuesHtml(data) {
+        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
+
+        if (data.antecipation_enabled_flag) {
+            $('.info-antecipation-tax').show();
+            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
+        } else {
+            $('.title-antecipation-tax').hide();
+            $('.form-antecipation-tax').hide();
+        }
+
+        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
+    }
+
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_update_bank_form'));
         loadingOnScreen();
-
         var encodedId = extractIdFromPathName();
 
         if (!$('#active_flag').is(':checked')) {
@@ -128,6 +222,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {

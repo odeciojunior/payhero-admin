@@ -50,10 +50,15 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $monthly_gross_income
  * @property int $federal_registration_status
  * @property string $founding_date
- * @property int $subseller_getnet_id
+ * @property string $subseller_getnet_id
+ * @property string $subseller_getnet_homolog_id
  * @property int $get_net_status
+ * @property int $boleto_release_money
+ * @property int $credit_card_release_money
  * @property int $account_type
  * @property int $social_value
+ * @property int $gateway_tax
+ * @property int $gateway_release_money_days
  * @property string $federal_registration_status_date
  * @property string $document_issue_date
  * @property string $document_issuer
@@ -83,18 +88,13 @@ class Company extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    /**
-     * @var string
-     */
     protected $presenter = CompanyPresenter::class;
     /**
      * The accessors to append to the model's array form.
      * @var array
      */
     protected $appends = ['id_code'];
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'user_id',
         'fantasy_name',
@@ -142,6 +142,13 @@ class Company extends Model
         'document_issuer',
         'document_issuer_state',
         'active_flag',
+        'gateway_tax',
+        'boleto_tax',
+        'credit_card_tax',
+        'installment_tax',
+        'gateway_release_money_days',
+        'credit_card_release_money_days',
+        'boleto_release_money_days',
         'deleted_at',
         'created_at',
         'updated_at',
@@ -169,10 +176,6 @@ class Company extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @param  Activity  $activity
-     * @param  string  $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
@@ -186,73 +189,52 @@ class Company extends Model
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
+
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function affiliates()
     {
         return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
-    /**
-     * @return HasMany
-     */
     public function companyDocuments()
     {
         return $this->hasMany('Modules\Core\Entities\CompanyDocument');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function hotzappIntegrations()
     {
         return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function invitations()
     {
         return $this->hasMany('Modules\Core\Entities\Invitation');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function transactions()
     {
         return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 
-    /**
-     * @return HasMany
-     */
+
     public function transfers()
     {
         return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 
-    /**
-     * @return HasMany
-     */
     public function usersProjects()
     {
         return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
-    /**
-     * @return HasMany
-     */
     public function withdrawals()
     {
         return $this->hasMany('Modules\Core\Entities\Withdrawal');

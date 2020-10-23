@@ -42,6 +42,7 @@ class CompanyResource extends JsonResource
 
         return [
             'id_code' => Hashids::encode($this->resource->id),
+            'user_code' => Hashids::encode($this->resource->user_id),
             'business_website' => $this->resource->business_website ?? '',
             'support_email' => $this->resource->support_email ?? '',
             'support_telephone' => $this->resource->support_telephone ?? '',
@@ -93,6 +94,12 @@ class CompanyResource extends JsonResource
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
             'capture_transaction_enabled' => $this->capture_transaction_enabled,
+            'credit_card_tax' => $this->credit_card_tax,
+            'boleto_tax' => $this->boleto_tax,
+            'credit_card_release_money' => $this->credit_card_release_money_days,
+            'boleto_release_money' => $this->boleto_release_money_days,
+            'gateway_tax' => $this->gateway_tax,
+            'installment_tax' => $this->installment_tax
         ];
     }
 }

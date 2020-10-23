@@ -51,7 +51,7 @@ class ProfileApiController
 
                 $userResource = new UserResource($user);
                 $countryService = new CountryService();
-                $userService         = new UserService();
+                $userService = new UserService();
                 $countries = $countryService->getCountries();
 
                 return response()->json(
@@ -71,17 +71,11 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param ProfileUpdateRequest $request
-     * @param $idCode
-     * @return JsonResponse
-     */
     public function update(ProfileUpdateRequest $request, $idCode)
     {
         try {
             $user = auth()->user();
             $userModel = new User();
-            $companyService = new CompanyService();
 
             $requestData = $request->validated();
 
@@ -89,10 +83,10 @@ class ProfileApiController
                 return response()->json(['message' => 'Sem permissão para editar este perfil'], 403);
             }
 
-
             if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
-                $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
+                $requestData['cellphone'] = '+'.preg_replace("/[^0-9]/", "", $requestData['cellphone']);
             }
+
             $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
             $requestData['name'] = preg_replace('/( )+/', ' ', $requestData['name']);
 
@@ -178,7 +172,7 @@ class ProfileApiController
 
                     $digitalOceanPath = $digitalOceanService
                         ->uploadFile(
-                            'uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile',
+                            'uploads/user/'.Hashids::encode(auth()->user()->id).'/public/profile',
                             $userPhoto
                         );
 
@@ -194,15 +188,6 @@ class ProfileApiController
                 }
             }
 
-
-    /*        if (!empty($company) && !$companyService->verifyFieldsEmpty($company)) {
-                if (empty($company->subseller_getnet_id)) {
-                    $companyService->createCompanyGetnet($company);
-                } elseif ($company->getnet_status != $company->present()->getStatusGetnet('approved')) {
-                    $companyService->updateCompanyGetnet($company);
-                }
-            }*/
-
             return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
         } catch (Exception $e) {
             report($e);
@@ -211,67 +196,6 @@ class ProfileApiController
         }
     }
 
-    public function updateTaxes(Request $request)
-    {
-        try {
-            $requestData = $request->all();
-
-            $cardTaxes = [
-                'plan-15' => [
-                    'credit_card_tax' => '6.5',
-                    'credit_card_release_money_days' => 15,
-                    'debit_card_tax' => '6.5',
-                    'debit_card_release_money_days' => 15,
-                ],
-                'plan-30' => [
-                    'credit_card_tax' => '5.9',
-                    'credit_card_release_money_days' => 30,
-                    'debit_card_tax' => '5.9',
-                    'debit_card_release_money_days' => 30,
-                ],
-            ];
-
-            $boletoTaxes = [
-                'plan-30' => [
-                    'boleto_tax' => '5.9',
-                    'boleto_release_money_days' => 30,
-                ],
-                'plan-2' => [
-                    'boleto_tax' => '6.5',
-                    'boleto_release_money_days' => 2,
-                ],
-            ];
-
-            auth()->user()->update($cardTaxes[$requestData['credit_card_plan']]);
-            auth()->user()->update($boletoTaxes[$requestData['boleto_plan']]);
-
-            $newCardTax = $requestData['credit_card_plan'] == 'plan-30' ? '5.9%' : '6.5%';
-            $newBoletoTax = $requestData['boleto_plan'] == 'plan-30' ? '5.9%' : '6.5%';
-
-            return response()->json(
-                [
-                    'message' => 'Plano atualizado com sucesso',
-                    'data' => [
-                        'new_card_tax_value' => $newCardTax,
-                        'new_boleto_tax_value' => $newBoletoTax,
-                    ],
-                ]
-            );
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu algum erro',
-                ]
-            );
-        }
-    }
-
-    /**
-     * @param ProfilePasswordRequest $request
-     * @return JsonResponse
-     */
     public function changePassword(ProfilePasswordRequest $request)
     {
         try {
@@ -296,10 +220,6 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function verifyCellphone(Request $request)
     {
         try {
@@ -324,7 +244,7 @@ class ProfileApiController
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 
-            $message = "Código de verificação CloudFox - " . $verifyCode;
+            $message = "Código de verificação CloudFox - ".$verifyCode;
             $smsService = new SmsService();
 
             $smsService->sendSms($cellphone, $message, ' ', 'aws-sns');
@@ -335,8 +255,7 @@ class ProfileApiController
 
                 ],
                 200
-            )
-                ->withCookie("cellphoneverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+            )->withCookie("cellphoneverifycode_".Hashids::encode(auth()->id()), $verifyCode, 15);
         } catch (Exception $e) {
             report($e);
 
@@ -345,7 +264,7 @@ class ProfileApiController
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function matchCellphoneVerifyCode(Request $request)
@@ -361,7 +280,7 @@ class ProfileApiController
                     400
                 );
             }
-            $cookie = Cookie::get("cellphoneverifycode_" . Hashids::encode(auth()->id()));
+            $cookie = Cookie::get("cellphoneverifycode_".Hashids::encode(auth()->id()));
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
@@ -379,7 +298,7 @@ class ProfileApiController
                 ],
                 200
             )
-                ->withCookie(Cookie::forget("cellphoneverifycode_" . Hashids::encode(auth()->id())));
+                ->withCookie(Cookie::forget("cellphoneverifycode_".Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             report($e);
 
@@ -387,32 +306,24 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function verifyEmail(Request $request)
     {
         try {
             $data = $request->all();
             $email = $data["email"] ?? null;
+
             if (FoxUtils::isEmpty($email)) {
-                return response()->json(
-                    [
-                        'message' => 'Email não pode ser vazio!',
-                    ],
-                    400
-                );
-            } else {
-                if (!FoxUtils::validateEmail($email)) {
-                    return response()->json(
-                        [
-                            'message' => 'Email inválido!',
-                        ],
-                        400
-                    );
-                }
+                return response()->json([
+                    'message' => 'Email não pode ser vazio!',
+                ], 400);
             }
+
+            if (!FoxUtils::validateEmail($email)) {
+                return response()->json([
+                    'message' => 'Email inválido!',
+                ], 400);
+            }
+
 
             $user = auth()->user();
             if ($email != $user->email) {
@@ -443,7 +354,7 @@ class ProfileApiController
                     ],
                     200
                 )
-                    ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+                    ->withCookie("emailverifycode_".Hashids::encode(auth()->id()), $verifyCode, 15);
             }
 
             return response()->json(
@@ -460,42 +371,28 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function matchEmailVerifyCode(Request $request)
     {
         try {
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Código de verificação não pode ser vazio!',
+                ], 400);
             }
-            $cookie = Cookie::get("emailverifycode_" . Hashids::encode(auth()->id()));
+            $cookie = Cookie::get("emailverifycode_".Hashids::encode(auth()->id()));
             if ($verifyCode != $cookie) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação inválido!',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Código de verificação inválido!',
+                ], 400);
             }
 
             User::where("id", auth()->id())->update(["email_verified" => true]);
 
-            return response()->json(
-                [
-                    "message" => "Email verificado com sucesso!",
-                ],
-                200
-            )
-                ->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
+            return response()->json([
+                "message" => "Email verificado com sucesso!",
+            ], 200)->withCookie(Cookie::forget("emailverifycode_".Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             report($e);
 
@@ -503,85 +400,71 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param ProfileUploadDocumentRequest $request
-     * @return JsonResponse
-     */
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
         try {
             $user = auth()->user();
 
-            if (Gate::allows('uploadDocuments', [$user])) {
-                $amazonFileService = app(AmazonFileService::class);
-                $userDocument = new UserDocument();
-                $userModel = new User();
-
-                $dataForm = $request->validated();
-
-                $document = $request->file('file');
-
-                $amazonFileService->setDisk('s3_documents');
-                $amazonPath = $amazonFileService->uploadFile(
-                    'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
-                    $document,
-                    null,
-                    null,
-                    'private'
-                );
-
-                $documentType = $userModel->present()
-                    ->getDocumentType($dataForm["document_type"]);
-
-                $documentSaved = $userDocument->create(
-                    [
-                        'user_id' => auth()->user()->account_owner_id,
-                        'document_url' => $amazonPath,
-                        'document_type_enum' => $documentType,
-                        'status' => $userDocument->present()
-                            ->getTypeEnum('analyzing'),
-                    ]
-                );
-
-                if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
-                    $user->update(
-                        [
-                            'personal_document_status' => $user->present()
-                                ->getPersonalDocumentStatus('analyzing'),
-                        ]
-                    );
-                } else {
-                    if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
-                        $user->update(
-                            [
-                                'address_document_status' => $user->present()
-                                    ->getAddressDocumentStatus('analyzing'),
-                            ]
-                        );
-                    } else {
-                        $documentSaved->delete();
-
-                        return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-                    }
-                }
-
-                return response()->json(
-                    [
-                        'message' => 'Arquivo enviado com sucesso.',
-                        'personal_document_translate' => Lang::get(
-                            'definitions.enum.personal_document_status.' . $user->present()
-                                ->getPersonalDocumentStatus($user->personal_document_status)
-                        ),
-                        'address_document_translate' => Lang::get(
-                            'definitions.enum.personal_document_status.' . $user->present()
-                                ->getAddressDocumentStatus($user->address_document_status)
-                        ),
-                    ],
-                    200
-                );
-            } else {
+            if (!Gate::allows('uploadDocuments', [$user])) {
                 return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
             }
+
+            $amazonFileService = app(AmazonFileService::class);
+            $userDocument = new UserDocument();
+            $userModel = new User();
+
+            $dataForm = $request->validated();
+
+            $document = $request->file('file');
+
+            $amazonFileService->setDisk('s3_documents');
+            $amazonPath = $amazonFileService->uploadFile(
+                'uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/private/documents',
+                $document,
+                null,
+                null,
+                'private'
+            );
+
+            $documentType = $userModel->present()->getDocumentType($dataForm["document_type"]);
+
+            $documentSaved = $userDocument->create([
+                'user_id' => auth()->user()->account_owner_id,
+                'document_url' => $amazonPath,
+                'document_type_enum' => $documentType,
+                'status' => $userDocument->present()
+                    ->getTypeEnum('analyzing'),
+            ]);
+
+            if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
+                $user->update([
+                    'personal_document_status' => $user->present()
+                        ->getPersonalDocumentStatus('analyzing'),
+                ]);
+            } else {
+                if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
+                    $user->update([
+                        'address_document_status' => $user->present()
+                            ->getAddressDocumentStatus('analyzing'),
+                    ]);
+                } else {
+                    $documentSaved->delete();
+
+                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+                }
+            }
+
+            return response()->json([
+                'message' => 'Arquivo enviado com sucesso.',
+                'personal_document_translate' => Lang::get(
+                    'definitions.enum.personal_document_status.'.$user->present()
+                        ->getPersonalDocumentStatus($user->personal_document_status)
+                ),
+                'address_document_translate' => Lang::get(
+                    'definitions.enum.personal_document_status.'.$user->present()
+                        ->getAddressDocumentStatus($user->address_document_status)
+                ),
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -589,50 +472,32 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param $userId
-     * @return JsonResponse|ProfileTaxResource
-     */
     public function getTax($userId)
     {
         try {
-            if (!empty($userId)) {
-                $user = auth()->user();
-                $userId = current(Hashids::decode($userId));
-                if ($user->account_owner_id == $userId) {
-                    return new ProfileTaxResource($user);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro!',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    ],
-                    400
-                );
+            if (empty($userId)) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ], 400);
             }
+
+            $user = auth()->user();
+            $userId = current(Hashids::decode($userId));
+            if ($user->account_owner_id == $userId) {
+                return new ProfileTaxResource($user);
+            }
+            return response()->json([
+                'message' => 'Ocorreu um erro!',
+            ], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ],
-                400
-            );
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function updateUserNotification(Request $request)
     {
         try {
@@ -691,7 +556,7 @@ class ProfileApiController
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function openDocument(Request $request)
@@ -732,33 +597,27 @@ class ProfileApiController
     public function getDocuments(Request $request)
     {
         try {
-            if (!empty($request->input('document_type'))) {
-                $userDocumentModel = new UserDocument();
-                $userModel = new User();
-
-                $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
-
-                $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
-                    ->where('document_type_enum', $documentType)->get();
-
-                return ProfileDocumentsResource::collection($userDocuments);
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    ],
-                    400
-                );
+            if (empty($request->input('document_type'))) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ], 400);
             }
+            
+            $userDocumentModel = new UserDocument();
+            $userModel = new User();
+
+            $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
+
+            $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
+                ->where('document_type_enum', $documentType)->get();
+
+            return ProfileDocumentsResource::collection($userDocuments);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ],
-                400
-            );
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ], 400);
         }
     }
 

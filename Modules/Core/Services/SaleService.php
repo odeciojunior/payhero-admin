@@ -773,7 +773,8 @@ class SaleService
                     'value' => $refundValue,
                     'type' => 'out',
                     'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                    'reason' => 'Estorno',
+                    'reason' => 'Taxa de estorno de boleto',
+                    'is_refund_tax'  => 1,
                     'company_id' => $transaction->company->id,
                 ]);
 
@@ -800,7 +801,8 @@ class SaleService
                         'value' => $refundValue,
                         'type' => 'out',
                         'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'reason' => 'Estorno',
+                        'reason' => 'Taxa de estorno de boleto',
+                        'is_refund_tax'  => 1,
                         'company_id' => $transaction->company->id,
                     ]);
 

@@ -49,8 +49,6 @@ use Laravel\Passport\HasApiTokens;
  * @property int $antecipation_tax
  * @property int $invites_amount
  * @property float $abroad_transfer_tax
- * @property string $installment_tax
- * @property int $boleto_release_money_days
  * @property bool $antecipation_enabled_flag
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
@@ -118,13 +116,6 @@ class User extends Authenticable
         'percentage_antecipable',
         'antecipation_tax',
         'invites_amount',
-        'installment_tax',
-        'credit_card_release_money_days',
-        'debit_card_release_money_days',
-        'boleto_release_money_days',
-        'boleto_tax',
-        'credit_card_tax',
-        'debit_card_tax',
         'last_login',
         'account_owner_id',
         'abroad_transfer_tax',
@@ -159,17 +150,17 @@ class User extends Authenticable
     protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
 
     /**
-     * @param Activity $activity
-     * @param string $eventName
+     * @param  Activity  $activity
+     * @param  string  $eventName
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Usuário ' . $this->name . ' foi deletedo.';
+            $activity->description = 'Usuário '.$this->name.' foi deletedo.';
         } elseif ($eventName == 'updated') {
-            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
+            $activity->description = 'Usuário '.$this->name.' foi atualizado.';
         } elseif ($eventName == 'created') {
-            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
+            $activity->description = 'Usuário '.$this->name.' foi criado.';
         } else {
             $activity->description = $eventName;
         }
@@ -312,7 +303,7 @@ class User extends Authenticable
     }
 
     /**
-     * @param string $token
+     * @param  string  $token
      */
     public function sendPasswordResetNotification($token)
     {

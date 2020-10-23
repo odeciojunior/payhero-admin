@@ -67,6 +67,7 @@ class TrackingmoreService
                     break;
                 case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
                 case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
+                case preg_match('/^[A-Z]{2}[0-9]{9}SE$/', $trackingNumber): //swenden posten
                     $carrierCode = "cainiao";
                     break;
                 default:
