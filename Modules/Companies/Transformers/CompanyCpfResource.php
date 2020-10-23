@@ -26,6 +26,7 @@ class CompanyCpfResource extends JsonResource
 
         return [
             'id_code' => Hashids::encode($this->resource->id),
+            'user_code' => Hashids::encode($this->resource->user_id),
             'bank' => $this->resource->bank ?? '',
             'agency' => $this->resource->agency ?? '',
             'agency_digit' => $this->resource->agency_digit ?? '',
@@ -42,7 +43,8 @@ class CompanyCpfResource extends JsonResource
             'credit_card_tax' => $this->credit_card_tax,
             'boleto_tax' => $this->boleto_tax,
             'credit_card_release_money' => $this->credit_card_release_money_days,
-            'gateway_tax' => $this->gateway_tax
+            'gateway_tax' => $this->gateway_tax,
+            'installment_tax' => $this->installment_tax
         ];
     }
 }

@@ -412,12 +412,12 @@
                                     <div class="gateway-tax col-md-12 mt-20  " hidden>
                                         <div class="container">
                                             <div class='row mt-15 col-xl-12'>
-                                                <div class='col form-group col-md-3'>
+                                                <div class='col form-group col-6'>
                                                     <label for='tax-payment'>Por venda (porcentagem):</label>
                                                     <input id='tax-payment' disabled='disabled'
                                                            class="form-control">
                                                 </div>
-                                                <div class='col form-group col-md-8'>
+                                                <div class='col form-group col-6'>
                                                     <label for='gateway-release-payment'>Dias para
                                                         liberação:</label>
                                                     <div class='form-group select-gateway-tax'></div>
@@ -427,6 +427,39 @@
                                                 <input id="update_payment_tax_cnpj" type="submit"
                                                        class="btn btn-success"
                                                        value="Atualizar" style="width: auto;">
+                                            </div>
+                                        </div>
+
+                                        <div class='col'></div>
+                                        <div class='row mt-15 col-xl-12'>
+                                            <div class="col-12">
+                                                <p class='info' style='font-size: 10px; margin-top: -10px'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
+                                                    parcelamento no cartão de crédito de
+                                                    <label id="installment-tax" style="color: gray"></label>
+                                                    % ao mês.
+                                                </p>
+                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de
+                                                    R$
+                                                    <label style="color: gray" id="transaction-tax"></label>
+                                                    por transação.
+                                                </p>
+                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
+                                                    transferência para empresas do exterior de
+                                                    <label style="color: gray" id="transaction-tax-abroad"></label>
+                                                </p>
+                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos
+                                                    com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
+                                                </p>
+                                                <p class='info info-antecipation-tax'
+                                                   style='font-size: 10px; margin-top: -8px;display:none;'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
+                                                    antecipação de
+                                                    <label style="color: gray" id="label-antecipation-tax"></label>
+                                                </p>
                                             </div>
                                         </div>
 

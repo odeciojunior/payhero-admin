@@ -92,6 +92,7 @@ $(document).ready(function () {
     }
 
     let companyIdCode = '';
+    let userIdCode = '';
 
     initForm = function () {
         //Get CompanyId from path
@@ -114,6 +115,9 @@ $(document).ready(function () {
                 var company = response.company;
                 var banks = response.banks;
                 companyIdCode = company.id_code;
+                userIdCode = company.user_code;
+
+                getTax();
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -150,13 +154,10 @@ $(document).ready(function () {
                     $(".select-gateway-tax").html('');
 
                     $(".select-gateway-tax").append(`
-                        <select id="gateway-release-payment" class="form-control col-md-6">
-                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Apos postagem de rastreio valida (taxa de 6.9%)</option>
+                        <select id="gateway-release-payment" class="form-control">
+                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Após postagem de rastreio válida (taxa de 6.9%)</option>
                             <option value="plan-15" ${company.gateway_tax == 6.5 ? 'selected' : ''}>15 dias (taxa de 6.5%)</option>
                             <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
-                            <option value="plan-tracking-code" disabled>
-                                Ao informar o código de rastreio (em breve)
-                            </option>
                         </select>
                     `);
 
@@ -277,10 +278,13 @@ $(document).ready(function () {
                     $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
                 })
 
-
+                $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
             }
         });
     };
+
+    initForm();
+
     $("#update_payment_tax_cnpj").unbind('click');
     $("#update_payment_tax_cnpj").on('click', function () {
         loadingOnScreen();
@@ -309,7 +313,42 @@ $(document).ready(function () {
         });
     });
 
-    initForm();
+
+    function getTax() {
+        $.ajax({
+            method: "GET",
+            url: `/api/profile/${userIdCode}/tax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                setValuesHtml(response.data);
+            }
+        });
+    }
+
+    function setValuesHtml(data) {
+        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
+
+        if (data.antecipation_enabled_flag) {
+            $('.info-antecipation-tax').show();
+            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
+        } else {
+            $('.title-antecipation-tax').hide();
+            $('.form-antecipation-tax').hide();
+        }
+
+        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
+    }
+
 
     //Couting number
     $('#rounting_number').on('input', function () {
