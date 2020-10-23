@@ -275,6 +275,9 @@ class SalesRecoveryApiController extends Controller
                     $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
+                    $totalPaidValue = ($sale->sub_total * 100) - $sale->automatic_discount;
+                    $shippingPrice  = $sale->shipment_value * 100;
+
                     if (!empty($request->input('discountValue'))) {
 
                         if ($request->discountType == 'percentage') {
