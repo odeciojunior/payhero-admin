@@ -14,7 +14,7 @@ $(document).ready(function () {
     $(".mm-panels").css('scrollbar-width', 'none');
 
     $('#accounts-service').click(function (e) {
-        e.preventDefault();
+        e.preventDefault()
         $.ajax({
             method: 'GET',
             url: '/send-authenticated',
@@ -26,7 +26,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                $(this).attr('href', response.url)
+                window.location.href = response.url
             },
         });
     })
