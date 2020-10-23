@@ -37,14 +37,16 @@
                                        aria-controls="tab_documentos" role="tab"> Documentos
                                     </a>
                                 </li>
-                                <li class="nav-item" role="presentation" id="nav_tax_gateways">
-                                    <a class="nav-link"
-                                       data-toggle="tab"
-                                       href="#tab_tax_gateways"
-                                       aria-controls="tab_tax_gateways"
-                                       role="tab"> Tarifas e Prazos
-                                    </a>
-                                </li>
+                                @if(!auth()->user()->hasRole('attendance'))
+                                    <li class="nav-item" role="presentation" id="nav_tax_gateways">
+                                        <a class="nav-link"
+                                           data-toggle="tab"
+                                           href="#tab_tax_gateways"
+                                           aria-controls="tab_tax_gateways"
+                                           role="tab"> Tarifas e Prazos
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                         <div class="tab-content pt-10 pr-30 pl-30">
