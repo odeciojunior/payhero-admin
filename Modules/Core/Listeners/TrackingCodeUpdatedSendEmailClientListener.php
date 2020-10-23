@@ -76,16 +76,16 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                 if (!empty($projectNotificationSms)) {
                     //$link = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
                     $message = $projectNotificationSms->message;
-                    $smsMessage = $projectNotificationService->formatNotificationData($message, $sale, $project, 'sms', null, null, $event->tracking->tracking_code);
+                    $smsMessage = $projectNotificationService->formatNotificationData($message, $sale, $project, 'sms', null, null, $tracking->tracking_code);
                     if (!empty($smsMessage) && !empty($clientTelephone)) {
                         $smsService->sendSms($clientTelephone, $smsMessage);
                     }
                 }
                 if (!empty($projectNotificationEmail)) {
                     $message = json_decode($projectNotificationEmail->message);
-                    $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project, null, null, null, $event->tracking->tracking_code);
-                    $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project, null, null, null, $event->tracking->tracking_code);
-                    $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project, null, null, null, $event->tracking->tracking_code);
+                    $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project, null, null, null, $tracking->tracking_code);
                     $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                     $data = [
                         'name' => $clientName,
