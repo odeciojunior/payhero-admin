@@ -283,6 +283,8 @@ $(document).ready(function () {
     };
     $("#update_payment_tax_cnpj").unbind('click');
     $("#update_payment_tax_cnpj").on('click', function () {
+        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: `/api/companies/${companyIdCode}/updatetax`,
@@ -295,9 +297,11 @@ $(document).ready(function () {
                 gateway_release_payment: $("#gateway-release-payment").val(),
             },
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 $("#tax-payment").val(response.data.new_gateway_tax + '%');
                 initForm();

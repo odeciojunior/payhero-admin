@@ -14,14 +14,17 @@ var companyStatusTranslated = {
 
 var initForm = null;
 let companyIdCode = null;
+let gatewayTax = {
+    'plan-2': 6.9,
+    'plan-15': 6.5,
+    'plan-30': 5.9
+}
 
 $(document).ready(function () {
 
     initForm = function () {
 
         var encodedId = extractIdFromPathName();
-
-        loadOnAny('#tab_user');
 
         $.ajax({
             method: "GET",
@@ -33,13 +36,11 @@ $(document).ready(function () {
             },
             error: function (response) {
                 errorAjaxResponse(response);
-                loadOnAny('#tab_user', true);
             },
             success: function success(response) {
                 if (response.company.country === 'usa') {
                     $('#rounting_number').val(response.company.bank).trigger('input');
                     $('#account_routing_number').val(response.company.account);
-                    //$('#swift-code-info').show();
                     $('#company_update_bank_form').hide();
                     $('#company_bank_routing_number_form').show();
                 } else {
@@ -54,8 +55,8 @@ $(document).ready(function () {
                     $('#account_type').val(response.company.account_type);
                 }
 
+                let company = response.company;
                 if (response.company.capture_transaction_enabled) {
-                    let company = response.company;
                     companyIdCode = company.id_code;
 
                     $("#tax-payment").val(company.gateway_tax + '%')
@@ -72,7 +73,17 @@ $(document).ready(function () {
                             </option>
                         </select>
                     `);
-                    $('#nav_tax_gateways').removeAttr('hidden');
+                    $('#tab_tax_gateways .gateway-tax').removeAttr('hidden');
+                    $('#tab_tax_gateways .cielo-tax').hide();
+                } else {
+
+                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
+                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
+                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
+                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
+
+                    $('#tab_tax_gateways .cielo-tax').removeAttr('hidden');
+                    $('#tab_tax_gateways .gateway-tax').hide();
                 }
 
                 if (response.company.country === 'brazil') {
@@ -113,7 +124,11 @@ $(document).ready(function () {
                     $("#active_flag").attr('checked', false);
                 }
 
-                loadOnAny('#tab_user', true);
+
+                // update tax payment after change select input
+                $("#gateway-release-payment").on("change", function () {
+                    $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
+                })
             }
         });
     };
@@ -122,6 +137,8 @@ $(document).ready(function () {
 
     $("#update_payment_tax_cnpj").unbind('click');
     $("#update_payment_tax_cnpj").on('click', function () {
+        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: `/api/companies/${companyIdCode}/updatetax`,
@@ -134,12 +151,13 @@ $(document).ready(function () {
                 gateway_release_payment: $("#gateway-release-payment").val(),
             },
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 $("#tax-payment").val(response.data.new_gateway_tax + '%');
-                initForm();
             }
         });
     });
@@ -148,7 +166,6 @@ $(document).ready(function () {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_update_bank_form'));
         loadingOnScreen();
-
         var encodedId = extractIdFromPathName();
 
         if (!$('#active_flag').is(':checked')) {
@@ -167,6 +184,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
