@@ -188,7 +188,8 @@ class LoginController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Não foi possivel autenticar o usuário.'
+                'message' => 'Não foi possivel autenticar o usuário.',
+                'error' => $e->getMessage()
             ]);
         }
     }
