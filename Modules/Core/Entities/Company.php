@@ -57,6 +57,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $credit_card_release_money
  * @property int $account_type
  * @property int $social_value
+ * @property int $gateway_tax
+ * @property int $gateway_release_money_days
  * @property string $federal_registration_status_date
  * @property string $document_issue_date
  * @property string $document_issuer

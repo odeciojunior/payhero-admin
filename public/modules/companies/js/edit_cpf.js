@@ -13,6 +13,7 @@ var companyStatusTranslated = {
 };
 
 var initForm = null;
+let companyIdCode = null;
 
 $(document).ready(function () {
 
@@ -53,6 +54,27 @@ $(document).ready(function () {
                     $('#account_type').val(response.company.account_type);
                 }
 
+                if (response.company.capture_transaction_enabled) {
+                    let company = response.company;
+                    companyIdCode = company.id_code;
+
+                    $("#tax-payment").val(company.gateway_tax + '%')
+
+                    $(".select-gateway-tax").html('');
+
+                    $(".select-gateway-tax").append(`
+                        <select id="gateway-release-payment" class="form-control col-md-6">
+                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Apos postagem de rastreio valida (taxa de 6.9%)</option>
+                            <option value="plan-15" ${company.gateway_tax == 6.5 ? 'selected' : ''}>15 dias (taxa de 6.5%)</option>
+                            <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
+                            <option value="plan-tracking-code" disabled>
+                                Ao informar o código de rastreio (em breve)
+                            </option>
+                        </select>
+                    `);
+                    $('#nav_tax_gateways').removeAttr('hidden');
+                }
+
                 if (response.company.country === 'brazil') {
                     $('#agency').attr('maxlength', '4');
                 } else {
@@ -74,13 +96,6 @@ $(document).ready(function () {
                     Dropzone.forElement('#dropzoneDocumentsFisicPerson').removeAllFiles(true);
                     getDocuments(encodedId);
                 });
-
-                // if (response.company.has_project) {
-                //     $('#active_flag').prop('disabled', true);
-                // } else {
-                //     $('#active_flag').prop('disabled', false);
-                // }
-                // $('#active_flag').val(response.company.active_flag);
 
                 if (response.company.has_project) {
                     $('#active_flag').attr('disabled', true);
@@ -104,6 +119,30 @@ $(document).ready(function () {
     };
 
     initForm();
+
+    $("#update_payment_tax_cnpj").unbind('click');
+    $("#update_payment_tax_cnpj").on('click', function () {
+        $.ajax({
+            method: "POST",
+            url: `/api/companies/${companyIdCode}/updatetax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                gateway_release_payment: $("#gateway-release-payment").val(),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                alertCustom('success', response.message);
+                $("#tax-payment").val(response.data.new_gateway_tax + '%');
+                initForm();
+            }
+        });
+    });
 
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();

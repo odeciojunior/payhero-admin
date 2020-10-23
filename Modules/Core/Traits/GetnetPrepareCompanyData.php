@@ -54,7 +54,7 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit,
                 ]
             ],
-            'list_commissions' => $this->getListCommissions($company->user),
+            'list_commissions' => $this->getListCommissions($company),
             'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
@@ -217,7 +217,7 @@ trait GetnetPrepareCompanyData
         ];
     }
 
-    private function getListCommissions($user)
+    public function getListCommissions($gatewayData)
     {
         $listCommissions = [];
 
@@ -246,17 +246,6 @@ trait GetnetPrepareCompanyData
         foreach ($brands as $brand) {
             foreach ($products as $product) {
                 if (!in_array([$product, $brand], $listCommissions)) {
-                    switch ($product) {
-                        case 'BOLETO':
-                            $value = 100 - $user->boleto_tax;
-                            break;
-                        case 'DEBITO A VISTA':
-                            $value = 100 - $user->debit_card_tax;
-                            break;
-                        default:
-                            $value = 100 - $user->credit_card_tax;
-                    }
-
                     if ((in_array($brand, $brands)) && ($product == 'DEBITO A VISTA' || $product == 'BOLETO')) {
                         continue;
                     }
@@ -276,8 +265,8 @@ trait GetnetPrepareCompanyData
                     $listCommissions[] = [
                         'brand' => $brand,
                         'product' => $product,
-                        'commission_percentage' => $value,
-                        'payment_plan' => 3,
+                        'commission_percentage' => 100 - $gatewayData['gateway_tax'],
+                        'payment_plan' => $this->getPlans($gatewayData['gateway_release_money_days']),
                     ];
                 }
             }

@@ -23,16 +23,18 @@ class CompanyServiceGetnet
     {
         try {
             $getnetService = new GetnetBackOfficeService();
-            $dataUpdated = $getnetService->setTaxPlans($releaseMoneyDays['gateway_release_money_days']);
 
-            if (is_null($dataUpdated)) {
+            $paymentPlan = $getnetService->setTaxPlans($releaseMoneyDays['gateway_release_money_days']);
+            if (is_null($paymentPlan)) {
                 return false;
             }
 
             if ($this->companyModel->present()->getCompanyType($this->company->company_type) == 'physical person') {
+                $listCommission = $getnetService->getListCommissions($releaseMoneyDays);
+                $dataUpdated = array_merge($paymentPlan, ['list_commissions' => $listCommission]);
                 $result = $getnetService->updatePfCompany($this->company, $dataUpdated);
             } else {
-                $result = $getnetService->updatePjCompany($this->company, $dataUpdated);
+                $result = $getnetService->updatePjCompany($this->company, $paymentPlan);
             }
 
             if (!empty($result) && !empty(json_decode($result)->success) && json_decode($result)->success == true) {

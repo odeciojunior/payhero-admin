@@ -84,10 +84,10 @@ class CompaniesApiController extends Controller
                 ]
             );
 
-            return response()->json(
-                ['message' => 'Empresa cadastrada com sucesso', 'idEncoded' => Hashids::encode($company->id)],
-                Response::HTTP_OK
-            );
+            return response()->json([
+                'message' => 'Empresa cadastrada com sucesso',
+                'idEncoded' => Hashids::encode($company->id)
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -99,39 +99,31 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-
             $bankService = new BankService();
-
-            $companyService = new CompanyService();
 
             $company = $companyModel
                 ->with('user', 'companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
 
-            if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks($company->country ?? 'brazil');
-
-                $companyResource = null;
-                if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
-                    $companyResource = new CompanyResource($company);
-                } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
-                    $companyResource = new CompanyCpfResource($company);
-                }
-                return response()->json(
-                    [
-                        'company' => $companyResource,
-                        'banks' => $banks,
-                    ],
-                    Response::HTTP_OK
-                );
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para editar a empresa',
-                    ],
-                    Response::HTTP_FORBIDDEN
-                );
+            if (!Gate::allows('edit', [$company])) {
+                return response()->json([
+                    'message' => 'Sem permissão para editar a empresa',
+                ], 400);
             }
+            $banks = $bankService->getBanks($company->country ?? 'brazil');
+
+            $companyResource = null;
+
+            if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
+                $companyResource = new CompanyResource($company);
+            } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
+                $companyResource = new CompanyCpfResource($company);
+            }
+
+            return response()->json([
+                'company' => $companyResource,
+                'banks' => $banks,
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -617,11 +609,11 @@ class CompaniesApiController extends Controller
 
             $company = Company::find(current(Hashids::decode($companyId)));
 
-            if (FoxUtils::isEmpty($company)) {
+            if (FoxUtils::isEmpty($company) || $company->getn) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
             }
-
-            $updateGetnet = (new CompanyServiceGetnet($company))->updateTaxCompanyGetnet($gatewayTax[$request->get('gateway_release_payment')]);
+            $companyServiceGetnet = new CompanyServiceGetnet($company);
+            $updateGetnet = $companyServiceGetnet->updateTaxCompanyGetnet($gatewayTax[$request->get('gateway_release_payment')]);
 
             if (!$updateGetnet) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
