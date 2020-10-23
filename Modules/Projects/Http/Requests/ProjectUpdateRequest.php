@@ -55,6 +55,7 @@ class ProjectUpdateRequest extends FormRequest
             "billet_discount"            => 'int|max:100',
             "pre_selected_installment"   => 'nullable',
             "required_email_checkout"    => 'nullable',
+            "document_type_checkout"    => 'nullable',
         ];
     }
 

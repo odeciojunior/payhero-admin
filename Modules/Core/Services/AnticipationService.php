@@ -177,7 +177,6 @@ class AnticipationService
                     $trackingPresenter = (new Tracking())->present();
                     $status = [
                         $trackingPresenter->getSystemStatusEnum('valid'),
-                        $trackingPresenter->getSystemStatusEnum('ignored'),
                         $trackingPresenter->getSystemStatusEnum('checked_manually'),
                     ];
                     $trackingsQuery->whereIn('system_status_enum', $status);

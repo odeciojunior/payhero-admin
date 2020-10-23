@@ -49,7 +49,7 @@ class GetNetStatementService
                     }
                 }
 
-                $statement = [
+                $statement = (object) [
                     //'id' => $id,
                     //'orderId' => Hashids::connection('sale_id')->encode(737634),
                     'orderId' => $arrayOrderId[0],

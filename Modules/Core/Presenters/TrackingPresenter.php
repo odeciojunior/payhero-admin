@@ -31,7 +31,6 @@ class TrackingPresenter extends Presenter
             3 => 'unknown_carrier', // O código não foi reconhecido por nenhuma transportadora
             4 => 'posted_before_sale', // A data de postagem da remessa é anterior a data da venda
             5 => 'duplicated', // Já existe uma venda com esse código de rastreio cadastrado
-            6 => 'ignored', // Código ignorado pela plataforma (no Manager)
             7 => 'checked_manually', // Código de rastreio verificado manualmente (no Manager)
         ];
 
