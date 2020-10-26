@@ -11,8 +11,8 @@ var statusDocumentUser = {
     refused: 'Recusado',
 };
 
-let disabledCompany = true;
-let companyVerification = false;
+let disabledCompany = false;
+let companyVerification = true;
 $(document).ready(function () {
     updateInvites();
     var currentPage = 1;
@@ -180,10 +180,10 @@ $(document).ready(function () {
                         var selCompany = '';
                         selCompany = '<select class="select-company-list">';
 
-                        disabledCompany = true;
+                        disabledCompany = false;
                         $.each(response.data, function (index, value) {
                             contCompanies++;
-                            if (value.fantasy_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.fantasy_name === 'WALLISON VICTOR DE LIMA 05111953116') {
+                            // if (value.fantasy_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.fantasy_name === 'WALLISON VICTOR DE LIMA 05111953116') {
                                 if (value.type_company === 'physical person') {
                                     if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
                                         disabledCompany = false;
@@ -203,7 +203,7 @@ $(document).ready(function () {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
                                     }
                                 }
-                            }
+                            // }
 
                         });
                         selCompany += '</select>';
