@@ -55,6 +55,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $get_net_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money
+ * @property int $capture_transaction_enabled
  * @property int $account_type
  * @property int $social_value
  * @property int $gateway_tax
