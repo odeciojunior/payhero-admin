@@ -193,7 +193,7 @@
             <!-- Notícias e Releases -->
             <div class="row">
                 <div class="col-lg-8" id="news-col" style="display:none">
-                    <div id="carouselNews" class="carousel slide" data-ride="carousel">
+                    <div id="carouselNews" class="carousel slide" data-ride="carousel" data-interval="15000">
                         <ol class="carousel-indicators">
                         </ol>
                         <div class="carousel-inner">
