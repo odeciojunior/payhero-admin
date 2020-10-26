@@ -10,7 +10,7 @@
             <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
-            <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
+            <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
             <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div style="width: 20%">
@@ -149,9 +149,6 @@
                     </div>
                     <!-- Not Approved documents companies -->
                     <div id='modal-not-approved-document-companies' class='modal-content p-10' style='display: none;'>
-                        <div class='header-modal simple-border-bottom'>
-                            <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
-                        </div>
                         <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
                             <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
                             <span class='swal2-x-mark'>
@@ -159,7 +156,7 @@
                                 <span class='swal2-x-mark-line-right'></span>
                             </span>
                             </div>
-                            <h3 align='center'>Para enviar convites todos os documentos precisam estar aprovados!</h3>
+                            <h3 align='center'>Para enviar convites a transação e todos os documentos precisam estar aprovados!</h3>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
                         <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>

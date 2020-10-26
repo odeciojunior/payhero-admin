@@ -313,15 +313,15 @@ class SendgridService
     {
         try {
             //Em produção valida o e-mail e local marreta e-mail de teste
-            if (env('APP_ENV') == 'production') {
+//            if (env('APP_ENV') == 'production') {
                 if (!FoxUtils::validateEmail($toEmail)) {
                     return false;
                 }
-            } else {
-                $toEmail = env('APP_EMAIL_TEST');
-                if (empty($toEmail)) {
-                    return false;
-                }
+//            } else {
+//                $toEmail = env('APP_EMAIL_TEST');
+//                if (empty($toEmail)) {
+//                    return false;
+//                }
             }
 
 

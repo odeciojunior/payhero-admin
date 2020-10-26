@@ -183,12 +183,12 @@ $(document).ready(function () {
                         disabledCompany = false;
                         $.each(response.data, function (index, value) {
                             contCompanies++;
-                            // if (value.fantasy_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.fantasy_name === 'WALLISON VICTOR DE LIMA 05111953116') {
+                            if (value.capture_transaction_enabled) {
                                 if (value.type_company === 'physical person') {
                                     if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> TESTE1 ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
 
@@ -198,12 +198,14 @@ $(document).ready(function () {
                                     if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> TESTE2 ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
                                     }
                                 }
-                            // }
+                            } else {
+                                contCompaniesNotApproved++
+                            }
 
                         });
                         selCompany += '</select>';
