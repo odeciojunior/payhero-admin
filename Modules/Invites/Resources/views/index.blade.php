@@ -156,7 +156,7 @@
                                 <span class='swal2-x-mark-line-right'></span>
                             </span>
                             </div>
-                            <h3 align='center'>Para enviar convites a transação e todos os documentos precisam estar aprovados!</h3>
+                            <h3 align='center'>Para enviar convites, a transação e todos os documentos precisam estar aprovados!</h3>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
                         <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
