@@ -101,4 +101,35 @@ class ProjectPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @param $type
+     * @return int|string
+     */
+    public function getDocumentTypeCheckout($type)
+    {
+        if (is_numeric($type)) {
+            switch ($type) {
+                case 1:
+                    return 'CPF';
+                case 2:
+                    return 'CNPJ';
+                case 3:
+                    return 'CPF/CNPJ';
+            }
+
+            return '';
+        } else {
+            switch ($type) {
+                case 'CPF':
+                    return 1;
+                case 'CNPJ':
+                    return 2;
+                case 'CPF/CNPJ':
+                    return 3;
+            }
+
+            return '';
+        }
+    }
 }

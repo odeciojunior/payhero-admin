@@ -40,6 +40,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Collection $productPlanSales
  * @property Collection $productPlans
  * @property Collection $variants
+ * @method ProductPresenter present()
  */
 class Product extends Model
 {

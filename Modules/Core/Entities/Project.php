@@ -116,6 +116,7 @@ class Project extends Model
         'billet_discount',
         'pre_selected_installment',
         'required_email_checkout',
+        'document_type_checkout',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -4,54 +4,79 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\User;
-use Modules\Core\Services\AwsSns;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Core\Services\TrackingmoreService;
-use Illuminate\Database\Eloquent\Builder;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\CheckoutService;
 
-
-/**
- * Class GenericCommand
- * @package App\Console\Commands
- */
 class GenericCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     * @var string
-     */
     protected $signature = 'generic {user?}';
-    /**
-     * The console command description.
-     * @var string
-     */
+
     protected $description = 'Command description';
 
     public function handle()
     {
-        /*$companies = Company::whereHas('user', function ($q) {
-            $q->where('credit_card_release_money_days', '<', 15);
-        })->whereNotNull('braspag_merchant_id')->get();
+        try {
+            $salesModel = new Sale();
+            $trackingPresenter = (new Tracking())->present();
+            $productPresenter = (new Product())->present();
+            $checkoutService = new CheckoutService();
 
-        $companiesVerified = [];
+            $salesQuery = $salesModel::with([
+                'productsPlansSale.tracking',
+                'productsPlansSale.product',
+            ])->whereIn('status', [1, 4])
+                ->where('has_valid_tracking', false)
+                ->whereHas('productsPlansSale', function ($query) use ($productPresenter) {
+                    $query->whereHas('product', function ($query) use ($productPresenter) {
+                        $query->where('type_enum', $productPresenter->getType('physical'));
+                    });
+                })
+                ->where('start_date', '>=', '2020-10-16 00:00:00')
+                ->orderByDesc('id');
 
-        foreach ($companies as $company) {
-            $companiesVerified[] = [
-                "name" => FoxUtils::removeAccents($company->fantasy_name),
-                "braspag_merchant_id" => $company->braspag_merchant_id
-            ];
+            $total = $salesQuery->count();
+            $count = 1;
+
+            $salesQuery->chunk(60,
+                function ($sales) use ($total, &$count, $checkoutService, $trackingPresenter, $productPresenter) {
+                    foreach ($sales as $sale) {
+                        $this->line("Verificando venda {$count} de {$total}: {$sale->id}...");
+                        try {
+                            foreach ($sale->productsPlansSale as $pps) {
+                                if ($pps->product->type_enum == $productPresenter->getType('physical')) {
+                                    $hasInvalidOrNotInformedTracking = is_null($pps->tracking) || !in_array($pps->tracking->system_status_enum,
+                                            [
+                                                $trackingPresenter->getSystemStatusEnum('valid'),
+                                                $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                                            ]);
+                                    if ($hasInvalidOrNotInformedTracking) {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!$hasInvalidOrNotInformedTracking) {
+                                $sale->has_valid_tracking = true;
+                                $sale->save();
+                                $checkoutService->releasePaymentGetnet($sale->id);
+
+                                $this->info("Venda liberada!");
+                            } else {
+                                $this->line("Venda ainda não liberada!");
+                            }
+                        } catch (Exception $e) {
+                            $this->error('ERROR:'.$e->getMessage());
+                        }
+                        $count++;
+                    }
+                    $this->warn('Aguardando 60 segundos...');
+                    sleep(60);
+                });
+        } catch (Exception $e) {
+            report($e);
         }
-
-
-        dd($companiesVerified);*/
     }
 }
 

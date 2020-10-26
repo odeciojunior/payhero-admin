@@ -103,7 +103,7 @@ class SplitPaymentPartialRefundService
                 $affiliateValue      = intval((($this->totalValue - $this->cloudfoxValue) / 100) * $affiliate->percentage);
                 $this->producerValue -= $affiliateValue;
 
-                $invite = Invitation::where([
+                $invite = Invitation::with('company')->where([
                                                 ['user_invited', $affiliate->user_id],
                                                 ['status', (new Invitation)->present()->getStatus('accepted')],
                                             ])->first();
@@ -131,11 +131,17 @@ class SplitPaymentPartialRefundService
                 }
 
                 if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
-                    $percentageRate   = $this->sale->user->credit_card_tax;
+                    if ($invite->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                        $percentageRate = $invite->company->gateway_tax;
+                    }else{
+                        $percentageRate = $invite->company->credit_card_tax;
+                    }
                 } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
-                    $percentageRate = $this->sale->user->boleto_tax;
-                } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('debito')) {
-                    $percentageRate   = $this->sale->user->debit_card_tax;
+                    if ($invite->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                        $percentageRate = $invite->company->gateway_tax;
+                    }else{
+                        $percentageRate = $invite->company->boleto_tax;
+                    }
                 }
 
                 if (preg_replace("/[^0-9]/", "", $this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == (new Sale)->present()
@@ -283,11 +289,17 @@ class SplitPaymentPartialRefundService
         }
 
         if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
-            $percentageRate   = $this->sale->user->credit_card_tax;
+            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                $percentageRate = $producerCompany->gateway_tax;
+            }else{
+                $percentageRate = $producerCompany->credit_card_tax;
+            }
         } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
-            $percentageRate = $this->sale->user->boleto_tax;
-        } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('debito')) {
-            $percentageRate   = $this->sale->user->debit_card_tax;
+            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                $percentageRate = $producerCompany->gateway_tax;
+            }else{
+                $percentageRate = $producerCompany->boleto_tax;
+            }
         }
 
         $transactionsRefunded = $this->refundedTransactions;
@@ -304,7 +316,7 @@ class SplitPaymentPartialRefundService
                                 'percentage_rate'  => $percentageRate,
                                 'transaction_rate' => $transactionRate,
                                 'type'             => (new Transaction)->present()->getType('producer'),
-                                'installment_tax'  => $this->sale->user->installment_tax,
+                                'installment_tax'  => $producerCompany->installment_tax,
                             ]);
 
         return $this;

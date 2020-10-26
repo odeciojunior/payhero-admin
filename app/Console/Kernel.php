@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:DisableUserAntecipation')->dailyAt('02:00');
 
         //restart all shopify webhooks from shopify integrations
-        $schedule->command('restartShopifyWebhooks')->weekly();
+//        $schedule->command('restartShopifyWebhooks')->weekly();
 
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
@@ -91,9 +91,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:checkUpdateCompanyGetnet')->dailyAt('20:00');
 
         // Check companies update status on braspag
-        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('08:00');
+        /*$schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('08:00');
         $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('12:00');
-        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('20:00');
+        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('20:00');*/
 
         //check invites expired
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');

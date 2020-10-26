@@ -38,12 +38,28 @@ class SplitPaymentService
             $companyModel              = new Company();
             $invitationModel           = new Invitation();
             $convertaxIntegrationModel = new ConvertaxIntegration();
+
+            $userProject = $userProjectModel->with('company')->where([
+                                                                   [
+                                                                       'type_enum', (new UserProject)->present()
+                                                                                                     ->getTypeEnum('producer'),
+                                                                   ],
+                                                                   ['project_id', $project->id],
+                                                               ])->first();
+            $producerCompany = $userProject->company;
+
             if ($sale->payment_method == 1) {
-                $percentageRate = $user->credit_card_tax;
+                if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                    $percentageRate = $producerCompany->gateway_tax;
+                }else{
+                    $percentageRate = $producerCompany->credit_card_tax;
+                }
             } else if ($sale->payment_method == 2) {
-                $percentageRate = $user->boleto_tax;
-            } else if ($sale->payment_method == 3) {
-                $percentageRate = $user->debit_card_tax;
+                if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                    $percentageRate = $producerCompany->gateway_tax;
+                }else{
+                    $percentageRate = $producerCompany->boleto_tax;
+                }
             } else {
                 $percentageRate = 6.5;
             }

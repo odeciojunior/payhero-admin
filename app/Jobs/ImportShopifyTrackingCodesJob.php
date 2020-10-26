@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TrackingService;
@@ -90,17 +89,10 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                             $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
 
                                         if ($products->count()) {
-                                            foreach ($products as &$product) {
+                                            foreach ($products as $product) {
                                                 $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
 
-                                                $tracking = $trackingService->createOrUpdateTracking($trackingCode,
-                                                    $productPlanSale);
-
-                                                if (!empty($tracking)) {
-                                                    $product->tracking_code = $trackingCode;
-                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking,
-                                                        $saleProducts));
-                                                }
+                                                $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
                                             }
                                         }
                                     }

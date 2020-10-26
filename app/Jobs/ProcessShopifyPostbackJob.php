@@ -8,12 +8,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 
@@ -46,6 +44,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws PresenterException
      */
     public function handle()
     {
@@ -64,6 +63,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                 'productsPlansSale.product'
             ])->where('shopify_order', $shopifyOrder)
                 ->where('project_id', $projectId)
+                ->where('status', $salesModel->present()->getStatus('approved'))
                 ->get();
 
             foreach ($sales as $sale) {
@@ -79,17 +79,9 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                                 $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
                                     ->where('amount', $line_item["quantity"])->where('type_enum', (new Product)->present()->getType('physical'));
                                 if ($products->count()) {
-                                    foreach ($products as &$product) {
-
+                                    foreach ($products as $product) {
                                         $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-
-                                        $tracking = $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
-
-                                        if(!empty($tracking)) {
-                                            //atualiza no array de produtos para enviar no email
-                                            $product->tracking_code = $trackingCode;
-                                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                        }
+                                        $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
                                     }
                                 }
                             }

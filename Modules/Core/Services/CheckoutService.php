@@ -240,18 +240,18 @@ class CheckoutService
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
             if ($response->status == 'success' && $response->response->status == 'success') {
-                $saleModel  = new Sale();
+                // $saleModel  = new Sale();
                 $dataUpdate = (array) $response->response->response;
-                if (!empty($dataUpdate['gateway_received_date'])) {
-                    unset($dataUpdate['gateway_received_date']);
-                }
-                $check = $saleModel->where('id', $saleIdDecode)
-                                   ->update(array_merge($dataUpdate,
-                                                        [
-                                                            'start_date'       => Carbon::now(),
-                                                            'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
-                                                        ]));
-                if ($check) {
+                // if (!empty($dataUpdate['gateway_received_date'])) {
+                //     unset($dataUpdate['gateway_received_date']);
+                // }
+                // $check = $saleModel->where('id', $saleIdDecode)
+                //                    ->update(array_merge($dataUpdate,
+                //                                         [
+                //                                             'start_date'       => Carbon::now(),
+                //                                             'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
+                //                                         ]));
+                // if ($check) {
                     RegeneratedBillet::create([
                                                   'sale_id'                      => $saleIdDecode,
                                                   'billet_link'                  => $dataUpdate['boleto_link'],
@@ -263,28 +263,28 @@ class CheckoutService
                                                   'owner_id'                     => $sale->owner_id,
                                               ]);
 
-                    $transactionModel = new Transaction();
-                    $sale             = $saleModel::with('project.domains')
-                                                  ->where('id', $saleIdDecode)
-                                                  ->first();
-                    $transactionModel->where('sale_id', $saleIdDecode)->delete();
+                    // $transactionModel = new Transaction();
+                    // $sale             = $saleModel::with('project.domains')
+                    //                               ->where('id', $saleIdDecode)
+                    //                               ->first();
+                    // $transactionModel->where('sale_id', $saleIdDecode)->delete();
 
-                    $splitPaymentService = new SplitPaymentService();
+                    // $splitPaymentService = new SplitPaymentService();
 
-                    $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
+                    // $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
                     $result = [
                         'status'   => 'success',
                         'message'  => print_r($response->message, true) ?? '',
                         'response' => $response,
                     ];
-                } else {
-                    $result = [
-                        'status'   => 'error',
-                        'error'    => 'error',
-                        'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
-                        'response' => $response,
-                    ];
-                }
+                // } else {
+                //     $result = [
+                //         'status'   => 'error',
+                //         'error'    => 'error',
+                //         'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
+                //         'response' => $response,
+                //     ];
+                // }
             } else {
                 $result = [
                     'status'   => 'error',
@@ -306,6 +306,21 @@ class CheckoutService
         }
     }
 
+    public function releasePaymentGetnet($saleId){
+
+        if (FoxUtils::isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/releasepaymentgetnet';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
+        }
+
+        $data = [
+            'sale_id' => Hashids::connection('sale_id')->encode($saleId)
+        ];
+
+        return $this->runCurl($url, 'POST', $data);
+    }
+
     /**
      * @param $url
      * @param string $method
@@ -314,13 +329,13 @@ class CheckoutService
      * @throws Exception
      * @description GET/POST/PUT/DELETE
      */
-    public function runCurl($url, $method = 'GET', $data = null)
+    private function runCurl($url, $method = 'GET', $data = null)
     {
         try {
             $this->internalApiToken = env('ADMIN_TOKEN');
             $headers                = [
                 'Content-Type: application/json',
-                'Accpet: application/json',
+                'Accept: application/json',
             ];
             if (!empty($this->internalApiToken)) {
                 $headers[] = 'Api-name:ADMIN';

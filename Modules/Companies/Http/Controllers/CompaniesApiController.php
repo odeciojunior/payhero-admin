@@ -5,25 +5,26 @@ namespace Modules\Companies\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Companies\Transformers\CompanyDocumentsResource;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Project;
-use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\FoxUtils;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Modules\Core\Services\BankService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Entities\CompanyDocument;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Companies\Transformers\CompanyCpfResource;
+use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompanyCpfResource;
+use Modules\Companies\Transformers\CompanyDocumentsResource;
+use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Project;
+use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CompaniesController
@@ -43,7 +44,6 @@ class CompaniesApiController extends Controller
 
             return $companyService->getCompaniesUser($paginate);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados companies CompaniesApiController - index');
             report($e);
 
             return response()->json(
@@ -84,10 +84,10 @@ class CompaniesApiController extends Controller
                 ]
             );
 
-            return response()->json(
-                ['message' => 'Empresa cadastrada com sucesso', 'idEncoded' => Hashids::encode($company->id)],
-                Response::HTTP_OK
-            );
+            return response()->json([
+                'message' => 'Empresa cadastrada com sucesso',
+                'idEncoded' => Hashids::encode($company->id)
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -99,39 +99,31 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-
             $bankService = new BankService();
-
-            $companyService = new CompanyService();
 
             $company = $companyModel
                 ->with('user', 'companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
 
-            if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks($company->country ?? 'brazil');
-
-                $companyResource = null;
-                if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
-                    $companyResource = new CompanyResource($company);
-                } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
-                    $companyResource = new CompanyCpfResource($company);
-                }
-                return response()->json(
-                    [
-                        'company' => $companyResource,
-                        'banks' => $banks,
-                    ],
-                    Response::HTTP_OK
-                );
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para editar a empresa',
-                    ],
-                    Response::HTTP_FORBIDDEN
-                );
+            if (!Gate::allows('edit', [$company])) {
+                return response()->json([
+                    'message' => 'Sem permissão para editar a empresa',
+                ], 400);
             }
+            $banks = $bankService->getBanks($company->country ?? 'brazil');
+
+            $companyResource = null;
+
+            if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
+                $companyResource = new CompanyResource($company);
+            } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
+                $companyResource = new CompanyCpfResource($company);
+            }
+
+            return response()->json([
+                'company' => $companyResource,
+                'banks' => $banks,
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -186,7 +178,7 @@ class CompaniesApiController extends Controller
             }
 
             $company->update($requestData);
-            $dataUpdate = $companyService->getChangesUpdateBankData($company);
+            $dataBankAccountUpdated = $companyService->getChangesUpdateBankData($company);
 
             if ($companyService->verifyFieldsEmpty($company)) {
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
@@ -550,11 +542,11 @@ class CompaniesApiController extends Controller
     public function checkBraspagCompany()
     {
         try {
-            $user          = auth()->user();
-            $companyModel  = new Company();
-            $columnName    = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+            $user = auth()->user();
+            $companyModel = new Company();
+            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
             $hasMerchantId = $companyModel->whereNotNull($columnName)
-                                          ->where('user_id', $user->account_owner_id)->exists();
+                ->where('user_id', $user->account_owner_id)->exists();
 
             return response()->json(
                 [
@@ -565,6 +557,84 @@ class CompaniesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
+        }
+    }
+
+    public function checkStatementAvailable()
+    {
+        try {
+            $user = auth()->user();
+
+            $hasSubsellerId = Company::whereNotNull('subseller_getnet_id')
+                ->whereGetNetStatus(1)
+                ->where('user_id', $user->account_owner_id)
+                ->exists();
+
+            return response()->json(
+                [
+                    'has_subseller_id' => $hasSubsellerId,
+                    'env' => env("APP_ENV", "local"),
+                ], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar empresas'], 400);
+        }
+    }
+
+    public function updateTax(Request $request, $companyId)
+    {
+        try {
+            if (FoxUtils::isEmpty($request->get('gateway_release_payment')) || FoxUtils::isEmpty($companyId)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!']);
+            }
+
+            $gatewayTax = [
+                'plan-2' => [
+                    'gateway_tax' => '6.9',
+                    'gateway_release_money_days' => 2,
+                ],
+                'plan-15' => [
+                    'gateway_tax' => '6.5',
+                    'gateway_release_money_days' => 15,
+                ],
+                'plan-30' => [
+                    'gateway_tax' => '5.9',
+                    'gateway_release_money_days' => 30,
+                ],
+            ];
+
+            if (!array_key_exists($request->get('gateway_release_payment'), $gatewayTax)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+
+            $company = Company::find(current(Hashids::decode($companyId)));
+
+            if (FoxUtils::isEmpty($company) || $company->getn) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+            $companyServiceGetnet = new CompanyServiceGetnet($company);
+            $updateGetnet = $companyServiceGetnet->updateTaxCompanyGetnet($gatewayTax[$request->get('gateway_release_payment')]);
+
+            if (!$updateGetnet) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+            }
+
+            $companyUpdated = $company->update($gatewayTax[$request->get('gateway_release_payment')]);
+
+            if ($companyUpdated) {
+                return response()->json([
+                    'message' => 'Taxa atualizado com sucesso!',
+                    'data' => [
+                        'new_gateway_tax' => $gatewayTax[$request->get('gateway_release_payment')]['gateway_tax']
+                    ]
+                ], 200);
+            }
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
     }
 }

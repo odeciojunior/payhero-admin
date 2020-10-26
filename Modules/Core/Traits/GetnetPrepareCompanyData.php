@@ -5,13 +5,9 @@ namespace Modules\Core\Traits;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 
-/**
- * Trait GetNetPrepareDataTrait
- * @package Modules\Core\Traits
- */
 trait GetnetPrepareCompanyData
 {
-    private $urlCallback = 'https://app.cloudfox.net/postback/getnet';
+    private string $urlCallback = 'https://app.cloudfox.net/postback/getnet';
 
     public function getPrepareDataCreatePfCompany(Company $company)
     {
@@ -58,7 +54,7 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit,
                 ]
             ],
-            'list_commissions' => $this->getListCommissions($company->user),
+            'list_commissions' => $this->getListCommissions($company),
             'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
@@ -100,13 +96,10 @@ trait GetnetPrepareCompanyData
 
     public function getPrepareDataUpdatePfCompany(Company $company)
     {
-        $user = $company->user;
-        $userInformation = $user->userInformation;
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
-            'email' => $user->email,
         ];
     }
 
@@ -217,85 +210,14 @@ trait GetnetPrepareCompanyData
 
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
-        $user = $company->user;
-        $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
-
-        $stateFiscal = [
-            'SERVIÇO É ISENTO',
-            'SEM INSCRIÇÃO',
-            'INSENTO',
-            'n/e',
-            'Não Possui',
-            'Nao possui',
-            'nao possui',
-            'não possui',
-            'não se aplica',
-            'nao tem',
-            'Não tem',
-            'não',
-            '00000000',
-            '000000000000',
-            '000',
-            'ISENTO',
-            'isento',
-            'Isento',
-            'Insento',
-            'Isenta',
-            'Não Contribuinte'
-        ];
-
-        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 4
-            || in_array($company->state_fiscal_document_number, $stateFiscal)
-        ) {
-            $stateFiscalNumber = 'ISENTO';
-        } else {
-            $stateFiscalNumber = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
-        }
-
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
             'legal_document_number' => $company->company_document,
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
-                ],
-            ],
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'block_payments' => 'N',
-            'block_transactions' => 'N',
-            'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
-            'economic_activity_classification_code' => FoxUtils::onlyNumbers(
-                $company->economic_activity_classification_code
-            ),
-            'state_fiscal_document_number' => $stateFiscalNumber,
-            'federal_registration_status' => 'active',
-            'email' => $company->support_email,
-            'business_address' => [
-                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
-                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                'state' => $company->state,
-                'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
-            ],
-            'phone' => [
-                'area_code' => $telephone['dd'],
-                'phone_number' => $telephone['number']
-            ],
-
         ];
     }
 
-
-    private function getListCommissions($user)
+    public function getListCommissions($gatewayData)
     {
         $listCommissions = [];
 
@@ -324,17 +246,6 @@ trait GetnetPrepareCompanyData
         foreach ($brands as $brand) {
             foreach ($products as $product) {
                 if (!in_array([$product, $brand], $listCommissions)) {
-                    switch ($product) {
-                        case 'BOLETO':
-                            $value = 100 - $user->boleto_tax;
-                            break;
-                        case 'DEBITO A VISTA':
-                            $value = 100 - $user->debit_card_tax;
-                            break;
-                        default:
-                            $value = 100 - $user->credit_card_tax;
-                    }
-
                     if ((in_array($brand, $brands)) && ($product == 'DEBITO A VISTA' || $product == 'BOLETO')) {
                         continue;
                     }
@@ -354,14 +265,41 @@ trait GetnetPrepareCompanyData
                     $listCommissions[] = [
                         'brand' => $brand,
                         'product' => $product,
-                        'commission_percentage' => $value,
-                        'payment_plan' => 3,
+                        'commission_percentage' => 100 - $gatewayData['gateway_tax'],
+                        'payment_plan' => $this->getPlans($gatewayData['gateway_release_money_days']),
                     ];
                 }
             }
         }
 
         return $listCommissions;
+    }
+
+    public function setTaxPlans($releaseMoneyDays)
+    {
+        $paymentPlanId = $this->getPlans($releaseMoneyDays);
+
+        if (in_array($paymentPlanId, [3, 5, 8])) {
+            return ['payment_plan' => $paymentPlanId];
+        }
+
+        return null;
+    }
+
+    private function getPlans($releaseMoneyDays)
+    {
+        $plans = [
+            'plans' => [
+                'days' => [
+                    2 => 3,
+                    15 => 8,
+                    30 => 5
+                ],
+            ]
+        ];
+
+
+        return $plans['plans']['days'][$releaseMoneyDays];
     }
 }
 

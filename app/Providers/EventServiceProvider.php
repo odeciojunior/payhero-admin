@@ -2,23 +2,6 @@
 
 namespace App\Providers;
 
-use Modules\Core\Events\BilletPaidEvent;
-use Modules\Core\Events\BilletRefundedEvent;
-use Modules\Core\Events\SaleRefundedEvent;
-use Modules\Core\Events\SaleRefundedPartialEvent;
-use Modules\Core\Events\BilletExpiredEvent;
-use Modules\Core\Listeners\BilletPaidHotZappListener;
-use Modules\Core\Listeners\BilletPaidSendEmailListener;
-use Modules\Core\Listeners\BilletPaidUnicodropListener;
-use Modules\Core\Listeners\BilletPaidWhatsapp2Listener;
-use Modules\Core\Listeners\BilletRefundedSendEmailListener;
-use Modules\Core\Listeners\SaleRefundedSendEmailListener;
-use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
-use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
-use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
-use Modules\Core\Listeners\SaleRefundedPartialSendEmailListener;
-use Modules\Core\Listeners\BilletPaidHotsacListener;
-use Modules\Core\Listeners\BilletPaidReportanaListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -32,96 +15,99 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        BilletPaidEvent::class => [
-            BilletPaidActiveCampaignListener::class,
-            BilletPaidHotZappListener::class,
-            BilletPaidSendEmailListener::class,
-            BilletPaidWhatsapp2Listener::class,
-            BilletPaidHotsacListener::class,
-            BilletPaidReportanaListener::class,
-//            BilletPaidUnicodropListener::class,
+        \Modules\Core\Events\BilletPaidEvent::class => [
+            \Modules\Core\Listeners\BilletPaidActiveCampaignListener::class,
+            \Modules\Core\Listeners\BilletPaidHotZappListener::class,
+            \Modules\Core\Listeners\BilletPaidSendEmailListener::class,
+            \Modules\Core\Listeners\BilletPaidWhatsapp2Listener::class,
+            \Modules\Core\Listeners\BilletPaidHotsacListener::class,
+            \Modules\Core\Listeners\BilletPaidReportanaListener::class,
+//            \Modules\Core\Listeners\BilletPaidUnicodropListener::class,
         ],
-        BilletExpiredEvent::class => [
-            BilletExpiredWhatsapp2Listener::class,
+        \Modules\Core\Events\BilletExpiredEvent::class => [
+            \Modules\Core\Listeners\BilletExpiredWhatsapp2Listener::class,
         ],
-        SaleRefundedEvent::class => [
-            SaleRefundedWhatsapp2Listener::class,
-            SaleRefundedSendEmailListener::class,
+        \Modules\Core\Events\SaleRefundedEvent::class => [
+            \Modules\Core\Listeners\SaleRefundedWhatsapp2Listener::class,
+            \Modules\Core\Listeners\SaleRefundedSendEmailListener::class,
         ],
-        SaleRefundedPartialEvent::class => [
-            SaleRefundedPartialSendEmailListener::class,
+        \Modules\Core\Events\SaleRefundedPartialEvent::class => [
+            \Modules\Core\Listeners\SaleRefundedPartialSendEmailListener::class,
         ],
-        BilletRefundedEvent::class => [
-            BilletRefundedSendEmailListener::class,
+        \Modules\Core\Events\BilletRefundedEvent::class => [
+            \Modules\Core\Listeners\BilletRefundedSendEmailListener::class,
         ],
-        'Modules\Core\Events\ShopifyIntegrationEvent' => [
-            'Modules\Core\Listeners\ImportShopifyStoreListener',
+        \Modules\Core\Events\ShopifyIntegrationEvent::class => [
+            \Modules\Core\Listeners\ImportShopifyStoreListener::class,
         ],
-        'Modules\Core\Events\ShopifyIntegrationReadyEvent' => [
-            'Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener',
-            'Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener',
+        \Modules\Core\Events\ShopifyIntegrationReadyEvent::class => [
+            \Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener::class,
+            \Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener::class,
         ],
-        'Modules\Core\Events\DomainApprovedEvent' => [
-            'Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener',
-            'Modules\Core\Listeners\DomainApprovedNotifyUserListener',
-            'Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener',
+        \Modules\Core\Events\DomainApprovedEvent::class => [
+            \Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener::class,
+            \Modules\Core\Listeners\DomainApprovedNotifyUserListener::class,
+            \Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener::class,
         ],
-        'Modules\Core\Events\BoletoPaidEvent' => [
-            'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
-            'Modules\Core\Listeners\BoletoPaidNotifyUser',
-            'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
+        \Modules\Core\Events\BoletoPaidEvent::class => [
+            \Modules\Core\Listeners\BoletoPaidPusherNotifyUser::class,
+            \Modules\Core\Listeners\BoletoPaidNotifyUser::class,
+            \Modules\Core\Listeners\BoletoPaidEmailNotifyUser::class,
         ],
-        'Modules\Core\Events\TrackingsImportedEvent' => [
-            'Modules\Core\Listeners\NotifyTrackingsImportedListener',
+        \Modules\Core\Events\TrackingsImportedEvent::class => [
+            \Modules\Core\Listeners\NotifyTrackingsImportedListener::class,
         ],
-        'Modules\Core\Events\SalesExportedEvent' => [
-            'Modules\Core\Listeners\NotifySalesExportedListener',
+        \Modules\Core\Events\SalesExportedEvent::class => [
+            \Modules\Core\Listeners\NotifySalesExportedListener::class,
         ],
-        'Modules\Core\Events\ExtractExportedEvent' => [
-            'Modules\Core\Listeners\NotifyExtractExportedListener',
+        \Modules\Core\Events\ExtractExportedEvent::class => [
+            \Modules\Core\Listeners\NotifyExtractExportedListener::class,
         ],
-        'Modules\Core\Events\TrackingsExportedEvent' => [
-            'Modules\Core\Listeners\NotifyTrackingsExportedListener',
+        \Modules\Core\Events\TrackingsExportedEvent::class => [
+            \Modules\Core\Listeners\NotifyTrackingsExportedListener::class,
         ],
-        'Modules\Core\Events\TrackingCodeUpdatedEvent' => [
-            'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
-            'Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener',
+        \Modules\Core\Events\TrackingCodeUpdatedEvent::class => [
+            \Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener::class,
+            \Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener::class,
         ],
-        'Modules\Core\Events\ResetPasswordEvent' => [
-            'Modules\Core\Listeners\ResetPasswordSendEmailListener',
+        \Modules\Core\Events\CheckSaleReleasedEvent::class => [
+            \Modules\Core\Listeners\CheckSaleReleasedListener::class
         ],
-        'Modules\Core\Events\ReleasedBalanceEvent' => [
-            'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
+        \Modules\Core\Events\ResetPasswordEvent::class => [
+            \Modules\Core\Listeners\ResetPasswordSendEmailListener::class,
         ],
-        'Modules\Core\Events\SaleApprovedEvent' => [
-            'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
+        \Modules\Core\Events\ReleasedBalanceEvent::class => [
+            \Modules\Core\Listeners\ReleasedBalanceNotifyUserListener::class,
+        ],
+        \Modules\Core\Events\SaleApprovedEvent::class => [
+            \Modules\Core\Listeners\SetApprovedShopifyOrderListener::class,
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle',
         ],
-        'Modules\Core\Events\WithdrawalRequestEvent' => [
-            'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
+        \Modules\Core\Events\WithdrawalRequestEvent::class => [
+            \Modules\Core\Listeners\WithdrawalRequestSendEmailListener::class,
         ],
-        'Modules\Core\Events\SendEmailEvent' => [
-            'Modules\Core\Listeners\SendEmailListener',
+        \Modules\Core\Events\SendEmailEvent::class => [
+            \Modules\Core\Listeners\SendEmailListener::class,
         ],
-        'Modules\Core\Events\SendSmsEvent' => [
-            'Modules\Core\Listeners\SendSmsListener',
+        \Modules\Core\Events\SendSmsEvent::class => [
+            \Modules\Core\Listeners\SendSmsListener::class,
         ],
-        'Modules\Core\Events\TicketMessageEvent' => [
-            'Modules\Core\Listeners\TicketMessageSendEmailListener',
+        \Modules\Core\Events\TicketMessageEvent::class => [
+            \Modules\Core\Listeners\TicketMessageSendEmailListener::class,
         ],
-        'Modules\Core\Events\AffiliateRequestEvent' => [
-            'Modules\Core\Listeners\AffiliateRequestSendEmailListener',
+        \Modules\Core\Events\AffiliateRequestEvent::class => [
+            \Modules\Core\Listeners\AffiliateRequestSendEmailListener::class,
         ],
-        'Modules\Core\Events\AffiliateEvent' => [
-            'Modules\Core\Listeners\AffiliateSendEmailListener',
+        \Modules\Core\Events\AffiliateEvent::class => [
+            \Modules\Core\Listeners\AffiliateSendEmailListener::class,
         ],
-        'Modules\Core\Events\EvaluateAffiliateRequestEvent' => [
-            'Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener',
+        \Modules\Core\Events\EvaluateAffiliateRequestEvent::class => [
+            \Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener::class,
         ],
-        'Modules\Core\Events\UserRegisteredEvent' => [
-            'Modules\Core\Listeners\SendEmailRegisteredListener',
+        \Modules\Core\Events\UserRegisteredEvent::class => [
+            \Modules\Core\Listeners\SendEmailRegisteredListener::class,
         ]
     ];
 

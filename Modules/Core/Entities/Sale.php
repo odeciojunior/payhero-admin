@@ -52,6 +52,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property string gateway_card_flag
  * @property float gateway_tax_percent
  * @property integer gateway_tax_value
+ * @property boolean has_valid_tracking
  * @property Checkout $checkout
  * @property Project $project
  * @property Shipping $shipping
@@ -62,6 +63,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property User $user
  * @property Collection $plansSales
  * @property Collection $transactions
+ * @property Collection $productsPlansSale
  * @property Tracking $tracking
  * @property Collection $upsells
  * @method SalePresenter present()
@@ -126,7 +128,8 @@ class Sale extends Model
         'interest_total_value',
         'refund_value',
         'is_chargeback',
-        'is_chargeback_recovered'
+        'is_chargeback_recovered',
+        'has_valid_tracking',
     ];
     /**
      * @var bool
@@ -289,5 +292,13 @@ class Sale extends Model
     public function upsells()
     {
         return $this->hasMany(Sale::class, 'upsell_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function saleGatewayRequests()
+    {
+        return $this->hasMany(SaleGatewayRequest::class);
     }
 }

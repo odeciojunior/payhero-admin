@@ -5,6 +5,7 @@ namespace Modules\Plans\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -18,11 +19,17 @@ class PlansResource extends JsonResource
         $companyDocumentValidated = $companyService->isDocumentValidated($companyId);
         $userDocumentValidated    = $userService->isDocumentValidated();
 
+        if(FoxUtils::isProduction()) {
+            $link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado';
+        } else {
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/' . $this->code;
+        }
+
         return [
             'id'                => Hashids::encode($this->id),
             'name'              => $this->name,
             'description'       => $this->description == null ? '' : $this->description,
-            'code'              => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
+            'code'              => $link,
             'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'            => isset($this->project->domains[0]->name) ? 1 : 0,
             'status_code'       => $this->status,

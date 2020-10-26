@@ -49,6 +49,8 @@ $(document).ready(function () {
         insertBefore: '.grad-border',
     };
 
+    $("#date_range_statement_unique").val(moment().format('YYYY-MM-DD'));
+
     //END - Comportamentos da tela
 
     //Obtém as empresas
@@ -75,6 +77,7 @@ $(document).ready(function () {
                         let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                         $("#transfers_company_select").append(data);
                         $("#extract_company_select").append(data);
+                        $("#statement_company_select").append(data);
                     });
 
                     if (response.data[0].antecipation_enabled_flag) {
@@ -86,6 +89,7 @@ $(document).ready(function () {
                     checkAllowed();
                     updateBalances();
                     updateTransfersTable();
+                    checkStatementAvailable();
                 } else {
                     $('.page-content').hide();
                     $('.content-error').show();
@@ -96,8 +100,6 @@ $(document).ready(function () {
     }
 
     getCompanies();
-
-    checkBraspagCompany();
 
     //Verifica se o saque está liberado
     function checkAllowed() {
@@ -725,18 +727,33 @@ $(document).ready(function () {
         });
     }
 
-    //atualiza a table de braspag
-    $(document).on("click", "#bt_filtro_braspag", function (e) {
-        e.preventDefault();
-        updateBraspagData();
-    });
-    function updateBraspagData(link = null){
-        loadOnTable('#table-braspag-body', '#braspagTable');
-        if (link == null) {
-            link = '/transfers/getbraspagdata?' + 'event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
-        } else {
-            link = '/transfers/getbraspagdata' + link + '&event_status=' + $("#event_status").val() + '&date_range=' + $("#date_range_braspag").val();
-        }
+
+    /*dateControl.value = moment();
+    console.log(dateControl.value)*/
+    // let dateControl = document.querySelector('input[type="date"]');
+
+    let perPage = 10;
+    const state = {
+        page: 1,
+        perPage,
+        totalPage: 0,
+        maxVisibleButtons: 100
+    }
+
+    let page = 0;
+    let start = 0;
+    let end = 0;
+
+    function updateAccountStatementData() {
+
+
+        $('#table-statement-body').html('');
+        loadOnTable('#table-statement-body', '#statementTable');
+
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+
+        $(".numbers").hide();
+
         $.ajax({
             method: "GET",
             url: link,
@@ -746,19 +763,221 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                errorAjaxResponse(response);
+                let error = 'Erro ao gerar o extrato';
+
+                errorAjaxResponse(error);
+                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
-                $('#braspagTable').addClass('table-striped');
 
+                updateClassHTML();
+
+                items = response;
+
+                if (!isEmpty(items)) {
+
+                    $(".numbers").show();
+
+                    state.totalPage = Math.ceil(items.length / perPage);
+
+                    const controls = {
+                        next() {
+                            state.page++;
+
+                            if (state.page > state.totalPage) {
+                                state.page--;
+                            }
+                        },
+                        prev() {
+                            state.page--;
+
+                            if (state.page < 1) {
+                                state.page++;
+                            }
+                        },
+                        goTo(page) {
+                            if (page < 1) {
+                                page = 1;
+                            }
+                            state.page = +page;
+
+                            if (page > state.totalPage) {
+                                state.page = state.totalPage;
+                            }
+                        },
+                        createListeners(exec = false) {
+
+                            if (exec) {
+                                controls.goTo(1);
+                                update();
+                            }
+                            exec = false;
+                            $('.first').on('click', function () {
+                                controls.goTo(1);
+                                update();
+                            })
+                            $('.last').on('click', function () {
+                                controls.goTo(state.totalPage);
+                                update();
+                            })
+                            $('.next').on('click', function () {
+                                controls.next();
+                                update();
+                            })
+                            $('.prev').on('click', function () {
+                                controls.prev();
+                                update();
+                            })
+
+
+                        }
+                    }
+
+                    const list = {
+                        create(item) {
+                            let dataTable = `
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        Transação
+                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                            <span style="color:black;">#${item.orderId}</span>
+                                        </a><br>
+                                        <small>(Data da venda: ${item.transactionDate})</small>
+                                     </td>
+                                     <td>
+                                        ${item.has_valid_tracking 
+                                            ? '<span class="badge badge-sm badge-success p-2">Pago</span>' 
+                                            : '<span class="badge badge-sm badge-info p-2">Aguardando postagem válida</span>'}
+                                     </td>
+                                    <td style="vertical-align: middle;">${item.paymentDate}</td>
+                                    <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
+                                </tr>
+                            `;
+                            updateClassHTML(dataTable);
+                        },
+                        update() {
+                            page = state.page - 1;
+                            start = page * state.perPage;
+                            end = start + state.perPage;
+
+                            const paginatedItems = items.slice(start, end);
+                            updateClassHTML();
+                            paginatedItems.forEach(list.create);
+                        }
+                    }
+
+                    const buttons = {
+                        create(number) {
+                            const button = document.createElement('div');
+                            button.innerHTML = number;
+
+                            if (state.page == number) {
+                                button.classList.add('active');
+                            }
+
+                            button.addEventListener('click', (event) => {
+                                const page = event.target.innerText;
+
+                                controls.goTo(page);
+                                update();
+                            })
+
+                            button.classList.add('btn', 'nav-btn');
+
+                            $(".pagination .numbers").append(button);
+
+                        },
+                        update() {
+                            $(".pagination .numbers").html('');
+                            const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+
+                            for (let page = maxLeft; page <= maxRight; page++) {
+                                buttons.create(page);
+                            }
+                        },
+                        calculateMaxVisible() {
+                            let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                            let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+
+                            if (maxLeft < 1) {
+                                maxLeft = 1;
+                                maxRight = state.maxVisibleButtons;
+                            }
+
+                            if (maxRight > state.totalPage) {
+                                maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
+                                maxRight = state.totalPage;
+
+                                if (maxLeft < 1) {
+                                    maxLeft = 1;
+                                }
+                            }
+                            return {maxLeft, maxRight};
+                        }
+
+
+                    }
+
+
+                    function update() {
+                        list.update();
+                        buttons.update();
+                    }
+
+                    function init() {
+                        update();
+                        controls.createListeners(true);
+                    }
+
+                    init();
+
+                    // let data = '';
+
+                    /* for (let item of items) {
+                         data = `
+                         <tr>
+                             <td style="vertical-align: middle;">
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                     <span style="color:black;">#${item.orderId}</span>
+                                 </a><br>
+                                 <small>(Data da venda: ${item.transactionDate})</small>
+                              </td>
+                             <td>${item.paymentDate}</td>
+                             <td>${item.subSellerRateAmount}</td>
+                         </tr>
+                         `;
+                         // $('#table-statement-body').append(data);
+                     }
+                     $('#statementTable').addClass('table-striped');*/
+
+
+                } else {
+                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                }
+
+                function updateClassHTML(dataTable = 0) {
+                    if (dataTable.length > 0) {
+                        $('#table-statement-body').append(dataTable);
+                    } else {
+                        $('#table-statement-body').html('');
+                    }
+                    $("#statementTable").addClass('table-striped');
+                }
             }
         });
 
     }
-    function checkBraspagCompany() {
+
+    //atualiza a table de statement
+    $(document).on("click", "#bt_filtro_statement", function (e) {
+        e.preventDefault();
+        updateAccountStatementData();
+    });
+
+    function checkStatementAvailable() {
         $.ajax({
             method: "GET",
-            url: '/api/companies/checkbraspagcompany',
+            url: '/api/companies/check-statement-available',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -766,20 +985,21 @@ $(document).ready(function () {
             error: response => {
             },
             success: response => {
-                if (response.has_merchant_id && response.env == 'local') {
-                    $('#nav-braspag-tab').show();
+                if (response.has_subseller_id) {
+                    $('#nav-statement-tab').show();
+                    updateAccountStatementData();
                 }
             }
         });
     }
 
-    $('#date_range_braspag').daterangepicker({
-        startDate: moment().startOf('week'),
+    $('#date_range_statement').daterangepicker({
+        startDate: moment(),
         endDate: moment(),
         opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
+        maxDate: moment(),
+        alwaysShowCalendar: false,
+        showCustomRangeLabel: false,
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',
@@ -796,11 +1016,6 @@ $(document).ready(function () {
         },
         ranges: {
             'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
 
@@ -819,6 +1034,7 @@ $(document).ready(function () {
     $("#nav-home-tab").on("click", function () {
         $('#export-excel').hide();
     });
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
