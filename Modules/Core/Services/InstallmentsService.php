@@ -24,11 +24,11 @@ class InstallmentsService
 
         $userModel = new User();
 
-        $userProject = $userProjectModel->where('project_id', $project->id)->where('type_enum', $userProjectModel->present()->getTypeEnum('producer'))->first();
+        $userProject = $userProjectModel->with('company')->where('project_id', $project->id)->where('type_enum', $userProjectModel->present()->getTypeEnum('producer'))->first();
 
         $user = $userModel->find($userProject->user_id);
 
-        $installmentValueTax = intval($totalValue / 100 * $user->installment_tax);
+        $installmentValueTax = intval($totalValue / 100 * $userProject->company->installment_tax);
 
         $totalValue = preg_replace("/[^0-9]/", "", $totalValue);
 

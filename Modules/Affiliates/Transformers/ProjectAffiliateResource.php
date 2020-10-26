@@ -5,6 +5,7 @@ namespace Modules\Affiliates\Transformers;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateRequest;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
@@ -72,9 +73,8 @@ class ProjectAffiliateResource extends JsonResource
             'producer'               => $producer,
             'status_url_affiliates'  => $this->status_url_affiliates,
             'cookie_duration'        => $this->cookie_duration ?? '',
-            'debit_release_days'     => $userProject->user->debit_card_release_money_days ?? '',
-            'credit_release_days'    => $userProject->user->credit_card_release_money_days ?? '',
-            'billet_release_days'    => $userProject->user->boleto_release_money_days ?? '',
+            'credit_release_days'    => ($userProject->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) ? $userProject->company->gateway_release_money_days : $userProject->company->credit_card_release_money_days ?? '',
+            'billet_release_days'    => ($userProject->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) ? $userProject->company->gateway_release_money_days : $userProject->company->boleto_release_money_days ?? '',
         ];
     }
 }
