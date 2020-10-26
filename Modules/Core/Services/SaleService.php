@@ -923,19 +923,20 @@ class SaleService
 
         $newTotalValueWithoutInterest = $newTotalvalue;
 
-        $userProject = UserProject::where([
+        $userProject = UserProject::with('company')->where([
             ['type_enum', (new UserProject())->present()->getTypeEnum('producer')],
             ['project_id', $sale->project->id],
         ])->first();
 
         $user = $userProject->user;
+        $company = $userProject->company;
 
         $installmentFreeTaxValue = 0;
         $interestValue = 0;
 
         $installmentSelected = $sale->installments_amount;
         $freeInstallments = $sale->project->installments_interest_free;
-        $installmentValueTax = intval(($newTotalvalue / 100) * $user->installment_tax);
+        $installmentValueTax = intval(($newTotalvalue / 100) * $company->installment_tax);
 
         if ($installmentSelected == 1) {
             $totalValueWithTax = intval($newTotalvalue);
@@ -956,7 +957,13 @@ class SaleService
             $newTotalvalue = $totalValueWithTax;
         }
 
-        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $user->credit_card_tax));
+        if ($company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+            $creditCardTax = $company->gateway_tax;
+        } else {
+            $creditCardTax = $company->credit_card_tax;
+        }
+
+        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $creditCardTax));
         $cloudfoxValue += str_replace('.', '', $user->transaction_rate);
         $cloudfoxValue += $interestValue;
 

@@ -18,6 +18,12 @@ var companyTypeDocument = {
     contract_document_status: 'Comprovante de contrato social'
 };
 
+let gatewayTax = {
+    'plan-2': 6.9,
+    'plan-15': 6.5,
+    'plan-30': 5.9
+}
+
 var initForm = null;
 var htmlTable = null;
 $(document).ready(function () {
@@ -85,6 +91,9 @@ $(document).ready(function () {
         }
     }
 
+    let companyIdCode = '';
+    let userIdCode = '';
+
     initForm = function () {
         //Get CompanyId from path
         var encodedId = extractIdFromPathName();
@@ -105,6 +114,10 @@ $(document).ready(function () {
             success: function success(response) {
                 var company = response.company;
                 var banks = response.banks;
+                companyIdCode = company.id_code;
+                userIdCode = company.user_code;
+
+                getTax();
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -126,7 +139,6 @@ $(document).ready(function () {
                 $('#business_entity_type').val(company.business_entity_type);
                 $('#economic_activity_classification_code').val(company.economic_activity_classification_code);
                 $('#monthly_gross_income').val(company.monthly_gross_income);
-                // $('#federal_registration_status').val(company.federal_registration_status);
                 $('#founding_date').val(company.founding_date);
                 $('#federal_registration_status_date').val(company.federal_registration_status_date);
                 $('#social_value').val(company.social_value);
@@ -134,6 +146,35 @@ $(document).ready(function () {
                 $('#document_issuer').val(company.document_issuer);
                 $('#document_issuer_state').val(company.document_issuer_state);
                 $('#document_number').val(company.document_number);
+
+
+                if (company.capture_transaction_enabled) {
+                    $("#tax-payment").val(company.gateway_tax + '%')
+
+                    $(".select-gateway-tax").html('');
+
+                    $(".select-gateway-tax").append(`
+                        <select id="gateway-release-payment" class="form-control">
+                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Após postagem de rastreio válida (taxa de 6.9%)</option>
+                            <option value="plan-15" ${company.gateway_tax == 6.5 ? 'selected' : ''}>15 dias (taxa de 6.5%)</option>
+                            <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
+                        </select>
+                    `);
+
+                    // others gateways payments tax
+                    $('.gateway-tax').removeAttr('hidden');
+                    $('.cielo-tax').hide();
+                } else {
+                    // tax cielo
+                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
+                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
+                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
+                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
+
+                    $('.cielo-tax').removeAttr('hidden');
+                    $('.gateway-tax').hide();
+                }
+
 
                 $('#patrimony').unmask();
                 $('#patrimony').mask('#.##0,00', {reverse: true});
@@ -193,7 +234,6 @@ $(document).ready(function () {
                         ${companyStatusTranslated[company.bank_document_status]}
                     </span>
                 `);
-
                 $("#td-address-status").html('').append(`
                     <span class='badge ${companyStatus[company.address_document_status]}'>
                         ${companyStatusTranslated[company.address_document_status]}
@@ -232,11 +272,83 @@ $(document).ready(function () {
                     getDocuments(encodedId);
 
                 });
+
+                // update tax payment after change select input
+                $("#gateway-release-payment").on("change", function () {
+                    $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
+                })
+
+                $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
             }
         });
     };
 
     initForm();
+
+    $("#update_payment_tax_cnpj").unbind('click');
+    $("#update_payment_tax_cnpj").on('click', function () {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "POST",
+            url: `/api/companies/${companyIdCode}/updatetax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                gateway_release_payment: $("#gateway-release-payment").val(),
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                $("#tax-payment").val(response.data.new_gateway_tax + '%');
+                initForm();
+            }
+        });
+    });
+
+
+    function getTax() {
+        $.ajax({
+            method: "GET",
+            url: `/api/profile/${userIdCode}/tax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                setValuesHtml(response.data);
+            }
+        });
+    }
+
+    function setValuesHtml(data) {
+        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
+
+        if (data.antecipation_enabled_flag) {
+            $('.info-antecipation-tax').show();
+            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
+        } else {
+            $('.title-antecipation-tax').hide();
+            $('.form-antecipation-tax').hide();
+        }
+
+        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
+    }
+
 
     //Couting number
     $('#rounting_number').on('input', function () {
@@ -401,6 +513,7 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
+
     function changeMaskByCompanyCountry(company) {
         if (company.country == 'brazil') {
             $('#zip_code').mask('00000-000');
@@ -411,6 +524,7 @@ $(document).ready(function () {
             $('#support_telephone').mask('+0#');
         }
     }
+
     function loadLabelsByCountry(company) {
         var companyDocumentName = {
             brazil: 'CNPJ',
@@ -425,6 +539,7 @@ $(document).ready(function () {
         $('.label-document').text(companyDocumentName[company.country]);
         $('#company_document').attr('placeholder', companyDocumentName[company.country]);
     }
+
     function getDocuments(encodedId) {
         loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
         $.ajax({

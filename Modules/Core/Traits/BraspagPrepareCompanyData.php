@@ -38,7 +38,7 @@ trait BraspagPrepareCompanyData
             'BankAccount' => $this->getBankData($company),
             'Agreement' => [
                 "Fee" => 100,
-                "MdrPercentage" => $user->credit_card_tax,
+                "MdrPercentage" => $company->credit_card_tax,
             ],
             'Notification' => [
                 'Url' => 'https://app.cloudfox.net/postback/braspag',

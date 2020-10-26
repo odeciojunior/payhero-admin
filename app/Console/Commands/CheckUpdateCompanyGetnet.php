@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
@@ -52,17 +51,18 @@ class CheckUpdateCompanyGetnet extends Command
                 $result = json_decode($result);
 
                 if (!empty($result) && !empty($result->subseller_id) && $company->subseller_getnet_id == $result->subseller_id) {
-                    if ($result->enabled == 'S' && ($result->status == 'Aprovado Transacionar' || $result->status == 'Aprovado Transacionar e Antecipar') && $result->capture_payments_enabled == 'S') {
+                    if (($result->status == 'Aprovado Transacionar' || $result->status == 'Aprovado Transacionar e Antecipar') && $result->capture_payments_enabled == 'S') {
                         $company->update([
                             'get_net_status' => 1 // approved
                         ]);
+
+                        $companyService->updateCaptureTransactionEnabled($company);
                     } elseif (($result->status == 'Reprovado' || $result->status == 'Rejeitado') && $result->capture_payments_enabled == 'N') {
                         $company->update([
                             'get_net_status' => 3 // reproved
                         ]);
                     }
                 }
-                $companyService->updateCaptureTransactionEnabled($company);
             }
         } catch (Exception $e) {
             report($e);
