@@ -54,7 +54,7 @@
                     <img src="modules/global/img/emptyconvites.svg" width="250px"/>
                     <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
                     <p class="desc gray" style='width:100%'>Envie convites, e
-                        <strong>ganhe 1% de tudo que seu convidado vender durante um ano!</strong></p>
+                        <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
                 </div>
             </div>
             <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
