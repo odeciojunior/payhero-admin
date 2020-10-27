@@ -49,15 +49,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class RegisterApiController extends Controller
 {
 
-    const PERCENTAGE_RATE = '5.9';
-    const TRANSACTION_RATE = '1.00';
     const BALANCE = '0';
-    const CREDIT_CARD_ANTECIPATION_MONEY_DAYS = '30';
-    const BOLETO_ANTECIPATION_MONEY_DAYS = '2';
-    const ANTECIPATION_TAX = '0';
-    const PERCENTAGE_ANTECIPABLE = '100';
-    const INVITES_AMOUNT = 1;
-    const BOLETO_RELEASE_MONEY_DAYS = 0;
     const VERIFIED_EMAIL = 1;
     const VERIFIED_CELLPHONE = 1;
 
@@ -971,15 +963,7 @@ class RegisterApiController extends Controller
     {
         $requestData = $request->validated();
 
-        $requestData['percentage_rate'] = self::PERCENTAGE_RATE;
-        $requestData['transaction_rate'] = self::TRANSACTION_RATE;
         $requestData['balance'] = self::BALANCE;
-        $requestData['credit_card_antecipation_money_days'] = self::CREDIT_CARD_ANTECIPATION_MONEY_DAYS;
-        $requestData['boleto_antecipation_money_days'] = self::BOLETO_ANTECIPATION_MONEY_DAYS;
-        $requestData['antecipation_tax'] = self::ANTECIPATION_TAX;
-        $requestData['percentage_antecipable'] = self::PERCENTAGE_ANTECIPABLE;
-        $requestData['invites_amount'] = self::INVITES_AMOUNT;
-        $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
         $requestData['email_verified'] = self::VERIFIED_EMAIL;
         $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
 
