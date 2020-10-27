@@ -630,11 +630,8 @@ class RegisterApiController extends Controller
         $data = $request->validated();
 
         $email = $data["email"];
-        $document = $data["cpf"];
 
-        $verifyIfExistCode = RegistrationToken::where('type', 'email')
-            ->where('document', $document)
-            ->where('type_data', $email)->first();
+        $verifyIfExistCode = RegistrationToken::where('type', 'email')->where('type_data', $email)->first();
 
         if ($verifyIfExistCode && $verifyIfExistCode->validated) {
 
@@ -654,7 +651,7 @@ class RegisterApiController extends Controller
             $verifyIfExistCode->save();
             $token = $verifyIfExistCode->token;
         } else {
-            $registration_token = $this->createRegistrationTokenEmail($email, $document);
+            $registration_token = $this->createRegistrationTokenEmail($email);
             $token = $registration_token->token;
         }
 
@@ -681,17 +678,15 @@ class RegisterApiController extends Controller
 
     /**
      * @param $email
-     * @param $document
      * @return RegistrationToken
      * @throws Exception
      */
-    private function createRegistrationTokenEmail($email, $document): RegistrationToken
+    private function createRegistrationTokenEmail($email): RegistrationToken
     {
         $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
         $registration_token = new RegistrationToken();
         $registration_token->type = 'email';
-        $registration_token->document = $document;
         $registration_token->type_data = $email;
         $registration_token->token = random_int(1000, 9999);
         $registration_token->number_wrong_attempts = 0;
@@ -704,18 +699,16 @@ class RegisterApiController extends Controller
 
     /**
      * @param $phone
-     * @param $document
      * @return RegistrationToken
      * @throws Exception
      */
-    private function createRegistrationTokenSms($phone, $document): RegistrationToken
+    private function createRegistrationTokenSms($phone): RegistrationToken
     {
 
         $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
         $registration_token = new RegistrationToken();
         $registration_token->type = 'sms';
-        $registration_token->document = $document;
         $registration_token->type_data = $phone;
         $registration_token->token = random_int(1000, 9999);
         $registration_token->number_wrong_attempts = 0;
@@ -770,7 +763,6 @@ class RegisterApiController extends Controller
 
             $data = $request->validated();
             $email = $data["email"];
-            $document = $data["cpf"];
             $token = $data["code"];
 
             $existCodeToEmail = RegistrationToken::where('type', 'email')->where('type_data', $email)->latest()->first();
@@ -788,7 +780,7 @@ class RegisterApiController extends Controller
 
             if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
-                $registration_token = $this->createRegistrationTokenEmail($email, $document);
+                $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
 
                 return response()->json(
@@ -850,13 +842,9 @@ class RegisterApiController extends Controller
         try {
             $data = $request->validated();
             $cellphone = $data["cellphone"];
-            $document = $data["cpf"];
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
-            $verifyIfExistCode = RegistrationToken::where('type', 'sms')
-                ->where('document', $document)
-                ->where('type_data', $cellphone)
-                ->orderByDesc('id')->first();
+            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->orderByDesc('id')->first();
 
             if ($verifyIfExistCode && $verifyIfExistCode->validated) {
 
@@ -876,7 +864,7 @@ class RegisterApiController extends Controller
                 $verifyIfExistCode->save();
                 $token = $verifyIfExistCode->token;
             } else {
-                $registration_token = $this->createRegistrationTokenSms($cellphone, $document);
+                $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $token = $registration_token->token;
             }
 
@@ -908,7 +896,6 @@ class RegisterApiController extends Controller
             $data = $request->validated();
             $token = $data["token"];
             $cellphone = $data["cellphone"];
-            $document = $data["cpf"];
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 
             $existCodeToPhone = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->latest()->first();
@@ -926,7 +913,7 @@ class RegisterApiController extends Controller
 
             if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
-                $registration_token = $this->createRegistrationTokenSms($cellphone,$document);
+                $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
 
                 return response()->json(
