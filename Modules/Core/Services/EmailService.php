@@ -34,8 +34,8 @@ class EmailService
                 ]
             );
 
-            if (env('APP_ENV') == 'local')
-                $to = env('APP_EMAIL_TEST');
+//            if (env('APP_ENV') == 'local')
+//                $to = env('APP_EMAIL_TEST');
 
             $email = new Mail();
             $email->setFrom("noreply@cloudfox.net", "Cloudfox");
