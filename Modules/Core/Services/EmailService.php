@@ -30,7 +30,7 @@ class EmailService
             $emailLayout = view(
                 'invites::email.invite',
                 [
-                    'link' => env('ACCOUNT_URL') . '/signup/i=' . $parameter,
+                    'link' => env('ACCOUNT_FRONT_URL') . '/signup/i=' . $parameter,
                 ]
             );
 

@@ -14,12 +14,6 @@
             <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div style="width: 20%">
-                        <h6 class="text-center green-gradient">
-                            <i class="material-icons align-middle mr-1 green-gradient"> card_giftcard </i> Convites disponíveis
-                        </h6>
-                        <h4 id='invitations_amount' class="number text-center green-gradient"></h4>
-                    </div>
-                    <div style="width: 20%">
                         <h6 class="text-center orange-gradient">
                             <i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites enviados
                         </h6>
