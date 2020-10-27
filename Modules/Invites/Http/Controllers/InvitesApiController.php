@@ -66,14 +66,6 @@ class InvitesApiController extends Controller
                 $userModel = new User();
                 $inviteSaved = null;
 
-                $invitesSent = $invitationModel->where('invite', auth()->user()->account_owner_id)->count();
-
-                if ($invitesSent >= auth()->user()->invites_amount) {
-                    return response()->json([
-                        'message' => 'Envio de convites indisponível, limite atingido!',
-                    ], 400);
-                }
-
                 $company = current(Hashids::decode($request->input('company')));
 
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
@@ -393,23 +385,12 @@ class InvitesApiController extends Controller
                         ], 400
                     );
                 } else {
-                    $invitesSent = $invitationModel->where('invite', $company->user_id)->where('status', 1)->count();
-
-                    if ($invitesSent >= $company->user->invites_amount) {
-                        return response()->json(
-                            [
-                                'message' => 'Convite indisponivel, limite atingido!',
-                                'data' => 'invalido',
-                            ], 400
-                        );
-                    } else {
-                        return response()->json(
-                            [
-                                'message' => 'Convite valido!',
-                                'data' => 'valido',
-                            ], 200
-                        );
-                    }
+                    return response()->json(
+                        [
+                            'message' => 'Convite valido!',
+                            'data' => 'valido',
+                        ], 200
+                    );
                 }
             }
         } catch (Exception $e) {
