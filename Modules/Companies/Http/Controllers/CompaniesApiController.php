@@ -178,19 +178,7 @@ class CompaniesApiController extends Controller
             }
 
             $company->update($requestData);
-            $dataBankAccountUpdated = $companyService->getChangesUpdateBankData($company);
-
-            if ($companyService->verifyFieldsEmpty($company)) {
-                return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
-            }
-
-            if (empty($company->subseller_getnet_id)) {
-                if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
-                    $companyService->createCompanyPfGetnet($company);
-                } else {
-                    $companyService->createCompanyPjGetnet($company);
-                }
-            }
+            $companyService->getChangesUpdateBankData($company);
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {
