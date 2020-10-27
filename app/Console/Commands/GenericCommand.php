@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\CheckoutService;
 
@@ -27,8 +29,24 @@ class GenericCommand extends Command
                     'status' => 3
                 ]);
             }
+
+            foreach (User::orderBy('id','DESC')->take(10)->get() as $key => $user) {
+                $user->update([
+                    'address_document_status' => 3,
+                    'personal_document_status' => 3
+                ]);
+            }
             print('FIM - Documentos Usuario: ' . PHP_EOL . PHP_EOL);
+
             print('INICIO - Documentos Empresa: ' . PHP_EOL);
+            foreach (Company::orderBy('id','DESC')->take(10)->get() as $key => $user) {
+                $user->update([
+                    'contract_document_status' => 3,
+                    'bank_document_status' => 3,
+                    'address_document_status' => 3
+                ]);
+            }
+
             foreach(CompanyDocument::orderBy('id','DESC')->take(10)->get() as $key => $user){
                 $this->line('Documentos Empresa: ' . $key);
                 $user->update([
