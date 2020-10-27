@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Core\Presenters\TransactionPresenter;
@@ -28,9 +29,10 @@ use Exception;
  * @property string $percentage_rate
  * @property string $transaction_rate
  * @property string $percentage_antecipable
+ * @property string $gateway_released_at
  * @property Company $company
  * @property Sale $sale
- * @property AntecipatedTransaction[] $antecipatedTransactions
+ * @property Collection $antecipatedTransactions
  * @property Transfer[] $transfers
  * @method TransactionPresenter present()
  */
@@ -79,6 +81,7 @@ class Transaction extends Model
         'installment_tax',
         'created_at',
         'updated_at',
+        'gateway_released_at',
     ];
     /**
      * @var bool
