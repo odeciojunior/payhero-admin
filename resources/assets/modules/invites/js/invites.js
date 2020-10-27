@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
 
     $("#company").on("change", function () {
-        $("#invite-link").val('https://accounts.cloudfox.net/' + $("#company option:selected").attr('invite-parameter'));
+        $("#invite-link").val('https://accounts.cloudfox.net/signup/i=' + $("#company option:selected").attr('invite-parameter'));
     });
 
     function isEmpty(obj) {
@@ -121,12 +121,12 @@ $(document).ready(function () {
 
                     let linkInvite = '';
                     let companyId = $(".select-company-list option:selected").val();
-                    linkInvite = 'https://accounts.cloudfox.net/' + $(".select-company-list option:selected").val();
+                    linkInvite = 'https://accounts.cloudfox.net/signup/i=' + $(".select-company-list option:selected").val();
 
                     $("#invite-link").val(linkInvite);
 
                     $(".select-company-list").on('change', function () {
-                        linkInvite = 'https://accounts.cloudfox.net/' + $(this).val();
+                        linkInvite = 'https://accounts.cloudfox.net/signup/i=' + $(this).val();
                         $("#invite-link").val(linkInvite);
                         companyId = $(this).val();
                     });

@@ -221,12 +221,12 @@ $(document).ready(function () {
 
                             var linkInvite = '';
                             var companyId = $(".select-company-list option:selected").val();
-                            linkInvite = 'https://accounts.cloudfox.net/' + $(".select-company-list option:selected").val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup/i=' + $(".select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
 
                             $(".select-company-list").on('change', function () {
-                                linkInvite = 'https://accounts.cloudfox.net/' + $(this).val();
+                                linkInvite = 'https://accounts.cloudfox.net/signup/i=' + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();
                             });
