@@ -76,7 +76,7 @@ class InvitesApiController extends Controller
 
                 $company = current(Hashids::decode($request->input('company')));
 
-                if (FoxUtils::validateEmail($request->input('email')) && !empty($company) && auth()->user()->account_owner_id == 19) {
+                if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
                         $companyService = new CompanyService();
                         if (!$companyService->isDocumentValidated($company)) {
