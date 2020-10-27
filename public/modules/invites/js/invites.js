@@ -52,9 +52,6 @@ $(document).ready(function () {
                     $("#table-body-invites").html('');
 
                     $.each(response.data, function (index, value) {
-                        if (value.company_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.company_name === 'WALLISON VICTOR DE LIMA 05111953116') {
-                            companyVerification = true;
-                        }
                         dados = '';
                         dados += '<tr>';
                         if (index != 9) {
@@ -171,7 +168,6 @@ $(document).ready(function () {
                         $("#modal-not-approved-document-companies").hide();
                         $("#modal-not-companies").show();
                     } else {
-
                         loadingOnScreenRemove();
 
                         let contCompanies = 0;

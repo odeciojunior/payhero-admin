@@ -43,7 +43,8 @@ class GenericCommand extends Command
                 $user->update([
                     'contract_document_status' => 3,
                     'bank_document_status' => 3,
-                    'address_document_status' => 3
+                    'address_document_status' => 3,
+                    'capture_transaction_enabled' => 1
                 ]);
             }
 
