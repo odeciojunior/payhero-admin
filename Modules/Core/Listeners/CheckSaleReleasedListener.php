@@ -55,7 +55,7 @@ class CheckSaleReleasedListener implements ShouldQueue
                 $sale->has_valid_tracking = true;
                 $sale->save();
 
-                if($sale->transactions->whereNotNull('gateway_released_at')->count()){
+                if(!$sale->transactions->whereNotNull('gateway_released_at')->count()){
                     $checkoutService->releasePaymentGetnet($sale->id);
 
                     //$result = $checkoutService->releasePaymentGetnet($sale->id);
