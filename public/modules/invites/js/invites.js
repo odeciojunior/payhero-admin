@@ -184,7 +184,7 @@ $(document).ready(function () {
                                     if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled> TESTE1 ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
 
@@ -194,7 +194,7 @@ $(document).ready(function () {
                                     if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled> TESTE2 ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
                                     }
