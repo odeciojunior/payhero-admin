@@ -21,15 +21,15 @@ class GenericCommand extends Command
     {
         if (env('APP_ENV') == 'local') {
             print('INICIO - Documentos Usuario: ' . PHP_EOL);
-            foreach(UserDocument::all() as $key => $user){
+            foreach(UserDocument::orderBy('id','DESC')->take(10)->get() as $key => $user){
                 $this->line('Documentos Usuario: ' . $key);
                 $user->update([
                     'status' => 3
                 ]);
             }
-            print('FIM -Documentos Usuario: ' . PHP_EOL);
+            print('FIM - Documentos Usuario: ' . PHP_EOL . PHP_EOL);
             print('INICIO - Documentos Empresa: ' . PHP_EOL);
-            foreach(CompanyDocument::all() as $key => $user){
+            foreach(CompanyDocument::orderBy('id','DESC')->take(10)->get() as $key => $user){
                 $this->line('Documentos Empresa: ' . $key);
                 $user->update([
                     'status' => 3
