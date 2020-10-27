@@ -187,9 +187,7 @@ class RegisterApiController extends Controller
 
         try {
 
-            if ($parameter == 'nw2usr3cfx') {
-                $withoutInvite = true;
-            } else if (strlen($parameter) > 15) {
+            if (strlen($parameter) > 15) {
 
                 $inviteId = substr($parameter, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
@@ -205,8 +203,6 @@ class RegisterApiController extends Controller
             } else {
 
                 if (isset($company->id)) {
-
-                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
                     $companyService = new CompanyService();
 
                     if (!$companyService->isDocumentValidated($company->id)) {
@@ -214,15 +210,6 @@ class RegisterApiController extends Controller
                         return [
                             'success' => 'false',
                             'message' => 'Convite indisponivel!'
-                        ];
-
-                    }
-
-                    if ($invitesSent >= $company->user->invites_amount) {
-
-                        return [
-                            'success' => 'false',
-                            'message' => 'Convite indisponivel, limite atingido!'
                         ];
 
                     }
