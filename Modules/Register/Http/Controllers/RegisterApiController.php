@@ -1047,8 +1047,8 @@ class RegisterApiController extends Controller
         $tokenModel = new RegistrationToken();
         $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
-        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->first();
-        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first();
+        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->last();
+        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->last();
 
         if (empty($email) || empty($cellphone)) {
             return false;
