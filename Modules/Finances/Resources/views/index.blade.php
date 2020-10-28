@@ -334,11 +334,23 @@
                                                        class="select-pad" placeholder="Transação">
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-30">
-                                            <button id="bt_filtro_statement" class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                                            </button>
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <div class="input-holder">
+                                                <label for="statement_status_select">Status</label>
+                                                <select class="form-control select-pad" name="status"
+                                                        id="statement_status_select">
+                                                    <option value="all">Todos</option>
+                                                    <option value="1">Aguardando postagem válida</option>
+                                                    <option value="2">Aguardando liquidação</option>
+                                                    <option value="3">Pago</option>
+                                                </select>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="float-right col-sm-4 col-md-2 col-lg-2 mt-10">
+                                        <button id="bt_filtro_statement" class="btn btn-primary w-full">
+                                            <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="col-12 mt-3">
@@ -348,7 +360,9 @@
                                             <th scope="col" class="headCenter" style="width:33%">Razão</th>
                                             <th scope="col" class="headCenter" style="width:33%">Status</th>
                                             <th scope="col" class="headCenter" style="width:33%">Data prevista
-                                                <i class="material-icons gray ml-5 font-size-18" data-toggle="tooltip" title="" data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                                <i class="material-icons gray ml-5 font-size-18" data-toggle="tooltip"
+                                                   title=""
+                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
                                             </th>
                                             <th scope="col" class="headCenter" style="width:34%">Valor</th>
                                         </tr>
@@ -359,29 +373,15 @@
 
                                     <section id="paginate">
                                         <div class="pagination" style="margin-top:10px;position:relative;float:right">
-                                            {{--<div class="first">
-                                                <button class='btn nav-btn first_page'>Primeiro</button>
-                                            </div>
-                                            <div class="prev">
-                                                <button class='btn nav-btn first_page'>Anterior</button>
-                                            </div>--}}
                                             <div class="numbers">
                                                 <div style=""></div>
                                             </div>
-                                            {{-- <div class="next">
-                                                 <button class='btn nav-btn first_page'> proximo</button>
-                                             </div>
-                                             <div class="last">
-                                                 <button class='btn nav-btn first_page'> Ultimo</button>
-                                             </div>--}}
                                         </div>
                                     </section>
 
                                     <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
-
-
                                     </ul>
                                 </div>
                             </div>
@@ -443,7 +443,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection

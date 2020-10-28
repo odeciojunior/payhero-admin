@@ -727,10 +727,11 @@ $(document).ready(function () {
         });
     }
 
-
-    /*dateControl.value = moment();
-    console.log(dateControl.value)*/
-    // let dateControl = document.querySelector('input[type="date"]');
+    let statusExtract = {
+        1: '<span class="badge badge-sm badge-pendente p-2">Aguardando postagem válida</span>',
+        2: '<span class="badge badge-sm badge-info p-2">Aguardando liquidação</span>',
+        3: '<span class="badge badge-sm badge-success p-2">Pago</span>'
+    }
 
     let perPage = 10;
     const state = {
@@ -750,7 +751,7 @@ $(document).ready(function () {
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val();
 
         $(".numbers").hide();
 
@@ -774,68 +775,72 @@ $(document).ready(function () {
 
                 items = response;
 
-                if (!isEmpty(items)) {
+                if (isEmpty(items)) {
+                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    return;
+                }
 
-                    $(".numbers").show();
 
-                    state.totalPage = Math.ceil(items.length / perPage);
+                $(".numbers").show();
 
-                    const controls = {
-                        next() {
-                            state.page++;
+                state.totalPage = Math.ceil(items.length / perPage);
 
-                            if (state.page > state.totalPage) {
-                                state.page--;
-                            }
-                        },
-                        prev() {
+                const controls = {
+                    next() {
+                        state.page++;
+
+                        if (state.page > state.totalPage) {
                             state.page--;
-
-                            if (state.page < 1) {
-                                state.page++;
-                            }
-                        },
-                        goTo(page) {
-                            if (page < 1) {
-                                page = 1;
-                            }
-                            state.page = +page;
-
-                            if (page > state.totalPage) {
-                                state.page = state.totalPage;
-                            }
-                        },
-                        createListeners(exec = false) {
-
-                            if (exec) {
-                                controls.goTo(1);
-                                update();
-                            }
-                            exec = false;
-                            $('.first').on('click', function () {
-                                controls.goTo(1);
-                                update();
-                            })
-                            $('.last').on('click', function () {
-                                controls.goTo(state.totalPage);
-                                update();
-                            })
-                            $('.next').on('click', function () {
-                                controls.next();
-                                update();
-                            })
-                            $('.prev').on('click', function () {
-                                controls.prev();
-                                update();
-                            })
-
-
                         }
-                    }
+                    },
+                    prev() {
+                        state.page--;
 
-                    const list = {
-                        create(item) {
-                            let dataTable = `
+                        if (state.page < 1) {
+                            state.page++;
+                        }
+                    },
+                    goTo(page) {
+                        if (page < 1) {
+                            page = 1;
+                        }
+                        state.page = +page;
+
+                        if (page > state.totalPage) {
+                            state.page = state.totalPage;
+                        }
+                    },
+                    createListeners(exec = false) {
+
+                        if (exec) {
+                            controls.goTo(1);
+                            update();
+                        }
+                        exec = false;
+                        $('.first').on('click', function () {
+                            controls.goTo(1);
+                            update();
+                        })
+                        $('.last').on('click', function () {
+                            controls.goTo(state.totalPage);
+                            update();
+                        })
+                        $('.next').on('click', function () {
+                            controls.next();
+                            update();
+                        })
+                        $('.prev').on('click', function () {
+                            controls.prev();
+                            update();
+                        })
+
+
+                    }
+                }
+
+                const list = {
+                    create(item) {
+                        let dataTable = `
                                 <tr>
                                     <td style="vertical-align: middle;">
                                         Transação
@@ -845,115 +850,90 @@ $(document).ready(function () {
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
-                                        ${item.has_valid_tracking 
-                                            ? '<span class="badge badge-sm badge-success p-2">Pago</span>' 
-                                            : '<span class="badge badge-sm badge-info p-2">Aguardando postagem válida</span>'}
+                                        ${statusExtract[item.status]}
                                      </td>
                                     <td style="vertical-align: middle;">${item.paymentDate}</td>
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
-                            updateClassHTML(dataTable);
-                        },
-                        update() {
-                            page = state.page - 1;
-                            start = page * state.perPage;
-                            end = start + state.perPage;
+                        updateClassHTML(dataTable);
+                    },
+                    update() {
+                        page = state.page - 1;
+                        start = page * state.perPage;
+                        end = start + state.perPage;
 
-                            const paginatedItems = items.slice(start, end);
-                            updateClassHTML();
-                            paginatedItems.forEach(list.create);
-                        }
+                        const paginatedItems = items.slice(start, end);
+                        updateClassHTML();
+                        paginatedItems.forEach(list.create);
                     }
+                }
 
-                    const buttons = {
-                        create(number) {
-                            const button = document.createElement('div');
-                            button.innerHTML = number;
+                const buttons = {
+                    create(number) {
+                        const button = document.createElement('div');
+                        button.innerHTML = number;
 
-                            if (state.page == number) {
-                                button.classList.add('active');
-                            }
+                        if (state.page == number) {
+                            button.classList.add('active');
+                        }
 
-                            button.addEventListener('click', (event) => {
-                                const page = event.target.innerText;
+                        button.addEventListener('click', (event) => {
+                            const page = event.target.innerText;
 
-                                controls.goTo(page);
-                                update();
-                            })
+                            controls.goTo(page);
+                            update();
+                        })
 
-                            button.classList.add('btn', 'nav-btn');
+                        button.classList.add('btn', 'nav-btn');
 
-                            $(".pagination .numbers").append(button);
+                        $(".pagination .numbers").append(button);
 
-                        },
-                        update() {
-                            $(".pagination .numbers").html('');
-                            const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+                    },
+                    update() {
+                        $(".pagination .numbers").html('');
+                        const {maxLeft, maxRight} = buttons.calculateMaxVisible();
 
-                            for (let page = maxLeft; page <= maxRight; page++) {
-                                buttons.create(page);
-                            }
-                        },
-                        calculateMaxVisible() {
-                            let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
-                            let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                        for (let page = maxLeft; page <= maxRight; page++) {
+                            buttons.create(page);
+                        }
+                    },
+                    calculateMaxVisible() {
+                        let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                        let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+
+                        if (maxLeft < 1) {
+                            maxLeft = 1;
+                            maxRight = state.maxVisibleButtons;
+                        }
+
+                        if (maxRight > state.totalPage) {
+                            maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
+                            maxRight = state.totalPage;
 
                             if (maxLeft < 1) {
                                 maxLeft = 1;
-                                maxRight = state.maxVisibleButtons;
                             }
-
-                            if (maxRight > state.totalPage) {
-                                maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
-                                maxRight = state.totalPage;
-
-                                if (maxLeft < 1) {
-                                    maxLeft = 1;
-                                }
-                            }
-                            return {maxLeft, maxRight};
                         }
-
-
+                        return {maxLeft, maxRight};
                     }
 
 
-                    function update() {
-                        list.update();
-                        buttons.update();
-                    }
-
-                    function init() {
-                        update();
-                        controls.createListeners(true);
-                    }
-
-                    init();
-
-                    // let data = '';
-
-                    /* for (let item of items) {
-                         data = `
-                         <tr>
-                             <td style="vertical-align: middle;">
-                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                     <span style="color:black;">#${item.orderId}</span>
-                                 </a><br>
-                                 <small>(Data da venda: ${item.transactionDate})</small>
-                              </td>
-                             <td>${item.paymentDate}</td>
-                             <td>${item.subSellerRateAmount}</td>
-                         </tr>
-                         `;
-                         // $('#table-statement-body').append(data);
-                     }
-                     $('#statementTable').addClass('table-striped');*/
-
-
-                } else {
-                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                 }
+
+
+                function update() {
+                    list.update();
+                    buttons.update();
+                }
+
+                function init() {
+                    update();
+                    controls.createListeners(true);
+                }
+
+                init();
+
 
                 function updateClassHTML(dataTable = 0) {
                     if (dataTable.length > 0) {

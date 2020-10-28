@@ -112,7 +112,6 @@ class TransfersController extends Controller
 
             return $return;
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);
 
             return response()->json([
@@ -121,51 +120,6 @@ class TransfersController extends Controller
         }
     }
 
-    /**
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function getBraspagData(Request $request)
-    {
-        try {
-            //            'eb25ce51-f685-41c5-a76a-d8ed09f373c9'
-            $data = $request->all();
-            $user = auth()->user();
-            $companyModel = new Company();
-            $braspagPaymentService = new BraspagPaymentService();
-            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
-            $companyBraspag = $companyModel->whereNotNull($columnName)
-                ->where('user_id', $user->account_owner_id)->first();
-            $dateRange = FoxUtils::validateDateRange($data["date_range"]);
-            $data['initial_forecasted_date'] = $dateRange[0];
-            $data['final_forecasted_date'] = $dateRange[1];
-            $data['merchant_id'] = FoxUtils::isProduction() ? $companyBraspag->braspag_merchant_id : $companyBraspag->braspag_merchant_homolog_id;
-            $data['page_size'] = 25;
-            $data['page_index'] = !empty($data['page']) ? intval($data['page']) : 1;
-            $result = $braspagPaymentService->getCompanyFinancialData($data, $companyBraspag->id);
-            $result = json_decode($result);
-
-            return response()->json(
-                [
-                    'page_count' => !property_exists($result, 'Errors') ? $result->PageCount : 0,
-                    'page_size' => !property_exists($result, 'Errors') ? $result->PageSize : 25,
-                    'page_index' => !property_exists($result, 'Errors') ? $result->PageIndex : 1,
-                    'schedules' => !property_exists($result, 'Errors') ? $result->Schedules : [],
-                ],
-                200
-            );
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
-        }
-    }
-
-    /**
-     * @return JsonResponse
-     */
     public function accountStatementData()
     {
         try {
@@ -193,17 +147,6 @@ class TransfersController extends Controller
 
             $transactions = (new GetNetStatementService())->performStatement($result);
             $transactions = collect($transactions);
-            $saleIds = $transactions->pluck('orderId')
-                ->map(function ($item) {
-                    return current(Hashids::connection('sale_id')->decode($item));
-                });
-            $sales = Sale::whereIn('id', $saleIds)
-                ->get();
-            foreach ($transactions as &$transaction){
-                $id = current(Hashids::connection('sale_id')->decode($transaction->orderId));
-                $sale = $sales->where('id', $id)->first();
-                $transaction->has_valid_tracking = $sale->has_valid_tracking;
-            }
 
             return response()->json($transactions);
         } catch (Exception $exception) {
