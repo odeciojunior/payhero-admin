@@ -727,6 +727,11 @@ $(document).ready(function () {
         });
     }
 
+    let formatter = new Intl.NumberFormat('br', {
+        style: 'currency',
+        currency: 'BRL',
+    });
+
     let statusExtract = {
         1: '<span class="badge badge-sm badge-pendente p-2">Aguardando postagem válida</span>',
         2: '<span class="badge badge-sm badge-info p-2">Aguardando liquidação</span>',
@@ -746,7 +751,7 @@ $(document).ready(function () {
     let end = 0;
 
     function updateAccountStatementData() {
-
+        loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
 
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
@@ -764,13 +769,13 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                let error = 'Erro ao gerar o extrato';
+                loadOnAny('#nav-statement #available-in-period-statement', true);
 
+                let error = 'Erro ao gerar o extrato';
                 errorAjaxResponse(error);
                 $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
-
                 updateClassHTML();
 
                 items = response;
@@ -780,6 +785,18 @@ $(document).ready(function () {
                     return;
                 }
 
+                let totalValue = 0;
+                $.each(items, function (index, value) {
+                    totalValue = value.subSellerRateSumTotalAmount + totalValue;
+                })
+
+                let isNegativeStatement = false;
+                if (totalValue < 1) {
+                    isNegativeStatement = true;
+                }
+
+                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${formatter.format(totalValue / 100)}</span>`);
+                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 $(".numbers").show();
 
@@ -840,6 +857,7 @@ $(document).ready(function () {
 
                 const list = {
                     create(item) {
+
                         let dataTable = `
                                 <tr>
                                     <td style="vertical-align: middle;">
