@@ -727,11 +727,6 @@ $(document).ready(function () {
         });
     }
 
-    let formatter = new Intl.NumberFormat('br', {
-        style: 'currency',
-        currency: 'BRL',
-    });
-
     let statusExtract = {
         1: '<span class="badge badge-sm badge-pendente p-2">Aguardando postagem válida</span>',
         2: '<span class="badge badge-sm badge-info p-2">Aguardando liquidação</span>',
@@ -795,7 +790,9 @@ $(document).ready(function () {
                     isNegativeStatement = true;
                 }
 
-                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${formatter.format(totalValue / 100)}</span>`);
+                totalValue = totalValue / 100;
+
+                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${(totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>`);
                 loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 $(".numbers").show();
