@@ -87,7 +87,7 @@ class RegisterApiController extends Controller
                             [
                                 'success' => 'false',
                                 'message' => $invitation['message']
-                            ]
+                            ],403
                         );
                 }
             }
@@ -148,6 +148,7 @@ class RegisterApiController extends Controller
                         'success' => 'true',
                         'message' => 'Arquivos Enviado com Sucesso',
                         'access_token' => base64_encode(Crypt::encrypt($user->id)),
+                        'invite' => isset($invitation) ? $invitation['message'] : 'Cadastro sem convite'
                     ], 200
                 );
             }
@@ -175,8 +176,6 @@ class RegisterApiController extends Controller
         $companyId = current(Hashids::decode($parameter));
         $company   = $companyModel->where('id', $companyId)->first();
 
-        $withoutInvite = false;
-
         try {
 
             if (strlen($parameter) > 15) {
@@ -194,7 +193,7 @@ class RegisterApiController extends Controller
 
             } else {
 
-                if (isset($company->id)) {
+                if (isset($company->id) && $company->active_flag == 1) {
                     $companyService = new CompanyService();
 
                     if (!$companyService->isDocumentValidated($company->id)) {
@@ -208,31 +207,30 @@ class RegisterApiController extends Controller
 
                 } else {
 
+                    Log::info('Cadastro por contive inválido, empresa não existe: ', $requestData);
+
                     return [
-                        'success' => 'false',
+                        'success' => 'true',
                         'message' => 'Registro sem convite'
                     ];
                 }
             }
+            if (!isset($invite))
+                $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
 
-            if ($withoutInvite == false) {
+            if ($invite) {
 
-                if (!isset($invite))
-                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
+                $invite->update(
+                    [
+                        'user_invited'    => $user->account_owner_id,
+                        'status'          => '1',
+                        'register_date'   => Carbon::now()->format('Y-m-d'),
+                        'expiration_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
+                        'email_invited'   => $requestData['email'],
+                    ]
+                );
 
-                if ($invite) {
-
-                    $invite->update(
-                        [
-                            'user_invited'    => $user->account_owner_id,
-                            'status'          => '1',
-                            'register_date'   => Carbon::now()->format('Y-m-d'),
-                            'expiration_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
-                            'email_invited'   => $requestData['email'],
-                        ]
-                    );
-
-                    if (empty($invite->invite) && isset($company->id)) {
+                if (empty($invite->invite) && isset($company->id)) {
 
                         $invite->update(
                             [
@@ -243,20 +241,19 @@ class RegisterApiController extends Controller
 
                 } else {
 
-                    if ($company) {
+                if ($company) {
 
-                        $inviteModel->create(
-                            [
-                                'invite'          => $company->user_id,
-                                'user_invited'    => $user->account_owner_id,
-                                'status'          => '1',
-                                'company_id'      => $company->id,
-                                'register_date'   => Carbon::now()->format('Y-m-d'),
-                                'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                'email_invited'   => $requestData['email'],
-                            ]
-                        );
-                    }
+                    $inviteModel->create(
+                        [
+                            'invite'          => $company->user_id,
+                            'user_invited'    => $user->account_owner_id,
+                            'status'          => '1',
+                            'company_id'      => $company->id,
+                            'register_date'   => Carbon::now()->format('Y-m-d'),
+                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                            'email_invited'   => $requestData['email'],
+                        ]
+                    );
                 }
             }
 
@@ -764,7 +761,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        "message" => "Seu cadastro com este email esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu email",
+                        "message" => "Seu cadastro com este token esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu email",
                     ],
                     403
                 );

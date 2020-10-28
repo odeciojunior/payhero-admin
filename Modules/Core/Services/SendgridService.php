@@ -322,7 +322,7 @@ class SendgridService
 //                if (empty($toEmail)) {
 //                    return false;
 //                }
-
+//            }
 
 
             $email = new \SendGrid\Mail\Mail();
