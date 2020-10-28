@@ -4,30 +4,28 @@ namespace Modules\Shopify\Http\Controllers;
 
 use App\Jobs\ImportShopifyTrackingCodesJob;
 use Exception;
-use Modules\Core\Services\FoxUtils;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
-use Modules\Core\Entities\Domain;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Events\ShopifyIntegrationEvent;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\UserService;
 use Modules\Core\Services\ShopifyErrors;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\UserService;
+use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\ShopifyService;
-use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Events\ShopifyIntegrationEvent;
-use Modules\Shopify\Transformers\ShopifyResource;
-use Modules\Companies\Transformers\CompaniesSelectResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class ShopifyApiController
@@ -35,9 +33,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 class ShopifyApiController extends Controller
 {
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index()
     {
         try {
@@ -69,10 +64,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request)
     {
         try {
@@ -96,12 +87,9 @@ class ShopifyApiController extends Controller
             $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
             $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
 
-            $shopifyIntegration = $shopifyIntegrationModel->where(
-                'url_store',
-                $dataRequest['url_store'] . '.myshopify.com'
-            )
-                ->orWhere('token', $dataRequest['token'])
-                ->first();
+            $shopifyIntegration = $shopifyIntegrationModel
+                ->where('url_store', $dataRequest['url_store'] . '.myshopify.com')
+                ->orWhere('token', $dataRequest['token'])->first();
 
             if ($shopifyIntegration) {
                 if ($shopifyIntegration->status == 1) {
@@ -120,10 +108,9 @@ class ShopifyApiController extends Controller
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dataRequest['token']);
 
                 if (empty($shopifyService->getClient())) {
-                    return response()->json(
-                        ['message' => 'Dados do shopify inválidos, revise os dados informados'],
-                        400
-                    );
+                    return response()->json([
+                        'message' => 'Dados do shopify inválidos, revise os dados informados'
+                    ], 400);
                 }
             } catch (Exception $e) {
                 if (method_exists($e, 'getCode')) {
@@ -160,128 +147,111 @@ class ShopifyApiController extends Controller
 
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
             }
+
             $tokenPermissions = $shopifyService->verifyPermissions();
             if ($tokenPermissions['status'] == 'error') {
                 return response()->json(['message' => $tokenPermissions['message']], 400);
             }
 
             $shopifyName = $shopifyService->getShopName();
-            $project = $projectModel->create(
-                [
-                    'name' => $shopifyName,
-                    'status' => $projectModel->present()
-                        ->getStatus('active'),
-                    'visibility' => 'private',
-                    'percentage_affiliates' => '0',
-                    'description' => $shopifyName,
-                    'invoice_description' => $shopifyName,
-                    'url_page' => 'https://' . $shopifyService->getShopDomain(),
-                    'automatic_affiliation' => false,
-                    'shopify_id' => $shopifyService->getShopId(),
-                    'boleto' => '1',
-                    'installments_amount' => '12',
-                    'installments_interest_free' => '1',
-                    'checkout_type' => 2 // checkout de 1 passo
-                ]
-            );
-            if (!empty($project)) {
-                $shippingModel->create(
-                    [
-                        'project_id' => $project->id,
-                        'name' => 'Frete gratis',
-                        'information' => 'de 15 até 30 dias',
-                        'value' => '0,00',
-                        'type' => 'static',
-                        'type_enum' => $shippingModel->present()->getTypeEnum('static'),
-                        'status' => '1',
-                        'pre_selected' => '1',
-                    ]
-                );
-                if (!empty($shippingModel)) {
-                    $shopifyIntegration = $shopifyIntegrationModel->create(
-                        [
-                            'token' => $dataRequest['token'],
-                            'shared_secret' => '',
-                            'url_store' => $urlStore . '.myshopify.com',
-                            'user_id' => auth()->user()->id,
-                            'project_id' => $project->id,
-                            'status' => 1,
-                        ]
-                    );
+            $project = $projectModel->create([
+                'name' => $shopifyName,
+                'status' => $projectModel->present()->getStatus('active'),
+                'visibility' => 'private',
+                'percentage_affiliates' => '0',
+                'description' => $shopifyName,
+                'invoice_description' => $shopifyName,
+                'url_page' => 'https://' . $shopifyService->getShopDomain(),
+                'automatic_affiliation' => false,
+                'shopify_id' => $shopifyService->getShopId(),
+                'boleto' => '1',
+                'installments_amount' => '12',
+                'installments_interest_free' => '1',
+                'checkout_type' => 2 // checkout de 1 passo
+            ]);
 
-                    if (!empty($shopifyIntegration)) {
-                        $companyId = current(Hashids::decode($dataRequest['company']));
-
-                        $userProjectModel->create(
-                            [
-                                'user_id' => auth()->user()->account_owner_id,
-                                'project_id' => $project->id,
-                                'company_id' => $companyId,
-                                'type' => 'producer',
-                                'type_enum' => $userProjectModel->present()
-                                    ->getTypeEnum('producer'),
-                                'shipment_responsible' => true,
-                                'access_permission' => true,
-                                'edit_permission' => true,
-                                'status' => 'active',
-                                'status_flag' => $userProjectModel->present()
-                                    ->getStatusFlag('active'),
-                            ]
-                        );
-                        if (!empty($userProjectModel)) {
-                            $projectNotificationService = new ProjectNotificationService();
-                            $projectService = new ProjectService();
-                            $projectNotificationService->createProjectNotificationDefault($project->id);
-                            $projectService->createUpsellConfig($project->id);
-
-                            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-                        } else {
-                            $shippingModel->delete();
-                            $shopifyIntegration->delete();
-                            $project->delete();
-
-                            return response()->json(
-                                ['message' => 'Problema ao criar integração, tente novamente mais tarde'],
-                                400
-                            );
-                        }
-                    } else {
-                        $shippingModel->delete();
-                        $project->delete();
-
-                        return response()->json(
-                            ['message' => 'Problema ao criar integração, tente novamente mais tarde'],
-                            400
-                        );
-                    }
-                } else {
-                    $project->delete();
-
-                    return response()->json(
-                        ['message' => 'Problema ao criar integração, tente novamente mais tarde'],
-                        400
-                    );
-                }
-            } else {
+            if (empty($project)) {
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
-            return response()->json(
-                ['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'],
-                200
-            );
+            $shipping = $shippingModel->create([
+                'project_id' => $project->id,
+                'name' => 'Frete gratis',
+                'information' => 'de 15 até 30 dias',
+                'value' => '0,00',
+                'type' => 'static',
+                'type_enum' => $shippingModel->present()->getTypeEnum('static'),
+                'status' => '1',
+                'pre_selected' => '1',
+            ]);
+
+            if (empty($shipping)) {
+                $project->delete();
+
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
+            }
+
+            $shopifyIntegration = $shopifyIntegrationModel->create([
+                'token' => $dataRequest['token'],
+                'shared_secret' => '',
+                'url_store' => $urlStore . '.myshopify.com',
+                'user_id' => auth()->user()->id,
+                'project_id' => $project->id,
+                'status' => 1,
+            ]);
+
+            if (empty($shopifyIntegration)) {
+                $shipping->delete();
+                $project->delete();
+
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
+            }
+
+            $userProject = $userProjectModel->create([
+                'user_id' => auth()->user()->account_owner_id,
+                'project_id' => $project->id,
+                'company_id' => current(Hashids::decode($dataRequest['company'])),
+                'type' => 'producer',
+                'type_enum' => $userProjectModel->present()->getTypeEnum('producer'),
+                'shipment_responsible' => true,
+                'access_permission' => true,
+                'edit_permission' => true,
+                'status' => 'active',
+                'status_flag' => $userProjectModel->present()->getStatusFlag('active'),
+            ]);
+
+            if (empty($userProject)) {
+                $shopifyIntegration->delete();
+                $shipping->delete();
+                $project->delete();
+
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
+            }
+
+            $projectNotificationService = new ProjectNotificationService();
+            $projectService = new ProjectService();
+            $projectNotificationService->createProjectNotificationDefault($project->id);
+            $projectService->createUpsellConfig($project->id);
+
+            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
+
+
+            return response()->json([
+                'message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'
+            ], 200);
         } catch (Exception $e) {
-            Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
             report($e);
 
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function undoIntegration(Request $request)
     {
         try {
@@ -291,83 +261,66 @@ class ShopifyApiController extends Controller
 
             $projectModel = new Project();
 
-            if ($projectId) {
-                //id decriptado
-                $project = $projectModel
-                    ->with(['shopifyIntegrations'])
-                    ->find($projectId);
-
-                activity()->on($projectModel)->tap(
-                    function (Activity $activity) use ($projectId) {
-                        $activity->log_name = 'updated';
-                        $activity->subject_id = current(Hashids::decode($projectId));
-                    }
-                )->log('Integração com o shopify desfeita para o projeto ' . $project->name);
-
-                if (!empty($project->shopify_id)) {
-                    //se for shopify, voltar as integraçoes ao html padrao
-                    try {
-                        foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                            $shopify->setThemeByRole('main');
-                            if (!empty($shopifyIntegration->theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    $shopifyIntegration->theme_file,
-                                    $shopifyIntegration->theme_html
-                                );
-                            }
-                            if (!empty($shopifyIntegration->layout_theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    'layout/theme.liquid',
-                                    $shopifyIntegration->layout_theme_html
-                                );
-                            }
-
-                            //remove todos os webhooks
-                            $shopify->deleteShopWebhook();
-
-                            $shopifyIntegration->update(
-                                [
-                                    'status' => $shopifyIntegration->present()
-                                        ->getStatus('disabled'),
-                                ]
-                            );
-                        }
-
-                        return response()->json(['message' => 'Integração com o shopify desfeita'], Response::HTTP_OK);
-                    } catch (Exception $e) {
-                        //throwl
-                        return response()->json(
-                            ['message' => 'Problema ao desfazer integração, tente novamente mais tarde'],
-                            Response::HTTP_BAD_REQUEST
-                        );
-                    }
-                } else {
-                    return response()->json(
-                        ['message' => 'Este projeto não tem integração com o shopify'],
-                        Response::HTTP_BAD_REQUEST
-                    );
-                }
-            } else {
-                //problema no id
+            if (FoxUtils::isEmpty($projectId)) {
                 return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
+
+            $project = $projectModel->with(['shopifyIntegrations'])->find($projectId);
+
+            if (empty($project->shopify_id)) {
+                return response()->json([
+                    'message' => 'Este projeto não tem integração com o shopify'
+                ], 400);
+            }
+
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'updated';
+                    $activity->subject_id = current(Hashids::decode($projectId));
+                }
+            )->log('Integração com o shopify desfeita para o projeto ' . $project->name);
+
+            try {
+                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                    $shopify->setThemeByRole('main');
+                    if (!empty($shopifyIntegration->theme_html)) {
+                        $shopify->setTemplateHtml(
+                            $shopifyIntegration->theme_file,
+                            $shopifyIntegration->theme_html
+                        );
+                    }
+                    if (!empty($shopifyIntegration->layout_theme_html)) {
+                        $shopify->setTemplateHtml(
+                            'layout/theme.liquid',
+                            $shopifyIntegration->layout_theme_html
+                        );
+                    }
+
+                    //remove todos os webhooks
+                    $shopify->deleteShopWebhook();
+
+                    $shopifyIntegration->update([
+                        'status' => $shopifyIntegration->present()->getStatus('disabled'),
+                    ]);
+                }
+
+                return response()->json(['message' => 'Integração com o shopify desfeita'], Response::HTTP_OK);
+            } catch (Exception $e) {
+                return response()->json([
+                    'message' => 'Problema ao desfazer integração, tente novamente mais tarde'
+                ], 400);
+            }
         } catch (Exception $e) {
-            Log::warning('ShopifyController - undoIntegration - Erro ao desfazer integracao');
             report($e);
 
-            return response()->json(
-                ['message' => 'Problema ao desfazer integração, tente novamente mais tarde'],
-                Response::HTTP_BAD_REQUEST
-            );
+            return response()->json([
+                'message' => 'Problema ao desfazer integração, tente novamente mais tarde'
+            ], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function reIntegration(Request $request)
     {
         try {
@@ -524,10 +477,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function synchronizeProducts(Request $request)
     {
         try {
@@ -578,10 +527,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function synchronizeTrackings(Request $request)
     {
         try {
@@ -599,7 +544,7 @@ class ShopifyApiController extends Controller
                 Response::HTTP_OK
             );
         } catch (Exception $e) {
-            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,422,423,429])) {
+            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 422, 423, 429])) {
                 return response()->json(
                     ['message' => 'Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde'],
                     Response::HTTP_BAD_REQUEST
@@ -614,10 +559,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function synchronizeTemplates(Request $request)
     {
         try {
@@ -785,10 +726,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function updateToken(Request $request)
     {
         try {
@@ -836,7 +773,7 @@ class ShopifyApiController extends Controller
             $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
 
             $shopify = new ShopifyService($integration->url_store, $data['token']);
-          
+
             $permissions = $shopify->verifyPermissions();
 
             if ($permissions['status'] == 'error') {
@@ -877,10 +814,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function verifyPermission(Request $request)
     {
         $data = $request->all();
@@ -906,17 +839,17 @@ class ShopifyApiController extends Controller
                         return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
                     }
                 } catch (Exception $e) {
-                    if(method_exists($e, 'getCode')) {
+                    if (method_exists($e, 'getCode')) {
                         if ($e->getCode() == 401) {
                             return response()->json(['message' => 'Token inválido'], 400);
                         } elseif ($e->getCode() == 402) {
                             return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
                         } elseif ($e->getCode() == 403) {
-                            return response()->json(['message' => 'Erro nas permissões de seu aplicativo'],400);
+                            return response()->json(['message' => 'Erro nas permissões de seu aplicativo'], 400);
                         } elseif ($e->getCode() == 404) {
-                            return response()->json(['message' => 'Url da loja não encontrada'],400);
+                            return response()->json(['message' => 'Url da loja não encontrada'], 400);
                         } elseif ($e->getCode() == 423) {
-                            return response()->json(['message' => 'Loja bloqueada no Shopify'],400);
+                            return response()->json(['message' => 'Loja bloqueada no Shopify'], 400);
                         } elseif ($e->getCode() == 429) {
                             return response()->json(['message' => 'Limite de requisiçoes atingido'], 400);
                         }
@@ -961,10 +894,6 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function setSkipToCart(Request $request)
     {
         $data = $request->all();
@@ -1008,7 +937,7 @@ class ShopifyApiController extends Controller
                         return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
                     }
                 } catch (Exception $e) {
-                    if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404])) {
+                    if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404])) {
                         return response()->json(
                             ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
                             400

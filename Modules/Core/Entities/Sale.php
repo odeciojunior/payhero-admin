@@ -101,6 +101,7 @@ class Sale extends Model
         'date_refunded',
         'end_date',
         'gateway_transaction_id',
+        'gateway_billet_identificator',
         'gateway_id',
         'status',
         'gateway_status',

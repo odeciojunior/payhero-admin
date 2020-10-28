@@ -150,6 +150,7 @@ class Company extends Model
         'gateway_release_money_days',
         'credit_card_release_money_days',
         'boleto_release_money_days',
+        'transaction_rate',
         'deleted_at',
         'created_at',
         'updated_at',

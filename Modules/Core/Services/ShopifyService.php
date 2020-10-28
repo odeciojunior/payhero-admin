@@ -1960,7 +1960,7 @@ class ShopifyService
     }
 
     /**
-     * @return boolean
+     * @return string[]
      * Ensure if the token entered at integration
      * creation has the required permissions
      */
@@ -1987,7 +1987,7 @@ class ShopifyService
     }
 
     /**
-     * @return boolean
+     * @return string[]
      * Verify if the informed token has permission to manage orders on shopify
      */
     public function testOrdersPermissions()
@@ -2084,7 +2084,7 @@ class ShopifyService
     }
 
     /**
-     * @return boolean
+     * @return string[]
      * Verify if the informed token has permission to manage products on shopify
      */
     public function testProductsPermissions()
@@ -2118,7 +2118,7 @@ class ShopifyService
     }
 
     /**
-     * @return boolean
+     * @return string[]
      * Verify if the informed token has permission to edit theme assets on shopify
      */
     public function testThemePermissions()

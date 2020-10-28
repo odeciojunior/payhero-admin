@@ -6,6 +6,7 @@ namespace Modules\Transfers\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
@@ -18,8 +19,9 @@ class GetNetStatementService
     public function performStatement(stdClass $data)
     {
         $transactions = array_reverse($data->list_transactions) ?? [];
+        $transferPresent = (new Transfer())->present();
 
-        $transactions = array_map(function ($item) {
+        $transactions = array_map(function ($item) use ($transferPresent) {
             if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
                 $summary = $item->summary;
                 $details = $item->details;
@@ -49,9 +51,19 @@ class GetNetStatementService
                     }
                 }
 
-                $statement = (object) [
-                    //'id' => $id,
-                    //'orderId' => Hashids::connection('sale_id')->encode(737634),
+
+                switch ($details[0]->release_status) {
+                    case 'N':
+                        $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
+                        break;
+                    case Carbon::now()->lessThan($details[0]->payment_date):
+                        $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
+                        break;
+                    default:
+                        $status = $transferPresent->getStatusGetnet('Pago');
+                }
+
+                $statement = (object)[
                     'orderId' => $arrayOrderId[0],
                     'transactionDate' => $transactionDate,
                     'installmentDate' => $installmentDate,
@@ -60,9 +72,15 @@ class GetNetStatementService
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
                     'subSellerRatePercentage' => $subSellerRatePercentage,
                     'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
+                    'status' => $status
                 ];
 
-                $this->data[] = $statement;
+
+                if (request('status') == 'all' || !in_array(request('status'), ['all', 1, 2, 3])) {
+                    $this->data[] = $statement;
+                } elseif (request('status') == $status) {
+                    $this->data[] = $statement;
+                }
             }
         }, $transactions);
 
