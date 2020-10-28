@@ -964,7 +964,7 @@ class SaleService
         }
 
         $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $creditCardTax));
-        $cloudfoxValue += str_replace('.', '', $user->transaction_rate);
+        $cloudfoxValue += str_replace('.', '', $company->transaction_rate);
         $cloudfoxValue += $interestValue;
 
         return [
