@@ -110,7 +110,6 @@ class User extends Authenticable
         'address_document_status',
         'personal_document_status',
         'percentage_rate',
-        'transaction_rate',
         'boleto_antecipation_money_days',
         'credit_card_antecipation_money_days',
         'percentage_antecipable',
