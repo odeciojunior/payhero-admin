@@ -27,6 +27,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Transaction $transaction
  * @property User $user
  * @property Company $company
+ * @method TransferPresenter present()
  */
 class Transfer extends Model
 {

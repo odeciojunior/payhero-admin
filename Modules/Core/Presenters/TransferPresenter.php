@@ -8,7 +8,6 @@ class TransferPresenter extends Presenter
 {
     public function getTypeEnum($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -27,6 +26,33 @@ class TransferPresenter extends Presenter
             }
 
             return '';
+        }
+    }
+
+    public function getStatusGetnet($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'Aguardando postagem válida';
+                case 2:
+                    return 'Aguardando liquidação';
+                case 3:
+                    return 'Pago';
+                default:
+                    return '';
+            }
+        } else {
+            switch ($status) {
+                case 'Aguardando postagem válida':
+                    return 1;
+                case 'Aguardando liquidação':
+                    return 2;
+                case 'Pago':
+                    return 3;
+                default:
+                    return '';
+            }
         }
     }
 }
