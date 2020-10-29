@@ -3,7 +3,7 @@
 if (env('APP_ENV', 'homolog') == 'production') {
     $sentry_dsn = env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')); // production
 } else {
-    $sentry_dsn = ''; // local
+    $sentry_dsn = null; // local
 }
 
 return [
