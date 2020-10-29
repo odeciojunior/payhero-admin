@@ -44,7 +44,7 @@
                             <div class="tab-pane active" id="tab_bank_data" role="tabpanel">
                                 <h3 class="mb-15 mt-10">Conta bancária</h3>
                                 <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
-                                    <strong>Atenção! </strong> O limite de saque mensal é de R$ R$ 1.900,00 para
+                                    <strong>Atenção! </strong> O limite de saque mensal é de R$ 1.900,00 para
                                     empresas cadastradas como pessoa física!
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
