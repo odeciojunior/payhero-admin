@@ -6,8 +6,6 @@ use Exception;
 use Carbon\Carbon;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Gateway;
@@ -47,11 +45,7 @@ class TransfersService
                     ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                 ])->whereHas('sale', function ($query) {
                     $query->where('has_valid_tracking', true)
-                        ->orDoesntHave('productsPlansSale', function ($query) {
-                            $query->whereHas('product', function ($query) {
-                                $query->where('type_enum', (new Product)->present()->getType('physical'));
-                            });
-                        });
+                        ->orWhereNull('delivery_id');
                 });
         } else {
             $transactions = $transactionModel->with('sale')
@@ -61,11 +55,7 @@ class TransfersService
                     ['sale_id', $saleId]
                 ])->whereHas('sale', function ($query) {
                     $query->where('has_valid_tracking', true)
-                        ->orDoesntHave('productsPlansSale', function ($query) {
-                            $query->whereHas('product', function ($query) {
-                                $query->where('type_enum', (new Product)->present()->getType('physical'));
-                            });
-                        });
+                        ->orWhereNull('delivery_id');
                 });
         }
 
@@ -108,11 +98,7 @@ class TransfersService
                     ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
                 ])->whereHas('sale', function ($query) {
                     $query->where('has_valid_tracking', true)
-                        ->orDoesntHave('productsPlansSale', function ($query) {
-                            $query->whereHas('product', function ($query) {
-                                $query->where('type_enum', (new Product)->present()->getType('physical'));
-                            });
-                        });
+                        ->orWhereNull('delivery_id');
                 });
         } else {
             $transactions = $transactionModel->with('anticipatedTransactions', 'sale')
@@ -122,11 +108,7 @@ class TransfersService
                     ['sale_id', $saleId]
                 ])->whereHas('sale', function ($query) {
                     $query->where('has_valid_tracking', true)
-                        ->orDoesntHave('productsPlansSale', function ($query) {
-                            $query->whereHas('product', function ($query) {
-                                $query->where('type_enum', (new Product)->present()->getType('physical'));
-                            });
-                        });
+                        ->orWhereNull('delivery_id');
                 });
         }
 
