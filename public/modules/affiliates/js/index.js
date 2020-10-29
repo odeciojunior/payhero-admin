@@ -1,6 +1,8 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     let countCompanies;
+    let countCompanyApproved = 0;
+
     getProjectData();
     getCompanyData();
 
@@ -27,7 +29,7 @@ $(document).ready(function () {
                     $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.png'}`);
                     $('#created_by').html(`Produtor: ${response.data.user_name}`);
                     $('.text-about-project').html(response.data.description);
-                    if(response.data.url_page != '' && response.data.url_page != null) {
+                    if (response.data.url_page != '' && response.data.url_page != null) {
                         $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
                     } else {
                         $('.url_page').html('');
@@ -48,11 +50,10 @@ $(document).ready(function () {
                     if (response.data.percentage_affiliates != '') {
                         $('.percentage-affiliate').html(`<strong>Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
                     }
-                    console.log(response.data.cookie_duration);
                     if (response.data.cookie_duration != '') {
                         if (response.data.cookie_duration == 0) {
                             $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>Eterno</span></strong>`);
-                        }  else if (response.data.cookie_duration >= 1) {
+                        } else if (response.data.cookie_duration >= 1) {
                             $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>${response.data.cookie_duration} dias</span></strong>`);
                         }
                     }
@@ -74,7 +75,6 @@ $(document).ready(function () {
                     dataRelease += '</strong>';
                     $('.release_days').html(dataRelease);
                 } else {
-                    // $('.div-disabled-url-affiliates').show();
                     swal({
                         title: 'Esse projeto não está disponível para afiliação',
                         type: 'warning',
@@ -102,18 +102,27 @@ $(document).ready(function () {
             },
             success: (response) => {
                 countCompanies = response.data.length;
+
                 for (let company of response.data) {
-                    $('#companies').append(`<option value='${company.id}'>
-                                                ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
-                                            </option>`);
+                    if (company.capture_transaction_enabled) {
+                        countCompanyApproved++;
+                        $('#companies').append(`
+                            <option value='${company.id}'>
+                                ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
+                            </option>
+                        `);
+                    }
                 }
             }
         });
 
     }
+
     $(document).on('click', '#btn-affiliation', function () {
         if (countCompanies == 0) {
             $("#modal-not-companies").modal('show');
+        } else if (countCompanyApproved == 0) {
+            $("#modal-not-companies-approved").modal('show');
         } else {
             $('#modal_store_affiliate').modal('show');
         }
@@ -147,7 +156,9 @@ $(document).ready(function () {
                 if (response.type == 'affiliate') {
                     window.location = "/projects";
                 } else {
-                    setTimeout(function(){ window.location = "/dashboard" }, 4000);
+                    setTimeout(function () {
+                        window.location = "/dashboard"
+                    }, 4000);
                 }
             }
         });
