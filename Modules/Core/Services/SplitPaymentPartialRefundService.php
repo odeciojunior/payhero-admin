@@ -148,7 +148,7 @@ class SplitPaymentPartialRefundService
                                                                                                       ->getPaymentType('boleto')) {
                     $transactionRate = 300;
                 } else {
-                    $transactionRate = $this->sale->user->transaction_rate;
+                    $transactionRate = $invite->company->transaction_rate;
                 }
 
                 $transactionsRefunded = $this->refundedTransactions;
@@ -285,7 +285,7 @@ class SplitPaymentPartialRefundService
                                                                                               ->getPaymentType('boleto')) {
             $transactionRate = 300;
         } else {
-            $transactionRate = $this->sale->user->transaction_rate;
+            $transactionRate = $producerCompany->transaction_rate;
         }
 
         if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {

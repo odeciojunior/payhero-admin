@@ -95,8 +95,6 @@ class GetnetBackOfficeService extends GetnetService
             $dates = explode(' - ', request('dateRange') ?? '');
 
             if (is_array($dates) && count($dates) == 1) {
-//                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
-//                $endDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
                 $startDate = $dates[0];
                 $endDate = $dates[0];
             }

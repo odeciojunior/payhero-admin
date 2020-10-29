@@ -28,11 +28,13 @@
                     <div class="nav-tabs-horizontal mt-20" data-plugin="tabs">
                         <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                             <li class="nav-item" role="presentation" id='nav_users'>
-                                <a class="nav-link active" data-toggle="tab" href="#tab_terms" aria-controls="tab_terms" role="tab">Termos de afiliação
+                                <a class="nav-link active" data-toggle="tab" href="#tab_terms" aria-controls="tab_terms"
+                                   role="tab">Termos de afiliação
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation" id="nav_documents">
-                                <a class="nav-link" data-toggle="tab" href="#tab_about" aria-controls="tab_about" role="tab">
+                                <a class="nav-link" data-toggle="tab" href="#tab_about" aria-controls="tab_about"
+                                   role="tab">
                                     Sobre
                                 </a>
                             </li>
@@ -89,6 +91,7 @@
             </div>
         </div>
         <!-- End Modal -->
+        <!-- Modal Not Company -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical text-center" id='modal-not-companies'
              aria-hidden="true"
              aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -120,10 +123,38 @@
                 </div>
             </div>
         </div>
-        <!-- Modal Not Company -->
+        <!-- End Modal Not Company -->
+        <!-- Modal Company Not Approved Transaction -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical text-center" id='modal-not-companies-approved'
+             aria-hidden="true"
+             aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-lg d-flex justify-content-center">
+                <div class="modal-content w-450" id="conteudo_modal_add">
+
+                    <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
+                        <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                            <span class='swal2-x-mark'>
+                                <span class='swal2-x-mark-line-left'></span>
+                                <span class='swal2-x-mark-line-right'></span>
+                            </span>
+                        </div>
+                        <h3 align='center'>
+                            Para se afiliar você precisa ter pelo menos uma empresa aprovada para transacionar
+                        </h3>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 15px">
+                        <div style='width:100%; text-align: center; padding-top: 3%;'>
+                          <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                Retornar
+                          </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=4') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=1') }}"></script>
     @endpush
 @endsection

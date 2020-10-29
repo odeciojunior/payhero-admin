@@ -64,7 +64,7 @@ class SplitPaymentService
                 $percentageRate = 6.5;
             }
             $cloudfoxValue = (int) (($totalValue / 100) * $percentageRate);
-            $cloudfoxValue += str_replace('.', '', $user->transaction_rate);
+            $cloudfoxValue += str_replace('.', '', $producerCompany->transaction_rate);
 
             $producerValue = (int) $totalValue - $cloudfoxValue;
 
@@ -241,7 +241,7 @@ class SplitPaymentService
                 if ($producerValue <= 4000 && $sale->payment_method == 2) {
                     $transactionRate = 300;
                 } else {
-                    $transactionRate = $user->transaction_rate;
+                    $transactionRate = $producerCompany->transaction_rate;
                 }
             }
             $transactionModel->create([
