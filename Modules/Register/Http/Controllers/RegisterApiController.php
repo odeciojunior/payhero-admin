@@ -1009,6 +1009,8 @@ class RegisterApiController extends Controller
         $supportEmail = $requestData['support_email'] ?? null;
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
+        $zipCode = $requestData['zip_code_company'] ?? null;
+        
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
         $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
         $idwallResult = $companyIdwall ?? null;
@@ -1018,6 +1020,7 @@ class RegisterApiController extends Controller
                 'user_id' => $user->account_owner_id,
                 'fantasy_name' => $fantasy_name,
                 'company_document' => $is_physical_person ? $requestData['document'] : $requestData['company_document'],
+                'zip_code' => $zipCode,
                 'company_type' => $is_physical_person ? 1 : 2,
                 'support_email' => $supportEmail,
                 'support_telephone' => $supportPhone,
