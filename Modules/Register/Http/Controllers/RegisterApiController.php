@@ -726,7 +726,7 @@ class RegisterApiController extends Controller
     {
         $message = "Código de verificação CloudFox - " . $token;
         $smsService = new SmsService();
-        $smsService->sendSms($phone, $message, ' ', 'DisparoPro');
+        $smsService->sendSms($phone, $message, ' ', 'aws-sns');
     }
 
     /**
@@ -1010,7 +1010,7 @@ class RegisterApiController extends Controller
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $zipCode = $requestData['zip_code_company'] ?? null;
-        
+
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
         $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
         $idwallResult = $companyIdwall ?? null;
