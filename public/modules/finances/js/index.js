@@ -794,7 +794,10 @@ $(document).ready(function () {
 
                 totalValue = totalValue / 100;
 
-                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${(totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>`);
+                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${(totalValue.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }))}</span>`);
                 loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 $(".numbers").show();
@@ -869,7 +872,9 @@ $(document).ready(function () {
                                      <td>
                                         ${statusExtract[item.status]}
                                      </td>
-                                    <td style="vertical-align: middle;">${item.paymentDate}</td>
+                                    <td style="vertical-align: middle;">
+                                        ${item.paymentDate} <br>
+                                    </td>
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
