@@ -63,6 +63,7 @@ class GetNetStatementService
                         $status = $transferPresent->getStatusGetnet('Pago');
                 }
 
+
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
                     'transactionDate' => $transactionDate,
@@ -70,6 +71,7 @@ class GetNetStatementService
                     'paymentDate' => $paymentDate,
                     'installmentAmount' => FoxUtils::formatMoney($installmentAmount / 100),
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
+                    'subSellerRateSumTotalAmount' => $subSellerRateAmount,
                     'subSellerRatePercentage' => $subSellerRatePercentage,
                     'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                     'status' => $status

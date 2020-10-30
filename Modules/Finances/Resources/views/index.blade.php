@@ -309,141 +309,165 @@
                         <div class="tab-pane fade" id="nav-statement" role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-between">
-                                <div class="col-lg-12 mb-15">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-4 col-lg-3">
-                                            <div class="input-holder">
-                                                <label for="statement_company_select">Empresa</label>
-                                                <select class="form-control select-pad" name="company"
-                                                        id="statement_company_select">
-                                                </select>
+                                <div class="row justify-content-between">
+                                    <div class="col-12 fix-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-2" style="flex:1">
+                                                <h5 class="title-pad"> Extrato 2.0 </h5>
+                                                <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua
+                                                    conta.
+                                                </p>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3">
-                                            <div class="form-group">
-                                                <label for="date_range_statement">Data da venda</label>
-                                                <input name="date_range_statement" type="date"
-                                                       id="date_range_statement_unique"
-                                                       class="select-pad" placeholder="Clique para editar...">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3">
-                                            <div class="form-group">
-                                                <label for="date_range_statement">Transação</label>
-                                                <input name="statement_sale" id="statement_sale"
-                                                       class="select-pad" placeholder="Transação">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3">
-                                            <div class="input-holder">
-                                                <label for="statement_status_select">Status</label>
-                                                <select class="form-control select-pad" name="status"
-                                                        id="statement_status_select">
-                                                    <option value="all">Todos</option>
-                                                    <option value="1">Aguardando postagem válida</option>
-                                                    <option value="2">Aguardando liquidação</option>
-                                                    <option value="3">Pago</option>
-                                                </select>
+                                            <div class="p-2" id="statement-money">
+                                                <div class="price-holder">
+                                                    <h6 class="label-price"> Saldo no período</h6>
+                                                    <h4 id="available-in-period-statement"
+                                                        style="font-weight: 700;font-size: 25px;display: inline;">
+                                                    </h4>
+                                                    <div class="grad-border green"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="float-right col-sm-4 col-md-2 col-lg-2 mt-10">
-                                        <button id="bt_filtro_statement" class="btn btn-primary w-full">
-                                            <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <table id="statementTable" class="table table-condensed unify table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col" class="headCenter" style="width:33%">Razão</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Status</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Data prevista
-                                                <i class="material-icons gray ml-5 font-size-18" data-toggle="tooltip"
-                                                   title=""
-                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
-                                            </th>
-                                            <th scope="col" class="headCenter" style="width:34%">Valor</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="table-statement-body" class="custom-t-body">
-                                        </tbody>
-                                    </table>
-
-                                    <section id="paginate">
-                                        <div class="pagination" style="margin-top:10px;position:relative;float:right">
-                                            <div class="numbers">
-                                                <div style=""></div>
+                                    <div class="col-lg-12 mb-15">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                                <div class="input-holder">
+                                                    <label for="statement_company_select">Empresa</label>
+                                                    <select class="form-control select-pad" name="company"
+                                                            id="statement_company_select">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="date_range_statement">Data da venda</label>
+                                                    <input name="date_range_statement" type="date"
+                                                           id="date_range_statement_unique"
+                                                           class="select-pad" placeholder="Clique para editar...">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="date_range_statement">Transação</label>
+                                                    <input name="statement_sale" id="statement_sale"
+                                                           class="select-pad" placeholder="Transação">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                                <div class="input-holder">
+                                                    <label for="statement_status_select">Status</label>
+                                                    <select class="form-control select-pad" name="status"
+                                                            id="statement_status_select">
+                                                        <option value="all">Todos</option>
+                                                        <option value="1">Aguardando postagem válida</option>
+                                                        <option value="2">Aguardando liquidação</option>
+                                                        <option value="3">Pago</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </section>
+                                        <div class="float-right col-sm-4 col-md-2 col-lg-2 mt-10">
+                                            <button id="bt_filtro_statement" class="btn btn-primary w-full">
+                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <table id="statementTable" class="table table-condensed unify table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" class="headCenter" style="width:33%">Razão</th>
+                                                <th scope="col" class="headCenter" style="width:33%">Status</th>
+                                                <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                                    <i class="material-icons gray ml-5 font-size-18"
+                                                       data-toggle="tooltip"
+                                                       title=""
+                                                       data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                                </th>
+                                                <th scope="col" class="headCenter" style="width:34%">Valor</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="table-statement-body" class="custom-t-body">
+                                            </tbody>
+                                        </table>
 
-                                    <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
+                                        <section id="paginate">
+                                            <div class="pagination"
+                                                 style="margin-top:10px;position:relative;float:right">
+                                                <div class="numbers">
+                                                    <div style=""></div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
+                                            style="margin-top:10px;position:relative;float:right">
+                                            {{--js carrega...--}}
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @include('companies::empty')
         </div>
-        @include('companies::empty')
-    </div>
-    <!-- Modal confirmar saque -->
-    <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
-        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
-            <div id="conteudo_modal_add" class="modal-content p-10">
-                <div class="header-modal simple-border-bottom">
-                    <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
-                </div>
-                <div id="modal_body" class="modal-body simple-border-bottom" style='padding-bottom:1%;padding-top:1%;'>
-                    <div>
-                        <h5>Verifique os dados da conta:</h5>
-                        <h4>Banco:
-                            <span id="modal-withdrawal-bank"></span>
-                        </h4>
-                        <h4>Agência:
-                            <span id="modal-withdrawal-agency"></span>
-                            <span id="modal-withdrawal-agency-digit"></span>
-                        </h4>
-                        <h4>Conta:
-                            <span id="modal-withdrawal-account"></span>
-                            <span id="modal-withdrawal-account-digit"></span>
-                        </h4>
-                        <h4>Documento:
-                            <span id="modal-withdrawal-document"></span>
-                        </h4>
-                        <hr>
-                        <h4>Valor do saque:
-                            <span id="modal-withdrawal-value" class='greenGradientText'></span>
-                            <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
-                        </h4>
+        <!-- Modal confirmar saque -->
+        <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
+            <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
+                <div id="conteudo_modal_add" class="modal-content p-10">
+                    <div class="header-modal simple-border-bottom">
+                        <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
                     </div>
-                </div>
-                <div id='modal-withdraw-footer' class="modal-footer">
-                    <button id="bt-confirm-withdrawal" class="btn btn-success"
-                            style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
-                        <strong>Confirmar</strong></button>
-                    <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close"
-                            style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
-                        <strong>Cancelar</strong></button>
+                    <div id="modal_body" class="modal-body simple-border-bottom"
+                         style='padding-bottom:1%;padding-top:1%;'>
+                        <div>
+                            <h5>Verifique os dados da conta:</h5>
+                            <h4>Banco:
+                                <span id="modal-withdrawal-bank"></span>
+                            </h4>
+                            <h4>Agência:
+                                <span id="modal-withdrawal-agency"></span>
+                                <span id="modal-withdrawal-agency-digit"></span>
+                            </h4>
+                            <h4>Conta:
+                                <span id="modal-withdrawal-account"></span>
+                                <span id="modal-withdrawal-account-digit"></span>
+                            </h4>
+                            <h4>Documento:
+                                <span id="modal-withdrawal-document"></span>
+                            </h4>
+                            <hr>
+                            <h4>Valor do saque:
+                                <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                                <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
+                            </h4>
+                        </div>
+                    </div>
+                    <div id='modal-withdraw-footer' class="modal-footer">
+                        <button id="bt-confirm-withdrawal" class="btn btn-success"
+                                style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
+                            <strong>Confirmar</strong></button>
+                        <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal"
+                                aria-label="Close"
+                                style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
+                            <strong>Cancelar</strong></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- End Modal -->
+        <!-- End Modal -->
 
-    <!-- Modal Detalhes -->
+        <!-- Modal Detalhes -->
     @include('sales::details')
     <!-- End Modal -->
 
-    @push('scripts')
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
+        @push('scripts')
+            <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+            <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=123') }}"></script>
     @endpush
 
 @endsection

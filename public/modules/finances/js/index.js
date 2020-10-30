@@ -746,7 +746,7 @@ $(document).ready(function () {
     let end = 0;
 
     function updateAccountStatementData() {
-
+        loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
 
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
@@ -764,13 +764,13 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                let error = 'Erro ao gerar o extrato';
+                loadOnAny('#nav-statement #available-in-period-statement', true);
 
+                let error = 'Erro ao gerar o extrato';
                 errorAjaxResponse(error);
                 $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
-
                 updateClassHTML();
 
                 items = response;
@@ -780,6 +780,20 @@ $(document).ready(function () {
                     return;
                 }
 
+                let totalValue = 0;
+                $.each(items, function (index, value) {
+                    totalValue = value.subSellerRateSumTotalAmount + totalValue;
+                })
+
+                let isNegativeStatement = false;
+                if (totalValue < 1) {
+                    isNegativeStatement = true;
+                }
+
+                totalValue = totalValue / 100;
+
+                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${(totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>`);
+                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 $(".numbers").show();
 
@@ -840,6 +854,7 @@ $(document).ready(function () {
 
                 const list = {
                     create(item) {
+
                         let dataTable = `
                                 <tr>
                                     <td style="vertical-align: middle;">

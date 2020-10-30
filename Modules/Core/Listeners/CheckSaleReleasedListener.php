@@ -32,8 +32,7 @@ class CheckSaleReleasedListener implements ShouldQueue
             'productsPlansSale.tracking',
             'productsPlansSale.product',
             'transactions'
-        ])->whereIn('gateway_id', [14, 15])//getnet
-            ->find($event->saleId);
+        ])->find($event->saleId);
 
         if(!empty($sale)) {
             $hasInvalidOrNotInformedTracking = false;
@@ -55,7 +54,8 @@ class CheckSaleReleasedListener implements ShouldQueue
                 $sale->has_valid_tracking = true;
                 $sale->save();
 
-                if(!$sale->transactions->whereNotNull('gateway_released_at')->count()){
+                if(!$sale->transactions->whereNotNull('gateway_released_at')->count()
+                    && in_array($sale->gateway_id, [14,15])){
                     $checkoutService->releasePaymentGetnet($sale->id);
 
                     //$result = $checkoutService->releasePaymentGetnet($sale->id);
