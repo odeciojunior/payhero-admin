@@ -331,7 +331,7 @@
                                     </div>
                                     <div class="col-lg-12 mb-15">
                                         <div class="row">
-                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <div class="col-sm-6 col-md">
                                                 <div class="input-holder">
                                                     <label for="statement_company_select">Empresa</label>
                                                     <select class="form-control select-pad" name="company"
@@ -339,22 +339,30 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                                <div class="form-group">
-                                                    <label for="date_range_statement">Data da venda</label>
+                                            <div class="col-sm-6 col-md">
+                                                <div class="input-holder">
+                                                    <label for="statement_data_type_select">Data</label>
+                                                    <select class="form-control select-pad" name="status"
+                                                            id="statement_data_type_select">
+                                                        <option value="transaction_date" selected>
+                                                            Data da venda
+                                                        </option>
+                                                        <option value="liquidation_date">
+                                                            Data da liquidação
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md">
+                                                <div class="form-group" style="margin-top:30px">
                                                     <input name="date_range_statement" type="date"
                                                            id="date_range_statement_unique"
                                                            class="select-pad" placeholder="Clique para editar...">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                                <div class="form-group">
-                                                    <label for="date_range_statement">Transação</label>
-                                                    <input name="statement_sale" id="statement_sale"
-                                                           class="select-pad" placeholder="Transação">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
                                                 <div class="input-holder">
                                                     <label for="statement_status_select">Status</label>
                                                     <select class="form-control select-pad" name="status"
@@ -366,12 +374,22 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="date_range_statement">Transação</label>
+                                                    <input name="statement_sale" id="statement_sale"
+                                                           class="select-pad" placeholder="Transação">
+                                                </div>
+                                            </div>
+                                            <div class="mt-30 col-md-4" style="text-align:right">
+                                                <button id="bt_filtro_statement"
+                                                        class="btn btn-primary w-full">
+                                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="float-right col-sm-4 col-md-2 col-lg-2 mt-10">
-                                            <button id="bt_filtro_statement" class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                                            </button>
-                                        </div>
+
+
                                     </div>
                                     <div class="col-12 mt-3">
                                         <table id="statementTable" class="table table-condensed unify table-striped">
@@ -467,7 +485,7 @@
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=123') }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=31') }}"></script>
     @endpush
 
 @endsection
