@@ -272,19 +272,16 @@ class SalesRecoveryApiController extends Controller
                 $sale = $saleModel->find(current(Hashids::decode($request->input('saleId'))));
 
                 if (!empty($sale)) {
-                    $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
-                    $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
-                    $totalPaidValue = ($sale->sub_total * 100) - $sale->automatic_discount;
-                    $shippingPrice  = $sale->shipment_value * 100;
+                    $totalPaidValue = (int)preg_replace("/[^0-9]/", "", $sale->sub_total) - (int)$sale->automatic_discount;
+                    $shippingPrice  = (int)preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
                     if (!empty($request->input('discountValue'))) {
 
                         if ($request->discountType == 'percentage') {
-                            $discount       = intval($totalPaidValue * (preg_replace("/[^0-9]/", "", $request->input('discountValue')) / 100));
-                            $totalPaidValue -= preg_replace("/[^0-9]/", "", $discount);
+                            $discount       = (int)($totalPaidValue * (((int)preg_replace("/[^0-9]/", "", $request->input('discountValue'))) / 100));
+                            $totalPaidValue -= $discount;
                         } else {
-                            $discount       = preg_replace("/[^0-9]/", "", $request->input('discountValue'));
+                            $discount       = (int)(preg_replace("/[^0-9]/", "", $request->input('discountValue')));
                             $totalPaidValue -= $discount;
                         }
 
