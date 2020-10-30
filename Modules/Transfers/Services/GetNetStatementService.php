@@ -50,19 +50,13 @@ class GetNetStatementService
                     } catch (Exception $exception) {
                     }
                 }
-
-
-                switch ($details[0]->release_status) {
-                    case 'N':
-                        $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
-                        break;
-                    case Carbon::now()->lessThan($details[0]->payment_date):
-                        $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
-                        break;
-                    default:
-                        $status = $transferPresent->getStatusGetnet('Pago');
+                if ($details[0]->release_status == 'N') {
+                    $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
+                } elseif ($details[0]->release_status == 'S' && Carbon::now()->lessThan($details[0]->payment_date)) {
+                    $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
+                } else {
+                    $status = $transferPresent->getStatusGetnet('Pago');
                 }
-
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
