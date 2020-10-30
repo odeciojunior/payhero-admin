@@ -134,24 +134,18 @@ class RegisterApiController extends Controller
 
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
 
-            if (env('APP_ENV') == 'production') {
-                return response()->json([
-                    'success' => 'false',
-                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
-                ], 403);
-            } else {
-                \DB::commit();
-                $this->sendWelcomeEmail($requestData);
+            \DB::commit();
+            $this->sendWelcomeEmail($requestData);
 
-                return response()->json(
-                    [
-                        'success' => 'true',
-                        'message' => 'Arquivos Enviado com Sucesso',
-                        'access_token' => base64_encode(Crypt::encrypt($user->id)),
-                        'invite' => isset($invitation) ? $invitation['message'] : 'Cadastro sem convite'
-                    ], 200
-                );
-            }
+            return response()->json(
+                [
+                    'success' => 'true',
+                    'message' => 'Arquivos Enviado com Sucesso',
+                    'access_token' => base64_encode(Crypt::encrypt($user->id)),
+                    'invite' => isset($invitation) ? $invitation['message'] : 'Cadastro sem convite'
+                ], 200
+            );
+
 
         } catch (Exception $ex) {
             \DB::rollback();
