@@ -39,7 +39,7 @@
         "pusher/pusher-php-server"  : "3.3.1",
         "qcod/laravel-settings"     : "^1.0",
         "sendgrid/sendgrid"         : "~7",
-        "sentry/sentry-laravel"     : "^1.6.0",
+        "sentry/sentry-laravel"     : "~2",
         "slince/shopify-api-php"    : "2.5.0",
         "socialiteproviders/shopify": "^1.0",
         "spatie/laravel-activitylog": "^3.9",
