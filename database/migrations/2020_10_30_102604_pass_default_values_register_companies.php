@@ -14,7 +14,6 @@ class PassDefaultValuesRegisterCompanies extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->integer('gateway_release_money_days')->default('2')->default(2)->after('installment_tax')->change();
             $table->integer('credit_card_release_money_days')->default('15')->after('gateway_release_money_days')->change();
             $table->string('boleto_release_money_days')->default('2')->after('active_flag')->change();
             $table->string('credit_card_tax')->default('6.5')->after('gateway_tax')->change();
@@ -33,7 +32,6 @@ class PassDefaultValuesRegisterCompanies extends Migration
             $table->dropColumn([
                 'boleto_tax',
                 'credit_card_tax',
-                'gateway_release_money_days',
                 'credit_card_release_money_days',
                 'boleto_release_money_days'
             ]);
