@@ -701,7 +701,7 @@ class RegisterApiController extends Controller
 
         return $sendgridService->sendEmail(
             'noreply@cloudfox.net',
-            'cloudfox',
+            'Cloudfox',
             $email,
             isset($data['firstname']) ? $data['firstname'] : 'Cliente',
             "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
