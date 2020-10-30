@@ -29,12 +29,10 @@ class PassDefaultValuesRegisterCompanies extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn([
-                'boleto_tax',
-                'credit_card_tax',
-                'credit_card_release_money_days',
-                'boleto_release_money_days'
-            ]);
+            $table->integer('credit_card_release_money_days')->nullable()->change();
+            $table->string('boleto_release_money_days')->nullable()->change();
+            $table->string('credit_card_tax')->nullable()->change();
+            $table->string('boleto_tax')->nullable()->change();
         });
     }
 }
