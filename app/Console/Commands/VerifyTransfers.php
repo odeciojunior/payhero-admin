@@ -40,6 +40,6 @@ class VerifyTransfers extends Command
     public function handle()
     {
         $transfersSerice = new TransfersService();
-        $transfersSerice->verifyTransactions(803095);
+        $transfersSerice->verifyTransactions();
     }
 }
