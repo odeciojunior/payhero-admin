@@ -411,14 +411,16 @@ class FoxUtils
 
     /**
      * @param $url
-     * @param  null  $expiration
+     * @param null $expiration
+     * @param null $type
      * @return string
      */
-    public static function getAwsSignedUrl($url, $expiration = null)
+    public static function getAwsSignedUrl($url, $expiration = null, $type = 'digital-products')
     {
         try {
             if (!empty($url)) {
-                $urlKey = str_replace('https://cloudfox-digital-products.s3.amazonaws.com/', '', $url);
+
+                $urlKey = str_replace("https://cloudfox-${type}.s3.amazonaws.com/", '', $url);
 
                 $client = new S3Client([
                     'credentials' => [
@@ -430,7 +432,7 @@ class FoxUtils
                 ]);
 
                 $command = $client->getCommand('GetObject', [
-                    'Bucket' => 'cloudfox-digital-products',
+                    'Bucket' => "cloudfox-${type}",
                     'Key' => $urlKey,
                 ]);
 
