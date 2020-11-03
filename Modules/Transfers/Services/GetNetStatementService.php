@@ -9,7 +9,6 @@ use Exception;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use stdClass;
-use Vinkla\Hashids\Facades\Hashids;
 
 class GetNetStatementService
 {
@@ -19,9 +18,8 @@ class GetNetStatementService
     public function performStatement(stdClass $data)
     {
         $transactions = array_reverse($data->list_transactions) ?? [];
-        $transferPresent = (new Transfer())->present();
 
-        $transactions = array_map(function ($item) use ($transferPresent) {
+        $transactions = array_map(function ($item) {
             if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
                 $summary = $item->summary;
                 $details = $item->details;
@@ -54,14 +52,12 @@ class GetNetStatementService
                     } catch (Exception $exception) {
                     }
                 }
-                if ($details[0]->release_status == 'N') {
-                    $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
-                } elseif ($details[0]->release_status == 'S' && Carbon::now()->lessThan(Carbon::createFromFormat('d/m/Y',
-                        $paymentDate))) {
-                    $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
-                } else {
-                    $status = $transferPresent->getStatusGetnet('Pago');
-                }
+
+                $status = $this->getStatus(
+                    $details[0]->release_status,
+                    $details[0]->subseller_rate_confirm_date,
+                    $paymentDate
+                );
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
@@ -87,5 +83,20 @@ class GetNetStatementService
         }, $transactions);
 
         return $this->data;
+    }
+
+    private function getStatus($releaseStatus, $RateConfirmDate, $paymentDate)
+    {
+        $transferPresent = (new Transfer())->present();
+        $dateNow = Carbon::now()->format('d/m/Y');
+        $paymentDate = Carbon::createFromFormat('d/m/Y', $paymentDate)->format('d/m/Y');
+
+        if ($releaseStatus == 'N') {
+            return $transferPresent->getStatusGetnet('Aguardando postagem válida');
+        } elseif ($releaseStatus == 'S' && is_null($RateConfirmDate) && $dateNow <= $paymentDate) {
+            return $transferPresent->getStatusGetnet('Aguardando liquidação');
+        } else {
+            return $transferPresent->getStatusGetnet('Pago');
+        }
     }
 }
