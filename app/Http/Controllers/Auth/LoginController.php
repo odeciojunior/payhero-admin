@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\IpService;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -31,6 +33,15 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    /**
+     * Create a new controller instance.
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout', 'sendAuthenticated', 'getAuthenticated');
+    }
 
     /**
      * @param Request $request
@@ -132,6 +143,48 @@ class LoginController extends Controller
         return $this->loggedOut($request) ?: redirect('/');
     }
 
+    public function sendAuthenticated()
+    {
+        $user = auth()->user();
+
+        if (empty($user))
+            return \response()->json('Nenhum usuário autenticado', Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $userId = Hashids::connection('login')->encode($user->id);
+        $expiration = Hashids::encode(Carbon::now()->addMinute()->unix());
+        $urlAuth = env('ACCOUNT_FRONT_URL') . '/redirect/' . $userId . '/' . (string) $expiration;
+
+        return \response()->json(
+            [
+                'url' => $urlAuth
+            ], Response::HTTP_OK);
+    }
+
+    public function getAuthenticated($user, $expiration)
+    {
+
+        try {
+            $dateUnix = current(Hashids::decode($expiration));
+
+            if ($dateUnix <= Carbon::now()->unix())
+                throw new \Exception('Autenticação Expirada');
+
+            $user = User::find(current(Hashids::connection('login')->decode($user)));
+
+            if (!$user)
+                throw new \Exception('Usuário não existe');
+
+            auth()->loginUsingId($user->id);
+            return response()->redirectTo('/dashboard');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Não foi possivel autenticar o usuário.',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
     /**
      *  default -> protected $redirectTo = '/dashboard';
      * @return string
@@ -143,14 +196,5 @@ class LoginController extends Controller
         } else {
             return '/sales';
         }
-    }
-
-    /**
-     * Create a new controller instance.
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
     }
 }

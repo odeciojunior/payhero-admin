@@ -28,19 +28,23 @@ class GetNetStatementService
 
                 $orderId = $summary->order_id;
                 $arrayOrderId = explode('-', $orderId);
-                $id = current(Hashids::connection('sale_id')->decode($arrayOrderId[0]));
 
                 $transactionDate = $summary->transaction_date ?? '';
 
                 $installmentDate = $details[0]->installment_date ?? '';
                 $installmentAmount = $details[0]->installment_amount ?? 0;
-                $paymentDate = $details[0]->payment_date ?? '';
+                $paymentDate = Carbon::parse($details[0]->payment_date) ?? '';
+                $subSellerRateClosingDate = $details[0]->subseller_rate_closing_date ?? '';
                 $subSellerRateConfirmDate = $details[0]->subseller_rate_confirm_date ?? '';
                 $subSellerRateAmount = $details[0]->subseller_rate_amount ?? 0;
                 $subSellerRatePercentage = $details[0]->subseller_rate_percentage ?? 0;
 
                 try {
-                    $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
+                    if (request('statement_data_type') == 'liquidation_date') {
+                        $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
+                    } else {
+                        $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
+                    }
                 } catch (Exception $exception) {
                 }
 
@@ -50,19 +54,14 @@ class GetNetStatementService
                     } catch (Exception $exception) {
                     }
                 }
-
-
-                switch ($details[0]->release_status) {
-                    case 'N':
-                        $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
-                        break;
-                    case Carbon::now()->lessThan($details[0]->payment_date):
-                        $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
-                        break;
-                    default:
-                        $status = $transferPresent->getStatusGetnet('Pago');
+                if ($details[0]->release_status == 'N') {
+                    $status = $transferPresent->getStatusGetnet('Aguardando postagem válida');
+                } elseif ($details[0]->release_status == 'S' && Carbon::now()->lessThan(Carbon::createFromFormat('d/m/Y',
+                        $paymentDate))) {
+                    $status = $transferPresent->getStatusGetnet('Aguardando liquidação');
+                } else {
+                    $status = $transferPresent->getStatusGetnet('Pago');
                 }
-
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
@@ -73,7 +72,8 @@ class GetNetStatementService
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
                     'subSellerRateSumTotalAmount' => $subSellerRateAmount,
                     'subSellerRatePercentage' => $subSellerRatePercentage,
-                    'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
+                    'subSellerRateClosingDate' => Carbon::parse($subSellerRateClosingDate)->format('d/m/Y') ?? '',
+                    'subSellerRateConfirmDate' => Carbon::parse($subSellerRateConfirmDate)->format('d/m/Y') ?? '',
                     'status' => $status
                 ];
 

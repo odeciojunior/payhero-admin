@@ -67,7 +67,8 @@
                                                 <div class="form-group col-lg-4">
                                                     <label for="date_birth">Data de nascimento</label>
                                                     <input name="date_birth" value="" type="date"
-                                                           class="form-control input-pad" id="date_birth" onkeydown="return false">
+                                                           class="form-control input-pad" id="date_birth"
+                                                           onkeydown="return false">
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     {{--carrega label no js--}}
@@ -109,7 +110,8 @@
                                                                placeholder="Celular" aria-describedby="addon-cellphone">
                                                     </div>
                                                     <small id="message_not_verified_cellphone"
-                                                           style='color:red; display:none;'>Celular não verificado, clique
+                                                           style='color:red; display:none;'>Celular não verificado,
+                                                        clique
                                                         <a href='#' id='btn_verify_cellphone'
                                                            onclick='event.preventDefault();' data-toggle='modal'
                                                            data-target='#modal_verify_cellphone'>aqui
@@ -208,7 +210,8 @@
                                                class="mr-10">
                                                 <i class="icon fa-lock" aria-hidden="true"></i> Alterar senha
                                             </a>
-                                            <button id="update_profile" type="submit" class="btn btn-success">Atualizar Dados
+                                            <button id="update_profile" type="submit" class="btn btn-success">Atualizar
+                                                Dados
                                             </button>
                                         </div>
                                     </div>
@@ -218,10 +221,12 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h5 class="title-pad"> Documentos </h5>
-                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de algumas comprovações. </p>
+                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de
+                                            algumas comprovações. </p>
                                         <div class="alert alert-info alert-dismissible fade show text-center"
                                              id='text-alert-documents-cpf' role="alert" style='display:none;'>
-                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
+                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos
+                                            serem enviados.
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>
@@ -234,37 +239,37 @@
                                     <div class="col-lg-12">
                                         <table class="table table-hover">
                                             <thead>
-                                                <tr>
-                                                    <th scope="col">Documento</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col"></th>
-                                                </tr>
+                                            <tr>
+                                                <th scope="col">Documento</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col"></th>
+                                            </tr>
                                             </thead>
                                             <tbody class="custom-t-body">
-                                                <tr>
-                                                    <td>
-                                                        Documento com foto
-                                                    </td>
-                                                    <td id="td_personal_status"></td>
-                                                    <td>
-                                                        <i id='personal-document-id' title='Enviar documento'
-                                                           class='icon wb-upload gradient details-document'
-                                                           data-document='personal_document' aria-hidden="true"
-                                                           style="cursor:pointer; font-size: 20px"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Comprovante de residência
-                                                    </td>
-                                                    <td id="td_address_status"></td>
-                                                    <td>
-                                                        <i id='address-document-id' title='Enviar Documento'
-                                                           class='icon wb-upload gradient details-document'
-                                                           data-document='address_document' aria-hidden="true"
-                                                           style="cursor:pointer; font-size: 20px"></i>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td>
+                                                    Documento com foto
+                                                </td>
+                                                <td id="td_personal_status"></td>
+                                                <td>
+                                                    <i id='personal-document-id' title='Enviar documento'
+                                                       class='icon wb-upload gradient details-document'
+                                                       data-document='personal_document' aria-hidden="true"
+                                                       style="cursor:pointer; font-size: 20px"></i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Comprovante de residência
+                                                </td>
+                                                <td id="td_address_status"></td>
+                                                <td>
+                                                    <i id='address-document-id' title='Enviar Documento'
+                                                       class='icon wb-upload gradient details-document'
+                                                       data-document='address_document' aria-hidden="true"
+                                                       style="cursor:pointer; font-size: 20px"></i>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -273,7 +278,8 @@
                                     <div class='col-md-12'>
                                         <div id='div_address_pending' class='alert alert-info text-center my-20'
                                              style='display:none;'>
-                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p>
+                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados
+                                                residenciais na aba MEUS DADOS.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -317,7 +323,8 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo (Cartão)</label>
+                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo
+                                                    (Cartão)</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="credit_card_in_proccess_switch"
@@ -459,7 +466,8 @@
                             <br>
                             <form method="POST" enctype="multipart/form-data" id='match_cellphone_verifycode_form'>
                                 @csrf
-                                <label for="cellphone_verify_code" style="margin-top: 20px">Código de verificação</label>
+                                <label for="cellphone_verify_code" style="margin-top: 20px">Código de
+                                    verificação</label>
                                 <input id="cellphone_verify_code" type="number" min='0' max='9999999' minlength='6'
                                        maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
                                 <button type='submit' class='btn btn-success mt-1'>
@@ -527,12 +535,12 @@
                                      style='min-height:100px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
                                     <table class="table table-striped table-hover table-sm table-striped">
                                         <thead>
-                                            <tr>
-                                                <th class='text-center' scope="col">Data Envio</th>
-                                                <th class='text-center' scope="col">Status</th>
-                                                <th class='text-center' scope="col"></th>
-                                                <th class='text-center' scope="col"></th>
-                                            </tr>
+                                        <tr>
+                                            <th class='text-center' scope="col">Data Envio</th>
+                                            <th class='text-center' scope="col">Status</th>
+                                            <th class='text-center' scope="col"></th>
+                                            <th class='text-center' scope="col"></th>
+                                        </tr>
                                         </thead>
                                         <tbody id='profile-documents-modal' class="custom-t-body">
                                         </tbody>
@@ -570,6 +578,7 @@
             border-radius: .215rem !important;
             height: 43px !important;
         }
+
         .select2-selection__rendered {
             color: #707070 !important;
             font-size: 16px !important;
@@ -578,20 +587,23 @@
             padding-left: 14px !important;
             padding-right: 38px !important;
         }
+
         .select2-selection__arrow {
             height: 43px !important;
             right: 10px !important;
         }
+
         .select2-selection__arrow b {
             border-color: #8f9ca2 transparent transparent transparent !important;
         }
+
         .select2-container--open .select2-selection__arrow b {
             border-color: transparent transparent #8f9ca2 transparent !important;
         }
     </style>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=13')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

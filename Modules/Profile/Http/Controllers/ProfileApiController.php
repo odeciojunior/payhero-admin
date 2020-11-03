@@ -2,35 +2,32 @@
 
 namespace Modules\Profile\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
+use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserInformation;
+use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CountryService;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
 use Modules\Core\Services\UserService;
-use Symfony\Component\HttpFoundation\Response;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
-use Intervention\Image\Facades\Image;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\ProfileDocumentsResource;
 use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ProfileApiController
@@ -84,7 +81,7 @@ class ProfileApiController
             }
 
             if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
-                $requestData['cellphone'] = '+'.preg_replace("/[^0-9]/", "", $requestData['cellphone']);
+                $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
             }
 
             $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
@@ -96,24 +93,26 @@ class ProfileApiController
             if (!empty($equalUserEmail)) {
                 return response()->json(['message' => 'Já existe um usuário cadastrado com esse Email'], 400);
             }
+            $userChanges = [
+                'name' => $requestData['name'],
+                'email' => $requestData['email'],
+                'document' => $requestData['document'],
+                'date_birth' => $requestData['date_birth'],
+                'zip_code' => $requestData['zip_code'],
+                'country' => $requestData['country'],
+                'state' => $requestData['country'] == 'brazil' || $requestData['country'] == 'usa' ? $requestData['state'] : null,
+                'city' => $requestData['city'],
+                'neighborhood' => $requestData['neighborhood'],
+                'street' => $requestData['street'],
+                'number' => $requestData['number'],
+                'complement' => $requestData['complement'],
+            ];
 
-            $user->fill(
-                [
-                    'name' => $requestData['name'],
-                    'email' => $requestData['email'],
-                    'document' => $requestData['document'],
-                    'cellphone' => $requestData['cellphone'],
-                    'date_birth' => $requestData['date_birth'],
-                    'zip_code' => $requestData['zip_code'],
-                    'country' => $requestData['country'],
-                    'state' => $requestData['country'] == 'brazil' || $requestData['country'] == 'usa' ? $requestData['state'] : null,
-                    'city' => $requestData['city'],
-                    'neighborhood' => $requestData['neighborhood'],
-                    'street' => $requestData['street'],
-                    'number' => $requestData['number'],
-                    'complement' => $requestData['complement'],
-                ]
-            )->save();
+            if ($user->cellphone != $requestData['cellphone']) {
+                $user->fill(["cellphone_verified" => false])->save();
+            }
+
+            $user->fill($userChanges)->save();
 
             $user->load('userInformation');
 
@@ -127,9 +126,7 @@ class ProfileApiController
                 if ((!empty($userUpdateChanges['email']) || array_key_exists('email', $userUpdateChanges))) {
                     $user->fill(["email_verified" => false])->save();
                 }
-                if ((!empty($userUpdateChanges['cellphone']) || array_key_exists('cellphone', $userUpdateChanges))) {
-                    $user->fill(["cellphone_verified" => false])->save();
-                }
+
                 if ((!empty($userUpdateChanges['document']) || array_key_exists('document', $userUpdateChanges))) {
                     if (!empty($company)) {
                         $company->update(['company_document' => $user->document]);
@@ -172,7 +169,7 @@ class ProfileApiController
 
                     $digitalOceanPath = $digitalOceanService
                         ->uploadFile(
-                            'uploads/user/'.Hashids::encode(auth()->user()->id).'/public/profile',
+                            'uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile',
                             $userPhoto
                         );
 
@@ -244,7 +241,7 @@ class ProfileApiController
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 
-            $message = "Código de verificação CloudFox - ".$verifyCode;
+            $message = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
 
             $smsService->sendSms($cellphone, $message, ' ', 'aws-sns');
@@ -255,7 +252,7 @@ class ProfileApiController
 
                 ],
                 200
-            )->withCookie("cellphoneverifycode_".Hashids::encode(auth()->id()), $verifyCode, 15);
+            )->withCookie("cellphoneverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
         } catch (Exception $e) {
             report($e);
 
@@ -264,7 +261,7 @@ class ProfileApiController
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function matchCellphoneVerifyCode(Request $request)
@@ -280,7 +277,7 @@ class ProfileApiController
                     400
                 );
             }
-            $cookie = Cookie::get("cellphoneverifycode_".Hashids::encode(auth()->id()));
+            $cookie = Cookie::get("cellphoneverifycode_" . Hashids::encode(auth()->id()));
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
@@ -298,7 +295,7 @@ class ProfileApiController
                 ],
                 200
             )
-                ->withCookie(Cookie::forget("cellphoneverifycode_".Hashids::encode(auth()->id())));
+                ->withCookie(Cookie::forget("cellphoneverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             report($e);
 
@@ -354,7 +351,7 @@ class ProfileApiController
                     ],
                     200
                 )
-                    ->withCookie("emailverifycode_".Hashids::encode(auth()->id()), $verifyCode, 15);
+                    ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
             }
 
             return response()->json(
@@ -381,7 +378,7 @@ class ProfileApiController
                     'message' => 'Código de verificação não pode ser vazio!',
                 ], 400);
             }
-            $cookie = Cookie::get("emailverifycode_".Hashids::encode(auth()->id()));
+            $cookie = Cookie::get("emailverifycode_" . Hashids::encode(auth()->id()));
             if ($verifyCode != $cookie) {
                 return response()->json([
                     'message' => 'Código de verificação inválido!',
@@ -392,7 +389,7 @@ class ProfileApiController
 
             return response()->json([
                 "message" => "Email verificado com sucesso!",
-            ], 200)->withCookie(Cookie::forget("emailverifycode_".Hashids::encode(auth()->id())));
+            ], 200)->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             report($e);
 
@@ -419,7 +416,7 @@ class ProfileApiController
 
             $amazonFileService->setDisk('s3_documents');
             $amazonPath = $amazonFileService->uploadFile(
-                'uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/private/documents',
+                'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
                 $document,
                 null,
                 null,
@@ -457,11 +454,11 @@ class ProfileApiController
             return response()->json([
                 'message' => 'Arquivo enviado com sucesso.',
                 'personal_document_translate' => Lang::get(
-                    'definitions.enum.personal_document_status.'.$user->present()
+                    'definitions.enum.personal_document_status.' . $user->present()
                         ->getPersonalDocumentStatus($user->personal_document_status)
                 ),
                 'address_document_translate' => Lang::get(
-                    'definitions.enum.personal_document_status.'.$user->present()
+                    'definitions.enum.personal_document_status.' . $user->present()
                         ->getAddressDocumentStatus($user->address_document_status)
                 ),
             ], 200);
@@ -556,7 +553,7 @@ class ProfileApiController
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function openDocument(Request $request)
@@ -602,7 +599,7 @@ class ProfileApiController
                     'message' => 'Ocorreu um erro, tente novamente mais tarde!',
                 ], 400);
             }
-            
+
             $userDocumentModel = new UserDocument();
             $userModel = new User();
 

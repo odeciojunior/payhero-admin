@@ -351,6 +351,7 @@ $(document).ready(function () {
             $('#birth_state').val('');
         }
     });
+
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
         $("#input_group_cellphone").css("border-color", "forestgreen");
@@ -777,7 +778,7 @@ $(document).ready(function () {
     }
 
     function verifyUserAddress(user) {
-        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null) {
+        if (user.zip_code == null || user.street == null || user.neighborhood == null || user.city == null) {
             $('#row_dropzone_documents').hide();
             $('#div_address_pending').show();
         } else {

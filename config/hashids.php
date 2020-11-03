@@ -44,6 +44,11 @@ return [
             'length' => '15',
         ],
 
+        'login' => [
+            'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
+            'length' => '25',
+        ],
+
         'sale_id' => [
             'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
             'length' => '8',

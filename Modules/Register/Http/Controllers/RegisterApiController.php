@@ -49,15 +49,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class RegisterApiController extends Controller
 {
 
-    const PERCENTAGE_RATE = '5.9';
-    const TRANSACTION_RATE = '1.00';
     const BALANCE = '0';
-    const CREDIT_CARD_ANTECIPATION_MONEY_DAYS = '30';
-    const BOLETO_ANTECIPATION_MONEY_DAYS = '2';
-    const ANTECIPATION_TAX = '0';
-    const PERCENTAGE_ANTECIPABLE = '100';
-    const INVITES_AMOUNT = 1;
-    const BOLETO_RELEASE_MONEY_DAYS = 0;
     const VERIFIED_EMAIL = 1;
     const VERIFIED_CELLPHONE = 1;
 
@@ -95,7 +87,7 @@ class RegisterApiController extends Controller
                             [
                                 'success' => 'false',
                                 'message' => $invitation['message']
-                            ]
+                            ],403
                         );
                 }
             }
@@ -142,23 +134,18 @@ class RegisterApiController extends Controller
 
             Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
 
-            if (env('APP_ENV') == 'production') {
-                return response()->json([
-                    'success' => 'false',
-                    'message' => 'No momento não é possível se cadastrar em nosso sistema, aguarde a liberação para o cadastro.',
-                ], 403);
-            } else {
-                \DB::commit();
-                $this->sendWelcomeEmail($requestData);
+            \DB::commit();
+            $this->sendWelcomeEmail($requestData);
 
-                return response()->json(
-                    [
-                        'success' => 'true',
-                        'message' => 'Arquivos Enviado com Sucesso',
-                        'access_token' => base64_encode(Crypt::encrypt($user->id)),
-                    ], 200
-                );
-            }
+            return response()->json(
+                [
+                    'success' => 'true',
+                    'message' => 'Arquivos Enviado com Sucesso',
+                    'access_token' => base64_encode(Crypt::encrypt($user->id)),
+                    'invite' => isset($invitation) ? $invitation['message'] : 'Cadastro sem convite'
+                ], 200
+            );
+
 
         } catch (Exception $ex) {
             \DB::rollback();
@@ -183,13 +170,9 @@ class RegisterApiController extends Controller
         $companyId = current(Hashids::decode($parameter));
         $company   = $companyModel->where('id', $companyId)->first();
 
-        $withoutInvite = false;
-
         try {
 
-            if ($parameter == 'nw2usr3cfx') {
-                $withoutInvite = true;
-            } else if (strlen($parameter) > 15) {
+            if (strlen($parameter) > 15) {
 
                 $inviteId = substr($parameter, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
@@ -204,9 +187,7 @@ class RegisterApiController extends Controller
 
             } else {
 
-                if (isset($company->id)) {
-
-                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
+                if (isset($company->id) && $company->active_flag == 1) {
                     $companyService = new CompanyService();
 
                     if (!$companyService->isDocumentValidated($company->id)) {
@@ -218,42 +199,32 @@ class RegisterApiController extends Controller
 
                     }
 
-                    if ($invitesSent >= $company->user->invites_amount) {
-
-                        return [
-                            'success' => 'false',
-                            'message' => 'Convite indisponivel, limite atingido!'
-                        ];
-
-                    }
-
                 } else {
 
+                    Log::info('Cadastro por contive inválido, empresa não existe: ', $requestData);
+
                     return [
-                        'success' => 'false',
+                        'success' => 'true',
                         'message' => 'Registro sem convite'
                     ];
                 }
             }
+            if (!isset($invite))
+                $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
 
-            if ($withoutInvite == false) {
+            if ($invite) {
 
-                if (!isset($invite))
-                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
+                $invite->update(
+                    [
+                        'user_invited'    => $user->account_owner_id,
+                        'status'          => '1',
+                        'register_date'   => Carbon::now()->format('Y-m-d'),
+                        'expiration_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
+                        'email_invited'   => $requestData['email'],
+                    ]
+                );
 
-                if ($invite) {
-
-                    $invite->update(
-                        [
-                            'user_invited'    => $user->account_owner_id,
-                            'status'          => '1',
-                            'register_date'   => Carbon::now()->format('Y-m-d'),
-                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                            'email_invited'   => $requestData['email'],
-                        ]
-                    );
-
-                    if (empty($invite->invite) && isset($company->id)) {
+                if (empty($invite->invite) && isset($company->id)) {
 
                         $invite->update(
                             [
@@ -264,20 +235,19 @@ class RegisterApiController extends Controller
 
                 } else {
 
-                    if ($company) {
+                if ($company) {
 
-                        $inviteModel->create(
-                            [
-                                'invite'          => $company->user_id,
-                                'user_invited'    => $user->account_owner_id,
-                                'status'          => '1',
-                                'company_id'      => $company->id,
-                                'register_date'   => Carbon::now()->format('Y-m-d'),
-                                'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                'email_invited'   => $requestData['email'],
-                            ]
-                        );
-                    }
+                    $inviteModel->create(
+                        [
+                            'invite'          => $company->user_id,
+                            'user_invited'    => $user->account_owner_id,
+                            'status'          => '1',
+                            'company_id'      => $company->id,
+                            'register_date'   => Carbon::now()->format('Y-m-d'),
+                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                            'email_invited'   => $requestData['email'],
+                        ]
+                    );
                 }
             }
 
@@ -731,7 +701,7 @@ class RegisterApiController extends Controller
 
         return $sendgridService->sendEmail(
             'noreply@cloudfox.net',
-            'cloudfox',
+            'Cloudfox',
             $email,
             isset($data['firstname']) ? $data['firstname'] : 'Cliente',
             "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
@@ -750,7 +720,7 @@ class RegisterApiController extends Controller
     {
         $message = "Código de verificação CloudFox - " . $token;
         $smsService = new SmsService();
-        $smsService->sendSms($phone, $message, ' ', 'DisparoPro');
+        $smsService->sendSms($phone, $message, ' ', 'aws-sns');
     }
 
     /**
@@ -785,7 +755,7 @@ class RegisterApiController extends Controller
 
                 return response()->json(
                     [
-                        "message" => "Seu cadastro com este email esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu email",
+                        "message" => "Seu cadastro com este token esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu email",
                     ],
                     403
                 );
@@ -984,15 +954,7 @@ class RegisterApiController extends Controller
     {
         $requestData = $request->validated();
 
-        $requestData['percentage_rate'] = self::PERCENTAGE_RATE;
-        $requestData['transaction_rate'] = self::TRANSACTION_RATE;
         $requestData['balance'] = self::BALANCE;
-        $requestData['credit_card_antecipation_money_days'] = self::CREDIT_CARD_ANTECIPATION_MONEY_DAYS;
-        $requestData['boleto_antecipation_money_days'] = self::BOLETO_ANTECIPATION_MONEY_DAYS;
-        $requestData['antecipation_tax'] = self::ANTECIPATION_TAX;
-        $requestData['percentage_antecipable'] = self::PERCENTAGE_ANTECIPABLE;
-        $requestData['invites_amount'] = self::INVITES_AMOUNT;
-        $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
         $requestData['email_verified'] = self::VERIFIED_EMAIL;
         $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
 
@@ -1041,6 +1003,8 @@ class RegisterApiController extends Controller
         $supportEmail = $requestData['support_email'] ?? null;
         $supportPhone = $requestData['support_telephone'] ?? null;
         $agencyDigit = $requestData['agency_digit'] ?? null;
+        $zipCode = $requestData['zip_code_company'] ?? null;
+
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
         $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
         $idwallResult = $companyIdwall ?? null;
@@ -1050,6 +1014,7 @@ class RegisterApiController extends Controller
                 'user_id' => $user->account_owner_id,
                 'fantasy_name' => $fantasy_name,
                 'company_document' => $is_physical_person ? $requestData['document'] : $requestData['company_document'],
+                'zip_code' => $zipCode,
                 'company_type' => $is_physical_person ? 1 : 2,
                 'support_email' => $supportEmail,
                 'support_telephone' => $supportPhone,
@@ -1079,8 +1044,8 @@ class RegisterApiController extends Controller
         $tokenModel = new RegistrationToken();
         $cellphoneUser = preg_replace("/[^0-9]/", "", $user->cellphone);
 
-        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->first();
-        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->first();
+        $email = $tokenModel->where('type_data', $user->email)->pluck('validated')->last();
+        $cellphone = $tokenModel->where('type_data', $cellphoneUser)->pluck('validated')->last();
 
         if (empty($email) || empty($cellphone)) {
             return false;

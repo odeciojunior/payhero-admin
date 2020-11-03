@@ -11,8 +11,8 @@ var statusDocumentUser = {
     refused: 'Recusado',
 };
 
-let disabledCompany = true;
-let companyVerification = false;
+let disabledCompany = false;
+let companyVerification = true;
 $(document).ready(function () {
     updateInvites();
     var currentPage = 1;
@@ -52,9 +52,6 @@ $(document).ready(function () {
                     $("#table-body-invites").html('');
 
                     $.each(response.data, function (index, value) {
-                        if (value.company_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.company_name === 'WALLISON VICTOR DE LIMA 05111953116') {
-                            companyVerification = true;
-                        }
                         dados = '';
                         dados += '<tr>';
                         if (index != 9) {
@@ -171,7 +168,6 @@ $(document).ready(function () {
                         $("#modal-not-approved-document-companies").hide();
                         $("#modal-not-companies").show();
                     } else {
-
                         loadingOnScreenRemove();
 
                         let contCompanies = 0;
@@ -180,15 +176,15 @@ $(document).ready(function () {
                         var selCompany = '';
                         selCompany = '<select class="select-company-list">';
 
-                        disabledCompany = true;
+                        disabledCompany = false;
                         $.each(response.data, function (index, value) {
                             contCompanies++;
-                            if (value.fantasy_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI' || value.fantasy_name === 'WALLISON VICTOR DE LIMA 05111953116') {
+                            if (value.capture_transaction_enabled) {
                                 if (value.type_company === 'physical person') {
                                     if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
 
@@ -198,11 +194,13 @@ $(document).ready(function () {
                                     if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
                                     }
                                 }
+                            } else {
+                                contCompaniesNotApproved++
                             }
 
                         });
@@ -223,12 +221,12 @@ $(document).ready(function () {
 
                             var linkInvite = '';
                             var companyId = $(".select-company-list option:selected").val();
-                            linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(".select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
 
                             $(".select-company-list").on('change', function () {
-                                linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
+                                linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();
                             });

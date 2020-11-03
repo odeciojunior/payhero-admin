@@ -100,7 +100,6 @@ class RegisterController extends Controller
 
         } catch (Exception $e) {
             report($e);
-            dd($e->getMessage());
         }
 
     }

@@ -32,9 +32,14 @@ Route::group(
         // rotas para autenticação e registro de novos usuarios
         Route::get('/login', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
         Route::post('/login', '\App\Http\Controllers\Auth\LoginController@login');
+
         Route::post('/logout', '\App\Http\Controllers\Auth\LoginController@logout')->name('logout');
         //somente para desenvolvimento, depois remover e deixar somente o metodo post para logout
         Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+        //rotas para login automatico
+        Route::get('/send-authenticated', '\App\Http\Controllers\Auth\LoginController@sendAuthenticated');
+        Route::get('/get-authenticated/{user}/{expiration}', '\App\Http\Controllers\Auth\LoginController@getAuthenticated');
 
         // Registration Routes...
         //        Route::get('/register', '\App\Http\Controllers\Auth\NewRegisterController@index')->name('register');
