@@ -93,7 +93,7 @@ class GetNetStatementService
 
         if ($releaseStatus == 'N') {
             return $transferPresent->getStatusGetnet('Aguardando postagem válida');
-        } elseif ($releaseStatus == 'S' && is_null($RateConfirmDate) && $dateNow <= $paymentDate) {
+        } elseif ($releaseStatus == 'S' && is_null($RateConfirmDate)) {
             return $transferPresent->getStatusGetnet('Aguardando liquidação');
         } else {
             return $transferPresent->getStatusGetnet('Pago');
