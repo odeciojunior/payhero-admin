@@ -287,4 +287,28 @@ class UserService
 
         return false;
     }
+
+    public function getUserByIdwallCPF($cpf)
+    {
+        try {
+            $idewallService = new IdwallService();
+            $userStatus = json_decode($idewallService->getGenerateProtocolByCPF($cpf), true);
+            $userProtocol = $userStatus['result']['numero'];
+
+            /**
+             * SLEEP É NECESSÁRIO PARA TER TEMPO DE PROCESSAR O RELATÓRIO
+             */
+            sleep(3);
+
+            if (!empty($userProtocol) && $userStatus['status_code'] == 200) {
+                $user = $idewallService->getReportByProtocolNumber($userProtocol);
+
+                return json_decode($user, true);
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
