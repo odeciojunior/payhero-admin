@@ -723,6 +723,11 @@ $(document).ready(function () {
                 $('#export-email').text(response.email);
                 $('#alert-export').show()
                     .shake();
+
+                setTimeout(function () {
+                    $("#bt_get_csv").prop("disabled", false);
+                    $("#bt_get_xls").prop("disabled", false);
+                }, 6000)
             }
         });
     }
@@ -853,7 +858,6 @@ $(document).ready(function () {
                             update();
                         })
 
-
                     }
                 }
 
@@ -940,9 +944,7 @@ $(document).ready(function () {
                         return {maxLeft, maxRight};
                     }
 
-
                 }
-
 
                 function update() {
                     list.update();
@@ -955,7 +957,6 @@ $(document).ready(function () {
                 }
 
                 init();
-
 
                 function updateClassHTML(dataTable = 0) {
                     if (dataTable.length > 0) {
@@ -1022,10 +1023,14 @@ $(document).ready(function () {
     });
 
     $("#bt_get_csv").on("click", function () {
+        $(this).prop("disabled", true);
+        $("#bt_get_xls").prop("disabled", true);
         extractExport('csv');
     });
 
     $("#bt_get_xls").on("click", function () {
+        $(this).prop("disabled", true);
+        $("#bt_get_csv").prop("disabled", true);
         extractExport('xls');
     });
 

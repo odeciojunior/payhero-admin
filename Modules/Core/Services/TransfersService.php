@@ -2,13 +2,13 @@
 
 namespace Modules\Core\Services;
 
-use Exception;
 use Carbon\Carbon;
+use Exception;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 
 /**
  * Class TransfersService
@@ -17,7 +17,7 @@ use Modules\Core\Entities\Gateway;
 class TransfersService
 {
     /**
-     * @param  null  $saleId
+     * @param null $saleId
      * @throws PresenterException
      */
     public function verifyTransactions($saleId = null)
