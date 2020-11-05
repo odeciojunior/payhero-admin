@@ -313,7 +313,7 @@ class RegisterApiController extends Controller
         }
 
         $cpf = $userService->verifyExistsCPF($data['document']);
-        $user = $userService->getUserByIdwallCPF($data['document']);
+//        $user = $userService->getUserByIdwallCPF($data['document']);
 
         if ($cpf) {
             return response()->json(
@@ -326,7 +326,7 @@ class RegisterApiController extends Controller
             return response()->json(
                 [
                     'cpf_exist' => 'false',
-                    'protocol_cpf' => $user['result']['numero']
+//                    'protocol_cpf' => $user['result']['numero']
                 ]
             );
         }
@@ -1007,11 +1007,11 @@ class RegisterApiController extends Controller
         $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
         $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
 
-        if ($requestData['protocol'])
+        if (isset($requestData['protocol']))
             $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol']);
 
-        if ($requestData['protocol_cpf'])
-            $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol_cpf']);
+//        if ($requestData['protocol_cpf'])
+//            $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol_cpf']);
 
         $companyService = new IdwallService();
         $idwallResult = json_decode($companyIdwall, true);
