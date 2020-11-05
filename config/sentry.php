@@ -10,7 +10,7 @@ return [
 
     'dsn' => $sentry_dsn,
 
-//    'traces_sample_rate' => 0.5,
+    'traces_sample_rate' => 0.5,
 
     'breadcrumbs' => [
 

@@ -1063,7 +1063,7 @@ class RegisterApiController extends Controller
         try {
             $userTermsModel = new UserTerms();
 
-            $userIdRegistered = $user->id ?? User::find(3190);
+            $userIdRegistered = $user->id;
 
             if (empty($userIdRegistered)) {
                 return response()->json(

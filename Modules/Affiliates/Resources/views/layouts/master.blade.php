@@ -13,7 +13,8 @@
     @endif
 
 <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
+    <meta name="access-token"
+          content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
@@ -35,7 +36,8 @@
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
@@ -51,7 +53,7 @@
     @if(env('APP_ENV', 'production') == 'production')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
-            Sentry.init({dsn: 'https://4b81ab6a91684acd888b817f34bd755b@sentry.io/1542991'});
+            Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
         </script>
     @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
