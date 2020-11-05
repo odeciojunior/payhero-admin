@@ -20,7 +20,9 @@ class GetNetStatementService
         $transactions = array_reverse($data->list_transactions) ?? [];
 
         $transactions = array_map(function ($item) {
+
             if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
+
                 $summary = $item->summary;
                 $details = $item->details;
 
@@ -61,6 +63,7 @@ class GetNetStatementService
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
+                    'originalOrderId' => $orderId,
                     'transactionDate' => $transactionDate,
                     'installmentDate' => $installmentDate,
                     'paymentDate' => $paymentDate,
