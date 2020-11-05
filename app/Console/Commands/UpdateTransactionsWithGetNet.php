@@ -9,7 +9,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Services\GetNetStatementService;
-use Vinkla\Hashids\Facades\Hashids;
+use Storage;
 
 class UpdateTransactionsWithGetNet extends Command
 {
@@ -45,8 +45,12 @@ class UpdateTransactionsWithGetNet extends Command
     public function handle()
     {
 
+        $date = date('Ymd_His');
+        $fileLogNameUpdate = 'transactionsGetNetUpdate_' . $date . '.log';
+        $fileLogNameRevert = 'transactionsGetNetRevert_' . $date . '.log';
+
         /*
-        SELECT companies.id AS company_id, companies.fantasy_name, companies.subseller_getnet_id, companies.get_net_status, user_id, users.name AS user_name, users.email AS user_email, users.get_net_status AS user_get_net_status
+        SELECT companies.id AS company_id, companies.fantasy_name, companies.subseller_getnet_id, companies.get_net_status, user_id, users.name AS user_name, users.email AS user_email
         FROM companies
         JOIN users ON users.id = companies.user_id
         WHERE companies.subseller_getnet_id IS NOT NULL
@@ -56,7 +60,9 @@ class UpdateTransactionsWithGetNet extends Command
             ->join('users', 'users.id', '=', 'companies.user_id')
             ->whereNotNull('companies.subseller_getnet_id')
             ->whereIn('companies.get_net_status', [1])
-            ->where('companies.id', 1521)
+            //->where('companies.id', 1521)
+            //->where('companies.id', 827)
+            ->where('companies.id', 1989)
             ->orderBy('fantasy_name')
             ->get();
 
@@ -75,7 +81,11 @@ class UpdateTransactionsWithGetNet extends Command
 
         foreach ($companies as $company) {
 
-            $this->line('  - Company ' . $company->fantasy_name . ' #' . $company->company_id);
+            $this->line('');
+            $this->line('- - - - - - - - - ');
+            $this->line('');
+
+            $this->line('  - Company: ' . $company->fantasy_name . ' #' . $company->company_id);
 
             $items = Sale::select('sales.id AS sale_id', 'transactions.id AS transaction_id', 'transactions.status', 'transactions.status_enum')
                 ->join('transactions', 'sales.id', '=', 'transactions.sale_id')
@@ -86,9 +96,6 @@ class UpdateTransactionsWithGetNet extends Command
 
             $companyTransactions = [];
             $withoutGatewayResult = [];
-            $orderIdsDatabase = [];
-            $orderIdsGetNet = [];
-            $orderIdsGetNetMissingInDatabase = [];
 
             $this->line('  - Transactions ' . $items->count() . '');
 
@@ -99,19 +106,15 @@ class UpdateTransactionsWithGetNet extends Command
                     #hardcode para o relacionamento
                     $transaction->id = $transaction->sale_id;
 
-                    //$gatewayResult = json_decode($transaction->saleGatewayRequests->last()->gateway_result);
                     if ($last = $transaction->saleGatewayRequests->last()) {
 
                         $lastGatewayResult = json_decode($last->gateway_result);
-
-                        //dd($lastGatewayResult, $transaction->toArray());
 
                         if (isset($lastGatewayResult->order_id)) {
 
                             $orderIdsDatabase[] = $lastGatewayResult->order_id;
 
                             $companyTransactions[$lastGatewayResult->order_id] = [
-                                #'order_id' => $lastGatewayResult->order_id,
                                 'sale_id' => $transaction->sale_id,
                                 'transaction_id' => $transaction->transaction_id,
                                 'status' => $transaction->status,
@@ -131,14 +134,11 @@ class UpdateTransactionsWithGetNet extends Command
                 }
             }
 
-            $this->line('    - $companyTransactions = ' . count($companyTransactions) . ' | $withoutGatewayResult = ' . count($withoutGatewayResult));
-            //print_r($companyTransactions);
-            //exit;
-            /*print_r($withoutGatewayResult);*/
+            $this->line('  - $companyTransactions = ' . count($companyTransactions) . ' | $withoutGatewayResult = ' . count($withoutGatewayResult));
+
+            $count = 0;
 
             if (count($companyTransactions)) {
-
-                request()->request->add(['dateRange' => '2020-07-01 - ' . date('Y-m-d')]);
 
                 $result = (new GetnetBackOfficeService())->getStatement($company->subseller_getnet_id);
                 $result = json_decode($result);
@@ -150,7 +150,6 @@ class UpdateTransactionsWithGetNet extends Command
 
                 $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
                 $transactionsGetNet = collect($transactionsGetNet);
-                //dd($transactionsGetNet);
 
                 foreach ($transactionsGetNet as $transactionGetNet) {
 
@@ -158,16 +157,33 @@ class UpdateTransactionsWithGetNet extends Command
 
                     if (isset($companyTransactions[$transactionGetNet->originalOrderId])) {
 
-                        $statusInDatabase = $companyTransactions[$transactionGetNet->originalOrderId]['status'];
+                        $count++;
+                        //$statusInDatabase = $companyTransactions[$transactionGetNet->originalOrderId]['status'];
+                        $transactionIdInDatabase = $companyTransactions[$transactionGetNet->originalOrderId]['transaction_id'];
+                        $orderIdGetNet = $transactionGetNet->orderId;
 
-                        if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
+                        $this->line('  - ' . $count . 'ª transaction | subSellerRateConfirmDate = ' . $transactionGetNet->subSellerRateConfirmDate . ' | orderId = ' . $orderIdGetNet . ' | transactionId = ' . $transactionIdInDatabase);
 
+                        if ($orderIdGetNet == '0Zxm2dkG') {
 
-                        } else {
-
-
+                            $this->info('  Teste simulado');
+                            $transactionGetNet->subSellerRateConfirmDate = '';
                         }
-                    } else {
+
+                        if (empty($transactionGetNet->subSellerRateConfirmDate)) {
+
+                            $sqlUpdate = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='paid', `status_enum`='2' WHERE  `id`={$transactionIdInDatabase};";
+                            $sqlRevert = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='transfered', `status_enum`='1' WHERE  `id`={$transactionIdInDatabase};";
+
+                            Storage::disk('local')->append($fileLogNameUpdate, $sqlUpdate);
+                            Storage::disk('local')->append($fileLogNameRevert, $sqlRevert);
+
+                            $this->alert('    - ' . $sqlUpdate);
+                        }
+
+                    } /*else {
+
+                        //$this->alert('       - FAIL ');
 
                         $orderIdsGetNetMissingInDatabase[] = [
                             'originalOrderId' => $transactionGetNet->originalOrderId,
@@ -176,15 +192,10 @@ class UpdateTransactionsWithGetNet extends Command
                             'installmentDate' => $transactionGetNet->installmentDate,
                             'sale_id' => current(Hashids::connection('sale_id')->decode($transactionGetNet->orderId)),
                         ];
-                    }
-
-                    //dd($transactionGetNet);
+                    }*/
                 }
 
-                dd($orderIdsDatabase, $orderIdsGetNet, $orderIdsGetNetMissingInDatabase);
-
             }
-            print('');
         }
 
         return 0;
