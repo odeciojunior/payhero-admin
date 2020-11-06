@@ -54,6 +54,34 @@
                     </div>
                 </form>
             </div>
+            <div id='modal-not-approved-document-companies' class='modal fade' aria-labelledby='modal-invite' role='dialog'
+                 tabindex='-1' style='padding-right: 12px;'>
+                <div class='modal-dialog modal-simple'>
+                    <div class='modal-content text-center'>
+                        <div class='modal-body text-center'>
+                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                            <span class='swal2-x-mark'>
+                                <span class='swal2-x-mark-line-left'></span>
+                                <span class='swal2-x-mark-line-right'></span>
+                            </span>
+                            </div>
+                            <h3 align='center'>
+                                Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                                e todos os documentos da empresa e do seu perfil precisam estar aprovados!
+                            </h3>
+                        </div>
+                        <div class='modal-footer'>
+                            <div style='width:100%; text-align: center; padding-top: 3%;'>
+                                <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                Retornar
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             @include('companies::empty')
         </div>
     </div>
