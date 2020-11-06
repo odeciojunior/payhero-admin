@@ -38,7 +38,7 @@ class BilletPaidSmartfunnelListener
                 $smartfunnelService = new SmartfunnelService($smartfunnel->api_url, $smartfunnel->id);
                 $sale = $event->sale;
                 $sale->setRelation('customer', $event->customer);
-                $sale->load('plansSales.plan', 'delivery');
+                $sale->load('plansSales.plan');
                 return $smartfunnelService->sendSale($sale, $sale->plansSales, 'billet_paid');
             }
         } catch (Exception $e) {

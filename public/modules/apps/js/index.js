@@ -55,6 +55,10 @@ $(document).ready(function () {
                     $('#unicodrop-bt').addClass('added');
                     $('#unicodrop-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if (response.smartfunnelIntegrations > 0) {
+                    $('#smartfunnel-bt').addClass('added');
+                    $('#smartfunnel-icon').removeClass('wb-plus').addClass('wb-check');
+                }
 
                 if (response.notazzIntegrations == 0) {
                     $('.div-notazz-integration').remove();
