@@ -15,6 +15,7 @@ use Modules\Core\Entities\UnicodropIntegration;
 use Modules\Core\Entities\Whatsapp2Integration;
 use Modules\Core\Entities\HotsacIntegration;
 use Modules\Core\Entities\ReportanaIntegration;
+use Modules\Core\Entities\SmartfunnelIntegration;
 
 class AppsApiController extends Controller
 {
@@ -34,6 +35,7 @@ class AppsApiController extends Controller
         $hotsacIntegrationModel         = new HotsacIntegration();
         $reportanaIntegrationModel      = new ReportanaIntegration();
         $unicodropIntegrationModel      = new UnicodropIntegration();
+        $smartfunnelIntegrationModel    = new SmartfunnelIntegration();
 
 
         return response()->json([
@@ -47,6 +49,7 @@ class AppsApiController extends Controller
             'hotsacIntegrations'         => $hotsacIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'reportanaIntegrations'      => $reportanaIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'unicodropIntegrations'      => $unicodropIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'smartfunnelIntegrations'    => $smartfunnelIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
           ]);
     }
 
