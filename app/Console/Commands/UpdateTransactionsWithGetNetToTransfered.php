@@ -11,14 +11,14 @@ use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Storage;
 
-class UpdateTransactionsWithGetNet extends Command
+class UpdateTransactionsWithGetNetToTransfered extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update-transactions-with-getnet';
+    protected $signature = 'update-transactions-with-getnet:to-transfered';
 
     /**
      * The console command description.
@@ -62,7 +62,7 @@ class UpdateTransactionsWithGetNet extends Command
             ->whereIn('companies.get_net_status', [1])
             //->where('companies.id', 1521)
             //->where('companies.id', 827)
-            ->where('companies.id', 1989)
+            //->where('companies.id', 1989)
             ->orderBy('fantasy_name')
             ->get();
 
@@ -90,8 +90,10 @@ class UpdateTransactionsWithGetNet extends Command
             $items = Sale::select('sales.id AS sale_id', 'transactions.id AS transaction_id', 'transactions.status', 'transactions.status_enum')
                 ->join('transactions', 'sales.id', '=', 'transactions.sale_id')
                 ->where('transactions.company_id', $company->company_id)
+                ->where('sales.end_date', '>=', '2020-10-15 00:00:00')
+                ->where('sales.end_date', '<=', '2020-10-25 23:59:59')
                 ->whereIn('gateway_id', [15])
-                ->whereIn('status_enum', [1]) //transfered
+                ->whereIn('status_enum', [2]) //paid
                 ->get();
 
             $companyTransactions = [];
@@ -158,22 +160,21 @@ class UpdateTransactionsWithGetNet extends Command
                     if (isset($companyTransactions[$transactionGetNet->originalOrderId])) {
 
                         $count++;
-                        //$statusInDatabase = $companyTransactions[$transactionGetNet->originalOrderId]['status'];
                         $transactionIdInDatabase = $companyTransactions[$transactionGetNet->originalOrderId]['transaction_id'];
                         $orderIdGetNet = $transactionGetNet->orderId;
 
                         $this->line('  - ' . $count . 'ª transaction | subSellerRateConfirmDate = ' . $transactionGetNet->subSellerRateConfirmDate . ' | orderId = ' . $orderIdGetNet . ' | transactionId = ' . $transactionIdInDatabase);
 
-                        if ($orderIdGetNet == '0Zxm2dkG') {
+                        /*if ($orderIdGetNet == '0Zxm2dkG') {
 
                             $this->info('  Teste simulado');
                             $transactionGetNet->subSellerRateConfirmDate = '';
-                        }
+                        }*/
 
                         if (empty($transactionGetNet->subSellerRateConfirmDate)) {
 
-                            $sqlUpdate = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='paid', `status_enum`='2' WHERE  `id`={$transactionIdInDatabase};";
-                            $sqlRevert = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='transfered', `status_enum`='1' WHERE  `id`={$transactionIdInDatabase};";
+                            $sqlUpdate = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='transfered', `status_enum`='1' WHERE  `id`={$transactionIdInDatabase};";
+                            $sqlRevert = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='paid', `status_enum`='2' WHERE  `id`={$transactionIdInDatabase};";
 
                             Storage::disk('local')->append($fileLogNameUpdate, $sqlUpdate);
                             Storage::disk('local')->append($fileLogNameRevert, $sqlRevert);
@@ -181,18 +182,7 @@ class UpdateTransactionsWithGetNet extends Command
                             $this->alert('    - ' . $sqlUpdate);
                         }
 
-                    } /*else {
-
-                        //$this->alert('       - FAIL ');
-
-                        $orderIdsGetNetMissingInDatabase[] = [
-                            'originalOrderId' => $transactionGetNet->originalOrderId,
-                            'orderId' => $transactionGetNet->orderId,
-                            'transactionDate' => $transactionGetNet->transactionDate,
-                            'installmentDate' => $transactionGetNet->installmentDate,
-                            'sale_id' => current(Hashids::connection('sale_id')->decode($transactionGetNet->orderId)),
-                        ];
-                    }*/
+                    }
                 }
 
             }
