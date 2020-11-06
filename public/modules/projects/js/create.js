@@ -46,7 +46,9 @@ $(document).ready(function () {
                 });
                 if (cont == response.length) {
                     // $('.opt1').text('Nenhuma empresa aprovada');
-                    $("#modal-not-approved-document-companies").modal('show');
+                    $('.page-content').hide();
+                    $('#empty-companies-error').show();
+                    // $("#modal-not-approved-document-companies").modal('show');
                 }
                 $('.content-error').hide();
             } else {

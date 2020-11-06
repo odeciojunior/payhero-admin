@@ -43,8 +43,8 @@
             </div>
             <div class="col-md-12">
                 <div class='form-group'>
-                    <label for="document">Documento</label>
-                    <input id='document' name='document' class='form-control' type='text' placeholder="Documento">
+                    <label for="document">CPF</label>
+                    <input id='document' name='document' class='form-control' type='text' placeholder="CPF">
                 </div>
             </div>
             <div class="col-md-12">
