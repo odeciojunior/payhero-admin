@@ -108,13 +108,12 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
                     #hardcode para o relacionamento
                     $transaction->id = $transaction->sale_id;
 
-                    if ($last = $transaction->saleGatewayRequests->last()) {
+                    $last = $transaction->saleGatewayRequests->last();
+                    if ($last) {
 
                         $lastGatewayResult = json_decode($last->gateway_result);
 
                         if (isset($lastGatewayResult->order_id)) {
-
-                            $orderIdsDatabase[] = $lastGatewayResult->order_id;
 
                             $companyTransactions[$lastGatewayResult->order_id] = [
                                 'sale_id' => $transaction->sale_id,
@@ -140,6 +139,7 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
 
             $count = 0;
 
+            // Vou na GetNet apenas se existirem dados em nosso banco
             if (count($companyTransactions)) {
 
                 $result = (new GetnetBackOfficeService())->getStatement($company->subseller_getnet_id);
@@ -153,9 +153,9 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
                 $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
                 $transactionsGetNet = collect($transactionsGetNet);
 
+                // Se no meu mapeamento houver índice de orderId igual ao que vem de (new GetNetStatementService())->performStatement..."
+                // Faço esse tratamento para o caso de execução local onde o banco de dados não está atualizado
                 foreach ($transactionsGetNet as $transactionGetNet) {
-
-                    $orderIdsGetNet[] = $transactionGetNet->originalOrderId;
 
                     if (isset($companyTransactions[$transactionGetNet->originalOrderId])) {
 
