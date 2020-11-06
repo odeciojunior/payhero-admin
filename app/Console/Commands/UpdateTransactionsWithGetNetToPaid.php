@@ -11,14 +11,14 @@ use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Storage;
 
-class UpdateTransactionsWithGetNet extends Command
+class UpdateTransactionsWithGetNetToPaid extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update-transactions-with-getnet';
+    protected $signature = 'update-transactions-with-getnet:to-paid';
 
     /**
      * The console command description.
@@ -62,7 +62,7 @@ class UpdateTransactionsWithGetNet extends Command
             ->whereIn('companies.get_net_status', [1])
             //->where('companies.id', 1521)
             //->where('companies.id', 827)
-            ->where('companies.id', 1989)
+            //->where('companies.id', 1989)
             ->orderBy('fantasy_name')
             ->get();
 
@@ -106,7 +106,8 @@ class UpdateTransactionsWithGetNet extends Command
                     #hardcode para o relacionamento
                     $transaction->id = $transaction->sale_id;
 
-                    if ($last = $transaction->saleGatewayRequests->last()) {
+                    $last = $transaction->saleGatewayRequests->last();
+                    if ($last) {
 
                         $lastGatewayResult = json_decode($last->gateway_result);
 
@@ -138,6 +139,7 @@ class UpdateTransactionsWithGetNet extends Command
 
             $count = 0;
 
+            // Vou na GetNet apenas se existirem dados em nosso banco
             if (count($companyTransactions)) {
 
                 $result = (new GetnetBackOfficeService())->getStatement($company->subseller_getnet_id);
@@ -151,6 +153,8 @@ class UpdateTransactionsWithGetNet extends Command
                 $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
                 $transactionsGetNet = collect($transactionsGetNet);
 
+                // Se no meu mapeamento houver índice de orderId igual ao que vem de (new GetNetStatementService())->performStatement..."
+                // Faço esse tratamento para o caso de execução local onde o banco de dados não está atualizado
                 foreach ($transactionsGetNet as $transactionGetNet) {
 
                     $orderIdsGetNet[] = $transactionGetNet->originalOrderId;

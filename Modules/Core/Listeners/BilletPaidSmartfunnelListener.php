@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Modules\Core\Services\SmartfunnelService;
 use Modules\Core\Entities\SmartfunnelIntegration;
-use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\Log;
 
 class BilletPaidSmartfunnelListener
@@ -40,8 +39,7 @@ class BilletPaidSmartfunnelListener
                 $sale = $event->sale;
                 $sale->setRelation('customer', $event->customer);
                 $sale->load('plansSales.plan', 'delivery');
-                $domain = Domain::where('status', 3)->where('project_id', $sale->project_id)->first();
-                return $smartfunnelService->sendSale($sale, $sale->plansSales, $domain, 'billet_paid');
+                return $smartfunnelService->sendSale($sale, $sale->plansSales, 'billet_paid');
             }
         } catch (Exception $e) {
             Log::warning('erro ao enviar notificação para Smart Funnel na venda ' . $event->sale->id);

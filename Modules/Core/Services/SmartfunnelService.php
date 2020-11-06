@@ -3,7 +3,6 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
 use Modules\Core\Entities\SmartfunnelSent;
@@ -66,72 +65,61 @@ class SmartfunnelService
     /**
      * @param $sale
      * @param $planSales
-     * @param $domain
      * @param $eventSale
      * @return array
      */
-    public function sendSale($sale, $planSales, $domain, $eventSale)
+    public function sendSale($sale, $planSales, $eventSale)
     {
         try {
-            if (!empty($domain)) {
 
-                $dataProducts = [];
-                foreach ($planSales as $planSale) {
-                    $dataProducts[] = [
-                        'id'       => Hashids::encode($planSale->plan_id),
-                        'name'     => $planSale->plan->name,
-                        'price'    => $planSale->plan->price,
-                        'quantity' => $planSale->amount,
-                    ];
-                }
+            $planSale = $planSales->first();
+            $totalValue = number_format(($sale->sub_total + $sale->shipment_value), 2, '.', '');
 
-                $totalValue = number_format(($sale->sub_total + $sale->shipment_value), 2, '.', '');
-
-                $data = [
-                    'event_type'       => $eventSale,
-                    'utm_campaign'     => $sale->checkout->utm_campaign,
-                    'sale_id'          => Hashids::connection('sale_id')->encode($sale->id),
-                    'total_value'      => $totalValue,
-                    'checkout_url'     => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
-                    'billet_url'       => $sale->boleto_link,
-                    "billet_bar_code"  => $sale->boleto_digitable_line,
-                    'customer'         => [
-                        'name'          => $sale->customer->name,
-                        'email'         => $sale->customer->present()->getEmail(),
-                        'document'      => $sale->customer->document,
-                        'phone_number'  => preg_replace('/[^0-9]/', '', $sale->customer->telephone),
-                        'street'        => $sale->delivery->street,
-                        'street_number' => $sale->delivery->number,
-                        'complement'    => $sale->delivery->complement,
-                        'district'      => $sale->delivery->neighborhood,
-                        'city'          => $sale->delivery->city,
-                        'state'         => $sale->delivery->state,
-                        'country'       => $sale->delivery->country,
-                        'zip_code'      => preg_replace('/[^0-9]/', '', $sale->delivery->zip_code),
-                    ],
-                    'products'   => $dataProducts,
-                    'created_at' => $sale->start_date,
-                ];
-
-                $return = $this->sendPost($data);
-                if (isset($return['code']) && $return['code'] > 199 && $return['code'] < 300) {
-                    $sentStatus = (new SmartfunnelSent())->present()->getSentStatus('success');
-                } else {
-                    $sentStatus = (new SmartfunnelSent())->present()->getSentStatus('error');
-                }
-                SmartfunnelSent::create(
-                    [
-                        'data'                       => json_encode($data),
-                        'response'                   => json_encode($return),
-                        'sent_status'                => $sentStatus,
-                        'sale_id'                    => $sale->id,
-                        'event_sale'                 => (new SmartfunnelSent())->present()->getEvent($eventSale),
-                        'smartfunnel_integration_id' => $this->integrationId,
-                    ]
-                );
-
-                return $return;
+            if($eventSale == 'billet_pending') {
+                $status      = 'pending';
+                $paymentType = 'billet';
+            } elseif($eventSale == 'credit_card_paid') {
+                $status      = 'approved';
+                $paymentType = 'credit_card';
+            } elseif($eventSale == 'billet_paid') {
+                $status      = 'approved';
+                $paymentType = 'billet';
             }
+
+            $data = [
+                "prod"              => Hashids::encode($planSale->plan_id),
+                "prod_name"         => $planSale->plan->name,
+                "commission_amount" => $totalValue,
+                "email"             => $sale->customer->present()->getEmail(),
+                "name"              => $sale->customer->name,
+                "first_name"        => $sale->customer->present()->getFirstName(),
+                "last_name"         => $sale->customer->present()->getLastName(),
+                "ddd"               => $sale->customer->present()->getFormatTelephone(true, false),
+                "phone"             => $sale->customer->present()->getFormatTelephone(false, true),
+                "status"            => $status,
+                "purchase_date"     => $sale->start_date,
+                "payment_type"      => $paymentType,
+                'utm_campaign'      => $sale->checkout->utm_campaign,
+            ];
+
+            $return = $this->sendPost($data);
+            if (isset($return['code']) && $return['code'] > 199 && $return['code'] < 300) {
+                $sentStatus = (new SmartfunnelSent())->present()->getSentStatus('success');
+            } else {
+                $sentStatus = (new SmartfunnelSent())->present()->getSentStatus('error');
+            }
+            SmartfunnelSent::create(
+                [
+                    'data'                       => json_encode($data),
+                    'response'                   => json_encode($return),
+                    'sent_status'                => $sentStatus,
+                    'sale_id'                    => $sale->id,
+                    'event_sale'                 => (new SmartfunnelSent())->present()->getEvent($eventSale),
+                    'smartfunnel_integration_id' => $this->integrationId,
+                ]
+            );
+
+            return $return;
         } catch (Exception $e) {
             report($e);
         }
