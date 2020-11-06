@@ -80,14 +80,19 @@
                     </div>
                 </div>
             </div>
-
-
-            @include('companies::empty')
+        </div>
+        <div class="text-center" id="empty-companies-error" style="display:none;color: black;display: flex;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
+            <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
+{{--            <h4 class="big gray">Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar--}}
+{{--                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </h4>--}}
+            <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
+{{--            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>--}}
         </div>
     </div>
 
     @push('scripts')
-        <script src="{!! asset('modules/projects/js/create.js?v=1') !!}"></script>
+        <script src="{!! asset('modules/projects/js/create.js?v=2') !!}"></script>
     @endpush
 
 

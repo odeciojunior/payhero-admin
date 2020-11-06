@@ -3,7 +3,6 @@
 namespace Modules\Profile\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Gate;
@@ -26,7 +25,6 @@ use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\ProfileDocumentsResource;
 use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
-use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -35,36 +33,25 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class ProfileApiController
 {
-    /**
-     * @return JsonResponse|UserResource
-     */
     public function index()
     {
         try {
             $user = auth()->user();
 
-            if (Gate::allows('view', [$user])) {
-                $user->load(["userNotification", "userDocuments"]);
-
-                $userResource = new UserResource($user);
-                $countryService = new CountryService();
-                $userService = new UserService();
-                $countries = $countryService->getCountries();
-
-                return response()->json(
-                    [
-                        'user' => $userResource,
-                        'countries' => $countries,
-                    ],
-                    Response::HTTP_OK
-                );
-            } else {
+            if (!Gate::allows('view', [$user])) {
                 return response()->json(['message' => 'Ocorreu um erro'], 403);
             }
+
+            $user->load(["userNotification", "userDocuments"]);
+
+            return response()->json([
+                'user' => new UserResource($user),
+                'countries' => (new CountryService())->getCountries(),
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro'], 403);
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
 
@@ -260,10 +247,6 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function matchCellphoneVerifyCode(Request $request)
     {
         try {
@@ -552,10 +535,6 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function openDocument(Request $request)
     {
         try {
@@ -618,9 +597,6 @@ class ProfileApiController
         }
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function verifyDocuments()
     {
         try {

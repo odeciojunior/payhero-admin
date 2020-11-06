@@ -46,8 +46,8 @@
             </div>
             <div class="col-md-12">
                 <div class='form-group'>
-                    <label for="document_edit">Documento</label>
-                    <input id='document_edit' name='document' class='form-control' type='text' placeholder="Documento">
+                    <label for="document_edit">CPF</label>
+                    <input id='document_edit' name='document' class='form-control' type='text' placeholder="CPF">
                 </div>
             </div>
             <div class="col-md-12">
