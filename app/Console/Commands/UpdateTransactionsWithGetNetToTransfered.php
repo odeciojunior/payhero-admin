@@ -63,6 +63,7 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
             //->where('companies.id', 1521)
             //->where('companies.id', 827)
             //->where('companies.id', 1989)
+            //->where('companies.id', 471)
             ->orderBy('fantasy_name')
             ->get();
 
@@ -94,6 +95,7 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
                 ->where('sales.end_date', '<=', '2020-10-25 23:59:59')
                 ->whereIn('gateway_id', [15])
                 ->whereIn('status_enum', [2]) //paid
+                //->where('transactions.id', 2103916)
                 ->get();
 
             $companyTransactions = [];
@@ -165,13 +167,14 @@ class UpdateTransactionsWithGetNetToTransfered extends Command
 
                         $this->line('  - ' . $count . 'ª transaction | subSellerRateConfirmDate = ' . $transactionGetNet->subSellerRateConfirmDate . ' | orderId = ' . $orderIdGetNet . ' | transactionId = ' . $transactionIdInDatabase);
 
-                        /*if ($orderIdGetNet == '0Zxm2dkG') {
+                        /*if ($orderIdGetNet == 'jZDrMRng') {
 
-                            $this->info('  Teste simulado');
-                            $transactionGetNet->subSellerRateConfirmDate = '';
+                            dd($transactionGetNet, $companyTransactions[$transactionGetNet->originalOrderId]);
+                            //$this->info('  Teste simulado');
+                            //$transactionGetNet->subSellerRateConfirmDate = '';
                         }*/
 
-                        if (empty($transactionGetNet->subSellerRateConfirmDate)) {
+                        if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
 
                             $sqlUpdate = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='transfered', `status_enum`='1' WHERE  `id`={$transactionIdInDatabase};";
                             $sqlRevert = "UPDATE `cloudfox_20201104`.`transactions` SET `status`='paid', `status_enum`='2' WHERE  `id`={$transactionIdInDatabase};";
