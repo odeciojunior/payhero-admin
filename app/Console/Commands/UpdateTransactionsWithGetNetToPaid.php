@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -142,7 +143,18 @@ class UpdateTransactionsWithGetNetToPaid extends Command
             // Vou na GetNet apenas se existirem dados em nosso banco
             if (count($companyTransactions)) {
 
-                $result = (new GetnetBackOfficeService())->getStatement($company->subseller_getnet_id);
+                $subSeller = $company->subseller_getnet_id;
+                $startDate = Carbon::createFromFormat('Y-m-d', '2020-07-01');
+                $endDate = today();
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+
+                $getNetBackOfficeService = new GetnetBackOfficeService();
+                $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+                    ->setStatementStartDate($startDate)
+                    ->setStatementEndDate($endDate)
+                    ->setStatementDateField($statementDateField);
+
+                $result = $getNetBackOfficeService->getStatement();
                 $result = json_decode($result);
 
                 if (isset($result->errors)) {
