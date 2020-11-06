@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
@@ -90,57 +91,83 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatement($subSellerId = null)
     {
+
         try {
+
             $dates = explode(' - ', request('dateRange') ?? '');
 
-            if (is_array($dates) && count($dates) == 1) {
+            if (is_array($dates) && count($dates) == 2) {
+
+                // Quando passarmos o daterange
+                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
+                $endDate = Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+
+            } else if (is_array($dates) && count($dates) == 1) {
+
+                // Quando enviarmos uma data única com o input type="date"
                 $startDate = $dates[0];
-                $endDate = $dates[0];
+                $endDate = $startDate;
             }
         } catch (Exception $exception) {
         }
 
         if (!isset($startDate) || !isset($endDate)) {
+
             $today = today()->format('Y-m-d');
             $startDate = $today;
             $endDate = $today;
         }
 
+        if (app()->runningInConsole()) {
+
+            $startDate = '2020-07-01';
+            //$endDate = '2020-11-04';
+            $endDate = date('Y-m-d');
+        }
+        //$startDate = '2020-07-01';
+        //$endDate = '2020-11-04';
+
         $startDate .= ' 00:00:00';
         $endDate .= ' 23:59:59';
 
         $queryParameters = [
-            'seller_id' => $this->sellerId,
-            // [Required] Id do marketplace (SellerId)
-            // 'transaction_date_init' => $startDate,
-            // Data de captura da transação Início.
-            // 'transaction_date_end' => $endDate,
-            // Data de captura da transação Fim.
-            /*'liquidation_date_init' => $startDate,                                    // Data Liquidação Inicial - Emissão do extrato somente com dados da liquidação do período informado.
+            'seller_id' => $this->sellerId,                                             // [Required] Id do marketplace (SellerId)
+            /*
+            'transaction_date_init' => $startDate,                                      // Data de captura da transação Início.
+            'transaction_date_end' => $endDate,                                         // Data de captura da transação Fim.
+            'liquidation_date_init' => $startDate,                                      // Data Liquidação Inicial - Emissão do extrato somente com dados da liquidação do período informado.
             'liquidation_date_end' => $endDate,                                         // Data Liquidação Final - Emissão do extrato somente com dados da liquidação do período informado.
             'confirmation_date_init' => $startDate,                                     // Data de confirmação inicial da transação.
-            'confirmation_date_end' => $endDate,*/
-            // Data de confirmação da transação Fim.
-//            'page' => request('page') ?? 1,
+            'confirmation_date_end' => $endDate,                                        // Data de confirmação da transação Fim.
+            */
+            //'page' => request('page') ?? 1,
         ];
 
         if (request('statement_data_type') == 'liquidation_date') {
-            $queryParameters += ['liquidation_date_init' => $startDate, 'liquidation_date_end' => $startDate];
+
+            $queryParameters += ['liquidation_date_init' => $startDate, 'liquidation_date_end' => $endDate];
         } else {
-            $queryParameters += ['transaction_date_init' => $startDate, 'transaction_date_end' => $startDate];
+
+            $queryParameters += ['transaction_date_init' => $startDate, 'transaction_date_end' => $endDate];
         }
 
         if (!empty($subSellerId)) {
+
             $queryParameters['subseller_id'] = $subSellerId;
         }
 
         if (request('sale')) {
+
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode(request('sale'))));
 
             if ($sale) {
+
                 try {
+
                     $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+
                     if (isset($gatewayResult->order_id)) {
+
                         $queryParameters['order_id'] = $gatewayResult->order_id;
                     }
                 } catch (Exception $exception) {
@@ -152,8 +179,8 @@ class GetnetBackOfficeService extends GetnetService
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
 
-        $data = $this->sendCurl($url, 'GET');
-        return $data;
+        //dd($startDate, $endDate, $url);
+        return $this->sendCurl($url, 'GET');
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)

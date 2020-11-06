@@ -1,0 +1,14 @@
+{
+    "name": "Smartfunnel",
+    "alias": "smartfunnel",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Smartfunnel\\Providers\\SmartfunnelServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
