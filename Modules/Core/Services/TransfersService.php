@@ -75,7 +75,8 @@ class TransfersService
                     $company = $companyModel->find($transaction->company_id);
 
                     if (!in_array($transaction->sale->gateway_id, $gatewayIds)) {
-                        /*$transferModel->create([
+
+                        $transferModel->create([
                             'transaction_id' => $transaction->id,
                             'user_id' => $company->user_id,
                             'company_id' => $company->id,
@@ -92,9 +93,8 @@ class TransfersService
                         $transaction->update([
                             'status' => 'transfered',
                             'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                        ]);*/
+                        ]);
                     } else {
-
 
                         $subSeller = $company->subseller_getnet_id;
                         $startDate = Carbon::createFromFormat('Y-m-d', '2020-07-01');
@@ -119,17 +119,17 @@ class TransfersService
 
                         if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
 
-                            Storage::disk('local')->append($fileLogName, json_encode([
+                            /*Storage::disk('local')->append($fileLogName, json_encode([
                                 'id' => $transaction->id,
                                 'status' => $transaction->status,
                                 'status_enum' => $transaction->status_enum,
                                 'transactionGetNet' => (array)$transactionGetNet,
-                            ]));
+                            ]));*/
 
-                            /*$transaction->update([
+                            $transaction->update([
                                 'status' => 'transfered',
                                 'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                            ]);*/
+                            ]);
                         }
                     }
 
