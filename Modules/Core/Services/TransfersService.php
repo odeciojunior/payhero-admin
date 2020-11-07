@@ -114,6 +114,9 @@ class TransfersService
                         $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
                         $transactionGetNet = collect($transactionsGetNet)->first();
 
+                        // Para Debug
+                        // echo "\r\n - " . $transaction->sale_id . ' - orderId: ' . $transactionGetNet->orderId . ' # subSellerRateConfirmDate = ' . $transactionGetNet->subSellerRateConfirmDate;
+
                         if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
 
                             Storage::disk('local')->append($fileLogName, json_encode([
