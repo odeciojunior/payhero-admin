@@ -78,7 +78,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
- * @property json id_wall_result
+ * @property json $id_wall_result
  * @method CompanyPresenter present()
  */
 class Company extends Model
