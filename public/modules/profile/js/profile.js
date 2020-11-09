@@ -414,6 +414,11 @@ $(document).ready(function () {
             alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
             return false;
         }
+
+        if ($('input[name="photo_x1"]').val() == '0' || $('input[name="photo_y1"]').val() == '0') {
+            $('input[name="photo_x1"]').val('30');
+            $('input[name="photo_y1"]').val('30');
+        }
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();
         $.ajax({

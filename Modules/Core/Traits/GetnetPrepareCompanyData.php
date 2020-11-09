@@ -16,12 +16,30 @@ trait GetnetPrepareCompanyData
 
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
+        $motherName = $userInformation->mother_name;
+
+        if ($user->id_wall_result) {
+
+            $idwall =  json_decode($user->id_wall_result, true);
+
+            $motherName = current(array_map(function ($item) use ($userInformation){
+
+                if (isset($item['tipo']) && $item['tipo'] == 'MAE')
+                    return ($item['nome']);
+
+
+                return $userInformation->mother_name;
+
+            }, $idwall['result']['pessoas_relacionadas']));
+
+        }
+
         return [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
             'birth_date' => $user->date_birth,
-            'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($userInformation->mother_name)),
+            'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($motherName)),
             'occupation' => 'vendedor',
             'business_address' => [
                 'mailing_address_equals' => 'S',

@@ -2,17 +2,15 @@
 
 namespace Modules\Transfers\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\Gateways\Braspag\BraspagPaymentService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Transfers\Transformers\TransfersResource;
@@ -26,7 +24,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TransfersController extends Controller
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
@@ -60,7 +58,7 @@ class TransfersController extends Controller
                     $query->where('transfers.company_id', $companyId)
                         ->orWhere('transaction.company_id', $companyId);
                 })
-                ->whereBetween($dateType, [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->whereNull('transfers.customer_id');
 
             $saleId = str_replace('#', '', $data['transaction']);
@@ -76,7 +74,7 @@ class TransfersController extends Controller
             }
 
             if (!empty($data['reason'])) {
-                $transfers->where('transfers.reason', 'like', '%'.$data['reason'].'%');
+                $transfers->where('transfers.reason', 'like', '%' . $data['reason'] . '%');
             }
 
             if (!empty($data['value'])) {
@@ -138,7 +136,53 @@ class TransfersController extends Controller
                 $subseller = $companyGetNet->subseller_getnet_id;
             }
 
-            $result = (new GetnetBackOfficeService())->getStatement($subseller);
+            try {
+
+                $dates = explode(' - ', request('dateRange') ?? '');
+
+                if (is_array($dates) && count($dates) == 2) {
+
+                    // Quando enviarmos o daterange
+                    $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
+                    $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
+
+                } else if (is_array($dates) && count($dates) == 1) {
+
+                    // Quando enviarmos uma data única com o input type="date"
+                    $startDate = Carbon::createFromFormat('Y-m-d', $dates[0]);
+                    $endDate = $startDate;
+                }
+            } catch (Exception $exception) {
+            }
+
+            if (!isset($startDate) || !isset($endDate)) {
+
+                $today = today();
+                $startDate = $today;
+                $endDate = $today;
+            }
+
+            if (request('statement_data_type') == 'liquidation_date') {
+
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
+
+            } else {
+
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+            }
+
+            $getNetBackOfficeService = new GetnetBackOfficeService();
+            $getNetBackOfficeService->setStatementSubSellerId($subseller)
+                ->setStatementStartDate($startDate)
+                ->setStatementEndDate($endDate)
+                ->setStatementDateField($statementDateField);
+
+            if (!empty(request('sale'))) {
+
+                $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
+            }
+
+            $result = $getNetBackOfficeService->getStatement();
             $result = json_decode($result);
 
             if (isset($result->errors)) {
