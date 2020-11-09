@@ -198,7 +198,7 @@ class TrackingService
                     ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
             })->where('id', '!=', $sale->id)
             ->where('id', '!=', $sale->upsell_id)
-            ->whereDoesnHave('upsells', function ($query) use ($sale) {
+            ->whereDoesntHave('upsells', function ($query) use ($sale) {
                 $query->where('id', '!=', $sale->id);
             })->where(function ($query) use ($sale) {
                 $query->where('customer_id', '!=', $sale->customer_id)
