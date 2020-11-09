@@ -313,7 +313,6 @@ class RegisterApiController extends Controller
         }
 
         $cpf = $userService->verifyExistsCPF($data['document']);
-//        $user = $userService->getUserByIdwallCPF($data['document']);
 
         if ($cpf) {
             return response()->json(
@@ -326,7 +325,6 @@ class RegisterApiController extends Controller
             return response()->json(
                 [
                     'cpf_exist' => 'false',
-//                    'protocol_cpf' => $user['result']['numero']
                 ]
             );
         }
@@ -340,7 +338,7 @@ class RegisterApiController extends Controller
     {
         $requestData = current(preg_replace('/[^0-9]/', '', $request->validated()));
         $companyService = new CompanyService();
-        $company = $companyService->getCompanyByIdwallCNPJ($requestData);
+        $company = $companyService->getNameCompanyByApiCNPJ($requestData);
 
         if (empty($company)) {
             return response()->json(
@@ -350,7 +348,7 @@ class RegisterApiController extends Controller
             );
         }
 
-        if (empty($company['result']['cnpj']))  {
+        if ($company['status'] != 'OK') {
             return response()->json(
                 [
                     'message' => 'CNPJ rejeitado pela Receita Federal',
@@ -362,7 +360,6 @@ class RegisterApiController extends Controller
         return response()->json(
             [
                 'cnpj_exist' => 'false',
-                'protocol' => $company['result']['numero'],
             ], 200
         );
 
@@ -960,6 +957,8 @@ class RegisterApiController extends Controller
         $requestData['balance'] = self::BALANCE;
         $requestData['email_verified'] = self::VERIFIED_EMAIL;
         $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
+        $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
+        $requestData['cellphone_verified'] = self::VERIFIED_CELLPHONE;
 
         if (isset($requestData['date_birth']) && !stristr($requestData['date_birth'], '-')) {
             $requestData['date_birth'] = null;
@@ -977,9 +976,12 @@ class RegisterApiController extends Controller
      */
     private function createUserAndAssignRole($requestData, User $userModel)
     {
+        $userService = new UserService();
+        $id_wall_result = $userService->getUserByIdwallCPF($requestData['document']);
 
         $user = $userModel->create($requestData);
         $user->update(['account_owner_id' => $user->id]);
+        $user->update(['id_wall_result' => $id_wall_result]);
         $user->assignRole('account_owner');
         return $user;
 
@@ -1004,17 +1006,16 @@ class RegisterApiController extends Controller
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $zipCode = $requestData['zip_code_company'] ?? null;
 
-        $company = null;
-        $companyIdwall = "[]";
+        $companyIdwall = null;
+        $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
 
-        if (isset($requestData['protocol'])) {
-            $companyService = new IdwallService();
-            $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol']);
-            $company = json_decode($companyIdwall, true);
+        if (!$is_physical_person) {
+            $companyService = new CompanyService();
+            $companyIdwall = $companyService->getCompanyByIdwallCNPJ($requestData['company_document']);
         }
 
-        $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
-        $fantasy_name = $is_physical_person ? $user->name : (isset($company['result']['cnpj']['nome_empresarial']) ? $company['result']['cnpj']['nome_empresarial'] : $user->name);
+        $fantasy_name = $is_physical_person ? $user->name : (isset($companyIdwall['result']['cnpj']['nome_empresarial']) ? $companyIdwall['result']['cnpj']['nome_empresarial'] : $user->name);
+        $companyIdwall = json_encode($companyIdwall);
 
         $companyModel->create(
             [

@@ -23,7 +23,7 @@ class UpdateIdwallResultInUsers extends Migration
 
             foreach ($users as $user) {
 
-                if (empty($user->idwall_result)){
+                if (empty($user->id_wall_result)){
 
                     $userIdwall = $userService->getUserByIdwallCPF($user->document);
 
@@ -36,9 +36,9 @@ class UpdateIdwallResultInUsers extends Migration
 
                 foreach ($user->companies as $company) {
 
-                    if ($company->company_type == 2 && empty($company->idwall_result)) {
+                    if ($company->company_type == 2 && empty($company->id_wall_result)) {
 
-                        $companyIdwall = $companyService->getCompanyByIdwallCNPJ($user->document);
+                        $companyIdwall = $companyService->getCompanyByIdwallCNPJ($company->company_document);
 
                         if ($companyIdwall){
                             $companyJson = json_encode($companyIdwall);
