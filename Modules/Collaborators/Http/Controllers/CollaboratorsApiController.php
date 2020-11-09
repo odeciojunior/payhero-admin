@@ -62,7 +62,6 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $data = $request->validated();
-            dd($data);
             $userModel = new User();
             $data['password'] = bcrypt($data['password']);
             $data['percentage_rate'] = '5.9';
