@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     ];
 
     /**
-     * @param  Schedule  $schedule
+     * @param Schedule $schedule
      */
     protected function schedule(Schedule $schedule)
     {
@@ -88,12 +88,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
         //checks companies update on getnet
-        $schedule->command('command:checkUpdateCompanyGetnet')->dailyAt('20:00');
-
-        // Check companies update status on braspag
-        /*$schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('08:00');
-        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('12:00');
-        $schedule->command('command:UpdateStatusCompanyBraspag')->dailyAt('20:00');*/
+        $schedule->command('command:checkUpdateCompanyGetnet')->everyFourHours();
 
         //check invites expired
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');
@@ -108,7 +103,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
