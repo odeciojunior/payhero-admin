@@ -413,7 +413,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=17') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=18') }}"></script>
     @endpush
 
 @endsection
