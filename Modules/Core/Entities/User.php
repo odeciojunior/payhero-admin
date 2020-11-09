@@ -40,6 +40,7 @@ use Laravel\Passport\HasApiTokens;
  * @property bool $personal_document_status
  * @property string $percentage_rate
  * @property string $transaction_rate
+ * @property json $id_wall_result
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
@@ -120,6 +121,7 @@ class User extends Authenticable
         'abroad_transfer_tax',
         'antecipation_enabled_flag',
         'deleted_project_filter',
+        'id_wall_result',
         'created_at',
         'updated_at',
         'deleted_at',

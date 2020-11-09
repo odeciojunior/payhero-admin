@@ -1004,17 +1004,17 @@ class RegisterApiController extends Controller
         $agencyDigit = $requestData['agency_digit'] ?? null;
         $zipCode = $requestData['zip_code_company'] ?? null;
 
-        $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
-        $fantasy_name = $is_physical_person ? $user->name : $company['result']['cnpj']['nome_empresarial'];
+        $company = null;
+        $companyIdwall = "[]";
 
-        if (isset($requestData['protocol']))
+        if (isset($requestData['protocol'])) {
+            $companyService = new IdwallService();
             $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol']);
+            $company = json_decode($companyIdwall, true);
+        }
 
-//        if ($requestData['protocol_cpf'])
-//            $companyIdwall = $companyService->getReportByProtocolNumber($requestData['protocol_cpf']);
-
-        $companyService = new IdwallService();
-        $idwallResult = json_decode($companyIdwall, true);
+        $is_physical_person = $companyModel->present()->getCompanyType($requestData['company_type']) == 1;
+        $fantasy_name = $is_physical_person ? $user->name : (isset($company['result']['cnpj']['nome_empresarial']) ? $company['result']['cnpj']['nome_empresarial'] : $user->name);
 
         $companyModel->create(
             [
@@ -1036,7 +1036,7 @@ class RegisterApiController extends Controller
                 'agency_digit' => $agencyDigit,
                 'account' => $requestData['account'],
                 'account_digit' => $requestData['account_digit'],
-                'id_wall_result' => $idwallResult,
+                'id_wall_result' => $companyIdwall,
             ]
         );
     }

@@ -3,7 +3,6 @@
 
 namespace Modules\Transfers\Services;
 
-
 use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Transfer;
@@ -71,8 +70,8 @@ class GetNetStatementService
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
                     'subSellerRateSumTotalAmount' => $subSellerRateAmount,
                     'subSellerRatePercentage' => $subSellerRatePercentage,
-                    'subSellerRateClosingDate' => Carbon::parse($subSellerRateClosingDate)->format('d/m/Y') ?? '',
-                    'subSellerRateConfirmDate' => Carbon::parse($subSellerRateConfirmDate)->format('d/m/Y') ?? '',
+                    'subSellerRateClosingDate' => $subSellerRateClosingDate ? Carbon::parse($subSellerRateClosingDate)->format('d/m/Y') : '',
+                    'subSellerRateConfirmDate' => $subSellerRateConfirmDate ? Carbon::parse($subSellerRateConfirmDate)->format('d/m/Y') : '',
                     'status' => $status
                 ];
 
