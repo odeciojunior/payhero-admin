@@ -192,12 +192,15 @@ class TrackingService
 
         //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
         $sale = $productPlanSale->sale;
-        $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingModel, $trackingCode, $productPlanSale) {
-            $query->where('tracking_code', $trackingCode)
+        $exists = $salesModel->whereHas('tracking',
+            function ($query) use ($trackingModel, $trackingCode, $productPlanSale) {
+                $query->where('tracking_code', $trackingCode)
                     ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
-        })->where('id', '!=', $sale->id)
+            })->where('id', '!=', $sale->id)
             ->where('id', '!=', $sale->upsell_id)
-            ->where(function ($query) use ($sale) {
+            ->whereDoesnHave('upsells', function ($query) use ($sale) {
+                $query->where('id', '!=', $sale->id);
+            })->where(function ($query) use ($sale) {
                 $query->where('customer_id', '!=', $sale->customer_id)
                     ->orWhere('delivery_id', '!=', $sale->delivery_id);
             })->whereIn('status', [
