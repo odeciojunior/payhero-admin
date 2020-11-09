@@ -114,6 +114,9 @@ $(document).ready(function () {
                     });
                     loadOnAny('.page-content', true);
                     updateList();
+                } else {
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    loadOnAny('.page-content', true);
                 }
             }
         });

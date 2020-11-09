@@ -12,7 +12,7 @@
     <table style="padding: 20px 5px;text-align:center" align="center">
         <tr>
             <td style="width:100px;height:100px;text-align:center">
-                <img src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/logo.png" height="80"> 
+                <img src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/logo.png" height="80">
             </td>
         </tr>
     </table>
@@ -27,21 +27,16 @@
                 <h1 style="text-align:center"> Seu convite chegou! </h1>
             </td>
         </tr>
-        <tr>
-            <td style="text-align:center">
-                <span style='color: #444444;'> Beta Tester, só falta você! </span>
-            </td>
-        </tr>
     </table>
 
     <table style="text-align: center;background: white;padding: 25px 80px;width:600px;" align="center">
         <tr style='color: #444444;padding-bottom: 40px;margin-bottom: 40px;'>
             <td>
                 <p style='padding-bottom:20px;'>
-                    Você solicitou um convite como Beta Tester e agora chegou a sua hora de fazer parte da
+                    Você recebeu um convite para se cadastrar na Cloudfox e agora chegou a sua hora de fazer parte da
                     <strong> nossa revolução!</strong>
-                    <br><br> Nosso trabalho é construir uma plataforma com a sua cara. Que bom que você quer construir essa história com a gente!
-                    <br><br> Sinta-se a vontade e em casa. A plataforma é sua e feita para você! Boas vendas!
+                    <br><br> Nosso trabalho é construir uma plataforma com a sua cara. Venha construir essa história com a gente!
+                    <br><br> Sinta-se à vontade e em casa. A plataforma é sua e feita para você! Boas vendas!
                 </p>
             </td>
         </tr>

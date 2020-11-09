@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     loadOnAny('#card-project');
     $.ajax({
         url: '/api/projects/create',
@@ -16,15 +15,41 @@ $(document).ready(function () {
         success: (response) => {
             loadOnAny('#card-project', true);
             if (!isEmpty(response)) {
+                let cont = 0;
                 $.each(response, (key, company) => {
-                    if (company.capture_transaction_enabled){
-                        $('#company').append(
-                            `<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
-                                ${company.name}
-                            </option>`
-                        );
+                    let dataSelect = '';
+                    if (company.capture_transaction_enabled) {
+                        // $('#company').append(
+                        //     `<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
+                        //         ${company.name}
+                        //     </option>`
+                        // );
+                        if (company.company_type == 'physical person') {
+                            if (company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
+                                cont++;
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
+                            } else {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
+                            }
+                        } else if (company.company_type == 'juridical person') {
+                            if (company.company_document_status != 'approved' || company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
+                                cont++;
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
+                            } else {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
+                            }
+                        }
+                    } else {
+                        cont++;
                     }
+                    $('#company').append(dataSelect);
                 });
+                if (cont == response.length) {
+                    // $('.opt1').text('Nenhuma empresa aprovada');
+                    $('.page-content').hide();
+                    $('#empty-companies-error').show();
+                    // $("#modal-not-approved-document-companies").modal('show');
+                }
                 $('.content-error').hide();
             } else {
                 $('#card-project').hide();

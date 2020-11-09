@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
+use LogicException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
@@ -14,15 +16,126 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class GetnetBackOfficeService extends GetnetService
 {
+
     use GetnetPrepareCompanyData;
 
+    const STATEMENT_DATE_LIQUIDATION = 'liquidation';
+    const STATEMENT_DATE_TRANSACTION = 'transaction';
+
     private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
+    public string $postFieldsAccessToken, $authorizationToken;
+    protected ?string $sellerId, $statementSubSellerId = null;
+    protected Carbon $statementStartDate, $statementEndDate;
+    protected ?string $statementDateField, $statementSaleHashId = '';
+    protected int $statementPage = 1;
 
-    public string $postFieldsAccessToken;
+    /**
+     * @return string|null
+     */
+    public function getStatementSubSellerId(): ?string
+    {
+        return $this->statementSubSellerId;
+    }
 
-    public string $authorizationToken;
+    /**
+     * @param string|null $statementSubSellerId
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementSubSellerId(?string $statementSubSellerId): GetnetBackOfficeService
+    {
+        $this->statementSubSellerId = $statementSubSellerId;
+        return $this;
+    }
 
-    private string $sellerId;
+    /**
+     * @return Carbon
+     */
+    public function getStatementStartDate(): Carbon
+    {
+        return $this->statementStartDate;
+    }
+
+    /**
+     * @param Carbon $statementStartDate
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementStartDate(Carbon $statementStartDate): GetnetBackOfficeService
+    {
+        $this->statementStartDate = $statementStartDate;
+        return $this;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getStatementEndDate(): Carbon
+    {
+        return $this->statementEndDate;
+    }
+
+    /**
+     * @param Carbon $statementEndDate
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementEndDate(Carbon $statementEndDate): GetnetBackOfficeService
+    {
+        $this->statementEndDate = $statementEndDate;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatementDateField(): ?string
+    {
+        return $this->statementDateField;
+    }
+
+    /**
+     * @param string|null $statementDateField
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementDateField(?string $statementDateField): GetnetBackOfficeService
+    {
+        $this->statementDateField = $statementDateField;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatementSaleHashId(): ?string
+    {
+        return $this->statementSaleHashId;
+    }
+
+    /**
+     * @param string|null $statementSaleHashId
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementSaleHashId(?string $statementSaleHashId): GetnetBackOfficeService
+    {
+        $this->statementSaleHashId = $statementSaleHashId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatementPage(): int
+    {
+        return $this->statementPage;
+    }
+
+    /**
+     * @param int $statementPage
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementPage(int $statementPage): GetnetBackOfficeService
+    {
+        $this->statementPage = $statementPage;
+        return $this;
+    }
 
     public function __construct()
     {
@@ -85,62 +198,48 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
-     * @param null $subSellerId
      * @return bool|string
      */
-    public function getStatement($subSellerId = null)
+    public function getStatement()
     {
-        try {
-            $dates = explode(' - ', request('dateRange') ?? '');
 
-            if (is_array($dates) && count($dates) == 1) {
-                $startDate = $dates[0];
-                $endDate = $dates[0];
-            }
-        } catch (Exception $exception) {
+        if (empty($this->getStatementDateField())) {
+
+            throw new LogicException('É obrigatório especificar um campo de data para a busca');
+        } else if (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
+
+            throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
-        if (!isset($startDate) || !isset($endDate)) {
-            $today = today()->format('Y-m-d');
-            $startDate = $today;
-            $endDate = $today;
-        }
+        $startDate = $this->getStatementStartDate()->format('Y-m-d');
+        $endDate = $this->getStatementEndDate()->format('Y-m-d');
 
         $startDate .= ' 00:00:00';
         $endDate .= ' 23:59:59';
 
         $queryParameters = [
             'seller_id' => $this->sellerId,
-            // [Required] Id do marketplace (SellerId)
-            // 'transaction_date_init' => $startDate,
-            // Data de captura da transação Início.
-            // 'transaction_date_end' => $endDate,
-            // Data de captura da transação Fim.
-            /*'liquidation_date_init' => $startDate,                                    // Data Liquidação Inicial - Emissão do extrato somente com dados da liquidação do período informado.
-            'liquidation_date_end' => $endDate,                                         // Data Liquidação Final - Emissão do extrato somente com dados da liquidação do período informado.
-            'confirmation_date_init' => $startDate,                                     // Data de confirmação inicial da transação.
-            'confirmation_date_end' => $endDate,*/
-            // Data de confirmação da transação Fim.
-//            'page' => request('page') ?? 1,
+            $this->getStatementDateField() . '_date_init' => $startDate,
+            $this->getStatementDateField() . '_date_end' => $endDate,
         ];
 
-        if (request('statement_data_type') == 'liquidation_date') {
-            $queryParameters += ['liquidation_date_init' => $startDate, 'liquidation_date_end' => $startDate];
-        } else {
-            $queryParameters += ['transaction_date_init' => $startDate, 'transaction_date_end' => $startDate];
+        if (!empty($this->getStatementSubSellerId())) {
+
+            $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
-        if (!empty($subSellerId)) {
-            $queryParameters['subseller_id'] = $subSellerId;
-        }
+        if (!empty($this->getStatementSaleHashId())) {
 
-        if (request('sale')) {
-            $sale = Sale::find(current(Hashids::connection('sale_id')->decode(request('sale'))));
+            $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
 
             if ($sale) {
+
                 try {
+
                     $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+
                     if (isset($gatewayResult->order_id)) {
+
                         $queryParameters['order_id'] = $gatewayResult->order_id;
                     }
                 } catch (Exception $exception) {
@@ -148,12 +247,13 @@ class GetnetBackOfficeService extends GetnetService
             }
         }
 
+        //dd($queryParameters);
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
 
-        $data = $this->sendCurl($url, 'GET');
-        return $data;
+        //dd($startDate, $endDate, $url);
+        return $this->sendCurl($url, 'GET');
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)

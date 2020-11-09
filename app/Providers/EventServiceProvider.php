@@ -22,6 +22,7 @@ class EventServiceProvider extends ServiceProvider
             \Modules\Core\Listeners\BilletPaidWhatsapp2Listener::class,
             \Modules\Core\Listeners\BilletPaidHotsacListener::class,
             \Modules\Core\Listeners\BilletPaidReportanaListener::class,
+            \Modules\Core\Listeners\BilletPaidSmartfunnelListener::class,
 //            \Modules\Core\Listeners\BilletPaidUnicodropListener::class,
         ],
         \Modules\Core\Events\BilletExpiredEvent::class => [

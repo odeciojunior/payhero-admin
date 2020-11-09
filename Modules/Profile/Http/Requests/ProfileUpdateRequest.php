@@ -14,42 +14,24 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
 
-            'name'                     => 'sometimes|string|max:255',
-            'email'                    => 'sometimes|email|max:255',
-            'document'                 => 'nullable|sometimes|string|max:255',
-            'cellphone'                => 'nullable|sometimes|string|max:255',
-            'date_birth'               => 'nullable|sometimes|date_format:Y-m-d',
-            'photo_x1'                 => 'nullable|numeric',
-            'photo_y1'                 => 'nullable|numeric',
-            'photo_w'                  => 'nullable|numeric',
-            'photo_h'                  => 'nullable|numeric',
-            'zip_code'                 => 'nullable|sometimes|string|max:255',
-            'country'                  => 'nullable|sometimes|string|max:255',
-            'state'                    => 'nullable|sometimes|string|max:255',
-            'city'                     => 'nullable|sometimes|string|max:255',
-            'country'                  => 'nullable|string|max:255',
-            'neighborhood'             => 'nullable|sometimes|string|max:255',
-            'street'                   => 'nullable|sometimes|string|max:255',
-            'number'                   => 'nullable|sometimes|string|max:255',
-            'complement'               => 'nullable|sometimes|string|max:255',
-            'profile_photo'            => 'nullable|image|mimes:jpeg,jpg,png',
-            'sex'                      => 'nullable|sometimes',
-            'marital_status'           => 'nullable|sometimes',
-            'nationality'              => 'nullable|sometimes',
-            'mother_name'              => 'nullable|sometimes',
-            'father_name'              => 'nullable|sometimes',
-            'spouse_name'              => 'nullable|sometimes',
-            'birth_place'              => 'nullable|sometimes',
-            'birth_city'               => 'nullable|sometimes',
-            'birth_state'              => 'nullable|sometimes',
-            'birth_country'            => 'nullable|sometimes',
-            'monthly_income'           => 'nullable|sometimes',
-            'document_issue_date'      => 'nullable|sometimes',
-            'document_expiration_date' => 'nullable|sometimes',
-            'document_issuer'          => 'nullable|sometimes',
-            'document_issuer_state'    => 'nullable|sometimes',
-//            'document_serial_number'   => 'nullable',
-            'document_number'          => 'nullable|sometimes',
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255',
+            'document' => 'required|sometimes|string|max:255',
+            'cellphone' => 'nullable|sometimes|string|max:255',
+            'date_birth' => 'nullable|sometimes|date_format:Y-m-d',
+            'photo_x1' => 'nullable|numeric',
+            'photo_y1' => 'nullable|numeric',
+            'photo_w' => 'nullable|numeric',
+            'photo_h' => 'nullable|numeric',
+            'zip_code' => 'required|sometimes|string|max:255',
+            'country' => 'required|sometimes|string|max:255',
+            'state' => 'required|sometimes|string|max:255',
+            'city' => 'required|sometimes|string|max:255',
+            'neighborhood' => 'required|sometimes|string|max:255',
+            'street' => 'required|sometimes|string|max:255',
+            'number' => 'nullable|sometimes|string|max:255',
+            'complement' => 'nullable|sometimes|string|max:255',
+            'profile_photo' => 'nullable|image|mimes:jpeg,jpg,png',
         ];
     }
 
@@ -60,5 +42,19 @@ class ProfileUpdateRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    public function messages()
+    {
+        return [
+            'name.string' => 'O campo nome é obrigatório',
+            'document.required' => 'O campo CPF é obrigatório',
+            'zip_code.required' => 'O campo CEP é obrigatório',
+            'country.required' => 'O campo País é obrigatório',
+            'state.required' => 'O campo Estado é obrigatório',
+            'city.required' => 'O campo Cidade é obrigatório',
+            'neighborhood.required' => 'O campo Bairro é obrigatório',
+            'street.required' => 'O campo Rua é obrigatório',
+        ];
     }
 }

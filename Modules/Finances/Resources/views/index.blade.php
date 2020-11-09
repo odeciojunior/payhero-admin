@@ -344,11 +344,11 @@
                                                     <label for="statement_data_type_select">Data</label>
                                                     <select class="form-control select-pad" name="status"
                                                             id="statement_data_type_select">
-                                                        <option value="transaction_date" selected>
-                                                            Data da venda
-                                                        </option>
-                                                        <option value="liquidation_date">
+                                                        <option value="liquidation_date" selected>
                                                             Data da liquidação
+                                                        </option>
+                                                        <option value="transaction_date">
+                                                            Data da venda
                                                         </option>
                                                     </select>
                                                 </div>
@@ -485,7 +485,7 @@
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=22') }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=23') }}"></script>
     @endpush
 
 @endsection

@@ -217,7 +217,19 @@ $(document).ready(function () {
                     $("#address-document-id").show();
                 }
 
-                if (response.user.address_document_translate == 'approved' || response.user.address_document_translate == 'analyzing') {
+                if ($("#name").val().length < 1
+                    || $("#date_birth").val().length < 1
+                    || $("#document").val().length < 1
+                    || $("#zip_code").val().length < 1
+                    || $("#street").val().length < 1
+                    || $("#number").val().length < 1
+                    || $("#neighborhood").val().length < 1
+                    || $("#city").val().length < 1
+                    || $("#state").val().length < 1
+                    || $("#country").val().length < 1
+                    || response.user.address_document_translate == 'approved'
+                    || response.user.address_document_translate == 'analyzing'
+                ) {
                     $("#address-document-id").hide();
                 }
 
@@ -401,6 +413,11 @@ $(document).ready(function () {
         if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {
             alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
             return false;
+        }
+
+        if ($('input[name="photo_x1"]').val() == '0' || $('input[name="photo_y1"]').val() == '0') {
+            $('input[name="photo_x1"]').val('30');
+            $('input[name="photo_y1"]').val('30');
         }
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();

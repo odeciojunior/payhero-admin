@@ -6,10 +6,10 @@ var statusRole = {
 $(document).ready(function () {
 
     $('#document').mask('000.000.000-00');
-    $("#cellphone").mask("(00) 0000-00009");
+    $("#cellphone").mask("(00) 00000-0009");
 
     $('#document_edit').mask('000.000.000-00');
-    $("#cellphone_edit").mask("(00) 0000-00009");
+    $("#cellphone_edit").mask("(00) 00000-0009");
 
     create();
     index();

@@ -5,7 +5,9 @@ namespace Modules\Companies\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\FoxUtils;
 
 class CompanyDocumentsResource extends JsonResource
 {
@@ -16,12 +18,11 @@ class CompanyDocumentsResource extends JsonResource
      */
     public function toArray($request)
     {
-        $digitalOceanFileService = app(DigitalOceanFileService::class);
         $companyDocumentModel    = app(CompanyDocument::class);
 
         $temporaryUrl = '';
         if (!empty($this->document_url)) {
-            $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($this->document_url, 100);
+            $temporaryUrl = FoxUtils::getAwsSignedUrl($this->document_url,10,'documents');
         }
 
         return [

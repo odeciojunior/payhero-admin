@@ -54,12 +54,45 @@
                     </div>
                 </form>
             </div>
-            @include('companies::empty')
+            <div id='modal-not-approved-document-companies' class='modal fade' aria-labelledby='modal-invite' role='dialog'
+                 tabindex='-1' style='padding-right: 12px;'>
+                <div class='modal-dialog modal-simple'>
+                    <div class='modal-content text-center'>
+                        <div class='modal-body text-center'>
+                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                            <span class='swal2-x-mark'>
+                                <span class='swal2-x-mark-line-left'></span>
+                                <span class='swal2-x-mark-line-right'></span>
+                            </span>
+                            </div>
+                            <h3 align='center'>
+                                Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                                e todos os documentos da empresa e do seu perfil precisam estar aprovados!
+                            </h3>
+                        </div>
+                        <div class='modal-footer'>
+                            <div style='width:100%; text-align: center; padding-top: 3%;'>
+                                <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                Retornar
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" id="empty-companies-error" style="display:none;color: black;display: flex;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
+            <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
+{{--            <h4 class="big gray">Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar--}}
+{{--                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </h4>--}}
+            <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
+{{--            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>--}}
         </div>
     </div>
 
     @push('scripts')
-        <script src="{!! asset('modules/projects/js/create.js?v=1') !!}"></script>
+        <script src="{!! asset('modules/projects/js/create.js?v=2') !!}"></script>
     @endpush
 
 

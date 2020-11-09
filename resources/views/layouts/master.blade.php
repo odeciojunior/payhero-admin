@@ -51,7 +51,7 @@
     @if(env('APP_ENV', 'production') == 'production')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
-            Sentry.init({dsn: 'https://4b81ab6a91684acd888b817f34bd755b@sentry.io/1542991'});
+            Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
         </script>
     @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
