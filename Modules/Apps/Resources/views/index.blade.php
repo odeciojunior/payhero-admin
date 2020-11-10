@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 @endif
-{{--                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                     <div class="card" onclick="window.location.href='/apps/smartfunnel'" style='width:300px;'>
                         <a id="smartfunnel-bt" href="/apps/smartfunnel" class="add-btn">
                             <i id="smartfunnel-icon" class="icon wb-plus" aria-hidden="true"></i></a>
@@ -118,7 +118,7 @@
                             <p class="card-text sm">Integre seus projetos com Smart Funnel </p>
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                     <div class="card" onclick="window.location.href='/apps/digitalmanager'" style='width:300px;'>
                         <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="icon wb-plus" aria-hidden="true"></i></a>
