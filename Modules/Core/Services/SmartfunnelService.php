@@ -6,6 +6,11 @@ use Exception;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
 use Modules\Core\Entities\SmartfunnelSent;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\FoxUtils;
 
 /**
  * Class SmartfunnelService
@@ -86,10 +91,13 @@ class SmartfunnelService
                 $paymentType = 'billet';
             }
 
+            $telephone = FoxUtils::onlyNumbers($sale->customer->telephone);
+            $sale->customer->telephone = (strlen($telephone) > 11) ? substr($telephone, 2) : $telephone;
+
             $data = [
                 "prod"              => Hashids::encode($planSale->plan_id),
                 "prod_name"         => $planSale->plan->name,
-                "commission_amount" => $totalValue,
+                "commission_amount" => $this->getComission($sale),
                 "email"             => $sale->customer->present()->getEmail(),
                 "name"              => $sale->customer->name,
                 "first_name"        => $sale->customer->present()->getFirstName(),
@@ -123,5 +131,61 @@ class SmartfunnelService
         } catch (Exception $e) {
             report($e);
         }
+    }
+
+    private function getComission($sale)
+    {
+        if ($sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
+
+            $producerCompany = UserProject::with('company')
+                ->where('type_enum', (new UserProject)->present()->getTypeEnum('producer'))
+                ->where('project_id', $sale->project_id)->first()->company;
+
+            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                $creditCardTax = $producerCompany->gateway_tax;
+            } else {
+                $creditCardTax = $producerCompany->credit_card_tax;
+            }
+
+            $foxvalue = (int) (($sale->original_total_paid_value - $sale->interest_total_value) / 100 * $creditCardTax);
+            $foxvalue += FoxUtils::onlyNumbers($producerCompany->transaction_rate);
+            $foxvalue += $sale->interest_total_value;
+        } else {
+
+            $producerCompany = UserProject::with('company')
+                ->where('type_enum', (new UserProject)->present()->getTypeEnum('producer'))
+                ->where('project_id', $sale->project_id)->first()->company;
+
+            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
+                $boletoTax = $producerCompany->gateway_tax;
+            } else {
+                $boletoTax = $producerCompany->boleto_tax;
+            }
+
+            $foxvalue = (int) (($sale->original_total_paid_value / 100) * $boletoTax);
+
+            if (FoxUtils::onlyNumbers($sale->total_paid_value) < 4000) {
+                $transactionRate = 300;
+            } else {
+                $transactionRate = $producerCompany->transaction_rate;
+            }
+
+            $foxvalue += FoxUtils::onlyNumbers($transactionRate);
+        }
+
+        $producerValue = (int) $sale->original_total_paid_value - $foxvalue;
+
+        if (!empty($sale->affiliate_id)) {
+            $affiliate = $sale->affiliate;
+            if (!empty($affiliate) && $affiliate->status_enum == (new Affiliate)->present()->getStatus('active')) {
+                $affiliateValue = intval((($sale->original_total_paid_value - $foxvalue) / 100) * $affiliate->percentage);
+                $producerValue  -= $affiliateValue;
+            }
+        }
+
+        if ($sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
+            $producerValue -= $sale->installment_tax_value;
+        }
+        return substr_replace($producerValue, '.', strlen($producerValue) - 2, 0);
     }
 }
