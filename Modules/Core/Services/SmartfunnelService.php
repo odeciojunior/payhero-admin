@@ -78,7 +78,6 @@ class SmartfunnelService
         try {
 
             $planSale = $planSales->first();
-            $totalValue = number_format(($sale->sub_total + $sale->shipment_value), 2, '.', '');
 
             if($eventSale == 'billet_pending') {
                 $status      = 'pending';
