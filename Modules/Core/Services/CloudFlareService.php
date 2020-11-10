@@ -133,11 +133,6 @@ class CloudFlareService
         return $this;
     }
 
-    /**
-     * @param string $domain
-     * @return string
-     * @throws EndpointException
-     */
     public function setZone(string $domain)
     {
         $this->zoneID = $this->zones->getZoneID($domain);
