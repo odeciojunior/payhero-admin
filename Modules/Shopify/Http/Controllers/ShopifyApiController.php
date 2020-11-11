@@ -154,7 +154,7 @@ class ShopifyApiController extends Controller
             }
 
             $shopifyName = $shopifyService->getShopName();
-            $project = $projectModel->create([
+            $projectCreated = $projectModel->create([
                 'name' => $shopifyName,
                 'status' => $projectModel->present()->getStatus('active'),
                 'visibility' => 'private',
@@ -170,12 +170,12 @@ class ShopifyApiController extends Controller
                 'checkout_type' => 2 // checkout de 1 passo
             ]);
 
-            if (empty($project)) {
+            if (empty($projectCreated)) {
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
-            $shipping = $shippingModel->create([
-                'project_id' => $project->id,
+            $shippingCreated = $shippingModel->create([
+                'project_id' => $projectCreated->id,
                 'name' => 'Frete gratis',
                 'information' => 'de 15 até 30 dias',
                 'value' => '0,00',
@@ -185,35 +185,35 @@ class ShopifyApiController extends Controller
                 'pre_selected' => '1',
             ]);
 
-            if (empty($shipping)) {
-                $project->delete();
+            if (empty($shippingCreated)) {
+                $projectCreated->delete();
 
                 return response()->json([
                     'message' => 'Problema ao criar integração, tente novamente mais tarde'
                 ], 400);
             }
 
-            $shopifyIntegration = $shopifyIntegrationModel->create([
+            $shopifyIntegrationCreated = $shopifyIntegrationModel->create([
                 'token' => $dataRequest['token'],
                 'shared_secret' => '',
                 'url_store' => $urlStore . '.myshopify.com',
                 'user_id' => auth()->user()->id,
-                'project_id' => $project->id,
+                'project_id' => $projectCreated->id,
                 'status' => 1,
             ]);
 
-            if (empty($shopifyIntegration)) {
-                $shipping->delete();
-                $project->delete();
+            if (empty($shopifyIntegrationCreated)) {
+                $shippingCreated->delete();
+                $projectCreated->delete();
 
                 return response()->json([
                     'message' => 'Problema ao criar integração, tente novamente mais tarde'
                 ], 400);
             }
 
-            $userProject = $userProjectModel->create([
+            $userProjectCreated = $userProjectModel->create([
                 'user_id' => auth()->user()->account_owner_id,
-                'project_id' => $project->id,
+                'project_id' => $projectCreated->id,
                 'company_id' => current(Hashids::decode($dataRequest['company'])),
                 'type' => 'producer',
                 'type_enum' => $userProjectModel->present()->getTypeEnum('producer'),
@@ -224,10 +224,10 @@ class ShopifyApiController extends Controller
                 'status_flag' => $userProjectModel->present()->getStatusFlag('active'),
             ]);
 
-            if (empty($userProject)) {
-                $shopifyIntegration->delete();
-                $shipping->delete();
-                $project->delete();
+            if (empty($userProjectCreated)) {
+                $shopifyIntegrationCreated->delete();
+                $shippingCreated->delete();
+                $projectCreated->delete();
 
                 return response()->json([
                     'message' => 'Problema ao criar integração, tente novamente mais tarde'
@@ -236,11 +236,10 @@ class ShopifyApiController extends Controller
 
             $projectNotificationService = new ProjectNotificationService();
             $projectService = new ProjectService();
-            $projectNotificationService->createProjectNotificationDefault($project->id);
-            $projectService->createUpsellConfig($project->id);
+            $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
+            $projectService->createUpsellConfig($projectCreated->id);
 
-            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-
+            event(new ShopifyIntegrationEvent($shopifyIntegrationCreated, auth()->user()->account_owner_id));
 
             return response()->json([
                 'message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'
