@@ -113,7 +113,6 @@ $(document).ready(function () {
             alertCustom('error', 'Dados informados inválidos');
             return false;
         } else {
-            loadingOnScreen();
             saveIntegration();
         }
 
@@ -157,6 +156,14 @@ $(document).ready(function () {
      */
     function saveIntegration() {
         let form_data = new FormData(document.getElementById('form_add_integration'));
+
+        if (!form_data.get('company').length > 0) {
+            alertCustom('error', 'A empresa precisa estar aprovada transacionar para realizar a integração! ');
+            return false;
+        }
+
+        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: "/api/apps/shopify",
@@ -175,13 +182,10 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadingOnScreenRemove();
-                // window.location.href = response.data.auth_shopify_url;
-                // index();
                 alertCustom('success', response.message);
             }
         });
     }
-
 });
 
 function openInNewWindow(url) {

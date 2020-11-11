@@ -83,6 +83,12 @@ class ShopifyApiController extends Controller
 
             $dataRequest = $request->all();
 
+            if (empty($dataRequest['company'])) {
+                return response()->json([
+                    'message' => 'A empresa precisa estar aprovada transacionar para realizar a integração!'
+                ], 400);
+            }
+
             //tratamento parcial do dominio
             $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
             $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
