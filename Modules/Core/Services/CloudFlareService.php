@@ -336,13 +336,6 @@ class CloudFlareService
         }
     }
 
-    /**
-     * @param int $domainModelId
-     * @param string $domain
-     * @param $ipAddress
-     * @return bool
-     * @throws EndpointException
-     */
     public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
         $domainModel = new Domain();
@@ -473,12 +466,6 @@ class CloudFlareService
         }
     }
 
-    /**
-     * @param int $domainModelId
-     * @param string $domain
-     * @return bool
-     * @throws EndpointException
-     */
     public function integrationShopify(int $domainModelId, string $domain)
     {
         $domainModel = new Domain();
@@ -509,7 +496,7 @@ class CloudFlareService
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("CNAME", 'www', 'shops.myshopify.com');
+            $recordId = $this->addRecord("CNAME", 'www', 'shops.myshopify.com', 0,false);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
