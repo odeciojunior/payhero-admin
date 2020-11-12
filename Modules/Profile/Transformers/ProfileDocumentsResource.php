@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\DigitalOceanFileService;
 
 /**
@@ -22,11 +23,21 @@ class ProfileDocumentsResource extends JsonResource
     public function toArray($request)
     {
         $digitalOceanFileService = app(DigitalOceanFileService::class);
+        $amazonFileService = app(AmazonFileService::class);
         $userDocumentModel       = app(UserDocument::class);
 
         $temporaryUrl = '';
         if (!empty($this->document_url)) {
-            $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($this->document_url, 180);
+            // Gera o Link temporário de acordo com o driver
+
+            if (strstr($this->document_url, 'digitaloceanspaces')) {
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($this->document_url, 180);
+            }
+
+            if (strstr($this->document_url, 'amazonaws')) {
+                $amazonFileService->setDisk('s3_documents');
+                $temporaryUrl = $amazonFileService->getTemporaryUrlFile($this->document_url, 180);
+            }
         }
 
         return [
@@ -34,7 +45,6 @@ class ProfileDocumentsResource extends JsonResource
             'status'         => $userDocumentModel->present()->getTypeEnum($this->status),
             'document_url'   => $temporaryUrl,
             'refused_reason' => $this->refused_reason,
-
         ];
     }
 }

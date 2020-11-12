@@ -551,7 +551,7 @@ class ProfileApiController
 
                 if (strstr($data['url'], 'amazonaws')) {
                     $amazonFileService->setDisk('s3_documents');
-                    $temporaryUrl = $amazonFileService->setDisk('s3_documents')->getTemporaryUrlFile($data['url'], 180);
+                    $temporaryUrl = $amazonFileService->getTemporaryUrlFile($data['url'], 180);
                 }
 
                 // Validacao
