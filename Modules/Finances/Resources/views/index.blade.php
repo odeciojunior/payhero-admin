@@ -485,7 +485,7 @@
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=23') }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v='. random_int(1, 10)) }}"></script>
     @endpush
 
 @endsection

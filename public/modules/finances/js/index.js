@@ -781,7 +781,7 @@ $(document).ready(function () {
                 items = response;
 
                 if (isEmpty(items)) {
-                    $('#statement-money #available-in-period-statement').html('');
+                    $('#statement-money #available-in-period-statement').html('R$ 0,00');
                     loadOnAny('#nav-statement #available-in-period-statement', true);
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                     return;
@@ -799,10 +799,14 @@ $(document).ready(function () {
 
                 totalValue = totalValue / 100;
 
-                $('#statement-money #available-in-period-statement').html(`<span${isNegativeStatement ? ' style="color:red;"' : ''}>${(totalValue.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }))}</span>`);
+                $('#statement-money #available-in-period-statement').html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                        ${(totalValue.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })
+                    )}</span>`
+                );
                 loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 $(".numbers").show();
