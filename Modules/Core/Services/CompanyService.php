@@ -14,6 +14,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Tracking;
 use DB;
+use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
 /**
  * Class CompaniesService
@@ -604,6 +605,9 @@ class CompanyService
                 $company->update([
                     'capture_transaction_enabled' => true
                 ]);
+                if ($this->isDocumentValidated($company->id) && (new UserService())->isDocumentValidated($company->user->id)) {
+                    event(new UpdateCompanyGetnetEvent($company));
+                }
             } else {
                 $company->update([
                     'capture_transaction_enabled' => false

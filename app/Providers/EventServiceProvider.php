@@ -109,7 +109,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         \Modules\Core\Events\UserRegisteredEvent::class => [
             \Modules\Core\Listeners\SendEmailRegisteredListener::class,
-        ]
+        ],
+        \Modules\Core\Events\UpdateCompanyGetnetEvent::class => [
+            \Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener::class,
+        ],
     ];
 
     /**

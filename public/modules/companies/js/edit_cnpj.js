@@ -37,7 +37,12 @@ $(document).ready(function () {
     // $('#patrimony').mask('#.###,#0', {reverse: true});
     // $('#social_value').mask('#.###,#0', {reverse: true});
     // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
-
+    if (window.location.search.split('?').length == 3) {
+        $('#company-nav').removeClass('active');
+        $('#tab_user').removeClass('active');
+        $('#tab_documentos').addClass('active');
+        $('#documents-nav').addClass('active');
+    }
     $('.check').on('change', function () {
         if ($(this).is(':checked')) {
             $(this).val(1);
@@ -147,7 +152,6 @@ $(document).ready(function () {
                 $('#document_issuer_state').val(company.document_issuer_state);
                 $('#document_number').val(company.document_number);
 
-
                 if (company.capture_transaction_enabled) {
                     $("#tax-payment").val(company.gateway_tax + '%')
 
@@ -174,7 +178,6 @@ $(document).ready(function () {
                     $('.cielo-tax').removeAttr('hidden');
                     $('.gateway-tax').hide();
                 }
-
 
                 $('#patrimony').unmask();
                 $('#patrimony').mask('#.##0,00', {reverse: true});
@@ -313,7 +316,6 @@ $(document).ready(function () {
         });
     });
 
-
     function getTax() {
         $.ajax({
             method: "GET",
@@ -348,7 +350,6 @@ $(document).ready(function () {
 
         $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
     }
-
 
     //Couting number
     $('#rounting_number').on('input', function () {

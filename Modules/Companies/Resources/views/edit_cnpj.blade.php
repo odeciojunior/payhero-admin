@@ -24,7 +24,7 @@
                         <div class="nav-tabs-horizontal nav-tabs-line pt-15" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation" id='nav_users'>
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_user"
+                                    <a class="nav-link active" id='company-nav' data-toggle="tab" href="#tab_user"
                                        aria-controls="tab_user" role="tab">Empresa
                                     </a>
                                 </li>
@@ -33,7 +33,7 @@
                                        aria-controls="tab_bank_data" role="tab">Dados Bancários</a>
                                 </li>
                                 <li class="nav-item" role="presentation" id="nav_documents">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_documentos"
+                                    <a class="nav-link" id='documents-nav' data-toggle="tab" href="#tab_documentos"
                                        aria-controls="tab_documentos" role="tab"> Documentos
                                     </a>
                                 </li>
@@ -559,7 +559,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=32')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=33')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
