@@ -304,11 +304,6 @@
                                                     por transação.
                                                 </p>
                                                 <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    transferência para empresas do exterior de
-                                                    <label style="color: gray" id="transaction-tax-abroad"></label>
-                                                </p>
-                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos
                                                     com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
                                                 </p>
