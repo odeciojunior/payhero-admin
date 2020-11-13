@@ -38,7 +38,7 @@
                                     </a>
                                 </li>
                                 @if(!auth()->user()->hasRole('attendance'))
-                                    <li class="nav-item" role="presentation" id="nav_tax_gateways">
+                                    <li class="nav-item" role="presentation" id="nav_tax_gateways" hidden>
                                         <a class="nav-link"
                                            data-toggle="tab"
                                            href="#tab_tax_gateways"
@@ -330,85 +330,6 @@
                             </div>
                             <div class='tab-pane fade' id='tab_tax_gateways' role='tabpanel'>
                                 <div class='row ' style='padding:0 30px 0 30px'>
-                                    <div class="cielo-tax" hidden>
-                                        <div class='col-lg-12'>
-                                            <h6 class='title-pad'>Cartão de crédito:</h6>
-                                        </div>
-                                        <div class='col'></div>
-                                        <div class='row mt-15 col-xl-12'>
-                                            <div class='form-group col-xl-5'>
-                                                <label for='credit-card-tax-cielo'>Por venda (porcentagem):</label>
-                                                <input id='credit-card-tax-cielo' disabled='disabled'
-                                                       class="form-control">
-                                            </div>
-                                            <div class='form-group col-xl-5'>
-                                                <div class='form-group'>
-                                                    <label for='credit-card-release-cielo'>Dias para liberação:</label>
-                                                    <select id="credit-card-release-cielo" disabled='disabled'
-                                                            class="form-control">
-                                                        <option value="plan-30">30 dias (taxa de 5.9%)</option>
-                                                        <option value="plan-15">15 dias (taxa de 6.5%)</option>
-                                                        <option value="plan-0">Após postagem com rastreio válido
-                                                        </option>
-                                                        <option value="plan-tracking-code" disabled>Ao informar o código
-                                                            de rastreio (em breve)
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='col-lg-12'>
-                                            <h6 class='title-pad'>Boleto:</h6>
-                                        </div>
-                                        <div class='col'></div>
-                                        <div class='row mt-15 col-xl-12'>
-                                            <div class='form-group col-xl-5'>
-                                                <label for='boleto-tax-cielo'>Por venda (porcentagem):</label>
-                                                <input id='boleto-tax-cielo' disabled='disabled' class="form-control">
-                                            </div>
-                                            <div class='form-group col-xl-5'>
-                                                <div class='form-group'>
-                                                    <label for='boleto-release-cielo'>Dias para liberação:</label>
-                                                    <select id="boleto-release-cielo" disabled='disabled'
-                                                            class="form-control">
-                                                        <option value="plan-30">30 dias (taxa de 5.9%)</option>
-                                                        <option value="plan-2">2 dias (taxa de 6.5%)</option>
-                                                        <option value="plan-0">Após postagem com rastreio válido
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    parcelamento no cartão de crédito de
-                                                    <label id="installment-tax" style="color: gray"></label>
-                                                    % ao mês.
-                                                </p>
-                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de
-                                                    R$
-                                                    <label style="color: gray" id="transaction-tax"></label>
-                                                    por transação.
-                                                </p>
-                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    transferência para empresas do exterior de
-                                                    <label style="color: gray" id="transaction-tax-abroad"></label>
-                                                </p>
-                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos
-                                                    com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
-                                                </p>
-                                                <p class='info info-antecipation-tax'
-                                                   style='font-size: 10px; margin-top: -8px;display:none;'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    antecipação de
-                                                    <label style="color: gray" id="label-antecipation-tax"></label>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="gateway-tax col-md-12 mt-20  " hidden>
                                         <div class="container">
                                             <div class='row mt-15 col-xl-12'>
@@ -433,32 +354,22 @@
                                         <div class='col'></div>
                                         <div class='row mt-15 col-xl-12'>
                                             <div class="col-12">
-                                                <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    parcelamento no cartão de crédito de
+                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                                    Taxa de parcelamento no cartão de crédito de
                                                     <label id="installment-tax" style="color: gray"></label>
                                                     % ao mês.
                                                 </p>
                                                 <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de
-                                                    R$
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                                    Taxa fixa de R$
                                                     <label style="color: gray" id="transaction-tax"></label>
                                                     por transação.
                                                 </p>
                                                 <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    transferência para empresas do exterior de
-                                                    <label style="color: gray" id="transaction-tax-abroad"></label>
-                                                </p>
-                                                <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos
-                                                    com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
-                                                </p>
-                                                <p class='info info-antecipation-tax'
-                                                   style='font-size: 10px; margin-top: -8px;display:none;'>
-                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                    antecipação de
-                                                    <label style="color: gray" id="label-antecipation-tax"></label>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                                    Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$
+                                                    3,00.
                                                 </p>
                                             </div>
                                         </div>
@@ -559,7 +470,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=33')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v='.random_int(1, 100))}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

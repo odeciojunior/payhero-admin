@@ -72,17 +72,9 @@ $(document).ready(function () {
                             <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
                         </select>
                     `);
-                    $('#tab_tax_gateways .gateway-tax').removeAttr('hidden');
-                    $('#tab_tax_gateways .cielo-tax').hide();
-                } else {
 
-                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
-                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
-                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
-                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
-
-                    $('#tab_tax_gateways .cielo-tax').removeAttr('hidden');
-                    $('#tab_tax_gateways .gateway-tax').hide();
+                    $('.gateway-tax').removeAttr('hidden');
+                    $('#nav_tax_gateways').removeAttr('hidden');
                 }
 
                 if (response.company.country === 'brazil') {

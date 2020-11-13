@@ -4,14 +4,13 @@ namespace Modules\Companies\Transformers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Services\CompanyService;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Modules\Core\Presenters\CompanyPresenter;
-use Laracasts\Presenter\Exceptions\PresenterException;
 
 /**
  * Class CompanyResource
@@ -26,7 +25,7 @@ class CompanyResource extends JsonResource
     public $resource;
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      * @throws PresenterException
      */
@@ -52,7 +51,7 @@ class CompanyResource extends JsonResource
                 '###.###.###-##') : $this->resource->company_document),
             'zip_code' => $this->resource->zip_code ?? '',
             'country' => $this->resource->country ?? '',
-            'country_translated' => $this->resource->country ? __('definitions.enum.country.'.$this->resource->country) : '',
+            'country_translated' => $this->resource->country ? __('definitions.enum.country.' . $this->resource->country) : '',
             'state' => $this->resource->state ?? '',
             'city' => $this->resource->city ?? '',
             'street' => $this->resource->street ?? '',
@@ -68,9 +67,9 @@ class CompanyResource extends JsonResource
             'bank_document_status' => $presenter->getBankDocumentStatus($this->resource->bank_document_status),
             'address_document_status' => $presenter->getAddressDocumentStatus($this->resource->address_document_status),
             'contract_document_status' => $presenter->getContractDocumentStatus($this->resource->contract_document_status),
-            'bank_document_translate' => __('definitions.enum.status.'.$presenter->getBankDocumentStatus()),
-            'address_document_translate' => __('definitions.enum.status.'.$presenter->getAddressDocumentStatus()),
-            'contract_document_translate' => __('definitions.enum.status.'.$presenter->getContractDocumentStatus()),
+            'bank_document_translate' => __('definitions.enum.status.' . $presenter->getBankDocumentStatus()),
+            'address_document_translate' => __('definitions.enum.status.' . $presenter->getAddressDocumentStatus()),
+            'contract_document_translate' => __('definitions.enum.status.' . $presenter->getContractDocumentStatus()),
             'refusedDocuments' => $refusedDocuments,
             'type' => $this->company_type,
             'type_company' => $presenter->getCompanyType($this->company_type),
@@ -96,6 +95,7 @@ class CompanyResource extends JsonResource
             'capture_transaction_enabled' => $this->capture_transaction_enabled,
             'credit_card_tax' => $this->credit_card_tax,
             'boleto_tax' => $this->boleto_tax,
+            'transaction_rate' => $this->transaction_rate,
             'credit_card_release_money' => $this->credit_card_release_money_days,
             'boleto_release_money' => $this->boleto_release_money_days,
             'gateway_tax' => $this->gateway_tax,
