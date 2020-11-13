@@ -216,6 +216,7 @@ $(document).ready(function () {
                     let neighborhood =  $('#neighborhood')
                     let complement =  $('#complement')
                     let city =  $('#city')
+                    let state =  $('#state')
                     let country =  $('#country')
 
                     zip_code.val().length > 1 ? zip_code.prop('disabled', true) : zip_code.prop('disabled', false);
@@ -224,6 +225,7 @@ $(document).ready(function () {
                     neighborhood.val().length > 1 ? neighborhood.prop('disabled', true) : neighborhood.prop('disabled', false);
                     complement.val().length > 1 ? complement.prop('disabled', true) : complement.prop('disabled', false);
                     city.val().length > 1 ? city.prop('disabled', true) : city.prop('disabled', false);
+                    state.val().length > 1 ? state.prop('disabled', true) : state.prop('disabled', false);
                     country.val().length > 1 ? country.prop('disabled', true) : country.prop('disabled', false);
                 }
 
