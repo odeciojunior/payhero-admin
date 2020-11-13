@@ -122,7 +122,6 @@ $(document).ready(function () {
                 })
 
                 $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
-                setValuesHtml(company)
             }
         });
     };
@@ -155,19 +154,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    function setValuesHtml(data) {
-
-        if (data.antecipation_enabled_flag) {
-            $('.info-antecipation-tax').show();
-            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-    }
 
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();

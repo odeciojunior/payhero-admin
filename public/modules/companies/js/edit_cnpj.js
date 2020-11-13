@@ -298,41 +298,6 @@ $(document).ready(function () {
         });
     });
 
-    function getTax() {
-        $.ajax({
-            method: "GET",
-            url: `/api/profile/${userIdCode}/tax`,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                setValuesHtml(response.data);
-            }
-        });
-    }
-
-    function setValuesHtml(data) {
-        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            $('.info-antecipation-tax').show();
-            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-    }
-
     //Couting number
     $('#rounting_number').on('input', function () {
 
