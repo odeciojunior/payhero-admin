@@ -121,6 +121,7 @@ $(document).ready(function () {
                     $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
                 })
 
+                $("#tab_tax_gateways  #transaction-tax").html(company.transaction_rate).attr('disabled', 'disabled');
                 $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
             }
         });
