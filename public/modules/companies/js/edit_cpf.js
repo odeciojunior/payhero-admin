@@ -57,7 +57,6 @@ $(document).ready(function () {
                     $('#account_type').val(response.company.account_type);
                 }
                 userIdCode = response.company.user_code;
-                getTax();
                 let company = response.company;
                 if (response.company.capture_transaction_enabled) {
                     companyIdCode = company.id_code;
@@ -131,7 +130,7 @@ $(document).ready(function () {
                 })
 
                 $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
-
+                setValuesHtml(company)
             }
         });
     };
@@ -165,29 +164,7 @@ $(document).ready(function () {
         });
     });
 
-    function getTax() {
-        $.ajax({
-            method: "GET",
-            url: `/api/profile/${userIdCode}/tax`,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                setValuesHtml(response.data);
-            }
-        });
-    }
-
     function setValuesHtml(data) {
-        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
 
         if (data.antecipation_enabled_flag) {
             $('.info-antecipation-tax').show();

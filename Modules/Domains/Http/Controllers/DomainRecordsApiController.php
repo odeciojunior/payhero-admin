@@ -3,6 +3,7 @@
 namespace Modules\Domains\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -224,6 +225,79 @@ class DomainRecordsApiController extends Controller
 
             return response()->json([
                 'message' => $message,
+            ], 400);
+        }
+    }
+
+    public function update(
+        Request $request,
+        $project,
+        $domain,
+        $domainRecord
+    ) {
+        try {
+            $domainModel = new Domain();
+            $domainRecordModel = new DomainRecord();
+            $cloudFlareService = new CloudFlareService();
+
+            $domain = $domainModel->find(current(Hashids::decode($domain)));
+            $domainRecord = $domainRecordModel->find(current(Hashids::decode($domainRecord)));
+
+            if (!Gate::allows('edit', [$domainRecord->domain->project])) {
+                return response()->json([
+                    'message' => 'Sem permissão para remover a entrada',
+                ], 400);
+            }
+
+            if ($domainRecord->system_flag) {
+                return response()->json([
+                    'message' => 'Você não tem permissão para alterar este proxy',
+                ], 400);
+            }
+
+            if ($domainRecord->type == 'MX' || $domainRecord->type == 'TXT') {
+                $proxy = false;
+            } else {
+                if ($request->input('proxy') == '1') {
+                    $proxy = true;
+                } else {
+                    $proxy = false;
+                }
+            }
+
+            $data = [
+                'type' => $domainRecord->type,
+                'name' => $domainRecord->name,
+                'content' => $domainRecord->content,
+                'proxied' => $proxy,
+            ];
+
+            $response = $cloudFlareService->updateRecordDetails(
+                $domain->cloudflare_domain_id,
+                $domainRecord->cloudflare_record_id,
+                $data
+            );
+
+            if (!$response->success) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ], 400);
+            }
+            $domainRecord->update([
+                'proxy' => $data['proxied'],
+            ]);
+
+            return response()->json([
+                'message' => 'Proxy atualizado com sucesso!',
+                'data' => [
+                    'domain' => $domain->id_code,
+                ],
+            ], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
             ], 400);
         }
     }

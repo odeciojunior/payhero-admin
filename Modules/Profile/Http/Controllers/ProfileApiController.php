@@ -23,7 +23,6 @@ use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\ProfileDocumentsResource;
-use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -452,32 +451,6 @@ class ProfileApiController
         }
     }
 
-    public function getTax($userId)
-    {
-        try {
-            if (empty($userId)) {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
-            }
-
-            $user = auth()->user();
-            $userId = current(Hashids::decode($userId));
-            if ($user->account_owner_id == $userId) {
-                return new ProfileTaxResource($user);
-            }
-            return response()->json([
-                'message' => 'Ocorreu um erro!',
-            ], 400);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
-        }
-    }
-
     public function updateUserNotification(Request $request)
     {
         try {
@@ -551,7 +524,7 @@ class ProfileApiController
 
                 if (strstr($data['url'], 'amazonaws')) {
                     $amazonFileService->setDisk('s3_documents');
-                    $temporaryUrl = $amazonFileService->setDisk('s3_documents')->getTemporaryUrlFile($data['url'], 180);
+                    $temporaryUrl = $amazonFileService->getTemporaryUrlFile($data['url'], 180);
                 }
 
                 // Validacao

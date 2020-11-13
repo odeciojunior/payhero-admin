@@ -15,13 +15,6 @@ class UserPresenter extends Presenter
     const EMPRESA_EXTRATO = 1;
     const EMPRESA_RESINDENCIA = 2;
     const EMPRESA_CCMEI = 3;
-    /**
-     * @return string
-     */
-    public function getTransactionRate()
-    {
-        return number_format($this->transaction_rate, 2, ',', '.');
-    }
 
     /**
      * @param $status

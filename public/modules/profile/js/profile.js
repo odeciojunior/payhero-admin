@@ -217,7 +217,7 @@ $(document).ready(function () {
                     $("#address-document-id").show();
                 }
 
-                if ($("#name").val().length < 1
+                if (($("#name").val().length < 1
                     || $("#date_birth").val().length < 1
                     || $("#document").val().length < 1
                     || $("#zip_code").val().length < 1
@@ -226,9 +226,9 @@ $(document).ready(function () {
                     || $("#neighborhood").val().length < 1
                     || $("#city").val().length < 1
                     || $("#state").val().length < 1
-                    || $("#country").val().length < 1
-                    || response.user.address_document_translate == 'approved'
-                    || response.user.address_document_translate == 'analyzing'
+                    || $("#country").val().length < 1)
+                    && (response.user.address_document_translate == 'approved'
+                    || response.user.address_document_translate == 'analyzing')
                 ) {
                     $("#address-document-id").hide();
                 }
