@@ -197,9 +197,9 @@ $(document).ready(function () {
                     let document = $('#document')
                     let date_birth =  $('#date_birth')
 
-                    name.val().length > 1 ? name.prop('disabled', true) : name.prop('disabled', false);
-                    document.val().length > 1 ? document.prop('disabled', true) : document.prop('disabled', false);
-                    date_birth.val().length > 1 ? date_birth.prop('disabled', true) : date_birth.prop('disabled', false);
+                    name.val().length > 1 ? name.prop('readonly', true) : name.prop('readonly', false);
+                    document.val().length > 1 ? document.prop('readonly', true) : document.prop('readonly', false);
+                    date_birth.val().length > 1 ? date_birth.prop('readonly', true) : date_birth.prop('readonly', false);
 
                     $("#personal-document-id").hide();
                 }
@@ -219,14 +219,14 @@ $(document).ready(function () {
                     let state =  $('#state')
                     let country =  $('#country')
 
-                    zip_code.val().length > 1 ? zip_code.prop('disabled', true) : zip_code.prop('disabled', false);
-                    street.val().length > 1 ? street.prop('disabled', true) : street.prop('disabled', false);
-                    number.val().length > 1 ? number.prop('disabled', true) : number.prop('disabled', false);
-                    neighborhood.val().length > 1 ? neighborhood.prop('disabled', true) : neighborhood.prop('disabled', false);
-                    complement.val().length > 1 ? complement.prop('disabled', true) : complement.prop('disabled', false);
-                    city.val().length > 1 ? city.prop('disabled', true) : city.prop('disabled', false);
-                    state.val().length > 1 ? state.prop('disabled', true) : state.prop('disabled', false);
-                    country.val().length > 1 ? country.prop('disabled', true) : country.prop('disabled', false);
+                    zip_code.val().length > 1 ? zip_code.prop('readonly', true) : zip_code.prop('readonly', false);
+                    street.val().length > 1 ? street.prop('readonly', true) : street.prop('readonly', false);
+                    number.val().length > 1 ? number.prop('readonly', true) : number.prop('readonly', false);
+                    neighborhood.val().length > 1 ? neighborhood.prop('readonly', true) : neighborhood.prop('readonly', false);
+                    complement.val().length > 1 ? complement.prop('readonly', true) : complement.prop('readonly', false);
+                    city.val().length > 1 ? city.prop('readonly', true) : city.prop('readonly', false);
+                    state.val().length > 1 ? state.prop('readonly', true) : state.prop('readonly', false);
+                    country.val().length > 1 ? country.prop('readonly', true) : country.prop('readonly', false);
                 }
 
                 if (($("#name").val().length < 1
