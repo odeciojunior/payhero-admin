@@ -323,47 +323,11 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo
-                                                    (Cartão)</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="credit_card_in_proccess_switch"
-                                                           name="credit_card_in_proccess"
-                                                           class="check notification_switch" value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
                                                 <label for="sale_approved" class="mb-10">Venda aprovada</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="sale_approved_switch"
                                                            name="sale_approved" class="check notification_switch"
-                                                           value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
-                                                <label for="notazz" class="mb-10">Notificação de Nota Fiscal</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="notazz_switch" name="notazz"
-                                                           class="check notification_switch" value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
-                                                <label for="released_balance" class="mb-10">Saldo liberado</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="released_balance_switch"
-                                                           name="released_balance" class="check notification_switch"
                                                            value='1'>
                                                     <span class="slider round"></span>
                                                 </label>
@@ -398,17 +362,6 @@
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="affiliation_switch" name="affiliation"
-                                                           class="check notification_switch" value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
-                                                <label for="blocked_balance" class="mb-10">Saldo Bloqueado</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="blocked_balance" name="blocked_balance"
                                                            class="check notification_switch" value='1'>
                                                     <span class="slider round"></span>
                                                 </label>
