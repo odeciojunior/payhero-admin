@@ -45,7 +45,7 @@ class CompanyCpfResource extends JsonResource
             'credit_card_release_money' => $this->credit_card_release_money_days,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
-            'transaction_rate' => $this->transaction_rate
+            'transaction_rate' => $this->transaction_rate,
         ];
     }
 }

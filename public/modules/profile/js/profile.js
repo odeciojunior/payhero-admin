@@ -660,31 +660,6 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
-    $("#nav_taxs").on('click', function () {
-        getTax();
-    });
-
-    function getTax() {
-        $.ajax({
-            method: "GET",
-            url: `/api/profile/${user}/tax`,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                setValuesHtml(response.data);
-            }
-        });
-    }
-
     function setValuesHtml(data) {
         $("#credit-card-tax").val(data.credit_card_tax + '%');
         $("#debit-card-tax").val(data.debit_card_tax + '%');
