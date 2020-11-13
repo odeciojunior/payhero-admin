@@ -37,12 +37,15 @@ $(document).ready(function () {
     // $('#patrimony').mask('#.###,#0', {reverse: true});
     // $('#social_value').mask('#.###,#0', {reverse: true});
     // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
-    if (window.location.search.split('?').length == 3) {
-        $('#company-nav').removeClass('active');
-        $('#tab_user').removeClass('active');
-        $('#tab_documentos').addClass('active');
-        $('#documents-nav').addClass('active');
+    if (window.location.search.split('&').length == 2) {
+        if (window.location.search.split('&')[1] == 'tab=documents') {
+            $('#company-nav').removeClass('active');
+            $('#tab_user').removeClass('active');
+            $('#tab_documentos').addClass('active');
+            $('#documents-nav').addClass('active');
+        }
     }
+
     $('.check').on('change', function () {
         if ($(this).is(':checked')) {
             $(this).val(1);

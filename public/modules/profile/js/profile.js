@@ -20,6 +20,15 @@ $(document).ready(function () {
     var user = '';
     // $('#monthly_income').mask('#.###,#0', {reverse: true});
     $('#document_number').mask('0#');
+    if (window.location.search.split('?').length == 2) {
+        if (window.location.search.split('?')[1] == 'tab=documents') {
+            $('#user-nav').removeClass('active');
+            $('#tab_user').removeClass('active');
+            $('#documents-nav').addClass('active');
+            $('#tab_documentos').addClass('active');
+            $('#tab_documentos').addClass('show');
+        }
+    }
     getDataProfile = function () {
         $.ajax({
             url: "/api/profile",
@@ -228,7 +237,7 @@ $(document).ready(function () {
                     || $("#state").val().length < 1
                     || $("#country").val().length < 1)
                     && (response.user.address_document_translate == 'approved'
-                    || response.user.address_document_translate == 'analyzing')
+                        || response.user.address_document_translate == 'analyzing')
                 ) {
                     $("#address-document-id").hide();
                 }

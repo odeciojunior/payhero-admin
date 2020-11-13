@@ -20,13 +20,13 @@
                 <div class="nav-tabs-horizontal mt-15" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                         <li class="nav-item" role="presentation" id='nav_users'>
-                            <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user"
+                            <a class="nav-link active" id='user-nav' data-toggle="tab" href="#tab_user" aria-controls="tab_user"
                                role="tab">Meus dados
                             </a>
                         </li>
                         @if(!auth()->user()->hasRole('attendance'))
                             <li class="nav-item" role="presentation" id="nav_documents">
-                                <a class="nav-link" data-toggle="tab" href="#tab_documentos"
+                                <a class="nav-link" id='documents-nav' data-toggle="tab" href="#tab_documentos"
                                    aria-controls="tab_documentos" role="tab">
                                     Documentos
                                 </a>
