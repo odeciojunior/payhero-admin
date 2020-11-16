@@ -136,19 +136,15 @@ $(document).ready(function () {
                 if (response.user.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
+
                 if (response.user.sale_approved) {
                     $("#sale_approved_switch").attr("checked", "checked");
                 }
-                if (response.user.notazz) {
-                    $("#notazz_switch").attr("checked", "checked");
-                }
 
-                if (response.user.released_balance) {
-                    $("#released_balance_switch").attr("checked", "checked");
-                }
                 if (response.user.domain_approved) {
                     $("#domain_approved_switch").attr("checked", "checked");
                 }
+
                 if (response.user.shopify) {
                     $("#shopify_switch").attr("checked", "checked");
                 }
@@ -156,16 +152,9 @@ $(document).ready(function () {
                 if (response.user.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
-                if (response.user.credit_card_in_proccess) {
-                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
-                }
 
                 if (response.user.affiliation) {
                     $("#affiliation_switch").attr("checked", "checked");
-                }
-
-                if (response.user.blocked_balance) {
-                    $("#blocked_balance").attr("checked", "checked");
                 }
 
                 // Verificação de telefone
@@ -202,21 +191,15 @@ $(document).ready(function () {
                     $("#text-alert-documents-cpf").hide();
                 }
 
+
                 if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
-                    $('#document').attr('disabled', 'disabled');
-                    $('#document_number').attr('disabled', 'disabled');
-                    $('#document_issuer').attr('disabled', 'disabled');
-                    $('#document_issue_date').attr('disabled', 'disabled');
-                    $('#document_expiration_date').attr('disabled', 'disabled');
-                    $('#document_issuer_state').attr('disabled', 'disabled');
-                    $('#sex').attr('disabled', 'disabled');
-                    $('#nationality').attr('disabled', 'disabled');
-                    $('#mother_name').attr('disabled', 'disabled');
-                    $('#father_name').attr('disabled', 'disabled');
-                    $('#birth_country').attr('disabled', 'disabled');
-                    $('#birth_state').attr('disabled', 'disabled');
-                    $('#birth_city').attr('disabled', 'disabled');
-                    $('#birth_place').attr('disabled', 'disabled');
+                    let name = $('#name')
+                    let document = $('#document')
+                    let date_birth =  $('#date_birth')
+
+                    name.prop('readonly', true);
+                    document.prop('readonly', true);
+                    date_birth.prop('readonly', true);
 
                     $("#personal-document-id").hide();
                 }
@@ -224,6 +207,26 @@ $(document).ready(function () {
                 if (response.user.address_document_translate == 'pending' || response.user.address_document_translate == 'refused') {
                     $("#text-alert-documents-cpf").show();
                     $("#address-document-id").show();
+                }
+
+                if (response.user.address_document_translate === 'approved' || response.user.address_document_translate == 'pending') {
+                    let zip_code = $('#zip_code')
+                    let street = $('#street')
+                    let number =  $('#number')
+                    let neighborhood =  $('#neighborhood')
+                    let complement =  $('#complement')
+                    let city =  $('#city')
+                    let state =  $('#state')
+                    let country =  $('#country')
+
+                    zip_code.prop('readonly', true);
+                    street.prop('readonly', true);
+                    number.prop('readonly', true);
+                    neighborhood.prop('readonly', true);
+                    complement.prop('readonly', true);
+                    city.prop('readonly', true);
+                    state.prop('readonly', true);
+                    country.attr('readonly', 'readonly');
                 }
 
                 if (($("#name").val().length < 1
@@ -734,6 +737,38 @@ $(document).ready(function () {
             }
         });
     });
+
+    maskPerfil()
+
+    function maskPerfil() {
+        var documentName = {
+            brazil: 'CPF',
+            portugal: 'NIF (Número de Identificação Fiscal)',
+            usa: 'SSN (Social Security Number)',
+            germany: 'STEUERNUMMER',
+            spain: 'DNI (Documento Nacional de Identidade)',
+            france: 'CI',
+            italy: 'Codice Fiscale',
+            chile: 'RUT (Rol Único Tributario)'
+        };
+        if ($('#country').val() == 'brazil' || $('#country').val() == 'usa') {
+            $(".div-state").show();
+        } else {
+            $(".div-state").hide();
+        }
+        if ($('#country').val() == 'brazil') {
+            $('#zip_code').mask('00000-000');
+            $('#cellphone').mask('+55 (00) 00000-0000');
+            $('#document').mask('000.000.000-00');
+            zipCode();
+        } else {
+            $('#cellphone').mask('+0#');
+            $('#document').unmask();
+            $('#zip_code').unmask();
+        }
+        $('.label-document').text(documentName[$('#country').val()]);
+        $('#document').attr('placeholder', documentName[$('#country').val()]);
+    }
 
     $('#country').on('change', function () {
         var documentName = {

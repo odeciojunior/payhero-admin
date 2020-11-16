@@ -55,6 +55,8 @@ $(document).ready(function () {
 
     //Obtém as empresas
     function getCompanies() {
+        loadOnAny('.page', false);
+
         $.ajax({
             method: "GET",
             url: "/api/companies?select=true",
@@ -64,39 +66,94 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadOnAny('.page', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
+                loadOnAny('.page', true);
 
-                if (!isEmpty(response.data)) {
-
-                    $('.page-content').show();
-                    $('.content-error').hide();
-
-                    $(response.data).each(function (index, value) {
-                        let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-                        $("#transfers_company_select").append(data);
-                        $("#extract_company_select").append(data);
-                        $("#statement_company_select").append(data);
-                    });
-
-                    if (response.data[0].antecipation_enabled_flag) {
-                        $('.div-antecipable-balance').show();
-                    } else {
-                        $('.div-antecipable-balance').hide();
-                    }
-
-                    checkAllowed();
-                    updateBalances();
-                    updateTransfersTable();
-                    checkStatementAvailable();
-                } else {
+                if (isEmpty(response.data)) {
                     $('.page-content').hide();
                     $('.content-error').show();
+                    return;
                 }
 
+                let hasSaleCielo = false;
+                let itsApprovedTransactGetnet = false;
+
+
+                $('.page-content').show();
+                $('.content-error').hide();
+
+                $(response.data).each(function (index, value) {
+                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
+
+                    if (value.company_has_sales_in_cielo) {
+                        hasSaleCielo = true;
+                        $("#transfers_company_select").append(data);
+                        $("#extract_company_select").append(data);
+                    }
+
+                    if (value.capture_transaction_enabled) {
+                        itsApprovedTransactGetnet = true;
+                        $("#statement_company_select").append(data);
+                    }
+                });
+
+
+                if (itsApprovedTransactGetnet && !hasSaleCielo) {
+                    approvedGetnet();
+                    $("#tabs-view, #text-info-getnet").show();
+                    $("#nav-statement-tab").addClass('active');
+                    $("#nav-statement").addClass('active show');
+                    $(".sub-pad-getnet").html('');
+
+
+                    $("#statement-getnet, .title-getnet").html('Extrato');
+                } else if (!itsApprovedTransactGetnet && hasSaleCielo) {
+                    hasSaleCieloExist(response.data[0].antecipation_enabled_flag);
+                    manipulateHTML();
+                    $("#statement-getnet").html('Extrato');
+                } else if (itsApprovedTransactGetnet && hasSaleCielo) {
+                    hasSaleCieloExist(response.data[0].antecipation_enabled_flag);
+                    approvedGetnet();
+                    manipulateHTML();
+
+                    $("#statement-getnet, .title-getnet").html('Extrato 2.0');
+
+                } else {
+                    $("#companies-not-approved-getnet").show();
+                }
+                $("#nav-extract").css('display', '');
+                $("#nav-statement").css('display', '');
+                $("#nav-statement-tab").on('click', function () {
+                    $("#nav-extract").css('display', '');
+                });
             }
         });
+    }
+
+    function manipulateHTML() {
+        $("#tabs-view, #menu-tabs-view").show();
+    }
+
+    function approvedGetnet() {
+        $('#nav-statement-tab, #nav-statement').show();
+        updateAccountStatementData();
+    }
+
+    function hasSaleCieloExist(anticipationEnabledFlag) {
+        if (anticipationEnabledFlag) {
+            $('.div-antecipable-balance').show();
+        } else {
+            $('.div-antecipable-balance').hide();
+        }
+
+        $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
+
+        checkAllowed();
+        updateBalances();
+        updateTransfersTable();
     }
 
     getCompanies();
@@ -779,9 +836,9 @@ $(document).ready(function () {
                 updateClassHTML();
 
                 items = response;
+                $('#statement-money #available-in-period-statement').html('R$ 0,00');
 
                 if (isEmpty(items)) {
-                    $('#statement-money #available-in-period-statement').html('R$ 0,00');
                     loadOnAny('#nav-statement #available-in-period-statement', true);
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                     return;
@@ -867,14 +924,25 @@ $(document).ready(function () {
 
                 const list = {
                     create(item) {
+                        let dataTable = `<tr>
+                                        <td style="vertical-align: middle;">
+                                        Transação`;
 
-                        let dataTable = `
-                                <tr>
-                                    <td style="vertical-align: middle;">
-                                        Transação
-                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                            <span style="color:black;">#${item.orderId}</span>
-                                        </a><br>
+                        if (item.isInvite) {
+                            dataTable += `
+                                <a class="">
+                                    <span>#${item.orderId}</span>
+                                </a>
+                            `;
+                        } else {
+                            dataTable += `
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                    <span style="color:black;">#${item.orderId}</span>
+                                </a>
+                            `;
+                        }
+
+                        dataTable += `<br>
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
@@ -980,25 +1048,6 @@ $(document).ready(function () {
         e.preventDefault();
         updateAccountStatementData();
     });
-
-    function checkStatementAvailable() {
-        $.ajax({
-            method: "GET",
-            url: '/api/companies/check-statement-available',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-            },
-            success: response => {
-                if (response.has_subseller_id) {
-                    $('#nav-statement-tab').show();
-                    updateAccountStatementData();
-                }
-            }
-        });
-    }
 
     $('#date_range_statement').daterangepicker({
         startDate: moment(),

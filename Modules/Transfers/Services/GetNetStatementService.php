@@ -19,9 +19,7 @@ class GetNetStatementService
         $transactions = array_reverse($data->list_transactions) ?? [];
 
         $transactions = array_map(function ($item) {
-
             if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
-
                 $summary = $item->summary;
                 $details = $item->details;
 
@@ -72,7 +70,8 @@ class GetNetStatementService
                     'subSellerRatePercentage' => $subSellerRatePercentage,
                     'subSellerRateClosingDate' => $subSellerRateClosingDate ? Carbon::parse($subSellerRateClosingDate)->format('d/m/Y') : '',
                     'subSellerRateConfirmDate' => $subSellerRateConfirmDate ? Carbon::parse($subSellerRateConfirmDate)->format('d/m/Y') : '',
-                    'status' => $status
+                    'status' => $status,
+                    'isInvite' => $subSellerRateAmount < 500
                 ];
 
 
