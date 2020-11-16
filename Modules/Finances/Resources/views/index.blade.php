@@ -18,6 +18,9 @@
             <div class="row">
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
+                    <p id='text-info-getnet' style="margin-top: 12px; display: none;">
+                        Para você controlar o fluxo financeiro da sua empresa.
+                    </p>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
@@ -343,120 +346,120 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-start align-items-center">
-                                    <div class="col-12 fix-5">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-2" style="flex:1">
-                                                <h5 class="title-pad title-getnet"> Extrato 2.0 </h5>
-                                                <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua
-                                                    conta.
-                                                </p>
-                                            </div>
-                                            <div class="p-2" id="statement-money">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price"> Saldo no período</h6>
-                                                    <h4 id="available-in-period-statement"
-                                                        style="font-weight: 700;font-size: 25px;display: inline;">
-                                                    </h4>
-                                                    <div class="grad-border green"></div>
-                                                </div>
+                                <div class="col-12 fix-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2" style="flex:1">
+                                            <h5 class="title-pad title-getnet"> Extrato 2.0 </h5>
+                                            <p class="sub-pad sub-pad-getnet">
+                                                Para você controlar o fluxo financeiro da sua empresa.
+                                            </p>
+                                        </div>
+                                        <div class="p-2" id="statement-money">
+                                            <div class="price-holder">
+                                                <h6 class="label-price"> Saldo no período</h6>
+                                                <h4 id="available-in-period-statement"
+                                                    style="font-weight: 700;font-size: 25px;display: inline;">
+                                                </h4>
+                                                <div class="grad-border green"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 mb-15">
-                                        <div class="row">
-                                            <div class="col-sm-6 col-md">
-                                                <div class="input-holder">
-                                                    <label for="statement_company_select">Empresa</label>
-                                                    <select class="form-control select-pad" name="company"
-                                                            id="statement_company_select">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md">
-                                                <div class="input-holder">
-                                                    <label for="statement_data_type_select">Data</label>
-                                                    <select class="form-control select-pad" name="status"
-                                                            id="statement_data_type_select">
-                                                        <option value="liquidation_date" selected>
-                                                            Data da liquidação
-                                                        </option>
-                                                        <option value="transaction_date">
-                                                            Data da venda
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md">
-                                                <div class="form-group" style="margin-top:30px">
-                                                    <input name="date_range_statement" type="date"
-                                                           id="date_range_statement_unique"
-                                                           class="select-pad" placeholder="Clique para editar...">
-                                                </div>
+                                </div>
+                                <div class="col-lg-12 mb-15">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md">
+                                            <div class="input-holder">
+                                                <label for="statement_company_select">Empresa</label>
+                                                <select class="form-control select-pad" name="company"
+                                                        id="statement_company_select">
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="input-holder">
-                                                    <label for="statement_status_select">Status</label>
-                                                    <select class="form-control select-pad" name="status"
-                                                            id="statement_status_select">
-                                                        <option value="all">Todos</option>
-                                                        <option value="1">Aguardando postagem válida</option>
-                                                        <option value="2">Aguardando liquidação</option>
-                                                        <option value="3">Pago</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="date_range_statement">Transação</label>
-                                                    <input name="statement_sale" id="statement_sale"
-                                                           class="select-pad" placeholder="Transação">
-                                                </div>
-                                            </div>
-                                            <div class="mt-30 col-md-4" style="text-align:right">
-                                                <button id="bt_filtro_statement"
-                                                        class="btn btn-primary w-full">
-                                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                                                </button>
+                                        <div class="col-sm-6 col-md">
+                                            <div class="input-holder">
+                                                <label for="statement_data_type_select">Data</label>
+                                                <select class="form-control select-pad" name="status"
+                                                        id="statement_data_type_select">
+                                                    <option value="liquidation_date" selected>
+                                                        Data da liquidação
+                                                    </option>
+                                                    <option value="transaction_date">
+                                                        Data da venda
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
-
-
-                                    </div>
-                                    <div class="col-12 mt-3">
-                                        <table id="statementTable" class="table table-condensed unify table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col" class="headCenter" style="width:33%">Razão</th>
-                                                <th scope="col" class="headCenter" style="width:33%">Status</th>
-                                                <th scope="col" class="headCenter" style="width:33%">Data prevista
-                                                    <i class="material-icons gray ml-5 font-size-18"
-                                                       data-toggle="tooltip"
-                                                       title=""
-                                                       data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
-                                                </th>
-                                                <th scope="col" class="headCenter" style="width:34%">Valor</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="table-statement-body" class="custom-t-body">
-                                            </tbody>
-                                        </table>
-
-                                        <section id="paginate">
-                                            <div class="pagination"
-                                                 style="margin-top:10px;position:relative;float:right">
-                                                <div class="numbers">
-                                                    <div style=""></div>
-                                                </div>
+                                        <div class="col-sm-6 col-md">
+                                            <div class="form-group" style="margin-top:30px">
+                                                <input name="date_range_statement" type="date"
+                                                       id="date_range_statement_unique"
+                                                       class="select-pad" placeholder="Clique para editar...">
                                             </div>
-                                        </section>
-
-                                        <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
-                                            style="margin-top:10px;position:relative;float:right">
-                                            {{--js carrega...--}}
-                                        </ul>
+                                        </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="input-holder">
+                                                <label for="statement_status_select">Status</label>
+                                                <select class="form-control select-pad" name="status"
+                                                        id="statement_status_select">
+                                                    <option value="all">Todos</option>
+                                                    <option value="1">Aguardando postagem válida</option>
+                                                    <option value="2">Aguardando liquidação</option>
+                                                    <option value="3">Pago</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="date_range_statement">Transação</label>
+                                                <input name="statement_sale" id="statement_sale"
+                                                       class="select-pad" placeholder="Transação">
+                                            </div>
+                                        </div>
+                                        <div class="mt-30 col-md-4" style="text-align:right">
+                                            <button id="bt_filtro_statement"
+                                                    class="btn btn-primary w-full">
+                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <table id="statementTable" class="table table-condensed unify table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" class="headCenter" style="width:33%">Razão</th>
+                                            <th scope="col" class="headCenter" style="width:33%">Status</th>
+                                            <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                                <i class="material-icons gray ml-5 font-size-18"
+                                                   data-toggle="tooltip"
+                                                   title=""
+                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                            </th>
+                                            <th scope="col" class="headCenter" style="width:34%">Valor</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table-statement-body" class="custom-t-body">
+                                        </tbody>
+                                    </table>
+
+                                    <section id="paginate">
+                                        <div class="pagination"
+                                             style="margin-top:10px;position:relative;float:right">
+                                            <div class="numbers">
+                                                <div style=""></div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
+                                        style="margin-top:10px;position:relative;float:right">
+                                        {{--js carrega...--}}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
