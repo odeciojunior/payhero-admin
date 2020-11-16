@@ -24,8 +24,7 @@
                             <td class="table-title"><b>Razão Social</b></td>
                             <td class="table-title"><b>País</b></td>
                             <td class="table-title"><b>Documento</b></td>
-                            <td class="table-title"><b>Aprovado<br/> Transacionar</b></td>
-                            <td class="table-title"><b>Status<br/> Documentos</b></td>
+                            <td class="table-title"><b>Status</b></td>
                             <td class="table-title" style="width: 130px"><b>Opções</b></td>
                         </tr>
                         </thead>

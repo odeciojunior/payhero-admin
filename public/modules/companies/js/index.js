@@ -27,7 +27,6 @@ let companyType = {
     2: 'juridical person',
 };
 
-
 $(document).ready(function () {
     function statusCompanyJuridicalPerson(company) {
         if (companyStatusTranslated[company.contract_document_status] === 'Aprovado'
@@ -81,15 +80,25 @@ $(document).ready(function () {
                             <td>${value.country_translated}</td>
                             <td>${value.company_document}</td>
                             <td>
-                                ${captureTransaction[value.capture_transaction_enabled]}
-                            </td>
-                            <td>
                     `;
 
                     if (companyType[value.type] === 'physical person') {
-                        dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
+                        if (companyStatusTranslated[value.bank_document_status] == 'Recusado') {
+                            dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
+                        } else if (companyStatusTranslated[value.bank_document_status] == 'Aprovado' && value.capture_transaction_enabled) {
+                            dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
+                        } else {
+                            dados += `<span class='badge ${companyStatus['analyzing']}'>${companyStatusTranslated['analyzing']}</span>`;
+                        }
+                        // dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
                     } else {
-                        dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
+                        if (companyStatusTranslated[statusCompanyJuridicalPerson(value)] == 'Recusado') {
+                            dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
+                        } else if (companyStatusTranslated[statusCompanyJuridicalPerson(value)] == 'Aprovado' && value.capture_transaction_enabled) {
+                            dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
+                        } else {
+                            dados += `<span class='badge ${companyStatus['analyzing']}'>${companyStatusTranslated['analyzing']}</span>`;
+                        }
                     }
 
                     dados += `
