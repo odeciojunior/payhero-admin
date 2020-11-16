@@ -59,3 +59,9 @@
 .input-is-invalid {
     border-color: #DC3545 !important;
 }
+
+select[readonly] {
+    background: #eee;
+    pointer-events: none;
+    touch-action: none;
+}

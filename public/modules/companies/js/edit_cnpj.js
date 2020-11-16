@@ -37,6 +37,14 @@ $(document).ready(function () {
     // $('#patrimony').mask('#.###,#0', {reverse: true});
     // $('#social_value').mask('#.###,#0', {reverse: true});
     // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
+    if (window.location.search.split('&').length == 2) {
+        if (window.location.search.split('&')[1] == 'tab=documents') {
+            $('#company-nav').removeClass('active');
+            $('#tab_user').removeClass('active');
+            $('#tab_documentos').addClass('active');
+            $('#documents-nav').addClass('active');
+        }
+    }
 
     $('.check').on('change', function () {
         if ($(this).is(':checked')) {
@@ -109,15 +117,12 @@ $(document).ready(function () {
             error: function (response) {
                 errorAjaxResponse(response);
                 $("#dropzone").css('display', 'block');
-
             },
             success: function success(response) {
                 var company = response.company;
                 var banks = response.banks;
                 companyIdCode = company.id_code;
                 userIdCode = company.user_code;
-
-                getTax();
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -133,7 +138,6 @@ $(document).ready(function () {
                 $('#state').val(company.state);
                 $('#city').val(company.city);
                 $('#country').val(company.country);
-
                 $('#patrimony').val(company.patrimony);
                 $('#state_fiscal_document_number').val(company.state_fiscal_document_number);
                 $('#business_entity_type').val(company.business_entity_type);
@@ -161,20 +165,9 @@ $(document).ready(function () {
                         </select>
                     `);
 
-                    // others gateways payments tax
                     $('.gateway-tax').removeAttr('hidden');
-                    $('.cielo-tax').hide();
-                } else {
-                    // tax cielo
-                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
-                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
-                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
-                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
-
-                    $('.cielo-tax').removeAttr('hidden');
-                    $('.gateway-tax').hide();
+                    $('#nav_tax_gateways').removeAttr('hidden');
                 }
-
 
                 $('#patrimony').unmask();
                 $('#patrimony').mask('#.##0,00', {reverse: true});
@@ -243,7 +236,7 @@ $(document).ready(function () {
                     <span class='badge ${companyStatus[company.contract_document_status]}'>
                         ${companyStatusTranslated[company.contract_document_status]}
                     </span>
-                    `);
+                `);
                 verifyDocuments(company);
                 // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
@@ -261,23 +254,18 @@ $(document).ready(function () {
                 $(".details-document-person-juridic").on('click', function () {
                     $("#document-type").val('');
                     $("#modal-title-document-person-juridic").html('');
-
                     $("#document-type").val($(this).data('document'));
                     $("#modal-title-document-person-juridic").html(`${companyTypeDocument[$(this).data('document')]}`);
-
                     $("#modal-document-person-juridic").modal('show');
-
                     Dropzone.forElement('#dropzoneDocumentsJuridicPerson').removeAllFiles(true);
-
                     getDocuments(encodedId);
-
                 });
 
                 // update tax payment after change select input
                 $("#gateway-release-payment").on("change", function () {
                     $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
                 })
-
+                $("#tab_tax_gateways  #transaction-tax").html(company.transaction_rate).attr('disabled', 'disabled');
                 $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
             }
         });
@@ -312,43 +300,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
-    function getTax() {
-        $.ajax({
-            method: "GET",
-            url: `/api/profile/${userIdCode}/tax`,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                setValuesHtml(response.data);
-            }
-        });
-    }
-
-    function setValuesHtml(data) {
-        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            $('.info-antecipation-tax').show();
-            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-    }
-
 
     //Couting number
     $('#rounting_number').on('input', function () {

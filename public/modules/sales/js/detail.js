@@ -160,8 +160,8 @@ $(() => {
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
         let sale = $(this).attr('venda');
-
         loadOnAny('#modal-saleDetails');
+
         $('#modal_detalhes').modal('show');
         $("#refundAmount").mask('##.###,#0', {reverse: true});
         $("#refundBilletAmount").mask('##.###,#0', {reverse: true});
@@ -175,6 +175,7 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                $('#modal_detalhes').modal('hide');
                 errorAjaxResponse(response);
             },
             success: (response) => {

@@ -57,7 +57,6 @@ $(document).ready(function () {
                     $('#account_type').val(response.company.account_type);
                 }
                 userIdCode = response.company.user_code;
-                getTax();
                 let company = response.company;
                 if (response.company.capture_transaction_enabled) {
                     companyIdCode = company.id_code;
@@ -73,17 +72,9 @@ $(document).ready(function () {
                             <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
                         </select>
                     `);
-                    $('#tab_tax_gateways .gateway-tax').removeAttr('hidden');
-                    $('#tab_tax_gateways .cielo-tax').hide();
-                } else {
 
-                    $('#credit-card-tax-cielo').val(company.credit_card_tax + '%');
-                    $('#boleto-tax-cielo').val(company.boleto_tax + '%');
-                    $("#credit-card-release-cielo").val('plan-' + company.credit_card_release_money);
-                    $("#boleto-release-cielo").val('plan-' + company.boleto_release_money);
-
-                    $('#tab_tax_gateways .cielo-tax').removeAttr('hidden');
-                    $('#tab_tax_gateways .gateway-tax').hide();
+                    $('.gateway-tax').removeAttr('hidden');
+                    $('#nav_tax_gateways').removeAttr('hidden');
                 }
 
                 if (response.company.country === 'brazil') {
@@ -130,8 +121,8 @@ $(document).ready(function () {
                     $("#tax-payment").val(gatewayTax[$(this).val()] + '%');
                 })
 
+                $("#tab_tax_gateways  #transaction-tax").html(company.transaction_rate).attr('disabled', 'disabled');
                 $("#tab_tax_gateways #installment-tax").html(company.installment_tax).attr('disabled', 'disabled');
-
             }
         });
     };
@@ -164,41 +155,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    function getTax() {
-        $.ajax({
-            method: "GET",
-            url: `/api/profile/${userIdCode}/tax`,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                setValuesHtml(response.data);
-            }
-        });
-    }
-
-    function setValuesHtml(data) {
-        $("#tab_tax_gateways  #transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            $('.info-antecipation-tax').show();
-            $('#tab_tax_gateways  #label-antecipation-tax').text(data.antecipation_tax + '%.');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#tab_tax_gateways  #transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-    }
 
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();
