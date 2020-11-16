@@ -2,6 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -10,6 +11,13 @@
 
 @section('content')
 
+    <style>
+        select[readonly] {
+            background: #eee;
+            pointer-events: none;
+            touch-action: none;
+        }
+    </style>
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
@@ -194,7 +202,7 @@
                                         </div>
                                         <div class="form-group col">
                                             <label for="country">País</label>
-                                            <select id="country" name='country' class="form-control select-pad">
+                                            <select id="country" name='country' class="form-control select-pad" tabindex="-1" aria-disabled="true">
                                                 <option value="brazil">Brasil</option>
                                                 <option value="usa">Estados Unidos</option>
                                                 <option value="chile">Chile</option>
