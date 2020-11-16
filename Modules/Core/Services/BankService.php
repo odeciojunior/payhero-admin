@@ -149,7 +149,7 @@ class BankService
             ['code' => '320', 'name' => 'CHINA CONSTRUCTION  BANK (BRASIL) BANCO MÚLTIPLO/ CCB S.A.'],
 //            ['code' => '323', 'name' => 'Mercado Pago'],
             ['code' => '330', 'name' => 'BANCO BARI DE INVESTIMENTOS  E FINANCIAMENTOS  S.A.'],
-            ['code' => '336', 'name' => 'BANCO C6 S.A'],
+//            ['code' => '336', 'name' => 'BANCO C6 S.A'],
             ['code' => '341', 'name' => 'BANCO ITAÚ UNIBANCO S.A.'],
 //            ['code' => '347', 'name' => 'Sudameris'],
 //            ['code' => '356', 'name' => 'ABN Amro Real'],
