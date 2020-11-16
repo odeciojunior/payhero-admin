@@ -343,7 +343,6 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-start align-items-center">
-                                <div class="row justify-content-between">
                                     <div class="col-12 fix-5">
                                         <div class="d-flex align-items-center">
                                             <div class="p-2" style="flex:1">
@@ -458,7 +457,6 @@
                                             {{--js carrega...--}}
                                         </ul>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>

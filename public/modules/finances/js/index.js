@@ -924,7 +924,7 @@ $(document).ready(function () {
                                 <tr>
                                     <td style="vertical-align: middle;">
                                         Transação
-                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                        <a class=" detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
                                             <span style="color:black;">#${item.orderId}</span>
                                         </a><br>
                                         <small>(Data da venda: ${item.transactionDate})</small>

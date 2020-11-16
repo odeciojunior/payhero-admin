@@ -71,16 +71,21 @@ class SalesApiController extends Controller
 
             $saleService = new SaleService();
 
-            if (isset($id)) {
-                $sale = $saleService->getSaleWithDetails($id);
-                return new SalesResource($sale);
+            if (empty($id)) {
+                return response()->json(['message' => 'Erro ao exibir detalhes da venda'], 400);
             }
 
-            return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
+            $sale = $saleService->getSaleWithDetails($id);
+
+            if ($sale->owner_id != auth()->user()->account_owner_id) {
+                return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
+            }
+
+            return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
+            return response()->json(['message' => 'Erro ao exibir detalhes da venda'], 400);
         }
     }
 
