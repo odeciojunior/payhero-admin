@@ -199,7 +199,7 @@ class TrackingService
             })->where('id', '!=', $sale->id)
             ->where('id', '!=', $sale->upsell_id)
             ->whereDoesntHave('upsells', function ($query) use ($sale) {
-                $query->where('id', '!=', $sale->id);
+                $query->where('id', $sale->id);
             })->where(function ($query) use ($sale) {
                 $query->where('customer_id', '!=', $sale->customer_id)
                     ->orWhere('delivery_id', '!=', $sale->delivery_id);
