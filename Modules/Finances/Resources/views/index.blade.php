@@ -13,6 +13,7 @@
 @section('content')
 
     <div class="page">
+        {{-- Buttons Export --}}
         <div class="page-header container">
             <div class="row">
                 <div class="col-lg-6 mb-30">
@@ -40,7 +41,7 @@
             </div>
         </div>
         <div class="page-content container" style="display:none">
-            <!-- Aviso de Exportação -->
+            {{-- Aviso de Exportação --}}
             <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
                  style="display:none;">
                 <div class="d-flex">
@@ -56,28 +57,56 @@
                 </div>
             </div>
             <div class="card shadow">
-                <nav class="pt-20">
+                {{-- TABS --}}
+                <nav class="pt-20" id="menu-tabs-view" style="display:none;">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                            <a class="nav-item nav-link active"
+                               id="nav-home-tab"
+                               data-toggle="tab"
                                href="#nav-transfers"
-                               role="tab" aria-controls="nav-home" aria-selected="false">Transferências
+                               role="tab"
+                               aria-controls="nav-home"
+                               aria-selected="true"
+                               style="display:none"
+                            >
+                                Transferências
                             </a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-extract"
-                               role="tab" aria-controls="nav-profile" aria-selected="true">Extrato
+                            <a class="nav-item nav-link"
+                               id="nav-profile-tab"
+                               data-toggle="tab"
+                               href="#nav-extract"
+                               role="tab"
+                               aria-controls="nav-profile"
+                               aria-selected="true"
+                               style="display:none"
+                            >
+                                Extrato
                             </a>
-                            <a class="nav-item nav-link" id="nav-statement-tab" data-toggle="tab" href="#nav-statement"
-                               role="tab" aria-controls="nav-statement" aria-selected="true" style='display:none;'>Extrato
-                                2.0
+                            <a class="nav-item nav-link"
+                               id="nav-statement-tab"
+                               data-toggle="tab"
+                               href="#nav-statement"
+                               role="tab"
+                               aria-controls="nav-statement"
+                               aria-selected="true"
+                               style='display:none;'
+                            >
+                                <p id="statement-getnet"></p>
                             </a>
                         </div>
                     </div>
                 </nav>
-                <div class="p-30 pt-20">
+                {{-- TABS --}}
+                <div class="p-30 pt-20" id="tabs-view" style="display:none">
                     <div class="tab-content" id="nav-tabContent">
-                        <!-- TRANSFERENCIAS -->
-                        <div class="tab-pane fade show active" id="nav-transfers" role="tabpanel"
-                             aria-labelledby="nav-home-tab">
+                        {{-- TRANSFERENCIAS --}}
+                        <div style="display:none"
+                             class="tab-pane fade show active"
+                             id="nav-transfers"
+                             role="tabpanel"
+                             aria-labelledby="nav-home-tab"
+                        >
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-8 mb-3">
                                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
@@ -204,11 +233,13 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <!-- EXTRATO -->
-                        <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <div class="row justify-content-between">
+                        {{--EXTRATO--}}
+                        <div style="display:none"
+                             class="tab-pane fade"
+                             id="nav-extract"
+                             role="tabpanel"
+                             aria-labelledby="nav-profile-tab">
+                            <div class="row justify-content-start align-items-center">
                                 <div class="col-12 fix-5">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2" style="flex:1">
@@ -306,14 +337,17 @@
                             </div>
                         </div>
                         {{-- extrato 2.0 --}}
-                        <div class="tab-pane fade" id="nav-statement" role="tabpanel"
+                        <div style="display:none"
+                             class="tab-pane fade"
+                             id="nav-statement"
+                             role="tabpanel"
                              aria-labelledby="nav-statement-tab">
-                            <div class="row justify-content-between">
+                            <div class="row justify-content-start align-items-center">
                                 <div class="row justify-content-between">
                                     <div class="col-12 fix-5">
                                         <div class="d-flex align-items-center">
                                             <div class="p-2" style="flex:1">
-                                                <h5 class="title-pad"> Extrato 2.0 </h5>
+                                                <h5 class="title-pad title-getnet"> Extrato 2.0 </h5>
                                                 <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua
                                                     conta.
                                                 </p>
@@ -431,8 +465,11 @@
                 </div>
             </div>
             @include('companies::empty')
+            @include('companies::not_company_approved_getnet')
         </div>
-        <!-- Modal confirmar saque -->
+
+
+        {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
             <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
                 <div id="conteudo_modal_add" class="modal-content p-10">
@@ -476,16 +513,17 @@
                 </div>
             </div>
         </div>
-        <!-- End Modal -->
+        {{-- End Modal --}}
 
-        <!-- Modal Detalhes -->
-    @include('sales::details')
-    <!-- End Modal -->
+        {{-- Modal Detalhes --}}
+        @include('sales::details')
+        {{-- End Modal --}}
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. random_int(1, 10)) }}"></script>
-    @endpush
+            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+        @endpush
+    </div>
 
 @endsection
