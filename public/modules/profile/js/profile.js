@@ -204,7 +204,7 @@ $(document).ready(function () {
                     $("#personal-document-id").hide();
                 }
 
-                if (response.user.address_document_translate == 'pending' || response.user.address_document_translate == 'refused') {
+                if (response.user.address_document_translate == 'refused') {
                     $("#text-alert-documents-cpf").show();
                     $("#address-document-id").show();
                 }
@@ -229,19 +229,9 @@ $(document).ready(function () {
                     country.attr('readonly', 'readonly');
                 }
 
-                if (($("#name").val().length < 1
-                    || $("#date_birth").val().length < 1
-                    || $("#document").val().length < 1
-                    || $("#zip_code").val().length < 1
-                    || $("#street").val().length < 1
-                    || $("#number").val().length < 1
-                    || $("#neighborhood").val().length < 1
-                    || $("#city").val().length < 1
-                    || $("#state").val().length < 1
-                    || $("#country").val().length < 1)
-                    && (response.user.address_document_translate == 'approved'
-                        || response.user.address_document_translate == 'analyzing')
-                ) {
+                if (response.user.address_document_translate == 'approved'
+                    || response.user.address_document_translate == 'analyzing')
+                {
                     $("#address-document-id").hide();
                 }
 
