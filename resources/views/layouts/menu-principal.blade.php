@@ -62,14 +62,9 @@
                 </span>
                     </a>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="{!! route('profile.index') !!}" role="menuitem">
+                        <a id="accounts-service" class="dropdown-item" href="" role="menuitem">
                             <i class="material-icons align-middle"> account_circle </i> Perfil
                         </a>
-                        @if(!auth()->user()->hasRole('attendance'))
-                            <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
-                                <i class="material-icons align-middle"> business </i> Empresas
-                            </a>
-                        @endif
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="material-icons align-middle"> power_settings_new </i> Logout
