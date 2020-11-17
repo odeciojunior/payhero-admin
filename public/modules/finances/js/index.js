@@ -81,6 +81,7 @@ $(document).ready(function () {
                 let hasSaleCielo = false;
                 let itsApprovedTransactGetnet = false;
 
+
                 $('.page-content').show();
                 $('.content-error').hide();
 
@@ -99,11 +100,14 @@ $(document).ready(function () {
                     }
                 });
 
+
                 if (itsApprovedTransactGetnet && !hasSaleCielo) {
                     approvedGetnet();
-                    manipulateHTML();
+                    $("#tabs-view, #text-info-getnet").show();
                     $("#nav-statement-tab").addClass('active');
                     $("#nav-statement").addClass('active show');
+                    $(".sub-pad-getnet").html('');
+
 
                     $("#statement-getnet, .title-getnet").html('Extrato');
                 } else if (!itsApprovedTransactGetnet && hasSaleCielo) {
@@ -120,7 +124,8 @@ $(document).ready(function () {
                 } else {
                     $("#companies-not-approved-getnet").show();
                 }
-
+                $("#nav-extract").css('display', '');
+                $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
                     $("#nav-extract").css('display', '');
                 });
@@ -919,14 +924,25 @@ $(document).ready(function () {
 
                 const list = {
                     create(item) {
+                        let dataTable = `<tr>
+                                        <td style="vertical-align: middle;">
+                                        Transação`;
 
-                        let dataTable = `
-                                <tr>
-                                    <td style="vertical-align: middle;">
-                                        Transação
-                                        <a class=" detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                            <span style="color:black;">#${item.orderId}</span>
-                                        </a><br>
+                        if (item.isInvite) {
+                            dataTable += `
+                                <a class="">
+                                    <span>#${item.orderId}</span>
+                                </a>
+                            `;
+                        } else {
+                            dataTable += `
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                    <span style="color:black;">#${item.orderId}</span>
+                                </a>
+                            `;
+                        }
+
+                        dataTable += `<br>
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
