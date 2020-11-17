@@ -564,6 +564,7 @@ class CompanyService
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $companyId)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
+            ->whereDate('created_at', '>=', '2020-01-01')
             ->where(function ($query) use ($salesModel) {
                 $query->whereHas('sale', function ($query) use ($salesModel) {
                     $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
@@ -593,6 +594,7 @@ class CompanyService
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $companyId)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
+            ->whereDate('created_at', '>=', '2020-01-01')
             ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
             })->sum('value');
