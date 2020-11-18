@@ -387,7 +387,7 @@ function ajaxVerifyDocumentPending(){
             //     $('#document-pending .top-alert-action').attr('href', response.link);
             // }
             if (response.analyzing) {
-                $('.top-alert-message').text('Seu acesso ainda é restrito pois seu cadastro ainda está em analise');
+                $('.top-alert-message').text('Seu acesso ainda é restrito pois seu cadastro ainda está em análise');
                 $('#document-pending .top-alert-action').hide();
                 $('#document-pending').show();
             } else if (response.refused) {

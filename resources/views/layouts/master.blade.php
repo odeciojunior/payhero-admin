@@ -115,7 +115,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=14') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=15') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
