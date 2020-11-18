@@ -576,23 +576,40 @@ class ProfileApiController
             $companyService = new CompanyService();
             $userService = new UserService();
 
-            $companyDocumentPending = $companyService->haveAnyDocumentPending();
-            $userDocumentPending = $userService->haveAnyDocumentPending();
+            $userDocumentRefused = $userService->haveAnyDocumentRefused();
 
             $link = null;
+            $refused = false;
+            $analyzing = false;
 
-            if ($userDocumentPending) {
-                $link = '/profile';
+            if ($userDocumentRefused) {
+                $refused = true;
+                $link    = '/profile?tab=documents';
             } else {
-                if ($companyDocumentPending) {
-                    $link = '/companies';
+                $companyDocumentRefused = $companyService->companyDocumentRefused();
+                if (!empty($companyDocumentRefused)) {
+                    $refused     = true;
+                    $companyCode = Hashids::encode($companyDocumentRefused->id);
+                    if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType('physical person')) {
+                        $link = "/companies/${companyCode}/edit?type=1";
+                    } else {
+                        $link = "/companies/${companyCode}/edit?type=2&tab=documents";
+                    }
+                } else {
+                    $userValid = $userService->isDocumentValidated();
+                    if (!$userValid) {
+                        $analyzing = true;
+                    } else {
+                        $companyValid = $companyService->hasCompanyValid();
+                        if (!$companyValid) {
+                            $analyzing = true;
+                        }
+                    }
                 }
             }
 
-            $result = $companyDocumentPending || $userDocumentPending;
-
             return response()->json(
-                ['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link],
+                ['message' => 'Documentos verificados!', 'analyzing' => $analyzing,'refused' => $refused,'link' => $link],
                 200
             );
         } catch (Exception $e) {

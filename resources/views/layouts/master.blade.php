@@ -59,6 +59,15 @@
     <script>
         Breakpoints();
     </script>
+    <style type='text/css'>
+        .top-bar-danger{
+            background-color: rgb(255 18 7 / 80%);
+        }
+        .top-alert-danger{
+            color: #fff;
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body class="animsition site-navbar-small dashboard">
 
@@ -72,7 +81,7 @@
     <div class="top-alert warning" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
             <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" class="top-alert-action">Finalizar cadastro</a>
+            <a href="/companies" class="top-alert-action">Corrigir documento</a>
         </div>
         <a class="top-alert-close">
             <i class="material-icons">close</i>
@@ -106,7 +115,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=13') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=14') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -120,20 +129,20 @@
 
     <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
 
-    <script type="text/javascript"> 
+    <script type="text/javascript">
 
         window.$crisp=[];
         window.CRISP_WEBSITE_ID="96ad410d-c6cf-4ffa-9763-be123b05acbd";
 
-        (function(){ 
+        (function(){
             d=document;
-            s=d.createElement("script"); 
-            s.src="https://client.crisp.chat/l.js"; 
+            s=d.createElement("script");
+            s.src="https://client.crisp.chat/l.js";
             s.async=1;
             $crisp.push(["set", "user:email", '{{ auth()->user()->email }}']);
             $crisp.push(["set", "user:nickname", '{{ auth()->user()->name }}'])
-            d.getElementsByTagName("head")[0].appendChild(s);        
-        })(); 
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
 
     </script>
 
@@ -143,7 +152,7 @@
 
 </html>
 
-    
+
     <!-- chat huggy abandonado -->
     {{-- <script>
         var $_PowerZAP = {

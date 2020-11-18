@@ -14,6 +14,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Tracking;
 use DB;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
 /**
@@ -246,6 +247,29 @@ class CompanyService
         }
     }
 
+    public function companyDocumentRefused()
+    {
+        $companyModel = new Company();
+        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        $companyPresenter = $companyModel->present();
+
+        foreach ($companies as $company) {
+            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused') ||
+                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('refused') ||
+                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('refused')) {
+                    return $company;
+            }
+            } else {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused')) {
+                    return $company;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getPendingBalance(Company $company)
     {
         $transactionModel = new Transaction();
@@ -273,7 +297,33 @@ class CompanyService
 
         return $pendingBalance;
     }
+    public function hasCompanyValid()
+    {
+        $companyModel = new Company();
+        $companyPresenter = $companyModel->present();
 
+        $existJuridicalCompany = $companyModel->where([
+                                                     ['user_id', auth()->user()->account_owner_id],
+                                                     ['company_type', $companyPresenter->getCompanyType('juridical person')],
+                                                     ['active_flag', true],
+                                                     ['capture_transaction_enabled', true],
+                                                     ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
+                                                     ['address_document_status', $companyPresenter->getAddressDocumentStatus('approved')],
+                                                     ['contract_document_status', $companyPresenter->getContractDocumentStatus('approved')],
+                                                 ])->exists();
+
+        $existPhysicalCompany = $companyModel->where([
+                                                    ['user_id', auth()->user()->account_owner_id],
+                                                    ['company_type', $companyPresenter->getCompanyType('physical person')],
+                                                    ['active_flag', true],
+                                                    ['capture_transaction_enabled', true],
+                                                    ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
+                                                ])->exists();
+
+        $valid = $existJuridicalCompany || $existPhysicalCompany;
+
+        return $valid;
+    }
     public function verifyFieldsEmptyBraspag(Company $company)
     {
         if ($company->company_type == $company->present()->getCompanyType('juridical person')) {

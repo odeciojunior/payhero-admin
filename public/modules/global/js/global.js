@@ -382,7 +382,19 @@ function ajaxVerifyDocumentPending(){
         },
         success: response => {
             sessionStorage.setItem('documentsPending', JSON.stringify(response));
-            if (response.pending) {
+            // if (response.pending) {
+            //     $('#document-pending').show();
+            //     $('#document-pending .top-alert-action').attr('href', response.link);
+            // }
+            if (response.analyzing) {
+                $('.top-alert-message').text('Seu acesso ainda é restrito pois seu cadastro ainda está em analise');
+                $('#document-pending .top-alert-action').hide();
+                $('#document-pending').show();
+            } else if (response.refused) {
+                $('.top-alert').removeClass('warning');
+                $('.top-alert').addClass('top-bar-danger');
+                $('.top-alert-message').addClass('top-alert-danger');
+                $('.top-alert-message').html('Um de seus documentos foi recusado');
                 $('#document-pending').show();
                 $('#document-pending .top-alert-action').attr('href', response.link);
             }

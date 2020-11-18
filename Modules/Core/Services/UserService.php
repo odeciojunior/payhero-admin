@@ -56,7 +56,21 @@ class UserService
 
         return true;
     }
+    public function haveAnyDocumentRefused()
+    {
+        $userModel = new User();
+        $user = auth()->user();
+        $userPresenter = $userModel->present();
 
+        if (!empty($user)) {
+            if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('refused') ||
+                    $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('refused')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public function getRefusedDocuments()
     {
         $userModel = new User();
