@@ -258,11 +258,15 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+        $userTransaction = $sale->transactions->where('invitation_id', null)
+            ->whereIn('company_id', $userCompanies)
             ->first();
 
-        $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
-        $valueAnticipable = $anticipatedTransaction->value ?? 0;
+        $valueAnticipable = 0;
+        if (!FoxUtils::isEmpty($userTransaction)){
+            $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
+            $valueAnticipable = $anticipatedTransaction->value;
+        }
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
