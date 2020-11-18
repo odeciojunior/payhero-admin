@@ -83,7 +83,6 @@ class ProfileApiController
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
                 'document' => $requestData['document'],
-                'date_birth' => $requestData['date_birth'],
                 'zip_code' => $requestData['zip_code'],
                 'country' => $requestData['country'],
                 'state' => $requestData['country'] == 'brazil' || $requestData['country'] == 'usa' ? $requestData['state'] : null,

@@ -52,7 +52,6 @@ $(document).ready(function () {
                 $('#email').val(response.user.email);
                 $('#document').val(response.user.document);
                 $('#cellphone').val(response.user.cellphone);
-                $('#date_birth').val(response.user.date_birth);
 
                 /**
                  * Imagem Perfil
@@ -195,11 +194,9 @@ $(document).ready(function () {
                 if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
                     let name = $('#name')
                     let document = $('#document')
-                    let date_birth =  $('#date_birth')
 
                     name.prop('readonly', true);
                     document.prop('readonly', true);
-                    date_birth.prop('readonly', true);
 
                     $("#personal-document-id").hide();
                 }
