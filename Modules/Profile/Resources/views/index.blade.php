@@ -230,8 +230,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h5 class="title-pad"> Documentos </h5>
-                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de
-                                            algumas comprovações. </p>
+                                        <p class="sub-pad"> Para manter a nossa comunidade segura, precisamos comprovar alguns dados através dos seus documentos pessoais. </p>
                                         <div class="alert alert-info alert-dismissible fade show text-center"
                                              id='text-alert-documents-cpf' role="alert" style='display:none;'>
                                             <strong>Atenção!</strong> Os documentos somente serão analisados após todos
