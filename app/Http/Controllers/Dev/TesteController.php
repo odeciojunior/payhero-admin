@@ -159,9 +159,6 @@ class TesteController extends Controller
                                                  'release_date'      => Carbon::now()
                                                                               ->addDays($user['release_money_days'])
                                                                               ->format('Y-m-d'),
-                                                 'antecipation_date' => Carbon::now()
-                                                                              ->addDays($user['boleto_antecipation_money_days'])
-                                                                              ->format('Y-m-d'),
                                              ]);
                     } else {
                         $transaction->update([
@@ -732,10 +729,7 @@ class TesteController extends Controller
                 'foxcoin'                             => "",
                 'email_amount'                        => "",
                 'call_amount'                         => "",
-                'boleto_antecipation_money_days'      => "1",
-                'credit_card_antecipation_money_days' => "1",
                 'release_money_days'                  => "1",
-                'percentage_antecipable'              => "1",
                 'antecipation_tax'                    => "1",
                 'invites_amount'                      => "1",
                 'installment_tax'                     => "1",
@@ -842,19 +836,14 @@ class TesteController extends Controller
                     'foxcoin'                             => "",
                     'email_amount'                        => "",
                     'call_amount'                         => "",
-                    'boleto_antecipation_money_days'      => "1",
-                    'credit_card_antecipation_money_days' => "1",
                     'release_money_days'                  => "1",
-                    'percentage_antecipable'              => "1",
                     'antecipation_tax'                    => "1",
                     'invites_amount'                      => "1",
                     'installment_tax'                     => "1",
                     'credit_card_release_money_days'      => "1",
-                    'debit_card_release_money_days'       => "1",
                     'boleto_release_money_days'           => "1",
                     'boleto_tax'                          => "1",
                     'credit_card_tax'                     => "1",
-                    'debit_card_tax'                      => "1",
                 ]
             );
             $user = auth()->user();

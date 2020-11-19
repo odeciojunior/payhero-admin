@@ -25,49 +25,11 @@ class AnticipationService
     public function getAntecipationData(Company $company)
     {
 
-        $antecipableValue = $this->getAntecipableValue($company);
         $antecipableTax   = $this->getAnticipationTax($company);
 
         return [
-            'percetage_antecipable' => $company->user->percentage_antecipable,
-            'antecipable_value'     => number_format($antecipableValue / 100, 2, ',', '.'),
             'tax_value'             => number_format($antecipableTax / 100, 2, ',', '.'),
-            'value_minus_tax'       => number_format(($antecipableValue - $antecipableTax) / 100, 2, ',', '.')
         ];
-    }
-
-    /**
-     * @param Company $company
-     * @return int
-     */
-    public function getAntecipableValue(Company $company)
-    {
-        $antecipableTransactionsValue = $this->getQuery($company->id)->sum('value');
-
-        return intval($antecipableTransactionsValue / 100 * $company->user->percentage_antecipable);
-    }
-
-    /**
-     * @param Company $company
-     * @return int
-     */
-    public function getAnticipationTax(Company $company)
-    {
-        $antecipableTransactions = $this->getQuery($company->id)->get();
-
-        $dailyTax = $this->getDailyTax($company->user);
-
-        $taxValue = 0;
-
-        foreach ($antecipableTransactions as $anticipableTransaction) {
-            $diffInDays = Carbon::now()->diffInDays($anticipableTransaction->release_date) + 1;
-
-            $transactionPercentageTax = $diffInDays * $dailyTax;
-
-            $taxValue += intval(intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable) / 100 * $transactionPercentageTax);
-        }
-
-        return (int) $taxValue;
     }
 
     /**
@@ -92,9 +54,6 @@ class AnticipationService
         $user     = $company->user;
         $dailyTax = $this->getDailyTax($user);
 
-        $taxValue          = $this->getAnticipationTax($company);
-        $anticipationValue = $this->getAntecipableValue($company);
-        $percentageTax     = 0;
         $anticipationArray = [];
 
         foreach ($antecipableTransactions as $anticipableTransaction) {
@@ -103,8 +62,6 @@ class AnticipationService
             $percentageTax = $diffInDays * $dailyTax;
 
             $anticipationArray[] = [
-                'value'           => intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable),
-                'tax_value'       => intval(intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable) / 100 * $percentageTax),
                 'tax'             => $percentageTax,
                 'days_to_release' => $diffInDays,
                 'transaction_id'  => $anticipableTransaction->id,
@@ -117,10 +74,7 @@ class AnticipationService
         }
 
         $anticipation = $anticipationModel->create([
-            'value'                  => $anticipationValue - $taxValue,
-            'tax'                    => $taxValue,
             'percentage_tax'         => $user->antecipation_tax,
-            'percentage_anticipable' => $user->percentage_antecipable,
             'company_id'             => $company->id,
         ]);
 

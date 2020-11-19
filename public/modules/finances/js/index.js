@@ -111,11 +111,11 @@ $(document).ready(function () {
 
                     $("#statement-getnet, .title-getnet").html('Extrato');
                 } else if (!itsApprovedTransactGetnet && hasSaleCielo) {
-                    hasSaleCieloExist(response.data[0].antecipation_enabled_flag);
+                    hasSaleCieloExist();
                     manipulateHTML();
                     $("#statement-getnet").html('Extrato');
                 } else if (itsApprovedTransactGetnet && hasSaleCielo) {
-                    hasSaleCieloExist(response.data[0].antecipation_enabled_flag);
+                    hasSaleCieloExist();
                     approvedGetnet();
                     manipulateHTML();
 
@@ -142,13 +142,7 @@ $(document).ready(function () {
         updateAccountStatementData();
     }
 
-    function hasSaleCieloExist(anticipationEnabledFlag) {
-        if (anticipationEnabledFlag) {
-            $('.div-antecipable-balance').show();
-        } else {
-            $('.div-antecipable-balance').hide();
-        }
-
+    function hasSaleCieloExist() {
         $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
 
         checkAllowed();

@@ -375,9 +375,8 @@ class WithdrawalsApiController extends Controller
             $iofValue = 0;
             $iofTax = 0.38;
             $costValue = 0;
-            $costTax = auth()->user()->abroad_transfer_tax;
+
             $abroadTransferValue = 0;
-            $abroadTax = $costTax + $iofTax;
 
             $currency = $companyService->getCurrency($company);
             $currentQuotation = 0;
@@ -388,8 +387,7 @@ class WithdrawalsApiController extends Controller
                 $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
 
                 $iofValue = intval($withdrawalValue / 100 * $iofTax);
-                $costValue = intval($withdrawalValue / 100 * $costTax);
-                $abroadTransferValue = $iofValue + $costValue;
+
                 $withdrawalValue -= $abroadTransferValue;
                 $convertedMoney = number_format(
                     intval($withdrawalValue / $currentQuotation) / 100,
@@ -412,18 +410,9 @@ class WithdrawalsApiController extends Controller
                         'document' => $company->company_document,
                         'currency' => $currency,
                         'quotation' => $currentQuotation,
-                        'abroad_transfer' => [
-                            'tax' => $abroadTax,
-                            'value' => number_format(intval($abroadTransferValue) / 100, 2, ',', '.'),
-                            'converted_money' => $convertedMoney,
-                        ],
                         'iof' => [
                             'tax' => $iofTax,
                             'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
-                        ],
-                        'cost' => [
-                            'tax' => $costTax,
-                            'value' => number_format(intval($costValue) / 100, 2, ',', '.'),
                         ],
                     ],
                 ],

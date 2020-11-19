@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\UserService;
 

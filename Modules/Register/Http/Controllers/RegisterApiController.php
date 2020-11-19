@@ -19,7 +19,6 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\IdwallService;
@@ -58,14 +57,12 @@ class RegisterApiController extends Controller
      * @param User $userModel
      * @param Company $companyModel
      * @param UserNotification $userNotificationModel
-     * @param UserInformation $userInformationModel
      * @return JsonResponse
      */
     public function store(RegisterRequest $request,
                           User $userModel,
                           Company $companyModel,
-                          UserNotification $userNotificationModel,
-                          UserInformation $userInformationModel)
+                          UserNotification $userNotificationModel)
     {
 
         try {
@@ -120,7 +117,7 @@ class RegisterApiController extends Controller
             }
 
             if (!empty($user)) {
-                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
+                $this->sendUserNotification($user, $userNotificationModel);
             }
 
             if (!$this->uploadDocumentsRegistered($files, $user)) {
@@ -984,7 +981,6 @@ class RegisterApiController extends Controller
         $user->update(['id_wall_result' => $id_wall_result]);
         $user->assignRole('account_owner');
         return $user;
-
     }
 
     /**
@@ -1150,9 +1146,8 @@ class RegisterApiController extends Controller
     /**
      * @param User $user
      * @param UserNotification $userNotificationModel
-     * @param UserInformation $userInformationModel
      */
-    private function sendUserNotification(User $user, UserNotification $userNotificationModel, UserInformation $userInformationModel): void
+    private function sendUserNotification(User $user, UserNotification $userNotificationModel): void
     {
         $user->load(["userNotification"]);
         $userNotification = $user->userNotification ?? collect();
@@ -1164,14 +1159,6 @@ class RegisterApiController extends Controller
                 ]
             );
         }
-
-        $userInformationModel->create(
-            [
-                "user_id" => $user->id,
-                "document_type" => 1,
-                "document_number" => $user->document,
-            ]
-        );
 
     }
 

@@ -201,10 +201,8 @@ class SplitPaymentPartialRefundService
                 $convertaXReleaseMoneyDays = $convertaxUser->credit_card_release_money_days;
             } else if ($this->sale->payment_method == 2) {
                 $percentageRate = $convertaxUser->boleto_tax;
-            } else if ($this->sale->payment_method == 3) {
-                $percentageRate            = $convertaxUser->debit_card_tax;
-                $convertaXReleaseMoneyDays = $convertaxUser->debit_card_release_money_days;
             }
+
             if(isset($convertaXReleaseMoneyDays)) {
                 $this->sale->load('delivery');
                 $convertaXReleaseMoneyDays = ($convertaXReleaseMoneyDays < 7 && empty($this->sale->delivery)) ? 7 : $convertaXReleaseMoneyDays;

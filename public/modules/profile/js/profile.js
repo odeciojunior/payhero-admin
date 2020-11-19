@@ -650,30 +650,6 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
-    function setValuesHtml(data) {
-        $("#credit-card-tax").val(data.credit_card_tax + '%');
-        $("#debit-card-tax").val(data.debit_card_tax + '%');
-        $("#boleto-tax").val(data.boleto_tax + '%');
-        $("#credit-card-release").val('plan-' + data.credit_card_release_money);
-        $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            // $('.title-antecipation-tax').show();
-            // $('.form-antecipation-tax').show();
-            $('.info-antecipation-tax').show();
-            $('#label-antecipation-tax').text(data.antecipation_tax + '%.');
-            // $("#antecipation-tax").val(data.antecipation_tax + '%');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#boleto-release").val('plan-' + data.boleto_release_money);
-        $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-        $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
-    }
-
     $("#update_taxes").on("click", function () {
 
         $.ajax({

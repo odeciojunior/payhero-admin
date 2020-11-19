@@ -9,7 +9,6 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserInformation;
 
 /**
  * Class CompaniesService
@@ -118,20 +117,6 @@ class UserService
         return false;
     }
 
-    public function createUserInformationDefault($userId)
-    {
-        try {
-            UserInformation::create(
-                [
-                    'user_id' => $userId,
-                    'document_type' => 1,
-                ]
-            );
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
     public function verifyFieldsEmptyBraspag(User $user)
     {
         if (empty($user->email)) {
@@ -162,7 +147,6 @@ class UserService
 
     public function verifyFieldsEmpty(User $user)
     {
-        $userInformation = $user->userInformation;
 
         if (empty($user->email)) {
             return true;
@@ -194,7 +178,7 @@ class UserService
     public function unfilledFields(User $user)
     {
         $arrayFields = [];
-        $userInformation = $user->userInformation;
+
         if (empty($user->document)) {
             $arrayFields[] = 'document';
         }
@@ -222,45 +206,11 @@ class UserService
         if (empty($user->date_birth)) {
             $arrayFields[] = 'date_birth';
         }
-        if (empty($userInformation->sex)) {
+        if (empty($user->sex)) {
             $arrayFields[] = 'sex';
         }
-        if (empty($userInformation->mother_name)) {
+        if (empty($user->mother_name)) {
             $arrayFields[] = 'mother_name';
-        }
-        if (empty($userInformation->marital_status)) {
-            $arrayFields[] = 'marital_status';
-        }
-        if (empty($userInformation->nationality)) {
-            $arrayFields[] = 'nationality';
-        }
-        if (!empty($userInformation) && $userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
-            && empty($userInformation->spouse_name)) {
-            $arrayFields[] = 'spouse_name';
-        }
-        if (empty($userInformation->birth_city)) {
-            $arrayFields[] = 'birth_city';
-        }
-        if (empty($userInformation->birth_country)) {
-            $arrayFields[] = 'birth_country';
-        }
-        if (empty($userInformation->monthly_income)) {
-            $arrayFields[] = 'monthly_income';
-        }
-        if (empty($userInformation->document_number)) {
-            $arrayFields[] = 'document_number';
-        }
-        if (empty($userInformation->document_issue_date)) {
-            $arrayFields[] = 'document_issue_date';
-        }
-        if (empty($userInformation->document_issuer)) {
-            $arrayFields[] = 'document_issuer';
-        }
-        if (empty($userInformation->document_issuer_state)) {
-            $arrayFields[] = 'document_issuer_state';
-        }
-        if (empty($userInformation->document_expiration_date)) {
-            $arrayFields[] = 'document_expiration_date';
         }
         return $arrayFields;
     }

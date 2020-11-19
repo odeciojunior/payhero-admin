@@ -55,7 +55,6 @@ class Withdrawal extends Model
         'currency',
         'currency_quotation',
         'value_transferred',
-        'abroad_transfer_tax',
         'tax',
         'bank',
         'agency',

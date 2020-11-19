@@ -99,8 +99,6 @@ class ProfileApiController
 
             $user->fill($userChanges)->save();
 
-            $user->load('userInformation');
-
             $companyModel = new Company();
             $company = $companyModel->where('user_id', $user->id)
                 ->where('company_type', $companyModel->present()->getCompanyType('physical person'))
