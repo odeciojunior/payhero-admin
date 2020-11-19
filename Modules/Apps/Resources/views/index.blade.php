@@ -112,7 +112,7 @@
                     <div class="card" onclick="window.location.href='/apps/smartfunnel'" style='width:300px;'>
                         <a id="smartfunnel-bt" href="/apps/smartfunnel" class="add-btn">
                             <i id="smartfunnel-icon" class="icon wb-plus" aria-hidden="true"></i></a>
-                        <img class="card-img-top mt-100" src="{!! asset('modules/global/img/smartfunnel.jpeg') !!}" alt="" align="middle">
+                        <img class="card-img-top mt-80" src="{!! asset('modules/global/img/smartfunnel.jpeg') !!}" alt="" align="middle">
                         <div class="card-body">
                             <h5 class="card-title">Smart Funnel</h5>
                             <p class="card-text sm">Integre seus projetos com Smart Funnel </p>
