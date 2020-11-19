@@ -14,7 +14,9 @@ class CompaniesSelectResource extends JsonResource
     {
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
-        $hasSaleCielo = Sale::where('owner_id', auth()->user()->id)->whereIn('gateway_id', [5, 6])->exists();
+        $hasSaleCielo = Sale::where('owner_id', auth()->user()->account_owner_id)
+            ->orWhere('affiliate_id', auth()->user()->account_owner)
+            ->whereNotIn('gateway_id',  [14, 15])->exists();
 
         return [
             'id' => Hashids::encode($this->id),
