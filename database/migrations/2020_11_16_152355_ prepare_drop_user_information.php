@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Modules\Core\Entities\UserInformation;
+use Modules\Core\Entities\User;
 
 class PrepareDropUserInformation extends Migration
 {
@@ -36,8 +36,10 @@ class PrepareDropUserInformation extends Migration
         DB::statement("ALTER TABLE users MODIFY COLUMN updated_at timestamp AFTER created_at");
         DB::statement("ALTER TABLE users MODIFY COLUMN deleted_at timestamp AFTER updated_at");
 
-        foreach (UserInformation::whereRaw('mother_name is not null or sex is not null')->get() as $userInformation) {
-            $user = $userInformation->user;
+        $usersInformation = DB::select('select * from user_informations where mother_name is not null or sex is not null');
+
+        foreach ($usersInformation as $userInformation) {
+            $user = User::find($userInformation->user_id);
 
             if (!empty($userInformation->sex)) {
                 $user->update(['sex' => $userInformation->sex]);
@@ -49,7 +51,6 @@ class PrepareDropUserInformation extends Migration
         }
 
         Schema::dropIfExists('user_informations');
-
     }
 
     /**
