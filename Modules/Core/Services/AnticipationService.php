@@ -38,74 +38,74 @@ class AnticipationService
      */
     public function performAnticipation(Company $company)
     {
-        $anticipationModel           = new Anticipation;
-        $anticipatedTransactionModel = new AnticipatedTransaction;
-        $transferModel               = new Transfer;
-        $transactionModel            = new Transaction;
-
-        $antecipableTransactions = $this->getQuery($company->id)->get();
-
-        if (count($antecipableTransactions) == 0) {
-            return [
-                'message'   => 'Você não tem saldo disponivel para antecipar!',
-            ];
-        }
-
-        $user     = $company->user;
-        $dailyTax = $this->getDailyTax($user);
-
-        $anticipationArray = [];
-
-        foreach ($antecipableTransactions as $anticipableTransaction) {
-            $diffInDays = Carbon::now()->diffInDays($anticipableTransaction->release_date) + 1;
-
-            $percentageTax = $diffInDays * $dailyTax;
-
-            $anticipationArray[] = [
-                'tax'             => $percentageTax,
-                'days_to_release' => $diffInDays,
-                'transaction_id'  => $anticipableTransaction->id,
-            ];
-
-            $anticipableTransaction->update([
-                'status'      => 'anticipated',
-                'status_enum' => $transactionModel->present()->getStatusEnum('anticipated')
-            ]);
-        }
-
-        $anticipation = $anticipationModel->create([
-            'percentage_tax'         => $user->antecipation_tax,
-            'company_id'             => $company->id,
-        ]);
-
-        foreach ($anticipationArray as $item) {
-            $anticipatedTransactionModel->create([
-                'anticipation_id' => $anticipation->id,
-                'transaction_id'  => $item['transaction_id'],
-                'value'           => $item['value'],
-                'tax'             => $item['tax'],
-                'tax_value'       => $item['tax_value'],
-                'days_to_release' => $item['days_to_release'],
-            ]);
-        }
-
-        $transferModel->create([
-            'user_id'         => $user->id,
-            'company_id'      => $company->id,
-            'anticipation_id' => $anticipation->id,
-            'value'           => $anticipation->value,
-            'type'            => 'in',
-            'type_enum'       => $transferModel->present()->getTypeEnum('in'),
-            'reason'          => 'Antecipação',
-        ]);
-
-        $company->update([
-            'balance' => $company->balance + $anticipation->value,
-        ]);
-
-        return [
-            'message' => 'Saldo antecipado com successo!',
-        ];
+//        $anticipationModel           = new Anticipation;
+//        $anticipatedTransactionModel = new AnticipatedTransaction;
+//        $transferModel               = new Transfer;
+//        $transactionModel            = new Transaction;
+//
+//        $antecipableTransactions = $this->getQuery($company->id)->get();
+//
+//        if (count($antecipableTransactions) == 0) {
+//            return [
+//                'message'   => 'Você não tem saldo disponivel para antecipar!',
+//            ];
+//        }
+//
+//        $user     = $company->user;
+//        $dailyTax = $this->getDailyTax($user);
+//
+//        $anticipationArray = [];
+//
+//        foreach ($antecipableTransactions as $anticipableTransaction) {
+//            $diffInDays = Carbon::now()->diffInDays($anticipableTransaction->release_date) + 1;
+//
+//            $percentageTax = $diffInDays * $dailyTax;
+//
+//            $anticipationArray[] = [
+//                'tax'             => $percentageTax,
+//                'days_to_release' => $diffInDays,
+//                'transaction_id'  => $anticipableTransaction->id,
+//            ];
+//
+//            $anticipableTransaction->update([
+//                'status'      => 'anticipated',
+//                'status_enum' => $transactionModel->present()->getStatusEnum('anticipated')
+//            ]);
+//        }
+//
+//        $anticipation = $anticipationModel->create([
+//            'percentage_tax'         => $user->antecipation_tax,
+//            'company_id'             => $company->id,
+//        ]);
+//
+//        foreach ($anticipationArray as $item) {
+//            $anticipatedTransactionModel->create([
+//                'anticipation_id' => $anticipation->id,
+//                'transaction_id'  => $item['transaction_id'],
+//                'value'           => $item['value'],
+//                'tax'             => $item['tax'],
+//                'tax_value'       => $item['tax_value'],
+//                'days_to_release' => $item['days_to_release'],
+//            ]);
+//        }
+//
+//        $transferModel->create([
+//            'user_id'         => $user->id,
+//            'company_id'      => $company->id,
+//            'anticipation_id' => $anticipation->id,
+//            'value'           => $anticipation->value,
+//            'type'            => 'in',
+//            'type_enum'       => $transferModel->present()->getTypeEnum('in'),
+//            'reason'          => 'Antecipação',
+//        ]);
+//
+//        $company->update([
+//            'balance' => $company->balance + $anticipation->value,
+//        ]);
+//
+//        return [
+//            'message' => 'Saldo antecipado com successo!',
+//        ];
     }
 
     /**
@@ -145,7 +145,7 @@ class AnticipationService
      */
     public function getDailyTax(User $user)
     {
-        return number_format(($user->antecipation_tax / $user->credit_card_release_money_days), 4, '.', ',');
+//        return number_format(($user->antecipation_tax / $user->credit_card_release_money_days), 4, '.', ',');
     }
 
 }

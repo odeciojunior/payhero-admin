@@ -96,7 +96,7 @@ class SplitPaymentService
 
                         $valueGodfatherPartner = intval((($partnerValue / 100) * 1));
 
-                        $antecipableValue = intval(($valueGodfatherPartner / 100) * $partnerGodfather->user->antecipation_tax);
+//                        $antecipableValue = intval(($valueGodfatherPartner / 100) * $partnerGodfather->user->antecipation_tax);
 
                         $transactionModel->create([
                                                       'sale_id'                => $sale->id,
@@ -108,7 +108,7 @@ class SplitPaymentService
                                                       'status'                 => 'pending',
                                                       'status_enum'            => $transactionModel->present()
                                                                                                    ->getStatusEnum('pending'),
-                                                      'antecipable_value'      => $antecipableValue,
+//                                                      'antecipable_value'      => $antecipableValue,
                                                       'currency'               => '',
                                                       'percentage_rate'        => '',
                                                       'transaction_rate'       => '',
