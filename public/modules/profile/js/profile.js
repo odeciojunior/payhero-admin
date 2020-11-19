@@ -174,7 +174,7 @@ $(document).ready(function () {
                     $("#address-document-id").show();
                 }
 
-                if (response.user.address_document_translate === 'approved' || response.user.address_document_translate == 'pending') {
+                if (response.user.address_document_translate === 'approved' || response.user.address_document_translate == 'analyzing') {
                     let zip_code = $('#zip_code')
                     let street = $('#street')
                     let number =  $('#number')
