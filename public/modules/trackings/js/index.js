@@ -392,7 +392,7 @@ $(() => {
                     }
                 }
 
-                let statusBadge = btnDetail.parent()
+                /*let statusBadge = btnDetail.parent()
                     .parent()
                     .find('td .badge');
 
@@ -400,7 +400,7 @@ $(() => {
                     statusBadge.removeClass('badge-success badge-warning badge-danger badge-primary')
                         .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
                         .html(tracking.tracking_status);
-                }
+                }*/
 
                 loadOnAny('#modal-tracking-details', true);
             }
