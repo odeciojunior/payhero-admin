@@ -295,7 +295,8 @@ class SaleService
             $convertaxValue = '0,00';
         }
 
-
+        //valor do produtor
+        $value = $userTransaction->value;
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         //valor do afiliado
