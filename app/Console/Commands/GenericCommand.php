@@ -13,7 +13,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\CheckoutService;
 
 class GenericCommand extends Command
