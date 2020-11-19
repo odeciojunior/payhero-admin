@@ -1462,7 +1462,7 @@ class ShopifyService
                 "last_name"     => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
                 "phone"         => $client->present()->getTelephoneShopify(),
                 "province"      => $delivery->state ?? "-",
-                "zip"           => empty($delivery) ? "-" : FoxUtilsService::formatCEP($delivery->zip_code),
+                "zip"           => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
                 "name"          => $client->name,
                 "country_code"  => "BR",
                 "province_code" => $delivery->state ?? "-",
@@ -1478,7 +1478,7 @@ class ShopifyService
             "city"       => $delivery->city ?? "-",
             "province"   => $delivery->state ?? "-",
             "country"    => "Brasil",
-            "zip"        => empty($delivery) ? "-" : FoxUtilsService::formatCEP($delivery->zip_code),
+            "zip"        => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
         ];
 
         $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
