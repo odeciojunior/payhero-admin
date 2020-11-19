@@ -24,58 +24,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-
-        $usersInformation = DB::select('select * from user_informations where mother_name is not null or sex is not null');
-
-        foreach ($usersInformation as $userInformation) {
-            $user = User::find($userInformation->user_id);
-
-            if (!empty($userInformation->sex)) {
-                $user->update(['sex' => $userInformation->sex]);
-            }
-
-            if (!empty($userInformation->mother_name)) {
-                $user->update(['mother_name' => $userInformation->mother_name]);
-            }
-        }
-//        if (env('APP_ENV') == 'local') {
-//            print('INICIO - Documentos Usuario: ' . PHP_EOL);
-//            foreach(UserDocument::orderBy('id','DESC')->take(10)->get() as $key => $user){
-//                $this->line('Documentos Usuario: ' . $key);
-//                $user->update([
-//                    'status' => 3
-//                ]);
-//            }
-//
-//            foreach (User::orderBy('id','DESC')->take(10)->get() as $key => $user) {
-//                $user->update([
-//                    'address_document_status' => 3,
-//                    'personal_document_status' => 3
-//                ]);
-//            }
-//            print('FIM - Documentos Usuario: ' . PHP_EOL . PHP_EOL);
-//
-//            print('INICIO - Documentos Empresa: ' . PHP_EOL);
-//            foreach (Company::orderBy('id','DESC')->take(10)->get() as $key => $user) {
-//                $user->update([
-//                    'contract_document_status' => 3,
-//                    'bank_document_status' => 3,
-//                    'address_document_status' => 3,
-//                    'capture_transaction_enabled' => 1
-//                ]);
-//            }
-//
-//            foreach(CompanyDocument::orderBy('id','DESC')->take(10)->get() as $key => $user){
-//                $this->line('Documentos Empresa: ' . $key);
-//                $user->update([
-//                    'status' => 3
-//                ]);
-//            }
-//            print('FIM -Documentos Empresa: ' . PHP_EOL);
-//        } else {
-//            print('Este comando só pode rodar no amibiente local ' . PHP_EOL);
-//        }
-
 //        try {
 //            $salesModel = new Sale();
 //            $trackingPresenter = (new Tracking())->present();
