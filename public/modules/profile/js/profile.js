@@ -18,8 +18,6 @@ $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
-    // $('#monthly_income').mask('#.###,#0', {reverse: true});
-    $('#document_number').mask('0#');
     if (window.location.search.split('?').length == 2) {
         if (window.location.search.split('?')[1] == 'tab=documents') {
             $('#user-nav').removeClass('active');
@@ -66,40 +64,10 @@ $(document).ready(function () {
                  */
 
                 $('#sex').val(response.user.sex);
-                $('#marital_status').val(response.user.marital_status);
-                $('#nationality').val(response.user.nationality);
                 $('#mother_name').val(response.user.mother_name);
-                $('#father_name').val(response.user.father_name);
-                $('#spouse_name').val(response.user.spouse_name);
-                $('#birth_place').val(response.user.birth_place);
-                $('#birth_city').val(response.user.birth_city);
-                $('#birth_state').val(response.user.birth_state);
-                $('#birth_country').val(response.user.birth_country);
-                $('#monthly_income').val(response.user.monthly_income);
-                $('#document_issue_date').val(response.user.document_issue_date);
-                $('#document_expiration_date').val(response.user.document_expiration_date);
-                $('#document_issuer').val(response.user.document_issuer);
-                $('#document_issuer_state').val(response.user.document_issuer_state);
-                // $('#document_serial_number').val(response.user.document_serial_number);
-                $('#document_number').val(response.user.document_number);
-                $('#monthly_income').unmask();
-                $('#monthly_income').mask('#.##0,00', {reverse: true});
                 // $('#document_number').unmask();
                 // $('#document_number').mask('00.000.000-0');
 
-                for (var country of countries) {
-                    $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
-                    $('#birth_country').append(`<option value="${country.name}" ${country.name === response.user.birth_country ? 'selected' : ''}>${country.name}</option>`);
-                }
-                if ($('#marital_status').val() == 'married') {
-                    $('.spouse-name-div').show();
-                }
-
-                if (response.user.birth_country == 'Brasil') {
-                    $('.div-birth-state').show();
-                } else {
-                    $('.div-birth-state').hide();
-                }
                 /**
                  * Dados Residenciais
                  */
@@ -346,22 +314,6 @@ $(document).ready(function () {
             }
         });
     });
-    $('#marital_status').on('change', function () {
-        if ($(this).val() == 'married') {
-            $('.spouse-name-div').show();
-        } else {
-            $('.spouse-name-div').hide();
-            $('#spouse_name').val('');
-        }
-    });
-    $('#birth_country').on('change', function () {
-        if ($(this).val() == 'Brasil') {
-            $('.div-birth-state').show();
-        } else {
-            $('.div-birth-state').hide();
-            $('#birth_state').val('');
-        }
-    });
 
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
@@ -394,25 +346,9 @@ $(document).ready(function () {
     $("#profile_update_form").on("submit", function (event) {
         $('.dados-residenciais').removeAttr('disabled');
         $('#document').removeAttr('disabled');
-        $('#document_number').removeAttr('disabled');
-        $('#document_issuer').removeAttr('disabled');
-        $('#document_issue_date').removeAttr('disabled');
-        $('#document_expiration_date').removeAttr('disabled');
-        $('#document_issuer_state').removeAttr('disabled');
         $('#sex').removeAttr('disabled');
-        $('#nationality').removeAttr('disabled');
         $('#mother_name').removeAttr('disabled');
-        $('#father_name').removeAttr('disabled');
-        $('#birth_country').removeAttr('disabled');
-        $('#birth_state').removeAttr('disabled');
-        $('#birth_city').removeAttr('disabled');
-        $('#birth_place').removeAttr('disabled');
-
         event.preventDefault();
-        if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {
-            alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
-            return false;
-        }
 
         if ($('input[name="photo_x1"]').val() == '0' || $('input[name="photo_y1"]').val() == '0') {
             $('input[name="photo_x1"]').val('30');

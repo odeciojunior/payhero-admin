@@ -58,7 +58,6 @@ use Laravel\Passport\HasApiTokens;
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property Transfer[] $transfers
  * @property UserDocument[] $userDocuments
- * @property UserInformation[] $userInformation
  * @method UserPresenter present()
  */
 class User extends Authenticable
@@ -323,14 +322,6 @@ class User extends Authenticable
     public function userTerms()
     {
         return $this->hasMany('Modules\Core\Entities\UserTerms');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function userInformation()
-    {
-        return $this->hasOne('Modules\Core\Entities\UserInformation');
     }
 
 }
