@@ -18,7 +18,6 @@ $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
-    $('#document_number').mask('0#');
     if (window.location.search.split('?').length == 2) {
         if (window.location.search.split('?')[1] == 'tab=documents') {
             $('#user-nav').removeClass('active');
