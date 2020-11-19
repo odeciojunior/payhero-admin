@@ -308,18 +308,18 @@ class SaleService
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue = $affiliateTransaction->value;
-                $affiliateComission = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue,
-                        ',', strlen($affiliateValue) - 2, 0);
+                $affiliateComission = 'R$ ' . number_format($affiliateValue / 100,2, ',', '.');
             }
         }
 
         $taxa = 0;
         $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
-            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "",
-                    $sale->installment_tax_value);
+            $taxaReal = preg_replace('/[^0-9]/', '', $comission)
+                -  $totalToCalcTaxReal
+                - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
         } else {
-            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
+            $taxaReal = preg_replace('/[^0-9]/', '', $comission) - $totalToCalcTaxReal;
         }
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
