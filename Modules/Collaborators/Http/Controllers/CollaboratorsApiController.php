@@ -64,14 +64,9 @@ class CollaboratorsApiController extends Controller
             $data = $request->validated();
             $userModel = new User();
             $data['password'] = bcrypt($data['password']);
-            $data['percentage_rate'] = '5.9';
             $data['transaction_rate'] = '1.00';
             $data['balance'] = '0';
-            $data['credit_card_antecipation_money_days'] = '30';
-            $data['boleto_antecipation_money_days'] = '2';
-            $data['antecipation_tax'] = '0';
             $data['boleto_release_money_days'] = 0;
-            $data['percentage_antecipable'] = '100';
             $data['invites_amount'] = 1;
             $data['address_document_status'] = 3;
             $data['personal_document_status'] = 3;

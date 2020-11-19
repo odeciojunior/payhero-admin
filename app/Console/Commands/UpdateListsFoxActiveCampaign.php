@@ -35,7 +35,7 @@ class UpdateListsFoxActiveCampaign extends Command
     /**
      * @var string
      */
-    private $apiKeyFox = '2610ac50cd96c7af66367453fab94f2bfe3e5914c2a9d8d3979706825f73c06a769ae3e7';
+    private $apiKeyFox = 'd516ef3da2fed7a6b0fd033e4d692273419b539451bab1dd98748ea34fc61d7bfc79df05';
     // private $apiKeyFox = 'd8bbf54664a3839137192929f6a4947d654c6bac20e10d8fc12fb12aeab9be4cbabb6a2d'; // teste
 
     /**
@@ -56,8 +56,6 @@ class UpdateListsFoxActiveCampaign extends Command
     public function handle()
     {
         try {
-            // 1 - Solicitação de Convites pelo Site Principal
-            $this->listInvites();
             // 2 - Usuários Ativos na plataforma
             $this->listActives();
             // 3 - Usuários que nunca venderam
@@ -66,53 +64,6 @@ class UpdateListsFoxActiveCampaign extends Command
             $this->listUsers100k();
             // 6 - Usuários que não vendem a mais de 7 dias
             $this->listNoSalesMore7Days();
-        } catch (Exception $e) {
-            report($e);
-        }
-    }
-
-    private function listInvites()
-    {
-        try {
-            
-            $listId = 1; // 1 - Solicitação de Convites pelo Site Principal
-            $activeCampaignService = new ActiveCampaignService();
-            $activeCampaignService->setAccess($this->apiUrlFox, $this->apiKeyFox, null);
-            $contacts = $activeCampaignService->getContactsByList($listId, 1, 0);
-            $contacts = json_decode($contacts, true);
-            $total    = !empty($contacts['meta']['total']) ? (int)$contacts['meta']['total'] : 0;
-
-            $pages = ($total > 0) ? ceil($total/100) : 0;
-
-            for ($i=0; $i < $pages; $i++) { 
-                $contacts = $activeCampaignService->getContactsByList($listId, 100, ($i*100));
-                $contacts = json_decode($contacts, true);
-
-                foreach ($contacts['contacts'] as $key => $value) {
-                    $email = $value['email'];
-                    $user = User::where('email', $email)->first();
-                    if(isset($user->id)) {
-                        // remove da lista
-                        $activeCampaignService->updateContactList($listId, $value['id'], 2);
-                    } else {
-                        // buscar convite por email com parameter > 15, se não existe:
-                        $invite = Invitation::where('email_invited', $email)->whereRaw('LENGTH(parameter) > 15')->whereNull('company_id')->first();
-                        // dd(strlen($invite->parameter));
-                        if(!isset($invite->id) || (isset($invite->id) && strlen($invite->parameter)) < 16) {
-                            // criar convite
-                            $invitation = Invitation::create([
-                                'status'        => 2,
-                                'email_invited' => $email
-                            ]);
-                            $parameter = Hashids::encode($invitation->id) . rand(10,999);
-                            $invitation->update(['parameter' => $parameter ]);
-                            // enviar url como campo customizado para activecp
-                            // Link convite - id: 7
-                            $activeCampaignService->setCustomFieldValue((int)$value['id'], 7, 'https://app.cloudfox.net/register/'.$parameter);
-                        }
-                    }
-                }
-            }
         } catch (Exception $e) {
             report($e);
         }
@@ -141,7 +92,7 @@ class UpdateListsFoxActiveCampaign extends Command
         try {
             
             $users = User::whereHas('sales', function($query) {
-                $query->whereDate('created_at', '>', Carbon::now()->subdays(7)->todateTimeString());
+                $query->whereDate('created_at', '>', Carbon::now()->subdays(30)->todateTimeString());
             })->get();
 
             $this->updateUsersList($users, 2);  // 2 - Usuários Ativos na plataforma

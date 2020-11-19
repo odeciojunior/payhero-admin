@@ -15,8 +15,10 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
@@ -24,8 +26,6 @@ use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\SaleLog;
-use Modules\Core\Entities\Tracking;
 
 /**
  * Class SaleService
@@ -297,7 +297,6 @@ class SaleService
 
         //valor do produtor
         $value = $userTransaction->value;
-
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         //valor do afiliado
@@ -308,18 +307,18 @@ class SaleService
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue = $affiliateTransaction->value;
-                $affiliateComission = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue,
-                        ',', strlen($affiliateValue) - 2, 0);
+                $affiliateComission = 'R$ ' . number_format($affiliateValue / 100,2, ',', '.');
             }
         }
 
         $taxa = 0;
         $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
-            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "",
-                    $sale->installment_tax_value);
+            $taxaReal = preg_replace('/[^0-9]/', '', $comission)
+                -  $totalToCalcTaxReal
+                - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
         } else {
-            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
+            $taxaReal = preg_replace('/[^0-9]/', '', $comission) - $totalToCalcTaxReal;
         }
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;

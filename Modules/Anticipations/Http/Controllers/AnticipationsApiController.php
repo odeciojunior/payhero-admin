@@ -29,14 +29,6 @@ class AnticipationsApiController extends Controller
             $company             = $companyModel->find(current(Hashids::decode($request->input('company_id'))));
             $anticipationService = new AnticipationService();
 
-            if(!$company->user->antecipation_enabled_flag) {
-                return response()->json([
-                    'data' => [
-                                'message' => 'Antecipação não está disponível'
-                              ]
-                ], 200);
-            }
-
             $anticipationResult = $anticipationService->performAnticipation($company);
 
             return response()->json([

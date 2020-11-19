@@ -73,18 +73,19 @@
                                                            placeholder="Nome">
                                                 </div>
                                                 <div class="form-group col-lg-4">
-                                                    <label for="date_birth">Data de nascimento</label>
+                                                   {{-- <label for="date_birth">Data de nascimento</label>
                                                     <input name="date_birth" value="" type="date"
                                                            class="form-control input-pad" id="date_birth"
-                                                           onkeydown="return false">
-                                                </div>
-                                                <div class="form-group col-lg-4">
-                                                    {{--carrega label no js--}}
+                                                           onkeydown="return false">--}}
                                                     <label for="document" class='label-document'></label>
                                                     <input name="document" value="" type="text" class="input-pad"
                                                            id="document">
                                                 </div>
-                                                <div class="form-group col-lg-4">
+                                                {{--<div class="form-group col-lg-4">
+                                                    --}}{{--carrega label no js--}}{{--
+
+                                                </div>--}}
+                                                <div class="form-group col-lg-6">
                                                     <label for="email">Email</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
@@ -105,7 +106,7 @@
                                                         para verificá-lo!
                                                     </small>
                                                 </div>
-                                                <div class="form-group col-xl-4">
+                                                <div class="form-group col-xl-6">
                                                     <label for="celular">Celular (WhatsApp)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
@@ -229,8 +230,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h5 class="title-pad"> Documentos </h5>
-                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de
-                                            algumas comprovações. </p>
+                                        <p class="sub-pad"> Para manter a nossa comunidade segura, precisamos comprovar alguns dados através dos seus documentos pessoais. </p>
                                         <div class="alert alert-info alert-dismissible fade show text-center"
                                              id='text-alert-documents-cpf' role="alert" style='display:none;'>
                                             <strong>Atenção!</strong> Os documentos somente serão analisados após todos

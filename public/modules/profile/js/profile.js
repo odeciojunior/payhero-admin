@@ -18,8 +18,6 @@ $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
-    // $('#monthly_income').mask('#.###,#0', {reverse: true});
-    $('#document_number').mask('0#');
     if (window.location.search.split('?').length == 2) {
         if (window.location.search.split('?')[1] == 'tab=documents') {
             $('#user-nav').removeClass('active');
@@ -52,7 +50,6 @@ $(document).ready(function () {
                 $('#email').val(response.user.email);
                 $('#document').val(response.user.document);
                 $('#cellphone').val(response.user.cellphone);
-                $('#date_birth').val(response.user.date_birth);
 
                 /**
                  * Imagem Perfil
@@ -67,40 +64,10 @@ $(document).ready(function () {
                  */
 
                 $('#sex').val(response.user.sex);
-                $('#marital_status').val(response.user.marital_status);
-                $('#nationality').val(response.user.nationality);
                 $('#mother_name').val(response.user.mother_name);
-                $('#father_name').val(response.user.father_name);
-                $('#spouse_name').val(response.user.spouse_name);
-                $('#birth_place').val(response.user.birth_place);
-                $('#birth_city').val(response.user.birth_city);
-                $('#birth_state').val(response.user.birth_state);
-                $('#birth_country').val(response.user.birth_country);
-                $('#monthly_income').val(response.user.monthly_income);
-                $('#document_issue_date').val(response.user.document_issue_date);
-                $('#document_expiration_date').val(response.user.document_expiration_date);
-                $('#document_issuer').val(response.user.document_issuer);
-                $('#document_issuer_state').val(response.user.document_issuer_state);
-                // $('#document_serial_number').val(response.user.document_serial_number);
-                $('#document_number').val(response.user.document_number);
-                $('#monthly_income').unmask();
-                $('#monthly_income').mask('#.##0,00', {reverse: true});
                 // $('#document_number').unmask();
                 // $('#document_number').mask('00.000.000-0');
 
-                for (var country of countries) {
-                    $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
-                    $('#birth_country').append(`<option value="${country.name}" ${country.name === response.user.birth_country ? 'selected' : ''}>${country.name}</option>`);
-                }
-                if ($('#marital_status').val() == 'married') {
-                    $('.spouse-name-div').show();
-                }
-
-                if (response.user.birth_country == 'Brasil') {
-                    $('.div-birth-state').show();
-                } else {
-                    $('.div-birth-state').hide();
-                }
                 /**
                  * Dados Residenciais
                  */
@@ -195,16 +162,14 @@ $(document).ready(function () {
                 if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
                     let name = $('#name')
                     let document = $('#document')
-                    let date_birth =  $('#date_birth')
 
                     name.prop('readonly', true);
                     document.prop('readonly', true);
-                    date_birth.prop('readonly', true);
 
                     $("#personal-document-id").hide();
                 }
 
-                if (response.user.address_document_translate == 'pending' || response.user.address_document_translate == 'refused') {
+                if (response.user.address_document_translate == 'refused') {
                     $("#text-alert-documents-cpf").show();
                     $("#address-document-id").show();
                 }
@@ -229,19 +194,9 @@ $(document).ready(function () {
                     country.attr('readonly', 'readonly');
                 }
 
-                if (($("#name").val().length < 1
-                    || $("#date_birth").val().length < 1
-                    || $("#document").val().length < 1
-                    || $("#zip_code").val().length < 1
-                    || $("#street").val().length < 1
-                    || $("#number").val().length < 1
-                    || $("#neighborhood").val().length < 1
-                    || $("#city").val().length < 1
-                    || $("#state").val().length < 1
-                    || $("#country").val().length < 1)
-                    && (response.user.address_document_translate == 'approved'
-                        || response.user.address_document_translate == 'analyzing')
-                ) {
+                if (response.user.address_document_translate == 'approved'
+                    || response.user.address_document_translate == 'analyzing')
+                {
                     $("#address-document-id").hide();
                 }
 
@@ -359,22 +314,6 @@ $(document).ready(function () {
             }
         });
     });
-    $('#marital_status').on('change', function () {
-        if ($(this).val() == 'married') {
-            $('.spouse-name-div').show();
-        } else {
-            $('.spouse-name-div').hide();
-            $('#spouse_name').val('');
-        }
-    });
-    $('#birth_country').on('change', function () {
-        if ($(this).val() == 'Brasil') {
-            $('.div-birth-state').show();
-        } else {
-            $('.div-birth-state').hide();
-            $('#birth_state').val('');
-        }
-    });
 
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
@@ -407,25 +346,9 @@ $(document).ready(function () {
     $("#profile_update_form").on("submit", function (event) {
         $('.dados-residenciais').removeAttr('disabled');
         $('#document').removeAttr('disabled');
-        $('#document_number').removeAttr('disabled');
-        $('#document_issuer').removeAttr('disabled');
-        $('#document_issue_date').removeAttr('disabled');
-        $('#document_expiration_date').removeAttr('disabled');
-        $('#document_issuer_state').removeAttr('disabled');
         $('#sex').removeAttr('disabled');
-        $('#nationality').removeAttr('disabled');
         $('#mother_name').removeAttr('disabled');
-        $('#father_name').removeAttr('disabled');
-        $('#birth_country').removeAttr('disabled');
-        $('#birth_state').removeAttr('disabled');
-        $('#birth_city').removeAttr('disabled');
-        $('#birth_place').removeAttr('disabled');
-
         event.preventDefault();
-        if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {
-            alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
-            return false;
-        }
 
         if ($('input[name="photo_x1"]').val() == '0' || $('input[name="photo_y1"]').val() == '0') {
             $('input[name="photo_x1"]').val('30');
@@ -662,30 +585,6 @@ $(document).ready(function () {
         $("#tab_user").click();
         $("#previewimage").imgAreaSelect({remove: true});
     });
-
-    function setValuesHtml(data) {
-        $("#credit-card-tax").val(data.credit_card_tax + '%');
-        $("#debit-card-tax").val(data.debit_card_tax + '%');
-        $("#boleto-tax").val(data.boleto_tax + '%');
-        $("#credit-card-release").val('plan-' + data.credit_card_release_money);
-        $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            // $('.title-antecipation-tax').show();
-            // $('.form-antecipation-tax').show();
-            $('.info-antecipation-tax').show();
-            $('#label-antecipation-tax').text(data.antecipation_tax + '%.');
-            // $("#antecipation-tax").val(data.antecipation_tax + '%');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#boleto-release").val('plan-' + data.boleto_release_money);
-        $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-        $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
-    }
 
     $("#update_taxes").on("click", function () {
 

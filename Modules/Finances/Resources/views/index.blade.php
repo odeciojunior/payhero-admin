@@ -174,14 +174,6 @@
                                 </div>
                                 <div class='container col-sm-12 mb-40'>
                                     <div class='row'>
-                                        <div class="col-sm-3 div-antecipable-balance">
-                                            <div class="price-holder" style='cursor: pointer;'>
-                                                <h6 class="label-price mb-15"> Saldo Antecipável </h6>
-                                                <h4 class="price saldoAntecipavel">
-                                                </h4>
-                                                <div class="grad-border purple"></div>
-                                            </div>
-                                        </div>
                                         <div class="col-sm-3 ">
                                             <div class="price-holder">
                                                 <h6 class="label-price mb-15"> Saldo Pendente </h6>

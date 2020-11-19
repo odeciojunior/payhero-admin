@@ -14,14 +14,15 @@ class CompaniesSelectResource extends JsonResource
     {
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
-        $hasSaleCielo = Sale::where('owner_id', auth()->user()->id)->whereIn('gateway_id', [5, 6])->exists();
+        $hasSaleCielo = Sale::where('owner_id', auth()->user()->account_owner_id)
+            ->orWhere('affiliate_id', auth()->user()->account_owner)
+            ->whereNotIn('gateway_id',  [14, 15])->exists();
 
         return [
             'id' => Hashids::encode($this->id),
             'country' => $this->country,
             'name' => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
             'company_document_status' => ($companyDocumentValidated) ? 'approved' : 'pending',
-            'antecipation_enabled_flag' => $this->user->antecipation_enabled_flag,
             'capture_transaction_enabled' => $this->capture_transaction_enabled,
             'company_has_sales_in_cielo' => $hasSaleCielo,
             'active_flag' => $this->active_flag,
