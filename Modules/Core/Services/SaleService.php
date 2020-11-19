@@ -313,11 +313,14 @@ class SaleService
             ->first();
 
         $valueAnticipable = 0;
+        $value = '000';
         if (!FoxUtils::isEmpty($userTransaction)) {
             $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
             if (!FoxUtils::isEmpty($anticipatedTransaction)) {
                 $valueAnticipable = $anticipatedTransaction->value;
             }
+            //valor do produtor
+            $value = $userTransaction->value;
         }
 
         //calcule total
@@ -355,8 +358,6 @@ class SaleService
             $convertaxValue = '0,00';
         }
 
-        //valor do produtor
-        $value = $userTransaction->value;
 
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
