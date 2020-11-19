@@ -18,7 +18,6 @@ class ProfileUpdateRequest extends FormRequest
             'email' => 'sometimes|email|max:255',
             'document' => 'required|sometimes|string|max:255',
             'cellphone' => 'nullable|sometimes|string|max:255',
-            'date_birth' => 'nullable|sometimes|date_format:Y-m-d',
             'photo_x1' => 'nullable|numeric',
             'photo_y1' => 'nullable|numeric',
             'photo_w' => 'nullable|numeric',

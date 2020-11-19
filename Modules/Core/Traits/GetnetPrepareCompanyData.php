@@ -12,23 +12,22 @@ trait GetnetPrepareCompanyData
     public function getPrepareDataCreatePfCompany(Company $company)
     {
         $user = $company->user;
-        $userInformation = $user->userInformation;
 
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
-        $motherName = $userInformation->mother_name;
+        $motherName = $user->mother_name;
 
         if ($user->id_wall_result) {
 
             $idwall =  json_decode($user->id_wall_result, true);
 
-            $motherName = current(array_map(function ($item) use ($userInformation){
+            $motherName = current(array_map(function ($item) use ($motherName){
 
                 if (isset($item['tipo']) && $item['tipo'] == 'MAE')
                     return ($item['nome']);
 
 
-                return $userInformation->mother_name;
+                return $motherName;
 
             }, $idwall['result']['pessoas_relacionadas']));
 
@@ -83,33 +82,8 @@ trait GetnetPrepareCompanyData
 
     public function getPrepareDataComplementPfCompany(Company $company)
     {
-        $user = $company->user;
-        $userInformation = $user->userInformation;
 
-        return [
-            'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
-            'legal_document_number' => $company->company_document,
-            'identification_document' => [
-                'document_type' => 'id_card', //
-                'document_number' => $userInformation->document_number,
-                'document_issue_date' => $userInformation->document_issue_date,
-                'document_expiration_date' => $userInformation->document_expiration_date,
-                'document_issuer' => $userInformation->document_issuer,
-                'document_issuer_state' => $userInformation->document_issuer_state,
-            ],
-            'sex' => $userInformation->sex,
-            'marital_status' => $userInformation->marital_status,
-            'nationality' => $userInformation->nationality,
-            'fathers_name' => $userInformation->father_name,
-            'spouse_name' => $userInformation->spouse_name,
-            'birth_place' => $userInformation->birth_place,
-            'birth_city' => $userInformation->birth_city,
-            'birth_state' => $userInformation->birth_state,
-            'birth_country' => $userInformation->birth_country,
-            'ppe_indication' => 'not_applied',
-            'patrimony' => $company->patrimony
-        ];
+        return [];
     }
 
     public function getPrepareDataUpdatePfCompany(Company $company)

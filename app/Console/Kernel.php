@@ -73,7 +73,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
 
         //verify users that has antecipation enabled and does not have approved sales in the last three days
-        $schedule->command('command:DisableUserAntecipation')->dailyAt('02:00');
 
         //restart all shopify webhooks from shopify integrations
 //        $schedule->command('restartShopifyWebhooks')->weekly();

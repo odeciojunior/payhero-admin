@@ -79,7 +79,6 @@ class SplitPaymentService
 
             if (count($partners) > 0) {
                 $shippingPrice       = $sale->shipment_value;
-                $antecipationDaysKey = 'boleto_antecipation_money_days';
                 $partnersValue       = 0;
 
                 foreach ($partners as $partner) {
@@ -97,7 +96,7 @@ class SplitPaymentService
 
                         $valueGodfatherPartner = intval((($partnerValue / 100) * 1));
 
-                        $antecipableValue = intval(($valueGodfatherPartner / 100) * $partnerGodfather->user->antecipation_tax);
+//                        $antecipableValue = intval(($valueGodfatherPartner / 100) * $partnerGodfather->user->antecipation_tax);
 
                         $transactionModel->create([
                                                       'sale_id'                => $sale->id,
@@ -106,18 +105,13 @@ class SplitPaymentService
                                                       'release_date'           => Carbon::now()
                                                                                         ->addDays($partnerGodfather->user->release_money_days)
                                                                                         ->format('Y-m-d'),
-                                                      'antecipation_date'      => Carbon::now()
-                                                                                        ->addDays($partnerGodfather->user->{$antecipationDaysKey})
-                                                                                        ->format('Y-m-d'),
                                                       'status'                 => 'pending',
                                                       'status_enum'            => $transactionModel->present()
                                                                                                    ->getStatusEnum('pending'),
-                                                      'antecipable_value'      => $antecipableValue,
-                                                      'antecipable_tax'        => $partnerGodfather->user->antecipation_tax,
+//                                                      'antecipable_value'      => $antecipableValue,
                                                       'currency'               => '',
                                                       'percentage_rate'        => '',
                                                       'transaction_rate'       => '',
-                                                      'percentage_antecipable' => '',
                                                       'type'                   => $transactionModel->present()
                                                                                                    ->getType('invitation'),
                                                   ]);
@@ -132,18 +126,12 @@ class SplitPaymentService
                                                   'release_date'           => Carbon::now()
                                                                                     ->addDays($partner->user->release_money_days)
                                                                                     ->format('Y-m-d'),
-                                                  'antecipation_date'      => Carbon::now()
-                                                                                    ->addDays($partner->user->{$antecipationDaysKey})
-                                                                                    ->format('Y-m-d'),
                                                   'status'                 => 'pending',
                                                   'status_enum'            => $transactionModel->present()
                                                                                                ->getStatusEnum('pending'),
-                                                  'antecipable_value'      => intval($partnerValue / 100 * $partner->user->percentage_antecipable),
-                                                  'antecipable_tax'        => $partner->user->antecipation_tax,
                                                   'currency'               => '',
                                                   'percentage_rate'        => '',
                                                   'transaction_rate'       => '',
-                                                  'percentage_antecipable' => '',
                                                   'type'                   => $transactionModel->present()
                                                                                                ->getType('partner'),
                                               ]);
@@ -173,11 +161,9 @@ class SplitPaymentService
                                               'status_enum'            => $transactionModel->present()
                                                                                            ->getStatusEnum('pending'),
                                               'antecipable_value'      => 0,
-                                              'antecipable_tax'        => 0,
                                               'currency'               => '',
                                               'percentage_rate'        => '',
                                               'transaction_rate'       => '',
-                                              'percentage_antecipable' => '',
                                               'invitation_id'          => $invite->id,
                                               'type'                   => $transactionModel->present()
                                                                                            ->getType('invitation'),
@@ -198,10 +184,7 @@ class SplitPaymentService
                 } else if ($sale->payment_method == 2) {
                     $convertaXReleaseMoneyDays = $convertaxUser->boleto_release_money_days;
                     $convertaXPercentageRate   = $convertaxUser->boleto_tax;
-                } else if ($sale->payment_method == 3) {
-                    $convertaXReleaseMoneyDays = $convertaxUser->debit_card_release_money_days;
-                    $convertaXPercentageRate   = $convertaxUser->debit_card_tax;
-                } else {
+                }  else {
                     $convertaXPercentageRate = 6.5;
                 }
                 $transactionModel->create([
@@ -213,12 +196,9 @@ class SplitPaymentService
                                               'status'                 => 'pending',
                                               'status_enum'            => $transactionModel->present()
                                                                                            ->getStatusEnum('pending'),
-                                              'antecipable_value'      => intval($convertaxIntegration->value / 100 * $convertaxUser->percentage_antecipable),
-                                              'antecipable_tax'        => $convertaxUser->antecipation_tax,
                                               'currency'               => ($convertaxCompany->country == 'usa') ? 'dolar' : 'real',
                                               'percentage_rate'        => $convertaXPercentageRate,
                                               'transaction_rate'       => ($convertaxCompany->country == 'usa') ? '0.25' : '1.00',
-                                              'percentage_antecipable' => $convertaxUser->percentage_antecipable,
                                               'type'                   => $transactionModel->present()
                                                                                            ->getType('convertaX'),
                                           ]);
@@ -253,12 +233,9 @@ class SplitPaymentService
                                           'status'                 => 'pending',
                                           'status_enum'            => $transactionModel->present()
                                                                                        ->getStatusEnum('pending'),
-                                          'antecipable_value'      => intval($producerValue / 100 * $user->percentage_antecipable),
-                                          'antecipable_tax'        => $user->antecipation_tax,
                                           'currency'               => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
                                           'percentage_rate'        => $percentageRate,
                                           'transaction_rate'       => $transactionRate,
-                                          'percentage_antecipable' => $user->percentage_antecipable,
                                           'type'                   => $transactionModel->present()->getType('producer'),
                                       ]);
             //Valor da Fox

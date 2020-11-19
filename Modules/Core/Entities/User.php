@@ -38,19 +38,14 @@ use Laravel\Passport\HasApiTokens;
  * @property string $date_birth
  * @property bool $address_document_status
  * @property bool $personal_document_status
- * @property string $percentage_rate
  * @property string $transaction_rate
  * @property json $id_wall_result
+ * @property string $sex
+ * @property string $mother_name
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
- * @property int $boleto_antecipation_money_days
- * @property int $credit_card_antecipation_money_days
- * @property int $percentage_antecipable
- * @property int $antecipation_tax
  * @property int $invites_amount
- * @property float $abroad_transfer_tax
- * @property bool $antecipation_enabled_flag
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -110,18 +105,13 @@ class User extends Authenticable
         'date_birth',
         'address_document_status',
         'personal_document_status',
-        'percentage_rate',
-        'boleto_antecipation_money_days',
-        'credit_card_antecipation_money_days',
-        'percentage_antecipable',
-        'antecipation_tax',
         'invites_amount',
         'last_login',
         'account_owner_id',
-        'abroad_transfer_tax',
-        'antecipation_enabled_flag',
         'deleted_project_filter',
         'id_wall_result',
+        'sex',
+        'mother_name',
         'created_at',
         'updated_at',
         'deleted_at',

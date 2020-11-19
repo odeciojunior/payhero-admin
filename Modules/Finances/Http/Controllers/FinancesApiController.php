@@ -76,14 +76,11 @@ class FinancesApiController extends Controller
                         $currencyQuotation = number_format((float) $currencyQuotation, 2, ',', '');
                     }
 
-                    $anticipationBalance = $company->user->antecipation_enabled_flag ? $anticipationService->getAntecipableValue($company) : '000';
-
                     return response()->json(
                         [
                             'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                            'anticipable_balance' => number_format(intval($anticipationBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
                             'blocked_balance'     => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),

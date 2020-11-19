@@ -52,7 +52,6 @@ $(document).ready(function () {
                 $('#email').val(response.user.email);
                 $('#document').val(response.user.document);
                 $('#cellphone').val(response.user.cellphone);
-                $('#date_birth').val(response.user.date_birth);
 
                 /**
                  * Imagem Perfil
@@ -195,16 +194,14 @@ $(document).ready(function () {
                 if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
                     let name = $('#name')
                     let document = $('#document')
-                    let date_birth =  $('#date_birth')
 
                     name.prop('readonly', true);
                     document.prop('readonly', true);
-                    date_birth.prop('readonly', true);
 
                     $("#personal-document-id").hide();
                 }
 
-                if (response.user.address_document_translate == 'pending' || response.user.address_document_translate == 'refused') {
+                if (response.user.address_document_translate == 'refused') {
                     $("#text-alert-documents-cpf").show();
                     $("#address-document-id").show();
                 }
@@ -229,19 +226,9 @@ $(document).ready(function () {
                     country.attr('readonly', 'readonly');
                 }
 
-                if (($("#name").val().length < 1
-                    || $("#date_birth").val().length < 1
-                    || $("#document").val().length < 1
-                    || $("#zip_code").val().length < 1
-                    || $("#street").val().length < 1
-                    || $("#number").val().length < 1
-                    || $("#neighborhood").val().length < 1
-                    || $("#city").val().length < 1
-                    || $("#state").val().length < 1
-                    || $("#country").val().length < 1)
-                    && (response.user.address_document_translate == 'approved'
-                        || response.user.address_document_translate == 'analyzing')
-                ) {
+                if (response.user.address_document_translate == 'approved'
+                    || response.user.address_document_translate == 'analyzing')
+                {
                     $("#address-document-id").hide();
                 }
 
@@ -662,30 +649,6 @@ $(document).ready(function () {
         $("#tab_user").click();
         $("#previewimage").imgAreaSelect({remove: true});
     });
-
-    function setValuesHtml(data) {
-        $("#credit-card-tax").val(data.credit_card_tax + '%');
-        $("#debit-card-tax").val(data.debit_card_tax + '%');
-        $("#boleto-tax").val(data.boleto_tax + '%');
-        $("#credit-card-release").val('plan-' + data.credit_card_release_money);
-        $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
-
-        if (data.antecipation_enabled_flag) {
-            // $('.title-antecipation-tax').show();
-            // $('.form-antecipation-tax').show();
-            $('.info-antecipation-tax').show();
-            $('#label-antecipation-tax').text(data.antecipation_tax + '%.');
-            // $("#antecipation-tax").val(data.antecipation_tax + '%');
-        } else {
-            $('.title-antecipation-tax').hide();
-            $('.form-antecipation-tax').hide();
-        }
-
-        $("#boleto-release").val('plan-' + data.boleto_release_money);
-        $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
-        $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
-    }
 
     $("#update_taxes").on("click", function () {
 

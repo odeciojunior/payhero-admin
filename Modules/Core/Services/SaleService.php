@@ -15,8 +15,10 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
@@ -24,8 +26,6 @@ use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\SaleLog;
-use Modules\Core\Entities\Tracking;
 
 /**
  * Class SaleService
@@ -295,8 +295,6 @@ class SaleService
             $convertaxValue = '0,00';
         }
 
-        //valor do produtor
-        $value = $userTransaction->value;
 
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
