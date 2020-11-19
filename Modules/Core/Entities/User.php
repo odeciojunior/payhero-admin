@@ -45,7 +45,6 @@ use Laravel\Passport\HasApiTokens;
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
- * @property int $antecipation_tax
  * @property int $invites_amount
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
@@ -106,7 +105,6 @@ class User extends Authenticable
         'date_birth',
         'address_document_status',
         'personal_document_status',
-        'antecipation_tax',
         'invites_amount',
         'last_login',
         'account_owner_id',

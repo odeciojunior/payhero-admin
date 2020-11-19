@@ -26,18 +26,15 @@ class PrepareDropUserInformation extends Migration
             $table->dropColumn('credit_card_antecipation_money_days');
             $table->dropColumn('boleto_antecipation_money_days');
             $table->dropColumn('percentage_antecipable');
-            $table->dropColumn('antecipable_tax');
+            $table->dropColumn('antecipation_tax');
+            $table->dropColumn('debit_card_release_money_days');
+            $table->dropColumn('percentage_rate');
             $table->dropColumn('antecipation_enabled_flag');
         });
 
         DB::statement("ALTER TABLE users MODIFY COLUMN created_at timestamp AFTER mother_name");
         DB::statement("ALTER TABLE users MODIFY COLUMN updated_at timestamp AFTER created_at");
         DB::statement("ALTER TABLE users MODIFY COLUMN deleted_at timestamp AFTER updated_at");
-
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('get_net_status');
-            $table->dropColumn('abroad_transfer_tax');
-        });
 
         foreach (UserInformation::whereRaw('mother_name is not null or sex is not null')->get() as $userInformation) {
             $user = $userInformation->user;
@@ -50,6 +47,9 @@ class PrepareDropUserInformation extends Migration
                 $user->update(['mother_name' => $userInformation->mother_name]);
             }
         }
+
+        Schema::dropIfExists('user_informations');
+
     }
 
     /**
