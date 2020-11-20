@@ -34,14 +34,9 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
 {
-    /**
-     * @var MP
-     */
+
     private $mp;
 
-    /**
-     * PostBackMercadoPagoController constructor.
-     */
     public function __construct()
     {
         //
