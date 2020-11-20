@@ -61,7 +61,7 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.page-content', true);
-                if (response.refused === false) {
+                if (!response.analyzing && !response.refused) {
                     $('#btn-integration-model').show();
                 } else {
                     $('#btn-integration-model').hide();
