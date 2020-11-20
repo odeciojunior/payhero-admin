@@ -807,7 +807,7 @@ $(document).ready(function () {
         $('#table-statement-body').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
 
         $(".numbers").hide();
 
@@ -1044,12 +1044,12 @@ $(document).ready(function () {
     });
 
     $('#date_range_statement').daterangepicker({
-        startDate: moment(),
-        endDate: moment(),
+        startDate: moment().subtract(7, 'days'),
+        endDate: moment().add(0, 'days'),
         opens: 'center',
-        maxDate: moment(),
-        alwaysShowCalendar: false,
-        showCustomRangeLabel: false,
+        maxDate: moment().add(1, 'month'),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',
@@ -1066,6 +1066,11 @@ $(document).ready(function () {
         },
         ranges: {
             'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
 
