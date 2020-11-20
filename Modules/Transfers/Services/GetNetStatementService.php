@@ -18,8 +18,25 @@ class GetNetStatementService
     {
         $transactions = array_reverse($data->list_transactions) ?? [];
 
+        /*echo '<pre>';
+                print_r($transactions);
+        exit;*/
+        /*$total = 0;
+        foreach ($transactions as $item){
+
+
+            if (isset($item->summary) && isset($item->details) && is_array($item->details) && count($item->details)) {
+
+                $details = $item->details;
+                $subSellerRateAmount = $details[0]->subseller_rate_amount ?? 0;
+
+                $total += $subSellerRateAmount;
+            }
+        }
+
+        dd($total, FoxUtils::formatMoney($total / 100));*/
         $transactions = array_map(function ($item) {
-            if (isset($item->summary) && isset($item->details) && is_array($item->details)) {
+            if (isset($item->summary) && isset($item->details) && is_array($item->details) && count($item->details)) {
                 $summary = $item->summary;
                 $details = $item->details;
 
