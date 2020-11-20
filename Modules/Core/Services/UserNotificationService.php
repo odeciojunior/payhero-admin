@@ -22,12 +22,10 @@ class UserNotificationService
         // "withdrawal_approved", // NÃO ESTÁ SENDO USADO
         "boleto_compensated",
         "domain_approved",
-        "released_balance",
         "notazz",
         "sale_approved",
         "shopify",
         "billet_generated",
-        "credit_card_in_proccess",
     ];
 
     /**

@@ -19,11 +19,6 @@ use Modules\Notifications\Notifications\ReleasedBalanceNotification;
 class ReleasedBalanceNotifyUserListener implements ShouldQueue
 {
     use Queueable;
-    /**
-     * @var string
-     * @description name of the column in user_notifications table to check if it will send
-     */
-    private $userNotification = "released_balance";
 
     /**
      * Create the event listener.
@@ -44,19 +39,15 @@ class ReleasedBalanceNotifyUserListener implements ShouldQueue
 
             $transfers = $event->transfer;
 
-            $transfers = $transfers->groupBy('user_id')->map(function($row) {
+            $transfers = $transfers->groupBy('user_id')->map(function ($row) {
                 return $row->sum('value');
             });
 
-            $message = '';
             foreach ($transfers as $user_id => $value) {
                 $user    = $userModel->find($user_id);
                 $message = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi acrescentado ao saldo disponível.';
 
-                $userNotificationService = app(UserNotificationService::class);
-                if ($userNotificationService->verifyUserNotification($user, $this->userNotification)) {
-                    $user->notify(new ReleasedBalanceNotification($message));
-                }
+                $user->notify(new ReleasedBalanceNotification($message));
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar notificação saldo liberado');

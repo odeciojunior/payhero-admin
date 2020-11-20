@@ -84,8 +84,8 @@ Route::group(
         Route::get('/trackingcode', 'TesteController@trackingCodeFunction');
         Route::get('/wilson', 'WilsonController@wilsonFunction');
         Route::get('/documentstatus', 'TesteController@documentStatus');
+        Route::get('/test-job-with-database', 'TesteController@testJobWithDatabase');
     }
 );
 
 Route::view('/carriers', 'carriers');
-
