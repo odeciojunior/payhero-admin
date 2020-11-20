@@ -58,7 +58,6 @@ $(document).ready(function () {
             error: function error(response) {
                 loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
-                $('#btn-integration-model').hide();
             },
             success: function success(response) {
                 loadOnAny('.page-content', true);
