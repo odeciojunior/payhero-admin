@@ -100,6 +100,7 @@ class CompanyResource extends JsonResource
             'boleto_release_money' => $this->boleto_release_money_days,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
+            'gateway_release_money_days' => $this->gateway_release_money_days
         ];
     }
 }

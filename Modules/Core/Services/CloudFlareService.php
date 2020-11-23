@@ -2,23 +2,23 @@
 
 namespace Modules\Core\Services;
 
+use Cloudflare\API\Adapter\Guzzle;
+use Cloudflare\API\Auth\APIKey;
+use Cloudflare\API\Endpoints\Crypto;
+use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Endpoints\EndpointException;
+use Cloudflare\API\Endpoints\SSL;
+use Cloudflare\API\Endpoints\TLS;
+use Cloudflare\API\Endpoints\User;
+use Cloudflare\API\Endpoints\Zones;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
-use Modules\Core\Entities\Domain;
-use PHPHtmlParser\Dom;
 use Illuminate\Http\Response;
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Endpoints\SSL;
-use Cloudflare\API\Endpoints\TLS;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Endpoints\User;
-use Cloudflare\API\Endpoints\Zones;
-use Cloudflare\API\Endpoints\Crypto;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
+use PHPHtmlParser\Dom;
 use stdClass;
 
 /**
@@ -27,11 +27,11 @@ use stdClass;
  */
 class CloudFlareService
 {
-    const shopifyIp   = '23.227.38.65';
-    const checkoutIp  = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
-    const sacIp       = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
+    const shopifyIp = '23.227.38.65';
+    const checkoutIp = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
+    const sacIp = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
     const affiliateIp = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
-    const adminIp     = 'cloudfoxsuit-admin-balance-942137392.us-east-1.elb.amazonaws.com';
+    const adminIp = 'cloudfoxsuit-admin-balance-942137392.us-east-1.elb.amazonaws.com';
 
     /**
      * @var APIKey
@@ -108,14 +108,14 @@ class CloudFlareService
     public function __construct()
     {
         try {
-            $this->key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
+            $this->key = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
             $this->adapter = new Guzzle($this->key);
-            $this->dns     = new DNS($this->adapter);
-            $this->ssl     = new SSL($this->adapter);
-            $this->tls     = new TLS($this->adapter);
-            $this->crypto  = new Crypto($this->adapter);
-            $this->zones   = new Zones($this->adapter);
-            $this->user    = new User($this->adapter);
+            $this->dns = new DNS($this->adapter);
+            $this->ssl = new SSL($this->adapter);
+            $this->tls = new TLS($this->adapter);
+            $this->crypto = new Crypto($this->adapter);
+            $this->zones = new Zones($this->adapter);
+            $this->user = new User($this->adapter);
         } catch (Exception $e) {
             report($e);
         }
@@ -172,7 +172,7 @@ class CloudFlareService
     {
         try {
             $zoneID = $this->zones->getZoneID($domain);
-            $user   = $this->adapter->delete('zones/' . $zoneID);
+            $user = $this->adapter->delete('zones/' . $zoneID);
 
             $body = json_decode($user->getBody());
 
@@ -182,7 +182,6 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-
             return false;
         }
     }
@@ -204,7 +203,6 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-
             return false;
         }
     }
@@ -224,19 +222,25 @@ class CloudFlareService
     }
 
     /**
-     * @param string $type    | A, CNAME, AAAA
-     * @param string $name    | dominio, subdominio
+     * @param string $type | A, CNAME, AAAA
+     * @param string $name | dominio, subdominio
      * @param string $content | IP, dominio
      * @param int $ttl
      * @param bool $proxied
      * @param string $priority
      * @return array
      */
-    public function addRecord(string $type, string $name, string $content, int $ttl = 0, bool $proxied = true, $priority = '0')
-    {
+    public function addRecord(
+        string $type,
+        string $name,
+        string $content,
+        int $ttl = 0,
+        bool $proxied = true,
+        $priority = '0'
+    ) {
         $options = [
-            'type'    => $type,
-            'name'    => $name,
+            'type' => $type,
+            'name' => $name,
             'content' => $content,
             'proxied' => $proxied,
         ];
@@ -246,7 +250,7 @@ class CloudFlareService
         }
 
         if (!empty($priority)) {
-            $options['priority'] = (int) $priority;
+            $options['priority'] = (int)$priority;
         } else {
             if ($priority == 0) {
                 $options['priority'] = 0;
@@ -274,20 +278,18 @@ class CloudFlareService
      * @param string $zoneID
      * @param string $recordID
      * @param array $details
-     * @return bool|mixed
+     * @return mixed|object
      */
     public function updateRecordDetails(string $zoneID, string $recordID, array $details)
     {
         try {
-
-            if (!empty($zoneID) && !empty($recordID) && !empty($details)) {
-                $response = $this->adapter->put('zones/' . $zoneID . '/dns_records/' . $recordID, $details);
-                $body     = json_decode($response->getBody());
-
-                return $body;
-            } else {
+            if (empty($zoneID) || empty($recordID) || empty($details)) {
                 return false;
             }
+
+            $response = $this->adapter->put('zones/' . $zoneID . '/dns_records/' . $recordID, $details);
+
+            return json_decode($response->getBody())->success;
         } catch (Exception $e) {
             report($e);
 
@@ -302,7 +304,6 @@ class CloudFlareService
     public function deleteRecord(string $recordId)
     {
         try {
-
             $user = $this->adapter->delete('zones/' . $this->zoneID . '/dns_records/' . $recordId);
 
             $body = json_decode($user->getBody());
@@ -350,73 +351,87 @@ class CloudFlareService
             //dominio criado
 
             $domainModel->where('id', $domainModelId)
-                        ->update([
-                                     'cloudflare_domain_id' => $newZone->id,
-                                 ]);
+                ->update(
+                    [
+                        'cloudflare_domain_id' => $newZone->id,
+                    ]
+                );
 
             $this->setZone($newZone->name);
 
             if (!empty($ipAddress)) {
                 $recordId = $this->addRecord("A", $newZone->name, $ipAddress);
-                $this->getDomainRecordModel()->create([
-                                                          'domain_id'            => $domainModelId,
-                                                          'cloudflare_record_id' => $recordId,
-                                                          'type'                 => 'A',
-                                                          'name'                 => $newZone->name,
-                                                          'content'              => $ipAddress,
-                                                          'system_flag'          => 1,
-                                                      ]);
+                $this->getDomainRecordModel()->create(
+                    [
+                        'domain_id' => $domainModelId,
+                        'cloudflare_record_id' => $recordId,
+                        'type' => 'A',
+                        'name' => $newZone->name,
+                        'content' => $ipAddress,
+                        'system_flag' => 1,
+                    ]
+                );
             }
 
             $recordId = $this->addRecord("CNAME", 'www', $newZone->name);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'www',
-                                                      'content'              => $newZone->name,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'www',
+                    'content' => $newZone->name,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'checkout', self::checkoutIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'checkout',
-                                                      'content'              => self::checkoutIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'checkout',
+                    'content' => self::checkoutIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'sac', self::sacIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'sac',
-                                                      'content'              => self::sacIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'sac',
+                    'content' => self::sacIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'affiliate', self::affiliateIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'affiliate',
-                                                      'content'              => self::affiliateIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'affiliate',
+                    'content' => self::affiliateIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'tracking', self::adminIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'tracking',
-                                                      'content'              => self::adminIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'tracking',
+                    'content' => self::adminIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
@@ -424,24 +439,34 @@ class CloudFlareService
             foreach ($sendgridResponse->dns as $responseDns) {
                 if ($responseDns->type == 'mx') {
                     $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
-                    $this->getDomainRecordModel()->create([
-                                                              'domain_id'            => $domainModelId,
-                                                              'cloudflare_record_id' => $recordId,
-                                                              'type'                 => 'MX',
-                                                              'name'                 => $responseDns->host,
-                                                              'content'              => $responseDns->data,
-                                                              'system_flag'          => 1,
-                                                          ]);
+                    $this->getDomainRecordModel()->create(
+                        [
+                            'domain_id' => $domainModelId,
+                            'cloudflare_record_id' => $recordId,
+                            'type' => 'MX',
+                            'name' => $responseDns->host,
+                            'content' => $responseDns->data,
+                            'system_flag' => 1,
+                        ]
+                    );
                 } else {
-                    $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-                    $this->getDomainRecordModel()->create([
-                                                              'domain_id'            => $domainModelId,
-                                                              'cloudflare_record_id' => $recordId,
-                                                              'type'                 => strtoupper($responseDns->type),
-                                                              'name'                 => $responseDns->host,
-                                                              'content'              => $responseDns->data,
-                                                              'system_flag'          => 1,
-                                                          ]);
+                    $recordId = $this->addRecord(
+                        strtoupper($responseDns->type),
+                        $responseDns->host,
+                        $responseDns->data,
+                        0,
+                        false
+                    );
+                    $this->getDomainRecordModel()->create(
+                        [
+                            'domain_id' => $domainModelId,
+                            'cloudflare_record_id' => $recordId,
+                            'type' => strtoupper($responseDns->type),
+                            'name' => $responseDns->host,
+                            'content' => $responseDns->data,
+                            'system_flag' => 1,
+                        ]
+                    );
                 }
             }
 
@@ -449,15 +474,23 @@ class CloudFlareService
             $linkBrandResponse = $this->getSendgridService()->createLinkBrand($newZone->name);
 
             foreach ($linkBrandResponse->dns as $responseDns) {
-                $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-                $this->getDomainRecordModel()->create([
-                                                          'domain_id'            => $domainModelId,
-                                                          'cloudflare_record_id' => $recordId,
-                                                          'type'                 => strtoupper($responseDns->type),
-                                                          'name'                 => $responseDns->host,
-                                                          'content'              => $responseDns->data,
-                                                          'system_flag'          => 1,
-                                                      ]);
+                $recordId = $this->addRecord(
+                    strtoupper($responseDns->type),
+                    $responseDns->host,
+                    $responseDns->data,
+                    0,
+                    false
+                );
+                $this->getDomainRecordModel()->create(
+                    [
+                        'domain_id' => $domainModelId,
+                        'cloudflare_record_id' => $recordId,
+                        'type' => strtoupper($responseDns->type),
+                        'name' => $responseDns->host,
+                        'content' => $responseDns->data,
+                        'system_flag' => 1,
+                    ]
+                );
             }
 
             return true;
@@ -480,71 +513,85 @@ class CloudFlareService
             //dominio criado
 
             $domainModel->where('id', $domainModelId)
-                        ->update([
-                                     'cloudflare_domain_id' => $newZone->id,
-                                 ]);
+                ->update(
+                    [
+                        'cloudflare_domain_id' => $newZone->id,
+                    ]
+                );
 
             $this->setZone($newZone->name);
 
             $recordId = $this->addRecord("A", $newZone->name, self::shopifyIp, 0, false);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
-                                                      'name'                 => $newZone->name,
-                                                      'content'              => self::shopifyIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'A',
+                    'name' => $newZone->name,
+                    'content' => self::shopifyIp,
+                    'system_flag' => 1,
+                ]
+            );
 
-            $recordId = $this->addRecord("CNAME", 'www', 'shops.myshopify.com', 0,false);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'www',
-                                                      'content'              => 'shops.myshopify.com',
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $recordId = $this->addRecord("CNAME", 'www', 'shops.myshopify.com', 0, false);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'www',
+                    'content' => 'shops.myshopify.com',
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'checkout', self::checkoutIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'checkout',
-                                                      'content'              => self::checkoutIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'checkout',
+                    'content' => self::checkoutIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'sac', self::sacIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'sac',
-                                                      'content'              => self::sacIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'sac',
+                    'content' => self::sacIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'affiliate', self::affiliateIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'affiliate',
-                                                      'content'              => self::affiliateIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'affiliate',
+                    'content' => self::affiliateIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $recordId = $this->addRecord("CNAME", 'tracking', self::adminIp);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'            => $domainModelId,
-                                                      'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'CNAME',
-                                                      'name'                 => 'tracking',
-                                                      'content'              => self::adminIp,
-                                                      'system_flag'          => 1,
-                                                  ]);
+            $this->getDomainRecordModel()->create(
+                [
+                    'domain_id' => $domainModelId,
+                    'cloudflare_record_id' => $recordId,
+                    'type' => 'CNAME',
+                    'name' => 'tracking',
+                    'content' => self::adminIp,
+                    'system_flag' => 1,
+                ]
+            );
 
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
@@ -552,24 +599,34 @@ class CloudFlareService
             foreach ($sendgridResponse->dns as $responseDns) {
                 if ($responseDns->type == 'mx') {
                     $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
-                    $this->getDomainRecordModel()->create([
-                                                              'domain_id'            => $domainModelId,
-                                                              'cloudflare_record_id' => $recordId,
-                                                              'type'                 => 'MX',
-                                                              'name'                 => $responseDns->host,
-                                                              'content'              => $responseDns->data,
-                                                              'system_flag'          => 1,
-                                                          ]);
+                    $this->getDomainRecordModel()->create(
+                        [
+                            'domain_id' => $domainModelId,
+                            'cloudflare_record_id' => $recordId,
+                            'type' => 'MX',
+                            'name' => $responseDns->host,
+                            'content' => $responseDns->data,
+                            'system_flag' => 1,
+                        ]
+                    );
                 } else {
-                    $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-                    $this->getDomainRecordModel()->create([
-                                                              'domain_id'            => $domainModelId,
-                                                              'cloudflare_record_id' => $recordId,
-                                                              'type'                 => strtoupper($responseDns->type),
-                                                              'name'                 => $responseDns->host,
-                                                              'content'              => $responseDns->data,
-                                                              'system_flag'          => 1,
-                                                          ]);
+                    $recordId = $this->addRecord(
+                        strtoupper($responseDns->type),
+                        $responseDns->host,
+                        $responseDns->data,
+                        0,
+                        false
+                    );
+                    $this->getDomainRecordModel()->create(
+                        [
+                            'domain_id' => $domainModelId,
+                            'cloudflare_record_id' => $recordId,
+                            'type' => strtoupper($responseDns->type),
+                            'name' => $responseDns->host,
+                            'content' => $responseDns->data,
+                            'system_flag' => 1,
+                        ]
+                    );
                 }
             }
 
@@ -578,15 +635,23 @@ class CloudFlareService
 
             if (!empty($linkBrandResponse)) {
                 foreach ($linkBrandResponse->dns as $responseDns) {
-                    $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-                    $this->getDomainRecordModel()->create([
-                                                              'domain_id'            => $domainModelId,
-                                                              'cloudflare_record_id' => $recordId,
-                                                              'type'                 => strtoupper($responseDns->type),
-                                                              'name'                 => $responseDns->host,
-                                                              'content'              => $responseDns->data,
-                                                              'system_flag'          => 1,
-                                                          ]);
+                    $recordId = $this->addRecord(
+                        strtoupper($responseDns->type),
+                        $responseDns->host,
+                        $responseDns->data,
+                        0,
+                        false
+                    );
+                    $this->getDomainRecordModel()->create(
+                        [
+                            'domain_id' => $domainModelId,
+                            'cloudflare_record_id' => $recordId,
+                            'type' => strtoupper($responseDns->type),
+                            'name' => $responseDns->host,
+                            'content' => $responseDns->data,
+                            'system_flag' => 1,
+                        ]
+                    );
                 }
             } else {
                 return false;
@@ -608,19 +673,21 @@ class CloudFlareService
     public function checkHtmlMetadata($url, $metaName, $metaContent)
     {
         try {
-            $client = new Client([
-                                     'base_uri'        => $url,
-                                     'timeout'         => 0,
-                                     'connect_timeout' => 0,
-                                     //'headers'  => $headers,
-                                     'Accept'          => 'application/json',
-                                 ]);
+            $client = new Client(
+                [
+                    'base_uri' => $url,
+                    'timeout' => 0,
+                    'connect_timeout' => 0,
+                    //'headers'  => $headers,
+                    'Accept' => 'application/json',
+                ]
+            );
 
             $response = $client->request('get', '/');
 
             if ($response->getStatusCode() == Response::HTTP_OK) {
                 $data = $response->getBody()->getContents();
-                $dom  = new Dom;
+                $dom = new Dom;
                 $dom->load($data);
                 $metas = $dom->find('meta');
 
@@ -636,7 +703,6 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-
             return false;
         }
     }
@@ -839,7 +905,6 @@ class CloudFlareService
         */
 
         try {
-
             if ($domain) {
                 $zoneID = $this->zones->getZoneID($domain);
             } else {
@@ -848,12 +913,12 @@ class CloudFlareService
 
             if (empty($options)) {
                 $options = [
-                    'ssl'                      => 'flexible',
-                    'always_use_https'         => 'on',
-                    'origin_pulls'             => 'off',
+                    'ssl' => 'flexible',
+                    'always_use_https' => 'on',
+                    'origin_pulls' => 'off',
                     'opportunistic_encryption' => 'on',
-                    'onion_routing'            => 'on',
-                    'tls13'                    => 'on',
+                    'onion_routing' => 'on',
+                    'tls13' => 'on',
                     'automatic_https_rewrites' => 'on',
                 ];
             }
