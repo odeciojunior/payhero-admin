@@ -77,7 +77,7 @@ class SalesApiController extends Controller
 
             $sale = $saleService->getSaleWithDetails($id);
 
-            if ($sale->owner_id != auth()->user()->account_owner_id) {
+            if (!in_array(auth()->user()->account_owner_id, [$sale->owner_id, $sale->affiliate->user_id])) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
 
