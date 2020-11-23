@@ -33,6 +33,13 @@ class Kernel extends ConsoleKernel
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('05:00');
 
+        // transfer money from transactions for user companies on getnet
+        $schedule->command('verify:transfersgetnet')->dailyAt('11:00');
+        $schedule->command('verify:transfersgetnet')->dailyAt('14:00');
+        $schedule->command('verify:transfersgetnet')->dailyAt('16:00');
+        $schedule->command('verify:transfersgetnet')->dailyAt('20:00');
+        $schedule->command('verify:transfersgetnet')->dailyAt('24:30');
+
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
 
