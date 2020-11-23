@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:transfersgetnet')->dailyAt('14:00');
         $schedule->command('verify:transfersgetnet')->dailyAt('16:00');
         $schedule->command('verify:transfersgetnet')->dailyAt('20:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('24:30');
+        $schedule->command('verify:transfersgetnet')->dailyAt('23:30');
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
