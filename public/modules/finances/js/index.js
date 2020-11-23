@@ -78,7 +78,7 @@ $(document).ready(function () {
                     return;
                 }
 
-                let hasSaleCielo = false;
+                let hasSaleBeforeGetnet = false;
                 let itsApprovedTransactGetnet = false;
 
 
@@ -88,8 +88,8 @@ $(document).ready(function () {
                 $(response.data).each(function (index, value) {
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
 
-                    if (value.company_has_sales_in_cielo) {
-                        hasSaleCielo = true;
+                    if (value.company_has_sale_before_getnet) {
+                        hasSaleBeforeGetnet = true;
                         $("#transfers_company_select").append(data);
                         $("#extract_company_select").append(data);
                     }
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 });
 
 
-                if (itsApprovedTransactGetnet && !hasSaleCielo) {
+                if (itsApprovedTransactGetnet && !hasSaleBeforeGetnet) {
                     approvedGetnet();
                     $("#tabs-view, #text-info-getnet").show();
                     $("#nav-statement-tab").addClass('active');
@@ -110,12 +110,12 @@ $(document).ready(function () {
 
 
                     $("#statement-getnet, .title-getnet").html('Extrato');
-                } else if (!itsApprovedTransactGetnet && hasSaleCielo) {
-                    hasSaleCieloExist();
+                } else if (!itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
+                    hasSaleBeforeGetnetExist();
                     manipulateHTML();
                     $("#statement-getnet").html('Extrato');
-                } else if (itsApprovedTransactGetnet && hasSaleCielo) {
-                    hasSaleCieloExist();
+                } else if (itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
+                    hasSaleBeforeGetnetExist();
                     approvedGetnet();
                     manipulateHTML();
 
@@ -142,7 +142,7 @@ $(document).ready(function () {
         updateAccountStatementData();
     }
 
-    function hasSaleCieloExist() {
+    function hasSaleBeforeGetnetExist() {
         $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
 
         checkAllowed();

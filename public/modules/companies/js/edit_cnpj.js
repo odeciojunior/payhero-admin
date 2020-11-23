@@ -159,9 +159,9 @@ $(document).ready(function () {
 
                     $(".select-gateway-tax").append(`
                         <select id="gateway-release-payment" class="form-control">
-                            <option value="plan-2" ${company.gateway_tax == 6.9 ? 'selected' : ''}>Após postagem de rastreio válida (taxa de 6.9%)</option>
-                            <option value="plan-15" ${company.gateway_tax == 6.5 ? 'selected' : ''}>15 dias (taxa de 6.5%)</option>
-                            <option value="plan-30" ${company.gateway_tax == 5.9 ? 'selected' : ''}>30 dias (taxa de 5.9%)</option>
+                            <option value="plan-2" ${company.gateway_release_money_days == 2 ? 'selected' : ''}> Após postagem de rastreio válida (taxa de ${company.gateway_release_money_days == 2 ? company.gateway_tax : '6.9'}%)</option>
+                            <option value="plan-15" ${company.gateway_release_money_days == 15 ? 'selected' : ''}>15 dias (taxa de ${company.gateway_release_money_days == 15 ? company.gateway_tax : '6.5'}%)</option>
+                            <option value="plan-30" ${company.gateway_release_money_days == 30 ? 'selected' : ''}>30 dias (taxa de ${company.gateway_release_money_days == 30 ? company.gateway_tax : '5.9'}%)</option>
                         </select>
                     `);
 

@@ -1118,6 +1118,7 @@ class SaleService
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
                 ->where('transactions.status_enum', 1)
+                ->whereNotNull('delivery_id')
                 ->whereHas('sale', function($f1) use($salesModel){
                     $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
                        ->orWhere(function($f2) use($salesModel) {

@@ -17,20 +17,21 @@ trait GetnetPrepareCompanyData
 
         $motherName = $user->mother_name;
 
-        if ($user->id_wall_result) {
-
-            $idwall =  json_decode($user->id_wall_result, true);
-
-            $motherName = current(array_map(function ($item) use ($motherName){
-
-                if (isset($item['tipo']) && $item['tipo'] == 'MAE')
-                    return ($item['nome']);
-
-
-                return $motherName;
-
-            }, $idwall['result']['pessoas_relacionadas']));
-
+        if (empty($motherName) && !FoxUtils::isEmpty($user->id_wall_result)
+            && !empty(json_decode($user->id_wall_result, true)['result']['pessoas_relacionadas'])
+        ) {
+            $idwall = json_decode($user->id_wall_result, true);
+            $motherName = current(
+                array_map(
+                    function ($item) use ($user) {
+                        if (isset($item['tipo']) && $item['tipo'] == 'MAE') {
+                            return ($item['nome']);
+                        }
+                        return $user->mother_name;
+                    },
+                    $idwall['result']['pessoas_relacionadas']
+                )
+            );
         }
 
         return [
