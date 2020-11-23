@@ -58,11 +58,10 @@ $(document).ready(function () {
             error: function error(response) {
                 loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
-                $('#btn-integration-model').hide();
             },
             success: function success(response) {
                 loadOnAny('.page-content', true);
-                if (response.pending === false) {
+                if (!response.analyzing && !response.refused) {
                     $('#btn-integration-model').show();
                 } else {
                     $('#btn-integration-model').hide();

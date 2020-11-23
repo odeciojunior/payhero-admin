@@ -292,7 +292,7 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/shopify/js/index.js?v=1244"></script>
+        <script src="{{ asset('modules/shopify/js/index.js?v='. uniqid()) }}"></script>
     @endpush
 
 @endsection

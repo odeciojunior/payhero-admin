@@ -37,16 +37,18 @@ class DomainRecordsApiController extends Controller
                 return response()->json(['message' => 'Domínio não encontrado'], 400);
             }
             $domainProject = $domainModel->with(['project'])->find($domainId);
-            $domain = $domainModel->with([
-                'domainsRecords' => function ($query) use ($domainProject) {
-                    $query->orWhere(
-                        function ($queryWhere) use ($domainProject) {
-                            $queryWhere->where('type', 'A');
-                            $queryWhere->where('name', $domainProject->name);
-                        }
-                    )->orderBy('id', 'desc');
-                },
-            ])->find($domainId);
+            $domain = $domainModel->with(
+                [
+                    'domainsRecords' => function ($query) use ($domainProject) {
+                        $query->orWhere(
+                            function ($queryWhere) use ($domainProject) {
+                                $queryWhere->where('type', 'A');
+                                $queryWhere->where('name', $domainProject->name);
+                            }
+                        )->orderBy('id', 'desc');
+                    },
+                ]
+            )->find($domainId);
 
             if (!Gate::allows('edit', [$domainProject->project])) {
                 return response()->json(['message' => 'Sem permissão para editar este domínio'], 400);
@@ -55,17 +57,22 @@ class DomainRecordsApiController extends Controller
                 return response()->json(['message' => 'Domínio não encontrado'], 400);
             }
 
-            return DomainRecordsIndexResource::make([
-                'domain' => $domain,
-                'domainRecords' => $domain->domainsRecords,
+            return DomainRecordsIndexResource::make(
+                [
+                    'domain' => $domain,
+                    'domainRecords' => $domain->domainsRecords,
 
-            ]);
+                ]
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 
@@ -79,17 +86,22 @@ class DomainRecordsApiController extends Controller
             DB::beginTransaction();
             $requestData = $request->validated();
 
-            $domain = $domainModel->with([
-                'domainsRecords',
-                'project'
-            ])->find(current(Hashids::decode($requestData['domain'])));
+            $domain = $domainModel->with(
+                [
+                    'domainsRecords',
+                    'project'
+                ]
+            )->find(current(Hashids::decode($requestData['domain'])));
 
             if (empty($domain)) {
                 DB::rollBack();
 
-                return response()->json([
-                    'message' => 'Ocorreu um erro, dominio nao encontrado!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, dominio nao encontrado!',
+                    ],
+                    400
+                );
             }
             $cloudFlareService->setZone($domain->name);
 
@@ -195,37 +207,52 @@ class DomainRecordsApiController extends Controller
     {
         try {
             if (empty($project) || empty($domain) || empty($record)) {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
             }
 
             $recordId = current(Hashids::decode($record));
             if (empty($recordId)) {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
             }
 
             $record = (new DomainRecord())->with(['domain', 'domain.project'])->find($recordId);
 
             if (empty($record->domain->project) || !Gate::allows('edit', [$record->domain->project])) {
-                return response()->json([
-                    'message' => 'Sem permissão para remover a entrada',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para remover a entrada',
+                    ],
+                    400
+                );
             }
 
             $recordDeleted = (new DomainRecordsService($record->domain))->verifyRecordDelete($record);
 
-            return response()->json([
-                'message' => $recordDeleted['message'],
-            ], $recordDeleted['success'] == true ? 200 : 400);
+            return response()->json(
+                [
+                    'message' => $recordDeleted['message'],
+                ],
+                $recordDeleted['success'] == true ? 200 : 400
+            );
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
 
-            return response()->json([
-                'message' => $message,
-            ], 400);
+            return response()->json(
+                [
+                    'message' => $message,
+                ],
+                400
+            );
         }
     }
 
@@ -243,26 +270,27 @@ class DomainRecordsApiController extends Controller
             $domain = $domainModel->find(current(Hashids::decode($domain)));
             $domainRecord = $domainRecordModel->find(current(Hashids::decode($domainRecord)));
 
-            if (!Gate::allows('edit', [$domainRecord->domain->project])) {
-                return response()->json([
-                    'message' => 'Sem permissão para remover a entrada',
-                ], 400);
+            if (empty($domain) || empty($domainRecord) || !Gate::allows('edit', [$domainRecord->domain->project])) {
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para remover a entrada',
+                    ],
+                    400
+                );
             }
 
             if ($domainRecord->system_flag) {
-                return response()->json([
-                    'message' => 'Você não tem permissão para alterar este proxy',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Você não tem permissão para alterar este proxy',
+                    ],
+                    400
+                );
             }
 
-            if ($domainRecord->type == 'MX' || $domainRecord->type == 'TXT') {
+            $proxy = true;
+            if ($domainRecord->type == 'MX' || $domainRecord->type == 'TXT' || $request->input('proxy') != '1') {
                 $proxy = false;
-            } else {
-                if ($request->input('proxy') == '1') {
-                    $proxy = true;
-                } else {
-                    $proxy = false;
-                }
             }
 
             $data = [
@@ -278,27 +306,40 @@ class DomainRecordsApiController extends Controller
                 $data
             );
 
-            if (!$response->success) {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ], 400);
-            }
-            $domainRecord->update([
-                'proxy' => $data['proxied'],
-            ]);
+            if ($response) {
+                $domainRecord->update(
+                    [
+                        'proxy' => $data['proxied'],
+                    ]
+                );
 
-            return response()->json([
-                'message' => 'Proxy atualizado com sucesso!',
-                'data' => [
-                    'domain' => $domain->id_code,
+                return response()->json(
+                    [
+                        'message' => 'Proxy atualizado com sucesso!',
+                        'data' => [
+                            'domain' => $domain->id_code,
+                        ],
+                    ],
+                    200
+                );
+            }
+
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
                 ],
-            ], 200);
+                400
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 }

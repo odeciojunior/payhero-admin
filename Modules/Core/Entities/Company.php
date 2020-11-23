@@ -157,7 +157,8 @@ class Company extends Model
         'braspag_status',
         'braspag_merchant_id',
         'braspag_merchant_homolog_id',
-        'id_wall_result'
+        'id_wall_result',
+        'block_checkout'
     ];
     /**
      * @var bool
