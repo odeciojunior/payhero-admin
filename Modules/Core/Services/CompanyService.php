@@ -13,7 +13,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Tracking;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
@@ -389,30 +389,6 @@ class CompanyService
                 return true;
             }
             // informações complementares
-            /*if (empty($company->patrimony)) {
-                return true;
-            }
-            if (empty($company->state_fiscal_document_number)) {
-                return true;
-            }
-            if (empty($company->business_entity_type)) {
-                return true;
-            }
-            if (empty($company->economic_activity_classification_code)) {
-                return true;
-            }
-            if (empty($company->monthly_gross_income)) {
-                return true;
-            }
-            if (empty($company->founding_date)) {
-                return true;
-            }
-            if (empty($company->federal_registration_status_date)) {
-                return true;
-            }
-            if (empty($company->social_value)) {
-                return true;
-            }
             if (empty($company->document_number)) {
                 return true;
             }
@@ -424,7 +400,7 @@ class CompanyService
             }
             if (empty($company->document_issuer_state)) {
                 return true;
-            }*/
+            }
         }
 
         if (empty($company->fantasy_name)) {
@@ -543,30 +519,6 @@ class CompanyService
                 $arrayFields[] = 'country';
             }
             // informações complementares
-            if (empty($company->patrimony)) {
-                $arrayFields[] = 'patrimony';
-            }
-            if (empty($company->state_fiscal_document_number)) {
-                $arrayFields[] = 'state_fiscal_document_number';
-            }
-            if (empty($company->business_entity_type)) {
-                $arrayFields[] = 'business_entity_type';
-            }
-            if (empty($company->economic_activity_classification_code)) {
-                $arrayFields[] = 'economic_activity_classification_code';
-            }
-            if (empty($company->monthly_gross_income)) {
-                $arrayFields[] = 'monthly_gross_income';
-            }
-            if (empty($company->founding_date)) {
-                $arrayFields[] = 'founding_date';
-            }
-            if (empty($company->federal_registration_status_date)) {
-                $arrayFields[] = 'federal_registration_status_date';
-            }
-            if (empty($company->social_value)) {
-                $arrayFields[] = 'social_value';
-            }
             if (empty($company->document_number)) {
                 $arrayFields[] = 'document_number';
             }

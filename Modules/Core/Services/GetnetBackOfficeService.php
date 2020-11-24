@@ -331,7 +331,7 @@ class GetnetBackOfficeService extends GetnetService
     public function createPjCompany(Company $company)
     {
         $url = 'v1/mgm/pj/create-presubseller';
-        $data = $this->getPrepareDataCreatePjCompany($company);
+        $data = $this->getDataToCreatePjCompany($company);
 
         return $this->sendCurl($url, 'POST', $data, $company->id);
     }

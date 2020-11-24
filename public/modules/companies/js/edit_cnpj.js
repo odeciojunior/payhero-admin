@@ -34,9 +34,6 @@ $(document).ready(function () {
     var companyBankUpdateForm = $("#company_bank_update_form");
     var companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
     initLinks();
-    // $('#patrimony').mask('#.###,#0', {reverse: true});
-    // $('#social_value').mask('#.###,#0', {reverse: true});
-    // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
     if (window.location.search.split('&').length == 2) {
         if (window.location.search.split('&')[1] == 'tab=documents') {
             $('#company-nav').removeClass('active');
@@ -127,7 +124,6 @@ $(document).ready(function () {
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
                 $('#company_document').val(company.company_document);
-                $('#business_website').val(company.business_website);
                 $('#support_email').val(company.support_email);
                 $('#support_telephone').val(company.support_telephone);
                 $('#zip_code').val(company.zip_code);
@@ -138,14 +134,6 @@ $(document).ready(function () {
                 $('#state').val(company.state);
                 $('#city').val(company.city);
                 $('#country').val(company.country);
-                $('#patrimony').val(company.patrimony);
-                $('#state_fiscal_document_number').val(company.state_fiscal_document_number);
-                $('#business_entity_type').val(company.business_entity_type);
-                $('#economic_activity_classification_code').val(company.economic_activity_classification_code);
-                $('#monthly_gross_income').val(company.monthly_gross_income);
-                $('#founding_date').val(company.founding_date);
-                $('#federal_registration_status_date').val(company.federal_registration_status_date);
-                $('#social_value').val(company.social_value);
                 $('#document_issue_date').val(company.document_issue_date);
                 $('#document_issuer').val(company.document_issuer);
                 $('#document_issuer_state').val(company.document_issuer_state);
@@ -169,12 +157,6 @@ $(document).ready(function () {
                     $('#nav_tax_gateways').removeAttr('hidden');
                 }
 
-                $('#patrimony').unmask();
-                $('#patrimony').mask('#.##0,00', {reverse: true});
-                $('#social_value').unmask();
-                $('#social_value').mask('#.##0,00', {reverse: true});
-                $('#monthly_gross_income').unmask();
-                $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
 
                 if (company.has_project) {
                     $('#active_flag').attr('disabled', true);

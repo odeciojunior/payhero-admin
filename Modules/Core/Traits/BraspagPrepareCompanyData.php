@@ -33,7 +33,7 @@ trait BraspagPrepareCompanyData
             'ContactName' => FoxUtils::getPortionOfString($user->name, 0, 100),
             'ContactPhone' => FoxUtils::formatCellPhoneBraspag($user->cellphone),
             'MailAddress' => FoxUtils::getPortionOfString($user->email, 0, 50),
-            'Website' => $company->business_website ?? null,
+            'Website' => null,
             'Address' => $address,
             'BankAccount' => $this->getBankData($company),
             'Agreement' => [

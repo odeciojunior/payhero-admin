@@ -196,43 +196,6 @@ class CompanyPresenter extends Presenter
             $this->entity->contract_document_status == 3;
     }
 
-    public function getFederalRegistrationStatus($federalRegistrationStatus = null)
-    {
-        $company = $this->entity;
-        $status = $federalRegistrationStatus ?? $company->federal_registration_status;
-        if (is_numeric($status)) {
-            switch ($status) {
-                case 1:
-                    return 'active';
-                case 2:
-                    return 'suspended';
-                case 3:
-                    return 'unfit';
-                case 4:
-                    return 'dactivated';
-                case 5:
-                    return 'nulified';
-            }
-
-            return '';
-        } else {
-            switch ($status) {
-                case 'active':
-                    return 1;
-                case 'suspended':
-                    return 2;
-                case 'unfit':
-                    return 3;
-                case 'dactivated':
-                    return 4;
-                case 'nulified':
-                    return 5;
-            }
-
-            return '';
-        }
-    }
-
     public function getAccountType($type = null)
     {
         $company = $this->entity;
@@ -293,43 +256,6 @@ class CompanyPresenter extends Presenter
                     return 5;
                 case 'pending' :
                     return 6;
-            }
-
-            return '';
-        }
-    }
-
-    public function getStatusBraspag($status = null)
-    {
-        $company = $this->entity;
-        $status = $status ?? $company->braspag_status;
-        if (is_numeric($status)) {
-            switch ($status) {
-                case 1:
-                    return 'Approved';
-                case 2:
-                    return 'ApprovedWithRestriction';
-                case 3:
-                    return 'Rejected';
-                case 4:
-                    return 'UnderAnalysis';
-                case 5:
-                    return 'Error';
-            }
-
-            return '';
-        } else {
-            switch ($status) {
-                case 'Approved':
-                    return 1;
-                case 'ApprovedWithRestriction':
-                    return 2;
-                case 'Rejected':
-                    return 3;
-                case 'UnderAnalysis':
-                    return 4;
-                case 'Error':
-                    return 5;
             }
 
             return '';
