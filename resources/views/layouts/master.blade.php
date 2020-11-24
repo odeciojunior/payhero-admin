@@ -6,14 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description" content="cloudfox">
+    <meta name="app-debug" content="{{ getenv('APP_DEBUG') }}">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
-    @if(getenv('APP_ENV') === 'production')
+    @if(getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'false')
+
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    @elseif(getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'true')
+        <style>
+            .site-navbar {
+                background-color: darkblue !important
+            }
+
+            .site-menubar {
+                background-color: darkblue !important
+            }
+        </style>
     @endif
 
-    <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
+<!-- access token used for api ajax requests -->
+    <meta name="access-token"
+          content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
@@ -48,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=9') }}">
     @stack('css')
 
-    @if(env('APP_ENV', 'production') == 'production')
+    @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
             Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
