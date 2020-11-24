@@ -235,24 +235,26 @@ class GetnetBackOfficeService extends GetnetService
 
             if ($sale) {
 
-                try {
+                if ($sale->created_at > '2020-10-30 13:28:51.0') {
 
-                    //dd(json_decode($sale->saleGatewayRequests));
-                    $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->id . '-' . $sale->attempts;
+                } else {
 
-                    //dd($sale->saleGatewayRequests, $sale->saleGatewayRequests->last(), $gatewayResult);
-                    if (isset($gatewayResult->sale_id)) {
-
-                        $queryParameters['order_id'] = $gatewayResult->sale_id;
-                    }
-                } catch (Exception $exception) {
-
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->attempts;
                 }
+
+                $queryParameters['order_id'] = $orderId;
             }
         }
 
-        //$queryParameters['order_id'] = 'w3RoVw0Z-860548-1';
-        //dd($queryParameters);
+        if (request('debug')) {
+
+            echo '<pre>';
+            print_r($queryParameters);
+            echo '</pre>';
+            echo '<hr>';
+        }
+
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);

@@ -192,17 +192,7 @@ class TransfersController extends Controller
             $transactions = (new GetNetStatementService())->performStatement($result);
             $transactions = collect($transactions);
 
-            $totalInPeriod = 0;
-
-            foreach ($transactions as $transaction) {
-
-                $totalInPeriod += $transaction->summaryValue;
-            }
-
-            return response()->json([
-                'transactions' => $transactions,
-                'totalInPeriod' => $totalInPeriod,
-            ]);
+            return response()->json($transactions);
         } catch (Exception $exception) {
             report($exception);
 

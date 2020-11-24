@@ -5,14 +5,11 @@ namespace Modules\Transfers\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use stdClass;
 
 class GetNetStatementService
 {
-
-    protected $data = [];
 
     const TRANSACTION_STATUS_CODE_APROVADO = 0;
     const TRANSACTION_STATUS_CODE_AGUARDANDO = 70;
@@ -30,6 +27,13 @@ class GetNetStatementService
 
     const TRANSACTION_SIGN_MINUS = '-';
     const TRANSACTION_SIGN_MORE = '+';
+
+    const SEARCH_STATUS_ALL = 'ALL';
+    const SEARCH_STATUS_WAITING_FOR_VALID_POST = 'WAITING_FOR_VALID_POST';
+    const SEARCH_STATUS_WAITING_LIQUIDATION = 'WAITING_LIQUIDATION';
+    const SEARCH_STATUS_PAID = 'PAID';
+    const SEARCH_STATUS_REVERSED = 'REVERSED';
+    const SEARCH_STATUS_UNKNOW = 'UNKNOW';
 
     private function translateTransactionStatusCode(int $status)
     {
@@ -82,11 +86,17 @@ class GetNetStatementService
 
     public function performStatement(stdClass $data)
     {
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        //dd($transactions);
-        /*echo '<pre>';
-        print_r($transactions);
-        exit;*/
+        $transactions = $data->list_transactions ?? [];
+        //$transactions = array_reverse($data->list_transactions) ?? [];
+
+        if (request('debug')) {
+
+            echo '<pre>';
+            print_r($transactions);
+            echo '</pre>';
+            exit;
+        }
+
         /*$total = 0;
         $release_status_sim_Subseller_rate_closing_date_null = 0;
         foreach ($transactions as $item){
@@ -107,7 +117,12 @@ class GetNetStatementService
         }
 
         dd($release_status_sim_Subseller_rate_closing_date_null, $total, FoxUtils::formatMoney($total / 100));*/
-        array_map(function ($item) {
+
+        $totalInPeriod = 0;
+
+        $data = [];
+
+        foreach ($transactions as $item) {
 
             if (isset($item->summary) && isset($item->details) && is_array($item->details) && count($item->details)) {
 
@@ -118,25 +133,13 @@ class GetNetStatementService
                 $arrayOrderId = explode('-', $orderId);
 
                 $transactionDate = $summary->transaction_date ?? '';                                                    // Data/Hora da transação.
-
-                //$installmentDate = $details[0]->installment_date ?? '';
-                //$installmentAmount = $details[0]->installment_amount ?? 0;
                 $paymentDate = $details[0]->payment_date ?? '';                                                         // Data calculada pelo sistema para o pagamento do valor ao subseller. Esta data pode ser alterada no momento da liberação do pagamento do item.
                 $subSellerRateClosingDate = $details[0]->subseller_rate_closing_date ?? '';                             // Data em que o registro de pagamento foi enviado para a CIP.
                 $subSellerRateConfirmDate = $details[0]->subseller_rate_confirm_date ?? '';                             // Data recebida no 2º arquivo de retorno da CIP com a confirmação pagamento a ser efetuado pelo banco.
                 $subSellerRateAmount = $details[0]->subseller_rate_amount ?? 0;                                         // Valor do repasse para o subseller em centavos.
-                //$subSellerRatePercentage = $details[0]->subseller_rate_percentage ?? 0;
+                $subSellerRateAmount = $summary->transaction_sign == '-' ? ($subSellerRateAmount * -1) : $subSellerRateAmount;
 
-                /*try {
-                    if (request('statement_data_type') == 'liquidation_date') {
-                        $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
-                    } else {
-                        $transactionDate = Carbon::parse($transactionDate)->format('d/m/Y');
-                    }
-                } catch (Exception $exception) {
-                }*/
-
-                foreach (['installmentDate', 'paymentDate', 'transactionDate'] as $date) {
+                foreach (['installmentDate', 'paymentDate', 'transactionDate', 'subSellerRateClosingDate', 'subSellerRateConfirmDate'] as $date) {
 
                     if (!empty(${$date})) {
 
@@ -150,55 +153,120 @@ class GetNetStatementService
                 }
 
                 $status = $this->getStatus(
+                    $summary->transaction_status_code,
+                    $summary->transaction_sign,
                     $details[0]->release_status,                                                                        // Indicada se o agendamento já foi liberado para pagamento S/N.
                     $details[0]->subseller_rate_confirm_date,
-                    $paymentDate
                 );
+
+                // Definido em 24/04/2020
+                // Se subseller_rate_confirm_date exibo subseller_rate_closing_date caso contrario, exibo o payment_date
+                $summaryDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
-                    'originalOrderId' => $orderId,
-                    'transactionDate' => $transactionDate,
-                    //'installmentDate' => $installmentDate,
-                    'paymentDate' => $paymentDate,
-                    //'installmentAmount' => FoxUtils::formatMoney($installmentAmount / 100),
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
-                    //'subSellerRateSumTotalAmount' => $subSellerRateAmount,
-                    //'subSellerRatePercentage' => $subSellerRatePercentage,
-                    //'subSellerRateClosingDate' => $subSellerRateClosingDate ? Carbon::parse($subSellerRateClosingDate)->format('d/m/Y') : '',
-                    //'subSellerRateConfirmDate' => $subSellerRateConfirmDate ? Carbon::parse($subSellerRateConfirmDate)->format('d/m/Y') : '',
-                    'statusNumeric' => $status[0],
-                    'status' => $status[1],
                     'isInvite' => $subSellerRateAmount < 500,
-                    'summaryStatus' => $this->translateTransactionStatusCode($summary->transaction_status_code),
-                    'summaryType' => $this->translateTransactionSign($summary->transaction_sign),
-                    'summaryValue' => $summary->transaction_sign == '-' ? ($subSellerRateAmount * -1) : $subSellerRateAmount,
+                    'transactionDate' => $transactionDate,
+                    'summaryStatus' => $status,
+                    'summaryValue' => $subSellerRateAmount,
+                    'summaryDate' => $summaryDate,
+                    '_originalOrderId' => $orderId,
+                    '_summaryTransactionStatusCode' => $summary->transaction_status_code,
+                    '_summaryTranslateTransactionStatusCode' => $this->translateTransactionStatusCode($summary->transaction_status_code),
+                    '_summaryTranslateSign' => $this->translateTransactionSign($summary->transaction_sign),
+                    '_summarySign' => $summary->transaction_sign,
+                    '_paymentDate' => $paymentDate,
+                    '_release_status' => $details[0]->release_status,
+                    '_subSellerRateClosingDate' => $subSellerRateClosingDate,
+                    '_subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                 ];
 
-                if (request('status') == 'all' || !in_array(request('status'), ['all', 1, 2, 3])) {
-                    $this->data[] = $statement;
-                } elseif (request('status') == $status) {
-                    $this->data[] = $statement;
-                }
-            }
-        }, $transactions);
+                $totalInPeriod += $subSellerRateAmount;
 
-        return $this->data;
+                // TODO Ignorar nessa fase inicial que não conhecemos todos os comportamentos da GETNET
+                if ($summary->transaction_sign == '+') {
+
+                    switch (request('status')) {
+
+                        case self::SEARCH_STATUS_ALL:
+
+                            // TODO Ignorar nessa fase inicial que não conhecemos todos os comportamentos da GETNET
+                            if (!in_array($statement->summaryStatus['identify'], [self::SEARCH_STATUS_UNKNOW])) {
+
+                                $data[] = $statement;
+                            }
+                            break;
+
+                        case self::SEARCH_STATUS_PAID:
+                            //if ($statement->summaryStatus['identify'] != self::SEARCH_STATUS_REVERSED) {
+
+                            $data[] = $statement;
+                            //}
+                            break;
+                        case self::SEARCH_STATUS_WAITING_LIQUIDATION:
+                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_LIQUIDATION) {
+
+                                $data[] = $statement;
+                            }
+                            break;
+                        case self::SEARCH_STATUS_WAITING_FOR_VALID_POST:
+                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
+
+                                $data[] = $statement;
+                            }
+                            break;
+                        case self::SEARCH_STATUS_REVERSED:
+                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_REVERSED) {
+
+                                $data[] = $statement;
+                            }
+                            break;
+                    }
+                }
+
+            }
+        }
+
+        return [
+            'totalInPeriod' => FoxUtils::formatMoney($totalInPeriod / 100),
+            'transactions' => $data,
+        ];
     }
 
-    private function getStatus($releaseStatus, $rateConfirmDate)
+    // TODO mapear essas situações
+    private function getStatus($transactionStatusCode, $transactionSign, $releaseStatus, $subSellerRateConfirmDate)
     {
-        $transferPresent = (new Transfer())->present();
 
-        if ($releaseStatus == 'N') {
+        if ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA) {
 
-            return [1, $transferPresent->getStatusGetnet(1)];
-        } elseif ($releaseStatus == 'S' && is_null($rateConfirmDate)) {
+            $status = 'Estornada';
+            $identify = self::SEARCH_STATUS_REVERSED;
 
-            return [2, $transferPresent->getStatusGetnet(2)];
+        } elseif ($releaseStatus == 'N') {
+
+            $status = 'Aguardando postagem válida';
+            $identify = self::SEARCH_STATUS_WAITING_FOR_VALID_POST;
+
+        } elseif ($releaseStatus == 'S' && is_null($subSellerRateConfirmDate)) {
+
+            $status = 'Aguardando liquidação';
+            $identify = self::SEARCH_STATUS_WAITING_LIQUIDATION;
+
+        } elseif ($releaseStatus == 'S' && $transactionSign == '+' && !is_null($subSellerRateConfirmDate) && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
+
+            $status = 'Pago';
+            $identify = self::SEARCH_STATUS_PAID;
+
         } else {
 
-            return [3, $transferPresent->getStatusGetnet(3)];
+            $status = '- - - -';
+            $identify = self::SEARCH_STATUS_UNKNOW;
         }
+
+        return [
+            'status' => $status,
+            'identify' => $identify,
+        ];
     }
 }

@@ -143,7 +143,7 @@ $(document).ready(function () {
         paginationStatement();
     }
 
-    function paginationStatement(){
+    function paginationStatement() {
         $("#pagination-statement").jPages({
             containerID: "table-statement-body",
             perPage: 10,
@@ -798,9 +798,11 @@ $(document).ready(function () {
     }
 
     let statusExtract = {
-        1: 'pendente',
-        2: 'info',
-        3: 'success'
+        'WAITING_FOR_VALID_POST': 'pendente',
+        'WAITING_LIQUIDATION': 'info',
+        'PAID': 'success',
+        'REVERSED': 'warning',
+        'UNKNOW': 'error',
     }
 
 
@@ -864,17 +866,30 @@ $(document).ready(function () {
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
-                                        <span class="badge badge-sm badge-${statusExtract[item.statusNumeric]} p-2">${item.status}</span>
+                                        <span class="badge badge-sm badge-${statusExtract[item.summaryStatus.identify]} p-2">${item.summaryStatus.status}</span>
                                      </td>
                                     <td style="vertical-align: middle;">
-                                        ${item.paymentDate} <br>
-                                        <small>(${item.summaryStatus} - Tipo: ${item.summaryType})</small>
+                                        ${item.summaryDate}
                                     </td>
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
                     updateClassHTML(dataTable);
                 });
+
+                let totalInPeriod = response.totalInPeriod;
+
+                let isNegativeStatement = false;
+                if (totalInPeriod < 1) {
+                    isNegativeStatement = true;
+                }
+
+                $('#statement-money #available-in-period-statement').html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                        ${totalInPeriod}
+                    </span>`
+                );
+                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
                 paginationStatement();
 
@@ -1083,6 +1098,22 @@ $(document).ready(function () {
         paginationStatement();
     });
 
+    let rangesToDateRangeStatement = {
+        'Hoje': [moment(), moment()],
+        'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+        'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+        'Este mês': [moment().startOf('month'), moment().endOf('month')],
+        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    };
+
+    let envDebug = $("meta[name=app-debug]").attr('content');
+
+    if (envDebug == 'true') {
+
+        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    }
+
     $('#date_range_statement').daterangepicker({
         maxSpan: {
             days: 31,
@@ -1107,14 +1138,7 @@ $(document).ready(function () {
             monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
             firstDay: 0
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
+        ranges: rangesToDateRangeStatement
     });
 
     $("#bt_get_csv").on("click", function () {

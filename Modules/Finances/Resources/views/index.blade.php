@@ -401,10 +401,12 @@
                                                 <label for="statement_status_select">Status</label>
                                                 <select class="form-control select-pad" name="status"
                                                         id="statement_status_select">
-                                                    <option value="all">Todos</option>
-                                                    <option value="1">Aguardando postagem válida</option>
-                                                    <option value="2">Aguardando liquidação</option>
-                                                    <option value="3">Pago</option>
+                                                    <option value="ALL">Todos</option>
+                                                    <option value="WAITING_FOR_VALID_POST">Aguardando postagem válida
+                                                    </option>
+                                                    <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
+                                                    <option value="PAID">Pago</option>
+                                                    <option value="REVERSED">Estornada</option>
                                                 </select>
                                             </div>
                                         </div>
