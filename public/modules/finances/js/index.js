@@ -140,6 +140,20 @@ $(document).ready(function () {
     function approvedGetnet() {
         $('#nav-statement-tab, #nav-statement').show();
         updateAccountStatementData();
+        paginationStatement();
+    }
+
+    function paginationStatement(){
+        $("#pagination-statement").jPages({
+            containerID: "table-statement-body",
+            perPage: 10,
+            startPage: 1,
+            startRange: 1,
+            first: false,
+            previous: '',
+            next: '',
+            last: false,
+        });
     }
 
     function hasSaleBeforeGetnetExist() {
@@ -789,17 +803,6 @@ $(document).ready(function () {
         3: 'success'
     }
 
-    let perPage = 10;
-    const state = {
-        page: 1,
-        perPage,
-        totalPage: 0,
-        maxVisibleButtons: 100
-    }
-
-    let page = 0;
-    let start = 0;
-    let end = 0;
 
     function updateAccountStatementData() {
         loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
@@ -838,102 +841,26 @@ $(document).ready(function () {
                     return;
                 }
 
-                let totalInPeriod = response.totalInPeriod;
-
-                let isNegativeStatement = false;
-                if (totalInPeriod < 1) {
-                    isNegativeStatement = true;
-                }
-
-                totalInPeriod = totalInPeriod / 100;
-
-                $('#statement-money #available-in-period-statement').html(`
-                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${(totalInPeriod.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                        })
-                    )}</span>`
-                );
-                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
-
-                $(".numbers").show();
-
-                state.totalPage = Math.ceil(items.length / perPage);
-
-                const controls = {
-                    next() {
-                        state.page++;
-
-                        if (state.page > state.totalPage) {
-                            state.page--;
-                        }
-                    },
-                    prev() {
-                        state.page--;
-
-                        if (state.page < 1) {
-                            state.page++;
-                        }
-                    },
-                    goTo(page) {
-                        if (page < 1) {
-                            page = 1;
-                        }
-                        state.page = +page;
-
-                        if (page > state.totalPage) {
-                            state.page = state.totalPage;
-                        }
-                    },
-                    createListeners(exec = false) {
-
-                        if (exec) {
-                            controls.goTo(1);
-                            update();
-                        }
-                        exec = false;
-                        $('.first').on('click', function () {
-                            controls.goTo(1);
-                            update();
-                        })
-                        $('.last').on('click', function () {
-                            controls.goTo(state.totalPage);
-                            update();
-                        })
-                        $('.next').on('click', function () {
-                            controls.next();
-                            update();
-                        })
-                        $('.prev').on('click', function () {
-                            controls.prev();
-                            update();
-                        })
-
-                    }
-                }
-
-                const list = {
-                    create(item) {
-                        let dataTable = `<tr>
+                items.forEach(function (item) {
+                    let dataTable = `<tr>
                                         <td style="vertical-align: middle;">
                                         Transação`;
 
-                        if (item.isInvite) {
-                            dataTable += `
+                    if (item.isInvite) {
+                        dataTable += `
                                 <a class="">
                                     <span>#${item.orderId}</span>
                                 </a>
                             `;
-                        } else {
-                            dataTable += `
+                    } else {
+                        dataTable += `
                                  <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
                                     <span style="color:black;">#${item.orderId}</span>
                                 </a>
                             `;
-                        }
+                    }
 
-                        dataTable += `<br>
+                    dataTable += `<br>
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
@@ -946,81 +873,195 @@ $(document).ready(function () {
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
-                        updateClassHTML(dataTable);
-                    },
-                    update() {
-                        page = state.page - 1;
-                        start = page * state.perPage;
-                        end = start + state.perPage;
+                    updateClassHTML(dataTable);
+                });
 
-                        const paginatedItems = items.slice(start, end);
-                        updateClassHTML();
-                        paginatedItems.forEach(list.create);
-                    }
-                }
+                paginationStatement();
 
-                const buttons = {
-                    create(number) {
-                        const button = document.createElement('div');
-                        button.innerHTML = number;
 
-                        if (state.page == number) {
-                            button.classList.add('active');
-                        }
+                /* let totalInPeriod = response.totalInPeriod;
 
-                        button.addEventListener('click', (event) => {
-                            const page = event.target.innerText;
+                 let isNegativeStatement = false;
+                 if (totalInPeriod < 1) {
+                     isNegativeStatement = true;
+                 }
 
-                            controls.goTo(page);
-                            update();
-                        })
+                 totalInPeriod = totalInPeriod / 100;
 
-                        button.classList.add('btn', 'nav-btn');
+                 $('#statement-money #available-in-period-statement').html(`
+                     <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                         ${(totalInPeriod.toLocaleString('pt-BR', {
+                             style: 'currency',
+                             currency: 'BRL'
+                         })
+                     )}</span>`
+                 );
+                 loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
 
-                        $(".pagination .numbers").append(button);
+                 $(".numbers").show();
 
-                    },
-                    update() {
-                        $(".pagination .numbers").html('');
-                        const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+                 state.totalPage = Math.ceil(items.length / perPage);
 
-                        for (let page = maxLeft; page <= maxRight; page++) {
-                            buttons.create(page);
-                        }
-                    },
-                    calculateMaxVisible() {
-                        let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
-                        let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                 const controls = {
+                     next() {
+                         state.page++;
 
-                        if (maxLeft < 1) {
-                            maxLeft = 1;
-                            maxRight = state.maxVisibleButtons;
-                        }
+                         if (state.page > state.totalPage) {
+                             state.page--;
+                         }
+                     },
+                     prev() {
+                         state.page--;
 
-                        if (maxRight > state.totalPage) {
-                            maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
-                            maxRight = state.totalPage;
+                         if (state.page < 1) {
+                             state.page++;
+                         }
+                     },
+                     goTo(page) {
+                         if (page < 1) {
+                             page = 1;
+                         }
+                         state.page = +page;
 
-                            if (maxLeft < 1) {
-                                maxLeft = 1;
-                            }
-                        }
-                        return {maxLeft, maxRight};
-                    }
+                         if (page > state.totalPage) {
+                             state.page = state.totalPage;
+                         }
+                     },
+                     createListeners(exec = false) {
 
-                }
+                         if (exec) {
+                             controls.goTo(1);
+                             update();
+                         }
+                         exec = false;
+                         $('.first').on('click', function () {
+                             controls.goTo(1);
+                             update();
+                         })
+                         $('.last').on('click', function () {
+                             controls.goTo(state.totalPage);
+                             update();
+                         })
+                         $('.next').on('click', function () {
+                             controls.next();
+                             update();
+                         })
+                         $('.prev').on('click', function () {
+                             controls.prev();
+                             update();
+                         })
 
-                function update() {
-                    list.update();
-                    buttons.update();
-                }
+                     }
+                 }
 
-                function init() {
-                    update();
-                    controls.createListeners(true);
-                }
+                 const list = {
+                     create(item) {
+                         let dataTable = `<tr>
+                                         <td style="vertical-align: middle;">
+                                         Transação`;
 
-                init();
+                         if (item.isInvite) {
+                             dataTable += `
+                                 <a class="">
+                                     <span>#${item.orderId}</span>
+                                 </a>
+                             `;
+                         } else {
+                             dataTable += `
+                                  <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
+                                     <span style="color:black;">#${item.orderId}</span>
+                                 </a>
+                             `;
+                         }
+
+                         dataTable += `<br>
+                                         <small>(Data da venda: ${item.transactionDate})</small>
+                                      </td>
+                                      <td>
+                                         <span class="badge badge-sm badge-${statusExtract[item.statusNumeric]} p-2">${item.status}</span>
+                                      </td>
+                                     <td style="vertical-align: middle;">
+                                         ${item.paymentDate} <br>
+                                         <small>(${item.summaryStatus} - Tipo: ${item.summaryType})</small>
+                                     </td>
+                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
+                                 </tr>
+                             `;
+                         updateClassHTML(dataTable);
+                     },
+                     update() {
+                         page = state.page - 1;
+                         start = page * state.perPage;
+                         end = start + state.perPage;
+
+                         const paginatedItems = items.slice(start, end);
+                         updateClassHTML();
+                         paginatedItems.forEach(list.create);
+                     }
+                 }
+
+                 const buttons = {
+                     create(number) {
+                         const button = document.createElement('div');
+                         button.innerHTML = number;
+
+                         if (state.page == number) {
+                             button.classList.add('active');
+                         }
+
+                         button.addEventListener('click', (event) => {
+                             const page = event.target.innerText;
+
+                             controls.goTo(page);
+                             update();
+                         })
+
+                         button.classList.add('btn', 'nav-btn');
+
+                         $(".pagination .numbers").append(button);
+
+                     },
+                     update() {
+                         $(".pagination .numbers").html('');
+                         const {maxLeft, maxRight} = buttons.calculateMaxVisible();
+
+                         for (let page = maxLeft; page <= maxRight; page++) {
+                             buttons.create(page);
+                         }
+                     },
+                     calculateMaxVisible() {
+                         let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
+                         let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
+
+                         if (maxLeft < 1) {
+                             maxLeft = 1;
+                             maxRight = state.maxVisibleButtons;
+                         }
+
+                         if (maxRight > state.totalPage) {
+                             maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
+                             maxRight = state.totalPage;
+
+                             if (maxLeft < 1) {
+                                 maxLeft = 1;
+                             }
+                         }
+                         return {maxLeft, maxRight};
+                     }
+
+                 }
+
+                 function update() {
+                     list.update();
+                     buttons.update();
+                 }
+
+                 function init() {
+                     update();
+                     controls.createListeners(true);
+                 }
+
+                 init();*/
 
                 function updateClassHTML(dataTable = 0) {
                     if (dataTable.length > 0) {
@@ -1039,9 +1080,13 @@ $(document).ready(function () {
     $(document).on("click", "#bt_filtro_statement", function (e) {
         e.preventDefault();
         updateAccountStatementData();
+        paginationStatement();
     });
 
     $('#date_range_statement').daterangepicker({
+        maxSpan: {
+            days: 31,
+        },
         startDate: moment().subtract(7, 'days'),
         endDate: moment().add(0, 'days'),
         opens: 'center',

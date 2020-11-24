@@ -443,15 +443,14 @@
                                         <tbody id="table-statement-body" class="custom-t-body">
                                         </tbody>
                                     </table>
-
-                                    <section id="paginate">
+                                   {{-- <section id="paginate">
                                         <div class="pagination"
                                              style="margin-top:10px;position:relative;float:right">
                                             <div class="numbers">
                                                 <div style=""></div>
                                             </div>
                                         </div>
-                                    </section>
+                                    </section>--}}
 
                                     <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
@@ -519,8 +518,11 @@
         {{-- End Modal --}}
 
         @push('scripts')
+
+            <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+            <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
