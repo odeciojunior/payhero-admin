@@ -784,9 +784,9 @@ $(document).ready(function () {
     }
 
     let statusExtract = {
-        1: '<span class="badge badge-sm badge-pendente p-2">Aguardando postagem válida</span>',
-        2: '<span class="badge badge-sm badge-info p-2">Aguardando liquidação</span>',
-        3: '<span class="badge badge-sm badge-success p-2">Pago</span>'
+        1: 'pendente',
+        2: 'info',
+        3: 'success'
     }
 
     let perPage = 10;
@@ -829,7 +829,7 @@ $(document).ready(function () {
             success: response => {
                 updateClassHTML();
 
-                items = response;
+                let items = response.transactions;
                 $('#statement-money #available-in-period-statement').html('R$ 0,00');
 
                 if (isEmpty(items)) {
@@ -838,21 +838,18 @@ $(document).ready(function () {
                     return;
                 }
 
-                let totalValue = 0;
-                $.each(items, function (index, value) {
-                    totalValue = value.subSellerRateSumTotalAmount + totalValue;
-                })
+                let totalInPeriod = response.totalInPeriod;
 
                 let isNegativeStatement = false;
-                if (totalValue < 1) {
+                if (totalInPeriod < 1) {
                     isNegativeStatement = true;
                 }
 
-                totalValue = totalValue / 100;
+                totalInPeriod = totalInPeriod / 100;
 
                 $('#statement-money #available-in-period-statement').html(`
                     <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${(totalValue.toLocaleString('pt-BR', {
+                        ${(totalInPeriod.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                         })
@@ -940,10 +937,11 @@ $(document).ready(function () {
                                         <small>(Data da venda: ${item.transactionDate})</small>
                                      </td>
                                      <td>
-                                        ${statusExtract[item.status]}
+                                        <span class="badge badge-sm badge-${statusExtract[item.statusNumeric]} p-2">${item.status}</span>
                                      </td>
                                     <td style="vertical-align: middle;">
                                         ${item.paymentDate} <br>
+                                        <small>(${item.summaryStatus} - Tipo: ${item.summaryType})</small>
                                     </td>
                                     <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
                                 </tr>

@@ -228,6 +228,7 @@ class GetnetBackOfficeService extends GetnetService
             $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
+
         if (!empty($this->getStatementSaleHashId())) {
 
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
@@ -236,17 +237,21 @@ class GetnetBackOfficeService extends GetnetService
 
                 try {
 
+                    //dd(json_decode($sale->saleGatewayRequests));
                     $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
 
-                    if (isset($gatewayResult->order_id)) {
+                    //dd($sale->saleGatewayRequests, $sale->saleGatewayRequests->last(), $gatewayResult);
+                    if (isset($gatewayResult->sale_id)) {
 
-                        $queryParameters['order_id'] = $gatewayResult->order_id;
+                        $queryParameters['order_id'] = $gatewayResult->sale_id;
                     }
                 } catch (Exception $exception) {
+
                 }
             }
         }
 
+        //$queryParameters['order_id'] = 'w3RoVw0Z-860548-1';
         //dd($queryParameters);
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
