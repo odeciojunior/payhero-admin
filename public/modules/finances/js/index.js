@@ -810,6 +810,7 @@ $(document).ready(function () {
         loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
 
         $('#table-statement-body').html('');
+        $('#pagination-statement').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
         let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
@@ -892,12 +893,19 @@ $(document).ready(function () {
                     );
                     paginationStatement();
 
+
+                    $("#pagination-statement span").addClass('jp-hidden');
                     $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
                     $("#pagination-statement a.jp-current").addClass('active');
                     $("#pagination-statement a").on('click', function () {
                         $("#pagination-statement a").removeClass('active');
                         $(this).addClass('active');
                     });
+
+                    $("#pagination-statement").on('click', function () {
+                        $("#pagination-statement span").remove();
+                    });
+
 
                     loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
                 }
