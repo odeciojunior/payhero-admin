@@ -86,8 +86,9 @@ class GetNetStatementService
 
     public function performStatement(stdClass $data)
     {
-        $transactions = $data->list_transactions ?? [];
-        //$transactions = array_reverse($data->list_transactions) ?? [];
+
+        //$transactions = $data->list_transactions ?? [];
+        $transactions = array_reverse($data->list_transactions) ?? [];
 
         if (request('debug')) {
 
