@@ -406,7 +406,7 @@
                                                     </option>
                                                     <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
                                                     <option value="PAID">Pago</option>
-                                                    <option value="REVERSED">Estornada</option>
+                                                    <option value="REVERSED">Estornado</option>
                                                 </select>
                                             </div>
                                         </div>

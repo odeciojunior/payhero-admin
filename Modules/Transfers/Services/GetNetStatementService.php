@@ -223,7 +223,7 @@ class GetNetStatementService
     {
 
         /*
-         Estornada
+         Estornado
             order_id = NOT NULL
             transaction_sign = -
             transaction_status_code = 0
@@ -286,7 +286,7 @@ class GetNetStatementService
 
         if ($type == self::SEARCH_STATUS_REVERSED) {
 
-            $status = 'Estornada';
+            $status = 'Estornado';
             $description = 'Solicitação do estorno: ' . $this->formatDate($summary->transaction_date);
 
         } elseif ($type == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
