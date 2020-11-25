@@ -140,7 +140,7 @@ $(document).ready(function () {
     function approvedGetnet() {
         $('#nav-statement-tab, #nav-statement').show();
         updateAccountStatementData();
-        paginationStatement();
+        //paginationStatement();
     }
 
     function paginationStatement() {
@@ -153,6 +153,9 @@ $(document).ready(function () {
             previous: '',
             next: '',
             last: false,
+            callback: function (){
+                console.log('chamou ' + new Date().getTime())
+            }
         });
     }
 
@@ -1095,7 +1098,7 @@ $(document).ready(function () {
     $(document).on("click", "#bt_filtro_statement", function (e) {
         e.preventDefault();
         updateAccountStatementData();
-        paginationStatement();
+        //paginationStatement();
     });
 
     let rangesToDateRangeStatement = {
