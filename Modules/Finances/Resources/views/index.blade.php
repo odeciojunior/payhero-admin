@@ -405,7 +405,7 @@
                                                     <option value="WAITING_FOR_VALID_POST">Aguardando postagem válida
                                                     </option>
                                                     <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
-                                                    <option value="PAID">Pago</option>
+                                                    <option value="PAID">Liquidado</option>
                                                     <option value="REVERSED">Estornado</option>
                                                 </select>
                                             </div>

@@ -301,7 +301,7 @@ class GetNetStatementService
 
         } elseif ($type == self::SEARCH_STATUS_PAID) {
 
-            $status = 'Pago';
+            $status = 'Liquidado';
             $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
 
         } else {
