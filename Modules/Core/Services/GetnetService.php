@@ -59,9 +59,10 @@ class GetnetService
      * @param $method
      * @param null $data
      * @param null $companyId
+     * @param bool $saveLog
      * @return bool|string
      */
-    public function sendCurl($url, $method, $data = null, $companyId = null)
+    public function sendCurl($url, $method, $data = null, $companyId = null, $saveLog = true)
     {
         $curl = curl_init($this->getUrlApi() . $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -75,7 +76,10 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        $this->saveRequests($url, $result, $httpStatus, $data, $companyId);
+        if ($saveLog) {
+
+            $this->saveRequests($url, $result, $httpStatus, $data, $companyId);
+        }
         return $result;
     }
 
