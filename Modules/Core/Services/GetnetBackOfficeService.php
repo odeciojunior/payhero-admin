@@ -261,7 +261,7 @@ class GetnetBackOfficeService extends GetnetService
         //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
 
         //dd($startDate, $endDate, $url);
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET', null, null, false);
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
