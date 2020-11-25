@@ -431,28 +431,28 @@
                                     <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
                                         <tr>
-                                            <th scope="col" class="headCenter" style="width:33%">Razão</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Status</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                            <th scope="col" class="headCenter" style="width:30%">Razão</th>
+                                            <th scope="col" class="headCenter" style="width:30%">Status</th>
+                                            <th scope="col" class="headCenter" style="width:30%">Data prevista
                                                 <i class="material-icons gray ml-5 font-size-18"
                                                    data-toggle="tooltip"
                                                    title=""
                                                    data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
                                             </th>
-                                            <th scope="col" class="headCenter" style="width:34%">Valor</th>
+                                            <th scope="col" class="headCenter" style="width:10%">Valor</th>
                                         </tr>
                                         </thead>
                                         <tbody id="table-statement-body" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                   {{-- <section id="paginate">
-                                        <div class="pagination"
-                                             style="margin-top:10px;position:relative;float:right">
-                                            <div class="numbers">
-                                                <div style=""></div>
-                                            </div>
-                                        </div>
-                                    </section>--}}
+                                    {{-- <section id="paginate">
+                                         <div class="pagination"
+                                              style="margin-top:10px;position:relative;float:right">
+                                             <div class="numbers">
+                                                 <div style=""></div>
+                                             </div>
+                                         </div>
+                                     </section>--}}
 
                                     <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">

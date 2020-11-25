@@ -200,7 +200,7 @@ class TransfersController extends Controller
                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
             ];
 
-            if (!FoxUtils::isProduction()) {
+            //if (!FoxUtils::isProduction()) {
                 $error += [
                     'dev_message' => $exception->getMessage(),
                     'dev_file' => $exception->getFile(),
@@ -208,7 +208,7 @@ class TransfersController extends Controller
                     'dev_code' => $exception->getCode(),
                     'dev_trace' => $exception->getTrace(),
                 ];
-            }
+            //}
 
             return response()->json($error, 400);
         }

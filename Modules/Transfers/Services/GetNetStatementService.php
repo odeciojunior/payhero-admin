@@ -139,35 +139,24 @@ class GetNetStatementService
                 $subSellerRateAmount = $details[0]->subseller_rate_amount ?? 0;                                         // Valor do repasse para o subseller em centavos.
                 $subSellerRateAmount = $summary->transaction_sign == '-' ? ($subSellerRateAmount * -1) : $subSellerRateAmount;
 
-                foreach (['installmentDate', 'paymentDate', 'transactionDate', 'subSellerRateClosingDate', 'subSellerRateConfirmDate'] as $date) {
+                foreach (['paymentDate', 'transactionDate', 'subSellerRateClosingDate', 'subSellerRateConfirmDate'] as $date) {
 
-                    if (!empty(${$date})) {
 
-                        try {
-
-                            ${$date} = Carbon::parse(${$date})->format('d/m/Y');
-                        } catch (Exception $exception) {
-
-                        }
-                    }
+                    ${$date} = $this->formatDate(${$date});
                 }
 
-                $status = $this->getStatus(
-                    $summary->transaction_status_code,
-                    $summary->transaction_sign,
-                    $details[0]->release_status,                                                                        // Indicada se o agendamento já foi liberado para pagamento S/N.
-                    $details[0]->subseller_rate_confirm_date,
-                );
+                $status = $this->getTransactionStatus($summary, $details[0]);
 
                 // Definido em 24/04/2020
                 // Se subseller_rate_confirm_date exibo subseller_rate_closing_date caso contrario, exibo o payment_date
-                $summaryDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                //$summaryDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                // Definido em 25/04/2020
+                $summaryDate = $subSellerRateConfirmDate ?? $subSellerRateClosingDate;
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
                     'subSellerRateAmount' => FoxUtils::formatMoney($subSellerRateAmount / 100),
                     'isInvite' => $subSellerRateAmount < 500,
-                    'transactionDate' => $transactionDate,
                     'summaryStatus' => $status,
                     'summaryValue' => $subSellerRateAmount,
                     'summaryDate' => $summaryDate,
@@ -177,54 +166,49 @@ class GetNetStatementService
                     '_summaryTranslateSign' => $this->translateTransactionSign($summary->transaction_sign),
                     '_summarySign' => $summary->transaction_sign,
                     '_paymentDate' => $paymentDate,
+                    '_transactionDate' => $transactionDate,
                     '_release_status' => $details[0]->release_status,
                     '_subSellerRateClosingDate' => $subSellerRateClosingDate,
                     '_subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                 ];
 
-                $totalInPeriod += $subSellerRateAmount;
+                switch (request('status')) {
 
-                // TODO Ignorar nessa fase inicial que não conhecemos todos os comportamentos da GETNET
-                if ($summary->transaction_sign == '+') {
+                    case self::SEARCH_STATUS_ALL:
 
-                    switch (request('status')) {
+                        $data[] = $statement;
+                        $totalInPeriod += $subSellerRateAmount;
+                        break;
 
-                        case self::SEARCH_STATUS_ALL:
-
-                            // TODO Ignorar nessa fase inicial que não conhecemos todos os comportamentos da GETNET
-                            if (!in_array($statement->summaryStatus['identify'], [self::SEARCH_STATUS_UNKNOW])) {
-
-                                $data[] = $statement;
-                            }
-                            break;
-
-                        case self::SEARCH_STATUS_PAID:
-                            //if ($statement->summaryStatus['identify'] != self::SEARCH_STATUS_REVERSED) {
+                    case self::SEARCH_STATUS_PAID:
+                        if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_PAID) {
 
                             $data[] = $statement;
-                            //}
-                            break;
-                        case self::SEARCH_STATUS_WAITING_LIQUIDATION:
-                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_LIQUIDATION) {
+                            $totalInPeriod += $subSellerRateAmount;
+                        }
+                        break;
+                    case self::SEARCH_STATUS_WAITING_LIQUIDATION:
+                        if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_LIQUIDATION) {
 
-                                $data[] = $statement;
-                            }
-                            break;
-                        case self::SEARCH_STATUS_WAITING_FOR_VALID_POST:
-                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
+                            $data[] = $statement;
+                            $totalInPeriod += $subSellerRateAmount;
+                        }
+                        break;
+                    case self::SEARCH_STATUS_WAITING_FOR_VALID_POST:
+                        if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
 
-                                $data[] = $statement;
-                            }
-                            break;
-                        case self::SEARCH_STATUS_REVERSED:
-                            if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_REVERSED) {
+                            $data[] = $statement;
+                            $totalInPeriod += $subSellerRateAmount;
+                        }
+                        break;
+                    case self::SEARCH_STATUS_REVERSED:
+                        if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_REVERSED) {
 
-                                $data[] = $statement;
-                            }
-                            break;
-                    }
+                            $data[] = $statement;
+                            $totalInPeriod += $subSellerRateAmount;
+                        }
+                        break;
                 }
-
             }
         }
 
@@ -234,39 +218,119 @@ class GetNetStatementService
         ];
     }
 
-    // TODO mapear essas situações
-    private function getStatus($transactionStatusCode, $transactionSign, $releaseStatus, $subSellerRateConfirmDate)
+    private function getTypeOfTransaction($summary, $details)
     {
 
-        if ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA) {
+        /*
+         Estornada
+            order_id = NOT NULL
+            transaction_sign = -
+            transaction_status_code = 0
+
+        Aguardando postagem válida
+            order_id = NOT NULL
+            transaction_sign = +
+            release_status = N
+            transaction_status_code = ??????????????????????
+
+        Aguardando liquidação
+            order_id = NOT NULL
+            transaction_sign = +
+            release_status = S
+            subseller_rate_confirm_date = NULL
+            transaction_status_code = ??????????????????????
+
+        Pago
+            order_id = NOT NULL
+            transaction_sign = +
+            release_status = S
+            subseller_rate_confirm_date = NOT NULL && <= today
+            transaction_status_code = 0 ou 92
+         * */
+
+        $hasOrderId = empty($summary->order_id) ? false : true;
+        $isTransactionSignCredit = $details->transaction_sign == '+';
+        $isReleaseStatus = $details->release_status == 'S';
+        $transactionStatusCode = $summary->transaction_status_code;
+        $subSellerRateConfirmDate = $details->subseller_rate_confirm_date;
+
+        if ($hasOrderId && !$isTransactionSignCredit && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
+
+            $type = self::SEARCH_STATUS_REVERSED;
+
+        } elseif ($hasOrderId && $isTransactionSignCredit && !$isReleaseStatus) {
+
+            $type = self::SEARCH_STATUS_WAITING_FOR_VALID_POST;
+
+        } elseif ($hasOrderId && $isTransactionSignCredit && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
+
+            $type = self::SEARCH_STATUS_WAITING_LIQUIDATION;
+
+        } elseif ($hasOrderId && $isTransactionSignCredit && $isReleaseStatus && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])) {
+
+            $type = self::SEARCH_STATUS_PAID;
+
+        } else {
+
+            $type = self::SEARCH_STATUS_UNKNOW;
+        }
+
+        return $type;
+    }
+
+    private function getTransactionStatus($summary, $details)
+    {
+
+        $type = $this->getTypeOfTransaction($summary, $details);
+
+        if ($type == self::SEARCH_STATUS_REVERSED) {
 
             $status = 'Estornada';
-            $identify = self::SEARCH_STATUS_REVERSED;
+            $description = 'Solicitação do estorno: ' . $this->formatDate($summary->transaction_date);
 
-        } elseif ($releaseStatus == 'N') {
+        } elseif ($type == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
 
             $status = 'Aguardando postagem válida';
-            $identify = self::SEARCH_STATUS_WAITING_FOR_VALID_POST;
+            $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
 
-        } elseif ($releaseStatus == 'S' && is_null($subSellerRateConfirmDate)) {
+        } elseif ($type == self::SEARCH_STATUS_WAITING_LIQUIDATION) {
 
             $status = 'Aguardando liquidação';
-            $identify = self::SEARCH_STATUS_WAITING_LIQUIDATION;
+            $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
 
-        } elseif ($releaseStatus == 'S' && $transactionSign == '+' && !is_null($subSellerRateConfirmDate) && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
+        } elseif ($type == self::SEARCH_STATUS_PAID) {
 
             $status = 'Pago';
-            $identify = self::SEARCH_STATUS_PAID;
+            $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
 
         } else {
 
             $status = '- - - -';
-            $identify = self::SEARCH_STATUS_UNKNOW;
+            $type = self::SEARCH_STATUS_UNKNOW;
+            $description = '- - - ';
         }
 
         return [
             'status' => $status,
-            'identify' => $identify,
+            'identify' => $type,
+            'description' => $description,
         ];
+    }
+
+    private function formatDate($date)
+    {
+
+
+        if (!empty($date)) {
+
+            try {
+
+                $date = Carbon::parse($date)->format('d/m/Y');
+            } catch (Exception $exception) {
+
+            }
+        }
+
+        return $date;
     }
 }

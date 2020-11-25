@@ -258,6 +258,7 @@ class GetnetBackOfficeService extends GetnetService
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
 
         //dd($startDate, $endDate, $url);
         return $this->sendCurl($url, 'GET');

@@ -866,7 +866,7 @@ $(document).ready(function () {
                     }
 
                     dataTable += `<br>
-                                        <small>(Data da venda: ${item.transactionDate})</small>
+                                        <small>(${item.summaryStatus.description})</small>
                                      </td>
                                      <td>
                                         <span class="badge badge-sm badge-${statusExtract[item.summaryStatus.identify]} p-2">${item.summaryStatus.status}</span>
@@ -874,7 +874,7 @@ $(document).ready(function () {
                                     <td style="vertical-align: middle;">
                                         ${item.summaryDate}
                                     </td>
-                                    <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
+                                    <td style="vertical-align: middle; color:${item.summaryValue >= 0 ? 'green' : 'red'};">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
                     updateClassHTML(dataTable);
