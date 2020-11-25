@@ -28,7 +28,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
                                  viewBox="0 0 24 24">
                                 <path
-                                    d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                             </svg>
                             <div class="btn-group" role="group">
                                 <button id="bt_get_xls" type="button"
@@ -442,7 +442,8 @@
                                             <th scope="col" class="headCenter" style="width:10%">Valor</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table-statement-body" class="custom-t-body">
+                                        <tbody id="table-statement-body"
+                                               class="custom-t-body table-statement-body-class">
                                         </tbody>
                                     </table>
                                     {{-- <section id="paginate">
@@ -453,11 +454,17 @@
                                              </div>
                                          </div>
                                      </section>--}}
+                                    <div id="pagination-statement"
+                                         class="pagination-sm margin-chat-pagination pagination-statement-class"
+                                         style="margin-top:10px;position:relative;float:right">
 
-                                    <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
+                                    </div>
+
+                                    {{--<ul id="pagination-statement"
+                                        class="pagination-sm margin-chat-pagination pagination-statement-class"
                                         style="margin-top:10px;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
+                                        --}}{{--js carrega...--}}{{--
+                                    </ul>--}}
                                 </div>
                             </div>
                         </div>
@@ -518,10 +525,9 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
 
         @push('scripts')
-
-            <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
