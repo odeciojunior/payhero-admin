@@ -78,7 +78,7 @@ class CompaniesApiController extends Controller
                     'user_id' => auth()->user()->account_owner_id,
                     'country' => $requestData["country"],
                     'fantasy_name' => $fantasyName,
-                    'company_document' => $companyDocument,
+                    'document' => $companyDocument,
                     'company_type' => $requestData['company_type'],
                     'account_type' => 1,
                 ]
@@ -151,7 +151,7 @@ class CompaniesApiController extends Controller
                 $requestData['support_telephone'] = '+' . FoxUtils::onlyNumbers($requestData['support_telephone']);
             }
             if (!empty($requestData['company_document'])) {
-                $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+                $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
             }
             if ($company->country == 'brazil' && !empty($requestData['agency'])
                 && strlen($requestData['agency']) == 3

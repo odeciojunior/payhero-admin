@@ -138,14 +138,4 @@ class AnticipationService
             });
 
     }
-
-    /**
-     * @param User $user
-     * @return float
-     */
-    public function getDailyTax(User $user)
-    {
-//        return number_format(($user->antecipation_tax / $user->credit_card_release_money_days), 4, '.', ',');
-    }
-
 }

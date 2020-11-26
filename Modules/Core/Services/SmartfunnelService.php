@@ -140,13 +140,7 @@ class SmartfunnelService
                 ->where('type_enum', (new UserProject)->present()->getTypeEnum('producer'))
                 ->where('project_id', $sale->project_id)->first()->company;
 
-            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                $creditCardTax = $producerCompany->gateway_tax;
-            } else {
-                $creditCardTax = $producerCompany->credit_card_tax;
-            }
-
-            $foxvalue = (int) (($sale->original_total_paid_value - $sale->interest_total_value) / 100 * $creditCardTax);
+            $foxvalue = (int) (($sale->original_total_paid_value - $sale->interest_total_value) / 100 * $producerCompany->gateway_tax);
             $foxvalue += FoxUtils::onlyNumbers($producerCompany->transaction_rate);
             $foxvalue += $sale->interest_total_value;
         } else {
@@ -155,13 +149,7 @@ class SmartfunnelService
                 ->where('type_enum', (new UserProject)->present()->getTypeEnum('producer'))
                 ->where('project_id', $sale->project_id)->first()->company;
 
-            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                $boletoTax = $producerCompany->gateway_tax;
-            } else {
-                $boletoTax = $producerCompany->boleto_tax;
-            }
-
-            $foxvalue = (int) (($sale->original_total_paid_value / 100) * $boletoTax);
+            $foxvalue = (int) (($sale->original_total_paid_value / 100) * $producerCompany->gateway_tax);
 
             if (FoxUtils::onlyNumbers($sale->total_paid_value) < 4000) {
                 $transactionRate = 300;

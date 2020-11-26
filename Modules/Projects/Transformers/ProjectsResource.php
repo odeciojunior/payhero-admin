@@ -96,8 +96,6 @@ class ProjectsResource extends JsonResource
             "commission_affiliate"           => $affiliate->percentage ?? '',
             "status_affiliate"               => $affiliate->status_enum ?? '',
             "producer"                       => $this->producer ?? '',
-            "credit_card_release_money_days" => $this->credit_card_release_money_days ?? '',
-            "boleto_release_money_days"      => $this->boleto_release_money_days ?? '',
             'whatsapp_button'                => $this->whatsapp_button,
             'credit_card_discount'           => $this->credit_card_discount,
             'billet_discount'                => $this->billet_discount,

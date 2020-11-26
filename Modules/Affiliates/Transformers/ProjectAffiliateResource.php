@@ -63,7 +63,6 @@ class ProjectAffiliateResource extends JsonResource
             'support_phone'          => $this->support_phone ?? '',
             'support_phone_verified' => $this->support_phone_verified,
             'status'                 => isset($this->domains[0]->name) ? 1 : 0,
-            "cookie_duration"        => $this->cookie_duration,
             "automatic_affiliation"  => $this->automatic_affiliation,
             "url_affiliates"         => route('index', Hashids::encode($this->id)),
             'user_name'              => $this->users[0]->name,
@@ -73,8 +72,7 @@ class ProjectAffiliateResource extends JsonResource
             'producer'               => $producer,
             'status_url_affiliates'  => $this->status_url_affiliates,
             'cookie_duration'        => $this->cookie_duration ?? '',
-            'credit_release_days'    => ($userProject->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) ? $userProject->company->gateway_release_money_days : $userProject->company->credit_card_release_money_days ?? '',
-            'billet_release_days'    => ($userProject->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) ? $userProject->company->gateway_release_money_days : $userProject->company->boleto_release_money_days ?? '',
+            'billet_release_days'    => $userProject->company->gateway_release_money_days ?? '',
         ];
     }
 }
