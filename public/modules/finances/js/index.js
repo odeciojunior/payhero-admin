@@ -1005,4 +1005,19 @@ $(document).ready(function () {
             }
         }
     });
+
+    $('#statement_sale').on('change paste keyup select', function () {
+
+        let val = $(this).val();
+
+        if (val === '') {
+
+            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
+            $('#statement_data_type_select').attr('disabled', false).removeClass('disableFields');
+        } else {
+
+            $('#date_range_statement').attr('disabled', true).addClass('disableFields');
+            $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
+        }
+    });
 });

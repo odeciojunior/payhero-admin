@@ -7,6 +7,11 @@
         .popover {
             left: -50px !important;
         }
+
+        .disableFields {
+            background-color: #f3f7f9;
+            opacity: 1;
+        }
     </style>
 @endpush
 
@@ -412,7 +417,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="date_range_statement">Transação</label>
+                                                <label for="statement_sale">
+                                                    Transação <i class="material-icons gray ml-5 font-size-18"
+                                                                 data-toggle="tooltip"
+                                                                 title=""
+                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">help</i>
+                                                </label>
                                                 <input name="statement_sale" id="statement_sale"
                                                        class="select-pad" placeholder="Transação">
                                             </div>
