@@ -27,7 +27,7 @@ class ValidateEmailRequest extends FormRequest
     {
         return [
             'email.required'    => 'Precisamos do seu email para continuar',
-            'email.unique'      => 'Email informado ja esta sendo utilizado',
+            'email.unique'      => 'Esse endereço de email já está em uso',
         ];
     }
 
