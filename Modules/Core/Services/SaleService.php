@@ -957,13 +957,7 @@ class SaleService
             $newTotalvalue = $totalValueWithTax;
         }
 
-        if ($company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-            $creditCardTax = $company->gateway_tax;
-        } else {
-            $creditCardTax = $company->credit_card_tax;
-        }
-
-        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $creditCardTax));
+        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $company->gateway_tax));
         $cloudfoxValue += str_replace('.', '', $company->transaction_rate);
         $cloudfoxValue += $interestValue;
 

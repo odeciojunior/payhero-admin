@@ -123,7 +123,7 @@ $(document).ready(function () {
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
-                $('#company_document').val(company.company_document);
+                $('#company_document').val(company.document);
                 $('#support_email').val(company.support_email);
                 $('#support_telephone').val(company.support_telephone);
                 $('#zip_code').val(company.zip_code);
@@ -137,7 +137,7 @@ $(document).ready(function () {
                 $('#document_issue_date').val(company.document_issue_date);
                 $('#document_issuer').val(company.document_issuer);
                 $('#document_issuer_state').val(company.document_issuer_state);
-                $('#document_number').val(company.document_number);
+                $('#document_number').val(company.extra_document);
 
 
                 if (company.capture_transaction_enabled) {

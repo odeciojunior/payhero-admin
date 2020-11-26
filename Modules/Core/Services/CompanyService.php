@@ -129,7 +129,7 @@ class CompanyService
         $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
         $company = $companyModel->where(
             [
-                ['company_document', $cnpj],
+                ['document', $cnpj],
                 ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
                 ['address_document_status', $companyPresenter->getAddressDocumentStatus('approved')],
                 ['contract_document_status', $companyPresenter->getContractDocumentStatus('approved')],
@@ -168,7 +168,7 @@ class CompanyService
     {
         $companyChanges = $company->getChanges();
 
-        if (!empty($documentType) && $documentType != $company->company_document) {
+        if (!empty($documentType) && $documentType != $company->document) {
             $company->contract_document_status = $company->presenter()->getStatus('pending');
         }
     }
@@ -351,7 +351,7 @@ class CompanyService
         if (empty($company->fantasy_name)) {
             return true;
         }
-        if (empty($company->company_document)) {
+        if (empty($company->document)) {
             return true;
         }
         if (empty($company->bank)) {
@@ -389,7 +389,7 @@ class CompanyService
                 return true;
             }
             // informações complementares
-            if (empty($company->document_number)) {
+            if (empty($company->extra_document)) {
                 return true;
             }
             if (empty($company->document_issue_date)) {
@@ -406,7 +406,7 @@ class CompanyService
         if (empty($company->fantasy_name)) {
             return true;
         }
-        if (empty($company->company_document)) {
+        if (empty($company->document)) {
             return true;
         }
         if (empty($company->bank)) {
@@ -519,8 +519,8 @@ class CompanyService
                 $arrayFields[] = 'country';
             }
             // informações complementares
-            if (empty($company->document_number)) {
-                $arrayFields[] = 'document_number';
+            if (empty($company->extra_document)) {
+                $arrayFields[] = 'extra_document';
             }
             if (empty($company->document_issue_date)) {
                 $arrayFields[] = 'document_issue_date';
@@ -538,8 +538,8 @@ class CompanyService
             if (empty($company->fantasy_name)) {
                 $arrayFields[] = 'fantasy_name';
             }
-            if (empty($company->company_document)) {
-                $arrayFields[] = 'company_document';
+            if (empty($company->document)) {
+                $arrayFields[] = 'document';
             }
             if (empty($company->bank)) {
                 $arrayFields[] = 'bank';

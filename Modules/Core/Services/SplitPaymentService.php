@@ -47,22 +47,8 @@ class SplitPaymentService
                                                                    ['project_id', $project->id],
                                                                ])->first();
             $producerCompany = $userProject->company;
+            $percentageRate = $producerCompany->gateway_tax;
 
-            if ($sale->payment_method == 1) {
-                if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                    $percentageRate = $producerCompany->gateway_tax;
-                }else{
-                    $percentageRate = $producerCompany->credit_card_tax;
-                }
-            } else if ($sale->payment_method == 2) {
-                if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                    $percentageRate = $producerCompany->gateway_tax;
-                }else{
-                    $percentageRate = $producerCompany->boleto_tax;
-                }
-            } else {
-                $percentageRate = 6.5;
-            }
             $cloudfoxValue = (int) (($totalValue / 100) * $percentageRate);
             $cloudfoxValue += str_replace('.', '', $producerCompany->transaction_rate);
 
@@ -174,37 +160,37 @@ class SplitPaymentService
             //ConvertaX
             $convertaxIntegration = $convertaxIntegrationModel->where('project_id', $project->id)->first();
 
-            if (!empty($convertaxIntegration)) {
-
-                $convertaxUser    = $userModel->find(27);
-                $convertaxCompany = $companyModel->find(29);
-                if ($sale->payment_method == 1) {
-                    $convertaXReleaseMoneyDays = $convertaxUser->credit_card_release_money_days;
-                    $convertaXPercentageRate   = $convertaxUser->credit_card_tax;
-                } else if ($sale->payment_method == 2) {
-                    $convertaXReleaseMoneyDays = $convertaxUser->boleto_release_money_days;
-                    $convertaXPercentageRate   = $convertaxUser->boleto_tax;
-                }  else {
-                    $convertaXPercentageRate = 6.5;
-                }
-                $transactionModel->create([
-                                              'sale_id'                => $sale->id,
-                                              'company_id'             => $convertaxCompany->id,
-                                              'value'                  => $convertaxIntegration->value,
-                                              'release_date'           => null,
-                                              'antecipation_date'      => null,
-                                              'status'                 => 'pending',
-                                              'status_enum'            => $transactionModel->present()
-                                                                                           ->getStatusEnum('pending'),
-                                              'currency'               => ($convertaxCompany->country == 'usa') ? 'dolar' : 'real',
-                                              'percentage_rate'        => $convertaXPercentageRate,
-                                              'transaction_rate'       => ($convertaxCompany->country == 'usa') ? '0.25' : '1.00',
-                                              'type'                   => $transactionModel->present()
-                                                                                           ->getType('convertaX'),
-                                          ]);
-
-                $producerValue -= $convertaxIntegration->value;
-            }
+//            if (!empty($convertaxIntegration)) {
+//
+//                $convertaxUser    = $userModel->find(27);
+//                $convertaxCompany = $companyModel->find(29);
+//                if ($sale->payment_method == 1) {
+//                    $convertaXReleaseMoneyDays = $convertaxUser->credit_card_release_money_days;
+//                    $convertaXPercentageRate   = $convertaxUser->credit_card_tax;
+//                } else if ($sale->payment_method == 2) {
+//                    $convertaXReleaseMoneyDays = $convertaxUser->boleto_release_money_days;
+//                    $convertaXPercentageRate   = $convertaxUser->boleto_tax;
+//                }  else {
+//                    $convertaXPercentageRate = 6.5;
+//                }
+//                $transactionModel->create([
+//                                              'sale_id'                => $sale->id,
+//                                              'company_id'             => $convertaxCompany->id,
+//                                              'value'                  => $convertaxIntegration->value,
+//                                              'release_date'           => null,
+//                                              'antecipation_date'      => null,
+//                                              'status'                 => 'pending',
+//                                              'status_enum'            => $transactionModel->present()
+//                                                                                           ->getStatusEnum('pending'),
+//                                              'currency'               => ($convertaxCompany->country == 'usa') ? 'dolar' : 'real',
+//                                              'percentage_rate'        => $convertaXPercentageRate,
+//                                              'transaction_rate'       => ($convertaxCompany->country == 'usa') ? '0.25' : '1.00',
+//                                              'type'                   => $transactionModel->present()
+//                                                                                           ->getType('convertaX'),
+//                                          ]);
+//
+//                $producerValue -= $convertaxIntegration->value;
+//            }
 
             $userProject = $userProjectModel->where([
                                                         [

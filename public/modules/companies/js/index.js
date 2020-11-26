@@ -78,7 +78,7 @@ $(document).ready(function () {
                         <tr data-id='${value.id_code}' class="text-center">
                             <td>${value.fantasy_name}</td>
                             <td>${value.country_translated}</td>
-                            <td>${value.company_document}</td>
+                            <td>${value.document}</td>
                             <td>
                     `;
 

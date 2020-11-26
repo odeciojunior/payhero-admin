@@ -37,7 +37,7 @@ trait GetnetPrepareCompanyData
 
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
             'birth_date' => $user->date_birth,
             'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($motherName)),
@@ -93,7 +93,7 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
         ];
     }
 
@@ -113,7 +113,7 @@ trait GetnetPrepareCompanyData
 
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
             'legal_name' => $legal_name ?? FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => $trade_name ?? FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'state_fiscal_document_number' => 'ISENTO',
@@ -157,7 +157,7 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => $company->document,
             "working_hours" => [
                 "start_day" => "mon",
                 "end_day" => "mon",
@@ -181,7 +181,7 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => $company->document,
         ];
     }
 

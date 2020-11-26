@@ -453,8 +453,6 @@ class ProjectsApiController extends Controller
             })->first();
 
             $project->producer = $producer->name ?? '';
-            $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
-            $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
 
             if (Gate::allows('show', [$project])) {
                 activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
