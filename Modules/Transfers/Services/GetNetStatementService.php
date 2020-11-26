@@ -148,11 +148,7 @@ class GetNetStatementService
 
                 $status = $this->getTransactionStatus($summary, $details[0]);
 
-                // Definido em 24/04/2020
-                // Se subseller_rate_confirm_date exibo subseller_rate_closing_date caso contrario, exibo o payment_date
-                //$summaryDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-                // Definido em 25/04/2020
-                $summaryDate = $subSellerRateConfirmDate ?? $subSellerRateClosingDate;
+                $summaryDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
 
                 $statement = (object)[
                     'orderId' => $arrayOrderId[0],
