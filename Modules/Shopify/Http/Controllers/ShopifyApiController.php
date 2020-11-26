@@ -626,131 +626,130 @@ class ShopifyApiController extends Controller
 
             $projectId = current(Hashids::decode($requestData['project_id']));
 
-            if (!empty($projectId)) {
-                $project = $projectModel->with(
-                    [
-                        'domains',
-                        'shopifyIntegrations',
-                        'plans',
-                        'plans.productsPlans',
-                        'plans.productsPlans.product',
-                        'pixels',
-                        'discountCoupons',
-                        'shippings',
-                    ]
-                )
-                    ->find($projectId);
+            if (empty($projectId)) {
+                return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
+            }
 
-                activity()->on($shopifyIntegrationModel)->tap(
-                    function (Activity $activity) {
-                        $activity->log_name = 'updated';
-                    }
-                )->log('Sicronizou template do shopify para o projeto ' . $project->name);
+            $project = $projectModel->with(
+                [
+                    'domains',
+                    'shopifyIntegrations',
+                    'plans',
+                    'plans.productsPlans',
+                    'plans.productsPlans.product',
+                    'pixels',
+                    'discountCoupons',
+                    'shippings',
+                ]
+            )->find($projectId);
 
-                $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
+            $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
 
-                if (!empty($domain)) {
-                    if (!empty($project->shopify_id)) {
-                        try {
-                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                $shopify = new ShopifyService(
-                                    $shopifyIntegration->url_store, $shopifyIntegration->token
-                                );
+            if (empty($domain)) {
+                return response()->json(
+                    ['message' => 'Você não tem nenhum domínio configurado'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
-                                $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+            if (empty($project->shopify_id)) {
+                return response()->json(
+                    ['message' => 'Este projeto não tem integração com o shopify'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
-                                if ($htmlCart) {
-                                    $shopifyIntegration->update(
-                                        [
-                                            'theme_type' => $shopifyIntegrationModel->present()
-                                                ->getThemeType('basic_theme'),
-                                            'theme_name' => $shopify->getThemeName(),
-                                            'theme_file' => 'sections/cart-template.liquid',
-                                            'theme_html' => $htmlCart,
-                                        ]
-                                    );
+            activity()->on($shopifyIntegrationModel)->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'updated';
+                }
+            )->log('Sicronizou template do shopify para o projeto ' . $project->name);
 
-                                    $shopify->updateTemplateHtml(
-                                        'sections/cart-template.liquid',
-                                        $htmlCart,
-                                        $domain->name
-                                    );
-                                } else {
-                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+            try {
+                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    $shopify = new ShopifyService(
+                        $shopifyIntegration->url_store, $shopifyIntegration->token
+                    );
 
-                                    if (empty($htmlCart)) {
-                                        return response()->json(
-                                            ['message' => 'Problema ao refazer integração, template \'ajax-cart-template.liquid\' não encontrado'],
-                                            Response::HTTP_BAD_REQUEST
-                                        );
-                                    }
+                    $shopify->setThemeByRole('main');
+                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
-                                    $shopifyIntegration->update(
-                                        [
-                                            'theme_type' => $shopifyIntegrationModel->present()
-                                                ->getThemeType('ajax_theme'),
-                                            'theme_name' => $shopify->getThemeName(),
-                                            'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                            'theme_html' => $htmlCart,
-                                        ]
-                                    );
+                    if ($htmlCart) {
+                        $shopifyIntegration->update(
+                            [
+                                'theme_type' => $shopifyIntegrationModel->present()
+                                    ->getThemeType('basic_theme'),
+                                'theme_name' => $shopify->getThemeName(),
+                                'theme_file' => 'sections/cart-template.liquid',
+                                'theme_html' => $htmlCart,
+                            ]
+                        );
 
-                                    $shopify->updateTemplateHtml(
-                                        'snippets/ajax-cart-template.liquid',
-                                        $htmlCart,
-                                        $domain->name,
-                                        true
-                                    );
-                                }
-
-                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-                                if ($htmlBody) {
-                                    $shopifyIntegration->update(
-                                        [
-                                            'layout_theme_html' => $htmlBody,
-                                        ]
-                                    );
-
-                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-                                }
-
-                                $shopifyIntegration->update(
-                                    [
-                                        'status' => $shopifyIntegration->present()
-                                            ->getStatus('approved'),
-                                    ]
-                                );
-                            }
-
-                            return response()->json(
-                                ['message' => 'Sincronização do template com o shopify concluida com sucesso!'],
-                                Response::HTTP_OK
-                            );
-                        } catch (Exception $e) {
-                            $message = ShopifyErrors::FormatErrors($e->getMessage());
-
-                            if (empty($message)) {
-                                report($e);
-                                $message = 'Problema ao refazer integração, tente novamente mais tarde';
-                            }
-
-                            return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
-                        }
+                        $shopify->updateTemplateHtml(
+                            'sections/cart-template.liquid',
+                            $htmlCart,
+                            $domain->name
+                        );
                     } else {
-                        return response()->json(
-                            ['message' => 'Este projeto não tem integração com o shopify'],
-                            Response::HTTP_BAD_REQUEST
+                        $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
+                        if (empty($htmlCart)) {
+                            return response()->json(
+                                ['message' => 'Problema ao refazer integração, template \'ajax-cart-template.liquid\' não encontrado'],
+                                Response::HTTP_BAD_REQUEST
+                            );
+                        }
+
+                        $shopifyIntegration->update(
+                            [
+                                'theme_type' => $shopifyIntegrationModel->present()->getThemeType('ajax_theme'),
+                                'theme_name' => $shopify->getThemeName(),
+                                'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                'theme_html' => $htmlCart,
+                            ]
+                        );
+
+                        $shopify->updateTemplateHtml(
+                            'snippets/ajax-cart-template.liquid',
+                            $htmlCart,
+                            $domain->name,
+                            true
                         );
                     }
-                } else {
-                    return response()->json(
-                        ['message' => 'Você não tem nenhum domínio configurado'],
-                        Response::HTTP_BAD_REQUEST
+
+                    $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                    if ($htmlBody) {
+                        $shopifyIntegration->update(
+                            [
+                                'layout_theme_html' => $htmlBody,
+                            ]
+                        );
+
+                        $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                    }
+
+                    $shopifyIntegration->update(
+                        [
+                            'status' => $shopifyIntegration->present()->getStatus('approved'),
+                        ]
                     );
                 }
-            } else {
-                return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
+
+                return response()->json(
+                    [
+                        'message' => 'Sincronização do template com o shopify concluida com sucesso!'
+                    ],
+                    Response::HTTP_OK
+                );
+            } catch (Exception $e) {
+                $message = ShopifyErrors::FormatErrors($e->getMessage());
+
+                if (empty($message)) {
+                    report($e);
+                    $message = 'Problema ao refazer integração, tente novamente mais tarde';
+                }
+
+                return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             report($e);
