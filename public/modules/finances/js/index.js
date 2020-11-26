@@ -951,7 +951,7 @@ $(document).ready(function () {
         maxSpan: {
             days: 31,
         },
-        startDate: moment().add(0, 'days'),
+        startDate: moment().subtract(7, 'days'),
         endDate: moment().add(0, 'days'),
         opens: 'center',
         maxDate: moment().add(1, 'month'),
