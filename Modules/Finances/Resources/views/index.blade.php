@@ -372,11 +372,11 @@
                                                 <label for="statement_data_type_select">Data</label>
                                                 <select class="form-control select-pad" name="status"
                                                         id="statement_data_type_select">
-                                                    <option value="liquidation_date" selected>
-                                                        Data da liquidação
-                                                    </option>
-                                                    <option value="transaction_date">
+                                                    <option value="transaction_date" selected>
                                                         Data da venda
+                                                    </option>
+                                                    <option value="liquidation_date">
+                                                        Data da liquidação
                                                     </option>
                                                 </select>
                                             </div>
@@ -389,7 +389,7 @@
                                             </div>--}}
 
                                             <div class="form-group">
-                                                <label for="date_range_statement">Data da venda</label>
+                                                <label for="date_range_statement">Período</label>
                                                 <input name="date_range_statement" id="date_range_statement"
                                                        class="select-pad" placeholder="Clique para editar..." readonly>
                                             </div>
