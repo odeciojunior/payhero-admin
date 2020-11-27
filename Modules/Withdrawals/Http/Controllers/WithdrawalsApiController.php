@@ -407,7 +407,7 @@ class WithdrawalsApiController extends Controller
                         'account_digit' => $company->account_digit,
                         'agency' => $company->agency,
                         'agency_digit' => $company->agency_digit,
-                        'document' => $company->company_document,
+                        'document' => $company->document,
                         'currency' => $currency,
                         'quotation' => $currentQuotation,
                         'iof' => [

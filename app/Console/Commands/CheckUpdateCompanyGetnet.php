@@ -43,9 +43,9 @@ class CheckUpdateCompanyGetnet extends Command
 
             foreach ($companies as $company) {
                 if ($company->company_type == 1) { // physical person
-                    $result = $getnet->checkPfCompanyRegister($company->company_document, $company->id);
+                    $result = $getnet->checkPfCompanyRegister($company->document, $company->id);
                 } else { // 'juridical person'
-                    $result = $getnet->checkPjCompanyRegister($company->company_document, $company->id);
+                    $result = $getnet->checkPjCompanyRegister($company->document, $company->id);
                 }
 
                 $result = json_decode($result);

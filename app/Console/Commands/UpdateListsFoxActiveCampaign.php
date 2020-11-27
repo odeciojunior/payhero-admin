@@ -133,7 +133,7 @@ class UpdateListsFoxActiveCampaign extends Command
                            ->where('company_type', $companyPresenter->getCompanyType('juridical person'));
                     })
                     ->orWhere(function($companyPhysical) use($companyPresenter) {
-                        $companyPhysical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                        $companyPhysical->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
                             ->where('company_type', $companyPresenter->getCompanyType('physical person'));
                     });
                 });
@@ -183,7 +183,7 @@ class UpdateListsFoxActiveCampaign extends Command
                            ->where('company_type', $companyPresenter->getCompanyType('juridical person'));
                     })
                     ->orWhere(function($companyPhysical) use($companyPresenter) {
-                        $companyPhysical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                        $companyPhysical->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
                             ->where('company_type', $companyPresenter->getCompanyType('physical person'));
                     });
                 });
