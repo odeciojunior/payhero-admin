@@ -76,7 +76,7 @@ class UpdateListsFoxActiveCampaign extends Command
             $this->listUsersChargeback15(15);
 
             // 7 - Clientes com documentos faltando
-            // $this->listUsersNotApproved(); @TODO
+            $this->listUsersNotApproved(7);
 
         } catch (Exception $e) {
             report($e);
@@ -172,30 +172,26 @@ class UpdateListsFoxActiveCampaign extends Command
             $companyPresenter = (new Company)->present();
             $userPresenter = (new User)->present();
 
-            // \DB::enableQueryLog();
-            // $users = User::whereDoesntHave('companies', function($query) use ($companyPresenter) {
-            //     $query->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
-            //         ->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
-            //         ->where('contract_document_status', $companyPresenter->getContractDocumentStatus('approved'));
-            // })->orWhere('address_document_status', '<>', $userPresenter->getAddressDocumentStatus('approved'))
-            // ->orWhere('personal_document_status', '<>', $userPresenter->getPersonalDocumentStatus('approved'))
-            // ->get();
+            $users = User::whereHas('roles', function($query) {
+                $query->where('name', 'account_owner');
+            })->whereDoesntHave('companies', function($query) use($companyPresenter) {
+                $query->where(function($queryCompany) use($companyPresenter) {
+                    $queryCompany->where(function($companyJuridical) use($companyPresenter) {
+                        $companyJuridical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                           ->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
+                           ->where('contract_document_status', $companyPresenter->getContractDocumentStatus('approved'))
+                           ->where('company_type', $companyPresenter->getCompanyType('juridical person'));
+                    })
+                    ->orWhere(function($companyPhysical) use($companyPresenter) {
+                        $companyPhysical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                            ->where('company_type', $companyPresenter->getCompanyType('physical person'));
+                    });
+                });
+            })->orWhere('address_document_status', '<>', $userPresenter->getAddressDocumentStatus('approved'))
+            ->orWhere('personal_document_status', '<>', $userPresenter->getPersonalDocumentStatus('approved'))
+            ->get();
 
-            // $userIdsApproved = Company::where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
-            //     ->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
-            //     ->where('contract_document_status', $companyPresenter->getContractDocumentStatus('approved'))
-            //     ->get()->pluck('id');
-
-            // $users = User::whereNotIn('id', $userIdsApproved)
-            //     ->orWhere('address_document_status', '<>', $userPresenter->getAddressDocumentStatus('approved'))
-            //     ->orWhere('personal_document_status', '<>', $userPresenter->getPersonalDocumentStatus('approved'))
-            //     ->get();
-
-            // dd(\DB::getQueryLog());
-
-            // dd($users->pluck('id'));
-
-            // $this->updateUsersList($users, $listId);
+            $this->updateUsersList($users, $listId);
 
         } catch (Exception $e) {
             report($e);
