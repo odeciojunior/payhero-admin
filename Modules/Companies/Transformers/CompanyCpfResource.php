@@ -22,7 +22,11 @@ class CompanyCpfResource extends JsonResource
     public function toArray($request)
     {
         $presenter = $this->resource->present();
-        $project = UserProject::where('company_id', $this->resource->id)->first();
+        $project = UserProject::whereHas('project', function ($query) {
+            $query->where('status', 1);
+        })
+            ->where('company_id', $this->resource->id)
+            ->first();
 
         return [
             'id_code' => Hashids::encode($this->resource->id),

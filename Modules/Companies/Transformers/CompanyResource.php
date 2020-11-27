@@ -37,7 +37,11 @@ class CompanyResource extends JsonResource
         $companyService = new CompanyService();
         $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
         $user = $this->resource->user;
-        $project = UserProject::where('company_id', $this->resource->id)->first();
+        $project = UserProject::whereHas('project', function ($query) {
+            $query->where('status', 1);
+        })
+            ->where('company_id', $this->resource->id)
+            ->first();
 
         return [
             'id_code' => Hashids::encode($this->resource->id),
@@ -45,9 +49,13 @@ class CompanyResource extends JsonResource
             'support_email' => $this->resource->support_email ?? '',
             'support_telephone' => $this->resource->support_telephone ?? '',
             'fantasy_name' => $this->resource->company_type == 1 ? 'Pessoa física' : $this->resource->fantasy_name ?? '',
-            'document' => strlen($this->resource->document) == 14 ? FoxUtils::mask($this->resource->document,
-                '##.###.###/####-##') : (strlen($this->resource->document) == 11 ? FoxUtils::mask($this->resource->document,
-                '###.###.###-##') : $this->resource->document),
+            'document' => strlen($this->resource->document) == 14 ? FoxUtils::mask(
+                $this->resource->document,
+                '##.###.###/####-##'
+            ) : (strlen($this->resource->document) == 11 ? FoxUtils::mask(
+                $this->resource->document,
+                '###.###.###-##'
+            ) : $this->resource->document),
             'zip_code' => $this->resource->zip_code ?? '',
             'country' => $this->resource->country ?? '',
             'country_translated' => $this->resource->country ? __('definitions.enum.country.' . $this->resource->country) : '',
