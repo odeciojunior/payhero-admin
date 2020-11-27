@@ -112,7 +112,7 @@ class ProfileApiController
 
                 if ((!empty($userUpdateChanges['document']) || array_key_exists('document', $userUpdateChanges))) {
                     if (!empty($company)) {
-                        $company->update(['company_document' => $user->document]);
+                        $company->update(['document' => $user->document]);
                     }
                 }
                 if ($user->address_document_status == $user->present()->getAddressDocumentStatus('approved')) {
