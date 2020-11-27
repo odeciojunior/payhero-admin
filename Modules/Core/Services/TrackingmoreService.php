@@ -65,18 +65,20 @@ class TrackingmoreService
                 case preg_match('/^NX[0-9]{9}BR$/', $trackingNumber):
                     $carrierCode = 'brazil-correios';
                     break;
-                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
-                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
-                case preg_match('/^LZ{2}[0-9]{9}CN$/', $trackingNumber): // new zeland post
+//                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
+//                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
+//                case preg_match('/^LZ{2}[0-9]{9}CN$/', $trackingNumber): // new zeland post
+//                    $carrierCode = "cainiao";
+//                    break;
+                default:
                     $carrierCode = "cainiao";
                     break;
-                default:
-                    $carrierCode = $this->detectCarrier($trackingNumber);
-
-                    if ($carrierCode == "china-ems") {
-                        $carrierCode = "china-post";
-                    }
-                    break;
+//                    $carrierCode = $this->detectCarrier($trackingNumber);
+//
+//                    if ($carrierCode == "china-ems") {
+//                        $carrierCode = "china-post";
+//                    }
+//                    break;
             }
 
             $data = [
