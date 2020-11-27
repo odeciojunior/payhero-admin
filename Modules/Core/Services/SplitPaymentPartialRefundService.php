@@ -51,7 +51,6 @@ class SplitPaymentPartialRefundService
              ->setProducerValue()
              ->checkAffiliate()
              ->checkInstallmentsFreeTax()
-             ->checkConvertaxIntegration()
              ->checkPartners()
              ->checkProducerInvitation()
              ->createProducerTransaction()
@@ -131,17 +130,9 @@ class SplitPaymentPartialRefundService
                 }
 
                 if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
-                    if ($invite->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                        $percentageRate = $invite->company->gateway_tax;
-                    }else{
-                        $percentageRate = $invite->company->credit_card_tax;
-                    }
+                    $percentageRate = $invite->company->gateway_tax;
                 } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
-                    if ($invite->company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                        $percentageRate = $invite->company->gateway_tax;
-                    }else{
-                        $percentageRate = $invite->company->boleto_tax;
-                    }
+                    $percentageRate = $invite->company->gateway_tax;
                 }
 
                 if (preg_replace("/[^0-9]/", "", $this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == (new Sale)->present()
@@ -180,50 +171,6 @@ class SplitPaymentPartialRefundService
 
             $this->producerValue -= $this->installmentFreeTax;
             $this->cloudfoxValue += $this->installmentFreeTax;
-        }
-
-        return $this;
-    }
-
-    private function checkConvertaxIntegration()
-    {
-
-        $convertaxIntegration = ConvertaxIntegration::where('project_id', $this->sale->project->id)->first();
-
-        if (!empty($convertaxIntegration)) {
-
-            $convertaxUser    = User::find(27);
-            $convertaxCompany = Company::find(29);
-
-            $releaseDate = null;
-            if ($this->sale->payment_method == 1) {
-                $percentageRate            = $convertaxUser->credit_card_tax;
-                $convertaXReleaseMoneyDays = $convertaxUser->credit_card_release_money_days;
-            } else if ($this->sale->payment_method == 2) {
-                $percentageRate = $convertaxUser->boleto_tax;
-            }
-
-            if(isset($convertaXReleaseMoneyDays)) {
-                $this->sale->load('delivery');
-                $convertaXReleaseMoneyDays = ($convertaXReleaseMoneyDays < 7 && empty($this->sale->delivery)) ? 7 : $convertaXReleaseMoneyDays;
-                $releaseDate               = Carbon::now()->addDays($convertaXReleaseMoneyDays)->format('Y-m-d');
-            }
-
-            Transaction::create([
-                                    'sale_id'          => $this->sale->id,
-                                    'company_id'       => $convertaxCompany->id,
-                                    'value'            => $convertaxIntegration->value,
-                                    'release_date'     => $releaseDate,
-                                    'status'           => $this->transactionStatus,
-                                    'status_enum'      => (new Transaction)->present()
-                                                                           ->getStatusEnum($this->transactionStatus),
-                                    'currency'         => 'real',
-                                    'percentage_rate'  => $percentageRate,
-                                    'transaction_rate' => '1.00',
-                                    'type'             => (new Transaction)->present()->getType('convertaX'),
-                                ]);
-
-            $this->producerValue -= $convertaxIntegration->value;
         }
 
         return $this;
@@ -286,20 +233,6 @@ class SplitPaymentPartialRefundService
             $transactionRate = $producerCompany->transaction_rate;
         }
 
-        if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
-            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                $percentageRate = $producerCompany->gateway_tax;
-            }else{
-                $percentageRate = $producerCompany->credit_card_tax;
-            }
-        } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
-            if ($producerCompany->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-                $percentageRate = $producerCompany->gateway_tax;
-            }else{
-                $percentageRate = $producerCompany->boleto_tax;
-            }
-        }
-
         $transactionsRefunded = $this->refundedTransactions;
         $transactionRefundedProducer = $transactionsRefunded->firstWhere('type', (new Transaction)->present()->getType('producer'));
 
@@ -311,7 +244,7 @@ class SplitPaymentPartialRefundService
                                 'status'           => $this->transactionStatus,
                                 'status_enum'      => (new Transaction)->present()
                                                                        ->getStatusEnum($this->transactionStatus),
-                                'percentage_rate'  => $percentageRate,
+                                'percentage_rate'  => $producerCompany->gateway_tax,
                                 'transaction_rate' => $transactionRate,
                                 'type'             => (new Transaction)->present()->getType('producer'),
                                 'installment_tax'  => $producerCompany->installment_tax,

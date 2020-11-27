@@ -66,8 +66,6 @@ class CollaboratorsApiController extends Controller
             $data['password'] = bcrypt($data['password']);
             $data['transaction_rate'] = '1.00';
             $data['balance'] = '0';
-            $data['boleto_release_money_days'] = 0;
-            $data['invites_amount'] = 1;
             $data['address_document_status'] = 3;
             $data['personal_document_status'] = 3;
             $data['account_owner_id'] = auth()->user()->account_owner_id;

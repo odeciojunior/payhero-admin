@@ -19,7 +19,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $id
  * @property int $user_id
  * @property string $fantasy_name
- * @property string $company_document
+ * @property string $document
  * @property string $zip_code
  * @property string $country
  * @property string $state
@@ -87,7 +87,7 @@ class Company extends Model
     protected $fillable = [
         'user_id',
         'fantasy_name',
-        'company_document',
+        'document',
         'zip_code',
         'country',
         'state',
@@ -114,18 +114,14 @@ class Company extends Model
         'subseller_getnet_id',
         'subseller_getnet_homolog_id',
         'account_type',
-        'document_number',
+        'extra_document',
         'document_issue_date',
         'document_issuer',
         'document_issuer_state',
         'active_flag',
         'gateway_tax',
-        'boleto_tax',
-        'credit_card_tax',
         'installment_tax',
         'gateway_release_money_days',
-        'credit_card_release_money_days',
-        'boleto_release_money_days',
         'transaction_rate',
         'deleted_at',
         'created_at',

@@ -14,7 +14,7 @@ class ValidateCnpjRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_document' => 'required|unique:companies,company_document,NULL,id,deleted_at,NULL',
+            'company_document' => 'required|unique:companies,document,NULL,id,deleted_at,NULL',
         ];
     }
 

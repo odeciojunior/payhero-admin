@@ -142,6 +142,20 @@ $(document).ready(function () {
         updateAccountStatementData();
     }
 
+    function paginationStatement() {
+        $("#pagination-statement").jPages({
+            containerID: "table-statement-body",
+            perPage: 10,
+            startPage: 1,
+            startRange: 1,
+            first: false,
+            previous: '',
+            next: '',
+            last: false,
+            delay: 1,
+        });
+    }
+
     function hasSaleBeforeGetnetExist() {
         $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
 
@@ -784,30 +798,22 @@ $(document).ready(function () {
     }
 
     let statusExtract = {
-        1: '<span class="badge badge-sm badge-pendente p-2">Aguardando postagem válida</span>',
-        2: '<span class="badge badge-sm badge-info p-2">Aguardando liquidação</span>',
-        3: '<span class="badge badge-sm badge-success p-2">Pago</span>'
+        'WAITING_FOR_VALID_POST': 'pendente',
+        'WAITING_LIQUIDATION': 'info',
+        'PAID': 'success',
+        'REVERSED': 'warning',
+        'UNKNOW': 'error',
     }
 
-    let perPage = 10;
-    const state = {
-        page: 1,
-        perPage,
-        totalPage: 0,
-        maxVisibleButtons: 100
-    }
-
-    let page = 0;
-    let start = 0;
-    let end = 0;
 
     function updateAccountStatementData() {
         loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
 
         $('#table-statement-body').html('');
+        $('#pagination-statement').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement_unique").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
 
         $(".numbers").hide();
 
@@ -829,95 +835,17 @@ $(document).ready(function () {
             success: response => {
                 updateClassHTML();
 
-                items = response;
+                let items = response.transactions;
                 $('#statement-money #available-in-period-statement').html('R$ 0,00');
 
                 if (isEmpty(items)) {
                     loadOnAny('#nav-statement #available-in-period-statement', true);
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
-                    return;
-                }
+                    return false;
+                } else {
 
-                let totalValue = 0;
-                $.each(items, function (index, value) {
-                    totalValue = value.subSellerRateSumTotalAmount + totalValue;
-                })
 
-                let isNegativeStatement = false;
-                if (totalValue < 1) {
-                    isNegativeStatement = true;
-                }
-
-                totalValue = totalValue / 100;
-
-                $('#statement-money #available-in-period-statement').html(`
-                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${(totalValue.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                        })
-                    )}</span>`
-                );
-                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
-
-                $(".numbers").show();
-
-                state.totalPage = Math.ceil(items.length / perPage);
-
-                const controls = {
-                    next() {
-                        state.page++;
-
-                        if (state.page > state.totalPage) {
-                            state.page--;
-                        }
-                    },
-                    prev() {
-                        state.page--;
-
-                        if (state.page < 1) {
-                            state.page++;
-                        }
-                    },
-                    goTo(page) {
-                        if (page < 1) {
-                            page = 1;
-                        }
-                        state.page = +page;
-
-                        if (page > state.totalPage) {
-                            state.page = state.totalPage;
-                        }
-                    },
-                    createListeners(exec = false) {
-
-                        if (exec) {
-                            controls.goTo(1);
-                            update();
-                        }
-                        exec = false;
-                        $('.first').on('click', function () {
-                            controls.goTo(1);
-                            update();
-                        })
-                        $('.last').on('click', function () {
-                            controls.goTo(state.totalPage);
-                            update();
-                        })
-                        $('.next').on('click', function () {
-                            controls.next();
-                            update();
-                        })
-                        $('.prev').on('click', function () {
-                            controls.prev();
-                            update();
-                        })
-
-                    }
-                }
-
-                const list = {
-                    create(item) {
+                    items.forEach(function (item) {
                         let dataTable = `<tr>
                                         <td style="vertical-align: middle;">
                                         Transação`;
@@ -937,104 +865,64 @@ $(document).ready(function () {
                         }
 
                         dataTable += `<br>
-                                        <small>(Data da venda: ${item.transactionDate})</small>
+                                        <small>(${item.summaryStatus.description})</small>
                                      </td>
                                      <td>
-                                        ${statusExtract[item.status]}
+                                        <span class="badge badge-sm badge-${statusExtract[item.summaryStatus.identify]} p-2">${item.summaryStatus.status}</span>
                                      </td>
                                     <td style="vertical-align: middle;">
-                                        ${item.paymentDate} <br>
+                                        ${item.summaryDate}
                                     </td>
-                                    <td style="vertical-align: middle; color:green;">${item.subSellerRateAmount}</td>
+                                    <td style="vertical-align: middle; color:${item.summaryValue >= 0 ? 'green' : 'red'};">${item.subSellerRateAmount}</td>
                                 </tr>
                             `;
                         updateClassHTML(dataTable);
-                    },
-                    update() {
-                        page = state.page - 1;
-                        start = page * state.perPage;
-                        end = start + state.perPage;
+                    });
 
-                        const paginatedItems = items.slice(start, end);
-                        updateClassHTML();
-                        paginatedItems.forEach(list.create);
-                    }
-                }
+                    let totalInPeriod = response.totalInPeriod;
 
-                const buttons = {
-                    create(number) {
-                        const button = document.createElement('div');
-                        button.innerHTML = number;
-
-                        if (state.page == number) {
-                            button.classList.add('active');
-                        }
-
-                        button.addEventListener('click', (event) => {
-                            const page = event.target.innerText;
-
-                            controls.goTo(page);
-                            update();
-                        })
-
-                        button.classList.add('btn', 'nav-btn');
-
-                        $(".pagination .numbers").append(button);
-
-                    },
-                    update() {
-                        $(".pagination .numbers").html('');
-                        const {maxLeft, maxRight} = buttons.calculateMaxVisible();
-
-                        for (let page = maxLeft; page <= maxRight; page++) {
-                            buttons.create(page);
-                        }
-                    },
-                    calculateMaxVisible() {
-                        let maxLeft = (state.page - Math.floor(state.maxVisibleButtons / 2));
-                        let maxRight = (state.page - Math.floor(state.maxVisibleButtons / 2));
-
-                        if (maxLeft < 1) {
-                            maxLeft = 1;
-                            maxRight = state.maxVisibleButtons;
-                        }
-
-                        if (maxRight > state.totalPage) {
-                            maxLeft = state.totalPage - (state.maxVisibleButtons - 1)
-                            maxRight = state.totalPage;
-
-                            if (maxLeft < 1) {
-                                maxLeft = 1;
-                            }
-                        }
-                        return {maxLeft, maxRight};
+                    let isNegativeStatement = false;
+                    if (totalInPeriod < 1) {
+                        isNegativeStatement = true;
                     }
 
+                    $('#statement-money #available-in-period-statement').html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                        ${totalInPeriod}
+                    </span>`
+                    );
+                    paginationStatement();
+
+
+                    $("#pagination-statement span").addClass('jp-hidden');
+                    $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
+                    $("#pagination-statement a.jp-current").addClass('active');
+                    $("#pagination-statement a").on('click', function () {
+                        $("#pagination-statement a").removeClass('active');
+                        $(this).addClass('active');
+                    });
+
+                    $("#pagination-statement").on('click', function () {
+                        $("#pagination-statement span").remove();
+                    });
+
+
+                    loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
                 }
 
-                function update() {
-                    list.update();
-                    buttons.update();
-                }
 
-                function init() {
-                    update();
-                    controls.createListeners(true);
-                }
-
-                init();
-
-                function updateClassHTML(dataTable = 0) {
-                    if (dataTable.length > 0) {
-                        $('#table-statement-body').append(dataTable);
-                    } else {
-                        $('#table-statement-body').html('');
-                    }
-                    $("#statementTable").addClass('table-striped');
-                }
             }
         });
 
+    }
+
+    function updateClassHTML(dataTable = 0) {
+        if (dataTable.length > 0) {
+            $('#table-statement-body').append(dataTable);
+            $("#statementTable").addClass('table-striped');
+        } else {
+            $('#table-statement-body').html('');
+        }
     }
 
     //atualiza a table de statement
@@ -1043,13 +931,32 @@ $(document).ready(function () {
         updateAccountStatementData();
     });
 
+    let rangesToDateRangeStatement = {
+        'Hoje': [moment(), moment()],
+        'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+        'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+        'Este mês': [moment().startOf('month'), moment().endOf('month')],
+        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    };
+
+    let envDebug = $("meta[name=app-debug]").attr('content');
+
+    if (envDebug == 'true') {
+
+        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    }
+
     $('#date_range_statement').daterangepicker({
-        startDate: moment(),
-        endDate: moment(),
+        maxSpan: {
+            days: 31,
+        },
+        startDate: moment().subtract(7, 'days'),
+        endDate: moment().add(0, 'days'),
         opens: 'center',
-        maxDate: moment(),
-        alwaysShowCalendar: false,
-        showCustomRangeLabel: false,
+        maxDate: moment().add(1, 'month'),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',
@@ -1064,9 +971,7 @@ $(document).ready(function () {
             monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
             firstDay: 0
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-        }
+        ranges: rangesToDateRangeStatement
     });
 
     $("#bt_get_csv").on("click", function () {
@@ -1098,6 +1003,21 @@ $(document).ready(function () {
             } else {
                 $("#transferred_value").hide();
             }
+        }
+    });
+
+    $('#statement_sale').on('change paste keyup select', function () {
+
+        let val = $(this).val();
+
+        if (val === '') {
+
+            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
+            $('#statement_data_type_select').attr('disabled', false).removeClass('disableFields');
+        } else {
+
+            $('#date_range_statement').attr('disabled', true).addClass('disableFields');
+            $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
         }
     });
 });

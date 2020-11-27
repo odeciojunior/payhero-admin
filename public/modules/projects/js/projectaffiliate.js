@@ -70,8 +70,6 @@ $(() => {
                 }
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
-                $('#show-credit-release').text(project.credit_card_release_money_days);
-                $('#show-billet-release').text(project.boleto_release_money_days);
                 loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {

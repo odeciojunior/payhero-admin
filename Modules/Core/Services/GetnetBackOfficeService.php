@@ -228,32 +228,40 @@ class GetnetBackOfficeService extends GetnetService
             $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
+
         if (!empty($this->getStatementSaleHashId())) {
 
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
 
             if ($sale) {
 
-                try {
+                if ($sale->created_at > '2020-10-30 13:28:51.0') {
 
-                    $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->id . '-' . $sale->attempts;
+                } else {
 
-                    if (isset($gatewayResult->order_id)) {
-
-                        $queryParameters['order_id'] = $gatewayResult->order_id;
-                    }
-                } catch (Exception $exception) {
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->attempts;
                 }
+
+                $queryParameters['order_id'] = $orderId;
             }
         }
 
-        //dd($queryParameters);
+        if (request('debug')) {
+
+            echo '<pre>';
+            print_r($queryParameters);
+            echo '</pre>';
+            echo '<hr>';
+        }
+
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
 
         //dd($startDate, $endDate, $url);
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET', null, null, false);
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)

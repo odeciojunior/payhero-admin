@@ -7,6 +7,11 @@
         .popover {
             left: -50px !important;
         }
+
+        .disableFields {
+            background-color: #f3f7f9;
+            opacity: 1;
+        }
     </style>
 @endpush
 
@@ -28,7 +33,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
                                  viewBox="0 0 24 24">
                                 <path
-                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                                    d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                             </svg>
                             <div class="btn-group" role="group">
                                 <button id="bt_get_xls" type="button"
@@ -149,7 +154,7 @@
                                                 <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
                                                               style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                    class="currency">$</span></span>
+                                                                class="currency">$</span></span>
                                                 </div>
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
@@ -165,7 +170,7 @@
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      viewBox="0 0 24 24">
                                                     <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                        d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                 </svg>
                                                 Sacar dinheiro
                                             </button>
@@ -372,20 +377,26 @@
                                                 <label for="statement_data_type_select">Data</label>
                                                 <select class="form-control select-pad" name="status"
                                                         id="statement_data_type_select">
-                                                    <option value="liquidation_date" selected>
-                                                        Data da liquidação
-                                                    </option>
-                                                    <option value="transaction_date">
+                                                    <option value="transaction_date" selected>
                                                         Data da venda
+                                                    </option>
+                                                    <option value="liquidation_date">
+                                                        Data da liquidação
                                                     </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md">
-                                            <div class="form-group" style="margin-top:30px">
+                                            {{--<div class="form-group" style="margin-top:30px">
                                                 <input name="date_range_statement" type="date"
                                                        id="date_range_statement_unique"
                                                        class="select-pad" placeholder="Clique para editar...">
+                                            </div>--}}
+
+                                            <div class="form-group">
+                                                <label for="date_range_statement">Período</label>
+                                                <input name="date_range_statement" id="date_range_statement"
+                                                       class="select-pad" placeholder="Clique para editar..." readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -395,16 +406,23 @@
                                                 <label for="statement_status_select">Status</label>
                                                 <select class="form-control select-pad" name="status"
                                                         id="statement_status_select">
-                                                    <option value="all">Todos</option>
-                                                    <option value="1">Aguardando postagem válida</option>
-                                                    <option value="2">Aguardando liquidação</option>
-                                                    <option value="3">Pago</option>
+                                                    <option value="ALL">Todos</option>
+                                                    <option value="WAITING_FOR_VALID_POST">Aguardando postagem válida
+                                                    </option>
+                                                    <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
+                                                    <option value="PAID">Liquidado</option>
+                                                    <option value="REVERSED">Estornado</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="date_range_statement">Transação</label>
+                                                <label for="statement_sale">
+                                                    Transação <i class="material-icons gray ml-5 font-size-18"
+                                                                 data-toggle="tooltip"
+                                                                 title=""
+                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">help</i>
+                                                </label>
                                                 <input name="statement_sale" id="statement_sale"
                                                        class="select-pad" placeholder="Transação">
                                             </div>
@@ -423,34 +441,40 @@
                                     <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
                                         <tr>
-                                            <th scope="col" class="headCenter" style="width:33%">Razão</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Status</th>
-                                            <th scope="col" class="headCenter" style="width:33%">Data prevista
+                                            <th scope="col" class="headCenter" style="width:30%">Razão</th>
+                                            <th scope="col" class="headCenter" style="width:30%">Status</th>
+                                            <th scope="col" class="headCenter" style="width:30%">Data prevista
                                                 <i class="material-icons gray ml-5 font-size-18"
                                                    data-toggle="tooltip"
                                                    title=""
                                                    data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
                                             </th>
-                                            <th scope="col" class="headCenter" style="width:34%">Valor</th>
+                                            <th scope="col" class="headCenter" style="width:10%">Valor</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table-statement-body" class="custom-t-body">
+                                        <tbody id="table-statement-body"
+                                               class="custom-t-body table-statement-body-class">
                                         </tbody>
                                     </table>
+                                    {{-- <section id="paginate">
+                                         <div class="pagination"
+                                              style="margin-top:10px;position:relative;float:right">
+                                             <div class="numbers">
+                                                 <div style=""></div>
+                                             </div>
+                                         </div>
+                                     </section>--}}
+                                    <div id="pagination-statement"
+                                         class="pagination-sm margin-chat-pagination pagination-statement-class"
+                                         style="margin-top:10px;position:relative;float:right">
 
-                                    <section id="paginate">
-                                        <div class="pagination"
-                                             style="margin-top:10px;position:relative;float:right">
-                                            <div class="numbers">
-                                                <div style=""></div>
-                                            </div>
-                                        </div>
-                                    </section>
+                                    </div>
 
-                                    <ul id="pagination-statement" class="pagination-sm margin-chat-pagination"
+                                    {{--<ul id="pagination-statement"
+                                        class="pagination-sm margin-chat-pagination pagination-statement-class"
                                         style="margin-top:10px;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
+                                        --}}{{--js carrega...--}}{{--
+                                    </ul>--}}
                                 </div>
                             </div>
                         </div>
@@ -511,10 +535,12 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+            <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
         @endpush
     </div>

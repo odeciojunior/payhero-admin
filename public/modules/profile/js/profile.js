@@ -607,7 +607,6 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 $("#credit-card-tax").val(response.data.new_card_tax_value);
                 $("#debit-card-tax").val(response.data.new_card_tax_value);
-                $("#boleto-tax").val(response.data.new_boleto_tax_value);
                 $("#debit-card-release").val($("#credit-card-release option:selected").html());
             }
         });
