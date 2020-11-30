@@ -1084,6 +1084,7 @@ class SaleService
 
     /**
      * @param $filters
+     * @return Builder|null
      */
     public function getSalesBlockedBalance($filters)
     {
@@ -1186,6 +1187,7 @@ class SaleService
     /**
      * @param $filters
      * @return array
+     * @throws PresenterException
      */
     public function getResumeBlocked($filters)
     {
@@ -1249,5 +1251,17 @@ class SaleService
         $transactions = $this->getSalesBlockedBalance($filters);
 
         return $transactions->paginate(10);
+    }
+
+    /**
+     * @param Sale $sale
+     * @return bool
+     */
+    public function saleIsGetnet(Sale $sale){
+        if (in_array($sale->gateway_id, [14,15])){
+            return true;
+        }
+
+        return false;
     }
 }

@@ -157,13 +157,19 @@ class ProjectsApiController extends Controller
             if ($photo != null) {
                 try {
                     $img = Image::make($photo->getPathname());
-                    $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'],
-                        $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                    $img->crop(
+                        $requestValidated['photo_w'],
+                        $requestValidated['photo_h'],
+                        $requestValidated['photo_x1'],
+                        $requestValidated['photo_y1']
+                    );
                     $img->save($photo->getPathname());
 
                     $digitalOceanPath = $digitalOceanService
-                        ->uploadFile("uploads/user/".Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/main',
-                            $photo);
+                        ->uploadFile(
+                            "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            $photo
+                        );
                     $project->update(['photo' => $digitalOceanPath]);
                 } catch (Exception $e) {
                     report($e);
@@ -230,7 +236,7 @@ class ProjectsApiController extends Controller
                 activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar configurações do projeto '.$project->name);
+                })->log('Visualizou tela editar configurações do projeto ' . $project->name);
 
                 $userProject = $userProjectModel->where('user_id', $user->account_owner_id)
                     ->where('project_id', $idProject)->first();
@@ -350,17 +356,25 @@ class ProjectsApiController extends Controller
                 if ($projectPhoto != null) {
                     $digitalOceanService->deleteFile($project->photo);
                     $img = Image::make($projectPhoto->getPathname());
-                    if (!empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
-                        && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])) {
-                        $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'],
-                            $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                    if (
+                        !empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
+                        && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])
+                    ) {
+                        $img->crop(
+                            $requestValidated['photo_w'],
+                            $requestValidated['photo_h'],
+                            $requestValidated['photo_x1'],
+                            $requestValidated['photo_y1']
+                        );
                     }
                     $img->resize(300, 300);
                     $img->save($projectPhoto->getPathname());
 
                     $digitalOceanPath = $digitalOceanService
-                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/main',
-                            $projectPhoto);
+                        ->uploadFile(
+                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            $projectPhoto
+                        );
                     $project->update([
                         'photo' => $digitalOceanPath,
                     ]);
@@ -378,8 +392,10 @@ class ProjectsApiController extends Controller
                     $img->save($projectLogo->getPathname());
 
                     $digitalOceanPathLogo = $digitalOceanService
-                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/projects/'.Hashids::encode($project->id).'/logo',
-                            $projectLogo);
+                        ->uploadFile(
+                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
+                            $projectLogo
+                        );
 
                     $project->update([
                         'logo' => $digitalOceanPathLogo,
@@ -458,7 +474,7 @@ class ProjectsApiController extends Controller
                 activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
                     $activity->subject_id = $id;
-                })->log('Visualizou o projeto '.$project->name);
+                })->log('Visualizou o projeto ' . $project->name);
 
                 return new ProjectsResource($project);
             }
@@ -507,7 +523,9 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         'message' => 'Telefone não pode ser vazio!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
             $project = $projectModel->find(Hashids::decode($projectId))->first();
 
@@ -515,7 +533,7 @@ class ProjectsApiController extends Controller
                 $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
             })
-                ->log('Visualizou tela envio de código para verificação de telefone contato do projeto '.$project->name);
+                ->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
 
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
@@ -524,7 +542,7 @@ class ProjectsApiController extends Controller
 
             $verifyCode = random_int(100000, 999999);
 
-            $message = "Código de verificação CloudFox - ".$verifyCode;
+            $message = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
             $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
 
@@ -532,15 +550,19 @@ class ProjectsApiController extends Controller
                 [
                     "message" => "Mensagem enviada com sucesso!",
 
-                ], 200)
-                ->withCookie("supportphoneverifycode_".Hashids::encode(auth()->id()).$projectId, $verifyCode, 15);
+                ],
+                200
+            )
+                ->withCookie("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
         } catch (Exception $ex) {
             report($ex);
 
             return response()->json(
                 [
                     'message' => 'Ocorreu um erro ao enviar sms para o telefone informado!',
-                ], 400);
+                ],
+                400
+            );
         }
     }
 
@@ -558,7 +580,7 @@ class ProjectsApiController extends Controller
             activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
                 $activity->log_name = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código telefone de contato do projeto '.$project->name);
+            })->log('Validação código telefone de contato do projeto ' . $project->name);
 
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
@@ -566,14 +588,18 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         'message' => 'Código de verificação não pode ser vazio!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
-            $cookie = Cookie::get("supportphoneverifycode_".Hashids::encode(auth()->id()).$projectId);
+            $cookie = Cookie::get("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId);
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
                         'message' => 'Código de verificação inválido!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
 
             $project->update(["support_phone_verified" => true]);
@@ -581,15 +607,19 @@ class ProjectsApiController extends Controller
             return response()->json(
                 [
                     "message" => "Telefone verificado com sucesso!",
-                ], 200)
-                ->withCookie(Cookie::forget("supportphoneverifycode_".Hashids::encode(auth()->id())).$projectId);
+                ],
+                200
+            )
+                ->withCookie(Cookie::forget("supportphoneverifycode_" . Hashids::encode(auth()->id())) . $projectId);
         } catch (Exception $e) {
             report($e);
 
             return response()->json(
                 [
                     'message' => 'Ocorreu um erro ao verificar código!',
-                ], 400);
+                ],
+                400
+            );
         }
     }
 
@@ -607,7 +637,7 @@ class ProjectsApiController extends Controller
             activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
                 $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: '.$project->name);
+            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $project->name);
 
             $data = $request->all();
             $contact = $data["contact"] ?? null;
@@ -615,7 +645,9 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         'message' => 'Email não pode ser vazio!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
 
             if ($contact != $project->contact) {
@@ -632,23 +664,31 @@ class ProjectsApiController extends Controller
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                'noreply@cloudfox.net', 'cloudfox', $contact, auth()->user()->name,
-                "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac", $data
+                'noreply@cloudfox.net',
+                'cloudfox',
+                $contact,
+                auth()->user()->name,
+                "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
+                $data
             );
 
             return response()->json(
                 [
                     "message" => "Email enviado com sucesso!",
 
-                ], 200)
-                ->withCookie("contactverifycode_".Hashids::encode(auth()->id()).$projectId, $verifyCode, 15);
+                ],
+                200
+            )
+                ->withCookie("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
         } catch (Exception $e) {
             report($e);
 
             return response()->json(
                 [
                     'message' => 'Ocorreu um erro, ao enviar o email com o código!',
-                ], 400);
+                ],
+                400
+            );
         }
     }
 
@@ -666,7 +706,7 @@ class ProjectsApiController extends Controller
             activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
                 $activity->log_name = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código email de contato do projeto: '.$project->name);
+            })->log('Validação código email de contato do projeto: ' . $project->name);
 
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
@@ -674,14 +714,18 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         'message' => 'Código de verificação não pode ser vazio!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
-            $cookie = Cookie::get("contactverifycode_".Hashids::encode(auth()->id()).$projectId);
+            $cookie = Cookie::get("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId);
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
                         'message' => 'Código de verificação inválido!',
-                    ], 400);
+                    ],
+                    400
+                );
             }
 
             $project->update(["contact_verified" => true]);
@@ -689,15 +733,19 @@ class ProjectsApiController extends Controller
             return response()->json(
                 [
                     "message" => "Email verificado com sucesso!",
-                ], 200)
-                ->withCookie(Cookie::forget("contactverifycode_".Hashids::encode(auth()->id())).$projectId);
+                ],
+                200
+            )
+                ->withCookie(Cookie::forget("contactverifycode_" . Hashids::encode(auth()->id())) . $projectId);
         } catch (Exception $e) {
             report($e);
 
             return response()->json(
                 [
                     'message' => 'Ocorreu um erro ao verificar código!',
-                ], 400);
+                ],
+                400
+            );
         }
     }
 

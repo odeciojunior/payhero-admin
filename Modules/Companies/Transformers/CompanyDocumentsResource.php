@@ -18,11 +18,22 @@ class CompanyDocumentsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $digitalOceanFileService = app(DigitalOceanFileService::class);
+        $amazonFileService = app(AmazonFileService::class);
         $companyDocumentModel    = app(CompanyDocument::class);
 
         $temporaryUrl = '';
         if (!empty($this->document_url)) {
-            $temporaryUrl = FoxUtils::getAwsSignedUrl($this->document_url,10,'documents');
+            // Gera o Link temporário de acordo com o driver
+
+            if (strstr($this->document_url, 'digitaloceanspaces')) {
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($this->document_url, 180);
+            }
+
+            if (strstr($this->document_url, 'amazonaws')) {
+                $amazonFileService->setDisk('s3_documents');
+                $temporaryUrl = $amazonFileService->getTemporaryUrlFile($this->document_url, 180);
+            }
         }
 
         return [
@@ -33,5 +44,3 @@ class CompanyDocumentsResource extends JsonResource
         ];
     }
 }
-
-

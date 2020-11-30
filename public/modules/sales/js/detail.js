@@ -321,6 +321,12 @@ $(() => {
         }
 
         $("#desconto-value").html("R$ " + sale.discount);
+        if (!!sale.cupom_code) {
+            $("#cupom-code").html(sale.cupom_code);
+            $(".cupom-info").show();
+        } else {
+            $(".cupom-info").hide();
+        }
         $('.text-discount').html('');
         $("#automatic-discount-value").html('');
         if (sale.automatic_discount !== '0,00') {
