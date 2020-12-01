@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Services\FoxUtils;
 use stdClass;
+use Vinkla\Hashids\Facades\Hashids;
 
 class GetNetStatementService
 {
@@ -158,6 +159,7 @@ class GetNetStatementService
                     'summaryValue' => $subSellerRateAmount,
                     'summaryDate' => $summaryDate,
                     '_originalOrderId' => $orderId,
+                    '_id' => current(Hashids::connection('sale_id')->decode($arrayOrderId[0])),
                     '_summaryTransactionStatusCode' => $summary->transaction_status_code,
                     '_summaryTranslateTransactionStatusCode' => $this->translateTransactionStatusCode($summary->transaction_status_code),
                     '_summaryTranslateSign' => $this->translateTransactionSign($summary->transaction_sign),
