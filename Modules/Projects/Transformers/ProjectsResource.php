@@ -101,7 +101,11 @@ class ProjectsResource extends JsonResource
             'billet_discount'                => $this->billet_discount,
             'pre_selected_installment'       => $this->pre_selected_installment,
             'required_email_checkout'        => $this->required_email_checkout,
-            'document_type_checkout'        => $this->document_type_checkout,
+            'document_type_checkout'         => $this->document_type_checkout,
+            'countdown_timer_flag'           => $this->countdown_timer_flag,
+            'countdown_timer_color'          => $this->countdown_timer_color,
+            'countdown_timer_time'           => $this->countdown_timer_time,
+            'countdown_timer_description'    => $this->countdown_timer_description,
         ];
     }
 }

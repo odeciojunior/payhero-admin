@@ -1,0 +1,26 @@
+.color-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.color-options > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.color-options > div > i {
+    display: none;
+    font-size: 20px
+}
+
+.color-options > div.active > i {
+    display: inline;
+}
