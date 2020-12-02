@@ -18,6 +18,7 @@
                             <option value="facebook">Facebook</option>
                             <option value="google_adwords">Google Adwords</option>
                             <option value="google_analytics">Google Analytics</option>
+                            <option value="google_analytics_four">Google Analytics 4.0</option>
                             <option value="taboola">Taboola</option>
                             <option value="outbrain">Outbrain</option>
                         </select>
