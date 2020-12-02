@@ -42,6 +42,7 @@ use Laravel\Passport\HasApiTokens;
  * @property json $id_wall_result
  * @property string $sex
  * @property string $mother_name
+ * @property boolean $has_sale_before_getnet
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
@@ -111,6 +112,7 @@ class User extends Authenticable
         'id_wall_result',
         'sex',
         'mother_name',
+        'has_sale_before_getnet',
         'created_at',
         'updated_at',
         'deleted_at',
