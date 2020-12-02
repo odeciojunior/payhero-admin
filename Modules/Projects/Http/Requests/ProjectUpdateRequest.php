@@ -56,20 +56,23 @@ class ProjectUpdateRequest extends FormRequest
             "pre_selected_installment"         => 'nullable',
             "required_email_checkout"          => 'nullable',
             "document_type_checkout"           => 'nullable',
-            'countdown_timer_flag'             => 'nullable',
-            'countdown_timer_color'            => 'sometimes|string|max:7',
-            'countdown_timer_time'             => 'nullable',
+            'countdown_timer_flag'             => 'boolean',
+            'countdown_timer_color'            => 'string|max:7',
+            'countdown_timer_time'             => 'int|min:1',
             'countdown_timer_description'      => 'nullable|string|max:255',
-            'countdown_timer_finished_message' => 'nullable|string|max:255',
+            'countdown_timer_finished_message' => 'string|min:20|max:255',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.max'        => 'O campo Nome do projeto permite apenas 100 caracteres',
-            'description.max' => 'O campo Descrição permite apenas 100 caracteres',
-            'url_page.max'    => 'O campo URL da pagina principal permite apenas 100 caracteres',
+            'name.max'                                => 'O campo Nome do projeto permite apenas 100 caracteres',
+            'description.max'                         => 'O campo Descrição permite apenas 100 caracteres',
+            'url_page.max'                            => 'O campo URL da pagina principal permite apenas 100 caracteres',
+            'countdown_timer_time.min'                => 'O campo Tempo do Contador precisa ser maior que 0',
+            'countdown_timer_finished_message.min'    => 'O campo da mensagem ao finalizar o contador precisa ter entre 20 e 255 caracteres',
+            'countdown_timer_finished_message.string' => 'O campo da mensagem ao finalizar o contador não pode estar vazio',
         ];
     }
 

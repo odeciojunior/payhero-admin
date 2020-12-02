@@ -531,8 +531,8 @@
 
                                     <div class='col-md-6 col-sm-12 col-12'>
                                         <label class="control-label"> Tempo (minutos) </label>
-                                        <input class="form-control" name="countdown_timer_time"
-                                               type='number' placeholder='0' maxlength='4' class="form-control">
+                                        <input class="form-control" name="countdown_timer_time" data-mask="000"
+                                               type='text' placeholder='0' maxlength='4' class="form-control">
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
                                             Informe o tempo (em minutos) que contador regressivo exibirá.
