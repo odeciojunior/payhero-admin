@@ -394,8 +394,7 @@
                             </div>
                             <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
                                 <div class="switch-holder">
-                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança
-                                        com desconto</label>
+                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="discount_recovery_status"
                                                name="discount_recovery_status" class='check discount-recovery'
@@ -422,10 +421,10 @@
                                 </p>
                             </div>
                             <p class="info mt-5 col-12" style="font-size: 10px;">
-                                <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar está função,
+                                <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,
                                 tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do
                                 cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor
-                                maximo que poderá ser aplicado.
+                                máximo que poderá ser aplicado.
                             </p>
                         </div>
                         <div class='row'>
@@ -451,6 +450,116 @@
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento aceito no checkout.
                                 </p>
+                            </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                                <div class="switch-holder mb-3">
+                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>
+                                        Mostrar contador regressivo no checkout
+                                    </label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="countdown_timer_flag"
+                                               name="countdown_timer_flag" class='check countdown-timer-flag'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p class='info pt-5' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        Ao habilitar esta função, será exibido um contador regressivo na página de
+                                        checkout.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class='col-12 countdown-config'>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label class="control-label">Cor de fundo</label>
+                                        <input type="hidden" name="countdown_timer_color" value="#f78d1e"/>
+
+                                        <div class="color-options">
+                                            <div data-color="#f8e34a" style="background: #f8e34a;" title="Amarelo">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#f78d1e" style="background: #f78d1e;" title="Laranja">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#ff4c52" style="background: #ff4c52;" title="Vermelho">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#ff3366" style="background: #ff3366;" title="Rosa">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#111111" style="background: #111111;" title="Preto">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#555555" style="background: #555555;" title="Cinza">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#aaaaaa" style="background: #aaaaaa;" title="Prata">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#d4af37" style="background: #d4af37;" title="Dourado">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#3e8ef7" style="background: #3e8ef7;" title="Azul Claro">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#0bb2d4" style="background: #0bb2d4;" title="Azul Escuro">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+
+                                            <div data-color="#11c26d" style="background: #11c26d;" title="Verde">
+                                                <i class="fa fa-check text-white"></i>
+                                            </div>
+                                        </div>
+
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            Cor do plano de fundo do banner do contador regressivo.
+                                        </p>
+                                    </div>
+
+                                    <div class='col-md-6 col-sm-12 col-12'>
+                                        <label class="control-label"> Tempo (minutos) </label>
+                                        <input class="form-control" name="countdown_timer_time" data-mask="000"
+                                               type='text' placeholder='0' maxlength='4' class="form-control">
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            Informe o tempo (em minutos) que contador regressivo exibirá.
+                                        </p>
+                                    </div>
+
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
+                                        <label for="link">Descrição</label>
+                                        <textarea type="text" class="form-control" name="countdown_timer_description"
+                                                  maxlength="255" placeholder="Informe a descrição"></textarea>
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            É opcional informar uma descrição e somente será exibida em desktops.
+                                        </p>
+                                    </div>
+
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
+                                        <label for="link">Mensagem ao encerrar contador regressivo</label>
+                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message"
+                                                  maxlength="255" placeholder="Informe a mensagem"></textarea>
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            Informe uma mensagem que será exibida após o contador regressivo finalizar
+                                        </p>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
