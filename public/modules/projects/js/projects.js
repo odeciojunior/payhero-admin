@@ -392,15 +392,16 @@ $(() => {
         //     $('#credit_card .credit_card_no').attr('selected', true);
         // }
 
+        $('[name=countdown_timer_flag]').prop('checked', !!(project.countdown_timer_flag))
+        $('[name=countdown_timer_color]').val(project.countdown_timer_color)
+        $('[name=countdown_timer_time]').val(project.countdown_timer_time)
+        $('[name=countdown_timer_description]').val(project.countdown_timer_description)
+        $('[name=countdown_timer_finished_message]').val(project.countdown_timer_finished_message || 'Seu tempo acabou! Você precisa finalizar sua compra imediatamente.')
+        $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
+
         if (project.countdown_timer_flag) {
-            $('[name=countdown_timer_flag]').prop('checked', true)
             $('.countdown-config').show('fast', 'linear')
-            $('[name=countdown_timer_color]').val(project.countdown_timer_color)
-            $('[name=countdown_timer_time]').val(project.countdown_timer_time)
-            $('[name=countdown_timer_description]').val(project.countdown_timer_description)
-            $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
         } else {
-            $('[name=countdown_timer_flag]').prop('checked', false)
             $('.countdown-config').hide('fast', 'linear')
         }
     }

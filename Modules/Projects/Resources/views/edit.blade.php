@@ -531,21 +531,31 @@
 
                                     <div class='col-md-6 col-sm-12 col-12'>
                                         <label class="control-label"> Tempo (minutos) </label>
-                                        <input class="form-control" name="countdown_timer_time"
-                                               type='number' placeholder='0' maxlength='4' class="form-control">
+                                        <input class="form-control" name="countdown_timer_time" data-mask="000"
+                                               type='text' placeholder='0' maxlength='4' class="form-control">
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
                                             Informe o tempo (em minutos) que contador regressivo exibirá.
                                         </p>
                                     </div>
 
-                                    <div class='col-12 mb-20 mt-2'>
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
                                         <label for="link">Descrição</label>
                                         <textarea type="text" class="form-control" name="countdown_timer_description"
                                                   maxlength="255" placeholder="Informe a descrição"></textarea>
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
                                             É opcional informar uma descrição e somente será exibida em desktops.
+                                        </p>
+                                    </div>
+
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
+                                        <label for="link">Mensagem ao encerrar contador regressivo</label>
+                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message"
+                                                  maxlength="255" placeholder="Informe a mensagem"></textarea>
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            Informe uma mensagem que será exibida após o contador regressivo finalizar
                                         </p>
                                     </div>
 
