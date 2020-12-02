@@ -539,13 +539,23 @@
                                         </p>
                                     </div>
 
-                                    <div class='col-12 mb-20 mt-2'>
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
                                         <label for="link">Descrição</label>
                                         <textarea type="text" class="form-control" name="countdown_timer_description"
                                                   maxlength="255" placeholder="Informe a descrição"></textarea>
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
                                             É opcional informar uma descrição e somente será exibida em desktops.
+                                        </p>
+                                    </div>
+
+                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
+                                        <label for="link">Mensagem ao encerrar contador regressivo</label>
+                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message"
+                                                  maxlength="255" placeholder="Informe a mensagem"></textarea>
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                            Informe uma mensagem que será exibida após o contador regressivo finalizar
                                         </p>
                                     </div>
 

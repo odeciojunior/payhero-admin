@@ -46,6 +46,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $countdown_timer_color
  * @property int $countdown_timer_time
  * @property string $countdown_timer_description
+ * @property string $countdown_timer_finished_message
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $checkouts
@@ -125,6 +126,7 @@ class Project extends Model
         'countdown_timer_color',
         'countdown_timer_time',
         'countdown_timer_description',
+        'countdown_timer_finished_message',
         'created_at',
         'updated_at',
         'deleted_at',

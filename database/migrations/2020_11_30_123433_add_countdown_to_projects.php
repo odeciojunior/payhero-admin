@@ -18,6 +18,7 @@ class AddCountdownToProjects extends Migration
             $table->string('countdown_timer_color', 7)->after('countdown_timer_flag')->default('#f78d1e')->nullable();
             $table->integer('countdown_timer_time')->after('countdown_timer_color')->nullable();
             $table->string('countdown_timer_description', 255)->after('countdown_timer_time')->nullable();
+            $table->string('countdown_timer_finished_message', 255)->after('countdown_timer_description')->default('Seu tempo acabou! Você precisa finalizar sua compra imediatamente.')->nullable();
         });
     }
 
@@ -33,6 +34,7 @@ class AddCountdownToProjects extends Migration
             $table->dropColumn('countdown_timer_color');
             $table->dropColumn('countdown_timer_time');
             $table->dropColumn('countdown_timer_description');
+            $table->dropColumn('countdown_timer_finished_message');
         });
     }
 }
