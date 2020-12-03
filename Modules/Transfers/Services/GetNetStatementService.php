@@ -32,6 +32,7 @@ class GetNetStatementService
     const SEARCH_STATUS_ALL = 'ALL';
     const SEARCH_STATUS_WAITING_FOR_VALID_POST = 'WAITING_FOR_VALID_POST';
     const SEARCH_STATUS_WAITING_LIQUIDATION = 'WAITING_LIQUIDATION';
+    const SEARCH_STATUS_WAITING_WITHDRAWAL = 'WAITING_WITHDRAWAL';
     const SEARCH_STATUS_PAID = 'PAID';
     const SEARCH_STATUS_REVERSED = 'REVERSED';
     const SEARCH_STATUS_UNKNOW = 'UNKNOW';
@@ -229,14 +230,18 @@ class GetNetStatementService
             order_id = NOT NULL
             transaction_sign = +
             release_status = N
-            transaction_status_code = ??????????????????????
 
         Aguardando liquidação
             order_id = NOT NULL
             transaction_sign = +
             release_status = S
             subseller_rate_confirm_date = NULL
-            transaction_status_code = ??????????????????????
+
+        Aguardando saque
+            order_id = NOT NULL
+            transaction_sign = +
+            release_status = N
+            subseller_rate_confirm_date = NULL
 
         Pago
             order_id = NOT NULL
@@ -259,6 +264,10 @@ class GetNetStatementService
         } elseif ($hasOrderId && $isTransactionSignCredit && !$isReleaseStatus) {
 
             $type = self::SEARCH_STATUS_WAITING_FOR_VALID_POST;
+
+        } elseif ($hasOrderId && $isTransactionSignCredit && !$isReleaseStatus && empty($subSellerRateConfirmDate)) {
+
+            $type = self::SEARCH_STATUS_WAITING_WITHDRAWAL;
 
         } elseif ($hasOrderId && $isTransactionSignCredit && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
 
@@ -289,6 +298,11 @@ class GetNetStatementService
         } elseif ($type == self::SEARCH_STATUS_WAITING_FOR_VALID_POST) {
 
             $status = 'Aguardando postagem válida';
+            $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
+
+        } elseif ($type == self::SEARCH_STATUS_WAITING_WITHDRAWAL) {
+
+            $status = 'Aguardando saque';
             $description = 'Data da venda: ' . $this->formatDate($summary->transaction_date);
 
         } elseif ($type == self::SEARCH_STATUS_WAITING_LIQUIDATION) {
