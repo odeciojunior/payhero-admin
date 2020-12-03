@@ -19,6 +19,16 @@ class FinancesController extends Controller
     {
         return view('finances::index');
     }
+
+    /**
+     * @return Factory|View
+     */
+    public function oldIndex()
+    {
+        return view('finances::old-index');
+    }
+
+
 }
 
 

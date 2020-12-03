@@ -119,6 +119,8 @@ $(document).ready(function () {
                     approvedGetnet();
                     manipulateHTML();
 
+                    $("#statement-getnet, .title-getnet").html('Extrato 2.0');
+
                 } else {
                     $("#companies-not-approved-getnet").show();
                 }
