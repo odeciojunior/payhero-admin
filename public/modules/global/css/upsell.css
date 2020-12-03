@@ -139,6 +139,6 @@
     }
 }
 
-#upsell-description {
+#upsell-description * {
     color: #ffffff !important;
 }
