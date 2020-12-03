@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group col-6">
                         <label for="status">Status</label>
-                        <select name="status" type="text" class="form-control select-pad pixel-status">
+                        <select name="status" type="text" id="status" class="form-control select-pad pixel-status">
                             <option value="1">Ativo</option>
                             <option value="0">Desativado</option>
                         </select>
@@ -46,6 +46,19 @@
                     Outbrain:<br>
                     Categoria Purchase - nome Purchase<br>
                     Categoria Checkout - nome Checkout<br>
+                </h5>
+                <h5 id="google-analytics-info" style="display:none">
+                    Para os eventos do pixel funcionarem normalmente, nós enviamos os seguintes eventos:<br>
+                    - begin_checkout<br>
+                    - basic_data_complete<br>
+                    - delivery_complete<br>
+                    - add_payment_info<br>
+                    - add_coupon_discount<br>
+                    - initiate_upsell<br>
+                    - purchase<br>
+                    - boleto_purchase<br>
+                    - card_purchase<br>
+                    - upsell_purchase<br>
                 </h5>
                 <div class="row">
                     <div class='form-group col-12'>

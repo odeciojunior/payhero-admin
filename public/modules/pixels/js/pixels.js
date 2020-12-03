@@ -38,6 +38,7 @@ $(function () {
     $("#select-platform").change(function () {
         let value = $(this).val();
         $("#outbrain-info").hide();
+        $("#google-analytics-info").hide();
 
         if (value === 'facebook') {
             $("#input-code-pixel").html('').hide();
@@ -47,9 +48,11 @@ $(function () {
             $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
         } else if (value === 'google_analytics') {
             $("#input-code-pixel").html('').hide();
+            $("#google-analytics-info").show();
             $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
         } else if (value === 'google_analytics_four') {
             $("#input-code-pixel").html('').hide();
+            $("#google-analytics-info").show();
             $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
         } else if (value === 'outbrain') {
             $("#input-code-pixel").html('').hide();
@@ -126,6 +129,7 @@ $(function () {
                 $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
                     $("#modal-edit-pixel #outbrain-info-edit").hide();
+                    $("#modal-edit-pixel #google-analytics-info").hide();
 
                     if (value === 'facebook') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
@@ -135,9 +139,11 @@ $(function () {
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #google-analytics-info").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
                     } else if (value === 'google_analytics_four') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                     } else if (value === 'outbrain') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
@@ -155,11 +161,13 @@ $(function () {
                 } else if (pixel.platform === 'google_adwords') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
-                } else if (value === 'google_analytics_four') {
+                } else if (pixel.platform === 'google_analytics_four') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                 } else if (pixel.platform === 'google_analytics') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
                 } else if (pixel.platform === 'outbrain') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
@@ -388,7 +396,6 @@ $(function () {
 
                 } else {
                     $.each(response.data, function (index, value) {
-                        console.log(value.platform_enum)
                         let data = `<tr>
                                     <td>${value.name}</td>
                                     <td>${value.code}</td>
@@ -410,6 +417,7 @@ $(function () {
                 $("#select-platform").change(function () {
                     let value = $(this).val();
                     $("#outbrain-info").hide();
+                    $("#google-analytics-info").hide();
 
                     if (value === 'facebook') {
                         $("#input-code-pixel").html('').hide();
@@ -419,9 +427,11 @@ $(function () {
                         $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
                         $("#input-code-pixel").html('').hide();
+                        $("#google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
                     } else if (value === 'google_analytics_four') {
                         $("#input-code-pixel").html('').hide();
+                        $("#google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                     } else if (value === 'outbrain') {
                         $("#input-code-pixel").html('').hide();
