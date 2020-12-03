@@ -94,7 +94,7 @@ class GetNetStatementService
         if (request('debug')) {
 
             echo '<pre>';
-            print_r($transactions);
+            print_r($data);
             echo '</pre>';
             exit;
         }

@@ -15,6 +15,7 @@
                             <option value="facebook">Facebook</option>
                             <option value="google_adwords">Google Adwords</option>
                             <option value="google_analytics">Google Analytics</option>
+                            <option value="google_analytics_four">Google Analytics 4.0</option>
                             <option value="taboola">Taboola</option>
                             <option value="outbrain">Outbrain</option>
                         </select>
@@ -36,12 +37,6 @@
                     <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
                 </div>
-                <h5 id="outbrain-info" style="display:none">
-                    Para os eventos do pixel funcionarem normalmente, você deve cadastrar os seguintes eventos no
-                    Outbrain:<br>
-                    Categoria Purchase - nome Purchase<br>
-                    Categoria Checkout - nome Checkout<br>
-                </h5>
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
                         <label for="add_pixel_plans">Executar no(s) plano(s)</label>

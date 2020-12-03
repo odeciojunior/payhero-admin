@@ -2,8 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=1') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 @endpush
 
@@ -186,15 +185,15 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/partners/js/partners.js?v=1')}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v=2')}}"></script>
-        <script src="{{asset('modules/domain/js/domainEdit.js?v=2')}}"></script>
-        <script src="{{asset('modules/project-notification/js/projectNotification.js?v=4')}}"></script>
-        <script src="{{asset('modules/pixels/js/pixels.js?v=2')}}"></script>
-        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v=2')}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v=4')}}"></script>
-        <script src="{{asset('modules/projectupsell/js/index.js?v=2')}}"></script>
+        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
     @endpush

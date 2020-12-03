@@ -114,7 +114,7 @@ class ProjectsApiController extends Controller
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (empty($requestValidated)) {
-                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+                return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
             $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
@@ -132,7 +132,7 @@ class ProjectsApiController extends Controller
             ]);
 
             if (empty($project)) {
-                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+                return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
             $shipping = $shippingModel->create([
@@ -150,7 +150,7 @@ class ProjectsApiController extends Controller
             if (empty($shipping)) {
                 $project->delete();
 
-                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+                return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
             $photo = $request->file('photo-main');
@@ -197,7 +197,7 @@ class ProjectsApiController extends Controller
                 $shipping->delete();
                 $project->delete();
 
-                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+                return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
             $projectNotificationService = new ProjectNotificationService();
@@ -206,11 +206,11 @@ class ProjectsApiController extends Controller
             $projectNotificationService->createProjectNotificationDefault($project->id);
             $projectService->createUpsellConfig($project->id);
 
-            return response()->json(['message', 'Projeto salvo com sucesso']);
+            return response()->json(['message' => 'Projeto salvo com sucesso']);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
+            return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
         }
     }
 
@@ -320,7 +320,7 @@ class ProjectsApiController extends Controller
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (!$requestValidated) {
-                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
             $project = $projectModel->find(current(Hashids::decode($id)));
@@ -348,7 +348,7 @@ class ProjectsApiController extends Controller
                 $project->fill(["contact_verified" => false])->save();
             }
             if (!$projectUpdate) {
-                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
             try {
@@ -404,7 +404,7 @@ class ProjectsApiController extends Controller
             } catch (Exception $e) {
                 report($e);
 
-                return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
             $userProject = $userProjectModel->where([
@@ -434,7 +434,7 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+            return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
         }
     }
 
