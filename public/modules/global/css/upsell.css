@@ -26,10 +26,6 @@
     color: #ffffff
 }
 
-.upsell-description * {
-    color: #ffffff !important;
-}
-
 .timer {
     background: #eceff1;
     color: #262222;
@@ -141,4 +137,8 @@
     .cvv {
         height: 80px;
     }
+}
+
+#upsell-description {
+    color: #ffffff !important;
 }
