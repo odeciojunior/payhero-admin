@@ -2,18 +2,13 @@
 
 namespace Modules\Pixels\Transformers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Pixel;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class PixelsResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     * @param \Illuminate\Http\Request
-     * @return array
-     */
     public function toArray($request)
     {
         $pixelPresenter = (new Pixel())->present();

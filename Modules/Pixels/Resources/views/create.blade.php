@@ -15,6 +15,7 @@
                             <option value="facebook">Facebook</option>
                             <option value="google_adwords">Google Adwords</option>
                             <option value="google_analytics">Google Analytics</option>
+                            <option value="google_analytics_four">Google Analytics 4.0</option>
                             <option value="taboola">Taboola</option>
                             <option value="outbrain">Outbrain</option>
                         </select>
@@ -41,6 +42,19 @@
                     Outbrain:<br>
                     Categoria Purchase - nome Purchase<br>
                     Categoria Checkout - nome Checkout<br>
+                </h5>
+                <h5 id="google-analytics-info" style="display:none">
+                    Para os eventos do pixel funcionarem normalmente, nós enviamos os seguintes eventos:<br>
+                    - begin_checkout<br>
+                    - basic_data_complete<br>
+                    - delivery_complete<br>
+                    - add_payment_info<br>
+                    - add_coupon_discount<br>
+                    - initiate_upsell<br>
+                    - purchase<br>
+                    - boleto_purchase<br>
+                    - card_purchase<br>
+                    - upsell_purchase<br>
                 </h5>
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
