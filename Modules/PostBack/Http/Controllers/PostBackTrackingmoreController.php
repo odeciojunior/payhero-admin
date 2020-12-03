@@ -28,14 +28,17 @@ class PostBackTrackingmoreController extends Controller
             $trackingModel = new Tracking();
 
             $trackingCode = $data['data']['tracking_number'] ?? '';
-            $trackingStatus =  $data['data']['status'] ?? '';
+            $trackingStatus = $data['data']['status'] ?? '';
             $trackingStatus = $trackingmoreService->parseStatus($trackingStatus);
 
             $trackings = $trackingModel->where('tracking_code', $trackingCode)->get();
 
-            foreach ($trackings as $tracking){
+            foreach ($trackings as $tracking) {
                 $tracking->tracking_status_enum = $trackingStatus;
-                if( $trackingStatus != $trackingModel->present()->getTrackingStatusEnum('posted') ){
+                if (!in_array($trackingStatus, [
+                    $trackingModel->present()->getTrackingStatusEnum('posted'),
+                    $trackingModel->present()->getTrackingStatusEnum('exception')
+                ])) {
                     $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
                     $tracking->save();
                     event(new CheckSaleReleasedEvent($tracking->sale_id));
@@ -46,7 +49,8 @@ class PostBackTrackingmoreController extends Controller
 
         } catch (\Exception $ex) {
             report($ex);
-            Log:info($ex->getMessage());
+            Log:
+            info($ex->getMessage());
             return response()->json(['message' => 'Postback listerner error']);
         }
     }
