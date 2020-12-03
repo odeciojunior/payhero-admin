@@ -28,17 +28,17 @@ trait BraspagPrepareCompanyData
             'FancyName' => FoxUtils::getPortionOfString(
                 FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)), 0, 50),
             'DocumentType' => $documentType,
-            'DocumentNumber' => FoxUtils::getPortionOfString(FoxUtils::onlyNumbers($company->company_document), 0, 14),
+            'DocumentNumber' => FoxUtils::getPortionOfString(FoxUtils::onlyNumbers($company->document), 0, 14),
             'MerchantCategoryCode' => '5719',
             'ContactName' => FoxUtils::getPortionOfString($user->name, 0, 100),
             'ContactPhone' => FoxUtils::formatCellPhoneBraspag($user->cellphone),
             'MailAddress' => FoxUtils::getPortionOfString($user->email, 0, 50),
-            'Website' => $company->business_website ?? null,
+            'Website' => null,
             'Address' => $address,
             'BankAccount' => $this->getBankData($company),
             'Agreement' => [
                 "Fee" => 100,
-                "MdrPercentage" => $company->credit_card_tax,
+//                "MdrPercentage" => $company->credit_card_tax,
             ],
             'Notification' => [
                 'Url' => 'https://app.cloudfox.net/postback/braspag',
@@ -116,7 +116,7 @@ trait BraspagPrepareCompanyData
             'VerifierDigit' => empty($company->account_digit) ? 'x' : $company->account_digit,
             'AgencyNumber' => $company->agency,
             'AgencyDigit' => $agencyDigit,
-            'DocumentNumber' => FoxUtils::onlyNumbers($company->company_document),
+            'DocumentNumber' => FoxUtils::onlyNumbers($company->document),
             'DocumentType' => $company->company_type == 1 ? 'Cpf' : 'Cnpj',
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Invitation;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
@@ -57,19 +58,32 @@ class UpdateListsFoxActiveCampaign extends Command
     {
         try {
             // 2 - Usuários Ativos na plataforma
-            $this->listActives();
+            $this->listActives(2);
+
             // 3 - Usuários que nunca venderam
-            $this->listNoSales();
+            $this->listNoSales(3);
+
             // 4 - Usuários que vendem mais de 100k/mês
-            $this->listUsers100k();
+            $this->listUsers100k(4);
+
             // 6 - Usuários que não vendem a mais de 7 dias
-            $this->listNoSalesMore7Days();
+            $this->listNoSalesMore7Days(6);
+
+            // 14 - Usuários com saldo negativo na plataforma
+            $this->listUsersNegativeBalance(14);
+
+            // 15 - Usuários com chargeback superior a 1,5%
+            $this->listUsersChargeback15(15);
+
+            // 7 - Clientes com documentos faltando
+            $this->listUsersNotApproved(7);
+
         } catch (Exception $e) {
             report($e);
         }
     }
 
-    private function listUsers100k()
+    private function listUsers100k($listId)
     {
         try {
             
@@ -79,7 +93,7 @@ class UpdateListsFoxActiveCampaign extends Command
                     ->havingRaw('(SELECT SUM(total_paid_value) FROM sales WHERE sales.owner_id = users.id AND status = 1 AND created_at > NOW() - INTERVAL 30 DAY ) > 100000')
                     ->get();
 
-            $this->updateUsersList($users, 4); // 4 - Usuários que vendem mais de 100k/mês
+            $this->updateUsersList($users, $listId);
 
         } catch (Exception $e) {
             report($e);
@@ -87,37 +101,54 @@ class UpdateListsFoxActiveCampaign extends Command
 
     }
  
-    private function listActives()
+    private function listActives($listId)
     {
         try {
             
             $users = User::whereHas('sales', function($query) {
-                $query->whereDate('created_at', '>', Carbon::now()->subdays(30)->todateTimeString());
+                $query->whereDate('created_at', '>', Carbon::now()->subdays(7)->todateTimeString());
             })->get();
 
-            $this->updateUsersList($users, 2);  // 2 - Usuários Ativos na plataforma
+            $this->updateUsersList($users, $listId);
 
         } catch (Exception $e) {
             report($e);
         }
     }
 
-    private function listNoSales()
+    private function listNoSales($listId)
     {
         try {
             
+            $userPresenter = (new User)->present();
+            $companyPresenter = (new Company)->present();
             $users = User::doesntHave('sales')->with('roles')->whereHas('roles', function($query) {
                 $query->where('name', 'account_owner');
-            })->get();
-            
-            $this->updateUsersList($users, 3); // 3 - Usuários que nunca venderam
+            })->whereHas('companies', function($query) use($companyPresenter) {
+                $query->where(function($queryCompany) use($companyPresenter) {
+                    $queryCompany->where(function($companyJuridical) use($companyPresenter) {
+                        $companyJuridical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                           ->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
+                           ->where('contract_document_status', $companyPresenter->getContractDocumentStatus('approved'))
+                           ->where('company_type', $companyPresenter->getCompanyType('juridical person'));
+                    })
+                    ->orWhere(function($companyPhysical) use($companyPresenter) {
+                        $companyPhysical->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
+                            ->where('company_type', $companyPresenter->getCompanyType('physical person'));
+                    });
+                });
+            })->where('address_document_status', $userPresenter->getAddressDocumentStatus('approved'))
+            ->where('personal_document_status', $userPresenter->getPersonalDocumentStatus('approved'))
+            ->get();
+
+            $this->updateUsersList($users, $listId);
 
         } catch (Exception $e) {
             report($e);
         }
     }
 
-    private function listNoSalesMore7Days()
+    private function listNoSalesMore7Days($listId)
     {
         try {
 
@@ -127,7 +158,80 @@ class UpdateListsFoxActiveCampaign extends Command
                 $query->whereDate('created_at', '>', Carbon::now()->subdays(7)->todateTimeString());
             })->get();
 
-            $this->updateUsersList($users, 6); // 6 - Usuários que não vendem a mais de 7 dias
+            $this->updateUsersList($users, $listId);
+
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    private function listUsersNotApproved($listId)
+    {
+        try {
+
+            $companyPresenter = (new Company)->present();
+            $userPresenter = (new User)->present();
+
+            $users = User::whereHas('roles', function($query) {
+                $query->where('name', 'account_owner');
+            })->whereDoesntHave('companies', function($query) use($companyPresenter) {
+                $query->where(function($queryCompany) use($companyPresenter) {
+                    $queryCompany->where(function($companyJuridical) use($companyPresenter) {
+                        $companyJuridical->where('address_document_status', $companyPresenter->getAddressDocumentStatus('approved'))
+                           ->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
+                           ->where('contract_document_status', $companyPresenter->getContractDocumentStatus('approved'))
+                           ->where('company_type', $companyPresenter->getCompanyType('juridical person'));
+                    })
+                    ->orWhere(function($companyPhysical) use($companyPresenter) {
+                        $companyPhysical->where('bank_document_status', $companyPresenter->getBankDocumentStatus('approved'))
+                            ->where('company_type', $companyPresenter->getCompanyType('physical person'));
+                    });
+                });
+            })->orWhere('address_document_status', '<>', $userPresenter->getAddressDocumentStatus('approved'))
+            ->orWhere('personal_document_status', '<>', $userPresenter->getPersonalDocumentStatus('approved'))
+            ->get();
+
+            $this->updateUsersList($users, $listId);
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+    }
+
+    private function listUsersNegativeBalance($listId)
+    {
+        try {
+            // $users = User::whereHas('companies', function($query) {
+            //     $query->where('balance', '<', 0);
+            // })->get();
+
+            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified', 
+                    DB::raw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id) as balance')
+                )->havingRaw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id ) < 0')
+                ->get();
+
+            $this->updateUsersList($users, $listId);
+
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    private function listUsersChargeback15($listId)
+    {
+        try {
+
+            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified', 
+                DB::raw('
+                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) / 
+                    (SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 1 )) as tax_chergeback')
+                )->havingRaw('
+                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) / 
+                    (SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 1 )) > 0.015')
+                ->get();
+
+            $this->updateUsersList($users, $listId);
 
         } catch (Exception $e) {
             report($e);

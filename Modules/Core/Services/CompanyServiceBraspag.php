@@ -49,29 +49,29 @@ class CompanyServiceBraspag
         }
     }
 
-    private function updateBraspagStatusToError($company)
-    {
-        $company->update(
-            [
-                'braspag_status' => $company->present()->getStatusBraspag('Error'),
-            ]
-        );
-    }
+//    private function updateBraspagStatusToError($company)
+//    {
+//        $company->update(
+//            [
+//                'braspag_status' => $company->present()->getStatusBraspag('Error'),
+//            ]
+//        );
+//    }
 
     private function updateBraspagStatusAndMerchantId($company, $merchantId, $status)
     {
         if (FoxUtils::isProduction()) {
             $company->update(
                 [
-                    'braspag_merchant_id' => $merchantId,
-                    'braspag_status' => $status ?? '',
+//                    '' => $merchantId,
+//                    '' => $status ?? '',
                 ]
             );
         } else {
             $company->update(
                 [
-                    'braspag_merchant_homolog_id' => $merchantId,
-                    'braspag_status' => $status ?? '',
+//                    '' => $merchantId,
+//                    '' => $status ?? '',
                 ]
             );
         }

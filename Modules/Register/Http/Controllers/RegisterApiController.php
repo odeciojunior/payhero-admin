@@ -974,7 +974,7 @@ class RegisterApiController extends Controller
     private function createUserAndAssignRole($requestData, User $userModel)
     {
         $userService = new UserService();
-        $id_wall_result = $userService->getUserByIdwallCPF($requestData['document']);
+        $id_wall_result = json_encode($userService->getUserByIdwallCPF($requestData['document']));
 
         $user = $userModel->create($requestData);
         $user->update(['account_owner_id' => $user->id]);
@@ -1017,7 +1017,7 @@ class RegisterApiController extends Controller
             [
                 'user_id' => $user->account_owner_id,
                 'fantasy_name' => $fantasy_name,
-                'company_document' => $is_physical_person ? $requestData['document'] : $requestData['company_document'],
+                'document' => $is_physical_person ? $requestData['document'] : $requestData['company_document'],
                 'zip_code' => $zipCode,
                 'company_type' => $is_physical_person ? 1 : 2,
                 'support_email' => $supportEmail,

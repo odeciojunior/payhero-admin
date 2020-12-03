@@ -40,7 +40,7 @@ class ProcessPostbackBraspagBackoffice implements ShouldQueue
 
             $companyModel = new Company();
 
-            $company = $companyModel->where('braspag_merchant_id', $this->merchantId)->first();
+//            $company = $companyModel->where('', $this->merchantId)->first();
 
             if (empty($company) || $companyModel->present()->getStatusBraspag($company->braspag_status) == $this->status) {
                 return;

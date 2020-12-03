@@ -22,7 +22,11 @@ class CompanyCpfResource extends JsonResource
     public function toArray($request)
     {
         $presenter = $this->resource->present();
-        $project = UserProject::where('company_id', $this->resource->id)->first();
+        $project = UserProject::whereHas('project', function ($query) {
+            $query->where('status', 1);
+        })
+            ->where('company_id', $this->resource->id)
+            ->first();
 
         return [
             'id_code' => Hashids::encode($this->resource->id),
@@ -39,10 +43,6 @@ class CompanyCpfResource extends JsonResource
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
             'capture_transaction_enabled' => $this->capture_transaction_enabled,
-            'boleto_release_money' => $this->boleto_release_money_days,
-            'credit_card_tax' => $this->credit_card_tax,
-            'boleto_tax' => $this->boleto_tax,
-            'credit_card_release_money' => $this->credit_card_release_money_days,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
             'transaction_rate' => $this->transaction_rate,

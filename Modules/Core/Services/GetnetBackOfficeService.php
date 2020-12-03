@@ -19,8 +19,9 @@ class GetnetBackOfficeService extends GetnetService
 
     use GetnetPrepareCompanyData;
 
-    const STATEMENT_DATE_LIQUIDATION = 'liquidation';
+    const STATEMENT_DATE_SCHEDULE = 'schedule';
     const STATEMENT_DATE_TRANSACTION = 'transaction';
+    const STATEMENT_DATE_LIQUIDATION = 'liquidation';
 
     private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
     public string $postFieldsAccessToken, $authorizationToken;
@@ -206,9 +207,9 @@ class GetnetBackOfficeService extends GetnetService
         if (empty($this->getStatementDateField())) {
 
             throw new LogicException('É obrigatório especificar um campo de data para a busca');
-        } else if (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
+        } else if (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_SCHEDULE, self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
 
-            throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
+            throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_SCHEDULE . '", "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
         $startDate = $this->getStatementStartDate()->format('Y-m-d');
@@ -228,32 +229,40 @@ class GetnetBackOfficeService extends GetnetService
             $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
+
         if (!empty($this->getStatementSaleHashId())) {
 
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
 
             if ($sale) {
 
-                try {
+                if ($sale->created_at > '2020-10-30 13:28:51.0') {
 
-                    $gatewayResult = json_decode($sale->saleGatewayRequests->last()->gateway_result);
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->id . '-' . $sale->attempts;
+                } else {
 
-                    if (isset($gatewayResult->order_id)) {
-
-                        $queryParameters['order_id'] = $gatewayResult->order_id;
-                    }
-                } catch (Exception $exception) {
+                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->attempts;
                 }
+
+                $queryParameters['order_id'] = $orderId;
             }
         }
 
-        //dd($queryParameters);
+        if (request('debug')) {
+
+            echo '<pre>';
+            print_r($queryParameters);
+            echo '</pre>';
+            echo '<hr>';
+        }
+
         // https://developers.getnet.com.br/backoffice#tag/Statement
         // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
 
         //dd($startDate, $endDate, $url);
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET', null, null, false);
     }
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
@@ -331,7 +340,7 @@ class GetnetBackOfficeService extends GetnetService
     public function createPjCompany(Company $company)
     {
         $url = 'v1/mgm/pj/create-presubseller';
-        $data = $this->getPrepareDataCreatePjCompany($company);
+        $data = $this->getDataToCreatePjCompany($company);
 
         return $this->sendCurl($url, 'POST', $data, $company->id);
     }

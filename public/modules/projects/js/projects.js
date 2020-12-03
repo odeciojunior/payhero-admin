@@ -256,9 +256,9 @@ $(() => {
         for (let company of companies) {
             if (company.id == userProject.company_id || company.capture_transaction_enabled) {
                 $('#update-project #companies').append(
-                    `<option value="${company.id}" 
-                    ${(company.id === userProject.company_id ? 'selected' : '')} 
-                    ${(company.company_document_status == 'pending' ? 'disabled' : '')} 
+                    `<option value="${company.id}"
+                    ${(company.id === userProject.company_id ? 'selected' : '')}
+                    ${(company.company_document_status == 'pending' ? 'disabled' : '')}
                     ${(company.active_flag == 0 ? 'disabled' : '')}
                 >
                     ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
@@ -391,6 +391,19 @@ $(() => {
         // } else {
         //     $('#credit_card .credit_card_no').attr('selected', true);
         // }
+
+        $('[name=countdown_timer_flag]').prop('checked', !!(project.countdown_timer_flag))
+        $('[name=countdown_timer_color]').val(project.countdown_timer_color)
+        $('[name=countdown_timer_time]').val(project.countdown_timer_time)
+        $('[name=countdown_timer_description]').val(project.countdown_timer_description)
+        $('[name=countdown_timer_finished_message]').val(project.countdown_timer_finished_message || 'Seu tempo acabou! Você precisa finalizar sua compra imediatamente.')
+        $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
+
+        if (project.countdown_timer_flag) {
+            $('.countdown-config').show('fast', 'linear')
+        } else {
+            $('.countdown-config').hide('fast', 'linear')
+        }
     }
 
     function supportphoneVerified() {
@@ -648,6 +661,7 @@ $(() => {
         discountCard = (discountCard == '') ? 0 : discountCard;
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
+        formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
 
         if (!verify) {
             $.ajax({
@@ -972,6 +986,15 @@ $(() => {
         statusUrlAffiliatesColor()
     })
 
+    $('#countdown_timer_flag').off().on('click', function (){
+        let checked = $('[name=countdown_timer_flag]').prop('checked');
+        if (checked) {
+            $('.countdown-config').show('fast', 'linear')
+        } else {
+            $('.countdown-config').hide('fast', 'linear')
+        }
+    });
+
     statusUrlAffiliatesColor()
 
     function statusUrlAffiliatesColor() {
@@ -982,5 +1005,12 @@ $(() => {
             $('.div-url-affiliate').hide('fast', 'linear')
         }
     }
+
+    let colorOptions = $('.color-options > div');
+    colorOptions.on('click', function () {
+        $('[name=countdown_timer_color]').val($(this).data('color'));
+        colorOptions.removeClass('active');
+        $(this).addClass('active');
+    });
 
 });

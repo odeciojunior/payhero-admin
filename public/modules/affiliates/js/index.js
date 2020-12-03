@@ -70,7 +70,6 @@ $(document).ready(function () {
                     }
                     let dataRelease = '<strong>Dias para liberar dinheiro<br>';
                     dataRelease += `Boleto: <span class='green-gradient'>${response.data.billet_release_days} dias</span><br>`;
-                    dataRelease += `Cartão de crédito: <span class='green-gradient'>${response.data.credit_release_days} dias</span><br>`;
                     dataRelease += `Cartão de débito: <span class='green-gradient'>${response.data.debit_release_days} dias</span>`;
                     dataRelease += '</strong>';
                     $('.release_days').html(dataRelease);

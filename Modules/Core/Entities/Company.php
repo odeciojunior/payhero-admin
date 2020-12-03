@@ -19,7 +19,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $id
  * @property int $user_id
  * @property string $fantasy_name
- * @property string $company_document
+ * @property string $document
  * @property string $zip_code
  * @property string $country
  * @property string $state
@@ -33,9 +33,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $agency_digit
  * @property string $account
  * @property string $account_digit
- * @property string $statement_descriptor
- * @property string $shortened_descriptor
- * @property string $business_website
  * @property string $support_email
  * @property string $support_telephone
  * @property int $balance
@@ -43,13 +40,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
- * @property int $patrimony
- * @property string $state_fiscal_document_number
- * @property string $business_entity_type
- * @property string $economic_activity_classification_code
- * @property int $monthly_gross_income
- * @property int $federal_registration_status
- * @property string $founding_date
  * @property string $subseller_getnet_id
  * @property string $subseller_getnet_homolog_id
  * @property int $get_net_status
@@ -57,10 +47,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $credit_card_release_money
  * @property int $capture_transaction_enabled
  * @property int $account_type
- * @property int $social_value
  * @property int $gateway_tax
  * @property int $gateway_release_money_days
- * @property string $federal_registration_status_date
  * @property string $document_issue_date
  * @property string $document_issuer
  * @property string document_issuer_state
@@ -99,7 +87,7 @@ class Company extends Model
     protected $fillable = [
         'user_id',
         'fantasy_name',
-        'company_document',
+        'document',
         'zip_code',
         'country',
         'state',
@@ -113,9 +101,6 @@ class Company extends Model
         'agency_digit',
         'account',
         'account_digit',
-        'statement_descriptor',
-        'shortened_descriptor',
-        'business_website',
         'support_email',
         'support_telephone',
         'balance',
@@ -124,40 +109,25 @@ class Company extends Model
         'contract_document_status',
         'company_type',
         'order_priority',
-        'patrimony',
-        'state_fiscal_document_number',
-        'business_entity_type',
-        'economic_activity_classification_code',
-        'monthly_gross_income',
-        'federal_registration_status',
         'get_net_status',
         'capture_transaction_enabled',
-        'founding_date',
         'subseller_getnet_id',
         'subseller_getnet_homolog_id',
         'account_type',
-        'social_value',
-        'federal_registration_status_date',
-        'document_number',
+        'extra_document',
         'document_issue_date',
         'document_issuer',
         'document_issuer_state',
         'active_flag',
         'gateway_tax',
-        'boleto_tax',
-        'credit_card_tax',
         'installment_tax',
         'gateway_release_money_days',
-        'credit_card_release_money_days',
-        'boleto_release_money_days',
         'transaction_rate',
         'deleted_at',
         'created_at',
         'updated_at',
-        'braspag_status',
-        'braspag_merchant_id',
-        'braspag_merchant_homolog_id',
-        'id_wall_result'
+        'id_wall_result',
+        'block_checkout'
     ];
     /**
      * @var bool

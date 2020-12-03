@@ -5,22 +5,21 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\TransfersService;
 
-
-class VerifyTransfers extends Command
+class verifyTransfersGetnet extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'verify:transfers';
+    protected $signature = 'verify:transfersgetnet';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'routine responsible for transferring the available money from the transactions to the users company account';
+    protected $description = 'routine responsible for transferring the available money from the transactions to the users company registered getnet account';
 
     /**
      * Create a new command instance.
@@ -32,12 +31,8 @@ class VerifyTransfers extends Command
         parent::__construct();
     }
 
-    /**
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
-     */
     public function handle()
     {
-        $transfersService = new TransfersService();
-        $transfersService->verifyTransactions();
+        (new TransfersService())->verifyTransactionsGetnet();
     }
 }

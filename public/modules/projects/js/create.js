@@ -15,42 +15,35 @@ $(document).ready(function () {
         success: (response) => {
             loadOnAny('#card-project', true);
             if (!isEmpty(response)) {
-                let cont = 0;
+                let countApproved = 0;
                 $.each(response, (key, company) => {
                     let dataSelect = '';
                     if (company.capture_transaction_enabled) {
-                        // $('#company').append(
-                        //     `<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
-                        //         ${company.name}
-                        //     </option>`
-                        // );
+                        countApproved = countApproved + 1;
                         if (company.company_type == 'physical person') {
                             if (company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
-                                cont++;
                                 dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
                             } else {
                                 dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
                             }
                         } else if (company.company_type == 'juridical person') {
                             if (company.company_document_status != 'approved' || company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
-                                cont++;
                                 dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
                             } else {
                                 dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
                             }
                         }
-                    } else {
-                        cont++;
                     }
                     $('#company').append(dataSelect);
                 });
-                if (cont == response.length) {
-                    // $('.opt1').text('Nenhuma empresa aprovada');
+
+                if (countApproved == 0){
                     $('.page-content').hide();
                     $('#empty-companies-error').show();
-                    // $("#modal-not-approved-document-companies").modal('show');
+                }else{
+                    $('.page-content').show();
+                    $('#empty-companies-error').hide();
                 }
-                $('.content-error').hide();
             } else {
                 $('#card-project').hide();
                 $('.content-error').show();

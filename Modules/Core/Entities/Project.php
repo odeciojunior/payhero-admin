@@ -42,6 +42,11 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $card_redirect
  * @property string $analyzing_redirect
  * @property string $support_phone
+ * @property bool $countdown_timer_flag
+ * @property string $countdown_timer_color
+ * @property int $countdown_timer_time
+ * @property string $countdown_timer_description
+ * @property string $countdown_timer_finished_message
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $checkouts
@@ -117,6 +122,11 @@ class Project extends Model
         'pre_selected_installment',
         'required_email_checkout',
         'document_type_checkout',
+        'countdown_timer_flag',
+        'countdown_timer_color',
+        'countdown_timer_time',
+        'countdown_timer_description',
+        'countdown_timer_finished_message',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -174,7 +174,7 @@ $(document).ready(function () {
                     $("#address-document-id").show();
                 }
 
-                if (response.user.address_document_translate === 'approved' || response.user.address_document_translate == 'pending') {
+                if (response.user.address_document_translate === 'approved' || response.user.address_document_translate == 'analyzing') {
                     let zip_code = $('#zip_code')
                     let street = $('#street')
                     let number =  $('#number')
@@ -607,7 +607,6 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 $("#credit-card-tax").val(response.data.new_card_tax_value);
                 $("#debit-card-tax").val(response.data.new_card_tax_value);
-                $("#boleto-tax").val(response.data.new_boleto_tax_value);
                 $("#debit-card-release").val($("#credit-card-release option:selected").html());
             }
         });

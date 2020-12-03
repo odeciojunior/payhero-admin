@@ -314,12 +314,13 @@ class SaleService
         $taxa = 0;
         $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
-            $taxaReal = preg_replace('/[^0-9]/', '', $comission)
-                -  $totalToCalcTaxReal
+            $taxaReal = $totalToCalcTaxReal
+                - preg_replace('/[^0-9]/', '', $comission)
                 - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
         } else {
-            $taxaReal = preg_replace('/[^0-9]/', '', $comission) - $totalToCalcTaxReal;
+            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
         }
+        if($taxaReal < 0) $taxaReal *= -1;
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
         }
@@ -956,13 +957,7 @@ class SaleService
             $newTotalvalue = $totalValueWithTax;
         }
 
-        if ($company->get_net_status == (new Company)->present()->getStatusGetnet('approved')) {
-            $creditCardTax = $company->gateway_tax;
-        } else {
-            $creditCardTax = $company->credit_card_tax;
-        }
-
-        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $creditCardTax));
+        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $company->gateway_tax));
         $cloudfoxValue += str_replace('.', '', $company->transaction_rate);
         $cloudfoxValue += $interestValue;
 
@@ -1089,6 +1084,7 @@ class SaleService
 
     /**
      * @param $filters
+     * @return Builder|null
      */
     public function getSalesBlockedBalance($filters)
     {
@@ -1118,6 +1114,7 @@ class SaleService
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
                 ->where('transactions.status_enum', 1)
+                ->whereNotNull('delivery_id')
                 ->whereHas('sale', function($f1) use($salesModel){
                     $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
                        ->orWhere(function($f2) use($salesModel) {
@@ -1190,6 +1187,7 @@ class SaleService
     /**
      * @param $filters
      * @return array
+     * @throws PresenterException
      */
     public function getResumeBlocked($filters)
     {
@@ -1253,5 +1251,17 @@ class SaleService
         $transactions = $this->getSalesBlockedBalance($filters);
 
         return $transactions->paginate(10);
+    }
+
+    /**
+     * @param Sale $sale
+     * @return bool
+     */
+    public function saleIsGetnet(Sale $sale){
+        if (in_array($sale->gateway_id, [14,15])){
+            return true;
+        }
+
+        return false;
     }
 }

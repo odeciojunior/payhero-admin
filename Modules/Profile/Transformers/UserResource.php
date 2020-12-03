@@ -57,12 +57,9 @@ class UserResource extends JsonResource
             'sale_approved'               => empty($userNotification->sale_approved) ? false : $userNotification->sale_approved,
             'notazz'                      => empty($userNotification->notazz) ? false : $userNotification->notazz,
             'withdrawal_approved'         => empty($userNotification->withdrawal_approved) ? false : $userNotification->withdrawal_approved,
-            'released_balance'            => empty($userNotification->released_balance) ? false : $userNotification->released_balance,
             'domain_approved'             => empty($userNotification->domain_approved) ? false : $userNotification->domain_approved,
             'shopify'                     => empty($userNotification->shopify) ? false : $userNotification->shopify,
-            'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generated,
-            'credit_card_in_proccess'     => empty($userNotification->credit_card_in_proccess) ? false : $userNotification->credit_card_in_proccess,
-            'blocked_balance'             => empty($userNotification->blocked_balance) ? false : $userNotification->blocked_balance,
+            'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generate,
             'sex'                         => $this->sex ?? '',
             'mother_name'                 => $this->mother_name ?? '',
         ];

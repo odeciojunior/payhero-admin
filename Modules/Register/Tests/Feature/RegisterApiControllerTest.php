@@ -70,7 +70,7 @@ class RegisterApiControllerTest extends TestCase
             ]
         )->first();
 
-        $response = $this->get($this->url . 'verify-cnpj?company_document=' . $company->company_document);
+        $response = $this->get($this->url . 'verify-cnpj?company_document=' . $company->document);
         $response->assertStatus(403);
     }
 

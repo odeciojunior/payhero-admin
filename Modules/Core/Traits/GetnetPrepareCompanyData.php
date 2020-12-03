@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Traits;
 
+use Carbon\Carbon;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 
@@ -17,25 +18,26 @@ trait GetnetPrepareCompanyData
 
         $motherName = $user->mother_name;
 
-        if ($user->id_wall_result) {
-
-            $idwall =  json_decode($user->id_wall_result, true);
-
-            $motherName = current(array_map(function ($item) use ($motherName){
-
-                if (isset($item['tipo']) && $item['tipo'] == 'MAE')
-                    return ($item['nome']);
-
-
-                return $motherName;
-
-            }, $idwall['result']['pessoas_relacionadas']));
-
+        if (empty($motherName) && !FoxUtils::isEmpty($user->id_wall_result)
+            && !empty(json_decode($user->id_wall_result, true)['result']['pessoas_relacionadas'])
+        ) {
+            $idwall = json_decode($user->id_wall_result, true);
+            $motherName = current(
+                array_map(
+                    function ($item) use ($user) {
+                        if (isset($item['tipo']) && $item['tipo'] == 'MAE') {
+                            return ($item['nome']);
+                        }
+                        return $user->mother_name;
+                    },
+                    $idwall['result']['pessoas_relacionadas']
+                )
+            );
         }
 
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
             'birth_date' => $user->date_birth,
             'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($motherName)),
@@ -91,53 +93,30 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
         ];
     }
 
-    private function getPrepareDataCreatePjCompany(Company $company)
+    private function getDataToCreatePjCompany(Company $company)
     {
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
-        $stateFiscal = [
-            'SERVIÇO É ISENTO',
-            'SEM INSCRIÇÃO',
-            'INSENTO',
-            'n/e',
-            'Não Possui',
-            'Nao possui',
-            'nao possui',
-            'não possui',
-            'não se aplica',
-            'nao tem',
-            'Não tem',
-            'não',
-            '00000000',
-            '000000000000',
-            '000',
-            'ISENTO',
-            'isento',
-            'Isento',
-            'Insento',
-            'Isenta',
-            'Não Contribuinte'
-        ];
+        if (!FoxUtils::isEmpty($company->id_wall_result)) {
+            $idWall = json_decode($company->id_wall_result, true)['result'];
 
-        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 4
-            || in_array($company->state_fiscal_document_number, $stateFiscal)
-        ) {
-            $stateFiscalNumber = 'ISENTO';
-        } else {
-            $stateFiscalNumber = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
+            $founding_date = Carbon::createFromFormat('d/m/Y' , $idWall['cnpj']['data_abertura'])->format('Y-d-m');
+            $economic_activity_classification_code = FoxUtils::onlyNumbers($idWall['cnpj']['atividade_principal']);
+            $legal_name = FoxUtils::removeAccents($idWall['cnpj']['nome_empresarial']);
+            $trade_name = FoxUtils::removeAccents($idWall['cnpj']['nome_fantasia']);
         }
 
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'state_fiscal_document_number' => $stateFiscalNumber,
+            'legal_document_number' => FoxUtils::onlyNumbers($company->document),
+            'legal_name' => $legal_name ?? FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+            'trade_name' => $trade_name ?? FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+            'state_fiscal_document_number' => 'ISENTO',
             'email' => $user->email,
             'cellphone' => [
                 'area_code' => $telephone['dd'],
@@ -167,12 +146,9 @@ trait GetnetPrepareCompanyData
             "liability_chargeback" => "S",
             'marketplace_store' => "S",
             'payment_plan' => 3,
-            'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
-            'economic_activity_classification_code' => FoxUtils::onlyNumbers(
-                $company->economic_activity_classification_code
-            ),
+            'economic_activity_classification_code' => $economic_activity_classification_code ?? 0,
             'federal_registration_status' => 'active',
-            'founding_date' => $company->founding_date,
+            'founding_date' => $founding_date ?? null,
         ];
     }
 
@@ -181,7 +157,7 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => $company->document,
             "working_hours" => [
                 "start_day" => "mon",
                 "end_day" => "mon",
@@ -195,8 +171,8 @@ trait GetnetPrepareCompanyData
                 'document_issuer' => $company->document_issuer,
                 'document_issuer_state' => $company->document_issuer_state
             ],
-            'federal_registration_status_date' => $company->federal_registration_status_date,
-            'social_value' => $company->social_value,
+            'federal_registration_status_date' => null,
+            'social_value' => null,
         ];
     }
 
@@ -205,7 +181,7 @@ trait GetnetPrepareCompanyData
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => $company->document,
         ];
     }
 

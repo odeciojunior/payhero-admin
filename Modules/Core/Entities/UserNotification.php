@@ -17,7 +17,6 @@ use App\Traits\LogsActivity;
  * @property bool $sale_approved
  * @property bool $retroactive_notazz
  * @property bool $withdrawal_approved
- * @property bool $released_balance
  * @property bool $domain_approved
  * @property bool $send_push_shopify_integration_ready
  * @property bool $user_shopify_integration_store
@@ -43,11 +42,9 @@ class UserNotification extends Model
         'sale_approved',
         'notazz',
         'withdrawal_approved',
-        'released_balance',
         'domain_approved',
         'shopify',
         'billet_generated',
-        'credit_card_in_proccess',
     ];
     /**
      * @var bool

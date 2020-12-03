@@ -224,7 +224,7 @@ class FinanceApiService
                             'account_digit'    => $company->account_digit,
                             'agency'           => $company->agency,
                             'agency_digit'     => $company->agency_digit,
-                            'document'         => $company->company_document,
+                            'document'         => $company->document,
                         ],
                     ], 200
                 );
@@ -271,7 +271,7 @@ class FinanceApiService
                                         ], 400);
             }
             $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
-            $companyDocument = preg_replace("/[^0-9]/", "", $company->company_document);
+            $companyDocument = preg_replace("/[^0-9]/", "", $company->document);
 
             if ($withdrawalValue < 1000) {
                 return response()->json([

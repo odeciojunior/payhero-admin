@@ -77,6 +77,12 @@
                         <div class="col-lg-6 text-right">
                             <span id="desconto-value" class="text-muted ft-12"></span>
                         </div>
+                        <div class="col-lg-6 cupom-info">
+                            <span class="text-muted ft-12"> Cupom Utilizado</span>
+                        </div>
+                        <div class="col-lg-6 text-right cupom-info">
+                            <span id="cupom-code" class="text-muted ft-12"></span>
+                        </div>
                         <div class="col-lg-6">
                             <span class="text-muted ft-12 text-discount"></span>
                         </div>

@@ -50,6 +50,7 @@ class SalesResource extends JsonResource
             'boleto_due_date' => $this->boleto_due_date,
             'attempts' => $this->attempts,
             'shipment_value' => $this->shipment_value,
+            'cupom_code' => $this->cupom_code,
             //invoices
             'invoices' => $this->details->invoices ?? null,
             //transaction

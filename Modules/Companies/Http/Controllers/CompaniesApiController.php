@@ -78,7 +78,7 @@ class CompaniesApiController extends Controller
                     'user_id' => auth()->user()->account_owner_id,
                     'country' => $requestData["country"],
                     'fantasy_name' => $fantasyName,
-                    'company_document' => $companyDocument,
+                    'document' => $companyDocument,
                     'company_type' => $requestData['company_type'],
                     'account_type' => 1,
                 ]
@@ -151,30 +151,12 @@ class CompaniesApiController extends Controller
                 $requestData['support_telephone'] = '+' . FoxUtils::onlyNumbers($requestData['support_telephone']);
             }
             if (!empty($requestData['company_document'])) {
-                $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+                $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
             }
             if ($company->country == 'brazil' && !empty($requestData['agency'])
                 && strlen($requestData['agency']) == 3
             ) {
                 $requestData['agency'] = substr_replace($requestData['agency'], '0', 0, 0);
-            }
-            if (!empty($requestData['patrimony'])) {
-                $requestData['patrimony'] = preg_replace("/[^0-9]/", "", $requestData['patrimony']);
-            }
-            if (!empty($requestData['social_value'])) {
-                $requestData['social_value'] = preg_replace("/[^0-9]/", "", $requestData['social_value']);
-            }
-            if (!empty($requestData['monthly_gross_income'])) {
-                $requestData['monthly_gross_income'] = FoxUtils::onlyNumbers($requestData['monthly_gross_income']);
-            }
-
-            if (empty($requestData['state_fiscal_document_number'])
-                || strlen($requestData['state_fiscal_document_number']) < 5
-                || $requestData['state_fiscal_document_number'] == 'n/e'
-                || $requestData['state_fiscal_document_number'] == 'Não Possui'
-                || $requestData['state_fiscal_document_number'] == 'isento'
-            ) {
-                $requestData['state_fiscal_document_number'] = 'ISENTO';
             }
 
             $company->update($requestData);
@@ -532,15 +514,15 @@ class CompaniesApiController extends Controller
         try {
             $user = auth()->user();
             $companyModel = new Company();
-            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
-            $hasMerchantId = $companyModel->whereNotNull($columnName)
-                ->where('user_id', $user->account_owner_id)->exists();
+//            $columnName = FoxUtils::isProduction() ? 'braspag_merchant_id' : 'braspag_merchant_homolog_id';
+//            $hasMerchantId = $companyModel->whereNotNull($columnName)
+//                ->where('user_id', $user->account_owner_id)->exists();
 
             return response()->json(
                 [
-                    'has_merchant_id' => $hasMerchantId,
-                    'env' => env("APP_ENV", "local"),
-                ], 200);
+//                    'has_merchant_id' => $hasMerchantId,
+//                    'env' => env("APP_ENV", "local"),
+                ], Response::HTTP_UNAUTHORIZED);
         } catch (Exception $e) {
             report($e);
 

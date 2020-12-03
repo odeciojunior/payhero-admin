@@ -77,7 +77,18 @@ class SalesApiController extends Controller
 
             $sale = $saleService->getSaleWithDetails($id);
 
-            if ($sale->owner_id != auth()->user()->account_owner_id) {
+            if(!empty($sale->affiliate)){
+                $users = [
+                    $sale->owner_id,
+                    $sale->affiliate->user_id
+                ];
+            } else {
+                $users = [
+                    $sale->owner_id,
+                ];
+            }
+
+            if (!in_array(auth()->user()->account_owner_id, $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
 
@@ -208,7 +219,6 @@ class SalesApiController extends Controller
                 'getnet_sandbox',
                 'getnet_production'
             ])) {
-                // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues, $refundObservation);
             } else {
                 $result = $saleService->refund($saleId, $refundObservation);
