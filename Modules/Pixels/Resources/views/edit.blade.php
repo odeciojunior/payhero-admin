@@ -40,26 +40,6 @@
                     <input value="" name="code" id='code-pixel' type="text" class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel-edit">
                 </div>
-                <h5 id="outbrain-info-edit" style="display:none">
-                    Para os eventos do pixel funcionarem normalmente, você deve cadastrar os seguintes eventos
-                    no
-                    Outbrain:<br>
-                    Categoria Purchase - nome Purchase<br>
-                    Categoria Checkout - nome Checkout<br>
-                </h5>
-                <h5 id="google-analytics-info" style="display:none">
-                    Para os eventos do pixel funcionarem normalmente, nós enviamos os seguintes eventos:<br>
-                    - begin_checkout<br>
-                    - basic_data_complete<br>
-                    - delivery_complete<br>
-                    - add_payment_info<br>
-                    - add_coupon_discount<br>
-                    - initiate_upsell<br>
-                    - purchase<br>
-                    - boleto_purchase<br>
-                    - card_purchase<br>
-                    - upsell_purchase<br>
-                </h5>
                 <div class="row">
                     <div class='form-group col-12'>
                         <label for="edit_pixel_plans">Executar no(s) plano(s)</label>
