@@ -175,7 +175,14 @@ class LoginController extends Controller
                 throw new \Exception('Usuário não existe');
 
             auth()->loginUsingId($user->id);
-            return response()->redirectTo('/dashboard');
+
+
+            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+                return response()->redirectTo('/dashboard');
+            } else {
+                return response()->redirectTo('/sales');
+            }
+
 
         } catch (\Exception $e) {
             return response()->json([
