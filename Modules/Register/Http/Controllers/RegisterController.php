@@ -13,6 +13,7 @@ use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class RegisterController extends Controller
@@ -26,13 +27,20 @@ class RegisterController extends Controller
      * @param $userId
      * @return Application|Factory|RedirectResponse|View
      */
-    public function loginAsSomeUser($userId)
+    public function loginAsSomeUser($managerId,$userId)
     {
         $userIdDecode = Hashids::decode($userId)[0];
-
-        if (!empty($userIdDecode)) {
-            auth()->loginUsingId($userIdDecode);
-
+        $managerIdDecode = Hashids::decode($managerId)[0];
+        if (!empty($userIdDecode) && !empty($managerIdDecode)) {
+            $user = auth()->loginUsingId($userIdDecode);
+            $userModel = new User();
+            activity()->on($userModel)->tap(
+                function (Activity $activity) use ($managerIdDecode) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = $managerIdDecode;
+                    $activity->causer_id = $managerIdDecode;
+                }
+            )->log('Fez login na conta do usuário '.$user->name);
             return response()->redirectTo('/dashboard');
         }
 
