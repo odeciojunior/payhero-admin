@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Services\FoxUtils;
 use stdClass;
+use Vinkla\Hashids\Facades\Hashids;
 
 class GetNetStatementService
 {
@@ -93,7 +94,7 @@ class GetNetStatementService
         if (request('debug')) {
 
             echo '<pre>';
-            print_r($transactions);
+            print_r($data);
             echo '</pre>';
             exit;
         }
@@ -157,7 +158,9 @@ class GetNetStatementService
                     'summaryStatus' => $status,
                     'summaryValue' => $subSellerRateAmount,
                     'summaryDate' => $summaryDate,
+                    'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                     '_originalOrderId' => $orderId,
+                    '_id' => current(Hashids::connection('sale_id')->decode($arrayOrderId[0])),
                     '_summaryTransactionStatusCode' => $summary->transaction_status_code,
                     '_summaryTranslateTransactionStatusCode' => $this->translateTransactionStatusCode($summary->transaction_status_code),
                     '_summaryTranslateSign' => $this->translateTransactionSign($summary->transaction_sign),
@@ -166,16 +169,9 @@ class GetNetStatementService
                     '_transactionDate' => $transactionDate,
                     '_release_status' => $details[0]->release_status,
                     '_subSellerRateClosingDate' => $subSellerRateClosingDate,
-                    '_subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                 ];
 
                 switch (request('status')) {
-
-                    case self::SEARCH_STATUS_ALL:
-
-                        $data[] = $statement;
-                        $totalInPeriod += $subSellerRateAmount;
-                        break;
 
                     case self::SEARCH_STATUS_PAID:
                         if ($statement->summaryStatus['identify'] == self::SEARCH_STATUS_PAID) {
@@ -204,6 +200,11 @@ class GetNetStatementService
                             $data[] = $statement;
                             $totalInPeriod += $subSellerRateAmount;
                         }
+                        break;
+
+                    default:
+                        $data[] = $statement;
+                        $totalInPeriod += $subSellerRateAmount;
                         break;
                 }
             }

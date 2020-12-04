@@ -240,6 +240,19 @@
                 </div>
             </div>
             <div class="fixhalf"></div>
+            <!-- Aviso Problemas com os Códigos -->
+            <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
+                <div class="d-flex">
+                    <i class="material-icons mr-10">contact_support</i>
+                    <div class="w-full">
+                        <strong class="font-size-16">Problemas com os códigos?</strong>
+                        <p class="font-size-14 pr-md-100 mb-5">
+                            Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
+                        </p>
+                    </div>
+                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                </div>
+            </div>
             <!-- Aviso de Saldo Bloqueado -->
             <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10"
                  style="display:none;">

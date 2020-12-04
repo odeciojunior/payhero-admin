@@ -7,8 +7,9 @@ let formatPlatform = {
     1: 'Facebook',
     2: 'Google Adwords',
     3: 'Google Analytics',
-    4: 'Taboola',
-    5: 'Outbrain'
+    4: 'Google Analytics 4.0',
+    5: 'Taboola',
+    6: 'Outbrain'
 }
 
 $(function () {
@@ -37,6 +38,7 @@ $(function () {
     $("#select-platform").change(function () {
         let value = $(this).val();
         $("#outbrain-info").hide();
+        $("#google-analytics-info").hide();
 
         if (value === 'facebook') {
             $("#input-code-pixel").html('').hide();
@@ -45,8 +47,13 @@ $(function () {
             $("#input-code-pixel").html('AW-').show();
             $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
         } else if (value === 'google_analytics') {
-            $("#input-code-pixel").html('UA-').show();
-            $("#code-pixel").attr("placeholder", '8984567741-3');
+            $("#input-code-pixel").html('').hide();
+            $("#google-analytics-info").show();
+            $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
+        } else if (value === 'google_analytics_four') {
+            $("#input-code-pixel").html('').hide();
+            $("#google-analytics-info").show();
+            $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
         } else if (value === 'outbrain') {
             $("#input-code-pixel").html('').hide();
             $("#outbrain-info").show();
@@ -58,7 +65,6 @@ $(function () {
 
     });
 
-    //carrega os itens na tabela
     atualizarPixel();
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
@@ -123,6 +129,7 @@ $(function () {
                 $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
                     $("#modal-edit-pixel #outbrain-info-edit").hide();
+                    $("#modal-edit-pixel #google-analytics-info").hide();
 
                     if (value === 'facebook') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
@@ -131,8 +138,13 @@ $(function () {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('UA-').show();
-                        $("#modal-edit-pixel #code-pixel").attr("placeholder", '8984567741-3');
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #google-analytics-info").show();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
+                    } else if (value === 'google_analytics_four') {
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #google-analytics-info").show();
+                        $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                     } else if (value === 'outbrain') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #outbrain-info-edit").show();
@@ -149,9 +161,14 @@ $(function () {
                 } else if (pixel.platform === 'google_adwords') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
+                } else if (pixel.platform === 'google_analytics_four') {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #google-analytics-info").show();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                 } else if (pixel.platform === 'google_analytics') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('UA-').show();
-                    $("#modal-edit-pixel #code-pixel").attr("placeholder", '8984567741-3');
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #google-analytics-info").show();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
                 } else if (pixel.platform === 'outbrain') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #outbrain-info-edit").show();
@@ -179,11 +196,14 @@ $(function () {
         if (pixel.platform == 'google_analytics') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 2).change();
         }
-        if (pixel.platform == 'taboola') {
+        if (pixel.platform == 'google_analytics_four') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 3).change();
         }
-        if (pixel.platform == 'outbrain') {
+        if (pixel.platform == 'taboola') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 4).change();
+        }
+        if (pixel.platform == 'outbrain') {
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 5).change();
         }
 
         if (pixel.status == '1') { //Ativo
@@ -397,6 +417,7 @@ $(function () {
                 $("#select-platform").change(function () {
                     let value = $(this).val();
                     $("#outbrain-info").hide();
+                    $("#google-analytics-info").hide();
 
                     if (value === 'facebook') {
                         $("#input-code-pixel").html('').hide();
@@ -405,8 +426,13 @@ $(function () {
                         $("#input-code-pixel").html('AW-').show();
                         $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#input-code-pixel").html('UA-').show();
-                        $("#code-pixel").attr("placeholder", '8984567741-3');
+                        $("#input-code-pixel").html('').hide();
+                        $("#google-analytics-info").show();
+                        $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
+                    } else if (value === 'google_analytics_four') {
+                        $("#input-code-pixel").html('').hide();
+                        $("#google-analytics-info").show();
+                        $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                     } else if (value === 'outbrain') {
                         $("#input-code-pixel").html('').hide();
                         $("#outbrain-info").show();

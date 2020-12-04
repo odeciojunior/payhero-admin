@@ -164,6 +164,7 @@ class TransfersService
 
 
         foreach ($transactions->cursor() as $transaction) {
+
             try {
                 if (!empty($transaction->company_id)) {
                     $company = $companyModel->find($transaction->company_id);
@@ -185,19 +186,25 @@ class TransfersService
                         $result = json_decode($result);
 
                         $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
-                        $transactionGetNet = collect($transactionsGetNet)->first();
 
-                        if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
-                            $transaction->update(
-                                [
-                                    'status' => 'transfered',
-                                    'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                                ]
-                            );
+                        if (array_key_exists('transactions', $transactionsGetNet)) {
+
+                            $transactionGetNet = collect($transactionsGetNet['transactions'])->first();
+
+                            if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
+
+                                $transaction->update(
+                                    [
+                                        'status' => 'transfered',
+                                        'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                    ]
+                                );
+                            }
                         }
+
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 report($e);
             }
         }
