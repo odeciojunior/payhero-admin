@@ -23,9 +23,6 @@
             <div class="row">
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
-                    <p id='text-info-getnet' style="margin-top: 12px; display: none;">
-                        Para você controlar o fluxo financeiro da sua empresa.
-                    </p>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
@@ -326,7 +323,6 @@
                 </div>
             </div>
             @include('companies::empty')
-            @include('companies::not_company_approved_getnet')
         </div>
 
 
