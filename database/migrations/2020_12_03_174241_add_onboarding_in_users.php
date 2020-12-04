@@ -14,7 +14,7 @@ class AddOnboardingInUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('onboard')->default(false)->after('has_sale_before_getnet');
+            $table->boolean('onboarding')->default(false)->after('has_sale_before_getnet');
         });
     }
 
@@ -26,7 +26,7 @@ class AddOnboardingInUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('onboard');
+            $table->dropColumn('onboarding');
         });
     }
 }
