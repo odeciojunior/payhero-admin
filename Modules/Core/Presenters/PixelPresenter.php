@@ -8,7 +8,6 @@ class PixelPresenter extends Presenter
 {
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -31,7 +30,6 @@ class PixelPresenter extends Presenter
 
     public function getPlatformEnum($platform)
     {
-
         if (is_numeric($platform)) {
             switch ($platform) {
                 case 1:
@@ -41,8 +39,10 @@ class PixelPresenter extends Presenter
                 case 3:
                     return 'google_analytics';
                 case 4:
-                    return 'taboola';
+                    return 'google_analytics_four';
                 case 5:
+                    return 'taboola';
+                case 6:
                     return 'outbrain';
             }
 
@@ -55,10 +55,12 @@ class PixelPresenter extends Presenter
                     return 2;
                 case 'google_analytics':
                     return 3;
-                case 'taboola':
+                case 'google_analytics_four':
                     return 4;
-                case 'outbrain':
+                case 'taboola':
                     return 5;
+                case 'outbrain':
+                    return 6;
             }
             return '';
         }

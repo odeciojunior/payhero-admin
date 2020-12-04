@@ -138,3 +138,7 @@
         height: 80px;
     }
 }
+
+#upsell-description * {
+    color: #ffffff !important;
+}

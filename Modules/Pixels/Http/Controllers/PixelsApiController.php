@@ -8,17 +8,16 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Affiliate;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
+use Modules\Pixels\Transformers\PixelsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Pixels\Transformers\PixelsResource;
 
 /**
  * Class PixelsApiController
@@ -33,45 +32,40 @@ class PixelsApiController extends Controller
     public function index($projectId)
     {
         try {
-            if (!empty($projectId)) {
-                $pixelModel   = new Pixel();
-                $projectModel = new Project();
-
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
-
-                $affiliate = Affiliate::where('project_id', $project->id)
-                                      ->where('user_id', auth()->user()->account_owner_id)
-                                      ->first();
-
-                $affiliateId = $affiliate->id ?? null;
-
-                activity()->on($pixelModel)->tap(function(Activity $activity) {
-                    $activity->log_name = 'visualization';
-                })->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
-
-                if (Gate::allows('edit', [$project, $affiliateId])) {
-
-                    $pixels = $pixelModel->where('project_id', $project->id)->where('affiliate_id', $affiliateId)
-                                         ->orderBy('id', 'DESC');
-
-                    return PixelsResource::collection($pixels->paginate(5));
-                } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para listar pixels',
-                                            ], 403);
-                }
-            } else {
-                return response()->json([
-                                            'message' => 'Erro ao listar dados de pixels',
-                                        ], 400);
+            if (empty($projectId)) {
+                return response()->json(['message' => 'Erro ao listar dados de pixels'], 400);
             }
+
+            $pixelModel = new Pixel();
+            $projectModel = new Project();
+
+            $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+            $affiliate = Affiliate::where('project_id', $project->id)
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->first();
+
+            $affiliateId = $affiliate->id ?? null;
+
+            activity()->on($pixelModel)->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
+
+            if (Gate::allows('edit', [$project, $affiliateId])) {
+                $pixels = $pixelModel->where('project_id', $project->id)
+                    ->where('affiliate_id', $affiliateId)
+                    ->orderBy('id', 'DESC');
+
+                return PixelsResource::collection($pixels->paginate(5));
+            }
+
+            return response()->json(['message' => 'Sem permissão para listar pixels'], 403);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar buscar pixels (PixelsController - index)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Erro ao listar dados de pixels',
-                                    ], 400);
+            return response()->json(['message' => 'Erro ao listar dados de pixels'], 400);
         }
     }
 
@@ -83,7 +77,7 @@ class PixelsApiController extends Controller
     public function store(PixelStoreRequest $request, $projectId)
     {
         try {
-            $pixelModel   = new Pixel();
+            $pixelModel = new Pixel();
             $projectModel = new Project();
 
             $validator = $request->validated();
@@ -96,7 +90,7 @@ class PixelsApiController extends Controller
 
             $affiliateId = 0;
             if (!empty($validator['affiliate_id'])) {
-                $affiliateId               = current(Hashids::decode($validator['affiliate_id']));
+                $affiliateId = current(Hashids::decode($validator['affiliate_id']));
                 $validator['affiliate_id'] = $affiliateId;
             } else {
                 $validator['affiliate_id'] = null;
@@ -104,48 +98,48 @@ class PixelsApiController extends Controller
 
             $project = $projectModel->find($validator['project_id']);
 
-            if (Gate::allows('edit', [$project, $affiliateId])) {
-
-                if ($validator['platform'] != 'outbrain' || $validator['platform'] != 'taboola') {
-                    $order             = ['UA-', 'AW-'];
-                    $validator['code'] = str_replace($order, '', $validator['code']);
-                }
-
-                $applyPlanArray = [];
-                if (in_array('all', $validator['add_pixel_plans'])) {
-                    $applyPlanArray[] = 'all';
-                } else {
-                    foreach ($validator['add_pixel_plans'] as $key => $value) {
-                        $applyPlanArray[] = current(Hashids::decode($value));
-                    }
-                }
-
-                $applyPlanEncoded = json_encode($applyPlanArray);
-
-                $pixel = $pixelModel->create([
-                                                 'project_id'      => $validator['project_id'],
-                                                 'name'            => $validator['name'],
-                                                 'code'            => $validator['code'],
-                                                 'platform'        => $validator['platform'],
-                                                 'status'          => $validator['status'],
-                                                 'checkout'        => $validator['checkout'],
-                                                 'purchase_boleto' => $validator['purchase_boleto'],
-                                                 'purchase_card'   => $validator['purchase_card'],
-                                                 'affiliate_id'    => $validator['affiliate_id'],
-                                                 'campaign_id'     => $validator['campaign'] ?? null,
-                                                 'apply_on_plans'  => $applyPlanEncoded,
-                                             ]);
-
-                if ($pixel) {
-                    return response()->json('Pixel Configurado com sucesso!', 200);
-                } else {
-                    return response()->json('Erro ao criar pixel', 400);
-                }
-            } else {
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
                 return response()->json(['message' => 'Sem permissão para salvar pixels'], 403);
             }
+
+            if ($validator['platform'] != 'outbrain' || $validator['platform'] != 'taboola') {
+                $order = ['AW-'];
+                $validator['code'] = str_replace($order, '', $validator['code']);
+            }
+
+            $applyPlanArray = [];
+            if (in_array('all', $validator['add_pixel_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($validator['add_pixel_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
+                }
+            }
+
+            $applyPlanEncoded = json_encode($applyPlanArray);
+
+            $pixel = $pixelModel->create(
+                [
+                    'project_id' => $validator['project_id'],
+                    'name' => $validator['name'],
+                    'code' => $validator['code'],
+                    'platform' => $validator['platform'],
+                    'status' => $validator['status'],
+                    'checkout' => $validator['checkout'],
+                    'purchase_boleto' => $validator['purchase_boleto'],
+                    'purchase_card' => $validator['purchase_card'],
+                    'affiliate_id' => $validator['affiliate_id'],
+                    'campaign_id' => $validator['campaign'] ?? null,
+                    'apply_on_plans' => $applyPlanEncoded,
+                ]
+            );
+
+            if ($pixel) {
+                return response()->json('Pixel Configurado com sucesso!', 200);
+            }
+
+            return response()->json('Erro ao criar pixel', 400);
         } catch (Exception $e) {
-            Log::warning('Erro tentar salvar pixel (PixelsController - store)');
             report($e);
 
             return response()->json('Erro ao criar pixel', 400);
@@ -160,56 +154,63 @@ class PixelsApiController extends Controller
      */
     public function update(PixelUpdateRequest $request, $projectId, $id)
     {
-        $validated = $request->validated();
         try {
-            if (isset($validated) && isset($id) && isset($projectId)) {
-                $pixelModel   = new Pixel();
-                $projectModel = new Project();
+            if (empty($id) || empty($projectId)) {
+                return response()->json(['message' => 'Pixel nao encontrado'], 400);
+            }
 
-                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
-                $project     = $projectModel->find(current(Hashids::decode($projectId)));
-                $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
-                if (Gate::allows('edit', [$project, $affiliateId])) {
+            $validated = $request->validated();
 
-                    if ($validated['platform'] != 'outbrain' || $validated['platform'] != 'taboola') {
-                        $order             = ['UA-', 'AW-', 'AG-'];
-                        $validated['code'] = str_replace($order, '', $validated['code']);
-                    }
+            $pixelModel = new Pixel();
 
-                    $applyPlanArray = [];
-                    if (in_array('all', $validated['edit_pixel_plans'])) {
-                        $applyPlanArray[] = 'all';
-                    } else {
-                        foreach ($validated['edit_pixel_plans'] as $key => $value) {
-                            $applyPlanArray[] = current(Hashids::decode($value));
-                        }
-                    }
+            $pixel = $pixelModel->find(current(Hashids::decode($id)));
 
-                    $applyPlanEncoded = json_encode($applyPlanArray);
+            if (empty($pixel)) {
+                return response()->json(['message' => 'Pixel nao encontrado'], 400);
+            }
 
-                    $pixelUpdated = $pixel->update([
-                                                       'name'            => $validated['name'],
-                                                       'platform'        => $validated['platform'],
-                                                       'status'          => $validated['status'],
-                                                       'code'            => $validated['code'],
-                                                       'apply_on_plans'  => $applyPlanEncoded,
-                                                       'checkout'        => $validated['checkout'],
-                                                       'purchase_boleto' => $validated['purchase_boleto'],
-                                                       'purchase_card'   => $validated['purchase_card'],
-                                                   ]);
-                    if ($pixelUpdated) {
-                        return response()->json('Sucesso', 200);
-                    } else {
-                        return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
-                    }
-                } else {
-                    return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
+            $projectModel = new Project();
+            $project = $projectModel->find(current(Hashids::decode($projectId)));
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
+            }
+
+            if ($validated['platform'] != 'outbrain' || $validated['platform'] != 'taboola') {
+                $order = ['AW-'];
+                $validated['code'] = str_replace($order, '', $validated['code']);
+            }
+
+            $applyPlanArray = [];
+            if (in_array('all', $validated['edit_pixel_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($validated['edit_pixel_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
                 }
             }
 
-            return response()->json(['message' => 'Pixel nao encontrado'], 400);
+            $applyPlanEncoded = json_encode($applyPlanArray);
+
+            $pixelUpdated = $pixel->update(
+                [
+                    'name' => $validated['name'],
+                    'platform' => $validated['platform'],
+                    'status' => $validated['status'],
+                    'code' => $validated['code'],
+                    'apply_on_plans' => $applyPlanEncoded,
+                    'checkout' => $validated['checkout'],
+                    'purchase_boleto' => $validated['purchase_boleto'],
+                    'purchase_card' => $validated['purchase_card'],
+                ]
+            );
+            if ($pixelUpdated) {
+                return response()->json('Sucesso', 200);
+            }
+
+            return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar fazer update dos dados do pixel (PixelsController - update)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
@@ -224,30 +225,30 @@ class PixelsApiController extends Controller
     public function destroy($projectId, $id)
     {
         try {
-            if (isset($id) && isset($projectId)) {
-                $pixelModel   = new Pixel();
-                $projectModel = new Project();
-
-                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
-                $projectId   = current(Hashids::decode($projectId));
-                $project     = $projectModel->find($projectId);
-                $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
-
-                if (Gate::allows('edit', [$project, $affiliateId])) {
-                    $pixelDeleted = $pixel->delete();
-                    if ($pixelDeleted) {
-                        return response()->json('sucesso', 200);
-                    } else {
-                        return response()->json(['message' => 'Erro ao tentar excluir pixel'], 400);
-                    }
-                } else {
-                    return response()->json(['message' => 'Sem permissão para remover pixels'], 403);
-                }
+            if (empty($projectId) || empty($id)) {
+                return response()->json(['message' => 'Pixel nao encontrado'], 400);
             }
 
-            return response()->json(['message' => 'Pixel nao encontrado'], 400);
+            $pixelModel = new Pixel();
+            $projectModel = new Project();
+
+            $pixel = $pixelModel->find(current(Hashids::decode($id)));
+            $projectId = current(Hashids::decode($projectId));
+            $project = $projectModel->find($projectId);
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para remover pixels'], 403);
+            }
+
+            $pixelDeleted = $pixel->delete();
+
+            if ($pixelDeleted) {
+                return response()->json('sucesso', 200);
+            }
+
+            return response()->json(['message' => 'Erro ao tentar excluir pixel'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar excluir pixel (PixelsController - destroy)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar excluir pixel'], 400);
@@ -262,37 +263,37 @@ class PixelsApiController extends Controller
     public function show($projectId, $id)
     {
         try {
-            if (isset($id) && isset($projectId)) {
-                $pixelModel   = new Pixel();
-                $projectModel = new Project();
-
-                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
-                $project     = $projectModel->find(current(Hashids::decode($projectId)));
-                $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
-
-                activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
-
-                if (Gate::allows('edit', [$project, $affiliateId])) {
-
-                    if (!empty($pixel)) {
-
-                        $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
-
-                        return response()->json($pixel);
-                    } else {
-                        return response()->json('Erro ao buscar pixel', 400);
-                    }
-                } else {
-                    return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
-                }
+            if (empty($id) || empty($projectId)) {
+                return response()->json('Pixel nao encontrado', 400);
             }
 
-            return response()->json('Pixel nao encontrado', 400);
+            $pixelModel = new Pixel();
+            $projectModel = new Project();
+
+            $pixel = $pixelModel->find(current(Hashids::decode($id)));
+
+            if (empty($pixel)) {
+                return response()->json('Pixel nao encontrado', 400);
+            }
+
+            $project = $projectModel->find(current(Hashids::decode($projectId)));
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+
+            activity()->on($pixelModel)->tap(
+                function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                }
+            )->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
+            }
+
+            $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
+            return response()->json($pixel);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar detalhes do pixel (PixelController - show)');
             report($e);
 
             return response()->json('Erro ao buscar pixel', 400);
@@ -307,64 +308,69 @@ class PixelsApiController extends Controller
     public function edit($projectId, $id)
     {
         try {
-            if (isset($projectId) && isset($id)) {
-                $pixelModel   = new Pixel();
-                $projectModel = new Project();
+            if (empty($projectId) || empty($id)) {
+                return response()->json('Erro ao buscar pixel', 400);
+            }
 
-                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
-                $project     = $projectModel->find(current(Hashids::decode($projectId)));
-                $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+            $pixelModel = new Pixel();
+            $projectModel = new Project();
 
-                activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
+            $pixel = $pixelModel->find(current(Hashids::decode($id)));
+
+            if (empty($pixel)) {
+                return response()->json('Erro ao buscar pixel', 400);
+            }
+
+            $project = $projectModel->find(current(Hashids::decode($projectId)));
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
+            }
+
+            activity()->on($pixelModel)->tap(
+                function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar pixel: ' . $pixel->name);
+                }
+            )->log('Visualizou tela editar pixel: ' . $pixel->name);
 
-                if (Gate::allows('edit', [$project, $affiliateId])) {
+            $applyPlanArray = [];
+            $planModel = new Plan();
 
-                    if ($pixel) {
-                        $applyPlanArray = [];
-                        $planModel      = new Plan();
-
-                        if (!empty($pixel->apply_on_plans)) {
-                            $applyPlanDecoded = json_decode($pixel->apply_on_plans);
-                            if (in_array('all', $applyPlanDecoded)) {
-                                $applyPlanArray[] = [
-                                    'id'          => 'all',
-                                    'name'        => 'Todos os Planos',
-                                    'description' => '',
-                                ];
-                            } else {
-                                foreach ($applyPlanDecoded as $key => $value) {
-                                    $plan = $planModel->select('plans.*', DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'))
-                                                      ->find($value);
-                                    if (!empty($plan)) {
-                                        $applyPlanArray[] = [
-                                            'id'          => Hashids::encode($plan->id),
-                                            'name'        => $plan->name,
-                                            'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
-                                        ];
-                                    }
-                                }
-                            }
-                        }
-
-                        $pixel->apply_on_plans = $applyPlanArray;
-
-                        $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
-
-                        return new PixelEditResource($pixel);
-                    } else {
-                        return response()->json('Erro ao buscar pixel', 400);
-                    }
+            if (!empty($pixel->apply_on_plans)) {
+                $applyPlanDecoded = json_decode($pixel->apply_on_plans);
+                if (in_array('all', $applyPlanDecoded)) {
+                    $applyPlanArray[] = [
+                        'id' => 'all',
+                        'name' => 'Todos os Planos',
+                        'description' => '',
+                    ];
                 } else {
-                    return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
+                    foreach ($applyPlanDecoded as $key => $value) {
+                        $plan = $planModel->select(
+                            'plans.*',
+                            DB::raw(
+                                '(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'
+                            )
+                        )->find($value);
+                        if (!empty($plan)) {
+                            $applyPlanArray[] = [
+                                'id' => Hashids::encode($plan->id),
+                                'name' => $plan->name,
+                                'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                            ];
+                        }
+                    }
                 }
             }
 
-            return response()->json('Erro ao buscar pixel', 400);
+            $pixel->apply_on_plans = $applyPlanArray;
+
+            $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
+            return new PixelEditResource($pixel);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar pixel (PixelsController - edit)');
             report($e);
 
             return response()->json('Erro ao buscar pixel', 400);
