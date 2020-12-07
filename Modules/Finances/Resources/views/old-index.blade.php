@@ -375,7 +375,6 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
