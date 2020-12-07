@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
-use App\Traits\LogsActivity;
 use Nwidart\Modules\Collection;
 use Spatie\Activitylog\Models\Activity;
 
@@ -309,5 +309,13 @@ class Project extends Model
     public function upsellConfig()
     {
         return $this->hasOne(ProjectUpsellConfig::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(ProjectReviews::class);
     }
 }
