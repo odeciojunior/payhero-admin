@@ -4,7 +4,7 @@
 namespace Modules\Core\Events;
 
 
-class CheckSaleReleasedEvent
+class CheckSaleHasValidTrackingEvent
 {
     public $saleId;
 

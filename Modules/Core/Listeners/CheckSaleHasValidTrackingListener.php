@@ -10,23 +10,21 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\CheckSaleReleasedEvent;
-use Modules\Core\Services\CheckoutService;
+use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 
-class CheckSaleReleasedListener implements ShouldQueue
+class CheckSaleHasValidTrackingListener implements ShouldQueue
 {
     use Queueable;
 
     /**
-     * @param  CheckSaleReleasedEvent  $event
+     * @param  CheckSaleHasValidTrackingEvent  $event
      * @throws PresenterException
      */
-    public function handle(CheckSaleReleasedEvent $event)
+    public function handle(CheckSaleHasValidTrackingEvent $event)
     {
         $salesModel = new Sale();
         $trackingPresenter = (new Tracking())->present();
         $productPresenter = (new Product())->present();
-        $checkoutService = new CheckoutService();
 
         $sale = $salesModel->with([
             'productsPlansSale.tracking',
@@ -53,16 +51,6 @@ class CheckSaleReleasedListener implements ShouldQueue
             if (!$hasInvalidOrNotInformedTracking) {
                 $sale->has_valid_tracking = true;
                 $sale->save();
-
-                if(!$sale->transactions->whereNotNull('gateway_released_at')->count()
-                    && in_array($sale->gateway_id, [14,15])){
-                    $checkoutService->releasePaymentGetnet($sale->id);
-
-                    //$result = $checkoutService->releasePaymentGetnet($sale->id);
-                    //if (!empty($result) && $result->status == 'success') {
-                    ////   faz alguma coisa com o resultado
-                    //}
-                }
             }
         }
     }

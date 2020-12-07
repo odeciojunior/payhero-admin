@@ -13,7 +13,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Events\CheckSaleReleasedEvent;
+use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
@@ -73,7 +73,7 @@ class TrackingService
 
             if ($item->isDirty()) {
                 $item->save();
-                event(new CheckSaleReleasedEvent($item->sale_id));
+                event(new CheckSaleHasValidTrackingEvent($item->sale_id));
             }
         }
 
@@ -279,7 +279,7 @@ class TrackingService
 
             if (!empty($tracking)) {
                 event(new TrackingCodeUpdatedEvent($tracking->id));
-                event(new CheckSaleReleasedEvent($productPlanSale->sale_id));
+                event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
             return $tracking;
