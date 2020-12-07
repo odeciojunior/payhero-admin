@@ -10,6 +10,7 @@ use Modules\Core\Entities\Invitation;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
 use DB;
+use Exception;
 
 class UpdateListsFoxActiveCampaign extends Command
 {
