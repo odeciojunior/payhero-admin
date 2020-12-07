@@ -190,7 +190,10 @@ class TransfersController extends Controller
                 return response()->json($result->errors, 400);
             }
 
-            $data = (new GetNetStatementService())->performStatement($result);
+            $filters['status'] = request()->get('status');
+            $filters['payment_method'] = request()->get('payment_method');
+
+            $data = (new GetNetStatementService())->performStatement($result, $filters);
 
             return response()->json($data);
         } catch (Exception $exception) {
