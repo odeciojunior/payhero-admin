@@ -49,8 +49,6 @@ $(document).ready(function () {
         insertBefore: '.grad-border',
     };
 
-    $("#date_range_statement_unique").val(moment().format('YYYY-MM-DD'));
-
     //END - Comportamentos da tela
 
     //Obtém as empresas
@@ -78,52 +76,21 @@ $(document).ready(function () {
                     return;
                 }
 
-                let hasSaleBeforeGetnet = false;
-                let itsApprovedTransactGetnet = false;
-
-
                 $('.page-content').show();
                 $('.content-error').hide();
 
                 $(response.data).each(function (index, value) {
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-
-                    if (value.company_has_sale_before_getnet) {
-                        hasSaleBeforeGetnet = true;
-                        $("#transfers_company_select").append(data);
-                        $("#extract_company_select").append(data);
-                    }
-
-                    if (value.capture_transaction_enabled) {
-                        itsApprovedTransactGetnet = true;
-                        $("#statement_company_select").append(data);
-                    }
+                    $("#transfers_company_select").append(data);
+                    $("#extract_company_select").append(data);
                 });
 
 
-                if (itsApprovedTransactGetnet && !hasSaleBeforeGetnet) {
-                    approvedGetnet();
-                    $("#tabs-view, #text-info-getnet").show();
-                    $("#nav-statement-tab").addClass('active');
-                    $("#nav-statement").addClass('active show');
-                    $(".sub-pad-getnet").html('');
+                $("#tabs-view, #menu-tabs-view, #nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
 
-
-                    $("#statement-getnet, .title-getnet").html('Extrato');
-                } else if (!itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
-                    hasSaleBeforeGetnetExist();
-                    manipulateHTML();
-                    $("#statement-getnet").html('Extrato');
-                } else if (itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
-                    hasSaleBeforeGetnetExist();
-                    approvedGetnet();
-                    manipulateHTML();
-
-                    $("#statement-getnet, .title-getnet").html('Extrato 2.0');
-
-                } else {
-                    $("#companies-not-approved-getnet").show();
-                }
+                checkAllowed();
+                updateBalances();
+                updateTransfersTable();
                 $("#nav-extract").css('display', '');
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
@@ -131,37 +98,6 @@ $(document).ready(function () {
                 });
             }
         });
-    }
-
-    function manipulateHTML() {
-        $("#tabs-view, #menu-tabs-view").show();
-    }
-
-    function approvedGetnet() {
-        $('#nav-statement-tab, #nav-statement').show();
-        updateAccountStatementData();
-    }
-
-    function paginationStatement() {
-        $("#pagination-statement").jPages({
-            containerID: "table-statement-body",
-            perPage: 10,
-            startPage: 1,
-            startRange: 1,
-            first: false,
-            previous: '',
-            next: '',
-            last: false,
-            delay: 1,
-        });
-    }
-
-    function hasSaleBeforeGetnetExist() {
-        $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
-
-        checkAllowed();
-        updateBalances();
-        updateTransfersTable();
     }
 
     getCompanies();
@@ -797,183 +733,6 @@ $(document).ready(function () {
         });
     }
 
-    let statusExtract = {
-        'WAITING_FOR_VALID_POST': 'pendente',
-        'WAITING_LIQUIDATION': 'info',
-        'PAID': 'success',
-        'REVERSED': 'warning',
-        'UNKNOW': 'error',
-    }
-
-
-    function updateAccountStatementData() {
-        loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
-
-        $('#table-statement-body').html('');
-        $('#pagination-statement').html('');
-        loadOnTable('#table-statement-body', '#statementTable');
-
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
-
-        $(".numbers").hide();
-
-        $.ajax({
-            method: "GET",
-            url: link,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                loadOnAny('#nav-statement #available-in-period-statement', true);
-
-                let error = 'Erro ao gerar o extrato';
-                errorAjaxResponse(error);
-                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
-            },
-            success: response => {
-                updateClassHTML();
-
-                let items = response.transactions;
-                $('#statement-money #available-in-period-statement').html('R$ 0,00');
-
-                if (isEmpty(items)) {
-                    loadOnAny('#nav-statement #available-in-period-statement', true);
-                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
-                    return false;
-                } else {
-
-
-                    items.forEach(function (item) {
-                        let dataTable = `<tr>
-                                        <td style="vertical-align: middle;">
-                                        Transação`;
-
-                        if (item.isInvite) {
-                            dataTable += `
-                                <a class="">
-                                    <span>#${item.orderId}</span>
-                                </a>
-                            `;
-                        } else {
-                            dataTable += `
-                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                    <span style="color:black;">#${item.orderId}</span>
-                                </a>
-                            `;
-                        }
-
-                        dataTable += `<br>
-                                        <small>(${item.summaryStatus.description})</small>
-                                     </td>
-                                     <td>
-                                        <span class="badge badge-sm badge-${statusExtract[item.summaryStatus.identify]} p-2">${item.summaryStatus.status}</span>
-                                     </td>
-                                    <td style="vertical-align: middle;">
-                                        ${item.summaryDate}
-                                    </td>
-                                    <td style="vertical-align: middle; color:${item.summaryValue >= 0 ? 'green' : 'red'};">${item.subSellerRateAmount}</td>
-                                </tr>
-                            `;
-                        updateClassHTML(dataTable);
-                    });
-
-                    let totalInPeriod = response.totalInPeriod;
-
-                    let isNegativeStatement = false;
-                    if (totalInPeriod < 1) {
-                        isNegativeStatement = true;
-                    }
-
-                    $('#statement-money #available-in-period-statement').html(`
-                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${totalInPeriod}
-                    </span>`
-                    );
-                    paginationStatement();
-
-
-                    $("#pagination-statement span").addClass('jp-hidden');
-                    $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
-                    $("#pagination-statement a.jp-current").addClass('active');
-                    $("#pagination-statement a").on('click', function () {
-                        $("#pagination-statement a").removeClass('active');
-                        $(this).addClass('active');
-                    });
-
-                    $("#pagination-statement").on('click', function () {
-                        $("#pagination-statement span").remove();
-                    });
-
-
-                    loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
-                }
-
-
-            }
-        });
-
-    }
-
-    function updateClassHTML(dataTable = 0) {
-        if (dataTable.length > 0) {
-            $('#table-statement-body').append(dataTable);
-            $("#statementTable").addClass('table-striped');
-        } else {
-            $('#table-statement-body').html('');
-        }
-    }
-
-    //atualiza a table de statement
-    $(document).on("click", "#bt_filtro_statement", function (e) {
-        e.preventDefault();
-        updateAccountStatementData();
-    });
-
-    let rangesToDateRangeStatement = {
-        'Hoje': [moment(), moment()],
-        'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-        'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-        'Este mês': [moment().startOf('month'), moment().endOf('month')],
-        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    };
-
-    let envDebug = $("meta[name=app-debug]").attr('content');
-
-    if (envDebug == 'true') {
-
-        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
-    }
-
-    $('#date_range_statement').daterangepicker({
-        maxSpan: {
-            days: 31,
-        },
-        startDate: moment().subtract(7, 'days'),
-        endDate: moment().add(0, 'days'),
-        opens: 'center',
-        maxDate: moment().add(1, 'month'),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
-        },
-        ranges: rangesToDateRangeStatement
-    });
-
     $("#bt_get_csv").on("click", function () {
         $(this).prop("disabled", true);
         $("#bt_get_xls").prop("disabled", true);
@@ -984,10 +743,6 @@ $(document).ready(function () {
         $(this).prop("disabled", true);
         $("#bt_get_csv").prop("disabled", true);
         extractExport('xls');
-    });
-
-    $("#nav-profile-tab").on("click", function () {
-        $('#export-excel').show();
     });
 
     $("#nav-home-tab").on("click", function () {
@@ -1003,21 +758,6 @@ $(document).ready(function () {
             } else {
                 $("#transferred_value").hide();
             }
-        }
-    });
-
-    $('#statement_sale').on('change paste keyup select', function () {
-
-        let val = $(this).val();
-
-        if (val === '') {
-
-            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
-            $('#statement_data_type_select').attr('disabled', false).removeClass('disableFields');
-        } else {
-
-            $('#date_range_statement').attr('disabled', true).addClass('disableFields');
-            $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
         }
     });
 });

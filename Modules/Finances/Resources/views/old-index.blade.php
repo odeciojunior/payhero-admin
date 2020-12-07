@@ -23,9 +23,6 @@
             <div class="row">
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
-                    <p id='text-info-getnet' style="margin-top: 12px; display: none;">
-                        Para você controlar o fluxo financeiro da sua empresa.
-                    </p>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
@@ -33,7 +30,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
                                  viewBox="0 0 24 24">
                                 <path
-                                    d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                             </svg>
                             <div class="btn-group" role="group">
                                 <button id="bt_get_xls" type="button"
@@ -141,7 +138,7 @@
                                                 <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
                                                               style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                class="currency">$</span></span>
+                                                                    class="currency">$</span></span>
                                                 </div>
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
@@ -157,7 +154,7 @@
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      viewBox="0 0 24 24">
                                                     <path
-                                                        d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                 </svg>
                                                 Sacar dinheiro
                                             </button>
@@ -326,7 +323,6 @@
                 </div>
             </div>
             @include('companies::empty')
-            @include('companies::not_company_approved_getnet')
         </div>
 
 
@@ -379,12 +375,10 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ asset('modules/finances/js/old-index.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
