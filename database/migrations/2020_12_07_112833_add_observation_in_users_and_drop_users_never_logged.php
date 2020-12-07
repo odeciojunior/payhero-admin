@@ -21,7 +21,9 @@ class AddObservationInUsersAndDropUsersNeverLogged extends Migration
 
 
 
-        $users = User::whereNull('last_login')->where('created_at', '<=', '2020-10-31')->get();
+        $users = User::whereNull('last_login')->where('created_at', '<=', '2020-10-31')
+            ->whereRaw('id = account_owner_id')
+            ->get();
         foreach($users as $user) {
             $user->update([
                 'email' => uniqid().$user->email
