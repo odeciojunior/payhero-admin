@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Services\ShopifyService;
 
 class GenericCommand extends Command
 {
