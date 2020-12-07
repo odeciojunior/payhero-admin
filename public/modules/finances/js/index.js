@@ -803,6 +803,7 @@ $(document).ready(function () {
         'REVERSED': 'warning',
         'ADJUSTMENT_CREDIT': 'success',
         'ADJUSTMENT_DEBIT': 'info',
+        'ERROR': 'pendente',
     }
 
 

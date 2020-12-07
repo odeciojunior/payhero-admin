@@ -17,6 +17,7 @@ class Details implements JsonSerializable, Arrayable
     const STATUS_REVERSED = 'REVERSED';
     const STATUS_ADJUSTMENT_CREDIT = 'ADJUSTMENT_CREDIT';
     const STATUS_ADJUSTMENT_DEBIT = 'ADJUSTMENT_DEBIT';
+    const STATUS_ERROR = 'ERROR';
     protected string $status, $description, $type;
 
     /**

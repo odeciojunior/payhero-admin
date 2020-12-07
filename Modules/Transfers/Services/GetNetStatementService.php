@@ -37,6 +37,7 @@ class GetNetStatementService
     const TRANSACTION_STATUS_CODE_NEGADO_MGM = 99;
 
     protected array $statementItems = [];
+    protected array $filters = [];
 
     protected float $totalInPeriod;
     protected float $totalAdjustment = 0;
@@ -79,14 +80,46 @@ class GetNetStatementService
         return '';
     }
 
+    private function canAddStatementItem($status, $paymentMethod): bool
+    {
+
+        $isValidStatusFilter = true;
+        $isValidPaymentMethodFilter = true;
+
+        if ($status && array_key_exists('status', $this->filters) && $this->filters['status'] != 'ALL') {
+
+            if ($status != $this->filters['status']) {
+
+                $isValidStatusFilter = false;
+            }
+        }
+
+        if ($paymentMethod && array_key_exists('payment_method', $this->filters) && $this->filters['payment_method'] != 'ALL') {
+
+            if ($paymentMethod != $this->filters['payment_method']) {
+
+                $isValidPaymentMethodFilter = false;
+            }
+        }
+
+        return $isValidStatusFilter && $isValidPaymentMethodFilter;
+    }
+
     public function performStatement(stdClass $data, array $filters)
     {
 
+        $this->filters = $filters;
+
+        //$saleIds = [865722, 864761, 864758, 864759, 864757, 864711, 864710, 864709, 860785, 838603, 838587];
+        //->whereIn('id', $saleIds)
         /*$sales = Sale::where('gateway_id', 15)->orderBy('id', 'desc')->get();
         foreach ($sales as $sale) {
             Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
         }
 
+        //foreach ($saleIds as $sale_id) {
+        //    echo "<br> - " . (Redis::connection('redis-statement')->get("sale:has:tracking:{$sale_id}"));
+        //}
         dd('FIM');*/
 
         $transactions = array_reverse($data->list_transactions) ?? [];
@@ -105,29 +138,6 @@ class GetNetStatementService
 
         $this->preparesNodeTransactions($transactions);
         $this->preparesNodeAdjustments($adjustments);
-
-        /*foreach ($this->statementItems as $index => $statementItem) {
-
-            if (array_key_exists('status', $filters) && $filters['status'] != 'ALL') {
-
-                if ($statementItem->details->getType() != $filters['status']) {
-
-                    $this->totalInPeriod -= $statementItem->amount;
-
-                    unset($this->statementItems[$index]);
-                }
-            }
-
-            if (array_key_exists('payment_method', $filters) && $filters['payment_method'] != 'ALL') {
-
-                if ($statementItem->paidWith != $filters['payment_method']) {
-
-                    $this->totalInPeriod -= $statementItem->amount;
-
-                    unset($this->statementItems[$index]);
-                }
-            }
-        }*/
 
         return [
             'items' => $this->statementItems,
@@ -181,8 +191,6 @@ class GetNetStatementService
                 $details = $item->details[0];
 
                 $transactionType = $summary->transaction_type;
-                /*$summary_transaction_sign = $summary->transaction_sign;
-                $details_transaction_sign = $details->transaction_sign;*/
 
                 $amount = $details->subseller_rate_amount / 100;
                 $amount = $details->transaction_sign == '-' ? ($amount * -1) : $amount;
@@ -204,13 +212,11 @@ class GetNetStatementService
 
                     $paidWith = null;
                     $type = StatementItem::TYPE_REVERSED;
-                    $this->totalReversed += $amount;
 
                 } else if ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
 
                     $paidWith = null;
                     $type = StatementItem::TYPE_CHARGEBACK;
-                    $this->totalChargeback += $amount;
 
                 } else {
 
@@ -225,43 +231,11 @@ class GetNetStatementService
                     }
 
                     $type = StatementItem::TYPE_TRANSACTION;
-                    $this->totalTransactions += $amount;
                 }
-
-                /*
-                 Estornado
-                    order_id = NOT NULL
-                    transaction_sign = -
-                    transaction_status_code = 0
-
-                Aguardando postagem válida
-                    order_id = NOT NULL
-                    transaction_sign = +
-                    release_status = N
-
-                Aguardando liquidação
-                    order_id = NOT NULL
-                    transaction_sign = +
-                    release_status = S
-                    subseller_rate_confirm_date = NULL
-
-                Aguardando saque
-                    order_id = NOT NULL
-                    transaction_sign = +
-                    release_status = N
-                    subseller_rate_confirm_date = NULL
-
-                Pago
-                    order_id = NOT NULL
-                    transaction_sign = +
-                    release_status = S
-                    subseller_rate_confirm_date = NOT NULL && <= today
-                    transaction_status_code = 0 ou 92
-                 * */
 
                 $orderFromGetNetOrderId = $this->setOrderFromGetNetOrderId($summary->order_id);
                 $hasOrderId = empty($summary->order_id) ? false : true;
-                $isTransactionSignCredit = $details->transaction_sign == '+';
+                $isTransactionCredit = $details->transaction_sign == '+';
                 $isReleaseStatus = $details->release_status == 'S';
                 $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}");
                 $transactionStatusCode = $summary->transaction_status_code;
@@ -269,31 +243,34 @@ class GetNetStatementService
 
                 $details = new Details();
 
-                if ($hasOrderId && !$isTransactionSignCredit && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
+                if ($hasOrderId && !$isTransactionCredit && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
 
                     $details->setStatus('Estornado')
                         ->setDescription('Solicitação do estorno: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_REVERSED);
 
-                } elseif ($hasOrderId && $isTransactionSignCredit && !$isReleaseStatus && !$hasValidTracking) {
+                } elseif ($hasOrderId && $isTransactionCredit && !$isReleaseStatus && !$hasValidTracking) {
 
                     $details->setStatus('Aguardando postagem válida')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
 
-                } elseif ($hasOrderId && $isTransactionSignCredit && $hasValidTracking && !$isReleaseStatus) {
+                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && !$isReleaseStatus) {
 
                     $details->setStatus('Aguardando saque')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
 
-                } elseif ($hasOrderId && $isTransactionSignCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
+                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
 
                     $details->setStatus('Aguardando liquidação')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
 
-                } elseif ($hasOrderId && $isTransactionSignCredit && $hasValidTracking && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])) {
+                } elseif (
+                    $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                    || self::TRANSACTION_STATUS_CODE_ESTORNADA
+                ) {
 
                     $details->setStatus('Liquidado')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
@@ -301,14 +278,21 @@ class GetNetStatementService
 
                 } else {
 
-                    $details->setStatus('----------')
+                    $details->setStatus(json_encode([
+                        'hasOrderId' => $hasOrderId,
+                        'isTransactionCredit' => $isTransactionCredit,
+                        'isReleaseStatus' => $isReleaseStatus,
+                        'hasValidTracking' => $hasValidTracking,
+                        'transactionStatusCode' => $transactionStatusCode,
+                        'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
+                    ]))
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
-                        ->setType(Details::STATUS_PAID);
+                        ->setType(Details::STATUS_ERROR);
 
                     /*dd('TODO::D', $item,
                         [
                             'hasOrderId' => $hasOrderId,
-                            'isTransactionSignCredit' => $isTransactionSignCredit,
+                            'isTransactionCredit' => $isTransactionCredit,
                             'isReleaseStatus' => $isReleaseStatus,
                             'hasValidTracking' => $hasValidTracking,
                             'transactionStatusCode' => $transactionStatusCode,
@@ -317,19 +301,35 @@ class GetNetStatementService
                     );*/
                 }
 
-                $statementItem = new StatementItem();
+                if ($this->canAddStatementItem($details->getType(), $paidWith)) {
 
-                $statementItem->order = $orderFromGetNetOrderId;
-                $statementItem->details = $details;
-                $statementItem->amount = $amount;
-                $statementItem->paidWith = $paidWith;
-                $statementItem->type = $type;
-                $statementItem->transactionDate = $transactionDate;
-                $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-                $statementItem->realizedDate = '';
+                    $statementItem = new StatementItem();
 
-                $this->totalInPeriod += $amount;
-                $this->statementItems[] = $statementItem;
+                    $statementItem->order = $orderFromGetNetOrderId;
+                    $statementItem->details = $details;
+                    $statementItem->amount = $amount;
+                    $statementItem->paidWith = $paidWith;
+                    $statementItem->type = $type;
+                    $statementItem->transactionDate = $transactionDate;
+                    $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->realizedDate = '';
+
+                    $this->totalInPeriod += $amount;
+                    $this->statementItems[] = $statementItem;
+
+                    if ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CANCELAMENTO) {
+
+                        $this->totalReversed += $amount;
+
+                    } else if ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
+
+                        $this->totalChargeback += $amount;
+
+                    } else {
+
+                        $this->totalTransactions += $amount;
+                    }
+                }
             }
         }
     }
@@ -362,18 +362,22 @@ class GetNetStatementService
                     ->setDescription($adjustment->adjustment_reason)
                     ->setType($adjustment->transaction_sign == '+' ? Details::STATUS_ADJUSTMENT_CREDIT : Details::STATUS_ADJUSTMENT_DEBIT);
 
-                $statementItem = new StatementItem();
+                if ($this->canAddStatementItem($details->getType(), null)) {
 
-                $statementItem->amount = $amount;
-                $statementItem->details = $details;
-                $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
-                $statementItem->transactionDate = $adjustmentDate;
-                $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-                $statementItem->realizedDate = '';
+                    $statementItem = new StatementItem();
 
-                $this->totalInPeriod += $amount;
-                $this->totalAdjustment += $amount;
-                $this->statementItems[] = $statementItem;
+                    $statementItem->amount = $amount;
+                    $statementItem->details = $details;
+                    $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
+                    $statementItem->transactionDate = $adjustmentDate;
+                    $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->realizedDate = '';
+
+                    $this->totalInPeriod += $amount;
+                    $this->totalAdjustment += $amount;
+                    $this->statementItems[] = $statementItem;
+                }
+
             }
         }
     }
