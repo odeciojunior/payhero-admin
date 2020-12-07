@@ -798,9 +798,11 @@ $(document).ready(function () {
     let statusExtract = {
         'WAITING_FOR_VALID_POST': 'pendente',
         'WAITING_LIQUIDATION': 'info',
+        'WAITING_WITHDRAWAL': 'success',
         'PAID': 'success',
         'REVERSED': 'warning',
-        'UNKNOW': 'error',
+        'ADJUSTMENT_CREDIT': 'success',
+        'ADJUSTMENT_DEBIT': 'info',
     }
 
 
@@ -811,7 +813,7 @@ $(document).ready(function () {
         $('#pagination-statement').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val();
+        let link = '/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val() + '&payment_method=' + $("#payment_method").val();
 
         $(".numbers").hide();
 
@@ -833,7 +835,7 @@ $(document).ready(function () {
             success: response => {
                 updateClassHTML();
 
-                let items = response.transactions;
+                let items = response.items;
                 $('#statement-money #available-in-period-statement').html('R$ 0,00');
 
                 if (isEmpty(items)) {
@@ -845,33 +847,46 @@ $(document).ready(function () {
 
                     items.forEach(function (item) {
                         let dataTable = `<tr>
-                                        <td style="vertical-align: middle;">
-                                        Transação`;
+                                        <td style="vertical-align: middle;">`;
 
-                        if (item.isInvite) {
-                            dataTable += `
+                        if (item.order && item.order.hashId) {
+
+                            dataTable += `Transação`;
+
+                            if (item.isInvite) {
+                                dataTable += `
                                 <a class="">
-                                    <span>#${item.orderId}</span>
+                                    <span>#${item.order.hashId}</span>
                                 </a>
                             `;
+                            } else {
+                                dataTable += `
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                    <span style="color:black;">#${item.order.hashId}</span>
+                                </a>
+                            `;
+                            }
+                            dataTable += `<br>
+                                        <small>(${item.details.description})</small>`;
                         } else {
-                            dataTable += `
-                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.orderId}">
-                                    <span style="color:black;">#${item.orderId}</span>
-                                </a>
-                            `;
+                            dataTable += `${item.details.description}`;
                         }
 
-                        dataTable += `<br>
-                                        <small>(${item.summaryStatus.description})</small>
+                        dataTable += `
                                      </td>
                                      <td>
-                                        <span class="badge badge-sm badge-${statusExtract[item.summaryStatus.identify]} p-2">${item.summaryStatus.status}</span>
+                                        <span class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
                                      </td>
                                     <td style="vertical-align: middle;">
-                                        ${item.summaryDate}
+                                        ${item.realizedDate ? item.realizedDate : item.expectedDate}
                                     </td>
-                                    <td style="vertical-align: middle; color:${item.summaryValue >= 0 ? 'green' : 'red'};">${item.subSellerRateAmount}</td>
+                                    <td style="vertical-align: middle; color:${item.amount >= 0 ? 'green' : 'red'};">
+                                    ${(item.amount.toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            })
+                        )}
+                                    </td>
                                 </tr>
                             `;
                         updateClassHTML(dataTable);
@@ -886,11 +901,14 @@ $(document).ready(function () {
 
                     $('#statement-money #available-in-period-statement').html(`
                     <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${totalInPeriod}
+                        ${(totalInPeriod.toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            })
+                        )}
                     </span>`
                     );
                     paginationStatement();
-
 
                     $("#pagination-statement span").addClass('jp-hidden');
                     $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');

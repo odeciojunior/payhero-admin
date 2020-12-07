@@ -358,12 +358,17 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md">
+                                        <div class="col-sm-6 col-md" style="display:none">
                                             <div class="input-holder">
                                                 <label for="statement_data_type_select">Data</label>
-                                                <select class="form-control select-pad" name="status"
+                                                <select class="form-control select-pad"
+                                                        name="statement_data_type_select"
                                                         id="statement_data_type_select">
-                                                    <option value="transaction_date" selected>
+
+                                                    <option value="schedule_date" selected>
+                                                        Data
+                                                    </option>
+                                                    <option value="transaction_date">
                                                         Data da venda
                                                     </option>
                                                     <option value="liquidation_date">
@@ -385,6 +390,16 @@
                                                        class="select-pad" placeholder="Clique para editar..." readonly>
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-6 col-md">
+                                            <label for="forma">Forma de pagamento</label>
+                                            <select name='payment_method' id="payment_method"
+                                                    class="form-control select-pad">
+                                                <option value="">Todos</option>
+                                                <option value="1">Cartão de crédito</option>
+                                                <option value="2">Boleto</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4">
@@ -393,11 +408,15 @@
                                                 <select class="form-control select-pad" name="status"
                                                         id="statement_status_select">
                                                     <option value="ALL">Todos</option>
-                                                    <option value="WAITING_FOR_VALID_POST">Aguardando postagem válida
+                                                    <option value="WAITING_FOR_VALID_POST">
+                                                        Aguardando postagem válida
                                                     </option>
                                                     <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
+                                                    <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
                                                     <option value="PAID">Liquidado</option>
                                                     <option value="REVERSED">Estornado</option>
+                                                    <option value="STATUS_ADJUSTMENT_CREDIT">Ajuste de crédito</option>
+                                                    <option value="STATUS_ADJUSTMENT_DEBIT">Ajuste de débito</option>
                                                 </select>
                                             </div>
                                         </div>

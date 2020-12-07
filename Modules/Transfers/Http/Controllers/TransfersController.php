@@ -120,6 +120,12 @@ class TransfersController extends Controller
 
     public function accountStatementData()
     {
+
+        if (!auth()->user()) {
+
+            dd('USUÁRIO NÃO AUTENTICADO');
+        }
+
         try {
             $companyGetNet = Company::whereNotNull('subseller_getnet_id')
                 ->where('user_id', auth()->user()->account_owner_id)
@@ -140,18 +146,9 @@ class TransfersController extends Controller
 
                 $dates = explode(' - ', request('dateRange') ?? '');
 
-                if (is_array($dates) && count($dates) == 2) {
+                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
+                $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
 
-                    // Quando enviarmos o daterange
-                    $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
-                    $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-
-                } else if (is_array($dates) && count($dates) == 1) {
-
-                    // Quando enviarmos uma data única com o input type="date"
-                    $startDate = Carbon::createFromFormat('Y-m-d', $dates[0]);
-                    $endDate = $startDate;
-                }
             } catch (Exception $exception) {
             }
 
@@ -193,10 +190,9 @@ class TransfersController extends Controller
                 return response()->json($result->errors, 400);
             }
 
-            $transactions = (new GetNetStatementService())->performStatement($result);
-            $transactions = collect($transactions);
+            $data = (new GetNetStatementService())->performStatement($result);
 
-            return response()->json($transactions);
+            return response()->json($data);
         } catch (Exception $exception) {
             report($exception);
 
