@@ -352,21 +352,6 @@ class CheckoutService
         }
     }
 
-    public function releasePaymentGetnet($saleId)
-    {
-        if (FoxUtils::isProduction()) {
-            $url = 'https://checkout.cloudfox.net/api/payment/releasepaymentgetnet';
-        } else {
-            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
-        }
-
-        $data = [
-            'sale_id' => Hashids::connection('sale_id')->encode($saleId)
-        ];
-
-        return $this->runCurl($url, 'POST', $data);
-    }
-
     /**
      * @param $url
      * @param string $method

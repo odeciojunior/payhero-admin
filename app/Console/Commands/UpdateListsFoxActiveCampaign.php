@@ -6,10 +6,9 @@ use Illuminate\Console\Command;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Invitation;
-use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
 use DB;
+use Exception;
 
 class UpdateListsFoxActiveCampaign extends Command
 {

@@ -59,7 +59,7 @@ class UserResource extends JsonResource
             'withdrawal_approved'         => empty($userNotification->withdrawal_approved) ? false : $userNotification->withdrawal_approved,
             'domain_approved'             => empty($userNotification->domain_approved) ? false : $userNotification->domain_approved,
             'shopify'                     => empty($userNotification->shopify) ? false : $userNotification->shopify,
-            'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generate,
+            'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generated,
             'sex'                         => $this->sex ?? '',
             'mother_name'                 => $this->mother_name ?? '',
         ];

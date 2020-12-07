@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Hashids\Hashids;
 use Illuminate\Console\Command;
 use Modules\Core\Services\ShopifyService;
