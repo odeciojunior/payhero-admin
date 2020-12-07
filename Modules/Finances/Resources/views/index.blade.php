@@ -395,9 +395,9 @@
                                             <label for="forma">Forma de pagamento</label>
                                             <select name='payment_method' id="payment_method"
                                                     class="form-control select-pad">
-                                                <option value="">Todos</option>
-                                                <option value="1">Cartão de crédito</option>
-                                                <option value="2">Boleto</option>
+                                                <option value="ALL">Todos</option>
+                                                <option value="CREDIT_CARD">Cartão de crédito</option>
+                                                <option value="BANK_SLIP">Boleto</option>
                                             </select>
                                         </div>
                                     </div>
@@ -415,8 +415,8 @@
                                                     <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
                                                     <option value="PAID">Liquidado</option>
                                                     <option value="REVERSED">Estornado</option>
-                                                    <option value="STATUS_ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                    <option value="STATUS_ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                    <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
+                                                    <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
                                                 </select>
                                             </div>
                                         </div>

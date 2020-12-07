@@ -82,9 +82,8 @@ class CheckGetnetSales extends Command
             
         }
 
-            // $transactions = (new GetNetStatementService())->performStatement($result);
-            // $transactions = collect($transactions);
-
+        // $transactions = (new GetNetStatementService())->performStatement($result);
+        // $transactions = collect($transactions);
 
         dd($transactions);
     }
