@@ -26,7 +26,7 @@ class StatementItem
     public ?Order $order;
     public Details $details;
     public ?string $paidWith;
-    public string $type, $transactionDate, $expectedDate, $realizedDate;
+    public string $type, $transactionDate, $date, $subSellerRateConfirmDate;
     public float $amount;
     public bool $isInvite = false;
 
@@ -34,5 +34,30 @@ class StatementItem
     {
         $this->order = null;
         $this->paidWith = null;
+    }
+
+    public function __toString()
+    {
+        return '$order.saleId: ' . $this->order->getSaleId() . ' | ' .
+            '$order.hashId: ' . $this->order->getHashId() . ' | ' .
+            '$order.orderId: ' . $this->order->getOrderId() . ' | ' .
+
+            '$date: ' . $this->date;
+
+        /*return '$order.saleId: '.$this->order->getSaleId().' | '.
+            '$order.hashId: '.$this->order->getHashId().' | '.
+            '$order.orderId: '.$this->order->getOrderId().' | '.
+
+            '$details.status: '.$this->details->getStatus().' | '.
+            '$details.description: '.$this->details->getDescription().' | '.
+            '$details.type: '.$this->details->getType().' | '.
+
+            '$paidWith: '.$this->paidWith.' | '.
+            '$type: '.$this->type.' | '.
+            '$transactionDate: '.$this->transactionDate.' | '.
+            '$date: '.$this->date.' | '.
+            '$subSellerRateConfirmDate: '.$this->subSellerRateConfirmDate.' | '.
+            '$amount: '.$this->amount.' | '.
+            '$isInvite: '.$this->isInvite;*/
     }
 }

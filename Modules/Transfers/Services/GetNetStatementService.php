@@ -88,15 +88,15 @@ class GetNetStatementService
 
         if ($status && array_key_exists('status', $this->filters) && $this->filters['status'] != 'ALL') {
 
-            if ($status != $this->filters['status']) {
+            if ($status !== $this->filters['status']) {
 
                 $isValidStatusFilter = false;
             }
         }
 
-        if ($paymentMethod && array_key_exists('payment_method', $this->filters) && $this->filters['payment_method'] != 'ALL') {
+        if (array_key_exists('payment_method', $this->filters) && $this->filters['payment_method'] != 'ALL') {
 
-            if ($paymentMethod != $this->filters['payment_method']) {
+            if (!$paymentMethod || ($paymentMethod !== $this->filters['payment_method'])) {
 
                 $isValidPaymentMethodFilter = false;
             }
@@ -105,7 +105,7 @@ class GetNetStatementService
         return $isValidStatusFilter && $isValidPaymentMethodFilter;
     }
 
-    public function performStatement(stdClass $data, array $filters)
+    public function performStatement(stdClass $data, array $filters = [])
     {
 
         $this->filters = $filters;
@@ -239,7 +239,6 @@ class GetNetStatementService
                 $isReleaseStatus = $details->release_status == 'S';
                 $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}");
                 $transactionStatusCode = $summary->transaction_status_code;
-                $subSellerRateConfirmDate = $details->subseller_rate_confirm_date;
 
                 $details = new Details();
 
@@ -288,17 +287,6 @@ class GetNetStatementService
                     ]))
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_ERROR);
-
-                    /*dd('TODO::D', $item,
-                        [
-                            'hasOrderId' => $hasOrderId,
-                            'isTransactionCredit' => $isTransactionCredit,
-                            'isReleaseStatus' => $isReleaseStatus,
-                            'hasValidTracking' => $hasValidTracking,
-                            'transactionStatusCode' => $transactionStatusCode,
-                            'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
-                        ]
-                    );*/
                 }
 
                 if ($this->canAddStatementItem($details->getType(), $paidWith)) {
@@ -311,8 +299,8 @@ class GetNetStatementService
                     $statementItem->paidWith = $paidWith;
                     $statementItem->type = $type;
                     $statementItem->transactionDate = $transactionDate;
-                    $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-                    $statementItem->realizedDate = '';
+                    $statementItem->date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
 
                     $this->totalInPeriod += $amount;
                     $this->statementItems[] = $statementItem;
@@ -370,8 +358,8 @@ class GetNetStatementService
                     $statementItem->details = $details;
                     $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
                     $statementItem->transactionDate = $adjustmentDate;
-                    $statementItem->expectedDate = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-                    $statementItem->realizedDate = '';
+                    $statementItem->date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
 
                     $this->totalInPeriod += $amount;
                     $this->totalAdjustment += $amount;

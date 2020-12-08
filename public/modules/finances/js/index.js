@@ -879,7 +879,7 @@ $(document).ready(function () {
                                         <span class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
                                      </td>
                                     <td style="vertical-align: middle;">
-                                        ${item.realizedDate ? item.realizedDate : item.expectedDate}
+                                        ${item.date}
                                     </td>
                                     <td style="vertical-align: middle; color:${item.amount >= 0 ? 'green' : 'red'};">
                                     ${(item.amount.toLocaleString('pt-BR', {

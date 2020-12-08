@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * @property integer $id
@@ -301,5 +302,11 @@ class Sale extends Model
     public function saleGatewayRequests()
     {
         return $this->hasMany(SaleGatewayRequest::class);
+    }
+
+    public function getHashIdAttribute()
+    {
+
+        return Hashids::connection('sale_id')->encode($this->id);
     }
 }
