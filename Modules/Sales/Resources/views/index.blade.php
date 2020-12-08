@@ -84,14 +84,6 @@
                                 <option value="1">Cartão de crédito</option>
                                 <option value="2">Boleto</option>
                             </select>
-                            <span class="badge badge-primary">Primary</span>
-                            <span class="badge badge-secondary">Secondary</span>
-                            <span class="badge badge-success">Success</span>
-                            <span class="badge badge-danger">Danger</span>
-                            <span class="badge badge-warning">Warning</span>
-                            <span class="badge badge-info">Info</span>
-                            <span class="badge badge-light">Light</span>
-                            <span class="badge badge-dark">Dark</span>
                         </div>
                         <div class="col-sm-6 col-md">
                             <label for="status">Status</label>
