@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectReviews;
-use Modules\Core\Entities\ProjectUpsellRule;
+use Modules\Core\Entities\ProjectReviewsConfig;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsStoreRequest;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsUpdateRequest;
 use Modules\ProjectReviews\Transformers\ProjectReviewsResource;
@@ -95,7 +96,9 @@ class ProjectReviewsApiController extends Controller
         $projectReviewModel = new ProjectReviews();
         $data = $request->validated();
         $projectId = current(Hashids::decode($data['project_id']));
-        if ($projectId) {
+        $project = Project::find($projectId);
+
+        if (!empty($project)) {
             $applyPlanArray = [];
             if (in_array('all', $data['apply_on_plans'])) {
                 $applyPlanArray[] = 'all';
@@ -111,11 +114,17 @@ class ProjectReviewsApiController extends Controller
                 'project_id'     => $projectId,
                 'name'           => $data['name'],
                 'description'    => $data['description'],
-                'photo'          => $data['photo'],
+                'photo'          => $data['photo'] ?? null,
                 'stars'          => $data['stars'] ?? 0,
                 'active_flag'    => $data['active_flag'] ?? 0,
                 'apply_on_plans' => $applyPlanEncoded,
             ]);
+
+            if (!$project->reviewsConfig) {
+                ProjectReviewsConfig::create([
+                    'project_id' => $projectId
+                ]);
+            }
 
             return response()->json(['message' => 'Review criado com sucesso!'], 200);
         } else {
@@ -151,7 +160,7 @@ class ProjectReviewsApiController extends Controller
             $reviewUpdated = $review->update([
                 'name'           => $data['name'],
                 'description'    => $data['description'],
-                'photo'          => $data['photo'],
+                'photo'          => $data['photo'] ?? null,
                 'stars'          => $data['stars'] ?? 0,
                 'active_flag'    => $data['active_flag'] ?? 0,
                 'apply_on_plans' => $applyPlanEncoded,

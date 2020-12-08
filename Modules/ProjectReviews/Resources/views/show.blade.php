@@ -1,36 +1,21 @@
-<table id="review-details-table" class='table table-striped' style='width: 100%'>
-    <tbody>
-    <tr>
-        <td class="table-title">Nome</td>
-        <td style='width: 20px'></td>
-        <td class='text-left'>
-            <img class="review-photo img-fluid rounded-circle p-0 m-0" width="35" height="35"
-            src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png">
-            <span class="review-name"></span>
-        </td>
-    </tr>
-    <tr>
-        <td class="table-title">Descrição</td>
-        <td style='width: 20px'></td>
-        <td class='text-left review-description'></td>
-    </tr>
-    <tr>
-        <td class="table-title">Classificação</td>
-        <td style='width: 20px'></td>
-        <td class='text-left review-stars'>
-            <div class="stars" data-score="0"></div>
-        </td>
-    </tr>
-    <tr>
-        <td class="table-title">Mostrar nos planos</td>
-        <td style='width: 20px'></td>
-        <td class='text-left review-apply-plans'></td>
-    </tr>
-    <tr>
-        <td class="table-title">Status</td>
-        <td style='width: 20px'></td>
-        <td class='text-left review-status'>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<br/>
+
+<div class="card m-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <img class="review-photo img-fluid rounded-circle p-0 m-0" width="40" height="40"
+                     src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png">
+                <b class="pl-2 review-name"></b>
+            </div>
+
+            <div class="col-4 text-right preview-review-stars d-flex align-items-center justify-content-end">
+                <div class="preview-stars"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col mt-2 text-left review-description"></div>
+        </div>
+    </div>
+</div>

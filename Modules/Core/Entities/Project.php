@@ -318,4 +318,12 @@ class Project extends Model
     {
         return $this->hasMany(ProjectReviews::class);
     }
+
+    /**
+     * @return hasOne
+     */
+    public function reviewsConfig()
+    {
+        return $this->hasOne(ProjectReviewsConfig::class);
+    }
 }

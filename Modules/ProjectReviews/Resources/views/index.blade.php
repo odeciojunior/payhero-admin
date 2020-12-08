@@ -2,13 +2,13 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
             <div class='div-config'>
-                <div id="config-review" class="btn-holder  d-flex align-items-center pointer mr-20">
+                <div id="config-review" class="btn-holder d-none align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Review </span>
                     <a class="ml-10 rounded-add pointer bg-primary">
                         <i class="icon wb-settings" aria-hidden="true"></i></a>
                 </div>
             </div>
-            <div id="add-review" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_review">
+            <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_review">
                 <span class="link-button-dependent red"> Adicionar Review </span>
                 <a class="ml-10 rounded-add pointer">
                     <i class="icon wb-plus" aria-hidden="true"></i></a>
@@ -64,25 +64,25 @@
 {{-- End Modal  --}}
 
 {{-- Modal config review --}}
-{{--<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>--}}
-{{--    <div class="modal-dialog modal-lg d-flex justify-content-center">--}}
-{{--        <div class="modal-content" id="conteudo_modal_add">--}}
-{{--            <div class="modal-header mb-0">--}}
-{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
-{{--                    <span aria-hidden="true">×</span>--}}
-{{--                </button>--}}
-{{--                <h4 class="modal-title text-center" style="font-weight: 700;">Configurações review</h4>--}}
-{{--            </div>--}}
-{{--            <div class="pt-10 pr-20 pl-20 modal_review_body">--}}
-{{--                @include('projectreviewrule::config')--}}
-{{--            </div>--}}
-{{--            <div class="modal-footer pt-0">--}}
-{{--                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>--}}
-{{--                <button type="button" class="btn btn-success bt-review-config-update">Atualizar</button>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</div>--}}
+<div class="modal fade modal-3d-flip-vertical" id="modal_config_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
+    <div class="modal-dialog d-flex justify-content-center">
+        <div class="modal-content" id="conteudo_modal_add">
+            <div class="modal-header mb-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title text-center" style="font-weight: 700;">Configurações das reviews</h4>
+            </div>
+            <div class="pt-10 pr-20 pl-20 modal_review_body">
+                @include('projectreviewsconfig::config')
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success bt-review-config-update">Atualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {{-- End Modal  --}}
 
 <!-- Details -->
@@ -90,7 +90,7 @@
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title">Detalhes do review</h4>
+                <h4 class="modal-title" id="modal-title">Exibição do Review</h4>
                 <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>

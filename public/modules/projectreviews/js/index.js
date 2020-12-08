@@ -7,18 +7,33 @@ $(document).ready(function () {
         loadReviews();
     })
 
-    var initStarsPlugin = function (el, score, readOnly = true, icon = 'star') {
+    $.ajax({
+        method: "GET",
+        url: "/api/projectreviewsconfig/" + projectId,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        }, success: function success(response) {
+            let reviewConfig = response.data;
+            localStorage.setItem('icon_type', reviewConfig.icon_type);
+            localStorage.setItem('icon_color', reviewConfig.icon_color);
+        }
+    });
+
+    var initStarsPlugin = function (el, score, readOnly = true) {
+        var icon = localStorage.getItem('icon_type') || 'star';
+        var starHalf = icon === 'star' ? `fa fa-${icon}-half-o` : `fa fa-${icon}`;
         var $el = $(el);
+        $el.off();
         $el.html('');
-        $el.css({'color': '#d4af37'})
+        $el.css({'color': localStorage.getItem('icon_color')})
         $el.raty({
-            color: '#d4af37',
-            fontColor: '#d4af37',
             half: true,
             readOnly: readOnly,
             starType: 'i',
             score: score,
-            starHalf: `fa fa-${icon}-half-o`,
+            starHalf: starHalf,
             starOff: `fa fa-${icon}-o`,
             starOn: `fa fa-${icon}`,
             scoreName: 'stars'
@@ -53,17 +68,18 @@ $(document).ready(function () {
                 dataTable.html('');
 
                 if (response.data == '') {
-                    //$('.div-config').hide();
                     dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
                     tableReviews.addClass('table-striped');
                 } else {
+                    $('#config-review').removeClass('d-none').addClass('d-flex');
                     tableReviews.addClass('table-striped');
                     let data = '';
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>
                             <td>
-                                <img src="${value.photo}" class="img-fluid rounded-circle" width="35" height="35">
+                                <img src="${value.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'}"
+                                class="img-fluid rounded-circle" width="35" height="35">
                                 ${value.name}
                             </td>
                             <td>${value.description.substring(0, 50)}...</td>
@@ -82,7 +98,7 @@ $(document).ready(function () {
                         initStarsPlugin('#stars-' + value.id);
                     });
                     $('.div-config').show();
-                    pagination(response, 'project_reviews', loadReviews);
+                    pagination(response, 'review', loadReviews);
                 }
 
             }
@@ -321,12 +337,12 @@ $(document).ready(function () {
             }, success: function success(response) {
                 let review = response.data;
 
-                $('.review-photo').attr('src', review.photo);
+                $('.review-photo').attr('src', review.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png');
                 $('.review-name').html(review.name);
                 $('.review-description').html(review.description);
                 $('.review-status').html(`${review.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);
 
-                initStarsPlugin('.review-stars .stars', review.stars);
+                initStarsPlugin('.preview-stars', review.stars);
 
                 var reviewApplyPlans = $('.review-apply-plans');
                 reviewApplyPlans.html('');
@@ -406,7 +422,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projectreviewconfig/" + projectId,
+            url: "/api/projectreviewsconfig/" + projectId,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -419,19 +435,22 @@ $(document).ready(function () {
             }, success: function success(response) {
                 loadingOnScreenRemove();
                 let reviewConfig = response.data;
-                $('#header_config').val(`${reviewConfig.header}`);
-                $('#title_config').val(`${reviewConfig.title}`);
-                // CKEDITOR.instances.review_description_config.setData(`${reviewConfig.description}`);
-                $('#countdown_time').val(`${reviewConfig.countdown_time}`);
+                let formConfigReview = $('#form_config_review');
 
-                if (reviewConfig.countdown_flag) {
-                    $('#countdown_flag').prop('checked', true);
-                } else {
-                    $('#countdown_flag').prop('checked', false);
-                }
-                if (reviewConfig.has_review) {
-                    $('.btn-view-config').show();
-                }
+                formConfigReview.find('[name=icon_color]').val(reviewConfig.icon_color)
+                formConfigReview.find('[name=icon_type][value=' + reviewConfig.icon_type + ']').prop('checked', true)
+                formConfigReview.find('[name=icon_type]').parent('.radio-custom').find('i').css({color: reviewConfig.icon_color})
+
+                let colorOptions = formConfigReview.find('.color-options > div');
+                colorOptions.removeClass('active');
+                formConfigReview.find('.color-options').find('[data-color="' + String(reviewConfig.icon_color).toLowerCase() + '"]').addClass('active')
+                colorOptions.off().on('click', function () {
+                    let color = $(this).data('color')
+                    formConfigReview.find('[name=icon_color]').val(color);
+                    formConfigReview.find('[name=icon_type]').parent('.radio-custom').find('i').css({color: color})
+                    colorOptions.removeClass('active');
+                    $(this).addClass('active');
+                });
 
                 $('#modal_config_review').modal('show');
             }
@@ -440,18 +459,16 @@ $(document).ready(function () {
 
     $(document).on('click', '.bt-review-config-update', function (event) {
         event.preventDefault();
-        if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
-            alertCustom('error', 'Preencha o campo Contagem');
-            return false;
-        }
+        // if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
+        //     alertCustom('error', 'Preencha o campo Contagem');
+        //     return false;
+        // }
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_config_review'));
-        let description = ''; //CKEDITOR.instances.review_description_config.getData();
-        form_data.set('description', description);
 
         $.ajax({
             method: "POST",
-            url: "/api/projectreviewconfig/" + projectId,
+            url: "/api/projectreviewsconfig/" + projectId,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -465,113 +482,117 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                // $('#modal_config_review').modal('hide');
+                localStorage.setItem('icon_type', form_data.get('icon_type'))
+                localStorage.setItem('icon_color', form_data.get('icon_color'))
+                loadReviews();
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
             }
         });
     });
+
     $(document).on('click', '.btn-return-to-config', function (event) {
         event.preventDefault();
         $('#modal-view-review-config').modal('hide');
         $('#modal_config_review').modal('show');
     });
-    $(document).on('click', '.btn-view-config', function (event) {
-        event.preventDefault();
-        $('#modal_config_review').modal('hide');
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: "/api/projectreviewconfig/previewreview",
-            dataType: "json",
-            data: {
-                project_id: projectId,
-            },
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
 
-            }, success: function success(response) {
-                loadingOnScreenRemove();
-                let review = response.data;
-
-                $('#div-review-products').html('');
-
-                $('#review-header').html(review.header);
-                $('#review-title').html(review.title);
-                $('#review-description').html(review.description);
-
-                if (review.countdown_flag) {
-                    $('#timer').show();
-                    startCountdown(review.countdown_time);
-                } else {
-                    $('#timer').hide();
-                }
-
-                let data = "";
-
-                for (let key in review.plans) {
-
-                    let plan = review.plans[key];
-                    data += `<div class="product-info">
-                                <div class="d-flex flex-column">`;
-                    for (let product of plan.products) {
-                        let firstVariant = Object.keys(product)[0];
-                        data += `<div class="product-row">
-                                    <img src="${product[firstVariant].photo}" class="product-img">
-                                    <div class="ml-4">
-                                        <h3>${product[firstVariant].amount}x ${product[firstVariant].name}</h3>`;
-                        if (Object.keys(product).length > 1) {
-                            data += `<select class="product-variant">`;
-                            for (let i in product) {
-                                data += `<option value="${i}">${product[i].description}</option>`;
-                            }
-                            data += `</select>`;
-                        } else {
-                            data += `<span class="text-muted">${product[firstVariant].description}</span>`;
-                        }
-                        data += `</div>
-                             </div>`;
-                    }
-                    data += `</div>
-                                <div class="d-flex flex-column mt-4 mt-md-0">`;
-                    if (plan.discount) {
-                        data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
-                                                 <div class="d-flex mb-2">
-                                                     <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
-                                                     <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
-                                                 </div>`;
-                    }
-
-                    if (!isEmpty(plan.installments)) {
-                        data += `<div class="form-group">
-                                    <select class="installments">`;
-                        for (let installment of plan.installments) {
-                            data += `<option value="${installment['amount']}">${installment['amount']}X DE R$ ${installment['value']}</option>`;
-                        }
-                        data += `</select>
-                             </div>`;
-                    } else {
-                        data += `<h2 class="text-primary mb-md-4"><b>R$ ${plan.price}</b></h2>`;
-                    }
-                    data += `<button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
-                         </div>
-                    </div>`;
-
-                    if (parseInt(key) !== (review.plans.length - 1)) {
-                        data += `<hr class="plan-separator">`;
-                    }
-                }
-
-                $('#div-review-products').append(data);
-
-                $('#modal-view-review-config').modal('show');
-            }
-        });
-
-    });
+    // $(document).on('click', '.btn-view-config', function (event) {
+    //     event.preventDefault();
+    //     $('#modal_config_review').modal('hide');
+    //     loadingOnScreen();
+    //     $.ajax({
+    //         method: "POST",
+    //         url: "/api/projectreviewsconfig/previewreview",
+    //         dataType: "json",
+    //         data: {
+    //             project_id: projectId,
+    //         },
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function error(response) {
+    //             loadingOnScreenRemove();
+    //             errorAjaxResponse(response);
+    //
+    //         }, success: function success(response) {
+    //             loadingOnScreenRemove();
+    //             let review = response.data;
+    //
+    //             $('#div-review-products').html('');
+    //
+    //             $('#review-header').html(review.header);
+    //             $('#review-title').html(review.title);
+    //             $('#review-description').html(review.description);
+    //
+    //             if (review.countdown_flag) {
+    //                 $('#timer').show();
+    //                 startCountdown(review.countdown_time);
+    //             } else {
+    //                 $('#timer').hide();
+    //             }
+    //
+    //             let data = "";
+    //
+    //             for (let key in review.plans) {
+    //
+    //                 let plan = review.plans[key];
+    //                 data += `<div class="product-info">
+    //                             <div class="d-flex flex-column">`;
+    //                 for (let product of plan.products) {
+    //                     let firstVariant = Object.keys(product)[0];
+    //                     data += `<div class="product-row">
+    //                                 <img src="${product[firstVariant].photo}" class="product-img">
+    //                                 <div class="ml-4">
+    //                                     <h3>${product[firstVariant].amount}x ${product[firstVariant].name}</h3>`;
+    //                     if (Object.keys(product).length > 1) {
+    //                         data += `<select class="product-variant">`;
+    //                         for (let i in product) {
+    //                             data += `<option value="${i}">${product[i].description}</option>`;
+    //                         }
+    //                         data += `</select>`;
+    //                     } else {
+    //                         data += `<span class="text-muted">${product[firstVariant].description}</span>`;
+    //                     }
+    //                     data += `</div>
+    //                          </div>`;
+    //                 }
+    //                 data += `</div>
+    //                             <div class="d-flex flex-column mt-4 mt-md-0">`;
+    //                 if (plan.discount) {
+    //                     data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
+    //                                              <div class="d-flex mb-2">
+    //                                                  <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
+    //                                                  <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
+    //                                              </div>`;
+    //                 }
+    //
+    //                 if (!isEmpty(plan.installments)) {
+    //                     data += `<div class="form-group">
+    //                                 <select class="installments">`;
+    //                     for (let installment of plan.installments) {
+    //                         data += `<option value="${installment['amount']}">${installment['amount']}X DE R$ ${installment['value']}</option>`;
+    //                     }
+    //                     data += `</select>
+    //                          </div>`;
+    //                 } else {
+    //                     data += `<h2 class="text-primary mb-md-4"><b>R$ ${plan.price}</b></h2>`;
+    //                 }
+    //                 data += `<button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
+    //                      </div>
+    //                 </div>`;
+    //
+    //                 if (parseInt(key) !== (review.plans.length - 1)) {
+    //                     data += `<hr class="plan-separator">`;
+    //                 }
+    //             }
+    //
+    //             $('#div-review-products').append(data);
+    //
+    //             $('#modal-view-review-config').modal('show');
+    //         }
+    //     });
+    //
+    // });
 });
