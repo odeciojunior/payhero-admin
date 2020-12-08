@@ -6,14 +6,10 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\AnticipationService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
-use Modules\Core\Services\SaleService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,11 +30,8 @@ class FinancesApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $transactionModel     = new Transaction();
             $companyService       = new CompanyService();
             $remessaOnlineService = new RemessaOnlineService();
-            $anticipationService  = new AnticipationService();
-            $saleService          = new SaleService();
 
             $pendingBalance = 0;
 
