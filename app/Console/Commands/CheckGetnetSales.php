@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Transfers\Getnet\Details;
 use Modules\Transfers\Services\GetNetStatementService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -55,35 +55,64 @@ class CheckGetnetSales extends Command
                     ->orderBy('id', 'desc');
 
         $getNetBackOfficeService = new GetnetBackOfficeService();
-        
+
         foreach($transactions->cursor() as $transaction) {
 
             $getNetBackOfficeService->setStatementSubSellerId($transaction->company->subseller_getnet_id)
-                                    ->setStatementStartDate(Carbon::now()->subYears(2))
-                                    ->setStatementEndDate(Carbon::now()->addYear())
-                                    ->setStatementDateField('transaction')
-                                    ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
+                ->setStatementStartDate(Carbon::now()->subYears(2))
+                ->setStatementEndDate(Carbon::now()->addYear())
+                ->setStatementDateField('transaction')
+                ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
 
-            $result = $getNetBackOfficeService->getStatement();
+            /*$result = $getNetBackOfficeService->getStatement();
 
             $statement = (new GetNetStatementService())->performStatement(json_decode($result));
             $statement = collect($statement);
 
-            // if($statement->transactions->first()->identify == GetNetStatementService::SEARCH_STATUS_WAITING_WITHDRAWAL) {
-            //     $transaction->update(
-            //         [
-            //             'status' => 'waiting_withdrawal',
-            //             'status_enum' => (new Transaction)->present()->getStatuEnum('waiting_withdrawal')
-            //         ]
-            //     );
-            // }
+            if($statement->transactions->first()->identify == GetNetStatementService::SEARCH_STATUS_WAITING_WITHDRAWAL) {
+                $transaction->update(
+                    [
+                        'status' => 'waiting_withdrawal',
+                        'status_enum' => (new Transaction)->present()->getStatuEnum('waiting_withdrawal')
+                    ]
+                );
+            }
 
-            Log::info($statement->toArray());
-            
+            Log::info($statement->toArray());*/
+
+            $result = $getNetBackOfficeService->getStatement();
+            $result = json_decode($result);
+
+            $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
+
+            if (array_key_exists('items', $transactionsGetNet)) {
+
+                $transactionGetNet = collect($transactionsGetNet['items'])->first();
+
+                if (!$transactionGetNet) {
+
+                    $this->info(' - NOT FOUND AFTER  (new GetNetStatementService())->performStatement(...) | sale_id = ' . $transaction->sale->id);
+                } else {
+
+                    if ($transactionGetNet->details->getType() == Details::STATUS_WAITING_WITHDRAWAL) {
+
+                        $this->info(' - UPDATE - ' . $transactionGetNet->order->getSaleId() . ' :: ' . $transactionGetNet->details->getStatus());
+
+                        /*$transaction->update(
+                            [
+                                'status' => 'waiting_withdrawal',
+                                'status_enum' => $transactionModel->present()->getStatusEnum('waiting_withdrawal'),
+                            ]
+                        );*/
+                    } else {
+
+                        $this->comment(' - ' . $transactionGetNet->order->getSaleId() . ' :: ' . $transactionGetNet->details->getStatus());
+
+                    }
+                }
+            }
+
         }
-
-        // $transactions = (new GetNetStatementService())->performStatement($result);
-        // $transactions = collect($transactions);
 
         dd($transactions);
     }
