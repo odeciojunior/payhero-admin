@@ -63,7 +63,7 @@
                     </a>
                     <div class="dropdown-menu" role="menu">
                         <a id="accounts-service" class="dropdown-item" href="" role="menuitem">
-                            <i class="material-icons align-middle"> account_circle </i> Perfil
+                            <i class="material-icons align-middle"> account_circle </i> Minha conta
                         </a>
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
