@@ -798,12 +798,12 @@ $(document).ready(function () {
     let statusExtract = {
         'WAITING_FOR_VALID_POST': 'pendente',
         'WAITING_LIQUIDATION': 'info',
-        'WAITING_WITHDRAWAL': 'success',
+        'WAITING_WITHDRAWAL': 'withdrawal',
         'PAID': 'success',
         'REVERSED': 'warning',
-        'ADJUSTMENT_CREDIT': 'success',
-        'ADJUSTMENT_DEBIT': 'info',
-        'ERROR': 'pendente',
+        'ADJUSTMENT_CREDIT': 'dark',
+        'ADJUSTMENT_DEBIT': 'warning',
+        'ERROR': 'error',
     }
 
 

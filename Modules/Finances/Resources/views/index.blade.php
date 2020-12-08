@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=2') }}">
     <style>
         .popover {
             left: -50px !important;

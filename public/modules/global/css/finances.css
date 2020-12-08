@@ -159,6 +159,11 @@
     background: rgb(255, 157, 0);
 }
 
+.badge-withdrawal {
+    background: yellow;
+    color: #0a0a0a;
+}
+
 .badge-antifraude {
     background: rgb(22, 142, 209);
 }
