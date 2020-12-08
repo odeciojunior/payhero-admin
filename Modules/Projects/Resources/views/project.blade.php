@@ -139,9 +139,9 @@
                             @include('projectupsellrule::index')
                         </div>
                         <!-- Painel de Parceiros -->
-                        <div class="tab-pane" id="tab_partners" role="tabpanel">
+                        {{-- <div class="tab-pane" id="tab_partners" role="tabpanel">
                             @include('partners::index')
-                        </div>
+                        </div> --}}
                         <!-- Painel de Configurações  Abre a tela edit-->
                         <div class="tab-pane" id="tab_configuration_project" role="tabpanel">
                             @include('projects::edit')
