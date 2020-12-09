@@ -11,7 +11,9 @@
                             <input type="radio" id="starIcon" name="icon_type" value="star">
                             <label for="starIcon">
                                 <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
                                 <i class="fa fa-star-half-o"></i>
+                                <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </label>
                         </div>
@@ -22,6 +24,9 @@
                             <input type="radio" id="heartIcon" name="icon_type" value="heart">
                             <label for="heartIcon">
                                 <i class="fa fa-heart"></i>
+                                <i class="fa fa-heart"></i>
+                                <i class="fa fa-heart"></i>
+                                <i class="fa fa-heart-o"></i>
                                 <i class="fa fa-heart-o"></i>
                             </label>
                         </div>
@@ -47,7 +52,7 @@
                         <i class="fa fa-check text-white"></i>
                     </div>
 
-                    <div data-color="#ff4c52" style="background: #ff4c52;" title="Vermelho">
+                    <div data-color="#ff0000" style="background: #ff0000;" title="Vermelho">
                         <i class="fa fa-check text-white"></i>
                     </div>
 

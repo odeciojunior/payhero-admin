@@ -38,7 +38,7 @@
 
                         <div class='form-group col-12 col-sm-6 mb-20'>
                             <label for="link">Classificação</label>
-                            <div id="review_add_stars"></div>
+                            <div id="review_add_stars" style="font-size: 25px;"></div>
                         </div>
 
                         <div class='form-group col-12 mb-20'>
