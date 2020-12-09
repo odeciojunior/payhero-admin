@@ -20,9 +20,9 @@ Route::get('/', function() {
     return view('auth.login');
 });
 
-/*Route::get('/terms', function () {
-    return view('terms.terms');
-});*/
+Route::get('/termos', function () {
+    return response()->file(public_path('terms-of-use.pdf'));
+});
 
 Route::group(
     [
