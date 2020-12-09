@@ -1,22 +1,29 @@
-<form id='form_add_review' method="post" action="#" style="display:none">
+<form id='form_add_review' method="post" action="#" style="display:none" enctype="multipart/form-data">
     @csrf
     <div style="width:100%">
         <div class="row">
             <div class="col-12">
                 <div class="row">
                     <div class='col-md-4 col-sm-12'>
-                        <input name='photo' type='file' class='form-control' id='review-photo'
-                               style="display:none">
-                        <label for='preview-review-photo'>Selecione a foto</label>
-                        <br>
-                        <img id="preview-review-photo" alt='Selecione a foto do review' class='img-fluid mb-sm-2'
-                             src="{{asset('modules/global/img/projeto.png')}}" style="cursor:pointer;">
-                        <br>
-                        <input type='hidden' name='photo_x1'/>
-                        <input type='hidden' name='photo_y1'/>
-                        <input type='hidden' name='photo_w'/>
-                        <input type='hidden' name='photo_h'/>
-                        <input type='hidden' name='photo'/>
+                        <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
+                            <input name='photo' type='file' class='form-control' id='photoReview' style='display:none;'
+                                   accept='image/*'>
+                            <label for='photo'>Selecione uma foto</label>
+                            <div style="width:100%" class="text-center">
+                                <img id='previewimage' alt='Selecione a foto do projeto'
+                                     src="{{asset('modules/global/img/projeto.png')}}"
+                                     style="min-width: 250px; max-width: 250px;margin: auto">
+                            </div>
+                            <input id='photo_x1' name='photo_x1' type='hidden'>
+                            <input id='photo_y1' name='photo_y1' type='hidden'>
+                            <input id='photo_w' name='photo_w' type='hidden'>
+                            <input id='photo_h' name='photo_h' type='hidden'>
+                            <p class='info pt-5' style='font-size: 10px;'>
+                                <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
+                                <br> Dimensões ideais: 300 x 300 pixels.
+                            </p>
+                        </div>
                     </div>
                     <div class="col-12 col-sm-8">
                         <div class='form-group col-12 mb-20'>

@@ -19,6 +19,10 @@ class ProjectReviewsUpdateRequest extends FormRequest
             'description'    => 'required',
             'stars'          => 'required',
             'active_flag'    => 'required',
+            'photo_w'        => 'nullable',
+            'photo_h'        => 'nullable',
+            'photo_x1'       => 'nullable',
+            'photo_y1'       => 'nullable',
         ];
     }
 

@@ -19,7 +19,11 @@ class ProjectReviewsStoreRequest extends FormRequest
             'name'           => 'required',
             'description'    => 'required',
             'stars'          => 'required',
-            'active_flag'    => 'required|int'
+            'active_flag'    => 'required|int',
+            'photo_w'        => 'nullable',
+            'photo_h'        => 'nullable',
+            'photo_x1'       => 'nullable',
+            'photo_y1'       => 'nullable',
         ];
     }
 

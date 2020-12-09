@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectReviews;
 use Modules\Core\Entities\ProjectReviewsConfig;
+use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsStoreRequest;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsUpdateRequest;
 use Modules\ProjectReviews\Transformers\ProjectReviewsResource;
@@ -97,6 +100,7 @@ class ProjectReviewsApiController extends Controller
         $data = $request->validated();
         $projectId = current(Hashids::decode($data['project_id']));
         $project = Project::find($projectId);
+        $amazonFileService = app(AmazonFileService::class);
 
         if (!empty($project)) {
             $applyPlanArray = [];
@@ -110,15 +114,50 @@ class ProjectReviewsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
-            $projectReviewModel->create([
+            $review = $projectReviewModel->create([
                 'project_id'     => $projectId,
                 'name'           => $data['name'],
                 'description'    => $data['description'],
-                'photo'          => $data['photo'] ?? null,
+                //'photo'          => $data['photo'] ,
                 'stars'          => $data['stars'] ?? 0,
                 'active_flag'    => $data['active_flag'] ?? 0,
                 'apply_on_plans' => $applyPlanEncoded,
             ]);
+
+//            var_dump($_FILES);
+//            var_dump($_REQUEST);
+//            var_dump($_POST);
+//            die();
+            dd(request()->file('photo'));
+            dd($data['photo']);
+
+            $photo = $request->file('photo');
+            if ($photo != null) {
+                try {
+                    $img = Image::make($photo->getPathname());
+                    $img->crop(
+                        $data['photo_w'],
+                        $data['photo_h'],
+                        $data['photo_x1'],
+                        $data['photo_y1']
+                    );
+                    $img->save($photo->getPathname());
+
+                    $amazonFileService->setDisk('s3_plans_reviews');
+                    $amazonPath = $amazonFileService->uploadFile(
+                        'uploads/user/' . Hashids::encode(
+                            auth()->user()->account_owner_id
+                        ) . '/plans-reviews/' . Hashids::encode($review->id) . '/public',
+                        $photo,
+                        null,
+                        null,
+                        'public'
+                    );
+                    $project->update(['photo' => $amazonPath]);
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
 
             if (!$project->reviewsConfig) {
                 ProjectReviewsConfig::create([
