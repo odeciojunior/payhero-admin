@@ -224,6 +224,30 @@ $(() => {
         });
     });
 
+    $('#update-sale-observation').click(function () {
+
+        let sale = $('#sale-code').text();
+
+        $.ajax({
+            method: "POST",
+            url: "/api/sales/set-observation/" + sale,
+            data: {
+                'observation': $("#observation").val()
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+                atualizar(currentPage);
+            }
+
+        });
+    })
+
     function getSale(sale) {
 
         renderSale(sale);
@@ -253,6 +277,13 @@ $(() => {
         } else {
             $('#release-date').text('');
         }
+
+        if (!isEmpty(sale.observation)) {
+            $('#sale-observation').removeClass('collapse');
+        } else {
+            $('#sale-observation').addClass('collapse');
+        }
+            $('#observation').val(sale.observation);
 
         //Status
         let status = $('.modal-body #status');

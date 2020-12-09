@@ -76,6 +76,7 @@ class SalesResource extends JsonResource
             'refund_observation' => $this->details->refund_observation,
             'user_changed_observation'=>$this->details->user_changed_observation,
             'is_chargeback_recovered'    => $this->is_chargeback_recovered,
+            'observation' => $this->observation,
             'thank_page_url'    => $thankPageUrl,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
