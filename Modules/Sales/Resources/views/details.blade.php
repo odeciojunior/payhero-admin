@@ -366,5 +366,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v='.uniqid()) }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
 @endpush

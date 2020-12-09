@@ -252,7 +252,7 @@ $(document).ready(function () {
                         }
 
                         let observation = ''
-                        if (!(isEmpty(value.observation) || (value.observation === null && false))) {
+                        if (!isEmpty(value.observation) || (value.observation === null && false) || (value.observation === '' && false)) {
                              observation = `<a data-toggle="tooltip" title="${value.observation}"
                                                 role="button" class="sale_observation" venda="${value.id}" style='margin-right:10px;'>
                                                     <i style="color: #44a44b" class='icon-observation-value  material-icons'>info</i>
