@@ -174,6 +174,34 @@
                 </div>
                 {{--resend shopfy order--}}
 
+            <!-- Observation -->
+                <div style="box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);" class="panel-group my-30" aria-multiselectable="true" role="tablist">
+                    <div class="panel">
+                        <div class="panel-heading" id="exampleHeadingDefaultOne" role="tab">
+                            <a class="panel-title" data-toggle="collapse" href="#sale-observation"
+                               data-parent="#exampleAccordionDefault" aria-expanded="true"
+                               aria-controls="exampleCollapseDefaultOne">
+                                <strong>Observações</strong>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse" id="sale-observation"
+                             aria-labelledby="exampleHeadingDefaultOne" role="tabpanel" style="">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="observation"></label>
+                                    <textarea class="form-control" id="observation"  rows="3"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-right">
+                                        <button id="update-sale-observation" type="button" class="btn btn-success">Atualizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- End Observation -->
+
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
@@ -338,5 +366,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v='.uniqid()) }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
 @endpush
