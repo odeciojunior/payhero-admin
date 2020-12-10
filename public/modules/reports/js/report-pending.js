@@ -180,7 +180,6 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#body-table-pending').html('');
                 $('.table-pending').addClass('table-striped');
-                console.log(response)
 
                 if (!isEmpty(response.data)) {
                     console.log(response.data)
