@@ -148,7 +148,7 @@
 
 @push('scripts')
     <script src="{{ asset('/modules/reports/js/detail.js?v=17') }}"></script>
-    <script src='{{asset('modules/reports/js/report-pending.js?v=1')}}'></script>
+    <script src='{{asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000))}}'></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
 @endpush
