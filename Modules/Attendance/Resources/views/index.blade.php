@@ -50,7 +50,7 @@
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
                                     <label>Data</label>
-                                    <input name='date_range' id="date_range" class="form-control" placeholder="Clique para editar..." readonly>
+                                    <input name='date_range' id="date_range" class="form-control bg-white" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
                             <div class='col-12 col-md-3 col-lg-3'>
@@ -134,9 +134,9 @@
             </div>
             <div id='div-ticket-empty' class='row' style='display:none;'>
                 <div class='col-12 col-lg-12'>
-                    {{--                    <div class="card card-shadow bg-white p-5">--}}
-                    <div class='alert font-size-14 text-center mt-10' style='background-color:#f1f4f5;'>Nenhum chamado encontrado</div>
-                    {{--                    </div>--}}
+                    <div class="card card-shadow bg-white card-left orange">
+                        <div class='card-header bg-white font-size-14 text-center  py-20'>Nenhum chamado encontrado</div>
+                    </div>
                 </div>
             </div>
             <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
