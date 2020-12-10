@@ -86,17 +86,20 @@ $(document).ready(function () {
                 $(response.data).each(function (index, value) {
                     if (value.capture_transaction_enabled) {
                         itsApprovedTransactGetnet = true;
-                        $("#statement_company_select").append(`<option country="${value.country}" value="${value.id}">${value.name}</option>`);
+                        let dataHtml = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
+                        $("#statement_company_select").append(dataHtml);
+                        $("#transfers_company_select").append(dataHtml);
                     }
                 });
 
-                if (!itsApprovedTransactGetnet){
+                if (!itsApprovedTransactGetnet) {
                     $("#companies-not-approved-getnet").show();
                     return;
                 }
                 $(".card-show-content-finances").show();
 
                 updateAccountStatementData();
+                updateBalances();
             }
         });
     }
@@ -158,7 +161,7 @@ $(document).ready(function () {
         loadOnAny('.price', false, balanceLoader);
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
-            url: "api/finances/getbalances/",
+            url: "/api/finances/getbalances",
             type: "GET",
             data: {company: $("#transfers_company_select option:selected").val()},
             dataType: "json",

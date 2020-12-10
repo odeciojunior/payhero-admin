@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Withdrawals\Http\Controllers\WithdrawalsApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +32,7 @@ Route::group(
         /**
          * News routes after Getnet
          */
-        Route::apiResource('/withdrawals', WithdrawalsApiController::class)
+        Route::apiResource('/withdrawals', 'WithdrawalsApiController')
             ->only('index', 'store')
             ->names('api.withdrawals');
 
