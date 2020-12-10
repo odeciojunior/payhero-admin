@@ -24,7 +24,8 @@
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-                <div class="col-6 text-right">
+                {{-- Botões de exportação --}}
+<!--                <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
                         <div class="p-2 align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
@@ -42,12 +43,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="page-content container" style="display:none">
-            {{-- Aviso de Exportação --}}
-            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+        {{-- Aviso de Exportação --}}
+        <!--            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
                  style="display:none;">
                 <div class="d-flex">
                     <i class="material-icons mr-10">info</i>
@@ -60,8 +61,8 @@
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
                 </div>
-            </div>
-            <div class="card shadow">
+            </div>-->
+            <div class="card shadow card-show-content-finances" style="display:none">
                 {{-- TABS --}}
                 <nav class="pt-20" id="menu-tabs-view" style="">
                     <div class="nav-tabs-horizontal">
@@ -381,7 +382,6 @@
             @include('companies::empty')
             @include('companies::not_company_approved_getnet')
         </div>
-
 
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">

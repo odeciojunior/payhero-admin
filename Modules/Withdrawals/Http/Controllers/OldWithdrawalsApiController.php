@@ -7,8 +7,8 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -21,7 +21,11 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class WithdrawalsGetnetApiController
+/**
+ * Class WithdrawalsApiController
+ * @package Modules\Withdrawals\Http\Controllers
+ */
+class OldWithdrawalsApiController extends Controller
 {
     /**
      * @param Request $request
@@ -42,7 +46,24 @@ class WithdrawalsGetnetApiController
                 )->log('Visualizou tela todas as transferências');
             }
 
-            if (empty($companyId)) {
+            if ($companyId) {
+                $company = $companyModel->find($companyId);
+
+                if (Gate::allows('edit', [$company])) {
+                    $withdrawals = $withdrawalModel->where('company_id', $companyId)
+                        ->orderBy('id', 'DESC');
+
+                    return WithdrawalResource::collection($withdrawals->paginate(5));
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Sem permissão para visualizar saques',
+                        ],
+                        403
+                    );
+                }
+            } else {
+                //id incorreto
                 return response()->json(
                     [
                         'message' => 'Empresa não encontrada',
@@ -50,21 +71,6 @@ class WithdrawalsGetnetApiController
                     400
                 );
             }
-
-            $company = $companyModel->find($companyId);
-
-            if (!Gate::allows('edit', [$company])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para visualizar saques',
-                    ],
-                    403
-                );
-            }
-
-            $withdrawals = $withdrawalModel->where('company_id', $companyId)->orderBy('id', 'DESC');
-
-            return WithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {
             report($e);
 
@@ -176,6 +182,7 @@ class WithdrawalsGetnetApiController
             /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
             if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                 $startDate = Carbon::now()->startOfMonth();
+
                 $endDate = Carbon::now()->endOfMonth();
 
                 $withdrawal = $withdrawalModel->where('company_id', $company->id)
@@ -289,7 +296,6 @@ class WithdrawalsGetnetApiController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function getAccountInformation(Request $request): JsonResponse
     {
@@ -418,7 +424,6 @@ class WithdrawalsGetnetApiController
 
     /**
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function checkAllowed(): JsonResponse
     {
@@ -437,5 +442,6 @@ class WithdrawalsGetnetApiController
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
         }
     }
-
 }
+
+

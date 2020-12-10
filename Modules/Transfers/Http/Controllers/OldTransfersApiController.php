@@ -16,7 +16,7 @@ use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TransfersGetnetApiController
+class OldTransfersApiController
 {
     /**
      * @param Request $request

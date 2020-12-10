@@ -78,7 +78,6 @@ $(document).ready(function () {
                     return;
                 }
 
-                let hasSaleBeforeGetnet = false;
                 let itsApprovedTransactGetnet = false;
 
                 $('.page-content').show();
@@ -95,33 +94,11 @@ $(document).ready(function () {
                     $("#companies-not-approved-getnet").show();
                     return;
                 }
+                $(".card-show-content-finances").show();
 
                 updateAccountStatementData();
-                if (!itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
-                    hasSaleBeforeGetnetExist();
-                    manipulateHTML();
-                    $("#statement-getnet").html('Extrato');
-                } else if (itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
-                    hasSaleBeforeGetnetExist();
-                    approvedGetnet();
-                    manipulateHTML();
-                }
-
-                $("#nav-extract").css('display', '');
-                $("#nav-statement").css('display', '');
-                $("#nav-statement-tab").on('click', function () {
-                    $("#nav-extract").css('display', '');
-                });
             }
         });
-    }
-
-    function manipulateHTML() {
-        $("#tabs-view, #menu-tabs-view").show();
-    }
-
-    function approvedGetnet() {
-
     }
 
     function paginationStatement() {
@@ -136,14 +113,6 @@ $(document).ready(function () {
             last: false,
             delay: 1,
         });
-    }
-
-    function hasSaleBeforeGetnetExist() {
-        $("#nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
-
-        checkAllowed();
-        updateBalances();
-        updateTransfersTable();
     }
 
     getCompanies();
