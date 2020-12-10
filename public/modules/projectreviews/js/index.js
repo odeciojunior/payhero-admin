@@ -162,24 +162,25 @@ $(document).ready(function () {
     }
 
     $("#add-review").on('click', function () {
-        $('#modal_add_review .modal-title').html("Novo review");
+        $('#modal_review .modal-title').html("Novo review");
         $(".bt-review-save").show();
         $(".bt-review-update").hide();
 
-        $('#form_edit_review').hide()
-
-        var form = $('#form_add_review');
+        var form = $('#form_review');
         form.show();
-        form.find('#add_name').val('');
-        form.find('#add_description_review').val('');
-        form.find('.stars').html('');
+        form.find('#name').val('');
+        form.find('#description_review').val('');
+        form.find('#review_stars').html('');
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        form.find('#review_apply_on_plans').val('').trigger('change');
 
-        initStarsPlugin('#review_add_stars', 5, false);
+        initStarsPlugin('#review_stars', 5, false);
+        previewImageReview.imgAreaSelect({remove: true});
     });
 
     $(document).on('click', '.bt-review-save', function () {
         loadingOnScreen();
-        var form_data = new FormData(document.getElementById('form_add_review'));
+        var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('project_id', projectId);
 
         $.ajax({
@@ -199,11 +200,14 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#modal_add_review').modal('hide');
+                $('#modal_review').modal('hide');
                 loadingOnScreenRemove();
                 loadReviews();
                 alertCustom('success', response.message);
-                $("#add_review_apply_on_plans").val(null).trigger('change');
+                $("#review_apply_on_plans").val(null).trigger('change');
+            },
+            complete: function () {
+                previewImageReview.imgAreaSelect({remove: true});
             }
         });
     });
@@ -211,17 +215,17 @@ $(document).ready(function () {
     $(document).on('click', '.edit-review', function (event) {
         event.preventDefault();
         let reviewId = $(this).data('review');
-        $('#modal_add_review .modal-title').html("Editar review");
+        $('#modal_review .modal-title').html("Editar review");
         $(".bt-review-save").hide();
-        $("#form_add_review").hide();
         $(".bt-review-update").show();
 
-        var form = $('#form_edit_review');
+        var form = $('#form_review');
         form.show();
-        form.find('#edit_name').val('');
-        form.find('#edit_description_review').val('');
-        form.find('#review_edit_stars').html('');
+        form.find('#name').val('');
+        form.find('#description_review').val('');
+        form.find('#review_stars').html('');
         form.find('.review-id').val(reviewId);
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
 
         loadingOnScreen();
 
@@ -239,20 +243,21 @@ $(document).ready(function () {
                 form.find('[name=name]').val(review.name);
                 form.find('[name=description]').val(review.description);
                 form.find('[name=active_flag]').val(review.active_flag);
+                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.png')
 
                 // Seleciona a opção do select de acordo com o que vem do banco
-                form.find('#edit_review_apply_on_plans').html('');
+                form.find('#review_apply_on_plans').html('');
                 let applyOnPlans = [];
                 for (let plan of review.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    form.find('#edit_review_apply_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    form.find('#review_apply_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
-                form.find('#edit_review_apply_on_plans').val(applyOnPlans).trigger('change');
+                form.find('#review_apply_on_plans').val(applyOnPlans).trigger('change');
 
-                initStarsPlugin('#review_edit_stars', review.stars, false);
+                initStarsPlugin('#review_stars', review.stars, false);
 
                 loadingOnScreenRemove();
-                $('#modal_add_review').modal('show');
+                $('#modal_review').modal('show');
                 // END
             }
         });
@@ -287,8 +292,10 @@ $(document).ready(function () {
     $(document).on('click', '.bt-review-update', function (event) {
         event.preventDefault();
         loadingOnScreen();
-        var form_data = new FormData(document.getElementById('form_edit_review'));
-        let reviewId = $('#form_edit_review .review-id').val();
+        var form_data = new FormData(document.getElementById('form_review'));
+        form_data.append('_method', 'PUT');
+
+        let reviewId = $('#form_review .review-id').val();
         $.ajax({
             method: "POST",
             url: "/api/projectreviews/" + reviewId,
@@ -305,10 +312,13 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#modal_add_review').modal('hide');
+                $('#modal_review').modal('hide');
                 loadingOnScreenRemove();
                 loadReviews();
                 alertCustom('success', response.message);
+            },
+            complete: function () {
+                previewImageReview.imgAreaSelect({remove: true});
             }
         });
     });
@@ -347,10 +357,10 @@ $(document).ready(function () {
     });
 
 // Search plan
-    $('#add_review_apply_on_plans, #edit_review_apply_on_plans, #add_review_offer_on_plans, #edit_review_offer_on_plans').select2({
+    $('#review_apply_on_plans').select2({
         placeholder: 'Nome do plano',
         multiple: true,
-        dropdownParent: $('#modal_add_review'),
+        dropdownParent: $('#modal_review'),
         language: {
             noResults: function () {
                 return 'Nenhum review encontrado';
@@ -381,7 +391,7 @@ $(document).ready(function () {
             },
             processResults: function (res) {
                 let elemId = this.$element.attr('id');
-                if ((elemId === 'add_review_apply_on_plans' || elemId === 'edit_review_apply_on_plans') && res.meta.current_page === 1) {
+                if (elemId === 'review_apply_on_plans' && res.meta.current_page === 1) {
                     let allObject = {
                         id: 'all',
                         name: 'Qualquer plano',
@@ -402,7 +412,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#add_review_apply_on_plans, #edit_review_apply_on_plans').on('select2:select', function () {
+    $('#review_apply_on_plans').on('select2:select', function () {
         let selectPlan = $(this);
         if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() !== 'all')) {
             selectPlan.val('all').trigger("change");
@@ -490,102 +500,8 @@ $(document).ready(function () {
         $('#modal_config_review').modal('show');
     });
 
-    // $(document).on('click', '.btn-view-config', function (event) {
-    //     event.preventDefault();
-    //     $('#modal_config_review').modal('hide');
-    //     loadingOnScreen();
-    //     $.ajax({
-    //         method: "POST",
-    //         url: "/api/projectreviewsconfig/previewreview",
-    //         dataType: "json",
-    //         data: {
-    //             project_id: projectId,
-    //         },
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: function error(response) {
-    //             loadingOnScreenRemove();
-    //             errorAjaxResponse(response);
-    //
-    //         }, success: function success(response) {
-    //             loadingOnScreenRemove();
-    //             let review = response.data;
-    //
-    //             $('#div-review-products').html('');
-    //
-    //             $('#review-header').html(review.header);
-    //             $('#review-title').html(review.title);
-    //             $('#review-description').html(review.description);
-    //
-    //             if (review.countdown_flag) {
-    //                 $('#timer').show();
-    //                 startCountdown(review.countdown_time);
-    //             } else {
-    //                 $('#timer').hide();
-    //             }
-    //
-    //             let data = "";
-    //
-    //             for (let key in review.plans) {
-    //
-    //                 let plan = review.plans[key];
-    //                 data += `<div class="product-info">
-    //                             <div class="d-flex flex-column">`;
-    //                 for (let product of plan.products) {
-    //                     let firstVariant = Object.keys(product)[0];
-    //                     data += `<div class="product-row">
-    //                                 <img src="${product[firstVariant].photo}" class="product-img">
-    //                                 <div class="ml-4">
-    //                                     <h3>${product[firstVariant].amount}x ${product[firstVariant].name}</h3>`;
-    //                     if (Object.keys(product).length > 1) {
-    //                         data += `<select class="product-variant">`;
-    //                         for (let i in product) {
-    //                             data += `<option value="${i}">${product[i].description}</option>`;
-    //                         }
-    //                         data += `</select>`;
-    //                     } else {
-    //                         data += `<span class="text-muted">${product[firstVariant].description}</span>`;
-    //                     }
-    //                     data += `</div>
-    //                          </div>`;
-    //                 }
-    //                 data += `</div>
-    //                             <div class="d-flex flex-column mt-4 mt-md-0">`;
-    //                 if (plan.discount) {
-    //                     data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
-    //                                              <div class="d-flex mb-2">
-    //                                                  <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
-    //                                                  <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
-    //                                              </div>`;
-    //                 }
-    //
-    //                 if (!isEmpty(plan.installments)) {
-    //                     data += `<div class="form-group">
-    //                                 <select class="installments">`;
-    //                     for (let installment of plan.installments) {
-    //                         data += `<option value="${installment['amount']}">${installment['amount']}X DE R$ ${installment['value']}</option>`;
-    //                     }
-    //                     data += `</select>
-    //                          </div>`;
-    //                 } else {
-    //                     data += `<h2 class="text-primary mb-md-4"><b>R$ ${plan.price}</b></h2>`;
-    //                 }
-    //                 data += `<button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
-    //                      </div>
-    //                 </div>`;
-    //
-    //                 if (parseInt(key) !== (review.plans.length - 1)) {
-    //                     data += `<hr class="plan-separator">`;
-    //                 }
-    //             }
-    //
-    //             $('#div-review-products').append(data);
-    //
-    //             $('#modal-view-review-config').modal('show');
-    //         }
-    //     });
-    //
-    // });
+    $('#modal_review').on('hidden.bs.modal', function () {
+        previewImageReview.imgAreaSelect({remove: true})
+        previewImageReview.trigger('fileselect', [1, ""]);
+    });
 });

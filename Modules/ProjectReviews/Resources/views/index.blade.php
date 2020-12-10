@@ -8,7 +8,7 @@
                         <i class="icon wb-settings" aria-hidden="true"></i></a>
                 </div>
             </div>
-            <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_review">
+            <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
                 <span class="link-button-dependent red"> Adicionar Review </span>
                 <a class="ml-10 rounded-add pointer">
                     <i class="icon wb-plus" aria-hidden="true"></i></a>
@@ -40,7 +40,7 @@
     {{-- js carrega... --}}
 </ul>
 {{-- Modal add-edit review --}}
-<div class="modal fade modal-3d-flip-vertical" id="modal_add_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+<div class="modal fade modal-3d-flip-vertical" id="modal_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="conteudo_modal_add">
             <div class="modal-header">
@@ -50,8 +50,7 @@
                 <h4 class="modal-title text-center" style="font-weight: 700;"></h4>
             </div>
             <div class="pt-10 pr-20 pl-20 modal_review_body">
-                @include('projectreviews::create')
-                @include('projectreviews::edit')
+                @include('projectreviews::form')
             </div>
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-review-save" style='display:none;'>Salvar</button>

@@ -13,7 +13,6 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectReviews;
 use Modules\Core\Entities\ProjectReviewsConfig;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsStoreRequest;
 use Modules\ProjectReviews\Http\Requests\ProjectReviewsUpdateRequest;
 use Modules\ProjectReviews\Transformers\ProjectReviewsResource;
@@ -190,9 +189,23 @@ class ProjectReviewsApiController extends Controller
             }
             $applyPlanEncoded = json_encode($applyPlanArray);
 
+            $reviewUpdated = $review->update([
+                'name'           => $data['name'],
+                'description'    => $data['description'],
+                'stars'          => $data['stars'] ?? 0,
+                'active_flag'    => $data['active_flag'] ?? 0,
+                'apply_on_plans' => $applyPlanEncoded,
+            ]);
+
+            $amazonPath = null;
             $photo = $request->file('photo');
             if ($photo != null) {
                 try {
+
+                    if (!$data['photo_w'] || !$data['photo_h']) {
+                        $data['photo_h'] = $data['photo_w'] = 300;
+                    }
+
                     $img = Image::make($photo->getPathname());
                     $img->crop(
                         $data['photo_w'],
@@ -217,15 +230,6 @@ class ProjectReviewsApiController extends Controller
                     report($e);
                 }
             }
-
-            $reviewUpdated = $review->update([
-                'name'           => $data['name'],
-                'description'    => $data['description'],
-                'photo'          => $data['photo'] ?? null,
-                'stars'          => $data['stars'] ?? 0,
-                'active_flag'    => $data['active_flag'] ?? 0,
-                'apply_on_plans' => $applyPlanEncoded,
-            ]);
 
             if ($reviewUpdated) {
                 return response()->json(['message' => 'Review atualizado com sucesso!'], 200);
