@@ -72,5 +72,35 @@ $(document).ready(function () {
         });
     }
 
+    getProjects();
+
+    function getProjects() {
+        loadOnAny('.page-content');
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.page-content', true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadOnAny('.page-content', true);
+            }
+        });
+    }
 });
 

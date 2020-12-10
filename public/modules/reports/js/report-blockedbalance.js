@@ -92,7 +92,7 @@ $(document).ready(function () {
 
     // Obtem o os campos dos filtros
     function getProjects() {
-        loadOnAny('.page-content');
+        loadOnAny('.page');
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -118,8 +118,7 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                 }
 
-                loadOnAny('.page-content', true);
-                atualizar();
+                loadOnAny('.page', true);
             }
         });
     }
