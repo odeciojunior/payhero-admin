@@ -81,36 +81,23 @@ $(document).ready(function () {
                 let hasSaleBeforeGetnet = false;
                 let itsApprovedTransactGetnet = false;
 
-
                 $('.page-content').show();
                 $('.content-error').hide();
 
                 $(response.data).each(function (index, value) {
-                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-
-                    if (value.company_has_sale_before_getnet) {
-                        hasSaleBeforeGetnet = true;
-                        $("#transfers_company_select").append(data);
-                        $("#extract_company_select").append(data);
-                    }
-
                     if (value.capture_transaction_enabled) {
                         itsApprovedTransactGetnet = true;
-                        $("#statement_company_select").append(data);
+                        $("#statement_company_select").append(`<option country="${value.country}" value="${value.id}">${value.name}</option>`);
                     }
                 });
 
+                if (!itsApprovedTransactGetnet){
+                    $("#companies-not-approved-getnet").show();
+                    return;
+                }
 
-                if (itsApprovedTransactGetnet && !hasSaleBeforeGetnet) {
-                    approvedGetnet();
-                    $("#tabs-view, #text-info-getnet").show();
-                    $("#nav-statement-tab").addClass('active');
-                    $("#nav-statement").addClass('active show');
-                    $(".sub-pad-getnet").html('');
-
-
-                    $("#statement-getnet, .title-getnet").html('Extrato');
-                } else if (!itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
+                updateAccountStatementData();
+                if (!itsApprovedTransactGetnet && hasSaleBeforeGetnet) {
                     hasSaleBeforeGetnetExist();
                     manipulateHTML();
                     $("#statement-getnet").html('Extrato');
@@ -118,10 +105,8 @@ $(document).ready(function () {
                     hasSaleBeforeGetnetExist();
                     approvedGetnet();
                     manipulateHTML();
-
-                } else {
-                    $("#companies-not-approved-getnet").show();
                 }
+
                 $("#nav-extract").css('display', '');
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
@@ -136,8 +121,7 @@ $(document).ready(function () {
     }
 
     function approvedGetnet() {
-        $('#nav-statement-tab, #nav-statement').show();
-        updateAccountStatementData();
+
     }
 
     function paginationStatement() {

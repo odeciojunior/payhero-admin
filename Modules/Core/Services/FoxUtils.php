@@ -269,12 +269,9 @@ class FoxUtils
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public static function isProduction()
+    public static function isProduction(): bool
     {
-        if (env("APP_ENV", "local") == "production") {
+        if (env("APP_ENV", "local") != "production") {
             return true;
         }
 
