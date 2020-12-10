@@ -215,81 +215,6 @@ $(document).ready(function () {
             }
         });
 
-        $('.div-antecipable-balance').popover({
-            animation: true,
-            placement: 'top',
-            title: 'Antecipação de saldo pendente',
-            content: '',
-            html: true,
-            template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header">Teste</h3><div class="popover-body"></div></div>'
-        });
-
-        // se clicar fora do popover ele fecha
-        $('html').on('click', function (e) {
-            if (typeof $(e.target).data('original-title') == 'undefined') {
-                $('.div-antecipable-balance').popover('hide');
-            }
-        });
-
-        $('.div-antecipable-balance').on('click', function () {
-
-            loadingOnScreen();
-
-            $.ajax({
-                url: "api/anticipations/" + $("#transfers_company_select option:selected").val(),
-                type: "GET",
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: (response) => {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    loadingOnScreenRemove();
-                    let tooltipData = `
-                        Disponível para antecipação: R$ ${response.data.antecipable_value} <br>
-                        Taxa de antecipação: R$ ${response.data.tax_value} <br>
-                        Saldo final antecipável: <b>R$ ${response.data.value_minus_tax}</b> <br>
-                        <button id='confirm-anticipation' class='btn btn-success text-center mt-20 mb-20'>Confirmar antecipação</button>
-                    `;
-                    $('.div-antecipable-balance').attr('data-content', tooltipData);
-                    $('.div-antecipable-balance').popover('show');
-
-                    $("#confirm-anticipation").unbind("click");
-                    $("#confirm-anticipation").on("click", function () {
-
-                        loadingOnScreen();
-
-                        $.ajax({
-                            url: "api/anticipations",
-                            type: "POST",
-                            data: {company_id: $("#transfers_company_select option:selected").val()},
-                            dataType: "json",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            error: (response) => {
-                                loadingOnScreenRemove();
-                                alertCustom('error', 'Ocorreu algum erro');
-                            },
-                            success: (response) => {
-                                loadingOnScreenRemove();
-                                alertCustom('success', response.data.message);
-                                updateBalances();
-                                updateTransfersTable();
-                            }
-                        });
-
-                    });
-                }
-            });
-
-        });
-
         function isEmpty(value) {
             if (value.length === 0) {
                 return 0;
@@ -603,49 +528,49 @@ $(document).ready(function () {
                 loadOnAny('#available-in-period', true);
 
                 if (response.data == '') {
-
                     $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
                     $("#pagination-transfers").html("");
-                } else {
-                    data = '';
+                    return;
+                }
 
-                    $.each(response.data, function (index, value) {
-                        data += '<tr >';
-                        if (value.is_owner && value.sale_id) {
-                            data += `<td style="vertical-align: middle;">
+                let data = '';
+
+                $.each(response.data, function (index, value) {
+                    data += '<tr >';
+                    if (value.is_owner && value.sale_id) {
+                        data += `<td style="vertical-align: middle;">
                                         ${value.reason}
                                         <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
                                             <span style="color:black;">#${value.sale_id}</span>
                                         </a><br>
                                         <small>(Data da venda: ${value.sale_date})</small>
                                      </td>`;
+                    } else {
+                        if (value.reason === 'Antecipação') {
+                            data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
                         } else {
-                            if (value.reason === 'Antecipação') {
-                                data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
-                            } else {
-                                data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
-                            }
+                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
                         }
-                        data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                        if (value.type_enum === 1) {
-                            data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
-                            if (value.reason === 'Antecipação') {
-                                data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
-                            } else if (value.value_anticipable != '0,00') {
-                                data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
-                            } else {
-                                data += `</td>`;
-                            }
+                    }
+                    data += '<td style="vertical-align: middle;">' + value.date + '</td>';
+                    if (value.type_enum === 1) {
+                        data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
+                        if (value.reason === 'Antecipação') {
+                            data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
+                        } else if (value.value_anticipable != '0,00') {
+                            data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
                         } else {
-                            data += `<td style="vertical-align: middle; color:red;"> ${value.value}</td> `;
+                            data += `</td>`;
                         }
-                        data += '</tr>';
-                    });
+                    } else {
+                        data += `<td style="vertical-align: middle; color:red;"> ${value.value}</td> `;
+                    }
+                    data += '</tr>';
+                });
 
-                    $("#table-transfers-body").html(data);
+                $("#table-transfers-body").html(data);
 
-                    paginationTransfersTable(response);
-                }
+                paginationTransfersTable(response);
             }
         });
 
@@ -701,56 +626,6 @@ $(document).ready(function () {
         }
     }
 
-    function getFilters(urlParams = false) {
-        let data = {
-            'company': $("#extract_company_select").val(),
-            'reason': $("#reason").val(),
-            'transaction': $("#transaction").val().replace('#', ''),
-            'type': $("#type").val(),
-            'value': $("#transaction-value").val(),
-            'date_range': $("#date_range").val(),
-            'date_type': $("#date_type").val(),
-        };
-
-        if (urlParams) {
-            let params = "";
-            for (let param in data) {
-                params += '&' + param + '=' + data[param];
-            }
-            return encodeURI(params);
-        } else {
-            return data;
-        }
-    }
-
-    function extractExport(fileFormat) {
-
-        let data = getFilters();
-        data['format'] = fileFormat;
-        $.ajax({
-            method: "POST",
-            url: '/api/finances/export',
-            data: data,
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                $('#export-email').text(response.email);
-                $('#alert-export').show()
-                    .shake();
-
-                setTimeout(function () {
-                    $("#bt_get_csv").prop("disabled", false);
-                    $("#bt_get_xls").prop("disabled", false);
-                }, 6000)
-            }
-        });
-    }
-
     let statusExtract = {
         'WAITING_FOR_VALID_POST': 'pendente',
         'WAITING_LIQUIDATION': 'info',
@@ -803,8 +678,7 @@ $(document).ready(function () {
 
 
                     items.forEach(function (item) {
-                        let dataTable = `<tr>
-                                        <td style="vertical-align: middle;">`;
+                        let dataTable = `<tr><td style="vertical-align: middle;">`;
 
                         if (item.order && item.order.hashId) {
 
@@ -945,26 +819,6 @@ $(document).ready(function () {
             firstDay: 0
         },
         ranges: rangesToDateRangeStatement
-    });
-
-    $("#bt_get_csv").on("click", function () {
-        $(this).prop("disabled", true);
-        $("#bt_get_xls").prop("disabled", true);
-        extractExport('csv');
-    });
-
-    $("#bt_get_xls").on("click", function () {
-        $(this).prop("disabled", true);
-        $("#bt_get_csv").prop("disabled", true);
-        extractExport('xls');
-    });
-
-    $("#nav-profile-tab").on("click", function () {
-        $('#export-excel').show();
-    });
-
-    $("#nav-home-tab").on("click", function () {
-        $('#export-excel').hide();
     });
 
     $(document).on('keypress', function (e) {
