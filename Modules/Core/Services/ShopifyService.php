@@ -39,7 +39,7 @@ use Slince\Shopify\Manager\InventoryItem\InventoryItem;
 
 class ShopifyService
 {
-    const templateKeyName = 'sections/cart-template.liquid';
+    const templateKeyName = 'templates/cart.liquid';
     const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
     /**
      * @var string
