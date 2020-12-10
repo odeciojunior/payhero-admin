@@ -88,9 +88,15 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
                     $.each(response.data, function (index, project) {
                         $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
                     });
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
                 }
                 loadOnAny('.page-content', true);
                 atualizar();
