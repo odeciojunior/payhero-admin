@@ -473,8 +473,12 @@ class RegisterApiController extends Controller
         $sDrive = Storage::disk('s3_documents');
         $company = $companyModel->where('user_id', $user->id)->first();
 
+        $is_physical_person = $company->company_type == 1;
+
         try {
+
             foreach ($files as $file) {
+
                 $fileName = explode('/', $file)[6];
                 $fileTypeName = preg_split('/[\/.]/', $file)[6];
                 $fileType = $user->present()->getDocumentTypeRegistered($fileTypeName);
@@ -482,24 +486,30 @@ class RegisterApiController extends Controller
                 if (!$sDrive->exists($file)) {
                     return false;
                 }
-
                 /**
                  * Uploud Usuário
                  */
-                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO', 'USUARIO_EXTRATO'])) {
+
+
+                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO'])) {
+
                     $amazonPathUser = 'uploads/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
+
                     if ($sDrive->exists($amazonPathUser)) {
                         $sDrive->delete($amazonPathUser);
                     }
-                    $sDrive->move(
-                        $file,
-                        $amazonPathUser
-                    );
-                    $amazonPathUrlUser = $sDrive->url($amazonPathUser);
 
                     /**
                      * Salva status do documentos no Banco | (Usuário)
                      */
+
+                    $sDrive->move(
+                        $file,
+                        $amazonPathUser
+                    );
+
+                    $amazonPathUrlUser = $sDrive->url($amazonPathUser);
+
                     $userDocument->create(
                         [
                             'user_id' => $user->id,
@@ -508,6 +518,7 @@ class RegisterApiController extends Controller
                             'status' => $userDocument->present()->getTypeEnum('analyzing'),
                         ]
                     );
+
 
                     if ($fileType == $user->present()->getDocumentType('personal_document')) {
                         $user->update(
@@ -531,7 +542,8 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Empresa
                  */
-                if (in_array($fileTypeName, ['EMPRESA_EXTRATO', 'EMPRESA_RESIDENCIA', 'EMPRESA_CCMEI'])) {
+                if (($is_physical_person && $fileTypeName == 'EMPRESA_EXTRATO') || (!$is_physical_person && in_array($fileTypeName, ['EMPRESA_RESIDENCIA', 'EMPRESA_CCMEI', 'EMPRESA_EXTRATO']))) {
+
                     $amazonPathCompanies = 'uploads/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
                     $sDrive->move(
                         $file,
@@ -576,10 +588,11 @@ class RegisterApiController extends Controller
                         );
                     }
                 }
+
             }
+
         } catch (Exception $e) {
             Log::warning('RegisterApiController uploadDocumentsRegistered');
-
             report($e);
             return false;
         }

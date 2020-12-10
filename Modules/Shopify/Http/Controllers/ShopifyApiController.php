@@ -387,6 +387,8 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel = new Domain();
 
+            $templateKeyName = 'templates/cart.liquid';
+
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
@@ -432,7 +434,7 @@ class ShopifyApiController extends Controller
                                 $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                                $htmlCart = $shopify->getTemplateHtml($templateKeyName);
 
                                 if ($htmlCart) {
                                     //template normal
@@ -441,13 +443,13 @@ class ShopifyApiController extends Controller
                                             'theme_type' => $shopifyIntegrationModel->present()
                                                 ->getThemeType('basic_theme'),
                                             'theme_name' => $shopify->getThemeName(),
-                                            'theme_file' => 'sections/cart-template.liquid',
+                                            'theme_file' => $templateKeyName,
                                             'theme_html' => $htmlCart,
                                         ]
                                     );
 
                                     $shopify->updateTemplateHtml(
-                                        'sections/cart-template.liquid',
+                                        $templateKeyName,
                                         $htmlCart,
                                         $domain->name
                                     );
@@ -624,6 +626,8 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel = new Domain();
 
+            $templateKeyName = 'templates/cart.liquid';
+
             $projectId = current(Hashids::decode($requestData['project_id']));
 
             if (empty($projectId)) {
@@ -672,7 +676,7 @@ class ShopifyApiController extends Controller
                     );
 
                     $shopify->setThemeByRole('main');
-                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                    $htmlCart = $shopify->getTemplateHtml($templateKeyName);
 
                     if ($htmlCart) {
                         $shopifyIntegration->update(
@@ -680,13 +684,13 @@ class ShopifyApiController extends Controller
                                 'theme_type' => $shopifyIntegrationModel->present()
                                     ->getThemeType('basic_theme'),
                                 'theme_name' => $shopify->getThemeName(),
-                                'theme_file' => 'sections/cart-template.liquid',
+                                'theme_file' => $templateKeyName,
                                 'theme_html' => $htmlCart,
                             ]
                         );
 
                         $shopify->updateTemplateHtml(
-                            'sections/cart-template.liquid',
+                            $templateKeyName,
                             $htmlCart,
                             $domain->name
                         );
@@ -955,6 +959,8 @@ class ShopifyApiController extends Controller
         $shopifyIntegrationModel = new ShopifyIntegration();
         $projectModel = new Project();
 
+        $templateKeyName = 'templates/cart.liquid';
+
         if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
             $projectId = current(Hashids::decode($data['project_id']));
             $project = $projectModel->with(['domains'])->find($projectId);
@@ -970,12 +976,12 @@ class ShopifyApiController extends Controller
 
                         $shopify->setThemeByRole('main');
 
-                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                        $htmlCart = $shopify->getTemplateHtml($templateKeyName);
 
                         $domain = $project->domains->first();
                         $domainName = $domain ? $domain->name : null;
 
-                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
+                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
 
                         $integration->skip_to_cart = boolval($data['skip_to_cart']);
                         $integration->save();
