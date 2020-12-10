@@ -70,6 +70,29 @@ $(document).ready(function () {
 
     function updateValues() {
 
+        loadOnAny('.card-text', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+            }
+        });
+
+        loadOnAny('.update', false, {
+            styles: {
+                container: {
+                    minHeight: '100px',
+                    height: 'auto'
+                },
+            }
+        })
+
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
@@ -80,7 +103,10 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
+                loadOnAny('.card-text', true)
+                loadOnAny('.update', true)
                 loadOnAny('.page-content', true);
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -100,6 +126,9 @@ $(document).ready(function () {
                 updateTickets(data.tickets);
                 updateNews(data.news);
                 updateReleases(data.releases);
+                // loadOnAny('.card-loading', true)
+                loadOnAny('.card-text', true)
+                loadOnAny('.update', true)
                 loadOnAny('.page-content', true);
             }
         });
@@ -180,10 +209,10 @@ $(document).ready(function () {
         if (!isEmpty(data)) {
             $.each(data, function (index, value) {
                 let item = `<div class="d-flex align-items-center my-15">
-                                <div class="release-progress" id="${index}">
+                                <div class="release-progress update" id="${index}">
                                     <strong>${value.progress}%</strong>
                                 </div>
-                                <span class="ml-2">${value.release}</span>
+                                <span class="ml-2 update">${value.release}</span>
                             </div>`;
                 $('#releases-div').append(item);
 

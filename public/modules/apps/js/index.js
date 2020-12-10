@@ -3,6 +3,8 @@ $(document).ready(function () {
     updateUsedApps();
 
     function updateUsedApps() {
+        loadOnAny('.page', false);
+
         $.ajax({
             method: 'GET',
             url: '/api/apps',
@@ -12,6 +14,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page', true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -63,6 +66,8 @@ $(document).ready(function () {
                 if (response.notazzIntegrations == 0) {
                     $('.div-notazz-integration').remove();
                 }
+
+                loadOnAny('.page', true);
             }
         });
     }
