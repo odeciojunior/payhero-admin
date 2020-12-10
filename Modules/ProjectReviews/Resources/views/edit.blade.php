@@ -1,4 +1,4 @@
-<form id='form_edit_review' method="PUT" action="#" style="display:none">
+<form id='form_edit_review' method="POST" action="#" style="display:none" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <input type="hidden" value="" name="id" class="review-id">
@@ -7,23 +7,23 @@
             <div class="col-12">
                 <div class="row">
                     <div class='col-md-4 col-sm-12'>
-                        <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
-                            <input name='photo' type='file' class='form-control' id='reviewPhoto' style='display:none;'
-                                   accept='image/*'>
-                            <label for='photo'>Selecione uma imagem capa do projeto</label>
+                        <div class="d-flex flex-column text-center" id="div-img-project" style="position: relative;">
+                            <input name="photo" type="file" class="form-control" id="photoReview"
+                                   style="display:none;" accept="image/*">
+                            <label for="photoReview">Selecione uma foto</label>
                             <div style="width:100%" class="text-center">
-                                <img id='previewReviewImage' alt='Selecione a foto do review'
+                                <img id="previewimagereview" alt="Selecione uma foto"
                                      src="{{asset('modules/global/img/projeto.png')}}"
-                                     style="min-width: 250px; max-width: 250px;margin: auto">
+                                     style="min-width: 250px; max-width: 250px;margin: auto; cursor: pointer;">
                             </div>
-                            <input type='hidden' id='photo_x1' name='photo_x1'>
-                            <input id='photo_y1' type='hidden' name='photo_y1'>
-                            <input type='hidden' id='photo_w' name='photo_w'>
-                            <input id='photo_h' type='hidden' name='photo_h'>
+                            <input id='photo_x1' name='photo_x1' type='hidden'>
+                            <input id='photo_y1' name='photo_y1' type='hidden'>
+                            <input id='photo_w' name='photo_w' type='hidden'>
+                            <input id='photo_h' name='photo_h' type='hidden'>
                             <p class='info pt-5' style='font-size: 10px;'>
-                                <i class='icon wb-info-circle' aria-hidden='true'></i> Foto que será exibida no review
-                                <br/> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
-                                <br/> Dimensões ideais: 300 x 300 pixels.
+                                <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
+                                <br> Dimensões ideais: 300 x 300 pixels.
                             </p>
                         </div>
                     </div>

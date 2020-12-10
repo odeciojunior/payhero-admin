@@ -1,4 +1,4 @@
-<form id='form_add_review' method="post" action="#" style="display:none" enctype="multipart/form-data">
+<form id='form_review' method="post" action="#" enctype="multipart/form-data">
     @csrf
     <div style="width:100%">
         <div class="row">

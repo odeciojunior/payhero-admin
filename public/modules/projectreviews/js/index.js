@@ -1,12 +1,67 @@
 $(document).ready(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
-    //let previewReviewPhoto = $("#previewReviewPhoto");
-    //loadReviews();
+    let previewImageReview = $("#previewimagereview");
+    let photoReview = $("#photoReview");
+
     $('#tab_reviews').on('click', function () {
-        $("#previewimagereview").imgAreaSelect({remove: true});
+        previewImageReview.imgAreaSelect({remove: true});
         loadReviews();
     })
+
+    let p = previewImageReview;
+    //$('#photoReview').unbind('change');
+    photoReview.off().on('change', function () {
+        let imageReader = new FileReader();
+        imageReader.readAsDataURL(document.getElementById("photoReview").files[0]);
+
+        imageReader.onload = function (oFREvent) {
+            p.attr('src', oFREvent.target.result).fadeIn();
+
+            p.on('load', function () {
+
+                let img = document.getElementById('previewimagereview');
+                let x1, x2, y1, y2;
+
+                if (img.naturalWidth > img.naturalHeight) {
+                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                    x2 = x1 + (y2 - y1);
+                } else {
+                    if (img.naturalWidth < img.naturalHeight) {
+                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                        y2 = y1 + (x2 - x1);
+                    } else {
+                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                        y1 = Math.floor(img.naturalHeight / 100 * 10);
+                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                    }
+                }
+
+                previewImageReview.imgAreaSelect({
+                    x1: x1, y1: y1, x2: x2, y2: y2,
+                    aspectRatio: '1:1',
+                    handles: true,
+                    imageHeight: this.naturalHeight,
+                    imageWidth: this.naturalWidth,
+                    onSelectEnd: function (img, selection) {
+                        $('#photo_x1').val(selection.x1);
+                        $('#photo_y1').val(selection.y1);
+                        $('#photo_w').val(selection.width);
+                        $('#photo_h').val(selection.height);
+                    }
+                });
+            })
+        };
+    });
+
+    previewImageReview.on("click", function () {
+        photoReview.click();
+    });
 
     $.ajax({
         method: "GET",
@@ -195,71 +250,6 @@ $(document).ready(function () {
                 form.find('#edit_review_apply_on_plans').val(applyOnPlans).trigger('change');
 
                 initStarsPlugin('#review_edit_stars', review.stars, false);
-
-
-                // --------------------------
-                // --------------------------
-
-
-                //images
-                //images
-                let p = $("#previewimagereview");
-                $('#photoReview').unbind('change');
-                $("#photoReview").on('change', function () {
-                    let imageReader = new FileReader();
-                    imageReader.readAsDataURL(document.getElementById("photoReview").files[0]);
-
-                    imageReader.onload = function (oFREvent) {
-                        p.attr('src', oFREvent.target.result).fadeIn();
-
-                        p.on('load', function () {
-
-                            let img = document.getElementById('previewimagereview');
-                            let x1, x2, y1, y2;
-
-                            if (img.naturalWidth > img.naturalHeight) {
-                                y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                x2 = x1 + (y2 - y1);
-                            } else {
-                                if (img.naturalWidth < img.naturalHeight) {
-                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                    y2 = y1 + (x2 - x1);
-                                } else {
-                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                }
-                            }
-
-                            $('#previewimagereview').imgAreaSelect({
-                                x1: x1, y1: y1, x2: x2, y2: y2,
-                                aspectRatio: '1:1',
-                                handles: true,
-                                imageHeight: this.naturalHeight,
-                                imageWidth: this.naturalWidth,
-                                onSelectEnd: function (img, selection) {
-                                    $('#photo_x1').val(selection.x1);
-                                    $('#photo_y1').val(selection.y1);
-                                    $('#photo_w').val(selection.width);
-                                    $('#photo_h').val(selection.height);
-                                }
-                            });
-                        })
-                    };
-                });
-
-                $("#previewimagereview").on("click", function () {
-                    $("#photoReview").click();
-                });
-
-                // --------------------------
-                // --------------------------
-
 
                 loadingOnScreenRemove();
                 $('#modal_add_review').modal('show');

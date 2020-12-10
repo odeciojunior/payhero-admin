@@ -124,13 +124,6 @@ class ProjectReviewsApiController extends Controller
                 'apply_on_plans' => $applyPlanEncoded,
             ]);
 
-//            var_dump($_FILES);
-//            var_dump($_REQUEST);
-//            var_dump($_POST);
-//            die();
-            dd(request()->file('photo'));
-            dd($data['photo']);
-
             $photo = $request->file('photo');
             if ($photo != null) {
                 try {
@@ -145,15 +138,15 @@ class ProjectReviewsApiController extends Controller
 
                     $amazonFileService->setDisk('s3_plans_reviews');
                     $amazonPath = $amazonFileService->uploadFile(
-                        'uploads/user/' . Hashids::encode(
-                            auth()->user()->account_owner_id
-                        ) . '/plans-reviews/' . Hashids::encode($review->id) . '/public',
+                        'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/plans-reviews/public/',
                         $photo,
-                        null,
-                        null,
+                        $photo->getFilename(),
+                        Hashids::encode($review->id) . '.' . $photo->extension(),
                         'public'
                     );
-                    $project->update(['photo' => $amazonPath]);
+
+                    $review->photo = $amazonPath;
+                    $review->save();
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -184,6 +177,7 @@ class ProjectReviewsApiController extends Controller
         $data = $request->validated();
         $reviewId = current(Hashids::decode($id));
         $review = $projectReviewModel->find($reviewId);
+        $amazonFileService = app(AmazonFileService::class);
 
         if ($reviewId && !empty($review)) {
             $applyPlanArray = [];
@@ -195,6 +189,34 @@ class ProjectReviewsApiController extends Controller
                 }
             }
             $applyPlanEncoded = json_encode($applyPlanArray);
+
+            $photo = $request->file('photo');
+            if ($photo != null) {
+                try {
+                    $img = Image::make($photo->getPathname());
+                    $img->crop(
+                        $data['photo_w'],
+                        $data['photo_h'],
+                        $data['photo_x1'],
+                        $data['photo_y1']
+                    );
+                    $img->save($photo->getPathname());
+
+                    $amazonFileService->setDisk('s3_plans_reviews');
+                    $amazonPath = $amazonFileService->uploadFile(
+                        'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/plans-reviews/public/',
+                        $photo,
+                        $photo->getFilename(),
+                        Hashids::encode($review->id) . '.' . $photo->extension(),
+                        'public'
+                    );
+
+                    $review->photo = $amazonPath;
+                    $review->save();
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
 
             $reviewUpdated = $review->update([
                 'name'           => $data['name'],
