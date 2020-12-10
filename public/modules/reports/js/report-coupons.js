@@ -98,6 +98,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
+
                 loadOnAny('.page-content', true);
                 atualizar();
             }

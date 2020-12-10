@@ -85,7 +85,11 @@
             </div>
         </div>
     </div>
+
+    {{-- Quando não tem projeto cadastrado  --}}
         @include('projects::empty')
+    {{-- FIM projeto nao existem projetos--}}
+
 @endsection
 
 @push('scripts')
