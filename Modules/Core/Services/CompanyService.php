@@ -389,7 +389,7 @@ class CompanyService
                 return true;
             }
             // informações complementares
-            if (empty($company->extra_document)) {
+            /*if (empty($company->extra_document)) {
                 return true;
             }
             if (empty($company->document_issue_date)) {
@@ -400,7 +400,7 @@ class CompanyService
             }
             if (empty($company->document_issuer_state)) {
                 return true;
-            }
+            }*/
         }
 
         if (empty($company->fantasy_name)) {
