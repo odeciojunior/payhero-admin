@@ -18,13 +18,13 @@
 </div>
 <div class="card shadow">
     <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
+        <div class='table-responsive'>
             <table id='table-reviews' class='table text-left table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
                         <td class='table-title'>Nome</td>
                         <td class='table-title'>Descrição</td>
-                        <td class='table-title'>Score</td>
+                        <td class='table-title'>Classificação</td>
                         <td class='table-title'>Status</td>
                         <td class='table-title text-center options-column-width'>Opções</td>
                     </tr>

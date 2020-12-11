@@ -118,9 +118,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let dataTable = $('#data-table-reviews');
                 let tableReviews = $('#table-reviews');
+                tableReviews.addClass('table-striped')
 
+                let dataTable = $('#data-table-reviews');
                 dataTable.html('');
 
                 if (response.data == '') {
@@ -132,7 +133,7 @@ $(document).ready(function () {
                         <tr>
                             <td>
                                 <img src="${value.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'}"
-                                class="img-fluid rounded-circle" width="35" height="35">
+                                class="img-fluid rounded-circle mr-2" width="35" height="35">
                                 ${value.name}
                             </td>
                             <td>${value.description.substring(0, 50)}...</td>
