@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\ShopifyService;
 
 class GenericCommand extends Command
@@ -15,47 +15,53 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $sales = Sale::with('project.shopifyIntegrations')
-            ->where('status', 3)
-            ->where('payment_method', 1)
-            ->whereDate('start_date', '>=', now()->subDays(30)->startOfDay())
-            ->whereNotNull('shopify_order')
+        $integrations = ShopifyIntegration::with('project')
+            ->where('theme_name', 'Debut')
+            ->orderByDesc('id')
             ->get();
 
-        $total = $sales->count();
-        $count = 0;
-
-        $integrations = [];
-        foreach ($sales as $sale) {
+        $count = 1;
+        $total = $integrations->count();
+        foreach ($integrations as $integration) {
+            $this->line("Loja {$count} de {$total}: $integration->url_store");
             try {
-                $count++;
-                $this->line("Venda {$count} de {$total}: {$sale->id}");
-
-                if (empty($integrations[$sale->project_id])) {
-                    $integration = $sale->project->shopifyIntegrations->first();
-                    $integrations[$sale->project_id] = new ShopifyService($integration->url_store,
-                        $integration->token,
-                        false);
+                $value = "{% comment %}\n  The contents of the cart.liquid template can be found in /sections/cart-template.liquid\n{% endcomment %}\n{% section 'cart-template' %}\n";
+                $shopify = new ShopifyService($integration->url_store, $integration->token);
+                $shopify->setThemeByRole('main');
+                $htmlCart = $shopify->getTemplateHtml($shopify::templateKeyNames[1]);
+                if (empty($htmlCart)) {
+                    $shopify->setTemplateHtml($shopify::templateKeyNames[1], $value);
                 }
-                $shopifyService = $integrations[$sale->project_id];
-
-                $order = $shopifyService->getClient()->getOrderManager()->find($sale->shopify_order);
-
-                $fulfillments = $order->getFulfillments();
-                foreach ($fulfillments as $fulfillment) {
-                    $shopifyService->getClient()->getFulfillmentManager()->cancel($order->getId(),
-                        $fulfillment->getId());
+                if($integration->skip_to_cart) {
+                    $this->setSkipToCart($shopify, $integration,false);
+                    $this->setSkipToCart($shopify, $integration, true);
                 }
-                $shopifyService->getClient()->getOrderManager()->cancel($order->getId());
-
-                $sale->shopify_order = null;
-                $sale->save();
-
-                $this->line('Foi!');
+                $this->line("foi!");
             } catch (Exception $e) {
-                $this->error('ERR: ' . $e->getMessage());
+                $this->error($e->getMessage());
             }
+            $count++;
         }
+    }
+
+    private function setSkipToCart($shopify, $integration, $isSet = false)
+    {
+        $shopify->setSkipToCart($isSet);
+
+        $shopify->setThemeByRole('main');
+
+        $htmlCart = null;
+        $templateKeyName = null;
+        foreach ($shopify::templateKeyNames as $template) {
+            $templateKeyName = $template;
+            $htmlCart = $shopify->getTemplateHtml($template);
+            if ($htmlCart) break;
+        }
+
+        $domain = $integration->project->domains->first();
+        $domainName = $domain ? $domain->name : null;
+
+        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
     }
 }
 
