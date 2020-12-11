@@ -387,8 +387,6 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel = new Domain();
 
-            $templateKeyName = 'templates/cart.liquid';
-
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
@@ -434,7 +432,14 @@ class ShopifyApiController extends Controller
                                 $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml($templateKeyName);
+
+                                $htmlCart = null;
+                                $templateKeyName = null;
+                                foreach ($shopify::templateKeyNames as $template){
+                                    $templateKeyName = $template;
+                                    $htmlCart = $shopify->getTemplateHtml($template);
+                                    if($htmlCart) break;
+                                }
 
                                 if ($htmlCart) {
                                     //template normal
@@ -455,7 +460,7 @@ class ShopifyApiController extends Controller
                                     );
                                 } else {
                                     //template ajax
-                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                                     $shopifyIntegration->update(
                                         [
@@ -468,7 +473,7 @@ class ShopifyApiController extends Controller
                                     );
 
                                     $shopify->updateTemplateHtml(
-                                        'snippets/ajax-cart-template.liquid',
+                                        $shopify::templateAjaxKeyName,
                                         $htmlCart,
                                         $domain->name,
                                         true
@@ -626,8 +631,6 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel = new Domain();
 
-            $templateKeyName = 'templates/cart.liquid';
-
             $projectId = current(Hashids::decode($requestData['project_id']));
 
             if (empty($projectId)) {
@@ -676,7 +679,14 @@ class ShopifyApiController extends Controller
                     );
 
                     $shopify->setThemeByRole('main');
-                    $htmlCart = $shopify->getTemplateHtml($templateKeyName);
+
+                    $htmlCart = null;
+                    $templateKeyName = null;
+                    foreach ($shopify::templateKeyNames as $template){
+                        $templateKeyName = $template;
+                        $htmlCart = $shopify->getTemplateHtml($template);
+                        if($htmlCart) break;
+                    }
 
                     if ($htmlCart) {
                         $shopifyIntegration->update(
@@ -695,7 +705,7 @@ class ShopifyApiController extends Controller
                             $domain->name
                         );
                     } else {
-                        $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                        $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                         if (empty($htmlCart)) {
                             return response()->json(
@@ -959,8 +969,6 @@ class ShopifyApiController extends Controller
         $shopifyIntegrationModel = new ShopifyIntegration();
         $projectModel = new Project();
 
-        $templateKeyName = 'templates/cart.liquid';
-
         if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
             $projectId = current(Hashids::decode($data['project_id']));
             $project = $projectModel->with(['domains'])->find($projectId);
@@ -976,7 +984,13 @@ class ShopifyApiController extends Controller
 
                         $shopify->setThemeByRole('main');
 
-                        $htmlCart = $shopify->getTemplateHtml($templateKeyName);
+                        $htmlCart = null;
+                        $templateKeyName = null;
+                        foreach ($shopify::templateKeyNames as $template){
+                            $templateKeyName = $template;
+                            $htmlCart = $shopify->getTemplateHtml($template);
+                            if($htmlCart) break;
+                        }
 
                         $domain = $project->domains->first();
                         $domainName = $domain ? $domain->name : null;
