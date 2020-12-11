@@ -28,37 +28,23 @@
             </div>
         </div>
         <div class="page-content container" style="display:none">
-        {{-- Aviso de Exportação --}}
-        <!--            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
-                 style="display:none;">
-                <div class="d-flex">
-                    <i class="material-icons mr-10">info</i>
-                    <div class="w-full">
-                        <strong class="font-size-16">Exportando seu relatório</strong>
-                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
-                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
-                            tempo, dependendo de quantos registros você estiver exportando.
-                        </p>
-                    </div>
-                    <i class="material-icons pointer" data-dismiss="alert">close</i>
-                </div>
-            </div>-->
             <div class="card shadow card-show-content-finances" style="display:none">
-                {{-- TABS --}}
+                {{-- MENU TABS --}}
                 <nav class="pt-20" id="menu-tabs-view" style="">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active"
+                            <a class="nav-item nav-link "
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
                                role="tab"
                                aria-controls="nav-home"
                                aria-selected="true"
+                               style="display:none"
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link"
+                            <a class="nav-item nav-link active"
                                id="nav-statement-tab"
                                data-toggle="tab"
                                href="#nav-statement"
@@ -75,7 +61,7 @@
                 <div class="p-30 pt-20" id="tabs-view">
                     <div class="tab-content" id="nav-tabContent">
                         {{-- TRANSFERENCIAS --}}
-                        <div class="tab-pane fade show active"
+                        <div class="tab-pane fade show "
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab"
@@ -200,7 +186,7 @@
                         </div>
                         {{--EXTRATO--}}
                         <div style=""
-                             class="tab-pane fade"
+                             class="tab-pane fade show active"
                              id="nav-statement"
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">

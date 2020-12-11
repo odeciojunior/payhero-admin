@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
@@ -21,16 +20,8 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class WithdrawalsApiController
- * @package Modules\Withdrawals\Http\Controllers
- */
 class OldWithdrawalsApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -83,15 +74,11 @@ class OldWithdrawalsApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request): JsonResponse
     {
         try {
             $settingsWithdrawalRequest = settings()->group('withdrawal_request')->get('withdrawal_request', null, true);
-
+            $settingsWithdrawalRequest = true;
             if ($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
                 return response()->json(
                     [
@@ -129,12 +116,12 @@ class OldWithdrawalsApiController extends Controller
                 );
             }
 
-            if (!$company->bank_document_status == $companyModel->present()
-                    ->getBankDocumentStatus('approved') ||
-                !$company->address_document_status == $companyModel->present()
-                    ->getAddressDocumentStatus('approved') ||
-                !$company->contract_document_status == $companyModel->present()
-                    ->getContractDocumentStatus('approved')) {
+            if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved')
+                || !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved')
+                || !$company->contract_document_status == $companyModel->present()->getContractDocumentStatus(
+                    'approved'
+                )
+            ) {
                 return response()->json(
                     [
                         'message' => 'error',
@@ -166,7 +153,7 @@ class OldWithdrawalsApiController extends Controller
             }
 
             // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
+            $blockedValue = $companyService->getBlockedBalance($company->id);
 
             $availableBalance = $company->balance - $blockedValue;
 
@@ -190,14 +177,11 @@ class OldWithdrawalsApiController extends Controller
                         'status',
                         collect(
                             [
-                                $withdrawalModel->present()
-                                    ->getStatus('returned'),
-                                $withdrawalModel->present()
-                                    ->getStatus('refused'),
+                                $withdrawalModel->present()->getStatus('returned'),
+                                $withdrawalModel->present()->getStatus('refused'),
                             ]
                         )
-                    )
-                    ->whereBetween('created_at', [$startDate, $endDate])->get();
+                    )->whereBetween('created_at', [$startDate, $endDate])->get();
                 $withdrawalSum = 0;
                 if (count($withdrawal) > 0) {
                     $withdrawalSum = $withdrawal->sum('value');
@@ -293,10 +277,6 @@ class OldWithdrawalsApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function getAccountInformation(Request $request): JsonResponse
     {
         try {
@@ -371,7 +351,6 @@ class OldWithdrawalsApiController extends Controller
 
             $iofValue = 0;
             $iofTax = 0.38;
-            $costValue = 0;
 
             $abroadTransferValue = 0;
 

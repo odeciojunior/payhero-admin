@@ -79,11 +79,15 @@ $(document).ready(function () {
                 }
 
                 let itsApprovedTransactGetnet = false;
+                let isLocal = false;
 
                 $('.page-content').show();
                 $('.content-error').hide();
 
                 $(response.data).each(function (index, value) {
+                    if (value.is_local) {
+                        isLocal = true;
+                    }
                     if (value.capture_transaction_enabled) {
                         itsApprovedTransactGetnet = true;
                         let dataHtml = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
@@ -98,6 +102,10 @@ $(document).ready(function () {
                 }
                 $(".card-show-content-finances").show();
 
+
+                if (isLocal) {
+                    $("#nav-home-tab").css('display', 'block');
+                }
                 updateAccountStatementData();
                 updateBalances();
             }

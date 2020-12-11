@@ -366,7 +366,7 @@ class CompanyService
         return false;
     }
 
-    public function verifyFieldsEmpty(Company $company)
+    public function verifyFieldsEmpty(Company $company): bool
     {
         if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
             // informações basicas
@@ -388,19 +388,6 @@ class CompanyService
             if (empty($company->country)) {
                 return true;
             }
-            // informações complementares
-            /*if (empty($company->extra_document)) {
-                return true;
-            }
-            if (empty($company->document_issue_date)) {
-                return true;
-            }
-            if (empty($company->document_issuer)) {
-                return true;
-            }
-            if (empty($company->document_issuer_state)) {
-                return true;
-            }*/
         }
 
         if (empty($company->fantasy_name)) {
