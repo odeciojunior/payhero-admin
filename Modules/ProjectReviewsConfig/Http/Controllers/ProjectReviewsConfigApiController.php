@@ -27,7 +27,7 @@ class ProjectReviewsConfigApiController extends Controller
             $projectId = current(Hashids::decode($projectId));
             if ($projectId) {
                 $projectModel = new Project();
-                $config = $projectModel->find($projectId)->first();
+                $config = $projectModel->where('id', $projectId)->first();
 
                 return new ProjectReviewsConfigResource($config);
             } else {
