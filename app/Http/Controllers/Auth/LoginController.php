@@ -43,6 +43,17 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout', 'sendAuthenticated', 'getAuthenticated');
     }
 
+    public function showLoginForm()
+    {
+        if(\Auth::id())
+            $this->redirectTo();
+
+        if(env('ACCOUNT_FRONT_URL'))
+            return \Redirect::to(env('ACCOUNT_FRONT_URL'));
+
+        return view('auth.login');
+    }
+
     /**
      * @param Request $request
      * @return RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response|void

@@ -16,9 +16,8 @@ use Illuminate\Support\Facades\Route;
 //    return true;
 //})->middleware('broadcast')->name('broadcast.auth');
 
-Route::get('/', function() {
-    return view('auth.login');
-});
+
+Route::get('/', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
 
 Route::get('/termos', function () {
     return response()->file(public_path('terms-of-use.pdf'));
