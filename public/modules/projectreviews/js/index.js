@@ -48,6 +48,7 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
+                    parent: $('body'),
                     onSelectEnd: function (img, selection) {
                         $('#photo_x1').val(selection.x1);
                         $('#photo_y1').val(selection.y1);
@@ -164,8 +165,6 @@ $(document).ready(function () {
         $(".bt-review-save").show();
         $(".bt-review-update").hide();
 
-        previewImageReview.imgAreaSelect({remove: true});
-
         var form = $('#form_review');
         form.trigger('reset');
         form.find('#name').val('');
@@ -175,6 +174,9 @@ $(document).ready(function () {
         form.find('#review_apply_on_plans').val('').trigger('change');
 
         initStarsPlugin('#review_stars', 5, false);
+        setTimeout(() => {
+            previewImageReview.imgAreaSelect({remove: true});
+        }, 50)
     });
 
     $(document).on('click', '.bt-review-save', function () {
@@ -225,6 +227,7 @@ $(document).ready(function () {
         form.find('#review_stars').html('');
         form.find('.review-id').val(reviewId);
         form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        previewImageReview.imgAreaSelect({remove: true});
 
         loadingOnScreen();
 
@@ -258,6 +261,9 @@ $(document).ready(function () {
 
                 loadingOnScreenRemove();
                 $('#modal_review').modal('show');
+                setTimeout(() => {
+                    form.find('#previewimagereview').imgAreaSelect({remove: true});
+                }, 300)
                 // END
             }
         });

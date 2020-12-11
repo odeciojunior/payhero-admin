@@ -42,7 +42,7 @@
 {{-- Modal add-edit review --}}
 <div class="modal fade modal-3d-flip-vertical" id="modal_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
     <div class="modal-dialog modal-lg d-flex justify-content-center">
-        <div class="modal-content" id="conteudo_modal_add">
+        <div class="modal-content" id="modal_content_review_form">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -65,7 +65,7 @@
 {{-- Modal config review --}}
 <div class="modal fade modal-3d-flip-vertical" id="modal_config_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
     <div class="modal-dialog d-flex justify-content-center">
-        <div class="modal-content" id="conteudo_modal_add">
+        <div class="modal-content" id="modal_review_config">
             <div class="modal-header mb-0">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
