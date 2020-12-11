@@ -302,4 +302,12 @@ class Sale extends Model
     {
         return $this->hasMany(SaleGatewayRequest::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function contestations()
+    {
+        return $this->hasMany(SaleContestation::class);
+    }
 }
