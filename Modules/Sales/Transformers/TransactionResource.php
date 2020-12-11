@@ -16,9 +16,9 @@ class TransactionResource extends JsonResource
 
         if (!empty($sale->flag)) {
             $flag = $sale->flag;
-        } else if ($sale->payment_method == 1 && empty($sale->flag)) {
+        } elseif ($sale->payment_method == 1 && empty($sale->flag)) {
             $flag = 'generico';
-        } else if ($sale->payment_method == 3 && empty($sale->flag)) {
+        } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
             $flag = 'debito';
         } else {
             $flag = 'boleto';
@@ -47,6 +47,7 @@ class TransactionResource extends JsonResource
             'total',
             'shopify_order'    => $sale->shopify_order ?? null,
             'is_chargeback_recovered'    => $sale->is_chargeback_recovered,
+            'observation' => $sale->observation,
         ];
         $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
 

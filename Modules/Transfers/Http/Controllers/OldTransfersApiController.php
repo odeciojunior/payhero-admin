@@ -96,8 +96,8 @@ class OldTransfersApiController
                 'transaction.currency',
                 'transaction.status',
                 'transaction.type as transaction_type',
-                'transaction.antecipable_value'
-            )->orderBy('id', 'DESC')->paginate(10);
+            )->orderBy('id', 'DESC')
+                ->paginate(10);
             $return = TransfersResource::collection($transfers);
 
             $return->additional(

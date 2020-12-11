@@ -553,4 +553,54 @@ class SalesApiController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setValueObservation(Request $request, $id)
+    {
+        try {
+            if (!empty($id)) {
+                $saleModel = new Sale();
+
+                activity()->on($saleModel)->tap(
+                    function (Activity $activity) use ($id) {
+                        $activity->log_name = 'updated';
+                        $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
+                    }
+                )->log('Adicionou observação a venda #' . $id);
+
+                $sale = $saleModel->find(current(Hashids::connection('sale_id')->decode($id)));
+
+                $sale->update(
+                    [
+                        'observation' => $request->input('observation'),
+                    ]
+                );
+
+                return response()->json(
+                    [
+                        'message' => 'Observaçao atualizada com sucesso!',
+                        'id' => $sale->id
+                    ],
+                    200);
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Erro ao atualizar observaçao!'
+                    ],
+                    400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Erro ao atualizar observaçao!'
+                ],
+                400);
+        }
+    }
 }

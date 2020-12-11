@@ -186,7 +186,6 @@ class PostBackPagarmeController extends Controller
 //                                 $transferModel->create([
 //                                     'transaction_id' => $transaction->id,
 //                                     'user_id' => $company->user_id,
-//                                     'value' => $transaction->antecipable_value,
 //                                     'type' => 'out',
 //                                     'type_enum' => $transferModel->present()->getTypeEnum('out'),
 //                                     'reason' => 'chargedback',
@@ -246,7 +245,6 @@ class PostBackPagarmeController extends Controller
 //                                     $transferModel->create([
 //                                         'transaction_id' => $transaction->id,
 //                                         'user_id' => $company->user_id,
-//                                         'value' => $transaction->antecipable_value,
 //                                         'type' => 'out',
 //                                         'type_enum' => $transferModel->present()->getTypeEnum('out'),
 //                                         'reason' => 'chargedback',
