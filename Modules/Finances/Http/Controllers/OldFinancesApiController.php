@@ -55,7 +55,7 @@ class OldFinancesApiController extends Controller
             $blockedBalance = $companyService->getBlockedBalance($companyId);
             $blockedBalancePending = $companyService->getBlockedBalancePending($companyId);
 
-            $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalancePending;
+            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE) - $blockedBalancePending;
 
             $availableBalance = $company->balance;
             $totalBalance = $availableBalance + $pendingBalance;

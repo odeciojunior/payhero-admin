@@ -25,12 +25,6 @@ class FinancesApiController
     public function getBalances(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
-
-            $companyService = new CompanyService();
-            $remessaOnlineService = new RemessaOnlineService();
-
-            $pendingBalance = 0;
 
             if (empty($request->input('company'))) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
@@ -38,7 +32,7 @@ class FinancesApiController
 
             $companyId = current(Hashids::decode($request->input('company')));
 
-            $company = $companyModel->find($companyId);
+            $company = Company::find($companyId);
 
             if (Gate::denies('edit', [$company])) {
                 return response()->json(
@@ -49,38 +43,27 @@ class FinancesApiController
                 );
             }
 
+            $companyService = new CompanyService();
+
+            $pendingBalance = 0;
+
             if (empty($company)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $blockedBalance = $companyService->getBlockedBalance($companyId);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($companyId);
-
-            $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalancePending;
+            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
 
             $availableBalance = $company->balance;
             $totalBalance = $availableBalance + $pendingBalance;
-
-            $availableBalance -= $blockedBalance;
-
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-
-            $currency = $companyService->getCurrency($company);
-            $currencyQuotation = '';
-
-            if ($company->country != 'brazil') {
-                $currencyQuotation = $remessaOnlineService->getCurrentQuotation($currency);
-                $currencyQuotation = number_format((float)$currencyQuotation, 2, ',', '');
-            }
 
             return response()->json(
                 [
                     'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                     'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                     'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'currency' => $currency,
-                    'currencyQuotation' => $currencyQuotation,
-                    'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                    'currency' => 'R$',
+                    'currencyQuotation' => '0,00',
+                    'blocked_balance' => '0,00',
                 ]
             );
         } catch (Exception $e) {

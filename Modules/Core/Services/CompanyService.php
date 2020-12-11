@@ -23,6 +23,10 @@ use Modules\Core\Events\UpdateCompanyGetnetEvent;
  */
 class CompanyService
 {
+
+    const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
+    const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
+
     public function getCompaniesUser($paginate = false)
     {
         try {
@@ -270,33 +274,25 @@ class CompanyService
         return null;
     }
 
-    public function getPendingBalance(Company $company)
+    public function getPendingBalance(Company $company, ?int $liquidationType = null)
     {
         $transactionModel = new Transaction();
 
         $pendingBalance = $transactionModel->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-            // ->whereDate('release_date', '>', Carbon::today()->toDateString())
-            ->sum('value');
+            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'));
 
-        $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
-            ->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()
-                ->getStatusEnum('anticipated'))
-            ->sum('value');
-
-        $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas(
-            'transaction',
-            function ($query) use ($company) {
-                $query->where('status_enum', (new Transaction())->present()->getStatusEnum('anticipated'));
-                $query->where('company_id', $company->id);
+        if(!empty($liquidationType)) {
+            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15]);
             }
-        )->sum('value');
+            elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
+            }
+        }
 
-        $pendingBalance += ($transactionsAnticipatedValue - $anticipatedValue);
-
-        return $pendingBalance;
+        return $pendingBalance->sum('value');
     }
+
     public function hasCompanyValid()
     {
         $companyModel = new Company();
