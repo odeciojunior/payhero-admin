@@ -32,73 +32,78 @@
                 </div>
             </div>
         </div>
-        <div class='page-content container' style='display:block'>
-            <!-- Filtro -->
-            <div class='fixhalf'></div>
-            <form id='filter_form'>
-                <div id="" class="card shadow p-20">
-                    <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="projeto">Projeto</label>
-                            <select name='select_project' id="projeto" class="form-control select-pad">
-                                <option value="">Todos projetos</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="comprador">Transação</label>
-                            <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_range">Data</label>
-                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="customer_name">Cliente</label>
-                            <input name='customer_name' id="customer_name" class="input-pad" placeholder="Nome do cliente">
-                        </div>
-                        <div class='col-md-9'></div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label></label>
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                            </button>
+        <div id="project-not-empty">
+            <div class='page-content container' style='display:block'>
+                <!-- Filtro -->
+                <div class='fixhalf'></div>
+                <form id='filter_form'>
+                    <div id="" class="card shadow p-20">
+                        <div class="row align-items-baseline">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="projeto">Projeto</label>
+                                <select name='select_project' id="projeto" class="form-control select-pad">
+                                    <option value="">Todos projetos</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="comprador">Transação</label>
+                                <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="date_range">Data</label>
+                                <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="customer_name">Cliente</label>
+                                <input name='customer_name' id="customer_name" class="input-pad" placeholder="Nome do cliente">
+                            </div>
+                            <div class='col-md-9'></div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label></label>
+                                <button id="bt_filtro" class="btn btn-primary col-sm-12">
+                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </form>
+                <div class="fixhalf"></div>
+                <div class="card shadow " style="min-height: 300px">
+                    <div class="page-invoice-table table-responsive">
+                        <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                            <thead>
+                                <tr class='text-center'>
+                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
+                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Descrição</td>
+                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
+                                    {{--                                <td class="table-title blacklist" style='display:none'>Motivo</td>--}}
+                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title" width="80px;"> &nbsp;</td>
+                                </tr>
+                            </thead>
+                            <tbody id="dados_tabela">
+                                {{-- js carrega... --}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal detalhes da venda-->
+                @include('salesblacklistantifraud::details')
+                <!-- End Modal -->
                 </div>
-            </form>
-            <div class="fixhalf"></div>
-            <div class="card shadow " style="min-height: 300px">
-                <div class="page-invoice-table table-responsive">
-                    <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                        <thead>
-                            <tr class='text-center'>
-                                <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                <td class="table-title">Projeto</td>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                {{--                                <td class="table-title blacklist" style='display:none'>Motivo</td>--}}
-                                <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title" width="80px;"> &nbsp;</td>
-                            </tr>
-                        </thead>
-                        <tbody id="dados_tabela">
-                            {{-- js carrega... --}}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Modal detalhes da venda-->
-            @include('salesblacklistantifraud::details')
-            <!-- End Modal -->
+                <ul id="pagination-sales-atifraud-blacklist" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    {{-- js carrega... --}}
+                </ul>
             </div>
-            <ul id="pagination-sales-atifraud-blacklist" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                {{-- js carrega... --}}
-            </ul>
         </div>
+
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=4') }}"></script>
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

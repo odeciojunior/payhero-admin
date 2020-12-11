@@ -184,7 +184,7 @@ $(document).ready(function () {
                     $("#data-table-products, #pagination-products").html('');
                     $(".products-is-empty").show();
                 }
-                loadOnAny('.page-content', true);
+                setTimeout(() => {  loadOnAny('.page-content', true); }, 1000);
             }
         });
 

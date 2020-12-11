@@ -92,10 +92,12 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
+                    $("#export-excel").show()
 
                 } else {
-                    $("#project-empty").show();
+                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
 
                 loadOnAny('.page-content', true);

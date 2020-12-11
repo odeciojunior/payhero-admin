@@ -188,13 +188,18 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
+                    $("#export-excel").show()
 
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    $.each(response.data, function (i, project) {
+                        $("#project").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
 
                     atualizar();
                 } else {
+                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
@@ -394,6 +399,7 @@ $(document).ready(function () {
         placeholder: 'Nome do plano',
         // multiple: true,
         allowClear: true,
+        dropdownParent: $('.align-items-baseline'),
         language: {
             noResults: function () {
                 return 'Nenhum plano encontrado';

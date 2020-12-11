@@ -109,15 +109,25 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append(`<option value='${project.id}'>${project.name}</option>`);
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    // $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
-                    loadOnAny('.page-content', true);
+
                     updateList();
                 } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                    loadOnAny('.page-content', true);
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    // $("#project-empty").show();
                 }
+
+                    loadOnAny('.page-content', true);
             }
         });
     }

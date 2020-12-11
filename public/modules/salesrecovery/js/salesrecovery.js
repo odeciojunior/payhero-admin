@@ -87,6 +87,8 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
+                    $("#export-excel").show()
+
                     $.each(response.data, function (i, project) {
                         $("#project").append($('<option>', {
                             value: project.id,
@@ -94,9 +96,10 @@ $(document).ready(function () {
                         }));
                     });
 
-                    updateSalesRecovery();
+                    atualizar();
 
                 } else {
+                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }

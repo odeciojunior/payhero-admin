@@ -35,16 +35,16 @@
         </style>
     @endpush
 
-    <div id="project-not-empty">
-        <!-- Page -->
-        <div class="page">
-            <div class="page-header container">
-                <div class="row align-items-center justify-content-between" style="min-height:50px">
-                    <div class="col-6">
-                        <h1 class="page-title">Vendas com saldo bloqueado</h1>
-                    </div>
+    <!-- Page -->
+    <div class="page">
+        <div class="page-header container">
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-6">
+                    <h1 class="page-title">Vendas com saldo bloqueado</h1>
                 </div>
             </div>
+        </div>
+        <div id="project-not-empty">
             <div class="page-content container" style="display:none">
                 <!-- Filtro -->
                 <div class="fixhalf"></div>
@@ -137,27 +137,27 @@
                     </div>
                 </div>
 
-            <!-- Tabela -->
+                <!-- Tabela -->
                 <div class="fixhalf"></div>
                 <div class="card shadow " style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
                         <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                             <thead>
-                                <tr>
-                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
-                                    <td class="table-title">Descrição</td>
-                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                    <td class="table-title">Forma</td>
-                                    <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Data</td>
-                                    <td class="table-title display-sm-none">Pagamento</td>
-                                    <td class="table-title">Comissão</td>
-                                    <td class="table-title">Motivo bloqueio</td>
-                                </tr>
+                            <tr>
+                                <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
+                                <td class="table-title">Projeto</td>
+                                <td class="table-title">Descrição</td>
+                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
+                                <td class="table-title">Forma</td>
+                                <td class="table-title">Status</td>
+                                <td class="table-title display-sm-none display-m-none">Data</td>
+                                <td class="table-title display-sm-none">Pagamento</td>
+                                <td class="table-title">Comissão</td>
+                                <td class="table-title">Motivo bloqueio</td>
+                            </tr>
                             </thead>
                             <tbody id="dados_tabela">
-                                {{-- js carrega... --}}
+                            {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
@@ -167,11 +167,11 @@
                 </ul>
             </div>
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
-    {{-- Quando não tem projeto cadastrado  --}}
-        @include('projects::empty')
-    {{-- FIM projeto nao existem projetos--}}
 
     @push('scripts')
         <script src='{{asset('modules/reports/js/report-blockedbalance.js?v=' . random_int(100, 10000))}}'></script>

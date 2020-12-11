@@ -3,7 +3,7 @@ $(() => {
     index();
 
     function index() {
-        loadOnAny('#data-table-projects');
+        loadOnAny('.page-content');
         $.ajax({
             url: '/api/projects',
             data: {
@@ -69,7 +69,8 @@ $(() => {
                     $('#data-table-projects').hide();
                     $('.content-error').show();
                 }
-                loadOnAny('#data-table-projects', true);
+
+                setTimeout(() => {  loadOnAny('.page-content', true); }, 1000);
             }
         });
     }

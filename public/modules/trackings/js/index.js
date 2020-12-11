@@ -137,13 +137,28 @@ $(() => {
                 loadOnAny('.page-content', true);
             },
             success: response => {
-                $.each(response.data, function (index, project) {
-                    $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
-                });
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#project-select").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    index();
+                    getResume();
+                    getBlockedBalance();
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
                 loadOnAny('.page-content', true);
-                index();
-                getResume();
-                getBlockedBalance();
             }
         });
     }

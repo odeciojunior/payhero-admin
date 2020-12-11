@@ -90,17 +90,24 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
+                    $("#export-excel").show()
 
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
+
+                    atualizar();
+
                 } else {
-                    $("#project-empty").show();
+                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
 
                 loadOnAny('.page-content', true);
-                atualizar();
             }
         });
     }
