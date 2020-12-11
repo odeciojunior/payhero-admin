@@ -476,9 +476,7 @@ class RegisterApiController extends Controller
         $is_physical_person = $company->company_type == 1;
 
         try {
-
             foreach ($files as $file) {
-
                 $fileName = explode('/', $file)[6];
                 $fileTypeName = preg_split('/[\/.]/', $file)[6];
                 $fileType = $user->present()->getDocumentTypeRegistered($fileTypeName);
@@ -492,8 +490,11 @@ class RegisterApiController extends Controller
 
 
                 if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'USUARIO_DOCUMENTO'])) {
-
-                    $amazonPathUser = 'uploads/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
+                    if (FoxUtils::isProduction()) {
+                        $amazonPathUser = 'uploads/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
+                    } else {
+                        $amazonPathUser = 'uploads/register/user/' . Hashids::encode($user->id) . '/private/documents/' . $fileName;
+                    }
 
                     if ($sDrive->exists($amazonPathUser)) {
                         $sDrive->delete($amazonPathUser);
@@ -543,8 +544,12 @@ class RegisterApiController extends Controller
                  * Uploud Empresa
                  */
                 if (($is_physical_person && $fileTypeName == 'EMPRESA_EXTRATO') || (!$is_physical_person && in_array($fileTypeName, ['EMPRESA_RESIDENCIA', 'EMPRESA_CCMEI', 'EMPRESA_EXTRATO']))) {
+                    if (FoxUtils::isProduction()) {
+                        $amazonPathCompanies = 'uploads/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
+                    } else {
+                        $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
+                    }
 
-                    $amazonPathCompanies = 'uploads/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
                     $sDrive->move(
                         $file,
                         $amazonPathCompanies
