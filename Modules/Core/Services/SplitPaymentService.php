@@ -82,8 +82,6 @@ class SplitPaymentService
 
                         $valueGodfatherPartner = intval((($partnerValue / 100) * 1));
 
-//                        $antecipableValue = intval(($valueGodfatherPartner / 100) * $partnerGodfather->user->antecipation_tax);
-
                         $transactionModel->create([
                                                       'sale_id'                => $sale->id,
                                                       'company_id'             => $partnerGodfather->company->id,
@@ -93,9 +91,7 @@ class SplitPaymentService
                                                                                         ->format('Y-m-d'),
                                                       'status'                 => 'pending',
                                                       'status_enum'            => $transactionModel->present()
-                                                                                                   ->getStatusEnum('pending'),
-//                                                      'antecipable_value'      => $antecipableValue,
-                                                      'currency'               => '',
+                                                                                                   ->getStatusEnum('pending'),                             'currency'               => '',
                                                       'percentage_rate'        => '',
                                                       'transaction_rate'       => '',
                                                       'type'                   => $transactionModel->present()
@@ -146,7 +142,6 @@ class SplitPaymentService
                                               'status'                 => 'pending',
                                               'status_enum'            => $transactionModel->present()
                                                                                            ->getStatusEnum('pending'),
-                                              'antecipable_value'      => 0,
                                               'currency'               => '',
                                               'percentage_rate'        => '',
                                               'transaction_rate'       => '',
@@ -178,7 +173,6 @@ class SplitPaymentService
 //                                              'company_id'             => $convertaxCompany->id,
 //                                              'value'                  => $convertaxIntegration->value,
 //                                              'release_date'           => null,
-//                                              'antecipation_date'      => null,
 //                                              'status'                 => 'pending',
 //                                              'status_enum'            => $transactionModel->present()
 //                                                                                           ->getStatusEnum('pending'),
@@ -215,10 +209,9 @@ class SplitPaymentService
                                           'company_id'             => $producerCompany->id,
                                           'value'                  => $producerValue,
                                           'release_date'           => null,
-                                          'antecipation_date'      => null,
                                           'status'                 => 'pending',
                                           'status_enum'            => $transactionModel->present()
-                                                                                       ->getStatusEnum('pending'),
+                                              ->getStatusEnum('pending'),
                                           'currency'               => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
                                           'percentage_rate'        => $percentageRate,
                                           'transaction_rate'       => $transactionRate,

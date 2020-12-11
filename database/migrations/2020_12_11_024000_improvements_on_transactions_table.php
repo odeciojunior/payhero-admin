@@ -24,13 +24,14 @@ class ImprovementsOnTransactionsTable extends Migration
 
         //Add new
         Schema::table('transactions', function (Blueprint $table) {
-            $table->integer('gateway_id')->nullable()->after('sale_id');
+            $table->unsignedBigInteger('gateway_id')->nullable()->after('sale_id');
             $table->boolean('is_waiting_withdrawal')->default(false);
-            $table->integer('withdrawal_id')->nullable();
+            $table->unsignedBigInteger('withdrawal_id')->nullable();
         });
         Schema::table('transactions', function (Blueprint $table) {
-            $table->index('gateway_id');
-            $table->index('withdrawal_id');
+            $table->foreign('gateway_id')->references('id')->on('gateways');
+            $table->index('is_waiting_withdrawal');
+            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
         });
     }
 
@@ -52,8 +53,9 @@ class ImprovementsOnTransactionsTable extends Migration
 
         //Drop new
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropIndex(['gateway_id']);
-            $table->dropIndex(['withdrawal_id']);
+            $table->dropForeign(['gateway_id']);
+            $table->dropIndex(['is_waiting_withdrawal']);
+            $table->dropForeign(['withdrawal_id']);
         });
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('gateway_id');
