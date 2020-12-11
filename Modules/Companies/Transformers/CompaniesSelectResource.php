@@ -36,6 +36,7 @@ class CompaniesSelectResource extends JsonResource
             'user_personal_document_status' => (new User())->present()->getAddressDocumentStatus(
                 $this->user->personal_document_status
             ),
+            'is_local' => env('APP_ENV') == 'local'
         ];
     }
 }
