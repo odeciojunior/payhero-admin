@@ -108,6 +108,7 @@ $(document).ready(function () {
                 }
                 updateAccountStatementData();
                 updateBalances();
+                checkAllowed();
             }
         });
     }
@@ -229,151 +230,160 @@ $(document).ready(function () {
             let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
             let availableBalance = parseInt(availableBalanceText);
             let toTransfer = parseFloat(toTransferText);
-
             if (toTransfer > availableBalance) {
                 alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
                 toTransferText = $('#custom-input-addon').val();
                 toTransfer = toTransferText.slice(0, -2);
                 $('#custom-input-addon').val('');
                 $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
-            } else if ($('#custom-input-addon').val() == '') {
-                alertCustom('error', 'Valor do saque inválido!');
-            } else {
-                $.ajax({
-                        url: "/api/withdrawals/getaccountinformation",
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            company_id: $("#transfers_company_select").val(),
-                            withdrawal_value: $('#custom-input-addon').val()
-                        },
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        error: (response) => {
-                            errorAjaxResponse(response);
-                        },
-                        success: (response) => {
-
-                            if (response.data.user_documents_status == 'pending') {
-                                let route = '/profile';
-                                $('#modal-withdrawal').modal('show');
-                                $('#modal-withdrawal-title').text("Oooppsssss!");
-                                $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos pessoais ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                            } else if (response.data.documents_status == 'pending') {
-                                let companie = $('#transfers_company_select').val();
-                                let _route = '/companies/' + companie + '/edit';
-                                $('#modal-withdrawal').modal('show');
-                                $('#modal-withdrawal-title').text("Oooppsssss!");
-                                $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos da empresa ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com os documentos de sua empresa</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                            } else if (response.data.email_verified == 'false') {
-                                let _route = '/profile';
-                                $('#modal-withdrawal').modal('show');
-                                $('#modal-withdrawal-title').text("Oooppsssss!");
-                                $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Email de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o e-mail do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                            } else if (response.data.cellphone_verified == 'false') {
-                                let _route = '/profile';
-                                $('#modal-withdrawal').modal('show');
-                                $('#modal-withdrawal-title').text("Oooppsssss!");
-                                $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Telefone de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o telefone do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-
-                            } else {
-
-                                $('#modal-withdrawal').modal('show');
-                                $('#modal-withdrawal-title').text("Confirmar Saque");
-
-                                let confirmationData = `<div class="row">
-                                                            <div class="col">
-                                                                <h4>Verifique os dados da conta:</h4>
-                                                                <div><b>Banco:</b><span id="modal-withdrawal-bank"></span></div>
-                                                                <div><b>Agência:</b><span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></div>
-                                                                <div><b>Conta:</b><span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></div>
-                                                                <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
-                                                             </div>`;
-
-
-                                confirmationData += `</div>
-                                                     <hr>
-                                                     <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
-
-
-                                confirmationData += `</h4>
-                                                    <hr>
-                                                    <div class="alert alert-warning text-center">
-                                                        <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
-                                                        <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
-                                                    </div>
-                                              </div>`;
-
-                                $('#modal_body').html(confirmationData);
-
-                                $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
-
-                                $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
-                                $("#modal-withdrawal-bank").html('  ' + response.data.bank);
-                                $("#modal-withdrawal-agency").html('  ' + response.data.agency);
-                                if (response.data.agency_digit != '' && response.data.agency_digit != null) {
-                                    $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
-                                }
-                                $("#modal-withdrawal-account").html('  ' + response.data.account);
-                                if (response.data.account_digit != '' && response.data.account_digit != null) {
-
-                                    $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
-                                }
-                                $("#modal-withdrawal-document").html('  ' + response.data.document);
-
-                                $("#bt-confirm-withdrawal").unbind("click");
-                                $("#bt-confirm-withdrawal").on("click", function () {
-                                    loadOnModal('#modal-body');
-
-                                    $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
-                                    $.ajax({
-                                        url: "/api/withdrawals",
-                                        type: "POST",
-                                        data: {
-                                            company_id: $('#transfers_company_select').val(),
-                                            withdrawal_value: $('#custom-input-addon').val()
-                                        },
-                                        dataType: "json",
-                                        headers: {
-                                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                                            'Accept': 'application/json',
-                                        },
-                                        error: (response) => {
-                                            loadingOnScreenRemove();
-                                            errorAjaxResponse(response);
-                                        },
-                                        success: (response) => {
-                                            loadingOnScreenRemove();
-                                            $('#modal-withdrawal').modal('show');
-                                            $('#modal-withdrawal-title').text("Sucesso!");
-                                            $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>');
-                                            $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                                            $('.btn-return').on('click', function () {
-                                                $('#custom-input-addon').val('');
-                                            });
-
-                                            updateBalances();
-
-                                            $('.btn-return').click(function () {
-                                                $('#modal_body').modal('hide');
-                                            });
-                                        },
-                                        complete: (response) => {
-                                            $("#bt-confirm-withdrawal").removeAttr('disabled');
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    }
-                );
+                return;
             }
+
+            if ($('#custom-input-addon').val() == '') {
+                alertCustom('error', 'Valor do saque inválido!');
+                return;
+            }
+
+            $.ajax(
+                {
+                    url: "/api/withdrawals/getaccountinformation",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        company_id: $("#transfers_company_select").val(),
+                        withdrawal_value: $('#custom-input-addon').val()
+                    },
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
+                    },
+                    error: (response) => {
+                        errorAjaxResponse(response);
+                    },
+                    success: (response) => {
+
+                        if (response.data.user_documents_status == 'pending') {
+                            let route = '/profile';
+                            $('#modal-withdrawal').modal('show');
+                            $('#modal-withdrawal-title').text("Oooppsssss!");
+                            $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos pessoais ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
+                            $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                            return;
+                        }
+
+                        if (response.data.documents_status == 'pending') {
+                            let companie = $('#transfers_company_select').val();
+                            let _route = '/companies/' + companie + '/edit';
+                            $('#modal-withdrawal').modal('show');
+                            $('#modal-withdrawal-title').text("Oooppsssss!");
+                            $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos da empresa ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com os documentos de sua empresa</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
+                            $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                            return;
+                        }
+
+                        if (response.data.email_verified == 'false') {
+                            let _route = '/profile';
+                            $('#modal-withdrawal').modal('show');
+                            $('#modal-withdrawal-title').text("Oooppsssss!");
+                            $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Email de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o e-mail do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
+                            $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                            return;
+                        }
+
+                        if (response.data.cellphone_verified == 'false') {
+                            let _route = '/profile';
+                            $('#modal-withdrawal').modal('show');
+                            $('#modal-withdrawal-title').text("Oooppsssss!");
+                            $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Telefone de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o telefone do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
+                            $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                            return;
+                        }
+
+                        $('#modal-withdrawal').modal('show');
+                        $('#modal-withdrawal-title').text("Confirmar Saque");
+
+                        $('#modal_body').html(`
+                            <div class="row">
+                                <div class="col">
+                                    <h4>Verifique os dados da conta:</h4>
+                                    <div><b>Banco:</b><span id="modal-withdrawal-bank"></span></div>
+                                    <div><b>Agência:</b><span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></div>
+                                    <div><b>Conta:</b><span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></div>
+                                    <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
+                                </div>
+                                </div>
+                                <hr>
+                                <h4>Valor do saque: 
+                                    <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                                </h4>
+                                <hr>
+                                <div class="alert alert-warning text-center">
+                                    <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
+                                    <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
+                                </div>
+                          </div>`);
+
+                        $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
+
+                        $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
+                        $("#modal-withdrawal-bank").html('  ' + response.data.bank);
+                        $("#modal-withdrawal-agency").html('  ' + response.data.agency);
+                        if (response.data.agency_digit != '' && response.data.agency_digit != null) {
+                            $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
+                        }
+                        $("#modal-withdrawal-account").html('  ' + response.data.account);
+                        if (response.data.account_digit != '' && response.data.account_digit != null) {
+
+                            $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
+                        }
+                        $("#modal-withdrawal-document").html('  ' + response.data.document);
+
+                        $("#bt-confirm-withdrawal").unbind("click");
+                        $("#bt-confirm-withdrawal").on("click", function () {
+                            loadOnModal('#modal-body');
+
+                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
+                            $.ajax({
+                                url: "/api/withdrawals",
+                                type: "POST",
+                                data: {
+                                    company_id: $('#transfers_company_select').val(),
+                                    withdrawal_value: $('#custom-input-addon').val()
+                                },
+                                dataType: "json",
+                                headers: {
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
+                                },
+                                error: (response) => {
+                                    loadingOnScreenRemove();
+                                    errorAjaxResponse(response);
+                                },
+                                success: (response) => {
+                                    loadingOnScreenRemove();
+                                    $('#modal-withdrawal').modal('show');
+                                    $('#modal-withdrawal-title').text("Sucesso!");
+                                    $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>');
+                                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                                    $('.btn-return').on('click', function () {
+                                        $('#custom-input-addon').val('');
+                                    });
+
+                                    updateBalances();
+
+                                    $('.btn-return').click(function () {
+                                        $('#modal_body').modal('hide');
+                                    });
+                                },
+                                complete: (response) => {
+                                    $("#bt-confirm-withdrawal").removeAttr('disabled');
+                                }
+                            });
+                        });
+
+                    }
+                }
+            );
         });
 
         let statusWithdrawals = {
@@ -408,34 +418,36 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     $("#withdrawals-table-data").html('');
+
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
                         $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
-                    } else {
-                        $.each(response.data, function (index, data) {
-
-                            let tableData = '';
-                            tableData += '<tr>';
-                            tableData += "<td>" + data.account_information + "</td>";
-                            tableData += "<td>" + data.date_request + "</td>";
-                            tableData += "<td>" + data.date_release + "</td>";
-                            if (data.tax_value < 50000) {
-                                tableData += "<td>" + data.value + '<br><small>(taxa de R$10,00)</small>' + "</td>";
-                            } else {
-                                tableData += "<td>" + data.value + "</td>";
-                            }
-                            if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
-                                tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
-                            }
-                            tableData += '<td class="shipping-status">';
-                            tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
-                            tableData += '</td>';
-                            tableData += '</tr>';
-                            $("#withdrawals-table-data").append(tableData);
-                            $('#withdrawalsTable').addClass('table-striped')
-                        });
-                        pagination(response, 'withdrawals', updateWithdrawalsTable);
+                        return;
                     }
+
+                    $.each(response.data, function (index, data) {
+
+                        let tableData = '';
+                        tableData += '<tr>';
+                        tableData += "<td>" + data.account_information + "</td>";
+                        tableData += "<td>" + data.date_request + "</td>";
+                        tableData += "<td>" + data.date_release + "</td>";
+                        if (data.tax_value < 50000) {
+                            tableData += "<td>" + data.value + '<br><small>(taxa de R$10,00)</small>' + "</td>";
+                        } else {
+                            tableData += "<td>" + data.value + "</td>";
+                        }
+                        if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
+                            tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
+                        }
+                        tableData += '<td class="shipping-status">';
+                        tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
+                        tableData += '</td>';
+                        tableData += '</tr>';
+                        $("#withdrawals-table-data").append(tableData);
+                        $('#withdrawalsTable').addClass('table-striped')
+                    });
+                    pagination(response, 'withdrawals', updateWithdrawalsTable);
 
                 }
             });
@@ -657,90 +669,84 @@ $(document).ready(function () {
                     loadOnAny('#nav-statement #available-in-period-statement', true);
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                     return false;
-                } else {
+                }
 
 
-                    items.forEach(function (item) {
-                        let dataTable = `<tr><td style="vertical-align: middle;">`;
+                items.forEach(function (item) {
+                    let dataTable = `<tr><td style="vertical-align: middle;">`;
 
-                        if (item.order && item.order.hashId) {
+                    if (item.order && item.order.hashId) {
 
-                            dataTable += `Transação`;
+                        dataTable += `Transação`;
 
-                            if (item.isInvite) {
-                                dataTable += `
+                        if (item.isInvite) {
+                            dataTable += `
                                 <a class="">
                                     <span>#${item.order.hashId}</span>
                                 </a>
                             `;
-                            } else {
-                                dataTable += `
+                        } else {
+                            dataTable += `
                                  <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
                                     <span style="color:black;">#${item.order.hashId}</span>
                                 </a>
                             `;
-                            }
-                            dataTable += `<br>
-                                        <small>(${item.details.description})</small>`;
-                        } else {
-                            dataTable += `${item.details.description}`;
                         }
-
-                        dataTable += `
-                                     </td>
-                                     <td>
-                                        <span class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
-                                     </td>
-                                    <td style="vertical-align: middle;">
-                                        ${item.date}
-                                    </td>
-                                    <td style="vertical-align: middle; color:${item.amount >= 0 ? 'green' : 'red'};">
-                                    ${(item.amount.toLocaleString('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                            })
-                        )}
-                                    </td>
-                                </tr>
-                            `;
-                        updateClassHTML(dataTable);
-                    });
-
-                    let totalInPeriod = response.totalInPeriod;
-
-                    let isNegativeStatement = false;
-                    if (totalInPeriod < 1) {
-                        isNegativeStatement = true;
+                        dataTable += `<br>
+                                        <small>(${item.details.description})</small>`;
+                    } else {
+                        dataTable += `${item.details.description}`;
                     }
 
-                    $('#statement-money #available-in-period-statement').html(`
-                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                        ${(totalInPeriod.toLocaleString('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                            })
-                        )}
-                    </span>`
-                    );
-                    paginationStatement();
+                    dataTable += `
+                         </td>
+                         <td>
+                            <span class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
+                         </td>
+                        <td style="vertical-align: middle;">
+                            ${item.date}
+                        </td>
+                        <td style="vertical-align: middle; color:${item.amount >= 0 ? 'green' : 'red'};">
+                        ${(item.amount.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })
+                    )}
+                        </td>
+                        </tr>`;
+                    updateClassHTML(dataTable);
+                });
 
-                    $("#pagination-statement span").addClass('jp-hidden');
-                    $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
-                    $("#pagination-statement a.jp-current").addClass('active');
-                    $("#pagination-statement a").on('click', function () {
-                        $("#pagination-statement a").removeClass('active');
-                        $(this).addClass('active');
-                    });
+                let totalInPeriod = response.totalInPeriod;
 
-                    $("#pagination-statement").on('click', function () {
-                        $("#pagination-statement span").remove();
-                    });
-
-
-                    loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
+                let isNegativeStatement = false;
+                if (totalInPeriod < 1) {
+                    isNegativeStatement = true;
                 }
 
+                $('#statement-money #available-in-period-statement').html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                        ${(totalInPeriod.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })
+                    )}
+                    </span>`
+                );
+                paginationStatement();
 
+                $("#pagination-statement span").addClass('jp-hidden');
+                $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
+                $("#pagination-statement jp-current").addClass('active');
+                $("#pagination-statement a").on('click', function () {
+                    $("#pagination-statement a").removeClass('active');
+                    $(this).addClass('active');
+                });
+
+                $("#pagination-statement").on('click', function () {
+                    $("#pagination-statement span").remove();
+                });
+                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
             }
         });
 
