@@ -126,6 +126,10 @@ class ProjectReviewsApiController extends Controller
             $photo = $request->file('photo');
             if ($photo != null) {
                 try {
+                    if (!$data['photo_w'] || !$data['photo_h']) {
+                        $data['photo_h'] = $data['photo_w'] = 200;
+                    }
+
                     $img = Image::make($photo->getPathname());
                     $img->crop(
                         $data['photo_w'],
@@ -133,6 +137,7 @@ class ProjectReviewsApiController extends Controller
                         $data['photo_x1'],
                         $data['photo_y1']
                     );
+                    $img->resize(200, 200);
                     $img->save($photo->getPathname());
 
                     $amazonFileService->setDisk('s3_plans_reviews');
@@ -197,7 +202,7 @@ class ProjectReviewsApiController extends Controller
                 try {
 
                     if (!$data['photo_w'] || !$data['photo_h']) {
-                        $data['photo_h'] = $data['photo_w'] = 300;
+                        $data['photo_h'] = $data['photo_w'] = 200;
                     }
 
                     $img = Image::make($photo->getPathname());
@@ -207,6 +212,7 @@ class ProjectReviewsApiController extends Controller
                         $data['photo_x1'],
                         $data['photo_y1']
                     );
+                    $img->resize(200, 200);
                     $img->save($photo->getPathname());
 
                     $amazonFileService->setDisk('s3_plans_reviews');
