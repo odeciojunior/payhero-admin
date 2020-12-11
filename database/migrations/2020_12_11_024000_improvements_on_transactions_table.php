@@ -24,9 +24,9 @@ class ImprovementsOnTransactionsTable extends Migration
 
         //Add new
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedInteger('gateway_id')->nullable()->after('sale_id');
+            $table->unsignedBigInteger('gateway_id')->nullable()->after('sale_id');
             $table->boolean('is_waiting_withdrawal')->default(false);
-            $table->unsignedInteger('withdrawal_id')->nullable();
+            $table->unsignedBigInteger('withdrawal_id')->nullable();
         });
         Schema::table('transactions', function (Blueprint $table) {
             $table->foreign('gateway_id')->references('id')->on('gateways');
