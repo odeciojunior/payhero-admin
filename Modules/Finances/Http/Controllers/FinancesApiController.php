@@ -30,30 +30,22 @@ class FinancesApiController
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $companyId = current(Hashids::decode($request->input('company')));
-
-            $company = Company::find($companyId);
-
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão',
-                    ],
-                    Response::HTTP_FORBIDDEN
-                );
-            }
-
-            $companyService = new CompanyService();
-
-            $pendingBalance = 0;
+            $company = Company::find(current(Hashids::decode($request->input('company'))));
 
             if (empty($company)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
+            if (Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            }
+
+            $companyService = new CompanyService();
+
             $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
 
-            $availableBalance = $company->balance;
+            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+
             $totalBalance = $availableBalance + $pendingBalance;
 
             return response()->json(
@@ -61,8 +53,6 @@ class FinancesApiController
                     'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                     'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                     'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'currency' => 'R$',
-                    'currencyQuotation' => '0,00',
                     'blocked_balance' => '0,00',
                 ]
             );

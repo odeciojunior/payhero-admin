@@ -62,7 +62,9 @@ class WithdrawalsApiController
                 );
             }
 
-            $withdrawals = $withdrawalModel->where('company_id', $companyId)->orderBy('id', 'DESC');
+            $withdrawals = $withdrawalModel->where('company_id', $companyId)
+                                            ->where('automatic_liquidation', 1)
+                                            ->orderBy('id', 'DESC');
 
             return WithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {

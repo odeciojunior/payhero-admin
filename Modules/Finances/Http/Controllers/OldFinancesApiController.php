@@ -24,61 +24,41 @@ class OldFinancesApiController extends Controller
     public function getBalances(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
-
-            $companyService = new CompanyService();
-            $remessaOnlineService = new RemessaOnlineService();
-
-            $pendingBalance = 0;
-
             if (empty($request->input('company'))) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $companyId = current(Hashids::decode($request->input('company')));
-
-            $company = $companyModel->find($companyId);
-
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão',
-                    ],
-                    Response::HTTP_FORBIDDEN
-                );
-            }
+            $company = Company::find(current(Hashids::decode($request->input('company'))));
 
             if (empty($company)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $blockedBalance = $companyService->getBlockedBalance($companyId);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($companyId);
+            if (Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            }
+
+            $companyService = new CompanyService();
+
+            $blockedBalance = $companyService->getBlockedBalance($company);
+
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
 
             $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE) - $blockedBalancePending;
 
-            $availableBalance = $company->balance;
+            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+
             $totalBalance = $availableBalance + $pendingBalance;
 
             $availableBalance -= $blockedBalance;
 
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
-            $currency = $companyService->getCurrency($company);
-            $currencyQuotation = '';
-
-            if ($company->country != 'brazil') {
-                $currencyQuotation = $remessaOnlineService->getCurrentQuotation($currency);
-                $currencyQuotation = number_format((float)$currencyQuotation, 2, ',', '');
-            }
-
             return response()->json(
                 [
                     'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                     'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                     'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'currency' => $currency,
-                    'currencyQuotation' => $currencyQuotation,
                     'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
                 ]
             );

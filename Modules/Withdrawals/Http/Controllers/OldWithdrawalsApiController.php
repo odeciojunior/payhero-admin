@@ -42,6 +42,7 @@ class OldWithdrawalsApiController extends Controller
 
                 if (Gate::allows('edit', [$company])) {
                     $withdrawals = $withdrawalModel->where('company_id', $companyId)
+                        ->where('automatic_liquidation', 0)
                         ->orderBy('id', 'DESC');
 
                     return WithdrawalResource::collection($withdrawals->paginate(5));
