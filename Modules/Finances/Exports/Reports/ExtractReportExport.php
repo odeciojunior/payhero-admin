@@ -88,10 +88,8 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
             'transfers.*',
             'transaction.sale_id',
             'transaction.company_id',
-            'transaction.currency',
             'transaction.status',
-            'transaction.type as transaction_type',
-            'transaction.antecipable_value'
+            'transaction.type as transaction_type'
         )->orderBy('id', 'DESC');
 
         return $transfers;
@@ -119,8 +117,6 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
 
         $type     = $transfer->type_enum == 2 ? '-' : '';
         $value    = number_format(intval($type . $transfer->value) / 100, 2, ',', '.');
-        // $currency = $transfer->currency == 'dolar' ? '$ ' . $value : 'R$ ';
-        // $value    = $currency . $value;
 
         $transferData = [
             'reason' => $reason . '#'. Hashids::connection('sale_id')->encode($transfer->sale_id),
