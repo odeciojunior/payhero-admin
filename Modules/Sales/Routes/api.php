@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'role:account_owner|admin|attendance', 'scopes:admin', 'setUserAsLogged'],
+        'middleware' => ['auth:api', 'role:account_owner|admin|attendance', 'scopes:admin'],
         'prefix'     => 'sales',
     ],
     function() {
@@ -28,12 +28,14 @@ Route::group(
         Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
         Route::get('/user-plans', 'SalesApiController@getPlans');
+        Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation');
     }
 );
 
 Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
      ->middleware(['auth:api', 'scopes:admin', 'setUserAsLogged']);
+
 
 Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'prefix' => 'profitfy',], function () {
     Route::get('/orders', 'SalesApiController@indexExternal');

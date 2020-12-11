@@ -215,6 +215,9 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                            <a href="https://app.cloudfox.net/termos" target='_blank' class="mr-10 float-left">
+                                                Termos de uso
+                                            </a>
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password'
                                                class="mr-10">
                                                 <i class="icon fa-lock" aria-hidden="true"></i> Alterar senha
