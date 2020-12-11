@@ -102,11 +102,11 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
-                                                <div class='input-group-prepend'>
+<!--                                                <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
                                                               style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
                                                                     class="currency">$</span></span>
-                                                </div>
+                                                </div>-->
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"

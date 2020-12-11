@@ -198,7 +198,7 @@ $(document).ready(function () {
 
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
-                $(".currency").html('R$ ');
+                // $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
@@ -208,15 +208,6 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
-
-                if (response.currency != 'real') {
-                    $("#quotation_information").show();
-                } else {
-                    $("#quotation_information").hide();
-                }
-
-                $("#current_quotation").text("R$ " + response.currencyQuotation);
-                $("#label_quotation").text("Cotação do " + response.currency);
 
                 updateWithdrawalsTable();
                 loadOnAny('.price', true);
@@ -305,27 +296,11 @@ $(document).ready(function () {
                                                                 <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
                                                              </div>`;
 
-                                if (response.data.currency !== 'real') {
-                                    confirmationData += `<div class="col">
-                                                            <h4>Transferência para o exterior:</h4>
-                                                            <div><b>Moeda:</b> ${response.data.currency}</div>
-                                                            <div><b>Cotação:</b> R$ ${response.data.quotation}</div>
-                                                            <div><b>Taxa de IOF:</b> R$ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
-                                                            <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
-                                                            <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
-                                                         </div>`;
-                                }
 
                                 confirmationData += `</div>
                                                      <hr>
                                                      <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
 
-                                if (response.data.currency !== 'real') {
-                                    confirmationData += `</h4>
-                                                         <h4>Valor convertido:
-                                                            <span class='greenGradientText'>${response.data.abroad_transfer.converted_money}</span>
-                                                            <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ${response.data.currency} )</span>`;
-                                }
 
                                 confirmationData += `</h4>
                                                     <hr>
