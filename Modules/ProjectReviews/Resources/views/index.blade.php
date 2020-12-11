@@ -2,7 +2,7 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
             <div class='div-config'>
-                <div id="config-review" class="btn-holder d-none align-items-center pointer mr-20">
+                <div id="config-review" class="btn-holder d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Review </span>
                     <a class="ml-10 rounded-add pointer bg-primary">
                         <i class="icon wb-settings" aria-hidden="true"></i></a>
@@ -73,7 +73,7 @@
                 <h4 class="modal-title text-center" style="font-weight: 700;">Configurações das reviews</h4>
             </div>
             <div class="pt-10 pr-20 pl-20 modal_review_body">
-                @include('projectreviewsconfig::config')
+                @include('projectreviews::config')
             </div>
             <div class="modal-footer pt-0">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>

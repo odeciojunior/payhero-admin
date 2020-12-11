@@ -71,19 +71,19 @@ $(document).ready(function () {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
         }, success: function success(response) {
-            let reviewConfig = response.data;
-            localStorage.setItem('icon_type', reviewConfig.icon_type);
-            localStorage.setItem('icon_color', reviewConfig.icon_color);
+            let project = response.data;
+            localStorage.setItem('reviews_config_icon_type', project.reviews_config_icon_type);
+            localStorage.setItem('reviews_config_icon_color', project.reviews_config_icon_color);
         }
     });
 
     var initStarsPlugin = function (el, score, readOnly = true) {
-        var icon = localStorage.getItem('icon_type') || 'star';
+        var icon = localStorage.getItem('reviews_config_icon_type') || 'star';
         var starHalf = icon === 'star' ? `fa fa-${icon}-half-o` : `fa fa-${icon}`;
         var $el = $(el);
         $el.off();
         $el.html('');
-        $el.css({'color': localStorage.getItem('icon_color')})
+        $el.css({'color': localStorage.getItem('reviews_config_icon_color')})
         $el.raty({
             half: true,
             readOnly: readOnly,
@@ -125,10 +125,7 @@ $(document).ready(function () {
 
                 if (response.data == '') {
                     dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
-                    tableReviews.addClass('table-striped');
                 } else {
-                    $('#config-review').removeClass('d-none').addClass('d-flex');
-                    tableReviews.addClass('table-striped');
                     let data = '';
                     $.each(response.data, function (index, value) {
                         data = `
@@ -166,8 +163,10 @@ $(document).ready(function () {
         $(".bt-review-save").show();
         $(".bt-review-update").hide();
 
+        previewImageReview.imgAreaSelect({remove: true});
+
         var form = $('#form_review');
-        form.show();
+        form.trigger('reset');
         form.find('#name').val('');
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
@@ -175,7 +174,6 @@ $(document).ready(function () {
         form.find('#review_apply_on_plans').val('').trigger('change');
 
         initStarsPlugin('#review_stars', 5, false);
-        previewImageReview.imgAreaSelect({remove: true});
     });
 
     $(document).on('click', '.bt-review-save', function () {
@@ -220,7 +218,7 @@ $(document).ready(function () {
         $(".bt-review-update").show();
 
         var form = $('#form_review');
-        form.show();
+        form.trigger('reset');
         form.find('#name').val('');
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
@@ -240,6 +238,7 @@ $(document).ready(function () {
 
             }, success: function (response) {
                 let review = response.data;
+                form.trigger('reset');
                 form.find('[name=name]').val(review.name);
                 form.find('[name=description]').val(review.description);
                 form.find('[name=active_flag]').val(review.active_flag);
@@ -440,17 +439,17 @@ $(document).ready(function () {
                 let reviewConfig = response.data;
                 let formConfigReview = $('#form_config_review');
 
-                formConfigReview.find('[name=icon_color]').val(reviewConfig.icon_color)
-                formConfigReview.find('[name=icon_type][value=' + reviewConfig.icon_type + ']').prop('checked', true)
-                formConfigReview.find('[name=icon_type]').parent('.radio-custom').find('i').css({color: reviewConfig.icon_color})
+                formConfigReview.find('[name=reviews_config_icon_color]').val(reviewConfig.reviews_config_icon_color)
+                formConfigReview.find('[name=reviews_config_icon_type][value=' + reviewConfig.reviews_config_icon_type + ']').prop('checked', true)
+                formConfigReview.find('[name=reviews_config_icon_type]').parent('.radio-custom').find('i').css({color: reviewConfig.reviews_config_icon_color})
 
                 let colorOptions = formConfigReview.find('.color-options > div');
                 colorOptions.removeClass('active');
-                formConfigReview.find('.color-options').find('[data-color="' + String(reviewConfig.icon_color).toLowerCase() + '"]').addClass('active')
+                formConfigReview.find('.color-options').find('[data-color="' + String(reviewConfig.reviews_config_icon_color).toLowerCase() + '"]').addClass('active')
                 colorOptions.off().on('click', function () {
                     let color = $(this).data('color')
-                    formConfigReview.find('[name=icon_color]').val(color);
-                    formConfigReview.find('[name=icon_type]').parent('.radio-custom').find('i').css({color: color})
+                    formConfigReview.find('[name=reviews_config_icon_color]').val(color);
+                    formConfigReview.find('[name=reviews_config_icon_type]').parent('.radio-custom').find('i').css({color: color})
                     colorOptions.removeClass('active');
                     $(this).addClass('active');
                 });
@@ -485,19 +484,13 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                localStorage.setItem('icon_type', form_data.get('icon_type'))
-                localStorage.setItem('icon_color', form_data.get('icon_color'))
+                localStorage.setItem('reviews_config_icon_type', form_data.get('reviews_config_icon_type'))
+                localStorage.setItem('reviews_config_icon_color', form_data.get('reviews_config_icon_color'))
                 loadReviews();
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
             }
         });
-    });
-
-    $(document).on('click', '.btn-return-to-config', function (event) {
-        event.preventDefault();
-        $('#modal-view-review-config').modal('hide');
-        $('#modal_config_review').modal('show');
     });
 
     $('#modal_review').on('hidden.bs.modal', function () {

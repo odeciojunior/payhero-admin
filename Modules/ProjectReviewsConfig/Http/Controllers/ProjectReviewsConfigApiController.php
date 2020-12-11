@@ -2,6 +2,7 @@
 
 namespace Modules\ProjectReviewsConfig\Http\Controllers;
 
+use Modules\Core\Entities\Project;
 use Modules\ProjectReviewsConfig\Http\Requests\ProjectReviewsConfigUpdate;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -25,8 +26,8 @@ class ProjectReviewsConfigApiController extends Controller
         try {
             $projectId = current(Hashids::decode($projectId));
             if ($projectId) {
-                $configModel = new ProjectReviewsConfig();
-                $config = $configModel->where('project_id', $projectId)->first();
+                $projectModel = new Project();
+                $config = $projectModel->find($projectId)->first();
 
                 return new ProjectReviewsConfigResource($config);
             } else {
@@ -50,7 +51,6 @@ class ProjectReviewsConfigApiController extends Controller
     {
         try {
             $projectId = current(Hashids::decode($projectId));
-            $projectReviewsConfig = new ProjectReviewsConfig();
             $data = $request->validated();
             if (empty($projectId)) {
                 return response()->json([
@@ -58,10 +58,10 @@ class ProjectReviewsConfigApiController extends Controller
                 ], 404);
             }
 
-            $reviewsConfig = $projectReviewsConfig->where('project_id', $projectId)->first();
-            $erviewsConfigUpdated = $reviewsConfig->update($data);
+            $project = Project::where('id', $projectId)->first();
+            $projectReviewsConfigUpdated = $project->update($data);
 
-            if ($erviewsConfigUpdated) {
+            if ($projectReviewsConfigUpdated) {
                 return response()->json(['message' => 'Configuração das reviews atualizado com sucesso!']);
             } else {
                 return response()->json([
@@ -70,8 +70,6 @@ class ProjectReviewsConfigApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-
-            dd($e->getMessage());
 
             return response()->json([
                 'message' => 'Erro ao atualizar configurações das reviews',

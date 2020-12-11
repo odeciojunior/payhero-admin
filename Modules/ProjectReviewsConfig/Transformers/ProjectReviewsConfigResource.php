@@ -5,7 +5,6 @@ namespace Modules\ProjectReviewsConfig\Transformers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Modules\Core\Entities\ProjectReviews;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProjectReviewsConfigResource extends JsonResource
@@ -17,14 +16,10 @@ class ProjectReviewsConfigResource extends JsonResource
      */
     public function toArray($request)
     {
-        $projectReviewsModel = new ProjectReviews();
-        $review = $projectReviewsModel->where('project_id', $this->project_id)->first();
-
         return [
-            'id'         => Hashids::encode($this->id),
-            'icon_type'  => $this->icon_type,
-            'icon_color' => $this->icon_color,
-            'has_review' => $review ? true : false,
+            'id'                        => Hashids::encode($this->id),
+            'reviews_config_icon_type'  => $this->reviews_config_icon_type,
+            'reviews_config_icon_color' => $this->reviews_config_icon_color
         ];
     }
 }

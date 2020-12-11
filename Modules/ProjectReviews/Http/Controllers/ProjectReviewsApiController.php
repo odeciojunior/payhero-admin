@@ -151,12 +151,6 @@ class ProjectReviewsApiController extends Controller
                 }
             }
 
-            if (!$project->reviewsConfig) {
-                ProjectReviewsConfig::create([
-                    'project_id' => $projectId
-                ]);
-            }
-
             return response()->json(['message' => 'Review criado com sucesso!'], 200);
         } else {
             return response()->json([

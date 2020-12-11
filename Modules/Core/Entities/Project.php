@@ -47,6 +47,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $countdown_timer_time
  * @property string $countdown_timer_description
  * @property string $countdown_timer_finished_message
+ * @property string $reviews_config_icon_type
+ * @property string $reviews_config_icon_color
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $checkouts
@@ -127,6 +129,8 @@ class Project extends Model
         'countdown_timer_time',
         'countdown_timer_description',
         'countdown_timer_finished_message',
+        'reviews_config_icon_type',
+        'reviews_config_icon_color',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -317,13 +321,5 @@ class Project extends Model
     public function reviews()
     {
         return $this->hasMany(ProjectReviews::class);
-    }
-
-    /**
-     * @return hasOne
-     */
-    public function reviewsConfig()
-    {
-        return $this->hasOne(ProjectReviewsConfig::class);
     }
 }
