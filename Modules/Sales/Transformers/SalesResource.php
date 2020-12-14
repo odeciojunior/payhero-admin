@@ -78,6 +78,7 @@ class SalesResource extends JsonResource
             'is_chargeback_recovered'    => $this->is_chargeback_recovered,
             'observation' => $this->observation,
             'thank_page_url'    => $thankPageUrl,
+            'company_name' => $this->details->company_name,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         if (count($shopifyIntegrations) > 0) {

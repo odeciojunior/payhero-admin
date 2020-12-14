@@ -25,8 +25,15 @@
                         <div id="" class="card shadow p-20">
                             <div class="row align-items-baseline">
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    <label for="projeto">Projeto</label>
-                                    <select name='select_project' id="projeto" class="form-control select-pad">
+                                    <label for="company">Empresa</label>
+                                    <select name='select_company' id="company" class="form-control select-pad">
+                                        <option value="0">Todas as empresas</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                    <label for="project">Projeto</label>
+                                    <select name='select_project' id="project" class="form-control select-pad">
                                         <option value="0">Todas os projetos</option>
                                     </select>
                                 </div>
@@ -38,7 +45,9 @@
                                     <label for="customer_document">CPF do cliente</label>
                                     <input name='customer_document' id="customer_document" class="input-pad"
                                            placeholder="CPF" data-mask="000.000.000-00">
-                                </div>
+                                </div>                                
+                            </div>
+                            <div class="row mt-md-15">
                                 <div class="col-sm-6 col-md">
                                     <label for="forma">Forma de pagamento</label>
                                     <select name='select_payment_method' id="forma" class="form-control select-pad">
@@ -47,8 +56,6 @@
                                         <option value="2">Boleto</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mt-md-15">
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                     <label for="sale_code">Transação</label>
                                     <input type="text" id="sale_code" placeholder="transação">
@@ -60,11 +67,17 @@
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
                                 </div>
+                                
+                                <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
+                                
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                     <label for="date_range">‏‏‎ ‎</label>
                                     <input name='date_range' id="date_range" class="select-pad"
                                            placeholder="Clique para editar..." readonly>
                                 </div>
+
+                                <div class='col-9'></div>
+
                                 <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
                                     <button id="bt_filtro" class="btn btn-primary col">
                                         <i class="icon wb-check" aria-hidden="true"></i>Aplicar
@@ -143,7 +156,8 @@
 
 @push('scripts')
     <script src="{{ asset('/modules/reports/js/detail.js?v=17') }}"></script>
-    <script src='{{asset('modules/reports/js/report-pending.js?v=1')}}'></script>
+    <!-- <script src='{{ asset('/modules/reports/js/report-pending.js?v=1')}}'></script> -->
+    <script src="{{ asset('/modules/reports/js/report-pending.js?v='.random_int(1, 100))}})}}"></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
 @endpush
