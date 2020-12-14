@@ -72,6 +72,8 @@ class TransactionPresenter extends Presenter
                     return 'pending_antifraud';
                 case 9:
                     return 'canceled_antifraud';
+                case 10:
+                    return 'waiting_withdrawal';    
                 case 12:
                     return 'anticipated';
                 case 13:
@@ -99,6 +101,8 @@ class TransactionPresenter extends Presenter
                     return 8;
                 case 'canceled_antifraud':
                     return 9;
+                case 'waiting_withdrawal':
+                    return 10;
                 case 'anticipated':
                     return 12;
                 case 'billet_refunded':

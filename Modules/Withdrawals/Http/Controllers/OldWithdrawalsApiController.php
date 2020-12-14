@@ -6,9 +6,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -21,12 +20,8 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class WithdrawalsApiController
+class OldWithdrawalsApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -42,7 +37,25 @@ class WithdrawalsApiController
                 )->log('Visualizou tela todas as transferências');
             }
 
-            if (empty($companyId)) {
+            if ($companyId) {
+                $company = $companyModel->find($companyId);
+
+                if (Gate::allows('edit', [$company])) {
+                    $withdrawals = $withdrawalModel->where('company_id', $companyId)
+                        ->where('automatic_liquidation', 0)
+                        ->orderBy('id', 'DESC');
+
+                    return WithdrawalResource::collection($withdrawals->paginate(5));
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Sem permissão para visualizar saques',
+                        ],
+                        403
+                    );
+                }
+            } else {
+                //id incorreto
                 return response()->json(
                     [
                         'message' => 'Empresa não encontrada',
@@ -50,23 +63,6 @@ class WithdrawalsApiController
                     400
                 );
             }
-
-            $company = $companyModel->find($companyId);
-
-            if (!Gate::allows('edit', [$company])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para visualizar saques',
-                    ],
-                    403
-                );
-            }
-
-            $withdrawals = $withdrawalModel->where('company_id', $companyId)
-                                            ->where('automatic_liquidation', 1)
-                                            ->orderBy('id', 'DESC');
-
-            return WithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {
             report($e);
 
@@ -79,15 +75,11 @@ class WithdrawalsApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request): JsonResponse
     {
         try {
             $settingsWithdrawalRequest = settings()->group('withdrawal_request')->get('withdrawal_request', null, true);
-
+            $settingsWithdrawalRequest = true;
             if ($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
                 return response()->json(
                     [
@@ -125,12 +117,12 @@ class WithdrawalsApiController
                 );
             }
 
-            if (!$company->bank_document_status == $companyModel->present()
-                    ->getBankDocumentStatus('approved') ||
-                !$company->address_document_status == $companyModel->present()
-                    ->getAddressDocumentStatus('approved') ||
-                !$company->contract_document_status == $companyModel->present()
-                    ->getContractDocumentStatus('approved')) {
+            if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved')
+                || !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved')
+                || !$company->contract_document_status == $companyModel->present()->getContractDocumentStatus(
+                    'approved'
+                )
+            ) {
                 return response()->json(
                     [
                         'message' => 'error',
@@ -162,7 +154,7 @@ class WithdrawalsApiController
             }
 
             // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
+            $blockedValue = $companyService->getBlockedBalance($company->id);
 
             $availableBalance = $company->balance - $blockedValue;
 
@@ -178,6 +170,7 @@ class WithdrawalsApiController
             /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
             if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                 $startDate = Carbon::now()->startOfMonth();
+
                 $endDate = Carbon::now()->endOfMonth();
 
                 $withdrawal = $withdrawalModel->where('company_id', $company->id)
@@ -185,14 +178,11 @@ class WithdrawalsApiController
                         'status',
                         collect(
                             [
-                                $withdrawalModel->present()
-                                    ->getStatus('returned'),
-                                $withdrawalModel->present()
-                                    ->getStatus('refused'),
+                                $withdrawalModel->present()->getStatus('returned'),
+                                $withdrawalModel->present()->getStatus('refused'),
                             ]
                         )
-                    )
-                    ->whereBetween('created_at', [$startDate, $endDate])->get();
+                    )->whereBetween('created_at', [$startDate, $endDate])->get();
                 $withdrawalSum = 0;
                 if (count($withdrawal) > 0) {
                     $withdrawalSum = $withdrawal->sum('value');
@@ -288,11 +278,6 @@ class WithdrawalsApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws PresenterException
-     */
     public function getAccountInformation(Request $request): JsonResponse
     {
         try {
@@ -367,7 +352,6 @@ class WithdrawalsApiController
 
             $iofValue = 0;
             $iofTax = 0.38;
-            $costValue = 0;
 
             $abroadTransferValue = 0;
 
@@ -420,7 +404,6 @@ class WithdrawalsApiController
 
     /**
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function checkAllowed(): JsonResponse
     {
@@ -439,5 +422,6 @@ class WithdrawalsApiController
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
         }
     }
-
 }
+
+

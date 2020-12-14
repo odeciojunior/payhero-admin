@@ -137,6 +137,12 @@ return [
             'port' => env('REDIS_HORIZON_PORT', 6379),
             'database' => 0,
         ],
-    ]    
+        'redis-statement' => [
+            'host' => env('REDIS_STATEMENT_HOST', '127.0.0.1'),
+            'password' => env('REDIS_STATEMENT_PASSWORD', null),
+            'port' => env('REDIS_STATEMENT_PORT', 6379),
+            'database' => 0,
+        ],
+    ]
 
 ];
