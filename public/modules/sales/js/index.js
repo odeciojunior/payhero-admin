@@ -251,6 +251,14 @@ $(document).ready(function () {
                             tableClass = ''
                         }
 
+                        let observation = ''
+                        if (!isEmpty(value.observation) || (value.observation === null && false) || (value.observation === '' && false)) {
+                             observation = `<a data-toggle="tooltip" title="${value.observation}"
+                                                role="button" class="sale_observation" venda="${value.id}" style='margin-right:10px;'>
+                                                    <i style="color: #44a44b" class='icon-observation-value  material-icons'>info</i>
+                                            </a>`
+                        }
+
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
@@ -275,8 +283,12 @@ $(document).ready(function () {
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
                                     <td>
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
-                                    </td>
+                                        ${observation}
                                 </tr>`;
+
+                        $(function () {
+                            $('[data-toggle="tooltip"]').tooltip()
+                        })
 
                         $("#dados_tabela").append(dados);
                     });

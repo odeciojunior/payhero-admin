@@ -432,7 +432,14 @@ class ShopifyApiController extends Controller
                                 $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                $htmlCart = null;
+                                $templateKeyName = null;
+                                foreach ($shopify::templateKeyNames as $template){
+                                    $templateKeyName = $template;
+                                    $htmlCart = $shopify->getTemplateHtml($template);
+                                    if($htmlCart) break;
+                                }
 
                                 if ($htmlCart) {
                                     //template normal
@@ -441,19 +448,19 @@ class ShopifyApiController extends Controller
                                             'theme_type' => $shopifyIntegrationModel->present()
                                                 ->getThemeType('basic_theme'),
                                             'theme_name' => $shopify->getThemeName(),
-                                            'theme_file' => 'sections/cart-template.liquid',
+                                            'theme_file' => $templateKeyName,
                                             'theme_html' => $htmlCart,
                                         ]
                                     );
 
                                     $shopify->updateTemplateHtml(
-                                        'sections/cart-template.liquid',
+                                        $templateKeyName,
                                         $htmlCart,
                                         $domain->name
                                     );
                                 } else {
                                     //template ajax
-                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                                     $shopifyIntegration->update(
                                         [
@@ -466,7 +473,7 @@ class ShopifyApiController extends Controller
                                     );
 
                                     $shopify->updateTemplateHtml(
-                                        'snippets/ajax-cart-template.liquid',
+                                        $shopify::templateAjaxKeyName,
                                         $htmlCart,
                                         $domain->name,
                                         true
@@ -672,7 +679,14 @@ class ShopifyApiController extends Controller
                     );
 
                     $shopify->setThemeByRole('main');
-                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                    $htmlCart = null;
+                    $templateKeyName = null;
+                    foreach ($shopify::templateKeyNames as $template){
+                        $templateKeyName = $template;
+                        $htmlCart = $shopify->getTemplateHtml($template);
+                        if($htmlCart) break;
+                    }
 
                     if ($htmlCart) {
                         $shopifyIntegration->update(
@@ -680,18 +694,18 @@ class ShopifyApiController extends Controller
                                 'theme_type' => $shopifyIntegrationModel->present()
                                     ->getThemeType('basic_theme'),
                                 'theme_name' => $shopify->getThemeName(),
-                                'theme_file' => 'sections/cart-template.liquid',
+                                'theme_file' => $templateKeyName,
                                 'theme_html' => $htmlCart,
                             ]
                         );
 
                         $shopify->updateTemplateHtml(
-                            'sections/cart-template.liquid',
+                            $templateKeyName,
                             $htmlCart,
                             $domain->name
                         );
                     } else {
-                        $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                        $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                         if (empty($htmlCart)) {
                             return response()->json(
@@ -970,12 +984,18 @@ class ShopifyApiController extends Controller
 
                         $shopify->setThemeByRole('main');
 
-                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                        $htmlCart = null;
+                        $templateKeyName = null;
+                        foreach ($shopify::templateKeyNames as $template){
+                            $templateKeyName = $template;
+                            $htmlCart = $shopify->getTemplateHtml($template);
+                            if($htmlCart) break;
+                        }
 
                         $domain = $project->domains->first();
                         $domainName = $domain ? $domain->name : null;
 
-                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
+                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
 
                         $integration->skip_to_cart = boolval($data['skip_to_cart']);
                         $integration->save();

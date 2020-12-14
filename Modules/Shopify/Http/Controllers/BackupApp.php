@@ -346,7 +346,14 @@ class BackupApp extends Controller
                                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                $htmlCart = null;
+                                $templateKeyName = null;
+                                foreach ($shopify::templateKeyNames as $template){
+                                    $templateKeyName = $template;
+                                    $htmlCart = $shopify->getTemplateHtml($template);
+                                    if($htmlCart) break;
+                                }
 
                                 if ($htmlCart) {
                                     //template normal
@@ -354,24 +361,24 @@ class BackupApp extends Controller
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('basic_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_file' => $templateKeyName,
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name);
                                 } else {
                                     //template ajax
-                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_file' => $shopify::templateAjaxKeyName,
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                    $shopify->updateTemplateHtml($shopify::templateAjaxKeyName, $htmlCart, $domain->name, true);
                                 }
 
                                 //inserir o javascript para o trackeamento (src, utm)
@@ -485,7 +492,14 @@ class BackupApp extends Controller
                                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                $htmlCart = null;
+                                $templateKeyName = null;
+                                foreach ($shopify::templateKeyNames as $template){
+                                    $templateKeyName = $template;
+                                    $htmlCart = $shopify->getTemplateHtml($template);
+                                    if($htmlCart) break;
+                                }
 
                                 if ($htmlCart) {
                                     //template normal
@@ -493,26 +507,25 @@ class BackupApp extends Controller
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('basic_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_file' => $templateKeyName,
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name);
                                 } else {
 
-                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                                     //template ajax
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_file' => $shopify::templateAjaxKeyName,
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    //$shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
-                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                    $shopify->updateTemplateHtml($shopify::templateAjaxKeyName, $htmlCart, $domain->name, true);
                                 }
 
                                 //inserir o javascript para o trackeamento (src, utm)

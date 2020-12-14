@@ -94,10 +94,8 @@ class TransfersController extends Controller
                 'transfers.*',
                 'transaction.sale_id',
                 'transaction.company_id',
-                'transaction.currency',
                 'transaction.status',
                 'transaction.type as transaction_type',
-                'transaction.antecipable_value'
             )->orderBy('id', 'DESC')
                 ->paginate(10);
             $return = TransfersResource::collection($transfers);
