@@ -42,17 +42,17 @@ class ProjectsResource extends JsonResource
         // $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
         //                        ->where('project_id', $this->id)
         //                        ->first();
-        if(isset($this->affiliate_id)) {
+        if (isset($this->affiliate_id)) {
             $affiliate = '';
-            if($this->affiliate_id > 0) {
-                $affiliate = New Affiliate;
+            if ($this->affiliate_id > 0) {
+                $affiliate = new Affiliate;
                 $affiliate->id = $this->affiliate_id;
                 $affiliate->created_at = $this->affiliate_created_at;
                 $affiliate->percentage = $this->affiliate_percentage;
                 $affiliate->status_enum = $this->affiliate_status;
             }
         } else {
-            $affiliate  = $this->affiliates[0] ?? '';
+            $affiliate = $this->affiliates[0] ?? '';
         }
         $affiliated = !empty($affiliate) ? true : false;
 
@@ -107,6 +107,8 @@ class ProjectsResource extends JsonResource
             'countdown_timer_time'             => $this->countdown_timer_time,
             'countdown_timer_description'      => $this->countdown_timer_description,
             'countdown_timer_finished_message' => $this->countdown_timer_finished_message,
+            'reviews_config_icon_type'         => $this->reviews_config_icon_type,
+            'reviews_config_icon_color'        => $this->reviews_config_icon_color
         ];
     }
 }

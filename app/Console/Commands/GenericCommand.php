@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 
 class GenericCommand extends Command
 {
@@ -14,17 +17,25 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $sales = Sale::where('gateway_id', 15)->orderBy('id', 'desc')->get();
+        dd(DB::statement('update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id'));
+        // $totalCount = Transaction::whereNull('gateway_id')->count();
+        // $currentCount = 0;
 
-        foreach($sales as $sale) {
-            Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
-        }
+        // Transaction::with('sale')->whereNull('gateway_id')->orderBy('id', 'desc')
+        //             ->chunk(100, function ($transactions) use($totalCount, $currentCount) {
 
-        // foreach($sales as $sale) {
-        //     $this->line("Venda {$sale->id} -> " . Redis::connection('redis-statement')->get("sale:has:tracking:{$sale->id}"));
-        // }
+        //                 foreach($transactions as $transaction) {
+        //                     $this->line("Atualizando transaction {$currentCount} de {$totalCount} ");
 
+        //                     $transaction->update([
+        //                         'gateway_id' => $transaction->sale->gateway_id
+        //                     ]);
+
+        //                     $currentCount++;
+        //                 }
+        //             });
     }
 }
 
 
+//update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id;

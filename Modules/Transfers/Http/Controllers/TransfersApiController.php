@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
@@ -17,11 +16,7 @@ use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class TransfersController
- * @package Modules\Transfers\Http\Controllers
- */
-class TransfersController extends Controller
+class TransfersApiController
 {
     /**
      * @param Request $request
@@ -32,33 +27,36 @@ class TransfersController extends Controller
         try {
             $transfersModel = new Transfer();
 
-            activity()->on($transfersModel)->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos os extratos');
+            activity()->on($transfersModel)->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou tela todos os extratos');
 
             $data = $request->all();
 
-            //parâmetros obrigatórios
             $companyId = current(Hashids::decode($data['company']));
             $dateRange = FoxUtils::validateDateRange($data["date_range"]);
             if ($data['date_type'] == 'transaction_date') {
                 $dateType = 'transaction.created_at';
+            } elseif ($data['date_type'] == 'transfer_date') {
+                $dateType = 'transfers.created_at';
             } else {
-                if ($data['date_type'] == 'transfer_date') {
-                    $dateType = 'transfers.created_at';
-                } else {
-                    $dateType = 'sales.start_date';
-                }
+                $dateType = 'sales.start_date';
             }
 
-            $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id',
-                'transfers.transaction_id')
-                ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
-                ->where(function ($query) use ($companyId) {
-                    $query->where('transfers.company_id', $companyId)
-                        ->orWhere('transaction.company_id', $companyId);
-                })
-                ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+
+            $transfers = $transfersModel->leftJoin(
+                'transactions as transaction',
+                'transaction.id',
+                'transfers.transaction_id'
+            )->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
+                ->where(
+                    function ($query) use ($companyId) {
+                        $query->where('transfers.company_id', $companyId)
+                            ->orWhere('transaction.company_id', $companyId);
+                    }
+                )->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->whereNull('transfers.customer_id');
 
             $saleId = str_replace('#', '', $data['transaction']);
@@ -82,8 +80,9 @@ class TransfersController extends Controller
                 $transfers->where('transfers.value', $value);
             }
 
-            $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")
-                ->first();
+            $balanceInPeriod = $transfers->selectRaw(
+                "sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod"
+            )->first();
 
             if (!empty($balanceInPeriod)) {
                 $balanceInPeriod = $balanceInPeriod->balanceInPeriod / 100;
@@ -98,31 +97,33 @@ class TransfersController extends Controller
                 'transaction.status',
                 'transaction.type as transaction_type',
                 'transaction.antecipable_value'
-            )->orderBy('id', 'DESC')
-                ->paginate(10);
+            )->orderBy('id', 'DESC')->paginate(10);
             $return = TransfersResource::collection($transfers);
 
-            $return->additional([
-                'meta' => [
-                    'balance_in_period' => $balanceInPeriod,
-                ],
-            ]);
+            $return->additional(
+                [
+                    'meta' => [
+                        'balance_in_period' => $balanceInPeriod,
+                    ],
+                ]
+            );
 
             return $return;
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ],
+                400
+            );
         }
     }
 
-    public function accountStatementData()
+    public function accountStatementData(): JsonResponse
     {
-
         if (!auth()->user()) {
-
             dd('USUÁRIO NÃO AUTENTICADO');
         }
 
@@ -143,32 +144,24 @@ class TransfersController extends Controller
             }
 
             try {
-
                 $dates = explode(' - ', request('dateRange') ?? '');
 
                 $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
                 $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-
             } catch (Exception $exception) {
             }
 
             if (!isset($startDate) || !isset($endDate)) {
-
                 $today = today();
                 $startDate = $today;
                 $endDate = $today;
             }
 
             if (request('statement_data_type') == 'schedule_date') {
-
                 $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
-
             } elseif (request('statement_data_type') == 'liquidation_date') {
-
                 $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
-
             } else {
-
                 $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
             }
 
@@ -179,7 +172,6 @@ class TransfersController extends Controller
                 ->setStatementDateField($statementDateField);
 
             if (!empty(request('sale'))) {
-
                 $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
             }
 
@@ -204,18 +196,17 @@ class TransfersController extends Controller
             ];
 
             //if (!FoxUtils::isProduction()) {
-                $error += [
-                    'dev_message' => $exception->getMessage(),
-                    'dev_file' => $exception->getFile(),
-                    'dev_line' => $exception->getLine(),
-                    'dev_code' => $exception->getCode(),
-                    'dev_trace' => $exception->getTrace(),
-                ];
+            $error += [
+                'dev_message' => $exception->getMessage(),
+                'dev_file' => $exception->getFile(),
+                'dev_line' => $exception->getLine(),
+                'dev_code' => $exception->getCode(),
+                'dev_trace' => $exception->getTrace(),
+            ];
             //}
 
             return response()->json($error, 400);
         }
     }
+
 }
-
-

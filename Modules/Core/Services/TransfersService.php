@@ -23,8 +23,6 @@ class TransfersService
      */
     public function verifyTransactions($saleId = null)
     {
-        $fileLogName = 'TransfersService_' . date('Ymd') . '.log';
-
         $companyModel = new Company();
         $transferModel = new Transfer();
         $transactionModel = new Transaction();

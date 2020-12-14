@@ -167,7 +167,14 @@ class DomainService
 
                                 $shopify->setThemeByRole('main');
 
-                                $htmlCart = $shopify->getTemplateHtml($shopify::templateKeyName);
+                                $htmlCart = null;
+                                $templateKeyName = null;
+                                foreach ($shopify::templateKeyNames as $template){
+                                    $templateKeyName = $template;
+                                    $htmlCart = $shopify->getTemplateHtml($template);
+                                    if($htmlCart) break;
+                                }
+
                                 if ($htmlCart) {
                                     //template normal
 
@@ -185,11 +192,11 @@ class DomainService
                                                 ->present()
                                                 ->getThemeType('basic_theme'),
                                             'theme_name' => $shopify->getThemeName(),
-                                            'theme_file' => 'sections/cart-template.liquid',
+                                            'theme_file' => $templateKeyName,
                                             'theme_html' => $htmlCart,
                                         ]);
 
-                                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart,
+                                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart,
                                             $domain->name);
                                     }
                                 } else {
@@ -202,11 +209,11 @@ class DomainService
                                             ->present()
                                             ->getThemeType('ajax_theme'),
                                         'theme_name' => $shopify->getThemeName(),
-                                        'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                        'theme_file' => $shopify::templateAjaxKeyName,
                                         'theme_html' => $htmlCart,
                                     ]);
 
-                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart,
+                                    $shopify->updateTemplateHtml($shopify::templateAjaxKeyName, $htmlCart,
                                         $domain->name, true);
                                 }
 

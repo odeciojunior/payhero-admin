@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/projectreviews",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\ProjectReviews\\Providers\\ProjectReviewsServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ProjectReviews\\": ""
+        }
+    }
+}

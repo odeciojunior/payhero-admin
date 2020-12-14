@@ -46,7 +46,8 @@ class CheckoutService
         string $client = null,
         string $customerDocument = null,
         string $plan = null
-    ) {
+    )
+    {
         $checkoutModel = new Checkout();
         $domainModel = new Domain();
         $affiliateModel = new Affiliate();
@@ -350,6 +351,22 @@ class CheckoutService
                 'error' => $ex->getMessage(),
             ];
         }
+    }
+
+
+    public function releasePaymentGetnet($saleId)
+    {
+        if (FoxUtils::isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/releasepaymentgetnet';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
+        }
+
+        $data = [
+            'sale_id' => Hashids::connection('sale_id')->encode($saleId)
+        ];
+
+        return $this->runCurl($url, 'POST', $data);
     }
 
     /**
