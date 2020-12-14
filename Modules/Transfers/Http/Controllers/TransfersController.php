@@ -94,7 +94,6 @@ class TransfersController extends Controller
                 'transfers.*',
                 'transaction.sale_id',
                 'transaction.company_id',
-                'transaction.currency',
                 'transaction.status',
                 'transaction.type as transaction_type',
             )->orderBy('id', 'DESC')
