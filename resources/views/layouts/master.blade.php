@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js css-menubar" lang="en">
+<html class="no-js" lang="en">
 <head>
     <title>CloudFox - Admin</title>
     <meta charset="utf-8">
@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
+{{--    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
@@ -83,7 +83,7 @@
         }
     </style>
 </head>
-<body class="animsition site-navbar-small dashboard">
+<body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
 
 {{-- loading --}}
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
@@ -112,7 +112,7 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.maskMoney.js') }}"></script>

@@ -5,9 +5,9 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
-    if(current_url.includes('reports')){
+    if (current_url.includes('reports')) {
         $("#reports-link").addClass('menu-active');
-    } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')){
+    } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
         $("#sales-link").addClass('menu-active');
     }
 
@@ -358,7 +358,7 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
 
 /* TOP ALERT */
 
-$('.top-alert-close').on('click', function(){
+$('.top-alert-close').on('click', function () {
     $(this).parent().fadeOut();
 });
 
@@ -369,7 +369,7 @@ $('.top-alert-close').on('click', function(){
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyDocumentPending(){
+function ajaxVerifyDocumentPending() {
     $.ajax({
         method: 'GET',
         url: '/api/profile/verifydocuments',
@@ -403,7 +403,7 @@ function ajaxVerifyDocumentPending(){
 }
 
 function verifyDocumentPending() {
-    if(window.location.href.includes('/dashboard')){
+    if (window.location.href.includes('/dashboard')) {
         sessionStorage.removeItem('documentsPending');
         $('#document-pending').hide();
     }
@@ -457,6 +457,7 @@ function getCookie(name) {
 function deleteCookie(name) {
     setCookie(name, -1);
 }
+
 /* Cookies */
 
 $.fn.shake = function () {
@@ -466,11 +467,42 @@ $.fn.shake = function () {
     let animation1 = {left: "+=" + distance};
     let animation2 = {left: "-=" + (distance * 2)};
 
-    for (let i = 0 ; i < repeat; i++ ) {
+    for (let i = 0; i < repeat; i++) {
         $(this).animate(animation1, speed)
             .animate(animation2, speed)
             .animate(animation1, speed);
     }
 };
 
+/**
+ * Menu implementation
+ */
+$(document).ready(() => {
+    var htmlEl = $('html')
+    var bodyEl = $('body')
+    $('.hamburger').on('click', function () {
+        $(this).toggleClass('hamburger-arrow-left')
+        bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
+        $('.site-menu-item.has-sub').removeClass('active')
+        // htmlEl.toggleClass('css-menubar')
+        // site-menubar-unfold
+        // site-menubar-keep
+        // site-menubar-hover
+    })
 
+    var siteMenuItems = $('.site-menu-item.has-sub')
+    var siteMenuBar = $('.site-menubar')
+    siteMenuBar.on('mouseenter', function () {
+        bodyEl.addClass('site-menubar-hover')
+    }).on('mouseleave', function () {
+        bodyEl.removeClass('site-menubar-hover')
+        if (!bodyEl.hasClass('site-menubar-unfold')) {
+            siteMenuItems.removeClass('active')
+        }
+    })
+
+    siteMenuItems.on('click', function () {
+        siteMenuItems.not($(this)).removeClass('active')
+        $(this).toggleClass('active')
+    })
+})
