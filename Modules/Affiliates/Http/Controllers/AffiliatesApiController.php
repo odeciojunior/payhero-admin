@@ -22,11 +22,9 @@ use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Services\AffiliateService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
-use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Affiliates\Transformers\AffiliateResource;
 use Modules\Affiliates\Transformers\AffiliateRequestResource;
-use Illuminate\Support\Facades\Gate;
 
 class AffiliatesApiController extends Controller
 {

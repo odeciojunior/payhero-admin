@@ -151,10 +151,6 @@
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             @include('projectupsellrule::index')
                         </div>
-                        <!-- Painel de Parceiros -->
-                        <div class="tab-pane" id="tab_partners" role="tabpanel">
-                            @include('partners::index')
-                        </div>
                         <!-- Reviews -->
                         <div class="tab-pane" id="tab_project_reviews" role="tabpanel">
                             @include('projectreviews::index')
