@@ -11,6 +11,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
+use Modules\Core\Services\CheckoutService;
 
 class CheckSaleHasValidTrackingListener implements ShouldQueue
 {
@@ -51,6 +52,14 @@ class CheckSaleHasValidTrackingListener implements ShouldQueue
             if (!$hasInvalidOrNotInformedTracking) {
                 $sale->has_valid_tracking = true;
                 $sale->save();
+
+                //TODO: remover quando ajustar
+                if(!$sale->transactions->whereNotNull('gateway_released_at')->count()
+                    && in_array($sale->gateway_id, [14,15])){
+                    $checkoutService = new CheckoutService();
+                    $checkoutService->releasePaymentGetnet($sale->id);
+                }
+
             }
         }
     }
