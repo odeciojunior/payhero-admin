@@ -23,28 +23,27 @@ class TransactionsService
         }
 
         $transactions = Transaction::with('sale')
-                    ->where(
-                        [
-                            ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                            ['status_enum', (new Transaction)->present()->getStatusEnum('paid')],
-                            ['is_waiting_withdrawal', 0],
-                        ]
-                    )->whereHas(
-                        'sale',
-                        function ($query) {
-                            $query->where(
-                                function ($q) {
-                                    $q->where('has_valid_tracking', true)
-                                        ->orWhereNull('delivery_id');
-                                }
-                            )->whereIn('gateway_id', [14, 15]);
+            ->where(
+                [
+                    ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                    ['status_enum', (new Transaction())->present()->getStatusEnum('paid')],
+                    ['is_waiting_withdrawal', 0],
+                ]
+            )->whereHas(
+                'sale',
+                function ($query) {
+                    $query->where(
+                        function ($q) {
+                            $q->where('has_valid_tracking', true)
+                                ->orWhereNull('delivery_id');
                         }
-                    );
+                    )->whereIn('gateway_id', [14, 15]);
+                }
+            );
 
         foreach ($transactions->cursor() as $transaction) {
             try {
                 if (!empty($transaction->company_id)) {
-
                     $transaction->update(
                         [
                             'is_waiting_withdrawal' => 1,
@@ -61,7 +60,5 @@ class TransactionsService
         } catch (Exception $e) {
             report($e);
         }
-
-
     }
 }

@@ -103,7 +103,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
         //Remove temporary files in regiter
-        $schedule->command('check:getnet-transactions')->twiceDaily(3, 16);;
+        $schedule->command('check:getnet-transactions')->twiceDaily(3, 16);
+
+        $schedule->command('redis:update-sale-tracking')->twiceDaily(10, 22);
+
+
     }
 
     /**

@@ -534,19 +534,18 @@ $(document).ready(function () {
                     data += '<tr >';
                     if (value.is_owner && value.sale_id) {
                         data += `<td style="vertical-align: middle;">
-                                        ${value.reason}
-                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
-                                            <span style="color:black;">#${value.sale_id}</span>
-                                        </a><br>
-                                        <small>(Data da venda: ${value.sale_date})</small>
-                                     </td>`;
+                            ${value.reason}
+                            <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
+                                <span style="color:black;">#${value.sale_id}</span>
+                            </a><br>
+                            <small>(Data da venda: ${value.sale_date})</small>
+                         </td>`;
+                    } else if (value.reason === 'Antecipação') {
+                        data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
                     } else {
-                        if (value.reason === 'Antecipação') {
-                            data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
-                        } else {
-                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
-                        }
+                        data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
                     }
+
                     data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                     if (value.type_enum === 1) {
                         data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
@@ -779,7 +778,6 @@ $(document).ready(function () {
     let envDebug = $("meta[name=app-debug]").attr('content');
 
     if (envDebug == 'true') {
-
         rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
     }
 
@@ -827,7 +825,6 @@ $(document).ready(function () {
         let val = $(this).val();
 
         if (val === '') {
-
             $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
             $('#statement_data_type_select').attr('disabled', false).removeClass('disableFields');
         } else {

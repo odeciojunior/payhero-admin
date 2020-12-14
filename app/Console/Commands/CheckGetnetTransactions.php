@@ -31,13 +31,8 @@ class CheckGetnetTransactions extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
-        (new TransactionsService)->verifyTransactions();
+        (new TransactionsService())->verifyTransactions();
     }
 }
