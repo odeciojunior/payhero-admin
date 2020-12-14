@@ -105,7 +105,7 @@ $(document).ready(function () {
     //Verifica se o saque está liberado
     function checkAllowed() {
         $.ajax({
-            url: "/api/withdrawals/checkallowed",
+            url: "/api/old_withdrawals/checkallowed",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -143,7 +143,7 @@ $(document).ready(function () {
         loadOnAny('.price', false, balanceLoader);
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
-            url: "api/finances/getbalances/",
+            url: "api/old_finances/getbalances",
             type: "GET",
             data: {company: $("#transfers_company_select option:selected").val()},
             dataType: "json",
@@ -298,7 +298,7 @@ $(document).ready(function () {
                 alertCustom('error', 'Valor do saque inválido!');
             } else {
                 $.ajax({
-                        url: "/api/withdrawals/getaccountinformation",
+                        url: "/api/old_withdrawals/getaccountinformation",
                         type: "POST",
                         dataType: "json",
                         data: {
@@ -407,7 +407,7 @@ $(document).ready(function () {
 
                                     $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                                     $.ajax({
-                                        url: "/api/withdrawals",
+                                        url: "/api/old_withdrawals",
                                         type: "POST",
                                         data: {
                                             company_id: $('#transfers_company_select').val(),
@@ -464,9 +464,9 @@ $(document).ready(function () {
             $("#withdrawals-table-data").html("");
             loadOnTable('#withdrawals-table-data', '#transfersTable');
             if (link == null) {
-                link = '/api/withdrawals';
+                link = '/api/old_withdrawals';
             } else {
-                link = '/api/withdrawals' + link;
+                link = '/api/old_withdrawals' + link;
             }
             $.ajax({
                 method: "GET",
@@ -533,9 +533,9 @@ $(document).ready(function () {
 
         loadOnTable('#table-transfers-body', '#transfersTable');
         if (link == null) {
-            link = '/transfers';
+            link = '/api/old_transfers';
         } else {
-            link = '/transfers' + link;
+            link = '/api/old_transfers' + link;
         }
 
         let data = {
@@ -711,7 +711,7 @@ $(document).ready(function () {
         data['format'] = fileFormat;
         $.ajax({
             method: "POST",
-            url: '/api/finances/export',
+            url: '/api/old_finances/export',
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
