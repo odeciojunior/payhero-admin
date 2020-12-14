@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Observers\SaleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
             report($event->exception);
         });
 
-        //Sale::observe(SaleObserver::class);
+        Sale::observe(SaleObserver::class);
     }
 
     /**
