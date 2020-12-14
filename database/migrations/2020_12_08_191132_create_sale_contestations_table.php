@@ -16,7 +16,7 @@ class CreateSaleContestationsTable extends Migration
         Schema::create('sale_contestations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("sale_id")->nullable();
-            $table->json('data_json')->nullable()->comment('Dados recebido por email de chargeback');;
+            $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

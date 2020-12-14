@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package Modules\Core\Entities
  * @property integer $id
  * @property integer $sale_id
- * @property json $data_json
+ * @property json $data
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -31,7 +31,7 @@ class SaleContestation extends Model
      */
     protected $fillable = [
         'sale_id',
-        'data_json',
+        'data',
         'created_at',
         'updated_at',
         'deleted_at',
