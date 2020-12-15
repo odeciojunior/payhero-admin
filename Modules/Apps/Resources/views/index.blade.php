@@ -7,11 +7,11 @@
 
     </style>
 
-    <div id="project-not-empty" style="display: none">
-        <div class="page">
-            <div class="page-header container">
-                <h1 class="page-title">Aplicativos</h1>
-            </div>
+    <div class="page">
+        <div class="page-header container">
+            <h1 class="page-title">Aplicativos</h1>
+        </div>
+        <div id="project-not-empty" style="display: none">
             <div class="page-content container">
                 <div class="row">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch div-notazz-integration">
@@ -138,14 +138,15 @@
                     </div> --}}
                 </div>
             </div>
-            @endsection
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+        @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
-        {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
-
-        @push('scripts')
-            <script src="{{ asset('modules/apps/js/index.js?v=' . random_int(100, 10000)) }}"></script>
+    @push('scripts')
+        <script src="{{ asset('modules/apps/js/index.js?v=' . random_int(100, 10000)) }}"></script>
     @endpush
+@endsection
+
+

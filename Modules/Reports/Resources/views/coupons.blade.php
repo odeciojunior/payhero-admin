@@ -17,8 +17,6 @@
                     </div>
                 </div>
             </div>
-
-            <div id="loadingOnScreen"></div>
             <div id="project-not-empty" style="display: none">
                 <div id="reports-content" class="page-content container">
                     <div class="row justify-content-between mt-20">

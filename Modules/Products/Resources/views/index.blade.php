@@ -17,8 +17,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="loadingOnScreen"></div>
         <div id="project-not-empty" style="display:none">
            <div class="page-header container pb-0">
                 <div class="card shadow p-20" id="filter-products">

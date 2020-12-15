@@ -71,7 +71,6 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $('#loadingOnScreen').html('');
     $('#loadingOnScreen').append(
         `<div class="ajax-loader">
             <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
@@ -81,7 +80,7 @@ function loadingOnScreen() {
 }
 
 function loadingOnScreenRemove() {
-    $('#loadingOnScreen').html('');
+    $('#loadingOnScreen').hide();
     $('#btn-modal').show();
 }
 

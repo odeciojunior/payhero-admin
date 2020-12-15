@@ -179,8 +179,6 @@
             </div>
         </div>
             <!-- Fim - Modal de Instruções -->
-
-        <div id="loadingOnScreen"></div>
         <div id="project-not-empty" style="display:none">
             <div class="page-content container">
                 <!-- Filtro -->

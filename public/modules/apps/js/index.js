@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-    updateUsedApps();
 
     function updateUsedApps() {
         loadOnAny('.page', false);
@@ -75,7 +74,7 @@ $(document).ready(function () {
     getProjects();
 
     function getProjects() {
-        loadOnAny('.page-content');
+        loadingOnScreen()
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -85,22 +84,22 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove()
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    $("#export-excel").show()
+
+                    updateUsedApps();
 
                 } else {
-                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
 
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove()
             }
         });
     }

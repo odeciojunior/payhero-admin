@@ -8,7 +8,6 @@
         <div class="page-header container">
             <h1 class="page-title">Atendimento</h1>
         </div>
-        <div id="loadingOnScreen"></div>
         <div class="page-content container">
             <div class='row'>
                 <div class='col-12 col-lg-12'>

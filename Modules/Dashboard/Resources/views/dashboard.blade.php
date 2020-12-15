@@ -26,7 +26,6 @@
                 </div>
             </div>
         </div>
-        <div id="loadingOnScreen"></div>
         <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
             <div class="row">

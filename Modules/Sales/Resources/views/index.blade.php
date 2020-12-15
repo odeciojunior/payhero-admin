@@ -58,8 +58,6 @@
                         </div>
                     @endif
                 </div>
-
-                <div id="loadingOnScreen"></div>
                 <div id="project-not-empty" style="display:none">
                 <div class="page-content container">
                     <!-- Filtro -->
