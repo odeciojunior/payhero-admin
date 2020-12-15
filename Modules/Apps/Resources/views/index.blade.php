@@ -7,7 +7,7 @@
 
     </style>
 
-    <div id="project-not-empty">
+    <div id="project-not-empty" style="display: none">
         <div class="page">
             <div class="page-header container">
                 <h1 class="page-title">Aplicativos</h1>

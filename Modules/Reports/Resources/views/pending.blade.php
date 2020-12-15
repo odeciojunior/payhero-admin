@@ -18,7 +18,9 @@
                     </div>
                 </div>
             </div>
-            <div id="project-not-empty">
+
+            <div id="loadingOnScreen"></div>
+            <div id="project-not-empty" style="display: none">
                 <div id="reports-content" class="page-content container">
                     <div class="row justify-content-between mt-20">
                         <div class="col-lg-12">
@@ -153,8 +155,8 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/modules/reports/js/detail.js?v=17') }}"></script>
-    <script src='{{asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000))}}'></script>
+    <script src="{{ asset('modules/reports/js/detail.js?v=17') }}"></script>
+    <script src='{{ asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000)) }}'></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
 @endpush

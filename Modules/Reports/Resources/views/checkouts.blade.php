@@ -20,7 +20,8 @@
             </div>
         </div>
 
-        <div id="project-not-empty">
+        <div id="loadingOnScreen"></div>
+        <div id="project-not-empty" style="display: none">
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">

@@ -34,7 +34,7 @@
         </div>
 
         <div id="loadingOnScreen"></div>
-        <div id="project-not-empty">
+        <div id="project-not-empty" style="display: none">
             <div class='page-content container' style='display:block'>
                 <!-- Filtro -->
                 <div class='fixhalf'></div>

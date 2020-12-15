@@ -17,8 +17,10 @@
                     </div>
                 </div>
             </div>
-            <div id="project-not-empty">
-                <div id="reports-content" class="page-content container" style="display:none">
+
+            <div id="loadingOnScreen"></div>
+            <div id="project-not-empty" style="display: none">
+                <div id="reports-content" class="page-content container">
                     <div class="row justify-content-between mt-20">
                         <div class="col-lg-12">
                             <form id='filter_form'>

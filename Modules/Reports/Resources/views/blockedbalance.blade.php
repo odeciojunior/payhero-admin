@@ -44,8 +44,10 @@
                 </div>
             </div>
         </div>
-        <div id="project-not-empty">
-            <div class="page-content container" style="display:none">
+
+        <div id="loadingOnScreen"></div>
+        <div id="project-not-empty" style="display: none">
+            <div class="page-content container">
                 <!-- Filtro -->
                 <div class="fixhalf"></div>
                 <form id='filter_form'>

@@ -73,7 +73,8 @@ $(document).ready(function () {
     getProjects();
 
     function getProjects() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -83,7 +84,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -107,7 +108,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                 }
 
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
             }
         });
     }

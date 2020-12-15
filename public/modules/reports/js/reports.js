@@ -1,5 +1,7 @@
 $(function () {
 
+    loadingOnScreen();
+
     $.ajax({
         method: "GET",
         url: "/api/projects/?select=true",
@@ -9,6 +11,7 @@ $(function () {
             'Accept': 'application/json',
         },
         error: function error(response) {
+            loadingOnScreenRemove();
             $("#modal-content").hide();
             errorAjaxResponse(response);
         },
@@ -32,6 +35,8 @@ $(function () {
                 $("#project-not-empty").hide();
                 $("#project-empty").show();
             }
+
+            loadingOnScreenRemove();
         }
     });
 
@@ -94,7 +99,6 @@ $(function () {
 
                 var table_data_itens = '';
                 if (!isEmpty(response.plans)){
-                    console.log('entrei', response.plans)
                     $.each(response.plans, function (index, data) {
                         table_data_itens += '<tr>';
                         table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
@@ -104,7 +108,6 @@ $(function () {
                     });
                 } else {
                     table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda </td> </tr>`;
-                    console.log(table_data_itens)
                 }
 
                 $('#origins-table-itens').html("");

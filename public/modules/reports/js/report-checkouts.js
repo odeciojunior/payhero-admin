@@ -1,4 +1,5 @@
 $(function () {
+    loadingOnScreen();
 
     $.ajax({
         method: "GET",
@@ -10,6 +11,8 @@ $(function () {
         },
         error: function error(response) {
             $("#modal-content").hide();
+
+            loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -32,6 +35,8 @@ $(function () {
                 $("#project-not-empty").hide();
                 $("#project-empty").show();
             }
+
+            loadingOnScreenRemove();
         }
     });
 

@@ -92,7 +92,7 @@ $(document).ready(function () {
 
     // Obtem o os campos dos filtros
     function getProjects() {
-        loadOnAny('.page');
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -102,7 +102,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -126,7 +126,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                 }
 
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
             }
         });
     }

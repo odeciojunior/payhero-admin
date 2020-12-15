@@ -19,7 +19,8 @@
                 </div>
             </div>
         </div>
-        <div id="project-not-empty">
+        <div id="loadingOnScreen"></div>
+        <div id="project-not-empty" style="display: none">
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
@@ -334,6 +335,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=4')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=' . random_int(100, 10000))}}'></script>
 @endpush
 
