@@ -477,17 +477,13 @@ $.fn.shake = function () {
 /**
  * Menu implementation
  */
-$(document).ready(() => {
-    var htmlEl = $('html')
+$(document).ready(function () {
     var bodyEl = $('body')
-    $('.hamburger').on('click', function () {
-        $(this).toggleClass('hamburger-arrow-left')
+    var menuBarToggle = $('[data-toggle="menubar"]');
+    menuBarToggle.off().on('click', function () {
         bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
+        menuBarToggle.toggleClass('hided')
         $('.site-menu-item.has-sub').removeClass('active')
-        // htmlEl.toggleClass('css-menubar')
-        // site-menubar-unfold
-        // site-menubar-keep
-        // site-menubar-hover
     })
 
     var siteMenuItems = $('.site-menu-item.has-sub')

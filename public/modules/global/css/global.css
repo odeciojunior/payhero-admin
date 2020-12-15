@@ -389,3 +389,10 @@ a.label {
     transform: rotateY(0deg) rotate(90deg);
     transition: transform 0.5s;
 }
+
+@media (max-width: 968px) {
+    .site-menubar-fold .page, .site-menubar-fold .site-footer {
+        margin-left: 0px;
+        transition: all .25s;
+    }
+}
