@@ -57,7 +57,7 @@ $(document).ready(function () {
     }
 
     function getTickets(link = null) {
-        loadOnAny('.page-content');
+        loadingOnScreen();
 
         if (link !== null) {
             pageCurrent = link;
@@ -91,12 +91,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
-
             },
             success: (response) => {
-                loadOnAny('.page-content', true);
+
                 $("#div-tickets").html('');
                 $("#div-ticket-empty").hide();
                 $("#div-tickets").show();
@@ -177,6 +176,9 @@ $(document).ready(function () {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
+
+                loadingOnScreenRemove();
+
                 let filter = {...getFilters(), page: pageCurrent || null};
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);

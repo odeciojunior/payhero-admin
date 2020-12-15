@@ -135,7 +135,7 @@
             <div id='div-ticket-empty' class='row' style='display:none;'>
                 <div class='col-12 col-lg-12'>
                     <div class="card card-shadow bg-white card-left orange">
-                        <div class='card-header bg-white font-size-14 text-center  py-20'>Nenhum chamado encontrado</div>
+                        <div class='card-header bg-white font-size-16 text-center py-20 d-flex justify-content-center align-items-center' style="height: 135.35px">Nenhum chamado encontrado</div>
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@
     </div>
     <!-- Modal detalhes do ticket -->
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=13')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=15')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
