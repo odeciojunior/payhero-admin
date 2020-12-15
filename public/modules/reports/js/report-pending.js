@@ -54,7 +54,8 @@ $(document).ready(function () {
 
     function getFilters(urlParams = false) {
         let data = {
-            'project': $("#projeto").val(),
+            'company': $("#company").val(),
+            'project': $("#project").val(),
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
             'payment_method': $("#forma").val(),
@@ -74,7 +75,34 @@ $(document).ready(function () {
         }
     }
 
+    getCompanies();
     getProjects();
+
+    function getCompanies() {
+        loadOnAny('.page-content');
+        $.ajax({
+            method: "GET",
+            //url: '/api/projects?select=true',
+            url: '/api/companies?select=true',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.page-content', true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (index, company) {
+                        $('#company').append('<option value="' + company.id + '">' + company.name + '</option>')
+                    });
+                }
+                loadOnAny('.page-content', true);
+                atualizar();
+            }
+        });
+    }
 
     function getProjects() {
         loadOnAny('.page-content');
@@ -97,7 +125,7 @@ $(document).ready(function () {
                     $("#export-excel").show()
 
                     $.each(response.data, function (i, project) {
-                        $("#projeto").append($('<option>', {
+                        $("#project").append($('<option>', {
                             value: project.id,
                             text: project.name
                         }));
@@ -187,6 +215,7 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#body-table-pending').html('');
                 $('.table-pending').addClass('table-striped');
+                console.log(response)
 
                 if (!isEmpty(response.data)) {
                     console.log(response.data)

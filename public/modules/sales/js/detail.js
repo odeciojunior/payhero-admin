@@ -165,7 +165,7 @@ $(() => {
         $('#modal_detalhes').modal('show');
         $("#refundAmount").mask('##.###,#0', {reverse: true});
         $("#refundBilletAmount").mask('##.###,#0', {reverse: true});
-
+        //alert("AQuii");
         $.ajax({
             method: "GET",
             url: '/api/sales/' + sale,
@@ -277,6 +277,8 @@ $(() => {
         } else {
             $('#release-date').text('');
         }
+
+        $('#card-company').text('Empresa responsável pelo faturamento: ' + sale.company_name);
 
         if (!isEmpty(sale.observation)) {
             $('#sale-observation').removeClass('collapse');
@@ -464,6 +466,7 @@ $(() => {
             $('#resendeShopifyOrderButton').attr('sale', '')
         }
         //Detalhes da venda
+        $('#nav-profile #card-copany').text('Empresa: Nome da Empresa'); // + sale.company_name);
         if (sale.payment_method === 1) {
             $('#details-card #card-flag').text('Bandeira: ' + sale.flag);
             $('#details-card #card-installments').text('Quantidade de parcelas: ' + sale.installments_amount);

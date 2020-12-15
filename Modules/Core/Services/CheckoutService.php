@@ -46,7 +46,8 @@ class CheckoutService
         string $client = null,
         string $customerDocument = null,
         string $plan = null
-    ) {
+    )
+    {
         $checkoutModel = new Checkout();
         $domainModel = new Domain();
         $affiliateModel = new Affiliate();
@@ -351,6 +352,7 @@ class CheckoutService
             ];
         }
     }
+
 
     public function releasePaymentGetnet($saleId)
     {

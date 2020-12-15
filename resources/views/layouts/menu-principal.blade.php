@@ -172,12 +172,32 @@
                 </a>
             </li>
         @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @if(!auth()->user()->has_sale_before_getnet)
             <li class="site-menu-item has-sub">
                 <a href="{!! route('finances') !!}">
                     <i class="material-icons align-middle">local_atm</i>
                     <span class="site-menu-title">Finanças</span>
                 </a>
+            </li>
+        @else
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)" id="reports-link">
+                    <i class="material-icons align-middle">local_atm</i>
+                    <span class="site-menu-title">Finanças</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item has-sub">
+                        <a href="{!! route('finances') !!}">
+                            <span class="site-menu-title">Extrato</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('old-finances') }}">
+                            <span class="site-menu-title">Extrato (antigo)</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
@@ -201,11 +221,6 @@
                             <span class="site-menu-title">Acessos</span>
                         </a>
                     </li>
-{{--                    <li class="site-menu-item">--}}
-{{--                        <a href="{{ route('reports.projections') }}">--}}
-{{--                            <span class="site-menu-title">Projeções</span>--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
                     <li class="site-menu-item">
                         <a href="{{ route('reports.coupons') }}">
                             <span class="site-menu-title">Cupons de desconto</span>
@@ -232,22 +247,6 @@
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
             </li>
-            {{--            <li class="site-menu-item has-sub  disabled">--}}
-            {{--                <ul class="site-menu-sub">--}}
-            {{--                    <li class="site-menu-item">--}}
-            {{--                        --}}{{-- <a href="{!! route('afiliados.minhasafiliacoes') !!}"> --}}
-            {{--                        <a href="">--}}
-            {{--                            <span class="site-menu-title">Minhas afiliações</span>--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="site-menu-item">--}}
-            {{--                        <a href="">--}}
-            {{--                        --}}{{-- <a href="{!! route('afiliados.meusafiliados') !!}"> --}}
-            {{--                            <span class="site-menu-title">Meus afiliados</span>--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                </ul>--}}
-            {{--            </li>--}}
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
@@ -275,67 +274,7 @@
         @endif
     </ul>
 </div>
-{{--FIM DA SIDEBAR--}}
-{{--SIDE BAR TESTE--}}
-{{--<style>
-    .hidden{
-        display:none;
-    }
-</style>
-<div class="site-menubar">
-    <ul class="site-menu" style="margin-top:10px">
-        <li id='sale-menu' class="site-menu-item">
-            <a id="sales-link" data-toggle="accordion" data-target="sale-menu-sub">
-                <!-- <i class="material-icons align-middle"><span class="mm-opended-hidden">shopping_basket</span></i> -->
-                <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79zM9 9l3-4.4L15 9H9zm3 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-                </svg>
-                <span class="site-menu-title">Vendas</span>
-                <span class="site-menu-arrow"></span>
-            </a>
-        </li>
-        <ul id='sale-menu-sub' class="accordion">
-            <li class="site-menu-item">
-                <a href="{!! route('sales') !!}">
-                    <span class="site-menu-title">Visão geral</span>
-                </a>
-            </li>
-            <li class="site-menu-item">
-                <a href="{!! route('cartrecovery') !!}">
-                    <span class="site-menu-title">Recuperação</span>
-                </a>
-            </li>
-        </ul>
-    </ul>
-</div>--}}
-{{--<script>
-    $('#sale-menu').on('click',function(){
-        if($('#sale-menu-sub').css('display') == 'none'){
-            $('#sale-menu-sub').show('slow');
-        }else{
-            $('#sale-menu-sub').hide('slow')
-        }
-    })
-</script>--}}
-{{--FIM DA SIDEBAR TESTE--}}
 
-
-<!--div class="site-menubar-footer">
-      <div class="menu-footer-content hide-menu fold-hide"> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
-
-    <a href="javascript: void(0);" data-placement="center" data-toggle="tooltip" data-original-title="Settings">
-      <span class="icon wb-settings" aria-hidden="true"></span>
-      <div class="menu-footer-content hide-menu "> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
-    </a>
-    <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">
-      <span class="icon wb-eye-close" aria-hidden="true"></span>
-    </a>
-    <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Logout">
-      <span class="icon wb-power" aria-hidden="true"></span>
-    </a>
-
-</div-->
 </div>
 <script>
     var links = $('.site-menubar .site-menu-item a');
@@ -345,13 +284,4 @@
         }
     });
 
-    // $( document ).ready(function() {
-    //   if ('mm.panels').hasClass('is-enabled') {
-    //     $('.menu-footer').hide;
-    //   }
-
-    //   if('mm.panels').hasClass('is-disabled') {
-    //     $('.menu-footer').show;
-    //   }
-    // });
 </script>

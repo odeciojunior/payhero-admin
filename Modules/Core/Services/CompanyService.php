@@ -14,6 +14,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Tracking;
 use Illuminate\Support\Facades\DB;
+use LogicException;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
@@ -23,6 +24,10 @@ use Modules\Core\Events\UpdateCompanyGetnetEvent;
  */
 class CompanyService
 {
+
+    const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
+    const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
+
     public function getCompaniesUser($paginate = false)
     {
         try {
@@ -270,33 +275,50 @@ class CompanyService
         return null;
     }
 
-    public function getPendingBalance(Company $company)
+    public function getPendingBalance(Company $company, ?int $liquidationType = null)
     {
         $transactionModel = new Transaction();
 
         $pendingBalance = $transactionModel->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-            // ->whereDate('release_date', '>', Carbon::today()->toDateString())
-            ->sum('value');
+            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'));
 
-        $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
-            ->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()
-                ->getStatusEnum('anticipated'))
-            ->sum('value');
-
-        $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas(
-            'transaction',
-            function ($query) use ($company) {
-                $query->where('status_enum', (new Transaction())->present()->getStatusEnum('anticipated'));
-                $query->where('company_id', $company->id);
+        if(!empty($liquidationType)) {
+            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15]);
             }
-        )->sum('value');
+            elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
+            }
+        }
 
-        $pendingBalance += ($transactionsAnticipatedValue - $anticipatedValue);
-
-        return $pendingBalance;
+        return $pendingBalance->sum('value');
     }
+
+    public function getAvailableBalance(Company $company, ?int $liquidationType = null) 
+    {
+        if($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+            return $company->balance;
+        }
+        elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+            return $company->transactions()
+                           ->whereIn('gateway_id', [14, 15])
+                           ->where('is_waiting_withdrawal', 1)
+                           ->sum('value');
+        }
+        elseif(empty($liquidationType)) {
+
+            $transactionsValue = $company->transactions()
+                                        ->whereIn('gateway_id', [14, 15])
+                                        ->where('is_waiting_withdrawal', 1)
+                                        ->sum('value');
+
+            return $transactionsValue + $company->balance;
+        }
+
+        throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
+        
+    }
+
     public function hasCompanyValid()
     {
         $companyModel = new Company();
@@ -366,7 +388,7 @@ class CompanyService
         return false;
     }
 
-    public function verifyFieldsEmpty(Company $company)
+    public function verifyFieldsEmpty(Company $company): bool
     {
         if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
             // informações basicas
@@ -388,19 +410,6 @@ class CompanyService
             if (empty($company->country)) {
                 return true;
             }
-            // informações complementares
-            /*if (empty($company->extra_document)) {
-                return true;
-            }
-            if (empty($company->document_issue_date)) {
-                return true;
-            }
-            if (empty($company->document_issuer)) {
-                return true;
-            }
-            if (empty($company->document_issuer_state)) {
-                return true;
-            }*/
         }
 
         if (empty($company->fantasy_name)) {
@@ -531,9 +540,6 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 $arrayFields[] = 'document_issuer_state';
             }
-//            if (empty($company->account_type)) {
-//                $arrayFields[] = 'account_type';
-//            }
         } else {
             if (empty($company->fantasy_name)) {
                 $arrayFields[] = 'fantasy_name';
@@ -550,21 +556,18 @@ class CompanyService
             if (empty($company->account)) {
                 $arrayFields[] = 'account';
             }
-//            if (empty($company->account_type)) {
-//                $arrayFields[] = 'account_type';
-//            }
         }
 
         return $arrayFields;
     }
 
-    public function getBlockedBalance(int $companyId)
+    public function getBlockedBalance(Company $company)
     {
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
 
         return $transactiosModel->whereNull('invitation_id')
-            ->where('company_id', $companyId)
+            ->where('company_id', $company->id)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
             ->whereDate('created_at', '>=', '2020-01-01')
             ->where(function ($query) use ($salesModel) {
@@ -588,13 +591,13 @@ class CompanyService
             })->sum('value');
     }
 
-    public function getBlockedBalancePending(int $companyId)
+    public function getBlockedBalancePending(Company $company)
     {
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
 
         return $transactiosModel->whereNull('invitation_id')
-            ->where('company_id', $companyId)
+            ->where('company_id', $company->id)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
             ->whereDate('created_at', '>=', '2020-01-01')
             ->whereHas('sale', function ($query) use ($salesModel) {
