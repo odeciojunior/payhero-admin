@@ -110,18 +110,6 @@ class GetNetStatementService
 
         $this->filters = $filters;
 
-        //$saleIds = [865722, 864761, 864758, 864759, 864757, 864711, 864710, 864709, 860785, 838603, 838587];
-        //->whereIn('id', $saleIds)
-        /*$sales = Sale::where('gateway_id', 15)->orderBy('id', 'desc')->get();
-        foreach ($sales as $sale) {
-            Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
-        }
-
-        //foreach ($saleIds as $sale_id) {
-        //    echo "<br> - " . (Redis::connection('redis-statement')->get("sale:has:tracking:{$sale_id}"));
-        //}
-        dd('FIM');*/
-
         $transactions = array_reverse($data->list_transactions) ?? [];
         $adjustments = array_reverse($data->adjustments) ?? [];
         $chargeback = array_reverse($data->chargeback) ?? [];
@@ -267,8 +255,12 @@ class GetNetStatementService
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
 
                 } elseif (
-                    $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
-                    || self::TRANSACTION_STATUS_CODE_ESTORNADA
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
+                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                    )
+                    ||
+                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
                 ) {
 
                     $details->setStatus('Liquidado')
@@ -277,14 +269,15 @@ class GetNetStatementService
 
                 } else {
 
-                    $details->setStatus(json_encode([
+                    /*$details->setStatus(json_encode([
                         'hasOrderId' => $hasOrderId,
                         'isTransactionCredit' => $isTransactionCredit,
                         'isReleaseStatus' => $isReleaseStatus,
                         'hasValidTracking' => $hasValidTracking,
                         'transactionStatusCode' => $transactionStatusCode,
                         'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
-                    ]))
+                    ]))*/
+                    $details->setStatus('-')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_ERROR);
                 }
