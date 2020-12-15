@@ -122,7 +122,7 @@ $(() => {
      */
     function getProjects() {
 
-        loadOnAny('.page-content');
+        loadingOnScreen();
 
         $.ajax({
             method: 'GET',
@@ -134,7 +134,7 @@ $(() => {
             },
             error: response => {
                 errorAjaxResponse(response);
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
             },
             success: response => {
                 if (!isEmpty(response.data)) {
@@ -158,7 +158,7 @@ $(() => {
                     $("#project-empty").show();
                 }
 
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
             }
         });
     }

@@ -26,7 +26,8 @@
                 </div>
             </div>
         </div>
-        <div class="page-content container" style="display:none">
+        <div id="loadingOnScreen"></div>
+        <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
             <div class="row">
                 <div class="col-6 col-lg-3">
@@ -230,7 +231,9 @@
                 </div>
             </div>
         </div>
-        @include('companies::empty')
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
 

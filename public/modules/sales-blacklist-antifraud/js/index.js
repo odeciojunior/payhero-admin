@@ -95,7 +95,7 @@ $(document).ready(function () {
     getProjects();
 
     function getProjects() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: 'GET',
             url: 'api/projects?select=true',
@@ -105,7 +105,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 if (!isEmpty(response.data)) {
@@ -122,12 +122,12 @@ $(document).ready(function () {
 
                     updateList();
                 } else {
-                    $("#export-excel").hide()
+                    $("#project-empty").show();
                     $("#project-not-empty").hide();
-                    // $("#project-empty").show();
+                    // $("#export-excel").hide()
                 }
 
-                    loadOnAny('.page-content', true);
+                    loadingOnScreenRemove();
             }
         });
     }

@@ -354,3 +354,39 @@ a.label {
         margin-bottom: 90px;
     }
 }
+
+.ajax-loader {
+    /*visibility: hidden;*/
+    background-color: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    text-align: center;
+}
+
+.ajax-loader img {
+    position: relative;
+    top: 37%;
+}
+
+.ajax-loader span {
+    position: fixed;
+    top: 55%;
+    width: 100%;
+    right: 0;
+    font-size: 18px;
+    font-weight: bolder;
+    /*background: -webkit-linear-gradient(left, #E6774C , #F92278);*/
+    /*background: -o-linear-gradient(right, #E6774C, #F92278);*/
+    /*background: -moz-linear-gradient(right, #E6774C, #F92278);*/
+    background: linear-gradient(74deg, #E6774C, #F17227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /*    -webkit-animation: flickerAnimation 5s infinite;
+        -moz-animation: flickerAnimation 5s infinite;
+        -o-animation: flickerAnimation 5s infinite;
+        animation: flickerAnimation 5s infinite;*/
+}

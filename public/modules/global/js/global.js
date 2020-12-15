@@ -72,7 +72,12 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     $('#loadingOnScreen').html('');
-    $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
+    $('#loadingOnScreen').append(
+        `<div class="ajax-loader">
+            <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
 }
 
 function loadingOnScreenRemove() {

@@ -72,6 +72,8 @@ $(document).ready(function () {
      * Busca os projetos para montar o select
      */
     function getProjects() {
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -81,6 +83,8 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
+                console.log('entrei erro')
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -96,13 +100,15 @@ $(document).ready(function () {
                         }));
                     });
 
-                    atualizar();
+                    updateSalesRecovery();
 
                 } else {
                     $("#export-excel").hide()
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
+
+                loadingOnScreenRemove();
             }
         });
     }

@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    getDataDashboard();
-
+    getProjects();
     $("#company").on("change", function () {
         updateValues();
     });
     let userAccepted = true;
     function getDataDashboard() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -16,7 +15,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -34,7 +33,7 @@ $(document).ready(function () {
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
-                    loadOnAny('.page-content', true);
+                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
@@ -105,7 +104,7 @@ $(document).ready(function () {
             error: function error(response) {
                 loadOnAny('.card-text', true)
                 loadOnAny('.update', true)
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
             },
@@ -129,7 +128,8 @@ $(document).ready(function () {
                 // loadOnAny('.card-loading', true)
                 loadOnAny('.card-text', true)
                 loadOnAny('.update', true)
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
+                $('.ajax-loader').css("visibility", "hidden");
             }
         });
     }
@@ -300,4 +300,35 @@ $(document).ready(function () {
     $("#closeWelcome").click(function () {
         $("#cardWelcome").slideUp("600");
     });
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    getDataDashboard();
+
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 });
