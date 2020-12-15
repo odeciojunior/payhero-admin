@@ -35,8 +35,8 @@ class TrackingService
     }
 
     /**
-     * @param  Tracking  $tracking
-     * @param  bool  $refresh
+     * @param Tracking $tracking
+     * @param bool $refresh
      * @return mixed
      * @throws PresenterException
      */
@@ -65,8 +65,8 @@ class TrackingService
                 }
             }
             if ($refresh && !in_array($item->system_status_enum, [
-                $trackingModel->present()->getSystemStatusEnum('checked_manually'),
-            ])) {
+                    $trackingModel->present()->getSystemStatusEnum('checked_manually'),
+                ])) {
                 $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
                     $item->productPlanSale);
             }
@@ -81,7 +81,7 @@ class TrackingService
     }
 
     /**
-     * @param  Tracking  $tracking
+     * @param Tracking $tracking
      * @param $apiTracking
      * @return Collection
      * @throws PresenterException
@@ -95,11 +95,11 @@ class TrackingService
 
         if (!empty($apiCheckpoints)) {
             foreach ($apiCheckpoints as $log) {
-                $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
+                $event = $log->Details ? $log->StatusDescription . ' - ' . $log->Details : $log->StatusDescription;
 
                 if (!empty($event)) {
                     $status_enum = $this->parseStatusApi($log->checkpoint_status ?? '');
-                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                     //remove caracteres chineses e informações indesejadas
                     $blacklistWords = [
@@ -165,9 +165,9 @@ class TrackingService
     }
 
     /**
-     * @param  string  $trackingCode
-     * @param  stdClass|null  $apiResult
-     * @param  ProductPlanSale  $productPlanSale
+     * @param string $trackingCode
+     * @param stdClass|null $apiResult
+     * @param ProductPlanSale $productPlanSale
      * @return false|int|mixed|string
      * @throws PresenterException
      */
@@ -192,22 +192,26 @@ class TrackingService
 
         //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
         $sale = $productPlanSale->sale;
-        $exists = $salesModel->whereHas('tracking',
+        $existsQuery = $salesModel->whereHas('tracking',
             function ($query) use ($trackingModel, $trackingCode, $productPlanSale) {
                 $query->where('tracking_code', $trackingCode)
                     ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
             })->where('id', '!=', $sale->id)
-            ->where('id', '!=', $sale->upsell_id)
-            ->where('upsell_id', '!=', $sale->id)
-            ->where('upsell_id', '!=', $sale->upsell_id)
-            ->where(function ($query) use ($sale) {
-                $query->where('customer_id', '!=', $sale->customer_id)
-                    ->orWhere('delivery_id', '!=', $sale->delivery_id);
-            })->whereIn('status', [
-                    $salesModel->present()->getStatus('approved'),
-                    $salesModel->present()->getStatus('in_dispute'),
-                ]
-            )->exists();
+            ->where('id', '!=', $sale->upsell_id);
+
+        if (!empty($sale->upsell_id)) {
+            $existsQuery->where('upsell_id', '!=', $sale->id)
+                ->where('upsell_id', '!=', $sale->upsell_id);
+        }
+
+        $exists = $existsQuery->where(function ($query) use ($sale) {
+            $query->where('customer_id', '!=', $sale->customer_id)
+                ->orWhere('delivery_id', '!=', $sale->delivery_id);
+        })->whereIn('status', [
+                $salesModel->present()->getStatus('approved'),
+                $salesModel->present()->getStatus('in_dispute'),
+            ]
+        )->exists();
 
         if ($exists) {
             $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
@@ -217,16 +221,17 @@ class TrackingService
     }
 
     /**
-     * @param  string  $trackingCode
-     * @param  ProductPlanSale  $productPlanSale
-     * @param  bool  $logging
+     * @param string $trackingCode
+     * @param ProductPlanSale $productPlanSale
+     * @param bool $logging
      * @return Tracking|null
      */
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
         $logging = false
-    ) {
+    )
+    {
         try {
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
@@ -257,7 +262,7 @@ class TrackingService
 
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
-                $oldTracking = (object) $tracking->getAttributes();
+                $oldTracking = (object)$tracking->getAttributes();
 
                 //atualiza
                 $tracking->update($newAttributes);
@@ -291,7 +296,7 @@ class TrackingService
 
     /**
      * @param $filters
-     * @param  int  $userId
+     * @param int $userId
      * @return Builder
      * @throws PresenterException
      */
@@ -315,7 +320,7 @@ class TrackingService
         $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-            $query->whereBetween('end_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->whereIn('status', $saleStatus)
                 ->where('owner_id', $userId);
 
@@ -398,7 +403,7 @@ class TrackingService
             $productPlanSales->whereHas(
                 'tracking',
                 function ($query) use ($filters) {
-                    $query->where('tracking_code', 'like', '%'.$filters['tracking_code'].'%');
+                    $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
                 }
             );
         }
