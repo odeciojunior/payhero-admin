@@ -364,6 +364,15 @@ a.label {
     }
 }
 
+.site-menubar-fold .site-menu-title {
+    width: 20px;
+}
+
+.site-menubar-unfold .site-menu-title,
+.site-menubar-hover .site-menu-title{
+    width: 100%;
+}
+
 .site-menubar:not(.mm-menu) .site-menu-item .site-menu-sub {
     display: block;
     max-height: 0;
@@ -371,20 +380,17 @@ a.label {
     transition: all ease .75s;
 }
 
-.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-sub,
-.site-menubar:not(.mm-menu) .site-menu-item:hover .site-menu-sub {
+.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-sub {
     display: block;
     opacity: 1;
     max-height: 100vh;
     transition: all ease .75s;
 }
 
-.site-menubar:not(.mm-menu) .site-menu-item .site-menu-arrow,
 .site-menubar:not(.mm-menu) .site-menu-item .site-menu-arrow {
     transition: transform 0.5s
 }
 
-/*.site-menubar:not(.mm-menu) .site-menu-item:hover .site-menu-arrow, */
 .site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-arrow {
     transform: rotateY(0deg) rotate(90deg);
     transition: transform 0.5s;

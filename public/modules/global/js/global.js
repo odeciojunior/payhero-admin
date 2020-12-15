@@ -491,10 +491,12 @@ $(document).ready(function () {
     siteMenuBar.on('mouseenter', function () {
         bodyEl.addClass('site-menubar-hover')
     }).on('mouseleave', function () {
-        bodyEl.removeClass('site-menubar-hover')
-        if (!bodyEl.hasClass('site-menubar-unfold')) {
-            siteMenuItems.removeClass('active')
-        }
+        setTimeout(function () {
+            bodyEl.removeClass('site-menubar-hover')
+            //if (!bodyEl.hasClass('site-menubar-unfold')) {
+                //siteMenuItems.removeClass('active')
+            //}
+        }, 1000)
     })
 
     siteMenuItems.on('click', function () {

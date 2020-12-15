@@ -59,7 +59,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=10') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=11') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -129,7 +129,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=17') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=18') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
