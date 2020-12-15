@@ -269,14 +269,15 @@ class GetNetStatementService
 
                 } else {
 
-                    $details->setStatus(json_encode([
+                    /*$details->setStatus(json_encode([
                         'hasOrderId' => $hasOrderId,
                         'isTransactionCredit' => $isTransactionCredit,
                         'isReleaseStatus' => $isReleaseStatus,
                         'hasValidTracking' => $hasValidTracking,
                         'transactionStatusCode' => $transactionStatusCode,
                         'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
-                    ]))
+                    ]))*/
+                    $details->setStatus('-')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_ERROR);
                 }
