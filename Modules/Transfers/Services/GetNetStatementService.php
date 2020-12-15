@@ -110,23 +110,10 @@ class GetNetStatementService
 
         $this->filters = $filters;
 
-        //$saleIds = [865722, 864761, 864758, 864759, 864757, 864711, 864710, 864709, 860785, 838603, 838587];
-        //->whereIn('id', $saleIds)
-        /*$sales = Sale::where('gateway_id', 15)->orderBy('id', 'desc')->get();
-        foreach ($sales as $sale) {
-            Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
-        }
-
-        //foreach ($saleIds as $sale_id) {
-        //    echo "<br> - " . (Redis::connection('redis-statement')->get("sale:has:tracking:{$sale_id}"));
-        //}
-        dd('FIM');*/
-
         $transactions = array_reverse($data->list_transactions) ?? [];
         $adjustments = array_reverse($data->adjustments) ?? [];
         $chargeback = array_reverse($data->chargeback) ?? [];
 
-        //request()->request->add(['debug' => true]);
         if (request('debug')) {
 
             echo '<pre>';
