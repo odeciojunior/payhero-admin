@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=2') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
     <style>
         .popover {
             left: -50px !important;
@@ -24,16 +24,49 @@
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-
+                <div class="col-6 text-right">
+                    <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
+                        <div class="p-2 align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
+                                 viewBox="0 0 24 24">
+                                <path
+                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
+                            </svg>
+                            <div class="btn-group" role="group">
+                                <button id="bt_get_xls" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                </button>
+                                <button id="bt_get_csv" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-right">.CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="page-content container" style="display:none">
-            <div class="card shadow card-show-content-finances" style="display:none">
-                {{-- MENU TABS --}}
-                <nav class="pt-20" id="menu-tabs-view" style="">
+            {{-- Aviso de Exportação --}}
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                 style="display:none;">
+                <div class="d-flex">
+                    <i class="material-icons mr-10">info</i>
+                    <div class="w-full">
+                        <strong class="font-size-16">Exportando seu relatório</strong>
+                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
+                            tempo, dependendo de quantos registros você estiver exportando.
+                        </p>
+                    </div>
+                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                </div>
+            </div>
+            <div class="card shadow">
+                {{-- TABS --}}
+                <nav class="pt-20" id="menu-tabs-view" style="display:none;">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link "
+                            <a class="nav-item nav-link active"
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
@@ -44,24 +77,24 @@
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link active"
-                               id="nav-statement-tab"
+                            <a class="nav-item nav-link"
+                               id="nav-profile-tab"
                                data-toggle="tab"
-                               href="#nav-statement"
+                               href="#nav-extract"
                                role="tab"
-                               aria-controls="nav-statement"
+                               aria-controls="nav-profile"
                                aria-selected="true"
                             >
-                                Agenda financeira
+                                Extrato
                             </a>
                         </div>
                     </div>
                 </nav>
                 {{-- TABS --}}
-                <div class="p-30 pt-20" id="tabs-view">
+                <div class="p-30 pt-20" id="tabs-view" style="display:none">
                     <div class="tab-content" id="nav-tabContent">
                         {{-- TRANSFERENCIAS --}}
-                        <div class="tab-pane fade show "
+                        <div class="tab-pane fade show active"
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab"
@@ -102,11 +135,11 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
-<!--                                                <div class='input-group-prepend'>
+                                                <div class='input-group-prepend'>
                                                         <span class="input-group-text custom-addon" id="basic-addon1"
                                                               style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
                                                                     class="currency">$</span></span>
-                                                </div>-->
+                                                </div>
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"
@@ -185,23 +218,22 @@
                             </div>
                         </div>
                         {{--EXTRATO--}}
-                        <div style=""
-                             class="tab-pane fade show active"
-                             id="nav-statement"
+                        <div class="tab-pane fade"
+                             id="nav-extract"
                              role="tabpanel"
-                             aria-labelledby="nav-statement-tab">
+                             aria-labelledby="nav-profile-tab">
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-12 fix-5">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2" style="flex:1">
-                                            <p class="sub-pad sub-pad-getnet">
-                                                Para você controlar o fluxo financeiro da sua empresa.
+                                            <h5 class="title-pad"> Extrato </h5>
+                                            <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
                                             </p>
                                         </div>
-                                        <div class="p-2" id="statement-money">
+                                        <div class="p-2">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo no período</h6>
-                                                <h4 id="available-in-period-statement"
+                                                <h4 id="available-in-period"
                                                     style="font-weight: 700;font-size: 25px;display: inline;">
                                                 </h4>
                                                 <div class="grad-border green"></div>
@@ -210,138 +242,80 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 mb-15">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
-                                                <label for="statement_company_select">Empresa</label>
+                                                <label for="extract_company_select">Empresa</label>
                                                 <select class="form-control select-pad" name="company"
-                                                        id="statement_company_select">
-                                                </select>
+                                                        id="extract_company_select"> </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md" style="display:none">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="reason">Razão</label>
+                                            <input type="text" id="reason" class="form-control select-pad"
+                                                   placeholder="Digite a razão. Ex.: Saque">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="transaction">Transação/Antecipação</label>
+                                            <input type="text" id="transaction" class="form-control select-pad"
+                                                   placeholder="Digite o código">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
-                                                <label for="statement_data_type_select">Data</label>
-                                                <select class="form-control select-pad"
-                                                        name="statement_data_type_select"
-                                                        id="statement_data_type_select">
-
-                                                    <option value="schedule_date" selected>
-                                                        Data
-                                                    </option>
-                                                    <option value="transaction_date">
-                                                        Data da venda
-                                                    </option>
-                                                    <option value="liquidation_date">
-                                                        Data da liquidação
-                                                    </option>
+                                                <label for="type">Tipo</label>
+                                                <select class="form-control select-pad" id="type">
+                                                    <option value="">Todos</option>
+                                                    <option value="in">Entrada</option>
+                                                    <option value="out">Saída</option>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md">
-                                            {{--<div class="form-group" style="margin-top:30px">
-                                                <input name="date_range_statement" type="date"
-                                                       id="date_range_statement_unique"
-                                                       class="select-pad" placeholder="Clique para editar...">
-                                            </div>--}}
-
-                                            <div class="form-group">
-                                                <label for="date_range_statement">Período</label>
-                                                <input name="date_range_statement" id="date_range_statement"
-                                                       class="select-pad" placeholder="Clique para editar..." readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6 col-md">
-                                            <label for="forma">Forma de pagamento</label>
-                                            <select name='payment_method' id="payment_method"
-                                                    class="form-control select-pad">
-                                                <option value="ALL">Todos</option>
-                                                <option value="CREDIT_CARD">Cartão de crédito</option>
-                                                <option value="BANK_SLIP">Boleto</option>
-                                            </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                    <div class="row mt-20">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="transaction-value">Valor</label>
+                                            <input type="text" id="transaction-value"
+                                                   class="form-control select-pad withdrawal-value"
+                                                   placeholder="Digite o valor">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
-                                                <label for="statement_status_select">Status</label>
-                                                <select class="form-control select-pad" name="status"
-                                                        id="statement_status_select">
-                                                    <option value="ALL">Todos</option>
-                                                    <option value="WAITING_FOR_VALID_POST">
-                                                        Aguardando postagem válida
-                                                    </option>
-                                                    <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
-                                                    <option value="WAITING_WITHDRAWAL" disabled>Aguardando saque (em
-                                                        breve)
-                                                    </option>
-                                                    <option value="PAID">Liquidado</option>
-                                                    <option value="REVERSED">Estornado</option>
-                                                    <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                    <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                <label for="date_type">Data</label>
+                                                <select class="form-control select-pad" id="date_type">
+                                                    <option value="transfer_date">Data da transferência</option>
+                                                    {{--                                                    <option value="transaction_date">Data da transação</option>--}}
+                                                    <option value="sale_start_date">Data da venda</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="statement_sale">
-                                                    Transação <i class="material-icons gray ml-5 font-size-18"
-                                                                 data-toggle="tooltip"
-                                                                 title=""
-                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">help</i>
-                                                </label>
-                                                <input name="statement_sale" id="statement_sale"
-                                                       class="select-pad" placeholder="Transação">
-                                            </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <input name="date_range" id="date_range" class="select-pad mt-30"
+                                                   placeholder="Clique para editar..." readonly>
                                         </div>
-                                        <div class="mt-30 col-md-4" style="text-align:right">
-                                            <button id="bt_filtro_statement"
-                                                    class="btn btn-primary w-full">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
+                                            <button id="bt_filtro" class="btn btn-primary w-full">
                                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                             </button>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <table id="statementTable" class="table table-condensed unify table-striped">
+                                    <table id='transfersTable' class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
-                                            <th scope="col" class="headCenter" style="width:30%">Razão</th>
-                                            <th scope="col" class="headCenter" style="width:30%">Status</th>
-                                            <th scope="col" class="headCenter" style="width:30%">Data prevista
-                                                <i class="material-icons gray ml-5 font-size-18"
-                                                   data-toggle="tooltip"
-                                                   title=""
-                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                            <th scope="col" class='headCenter' style='width:33%'>Razão</th>
+                                            <th scope="col" class='headCenter' style='width:33%'>Data da transferência
                                             </th>
-                                            <th scope="col" class="headCenter" style="width:10%">Valor</th>
+                                            <th scope="col" class='headCenter' style='width:34%'>Valor</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table-statement-body"
-                                               class="custom-t-body table-statement-body-class">
+                                        <tbody id="table-transfers-body" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    {{-- <section id="paginate">
-                                         <div class="pagination"
-                                              style="margin-top:10px;position:relative;float:right">
-                                             <div class="numbers">
-                                                 <div style=""></div>
-                                             </div>
-                                         </div>
-                                     </section>--}}
-                                    <div id="pagination-statement"
-                                         class="pagination-sm margin-chat-pagination pagination-statement-class"
-                                         style="margin-top:10px;position:relative;float:right">
-
-                                    </div>
-
-                                    {{--<ul id="pagination-statement"
-                                        class="pagination-sm margin-chat-pagination pagination-statement-class"
+                                    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
-                                        --}}{{--js carrega...--}}{{--
-                                    </ul>--}}
+                                        {{--js carrega...--}}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -349,8 +323,8 @@
                 </div>
             </div>
             @include('companies::empty')
-            @include('companies::not_company_approved_getnet')
         </div>
+
 
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
@@ -401,13 +375,11 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-            <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/old-index.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 

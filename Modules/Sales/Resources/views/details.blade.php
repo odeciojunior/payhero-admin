@@ -21,6 +21,7 @@
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
                     <p id='release-date'></p>
+                    <p id='card-company'></p>
                     <div id="status" class="status d-inline">
                     </div>
                     <div class="status d-inline">

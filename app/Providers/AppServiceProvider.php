@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Observers\SaleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         Queue::failing(function (JobFailed $event) {
             report($event->exception);
         });
+
+        Sale::observe(SaleObserver::class);
     }
 
     /**

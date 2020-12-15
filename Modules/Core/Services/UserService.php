@@ -3,20 +3,11 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Log;
-use Modules\Companies\Transformers\CompaniesSelectResource;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 
-/**
- * Class CompaniesService
- * @package Modules\Core\Services
- */
 class UserService
 {
-    public function isDocumentValidated($userId = null)
+    public function isDocumentValidated($userId = null): bool
     {
         $userModel = new User();
         if (empty($userId)) {
@@ -38,7 +29,7 @@ class UserService
         return false;
     }
 
-    public function haveAnyDocumentPending()
+    public function haveAnyDocumentPending(): bool
     {
         $userModel = new User();
         $user = auth()->user();
@@ -55,7 +46,8 @@ class UserService
 
         return true;
     }
-    public function haveAnyDocumentRefused()
+
+    public function haveAnyDocumentRefused(): bool
     {
         $userModel = new User();
         $user = auth()->user();
@@ -63,13 +55,14 @@ class UserService
 
         if (!empty($user)) {
             if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('refused') ||
-                    $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('refused')) {
+                $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('refused')) {
                 return true;
             }
         }
 
         return false;
     }
+
     public function getRefusedDocuments()
     {
         $userModel = new User();
@@ -82,7 +75,7 @@ class UserService
                     $dataDocument = [
                         'date' => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
-                            'definitions.enum.user_document_type.'.$userPresenter->getDocumentType(
+                            'definitions.enum.user_document_type.' . $userPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
@@ -97,7 +90,7 @@ class UserService
         return $refusedDocuments;
     }
 
-    public function verifyCpf($cpf)
+    public function verifyCpf($cpf): bool
     {
         $userModel = new User();
         $cpf = preg_replace("/[^0-9]/", "", $cpf);
@@ -145,9 +138,8 @@ class UserService
     }
 
 
-    public function verifyFieldsEmpty(User $user)
+    public function verifyFieldsEmpty(User $user): bool
     {
-
         if (empty($user->email)) {
             return true;
         } elseif (empty($user->cellphone)) {
@@ -168,14 +160,12 @@ class UserService
             return true;
         } elseif (empty($user->number)) {
             return true;
-        } elseif (empty($user->date_birth)) {
-            return true;
         } else {
             return false;
         }
     }
 
-    public function unfilledFields(User $user)
+    public function unfilledFields(User $user): array
     {
         $arrayFields = [];
 
@@ -215,7 +205,7 @@ class UserService
         return $arrayFields;
     }
 
-    public function verifyIsValidCPF($cpf)
+    public function verifyIsValidCPF($cpf): bool
     {
         $cpf = preg_replace('/[^0-9]/is', '', $cpf);
 
@@ -240,9 +230,10 @@ class UserService
         return true;
     }
 
-    public function verifyExistsCPF ($cpf) {
-        $userModel     = new User();
-        $cpf           = preg_replace("/[^0-9]/", "", $cpf);
+    public function verifyExistsCPF($cpf): bool
+    {
+        $userModel = new User();
+        $cpf = preg_replace("/[^0-9]/", "", $cpf);
 
         $user = $userModel->where('document', $cpf)->first();
         if (!empty($user)) {

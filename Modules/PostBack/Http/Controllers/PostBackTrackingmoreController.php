@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\CheckSaleReleasedEvent;
+use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Services\TrackingmoreService;
 
 class PostBackTrackingmoreController extends Controller
@@ -41,7 +41,7 @@ class PostBackTrackingmoreController extends Controller
                 ])) {
                     $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
                     $tracking->save();
-                    event(new CheckSaleReleasedEvent($tracking->sale_id));
+                    event(new CheckSaleHasValidTrackingEvent($tracking->sale_id));
                 }
             }
 

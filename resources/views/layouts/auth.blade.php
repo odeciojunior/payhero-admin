@@ -43,7 +43,7 @@
     body {
         font-family: 'Muli', sans-serif;
         min-height: 100vh;
-        background: url({{ asset('modules/global/adminremark/assets/images/gradient-bg.png') }}) bottom left no-repeat;
+        background: url(https://app.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
     }
 </style>
 @yield('content')
@@ -58,28 +58,28 @@
     <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/ashoverscroll/jquery-asHoverScroll.js') }}"></script>
-    
+
     <script src="{{ asset('modules/global/adminremark/global/vendor/switchery/switchery.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/intro-js/intro.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/screenfull/screenfull.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/slidepanel/jquery-slidePanel.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-placeholder/jquery.placeholder.js') }}"></script>
-    
+
     <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
-    
+
     <script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/assets/js/Plugin/menu.js') }}"></script>
-    
+
     <script src="{{ asset('modules/global/adminremark/global/js/config/colors.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/assets/js/config/tour.js') }}"></script>
     <script>Config.set('assets', '../../assets');</script>
-    
+
     <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/js/Plugin/asscrollable.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/js/Plugin/slidepanel.js') }}"></script>

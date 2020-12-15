@@ -7,26 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
-use Modules\Affiliates\Http\Requests\AffiliateUpdateRequest;
-use Modules\Affiliates\Transformers\ProjectAffiliateResource;
 use Modules\Affiliates\Transformers\AffiliateLinkResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
-use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\AffiliateEvent;
-use Modules\Core\Events\AffiliateRequestEvent;
-use Modules\Core\Events\EvaluateAffiliateRequestEvent;
-use Modules\Core\Services\AffiliateService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\UserService;
-use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Affiliates\Transformers\AffiliateResource;
-use Modules\Affiliates\Transformers\AffiliateRequestResource;
-use Illuminate\Support\Facades\Gate;
 
 class AffiliateLinksApiController extends Controller
 {

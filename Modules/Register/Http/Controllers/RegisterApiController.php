@@ -21,6 +21,7 @@ use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\IdwallService;
 use Modules\Core\Services\IpService;
 use Modules\Core\Services\SmsService;
