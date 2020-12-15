@@ -67,6 +67,39 @@ $(document).ready(function () {
         });
     }
 
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: 'GET',
+            url: 'api/projects?select=true',
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#div-create").show()
+
+                    updateProducts();
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#div-create").hide()
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
+
     function updateProducts(link = null) {
         if (link !== null) {
             pageCurrent = link;
@@ -184,7 +217,7 @@ $(document).ready(function () {
                     $("#data-table-products, #pagination-products").html('');
                     $(".products-is-empty").show();
                 }
-                setTimeout(() => {  loadOnAny('.page-content', true); }, 1000);
+                setTimeout(() => {  loadOnAny('.page-content', true); }, 2000);
             }
         });
 

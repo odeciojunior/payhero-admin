@@ -3,7 +3,7 @@ $(() => {
     index();
 
     function index() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             url: '/api/projects',
             data: {
@@ -55,11 +55,9 @@ $(() => {
                                     'Accept': 'application/json',
                                 },
                                 error: function (response) {
-                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                 },
                                 success: function success(data) {
-                                    loadingOnScreenRemove();
                                     alertCustom("success", data.message);
                                 }
                             });
@@ -70,7 +68,7 @@ $(() => {
                     $('.content-error').show();
                 }
 
-                setTimeout(() => {  loadOnAny('.page-content', true); }, 1000);
+                setTimeout(() => {  loadingOnScreenRemove(); }, 2000);
             }
         });
     }
