@@ -126,6 +126,7 @@ class GetNetStatementService
         $adjustments = array_reverse($data->adjustments) ?? [];
         $chargeback = array_reverse($data->chargeback) ?? [];
 
+        //request()->request->add(['debug' => true]);
         if (request('debug')) {
 
             echo '<pre>';
@@ -267,8 +268,12 @@ class GetNetStatementService
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
 
                 } elseif (
-                    $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
-                    || self::TRANSACTION_STATUS_CODE_ESTORNADA
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
+                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                    )
+                    ||
+                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
                 ) {
 
                     $details->setStatus('Liquidado')
