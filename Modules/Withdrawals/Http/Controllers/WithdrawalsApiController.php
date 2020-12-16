@@ -2,31 +2,23 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\RemessaOnlineService;
-use Modules\Core\Services\UserService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WithdrawalsApiController
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -63,8 +55,8 @@ class WithdrawalsApiController
             }
 
             $withdrawals = $withdrawalModel->where('company_id', $companyId)
-                                            ->where('automatic_liquidation', 1)
-                                            ->orderBy('id', 'DESC');
+                ->where('automatic_liquidation', 1)
+                ->orderBy('id', 'DESC');
 
             return WithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {
@@ -116,55 +108,12 @@ class WithdrawalsApiController
             }
 
             $companyService = new CompanyService();
-            $userService = new UserService();
 
-            if ($companyService->verifyFieldsEmpty($company) || $userService->verifyFieldsEmpty($user)) {
-                return response()->json(
-                    ['message' => 'Para efetuar o saque favor preencher os documentos pendentes'],
-                    403
-                );
-            }
-
-            if (!$company->bank_document_status == $companyModel->present()
-                    ->getBankDocumentStatus('approved') ||
-                !$company->address_document_status == $companyModel->present()
-                    ->getAddressDocumentStatus('approved') ||
-                !$company->contract_document_status == $companyModel->present()
-                    ->getContractDocumentStatus('approved')) {
-                return response()->json(
-                    [
-                        'message' => 'error',
-                        'data' => [
-                            'documents_status' => 'pending',
-                        ],
-                    ],
-                    400
-                );
-            }
-            $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
-
-            if ($withdrawalValue < 1000) {
-                return response()->json(
-                    [
-                        'message' => 'Valor de saque precisa ser maior que R$ 10,00',
-                    ],
-                    400
-                );
-            }
-
-            if ($withdrawalValue > $company->balance) {
-                return response()->json(
-                    [
-                        'message' => 'Valor informado inválido',
-                    ],
-                    400
-                );
-            }
-
-            // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
-
-            $availableBalance = $company->balance - $blockedValue;
+            $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $availableBalance = $companyService->getAvailableBalance(
+                $company,
+                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+            );
 
             if ($withdrawalValue > $availableBalance) {
                 return response()->json(
@@ -175,108 +124,66 @@ class WithdrawalsApiController
                 );
             }
 
-            /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
-            if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
-                $startDate = Carbon::now()->startOfMonth();
-                $endDate = Carbon::now()->endOfMonth();
 
-                $withdrawal = $withdrawalModel->where('company_id', $company->id)
-                    ->whereNotIn(
-                        'status',
-                        collect(
-                            [
-                                $withdrawalModel->present()
-                                    ->getStatus('returned'),
-                                $withdrawalModel->present()
-                                    ->getStatus('refused'),
-                            ]
-                        )
-                    )
-                    ->whereBetween('created_at', [$startDate, $endDate])->get();
-                $withdrawalSum = 0;
-                if (count($withdrawal) > 0) {
-                    $withdrawalSum = $withdrawal->sum('value');
+            /** Verifica se é o primeiro saque do usuário */
+            $isFirstUserWithdrawal = false;
+            $userWithdrawal = $withdrawalModel->whereHas(
+                'company',
+                function ($query) {
+                    $query->where('user_id', auth()->user()->account_owner_id);
                 }
-
-                if ($withdrawalSum + $withdrawalValue > 190000) {
-                    return response()->json(
-                        [
-                            'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
-                        ],
-                        400
-                    );
-                }
+            )->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
+            if (empty($userWithdrawal)) {
+                $isFirstUserWithdrawal = true;
             }
 
-            $company->update(['balance' => $company->balance -= $withdrawalValue]);
-
-            /** Verifica se o usuário possui algum saque pendente */
-            $withdrawal = $withdrawalModel->where(
+            $withdrawal = $withdrawalModel->create(
                 [
-                    ['company_id', $company->id],
-                    [
-                        'status',
-                        $companyModel->present()->getStatus('pending')
-                    ],
+                    'value' => $withdrawalValue,
+                    'company_id' => $company->id,
+                    'bank' => $company->bank,
+                    'agency' => $company->agency,
+                    'agency_digit' => $company->agency_digit,
+                    'account' => $company->account,
+                    'account_digit' => $company->account_digit,
+                    'status' => $withdrawalModel->present()->getStatus(
+                        $isFirstUserWithdrawal ? 'in_review' : 'pending'
+                    ),
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'automatic_liquidation' => true,
                 ]
-            )->first();
+            );
 
-            if (empty($withdrawal)) {
-                $tax = 0;
+            $transactionsSum = $company->transactions()
+                ->whereIn('gateway_id', [14, 15])
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
 
-                if ($withdrawalValue < 50000) {
-                    $withdrawalValue -= 1000;
-                    $tax = 1000;
-                }
+            $currentValue = 0;
 
-                /** Verifica se é o primeiro saque do usuário */
-                $isFirstUserWithdrawal = false;
-                $userWithdrawal = $withdrawalModel->whereHas(
-                    'company',
-                    function ($query) {
-                        $query->where('user_id', auth()->user()->account_owner_id);
+            $transactionsSum->chunk(
+                500,
+                $test = function ($transactions) use (
+                    $currentValue,
+                    $withdrawalValue,
+                    $withdrawal
+                ) {
+                    foreach ($transactions as $transaction) {
+                        $currentValue += $transaction->value;
+
+                        if ($currentValue <= $withdrawalValue) {
+                            $transaction->update(
+                                [
+                                    'withdrawal_id' => $withdrawal->id,
+                                    'is_waiting_withdrawal' => false
+                                ]
+                            );
+                        }
                     }
-                )->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
-                if (empty($userWithdrawal)) {
-                    $isFirstUserWithdrawal = true;
                 }
-
-                $withdrawal = $withdrawalModel->create(
-                    [
-                        'value' => $withdrawalValue,
-                        'company_id' => $company->id,
-                        'bank' => $company->bank,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'status' => $withdrawalModel->present()->getStatus(
-                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                        ),
-                        'tax' => $tax,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    ]
-                );
-            } else {
-                $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
-                $withdrawalTax = $withdrawal->tax;
-
-                /**
-                 *  Se a soma dos saques pendentes for maior de R$500,00
-                 *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
-                 */
-                if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
-                    $withdrawalValueSum += 1000;
-                    $withdrawalTax = 0;
-                }
-
-                $withdrawal->update(
-                    [
-                        'value' => $withdrawalValueSum,
-                        'tax' => $withdrawalTax,
-                    ]
-                );
-            }
+            );
 
             event(new WithdrawalRequestEvent($withdrawal));
 
@@ -288,12 +195,7 @@ class WithdrawalsApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws PresenterException
-     */
-    public function getAccountInformation(Request $request): JsonResponse
+    public function getWithdrawalValues(Request $request)
     {
         try {
             $companyModel = new Company();
@@ -305,7 +207,6 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $bankService = new BankService();
             $userModel = new User();
             $companyService = new CompanyService();
 
@@ -361,55 +262,44 @@ class WithdrawalsApiController
                 );
             }
 
-            $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+            $withdrawalValueRequested = FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $currentValue = 0;
 
-            $convertedMoney = $withdrawalValue;
+            $transactionsSum = $company->transactions()
+                ->whereIn('gateway_id', [14, 15])
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
 
-            $iofValue = 0;
-            $iofTax = 0.38;
-            $costValue = 0;
+            $transactionsSum->chunk(
+                500,
+                $test = function ($transactions) use (
+                    $currentValue,
+                    $withdrawalValueRequested
+                ) {
+                    foreach ($transactions as $transaction) {
+                        $currentValue += $transaction->value;
 
-            $abroadTransferValue = 0;
-
-            $currency = $companyService->getCurrency($company);
-            $currentQuotation = 0;
-
-            if (!in_array($company->country, ['brazil', 'brasil'])) {
-                $remessaOnlineService = new RemessaOnlineService();
-
-                $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
-
-                $iofValue = intval($withdrawalValue / 100 * $iofTax);
-
-                $withdrawalValue -= $abroadTransferValue;
-                $convertedMoney = number_format(
-                    intval($withdrawalValue / $currentQuotation) / 100,
-                    2,
-                    ',',
-                    '.'
-                );
-            }
+                        if ($currentValue >= $withdrawalValueRequested) {
+                            return response()->json(
+                                [
+                                    'data' => [
+                                        'lower_value' => $currentValue - $transaction->value,
+                                        'bigger_value' => $currentValue
+                                    ]
+                                ]
+                            )->send();
+                            exit();
+                        }
+                    }
+                }
+            );
 
             return response()->json(
                 [
-                    'message' => 'success',
-                    'data' => [
-                        'documents_status' => 'approved',
-                        'bank' => $bankService->getBankName($company->bank),
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'document' => $company->document,
-                        'currency' => $currency,
-                        'quotation' => $currentQuotation,
-                        'iof' => [
-                            'tax' => $iofTax,
-                            'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
-                        ],
-                    ],
-                ],
-                200
+                    'lower_value' => 0,
+                    'bigger_value' => 0
+                ]
             );
         } catch (Exception $e) {
             report($e);

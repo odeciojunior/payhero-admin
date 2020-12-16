@@ -294,18 +294,16 @@ class CompanyService
         return $pendingBalance->sum('value');
     }
 
-    public function getAvailableBalance(Company $company, ?int $liquidationType = null) 
+    public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
     {
         if($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
             return $company->balance;
-        }
-        elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        } elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $company->transactions()
                            ->whereIn('gateway_id', [14, 15])
                            ->where('is_waiting_withdrawal', 1)
                            ->sum('value');
-        }
-        elseif(empty($liquidationType)) {
+        } elseif(empty($liquidationType)) {
 
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])
