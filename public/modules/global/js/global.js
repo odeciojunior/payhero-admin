@@ -80,7 +80,9 @@ function loadingOnScreen() {
 }
 
 function loadingOnScreenRemove() {
-    $('#loadingOnScreen').hide();
+    window.setTimeout(function () {
+        $('.ajax-loader').fadeOut(300);
+    },2000)
     $('#btn-modal').show();
 }
 
