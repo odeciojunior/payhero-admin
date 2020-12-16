@@ -68,7 +68,7 @@ $(() => {
                     $('.content-error').show();
                 }
 
-                setTimeout(() => {  loadingOnScreenRemove(); }, 2000);
+                loadingOnScreenRemove();
             }
         });
     }

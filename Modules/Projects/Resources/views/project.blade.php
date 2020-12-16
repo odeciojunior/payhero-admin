@@ -25,7 +25,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container page-project">
+        <div class="page-content container page-project" style="display: none">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">

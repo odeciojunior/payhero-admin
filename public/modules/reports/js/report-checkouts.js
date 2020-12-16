@@ -94,8 +94,7 @@ $(function () {
                         table_data_itens += '</tr>';
                     });
                 } else {
-                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda </td> </tr>`;
-                    console.log(table_data_itens)
+                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda encontrada</td> </tr>`;
                 }
                 $('#origins-table-itens').html("");
                 $("#origins-table-itens").append(table_data_itens);

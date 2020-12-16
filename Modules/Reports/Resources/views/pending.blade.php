@@ -113,7 +113,7 @@
 
                         <!-- Tabela -->
                         <div class="col-lg-12">
-                            <div class="card shadow">
+                            <div class="card shadow" style="min-height: 300px">
                                 <div class="page-invoice-table table-responsive">
                                     <table class="table-vendas table unify table-striped">
                                         <thead>

@@ -62,7 +62,7 @@
 
                         <div class="col-lg-12">
                             <div class="card shadow" style="min-height: 300px;">
-                                <div class=" card-body data-holder">
+                                <div class="data-holder">
                                     <table class="table-coupons table table-striped" style="width:100%;margin: auto; margin-top:15px;">
                                         <thead>
                                         <tr>

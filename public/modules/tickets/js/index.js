@@ -18,10 +18,6 @@ $(document).ready(function () {
     let ticketId = '';
     $('#cpf-filter').mask('000.000.000-00');
 
-    dateRangePicker();
-    getTickets();
-    getTotalValues();
-
     $("#btn-filter").on("click", function (event) {
         event.preventDefault();
         deleteCookie('filterTickets');
@@ -32,6 +28,48 @@ $(document).ready(function () {
     $("#pagination-tickets").on('click', function () {
         deleteCookie('filterTickets');
     });
+
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    dateRangePicker();
+                    getTickets();
+                    getTotalValues();
+                } else {
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 
     function getFilters(urlParams = false) {
 

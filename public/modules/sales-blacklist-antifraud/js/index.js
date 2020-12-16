@@ -111,7 +111,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    // $("#export-excel").show()
+                    $("#text-info").show()
 
                     $.each(response.data, function (i, project) {
                         $("#projeto").append($('<option>', {
@@ -124,7 +124,7 @@ $(document).ready(function () {
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
-                    // $("#export-excel").hide()
+                    $("#text-info").hide()
                 }
 
                     loadingOnScreenRemove();

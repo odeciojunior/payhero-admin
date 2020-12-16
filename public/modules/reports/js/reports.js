@@ -107,7 +107,7 @@ $(function () {
                         table_data_itens += '</tr>';
                     });
                 } else {
-                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda </td> </tr>`;
+                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda encontrada</td> </tr>`;
                 }
 
                 $('#origins-table-itens').html("");

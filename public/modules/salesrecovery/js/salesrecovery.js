@@ -166,13 +166,13 @@ $(document).ready(function () {
 
                 if (response.data == '' && $('#type_recovery').val() == 1) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado encontrado</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 5) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado encontrado</td></tr>");
                 } else {
 
                     createHTMLTable(response);
