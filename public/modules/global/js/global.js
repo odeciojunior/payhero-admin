@@ -1,15 +1,14 @@
 $(document).ready(function () {
 
-    var current_url = window.location.pathname;
-
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
-    if (current_url.includes('reports')) {
-        $("#reports-link").addClass('menu-active');
-    } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
-        $("#sales-link").addClass('menu-active');
-    }
+    // var current_url = window.location.pathname;
+    // if (current_url.includes('reports')) {
+    //     $("#reports-link").addClass('menu-active');
+    // } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
+    //     $("#sales-link").addClass('menu-active');
+    // }
 
     $(".mm-panels").css('scrollbar-width', 'none');
 
@@ -489,24 +488,36 @@ $(document).ready(function () {
     menuBarToggle.off().on('click', function () {
         bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
         menuBarToggle.toggleClass('hided')
-        $('.site-menu-item.has-sub').removeClass('active')
+        //$('.site-menu-item.has-sub').removeClass('active')
     })
 
     var siteMenuItems = $('.site-menu-item.has-sub')
     var siteMenuBar = $('.site-menubar')
+    var menuTimeout
     siteMenuBar.on('mouseenter', function () {
         bodyEl.addClass('site-menubar-hover')
     }).on('mouseleave', function () {
-        setTimeout(function () {
+        menuTimeout = setTimeout(function () {
             bodyEl.removeClass('site-menubar-hover')
             //if (!bodyEl.hasClass('site-menubar-unfold')) {
                 //siteMenuItems.removeClass('active')
             //}
         }, 1000)
+    }).find('*').on('mouseenter', function (event) {
+        clearTimeout(menuTimeout)
+        bodyEl.addClass('site-menubar-hover')
     })
 
     siteMenuItems.on('click', function () {
         siteMenuItems.not($(this)).removeClass('active')
         $(this).toggleClass('active')
     })
+
+    var links = $('.site-menubar .site-menu-item a');
+    $.each(links, function (key, va) {
+        if (va.href == document.URL) {
+            $(this).addClass('menu-active')
+            $(this).parents('.site-menu-item.has-sub').find('> a').addClass('menu-active')
+        }
+    });
 })
