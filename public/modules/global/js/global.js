@@ -81,7 +81,7 @@ function loadingOnScreen() {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $('.ajax-loader').fadeOut(300);
+        $('.ajax-loader').fadeOut();
     },2000)
     $('#btn-modal').show();
 }
