@@ -39,8 +39,8 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <div class="card-text">
-                                <span class="moeda">R$</span>
+                            <div class="card-text row align-items-center">
+                                <span class="moeda"></span>
                                 <span id="today_money" class="text-money"></span>
                             </div>
                         </div>
@@ -57,8 +57,8 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <div class="card-text">
-                                <span class="moeda">R$</span>
+                            <div class="card-text row align-items-center">
+                                <span class="moeda"></span>
                                 <span id="pending_money" class="text-money"></span>
                             </div>
                         </div>
@@ -75,8 +75,8 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <div class="card-text">
-                                <span class="moeda">R$</span>
+                            <div class="card-text row align-items-center">
+                                <span class="moeda"></span>
                                 <span id="available_money" class="text-money"></span>
                             </div>
                         </div>
@@ -94,8 +94,8 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <div class="card-text">
-                                <span class="moeda">R$</span>
+                            <div class="card-text row align-items-center">
+                                <span class="moeda"></span>
                                 <span id="total_money" class="text-money"></span>
                             </div>
                         </div>
@@ -117,21 +117,21 @@
                                title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-lg-between py-15">
-                            <div class="update">
-                                <label>Tempo médio de postagem:</label>
-                                <span id="average_post_time"></span>
+                            <div class="d-inline-flex">
+                                <label>Tempo médio de postagem: &nbsp; </label>
+                                <span class="update-text" id="average_post_time"></span>
                             </div>
-                            <div class="update">
-                                <label>Venda mais antiga sem código:</label>
-                                <span id="oldest_sale"></span>
+                            <div class="d-inline-flex">
+                                <label>Venda mais antiga sem código: &nbsp; </label>
+                                <span class="update-text" id="oldest_sale"></span>
                             </div>
-                            <div class="update">
-                                <label>Códigos informados com problema:</label>
-                                <span id="problem"></span>
+                            <div class="d-inline-flex">
+                                <label>Códigos informados com problema: &nbsp; </label>
+                                <span class="update-text" id="problem"></span>
                             </div>
-                            <div class="update">
-                                <label>Códigos não informados:</label>
-                                <span id="unknown"></span>
+                            <div class="d-inline-flex">
+                                <label>Códigos não informados: &nbsp; </label>
+                                <span class="update-text" id="unknown"></span>
                             </div>
                         </div>
                         <div class="card-bottom orangered"></div>
@@ -148,16 +148,20 @@
                             <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom" title="Taxa geral de chargeback de sua empresa">help</i>
                         </div>
                         <div class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
-                            <div class="col text-center px-0 update">
-                                <div class="circle ">
+                            <div class="col text-center px-0 d-flex justify-content-center">
+                                <div class="circle">
                                     <strong>0.00%</strong>
                                 </div>
                             </div>
-                            <div class="col update">
-                                <span id="total_sales_approved" class="text-money">0</span>
-                                <div class="font-size-14 mb-20">Vendas no Cartão</div>
-                                <span id="total_sales_chargeback" class="text-money">0</span>
-                                <div class="font-size-14">Chargebacks</div>
+                            <div class="col">
+                                <div class="mb-10 d-flex flex-wrap justify-content-center">
+                                    <div class="font-size-14 w-p100">Vendas no Cartão</div>
+                                    <span id="total_sales_approved" class="text-money">0</span>
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-center">
+                                    <div class="font-size-14 w-p100">Chargebacks</div>
+                                    <span id="total_sales_chargeback" class="text-money">0</span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-bottom red"></div>
@@ -173,24 +177,24 @@
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center">
-                            <div class="row mb-15 update">
-                                <div class="col text-center">
+                            <div class="row mb-15">
+                                <div class="col text-center d-flex flex-wrap justify-content-center">
                                     <span id="open-tickets" class="text-money">0</span>
-                                    <div class="font-size-14">Abertos</div>
+                                    <div class="font-size-14 w-p100">Abertos</div>
                                 </div>
-                                <div class="col text-center">
+                                <div class="col text-center d-flex flex-wrap justify-content-center">
                                     <span id="closed-tickets" class="text-money">0</span>
-                                    <div class="font-size-14">Resolvidos</div>
+                                    <div class="font-size-14 w-p100">Resolvidos</div>
                                 </div>
                             </div>
-                            <div class="row update">
-                                <div class="col text-center">
+                            <div class="row">
+                                <div class="col text-center d-flex flex-wrap justify-content-center">
                                     <span id="mediation-tickets" class="text-money">0</span>
-                                    <div class="font-size-14">Em mediação</div>
+                                    <div class="font-size-14 w-p100">Em mediação</div>
                                 </div>
-                                <div class="col text-center">
+                                <div class="col text-center d-flex flex-wrap justify-content-center">
                                     <span id="total-tickets" class="text-money">0</span>
-                                    <div class="font-size-14">Total</div>
+                                    <div class="font-size-14 w-p100">Total</div>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +300,7 @@
 {{--                            --}}{{-- js carrega... --}}
 {{--                        </tbody>--}}
 {{--                    </table>--}}
-{{--                    <a class='btn btn-update-later mt-10' style='color:darkorange;' data-dismiss="modal">--}}
+{{--                    <a class='btn btn--later mt-10' style='color:darkorange;' data-dismiss="modal">--}}
 {{--                        <b>Atualizar mais tarde</b></a>--}}
 {{--                </div>--}}
 {{--                <p class='info pt-5 mb-0 text-center' style='font-size: 10px;'>--}}

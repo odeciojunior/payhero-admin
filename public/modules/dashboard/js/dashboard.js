@@ -69,10 +69,11 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.card-text', false, {
+        loadOnAny('.text-money, .update-text, .circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
+                    width: '30px',
                     height: 'auto'
                 },
                 loader: {
@@ -80,17 +81,9 @@ $(document).ready(function () {
                     height: '30px',
                     borderWidth: '6px'
                 },
+
             }
         });
-
-        loadOnAny('.update', false, {
-            styles: {
-                container: {
-                    minHeight: '100px',
-                    height: 'auto'
-                },
-            }
-        })
 
         $.ajax({
             method: "POST",
@@ -102,8 +95,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.card-text', true)
-                loadOnAny('.update', true)
+                loadOnAny('.text-money, .update-text, .circle', true)
                 loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
@@ -123,12 +115,9 @@ $(document).ready(function () {
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
-                updateNews(data.news);
 
-                loadOnAny('.card-text', true)
-                loadOnAny('.update', true)
+                loadOnAny('.text-money, .update-text, .circle', true)
                 loadingOnScreenRemove();
-                $('.ajax-loader').css("visibility", "hidden");
             }
         });
     }
@@ -201,7 +190,29 @@ $(document).ready(function () {
         }
     }
 
-    function updateReleases() {
+    function updateReleases(data) {
+        $('#releases-div').html('');
+
+        if (!isEmpty(data)) {
+            $.each(data, function (index, value) {
+                let item = `<div class="d-flex align-items-center my-15">
+                                <div class="release-progress" id="${index}">
+                                    <strong>${value.progress}%</strong>
+                                </div>
+                                <span class="ml-2">${value.release}</span>
+                            </div>`;
+                $('#releases-div').append(item);
+
+                updateReleasesProgress(index, value.progress);
+            });
+
+            $('#releases-col').show();
+        } else {
+            $('#releases-col').hide();
+        }
+    }
+
+    function updateCloudFox() {
 
         $.ajax({
             method: "GET",
@@ -216,27 +227,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let data = response.releases
-
-                $('#releases-div').html('');
-
-                if (!isEmpty(data)) {
-                    $.each(data, function (index, value) {
-                        let item = `<div class="d-flex align-items-center my-15">
-                                <div class="release-progress" id="${index}">
-                                    <strong>${value.progress}%</strong>
-                                </div>
-                                <span class="ml-2">${value.release}</span>
-                            </div>`;
-                        $('#releases-div').append(item);
-
-                        updateReleasesProgress(index, value.progress);
-                    });
-
-                    $('#releases-col').show();
-                } else {
-                    $('#releases-col').hide();
-                }
+                updateReleases(response.releases);
+                updateNews(response.news);
             }
         });
     }
@@ -336,7 +328,7 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
-                    updateReleases()
+                    updateCloudFox()
                     getDataDashboard();
 
                 } else {
