@@ -69,7 +69,7 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money, .update-text, .circle', false, {
+        loadOnAny('.text-money', false, {
             styles: {
                 container: {
                     minHeight: '30px',
@@ -85,6 +85,24 @@ $(document).ready(function () {
             }
         });
 
+        loadOnAnyEllipsis('.update-text, .text-circle', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
+            }
+        });
+
+        $('.circle strong').addClass('loaded')
+
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
@@ -95,7 +113,8 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money, .update-text, .circle', true)
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
                 loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
@@ -116,7 +135,8 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money, .update-text, .circle', true)
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });

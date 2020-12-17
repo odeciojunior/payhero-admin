@@ -149,7 +149,7 @@
                         </div>
                         <div class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
                             <div class="col text-center px-0 d-flex justify-content-center">
-                                <div class="circle">
+                                <div class="circle text-circle">
                                     <strong>0.00%</strong>
                                 </div>
                             </div>

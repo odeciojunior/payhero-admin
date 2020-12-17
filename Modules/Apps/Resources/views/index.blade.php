@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
-                        <div class="card" onclick="window.location.href='/apps/hotzapp/'">
+                        <div class="card" onclick="window.location.href='/apps/hotzapp/'" style='width:300px;'>
                             <a id="hotzapp-bt" href="/apps/hotzapp/" class="add-btn">
                                 <i id="hotzapp-icon" class="icon wb-plus" aria-hidden="true"></i></a>
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/hotzapp.png') !!}" alt="">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
-                        <div class="card" onclick="window.location.href='/apps/shopify'">
+                        <div class="card" onclick="window.location.href='/apps/shopify'" style='width:300px;'>
                             <a id="shopify-bt" href="/apps/shopify" class="add-btn">
                                 <i id="shopify-icon" class="icon wb-plus" aria-hidden="true"></i></a>
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/shopify.png') !!}" alt="">
