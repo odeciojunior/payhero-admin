@@ -227,9 +227,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- Modal detalhes da venda-->
-                        @include('sales::details')
-                        <!-- End Modal -->
                         </div>
                         <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                             {{-- js carrega... --}}
@@ -243,6 +240,10 @@
                     {{--        </div>--}}
                 </div>
             </div>
+            <!-- Modal detalhes da venda-->
+                @include('sales::details')
+            <!-- End Modal -->
+
             {{-- Quando não tem projeto cadastrado  --}}
                 @include('projects::empty')
             {{-- FIM projeto nao existem projetos--}}

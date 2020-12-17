@@ -364,6 +364,45 @@ a.label {
     }
 }
 
+.site-menubar-fold .site-menu-title {
+    width: 20px;
+}
+
+.site-menubar-unfold .site-menu-title,
+.site-menubar-hover .site-menu-title{
+    width: 100%;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item .site-menu-sub {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    transition: all ease .75s;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-sub {
+    display: block;
+    opacity: 1;
+    max-height: 100vh;
+    transition: all ease .75s;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item .site-menu-arrow {
+    transition: transform 0.5s
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-arrow {
+    transform: rotateY(0deg) rotate(90deg);
+    transition: transform 0.5s;
+}
+
+@media (max-width: 968px) {
+    .site-menubar-fold .page, .site-menubar-fold .site-footer {
+        margin-left: 0px;
+        transition: all .25s;
+    }
+}
+
 .ajax-loader {
     background-color: rgba(255, 255, 255, 1);
     position: absolute;
@@ -387,14 +426,7 @@ a.label {
     right: 0;
     font-size: 18px;
     font-weight: bolder;
-    /*background: -webkit-linear-gradient(left, #E6774C , #F92278);*/
-    /*background: -o-linear-gradient(right, #E6774C, #F92278);*/
-    /*background: -moz-linear-gradient(right, #E6774C, #F92278);*/
     background: linear-gradient(74deg, #E6774C, #F17227);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    /*    -webkit-animation: flickerAnimation 5s infinite;
-        -moz-animation: flickerAnimation 5s infinite;
-        -o-animation: flickerAnimation 5s infinite;
-        animation: flickerAnimation 5s infinite;*/
 }

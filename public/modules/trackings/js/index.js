@@ -287,6 +287,7 @@ $(() => {
             },
             success: response => {
                 $('#dados_tabela').html('');
+                $('#tabela_trackings').addClass('table-striped');
 
                 let grayRow = false;
                 let lastSale = '';
@@ -343,7 +344,6 @@ $(() => {
                         lastSale = tracking.sale;
                     });
 
-                    $('#tabela_trackings').addClass('table-striped');
                     pagination(response, 'trackings', index);
                 }
             }

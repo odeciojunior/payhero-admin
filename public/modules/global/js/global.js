@@ -80,7 +80,9 @@ function loadingOnScreen() {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $('.ajax-loader').fadeOut();
+        $('.ajax-loader').fadeOut(function () {
+            $(this).html('')
+        });
     },2000)
     $('#btn-modal').show();
 }
@@ -97,7 +99,7 @@ function loadOnModal(whereToLoad) {
 
     $(whereToLoad).children().hide('fast');
     $('#modal-title').html('Carregando ...')
-    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
         "<div class='loaderModal'>" +
         "</div>" +
         "</div>");
@@ -117,7 +119,8 @@ function loadOnTable(whereToLoad, tableReference) {
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
-    target.parent().find('.loader-any-container').remove();
+    $('.loader-any-container').fadeOut();
+    target.parent().find('.loader-any-container');
 
     if (!remove) {
 
@@ -150,7 +153,7 @@ function loadOnAny(target, remove = false, options = {}) {
         if (!target.hasClass('tab-pane') ||
             (target.hasClass('tab-pane') &&
                 target.hasClass('active'))) {
-            $(target).show();
+                $(target).fadeIn();
         }
     }
 }

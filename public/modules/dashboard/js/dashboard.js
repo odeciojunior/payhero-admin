@@ -124,8 +124,7 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
                 updateNews(data.news);
-                updateReleases(data.releases);
-                // loadOnAny('.card-loading', true)
+
                 loadOnAny('.card-text', true)
                 loadOnAny('.update', true)
                 loadingOnScreenRemove();
@@ -202,27 +201,44 @@ $(document).ready(function () {
         }
     }
 
-    function updateReleases(data) {
+    function updateReleases() {
 
-        $('#releases-div').html('');
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/get-releases",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                let data = response.releases
 
-        if (!isEmpty(data)) {
-            $.each(data, function (index, value) {
-                let item = `<div class="d-flex align-items-center my-15">
-                                <div class="release-progress update" id="${index}">
+                $('#releases-div').html('');
+
+                if (!isEmpty(data)) {
+                    $.each(data, function (index, value) {
+                        let item = `<div class="d-flex align-items-center my-15">
+                                <div class="release-progress" id="${index}">
                                     <strong>${value.progress}%</strong>
                                 </div>
-                                <span class="ml-2 update">${value.release}</span>
+                                <span class="ml-2">${value.release}</span>
                             </div>`;
-                $('#releases-div').append(item);
+                        $('#releases-div').append(item);
 
-                updateReleasesProgress(index, value.progress);
-            });
+                        updateReleasesProgress(index, value.progress);
+                    });
 
-            $('#releases-col').show();
-        } else {
-            $('#releases-col').hide();
-        }
+                    $('#releases-col').show();
+                } else {
+                    $('#releases-col').hide();
+                }
+            }
+        });
     }
     // function verifyPendingData() {
     //     $.ajax({
@@ -320,6 +336,7 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
+                    updateReleases()
                     getDataDashboard();
 
                 } else {
