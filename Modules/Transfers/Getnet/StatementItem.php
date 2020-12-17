@@ -28,6 +28,7 @@ class StatementItem
     public ?string $paidWith;
     public string $type, $transactionDate, $date, $subSellerRateConfirmDate;
     public float $amount;
+    public int $sequence;
     public bool $isInvite = false;
 
     public function __construct()
