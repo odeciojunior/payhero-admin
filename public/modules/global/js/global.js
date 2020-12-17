@@ -120,7 +120,7 @@ function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
     $('.loader-any-container').fadeOut();
-    target.parent().find('.loader-any-container');
+    target.parent().find('.loader-any-container').remove();
 
     if (!remove) {
 
