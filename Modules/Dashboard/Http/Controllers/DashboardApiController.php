@@ -188,11 +188,6 @@ class DashboardApiController extends Controller
                         $news[] = $newsDecoded;
                     }
 
-                    $releasesData = settings()->group('dashboard_releases')->all(true);
-                    $releases = [];
-                    foreach ($releasesData as $key => $value) {
-                        $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
-                    }
                     //Trackings
                     $trackingPresenter = (new Tracking())->present();
                     $trackingSystemStatus = [
@@ -248,7 +243,6 @@ class DashboardApiController extends Controller
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
                         'news'                   => $news,
-                        'releases'               => $releases,
                         'trackings'              => $trackingsInfo,
                         'tickets'                => $tickets,
                         'blocked_balance'        => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
@@ -314,5 +308,23 @@ class DashboardApiController extends Controller
                 400
             );
         }
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getReleases()
+    {
+        $releasesData = settings()->group('dashboard_releases')->all(true);
+        $releases = [];
+        foreach ($releasesData as $key => $value) {
+            $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json(
+            [
+                'releases' => $releases,
+            ]
+        );
     }
 }

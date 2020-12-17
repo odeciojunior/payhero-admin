@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="page-content container" style="display:none">
+        <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
             <div class="row">
                 <div class="col-6 col-lg-3">
@@ -39,8 +39,10 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="today_money" class="text-money"></span>
+                            <div class="card-text">
+                                <span class="moeda">R$</span>
+                                <span id="today_money" class="text-money"></span>
+                            </div>
                         </div>
                         <div class="card-bottom orangered"></div>
                     </div>
@@ -55,8 +57,10 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="pending_money" class="text-money"></span>
+                            <div class="card-text">
+                                <span class="moeda">R$</span>
+                                <span id="pending_money" class="text-money"></span>
+                            </div>
                         </div>
                         <div class="card-bottom orange"></div>
                     </div>
@@ -71,8 +75,10 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="available_money" class="text-money"></span>
+                            <div class="card-text">
+                                <span class="moeda">R$</span>
+                                <span id="available_money" class="text-money"></span>
+                            </div>
                         </div>
                         <div class="card-bottom green"></div>
                     </div>
@@ -88,8 +94,10 @@
                         </div>
                         <div
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="total_money" class="text-money"></span>
+                            <div class="card-text">
+                                <span class="moeda">R$</span>
+                                <span id="total_money" class="text-money"></span>
+                            </div>
                         </div>
                         <div class="card-bottom blue"></div>
                     </div>
@@ -101,7 +109,7 @@
                     <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
-                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/shipping.svg') }}"
+                                <img src="{{ asset('modules/global/img/svg/shipping.svg') }}"
                                      width="30px">
                                 <span class="card-desc">Códigos de rastreio informados</span>
                             </div>
@@ -109,19 +117,19 @@
                                title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-lg-between py-15">
-                            <div>
+                            <div class="update">
                                 <label>Tempo médio de postagem:</label>
                                 <span id="average_post_time"></span>
                             </div>
-                            <div>
+                            <div class="update">
                                 <label>Venda mais antiga sem código:</label>
                                 <span id="oldest_sale"></span>
                             </div>
-                            <div>
+                            <div class="update">
                                 <label>Códigos informados com problema:</label>
                                 <span id="problem"></span>
                             </div>
-                            <div>
+                            <div class="update">
                                 <label>Códigos não informados:</label>
                                 <span id="unknown"></span>
                             </div>
@@ -140,12 +148,12 @@
                             <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom" title="Taxa geral de chargeback de sua empresa">help</i>
                         </div>
                         <div class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
-                            <div class="col text-center px-0">
-                                <div class="circle">
+                            <div class="col text-center px-0 update">
+                                <div class="circle ">
                                     <strong>0.00%</strong>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col update">
                                 <span id="total_sales_approved" class="text-money">0</span>
                                 <div class="font-size-14 mb-20">Vendas no Cartão</div>
                                 <span id="total_sales_chargeback" class="text-money">0</span>
@@ -159,13 +167,13 @@
                     <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
-                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/tickets.svg') }}"
+                                <img src="{{ asset('modules/global/img/svg/tickets.svg') }}"
                                      width="30px">
                                 <span class="card-desc">Atendimento</span>
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center">
-                            <div class="row mb-15">
+                            <div class="row mb-15 update">
                                 <div class="col text-center">
                                     <span id="open-tickets" class="text-money">0</span>
                                     <div class="font-size-14">Abertos</div>
@@ -175,7 +183,7 @@
                                     <div class="font-size-14">Resolvidos</div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row update">
                                 <div class="col text-center">
                                     <span id="mediation-tickets" class="text-money">0</span>
                                     <div class="font-size-14">Em mediação</div>
@@ -210,7 +218,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white py-10 border-bottom">
                             <div class="font-size-14 gray-600 mr-auto">
-                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/releases.svg') }}"
+                                <img src="{{ asset('modules/global/img/svg/releases.svg') }}"
                                      width="30px">
                                 <span class="card-desc">Atualizações da Plataforma</span>
                             </div>
@@ -222,7 +230,9 @@
                 </div>
             </div>
         </div>
-        @include('companies::empty')
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
 
@@ -299,7 +309,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=3') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . random_int(100, 10000)) }}"></script>
     @endpush
 
 @endsection

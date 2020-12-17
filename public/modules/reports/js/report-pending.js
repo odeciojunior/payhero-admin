@@ -54,7 +54,8 @@ $(document).ready(function () {
 
     function getFilters(urlParams = false) {
         let data = {
-            'project': $("#projeto").val(),
+            'company': $("#company").val(),
+            'project': $("#project").val(),
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
             'payment_method': $("#forma").val(),
@@ -74,10 +75,35 @@ $(document).ready(function () {
         }
     }
 
-    getProjects();
+    getCompanies();
+
+    function getCompanies() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            //url: '/api/projects?select=true',
+            url: '/api/companies?select=true',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (index, company) {
+                        $('#company').append('<option value="' + company.id + '">' + company.name + '</option>')
+                    });
+
+                    getProjects();
+                }
+            }
+        });
+    }
 
     function getProjects() {
-        loadOnAny('.page-content');
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -87,17 +113,30 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#project").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
+
+                    atualizar();
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
-                loadOnAny('.page-content', true);
-                atualizar();
+
+                    loadingOnScreenRemove();
             }
         });
     }
@@ -173,10 +212,8 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#body-table-pending').html('');
                 $('.table-pending').addClass('table-striped');
-                console.log(response)
 
                 if (!isEmpty(response.data)) {
-                    console.log(response.data)
                     $.each(response.data, function (index, value) {
 
                         dados = `  <tr>

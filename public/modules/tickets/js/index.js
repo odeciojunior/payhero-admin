@@ -18,10 +18,6 @@ $(document).ready(function () {
     let ticketId = '';
     $('#cpf-filter').mask('000.000.000-00');
 
-    dateRangePicker();
-    getTickets();
-    getTotalValues();
-
     $("#btn-filter").on("click", function (event) {
         event.preventDefault();
         deleteCookie('filterTickets');
@@ -32,6 +28,48 @@ $(document).ready(function () {
     $("#pagination-tickets").on('click', function () {
         deleteCookie('filterTickets');
     });
+
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    dateRangePicker();
+                    getTickets();
+                    getTotalValues();
+                } else {
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 
     function getFilters(urlParams = false) {
 
@@ -57,7 +95,7 @@ $(document).ready(function () {
     }
 
     function getTickets(link = null) {
-        loadOnAny('.page-content');
+        loadingOnScreen();
 
         if (link !== null) {
             pageCurrent = link;
@@ -91,12 +129,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
-
             },
             success: (response) => {
-                loadOnAny('.page-content', true);
+
                 $("#div-tickets").html('');
                 $("#div-ticket-empty").hide();
                 $("#div-tickets").show();
@@ -177,6 +214,9 @@ $(document).ready(function () {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
+
+                loadingOnScreenRemove();
+
                 let filter = {...getFilters(), page: pageCurrent || null};
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);

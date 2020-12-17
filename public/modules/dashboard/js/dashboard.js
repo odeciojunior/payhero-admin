@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    getDataDashboard();
-
+    getProjects();
     $("#company").on("change", function () {
         updateValues();
     });
     let userAccepted = true;
     function getDataDashboard() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -16,7 +15,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -34,7 +33,7 @@ $(document).ready(function () {
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
-                    loadOnAny('.page-content', true);
+                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
@@ -70,6 +69,29 @@ $(document).ready(function () {
 
     function updateValues() {
 
+        loadOnAny('.card-text', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+            }
+        });
+
+        loadOnAny('.update', false, {
+            styles: {
+                container: {
+                    minHeight: '100px',
+                    height: 'auto'
+                },
+            }
+        })
+
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
@@ -80,7 +102,10 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadOnAny('.card-text', true)
+                loadOnAny('.update', true)
+                loadingOnScreenRemove()
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -99,8 +124,11 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
                 updateNews(data.news);
-                updateReleases(data.releases);
-                loadOnAny('.page-content', true);
+
+                loadOnAny('.card-text', true)
+                loadOnAny('.update', true)
+                loadingOnScreenRemove();
+                $('.ajax-loader').css("visibility", "hidden");
             }
         });
     }
@@ -173,27 +201,44 @@ $(document).ready(function () {
         }
     }
 
-    function updateReleases(data) {
+    function updateReleases() {
 
-        $('#releases-div').html('');
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/get-releases",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                let data = response.releases
 
-        if (!isEmpty(data)) {
-            $.each(data, function (index, value) {
-                let item = `<div class="d-flex align-items-center my-15">
+                $('#releases-div').html('');
+
+                if (!isEmpty(data)) {
+                    $.each(data, function (index, value) {
+                        let item = `<div class="d-flex align-items-center my-15">
                                 <div class="release-progress" id="${index}">
                                     <strong>${value.progress}%</strong>
                                 </div>
                                 <span class="ml-2">${value.release}</span>
                             </div>`;
-                $('#releases-div').append(item);
+                        $('#releases-div').append(item);
 
-                updateReleasesProgress(index, value.progress);
-            });
+                        updateReleasesProgress(index, value.progress);
+                    });
 
-            $('#releases-col').show();
-        } else {
-            $('#releases-col').hide();
-        }
+                    $('#releases-col').show();
+                } else {
+                    $('#releases-col').hide();
+                }
+            }
+        });
     }
     // function verifyPendingData() {
     //     $.ajax({
@@ -271,4 +316,36 @@ $(document).ready(function () {
     $("#closeWelcome").click(function () {
         $("#cardWelcome").slideUp("600");
     });
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    updateReleases()
+                    getDataDashboard();
+
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 });

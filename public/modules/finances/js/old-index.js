@@ -53,7 +53,7 @@ $(document).ready(function () {
 
     //Obtém as empresas
     function getCompanies() {
-        loadOnAny('.page', false);
+        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -64,15 +64,15 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAny('.page', true);
 
                 if (isEmpty(response.data)) {
                     $('.page-content').hide();
                     $('.content-error').show();
+                    loadingOnScreenRemove();
                     return;
                 }
 
@@ -96,6 +96,8 @@ $(document).ready(function () {
                 $("#nav-statement-tab").on('click', function () {
                     $("#nav-extract").css('display', '');
                 });
+
+                loadingOnScreenRemove();
             }
         });
     }

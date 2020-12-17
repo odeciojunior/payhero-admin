@@ -1,6 +1,6 @@
 <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: white">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided" data-toggle="menubar">
+        <button type="button" class="navbar-toggler hamburger hamburger-close hamburger-arrow-left navbar-toggler-left hided" data-toggle="menubar">
             <span class="sr-only">Toggle navigation</span>
             <span class="hamburger-bar"></span>
         </button>
@@ -125,7 +125,7 @@
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
-                    <li class="site-menu-item has-sub">
+                    <li class="site-menu-item">
                         <a href="{!! route('sales.index') !!}">
                             <span class="site-menu-title">Visão geral</span>
                         </a>
@@ -181,7 +181,7 @@
             </li>
         @else
             <li class="site-menu-item has-sub">
-                <a href="javascript:void(0)" id="reports-link">
+                <a href="javascript:void(0)" id="finances-link">
                     <i class="material-icons align-middle">local_atm</i>
                     <span class="site-menu-title">Finanças</span>
                     <span class="site-menu-arrow"></span>
@@ -274,14 +274,3 @@
         @endif
     </ul>
 </div>
-
-</div>
-<script>
-    var links = $('.site-menubar .site-menu-item a');
-    $.each(links, function (key, va) {
-        if (va.href == document.URL) {
-            $(this).addClass('menu-active');
-        }
-    });
-
-</script>

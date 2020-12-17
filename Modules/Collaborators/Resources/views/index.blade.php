@@ -108,7 +108,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/collaborators/js/index.js?v=4') }}"></script>
+        <script src="{{asset('modules/collaborators/js/index.js?v=' . random_int(100, 1000)) }}"></script>
     @endpush
 
 @endsection

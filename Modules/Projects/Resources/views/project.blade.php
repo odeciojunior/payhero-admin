@@ -25,7 +25,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container page-project">
+        <div class="page-content container page-project" style="display: none">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -150,10 +150,6 @@
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             @include('projectupsellrule::index')
-                        </div>
-                        <!-- Painel de Parceiros -->
-                        <div class="tab-pane" id="tab_partners" role="tabpanel">
-                            @include('partners::index')
                         </div>
                         <!-- Reviews -->
                         <div class="tab-pane" id="tab_project_reviews" role="tabpanel">

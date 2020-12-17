@@ -56,7 +56,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{asset('modules/projects/js/index.js?v=6')}}"></script>
+        <script src="{{asset('modules/projects/js/index.js?v=' . random_int(100, 10000))}}"></script>
     @endpush
 
 @endsection

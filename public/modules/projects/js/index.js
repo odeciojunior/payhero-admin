@@ -3,7 +3,7 @@ $(() => {
     index();
 
     function index() {
-        loadOnAny('#data-table-projects');
+        loadingOnScreen();
         $.ajax({
             url: '/api/projects',
             data: {
@@ -55,11 +55,9 @@ $(() => {
                                     'Accept': 'application/json',
                                 },
                                 error: function (response) {
-                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                 },
                                 success: function success(data) {
-                                    loadingOnScreenRemove();
                                     alertCustom("success", data.message);
                                 }
                             });
@@ -69,7 +67,8 @@ $(() => {
                     $('#data-table-projects').hide();
                     $('.content-error').show();
                 }
-                loadOnAny('#data-table-projects', true);
+
+                loadingOnScreenRemove();
             }
         });
     }

@@ -359,6 +359,8 @@ class SaleService
         } else {
             $userTransaction->release_date = null;
         }
+        $companyName = $userTransaction->company->fantasy_name;
+
         //add details to sale
         $sale->details = (object)[
             'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '',
@@ -379,6 +381,7 @@ class SaleService
             'total_paid_value' => number_format($sale->total_paid_value, 2, ',', '.'),
             'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
             'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
+            'company_name' => $companyName,
         ];
     }
 
@@ -999,9 +1002,18 @@ class SaleService
         $userId = auth()->user()->account_owner_id;
 
         try {
+            
             $userCompanies = $companyModel->where('user_id', $userId)
                 ->pluck('id')
                 ->toArray();
+
+            // Filtro Company
+            if (!empty($filters["company"])) {
+                $companyId = Hashids::decode($filters["company"]);
+                $userCompanies = $companyModel->where('user_id', $userId)->where('id',$companyId)
+                ->pluck('id')
+                ->toArray();
+            } 
 
             $relationsArray = [
                 'sale',

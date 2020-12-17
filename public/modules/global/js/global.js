@@ -1,15 +1,14 @@
 $(document).ready(function () {
 
-    var current_url = window.location.pathname;
-
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
-    if(current_url.includes('reports')){
-        $("#reports-link").addClass('menu-active');
-    } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')){
-        $("#sales-link").addClass('menu-active');
-    }
+    // var current_url = window.location.pathname;
+    // if (current_url.includes('reports')) {
+    //     $("#reports-link").addClass('menu-active');
+    // } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
+    //     $("#sales-link").addClass('menu-active');
+    // }
 
     $(".mm-panels").css('scrollbar-width', 'none');
 
@@ -71,12 +70,20 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $('#loadingOnScreen').html('');
-    $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
+    $('#loadingOnScreen').append(
+        `<div class="ajax-loader">
+            <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
 }
 
 function loadingOnScreenRemove() {
-    $('#loadingOnScreen').html('');
+    window.setTimeout(function () {
+        $('.ajax-loader').fadeOut(function () {
+            $(this).html('')
+        });
+    },2000)
     $('#btn-modal').show();
 }
 
@@ -92,7 +99,7 @@ function loadOnModal(whereToLoad) {
 
     $(whereToLoad).children().hide('fast');
     $('#modal-title').html('Carregando ...')
-    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
         "<div class='loaderModal'>" +
         "</div>" +
         "</div>");
@@ -112,7 +119,8 @@ function loadOnTable(whereToLoad, tableReference) {
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
-    target.parent().find('.loader-any-container').remove();
+    $('.loader-any-container').fadeOut();
+    target.parent().find('.loader-any-container');
 
     if (!remove) {
 
@@ -145,7 +153,7 @@ function loadOnAny(target, remove = false, options = {}) {
         if (!target.hasClass('tab-pane') ||
             (target.hasClass('tab-pane') &&
                 target.hasClass('active'))) {
-            $(target).show();
+                $(target).fadeIn();
         }
     }
 }
@@ -358,7 +366,7 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
 
 /* TOP ALERT */
 
-$('.top-alert-close').on('click', function(){
+$('.top-alert-close').on('click', function () {
     $(this).parent().fadeOut();
 });
 
@@ -369,7 +377,7 @@ $('.top-alert-close').on('click', function(){
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyDocumentPending(){
+function ajaxVerifyDocumentPending() {
     $.ajax({
         method: 'GET',
         url: '/api/profile/verifydocuments',
@@ -403,7 +411,7 @@ function ajaxVerifyDocumentPending(){
 }
 
 function verifyDocumentPending() {
-    if(window.location.href.includes('/dashboard')){
+    if (window.location.href.includes('/dashboard')) {
         sessionStorage.removeItem('documentsPending');
         $('#document-pending').hide();
     }
@@ -457,6 +465,7 @@ function getCookie(name) {
 function deleteCookie(name) {
     setCookie(name, -1);
 }
+
 /* Cookies */
 
 $.fn.shake = function () {
@@ -466,11 +475,52 @@ $.fn.shake = function () {
     let animation1 = {left: "+=" + distance};
     let animation2 = {left: "-=" + (distance * 2)};
 
-    for (let i = 0 ; i < repeat; i++ ) {
+    for (let i = 0; i < repeat; i++) {
         $(this).animate(animation1, speed)
             .animate(animation2, speed)
             .animate(animation1, speed);
     }
 };
 
+/**
+ * Menu implementation
+ */
+$(document).ready(function () {
+    var bodyEl = $('body')
+    var menuBarToggle = $('[data-toggle="menubar"]');
+    menuBarToggle.off().on('click', function () {
+        bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
+        menuBarToggle.toggleClass('hided')
+        //$('.site-menu-item.has-sub').removeClass('active')
+    })
 
+    var siteMenuItems = $('.site-menu-item.has-sub')
+    var siteMenuBar = $('.site-menubar')
+    var menuTimeout
+    siteMenuBar.on('mouseenter', function () {
+        bodyEl.addClass('site-menubar-hover')
+    }).on('mouseleave', function () {
+        menuTimeout = setTimeout(function () {
+            bodyEl.removeClass('site-menubar-hover')
+            //if (!bodyEl.hasClass('site-menubar-unfold')) {
+                //siteMenuItems.removeClass('active')
+            //}
+        }, 1000)
+    }).find('*').on('mouseenter', function (event) {
+        clearTimeout(menuTimeout)
+        bodyEl.addClass('site-menubar-hover')
+    })
+
+    siteMenuItems.on('click', function () {
+        siteMenuItems.not($(this)).removeClass('active')
+        $(this).toggleClass('active')
+    })
+
+    var links = $('.site-menubar .site-menu-item a');
+    $.each(links, function (key, va) {
+        if (va.href == document.URL) {
+            $(this).addClass('menu-active')
+            $(this).parents('.site-menu-item.has-sub').find('> a').addClass('menu-active')
+        }
+    });
+})

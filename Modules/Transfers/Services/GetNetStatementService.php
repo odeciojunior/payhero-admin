@@ -80,11 +80,23 @@ class GetNetStatementService
         return '';
     }
 
-    private function canAddStatementItem($status, $paymentMethod): bool
+    private function canAddStatementItem($date, $status, $paymentMethod): bool
     {
 
         $isValidStatusFilter = true;
         $isValidPaymentMethodFilter = true;
+
+        if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
+
+            $startDate = $this->filters['start_date']->format('Ymd');
+            $endDate = $this->filters['end_date']->format('Ymd');
+            $date = Carbon::createFromFormat('d/m/Y', $date)->format('Ymd');
+
+            if ($date < $startDate || $date > $endDate) {
+
+                return false;
+            }
+        }
 
         if ($status && array_key_exists('status', $this->filters) && $this->filters['status'] != 'ALL') {
 
@@ -105,22 +117,10 @@ class GetNetStatementService
         return $isValidStatusFilter && $isValidPaymentMethodFilter;
     }
 
-    public function performStatement(stdClass $data, array $filters = [])
+    public function performWebStatement(stdClass $data, array $filters = [])
     {
 
         $this->filters = $filters;
-
-        //$saleIds = [865722, 864761, 864758, 864759, 864757, 864711, 864710, 864709, 860785, 838603, 838587];
-        //->whereIn('id', $saleIds)
-        /*$sales = Sale::where('gateway_id', 15)->orderBy('id', 'desc')->get();
-        foreach ($sales as $sale) {
-            Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
-        }
-
-        //foreach ($saleIds as $sale_id) {
-        //    echo "<br> - " . (Redis::connection('redis-statement')->get("sale:has:tracking:{$sale_id}"));
-        //}
-        dd('FIM');*/
 
         $transactions = array_reverse($data->list_transactions) ?? [];
         $adjustments = array_reverse($data->adjustments) ?? [];
@@ -140,7 +140,31 @@ class GetNetStatementService
         $this->preparesNodeAdjustments($adjustments);
 
         return [
-            'items' => $this->statementItems,
+            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
+            'totalInPeriod' => $this->totalInPeriod,
+            'totalAdjustment' => $this->totalAdjustment,
+            'totalChargeback' => $this->totalChargeback,
+            'totalReversed' => $this->totalReversed,
+            'totalTransactions' => $this->totalTransactions,
+        ];
+    }
+
+    public function performStatement(stdClass $data, array $filters = [])
+    {
+
+        $this->filters = $filters;
+
+        $transactions = array_reverse($data->list_transactions) ?? [];
+        $adjustments = array_reverse($data->adjustments) ?? [];
+        $chargeback = array_reverse($data->chargeback) ?? [];
+
+        $this->totalInPeriod = 0;
+
+        $this->preparesNodeTransactions($transactions);
+        $this->preparesNodeAdjustments($adjustments);
+
+        return [
+            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
             'totalInPeriod' => $this->totalInPeriod,
             'totalAdjustment' => $this->totalAdjustment,
             'totalChargeback' => $this->totalChargeback,
@@ -179,10 +203,10 @@ class GetNetStatementService
 
             if (count($item->details) == 0) {
 
-                dd('TODO::A', $item);
+                report(new Exception('GETNET::STATEMENT $item->details == 0'));
             } else if (count($item->details) > 1) {
 
-                dd('TODO::B', $item);
+                report(new Exception('GETNET::STATEMENT $item->details > 1'));
             }
 
             if (isset($item->summary) && isset($item->details) && is_array($item->details) && count($item->details) == 1) {
@@ -227,7 +251,9 @@ class GetNetStatementService
 
                         $paidWith = StatementItem::PAID_WITH_CREDIT_CARD;
                     } else {
-                        dd('TODO::C', $item);
+
+                        $paidWith = null;
+                        report(new Exception('GETNET::STATEMENT UNKNOW ERROR'));
                     }
 
                     $type = StatementItem::TYPE_TRANSACTION;
@@ -267,8 +293,12 @@ class GetNetStatementService
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
 
                 } elseif (
-                    $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate) && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
-                    || self::TRANSACTION_STATUS_CODE_ESTORNADA
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
+                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                    )
+                    ||
+                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
                 ) {
 
                     $details->setStatus('Liquidado')
@@ -277,19 +307,22 @@ class GetNetStatementService
 
                 } else {
 
-                    $details->setStatus(json_encode([
+                    /*$details->setStatus(json_encode([
                         'hasOrderId' => $hasOrderId,
                         'isTransactionCredit' => $isTransactionCredit,
                         'isReleaseStatus' => $isReleaseStatus,
                         'hasValidTracking' => $hasValidTracking,
                         'transactionStatusCode' => $transactionStatusCode,
                         'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
-                    ]))
+                    ]))*/
+                    $details->setStatus('-')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_ERROR);
                 }
 
-                if ($this->canAddStatementItem($details->getType(), $paidWith)) {
+                $date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+
+                if ($this->canAddStatementItem($date, $details->getType(), $paidWith)) {
 
                     $statementItem = new StatementItem();
 
@@ -299,8 +332,9 @@ class GetNetStatementService
                     $statementItem->paidWith = $paidWith;
                     $statementItem->type = $type;
                     $statementItem->transactionDate = $transactionDate;
-                    $statementItem->date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->date = $date;
                     $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
+                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y', $statementItem->date)->format('Ymd')) : 0;
 
                     $this->totalInPeriod += $amount;
                     $this->statementItems[] = $statementItem;
@@ -350,7 +384,9 @@ class GetNetStatementService
                     ->setDescription($adjustment->adjustment_reason)
                     ->setType($adjustment->transaction_sign == '+' ? Details::STATUS_ADJUSTMENT_CREDIT : Details::STATUS_ADJUSTMENT_DEBIT);
 
-                if ($this->canAddStatementItem($details->getType(), null)) {
+                $date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+
+                if ($this->canAddStatementItem($date, $details->getType(), null)) {
 
                     $statementItem = new StatementItem();
 
@@ -358,8 +394,9 @@ class GetNetStatementService
                     $statementItem->details = $details;
                     $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
                     $statementItem->transactionDate = $adjustmentDate;
-                    $statementItem->date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+                    $statementItem->date = $date;
                     $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
+                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y', $statementItem->date)->format('Ymd')) : 0;
 
                     $this->totalInPeriod += $amount;
                     $this->totalAdjustment += $amount;
