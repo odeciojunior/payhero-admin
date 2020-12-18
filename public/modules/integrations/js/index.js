@@ -23,6 +23,8 @@ $(document).ready(function () {
     createIntegration();
 
     function refreshIntegrations(page = 1) {
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/integrations?resume=true&page=" + page,
@@ -32,10 +34,10 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                // console.log(response);
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
                     $("#card-table-integrate").css('display', 'none');
@@ -47,6 +49,7 @@ $(document).ready(function () {
                 }
                 refreshToken();
                 deleteIntegration();
+                loadingOnScreenRemove();
             }
         });
     }

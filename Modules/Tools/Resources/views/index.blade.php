@@ -30,8 +30,11 @@
                 </div>
             </div>
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 @endsection
 @push('scripts')
-    {{--    <script src="{{ asset('modules/apps/js/index.js?v=1') }}"></script>--}}
+        <script src="{{ asset('modules/tools/js/index.js?v=1') }}"></script>
 @endpush

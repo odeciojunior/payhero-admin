@@ -2,61 +2,40 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Services\ShopifyService;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 
 class GenericCommand extends Command
 {
-    protected $signature = 'generic {user?}';
+    protected $signature = 'generic';
 
     protected $description = 'Command description';
 
     public function handle()
     {
-        $sales = Sale::with('project.shopifyIntegrations')
-            ->where('status', 3)
-            ->where('payment_method', 1)
-            ->whereDate('start_date', '>=', now()->subDays(30)->startOfDay())
-            ->whereNotNull('shopify_order')
-            ->get();
+        dd(DB::statement('update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id'));
+        // $totalCount = Transaction::whereNull('gateway_id')->count();
+        // $currentCount = 0;
 
-        $total = $sales->count();
-        $count = 0;
+        // Transaction::with('sale')->whereNull('gateway_id')->orderBy('id', 'desc')
+        //             ->chunk(100, function ($transactions) use($totalCount, $currentCount) {
 
-        $integrations = [];
-        foreach ($sales as $sale) {
-            try {
-                $count++;
-                $this->line("Venda {$count} de {$total}: {$sale->id}");
+        //                 foreach($transactions as $transaction) {
+        //                     $this->line("Atualizando transaction {$currentCount} de {$totalCount} ");
 
-                if (empty($integrations[$sale->project_id])) {
-                    $integration = $sale->project->shopifyIntegrations->first();
-                    $integrations[$sale->project_id] = new ShopifyService($integration->url_store,
-                        $integration->token,
-                        false);
-                }
-                $shopifyService = $integrations[$sale->project_id];
+        //                     $transaction->update([
+        //                         'gateway_id' => $transaction->sale->gateway_id
+        //                     ]);
 
-                $order = $shopifyService->getClient()->getOrderManager()->find($sale->shopify_order);
-
-                $fulfillments = $order->getFulfillments();
-                foreach ($fulfillments as $fulfillment) {
-                    $shopifyService->getClient()->getFulfillmentManager()->cancel($order->getId(),
-                        $fulfillment->getId());
-                }
-                $shopifyService->getClient()->getOrderManager()->cancel($order->getId());
-
-                $sale->shopify_order = null;
-                $sale->save();
-
-                $this->line('Foi!');
-            } catch (Exception $e) {
-                $this->error('ERR: ' . $e->getMessage());
-            }
-        }
+        //                     $currentCount++;
+        //                 }
+        //             });
     }
 }
 
 
+//update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id;

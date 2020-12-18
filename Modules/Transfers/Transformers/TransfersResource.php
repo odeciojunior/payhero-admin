@@ -24,19 +24,6 @@ class TransfersResource extends JsonResource
 
         $codeAnticipation = null;
 
-        if (!empty($this->anticipation_id)) {
-            $anticipation     = $this->anticipation->first();
-            $valueAnticipated = number_format(intval($anticipation->value) / 100, 2, ',', '.');
-            $codeAnticipation = Hashids::connection('anticipation_id')->encode($anticipation->id);
-        } else if (!empty($this->transaction_id) && !empty($this->transaction->anticipatedTransactions()->first())) {
-            $anticipatedTransaction     = $this->transaction->anticipatedTransactions()->first();
-            $valueAnticipated = number_format(intval($anticipatedTransaction->value) / 100, 2, ',', '.');
-
-            $codeAnticipation = Hashids::connection('anticipation_id')->encode($anticipatedTransaction->anticipation_id);
-        } else {
-            $valueAnticipated = '0,00';
-        }
-
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
         } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
@@ -53,13 +40,10 @@ class TransfersResource extends JsonResource
 
         $type             = $this->type_enum == 2 ? '-' : '';
         $value            = number_format(intval($type . $this->value) / 100, 2, ',', '.');
-        $currency         = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
-        $value            = $currency . $value;
-        $valueAnticipated = $valueAnticipated != '0,00' ? $currency . $valueAnticipated : '0,00';
 
         $tax = '';
         if (!empty($this->anticipation_id)) {
-            $tax = $currency . number_format(intval($this->anticipation->tax) / 100, 2, ',', '.');
+            $tax = number_format(intval($this->anticipation->tax) / 100, 2, ',', '.');
         }
 
         $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
@@ -78,7 +62,7 @@ class TransfersResource extends JsonResource
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
             'sale_date'         => $saleDate,
-            'value_anticipable' => $valueAnticipated,
+            'value_anticipable' => '0,00',
             'tax'               => $tax,
         ];
     }

@@ -57,8 +57,8 @@
                 @endif
             </div>
         </div>
-        <div class="page-content container">
-            <div id='project-not-empty' style='display:none'>
+        <div id='project-not-empty' style='display:none'>
+            <div class="page-content container">
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
 
@@ -304,10 +304,10 @@
                     </div>
                 </div>
             </div>
-            {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
-            {{-- FIM projeto nao existem projetos--}}
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
     <!-- Modal exportar relatorio -->
@@ -332,7 +332,7 @@
     <!-- End Modal -->
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=6') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

@@ -1,4 +1,5 @@
 $(function () {
+    loadingOnScreen();
 
     $.ajax({
         method: "GET",
@@ -10,20 +11,32 @@ $(function () {
         },
         error: function error(response) {
             $("#modal-content").hide();
+
+            loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if (Object.keys(response.data).length === 0) {
-                $("#project-empty").show();
-            } else {
-                $(response.data).each(function (index, data) {
-                    $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
+            if (!isEmpty(response.data)) {
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel").show()
+
+                $.each(response.data, function (i, project) {
+                    $("#select_projects").append($('<option>', {
+                        value: project.id,
+                        text: project.name
+                    }));
                 });
 
-                $("#reports-content").show();
-
                 updateReports();
+
+            } else {
+                $("#export-excel").hide()
+                $("#project-not-empty").hide();
+                $("#project-empty").show();
             }
+
+            loadingOnScreenRemove();
         }
     });
 
@@ -71,13 +84,18 @@ $(function () {
                 $("#percent-mobile").html(response.conversaoMobile + '%');
 
                 var table_data_itens = '';
-                $.each(response.plans, function (index, data) {
-                    table_data_itens += '<tr>';
-                    table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
-                    table_data_itens += '<td>' + data.name + "</td>";
-                    table_data_itens += '<td> x ' + data.quantidade + "</td>";
-                    table_data_itens += '</tr>';
-                });
+                if (!isEmpty(response.plans)){
+                    console.log('entrei', response.plans)
+                    $.each(response.plans, function (index, data) {
+                        table_data_itens += '<tr>';
+                        table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
+                        table_data_itens += '<td>' + data.name + "</td>";
+                        table_data_itens += '<td> x ' + data.quantidade + "</td>";
+                        table_data_itens += '</tr>';
+                    });
+                } else {
+                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda encontrada</td> </tr>`;
+                }
                 $('#origins-table-itens').html("");
                 $("#origins-table-itens").append(table_data_itens);
 

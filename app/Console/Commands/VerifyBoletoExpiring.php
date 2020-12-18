@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Services\BoletoExpireService;
-use Modules\Core\Services\BoletoExpiringService;
 use Modules\Core\Services\BoletoService;
 
 class VerifyBoletoExpiring extends Command

@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    getDataDashboard();
-
+    getProjects();
     $("#company").on("change", function () {
         updateValues();
     });
     let userAccepted = true;
     function getDataDashboard() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -16,7 +15,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -34,7 +33,7 @@ $(document).ready(function () {
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
-                    loadOnAny('.page-content', true);
+                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
@@ -70,6 +69,40 @@ $(document).ready(function () {
 
     function updateValues() {
 
+        loadOnAny('.text-money', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
+            }
+        });
+
+        loadOnAnyEllipsis('.update-text, .text-circle', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
+            }
+        });
+
+        $('.circle strong').addClass('loaded')
+
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
@@ -80,7 +113,10 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadingOnScreenRemove()
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -98,9 +134,10 @@ $(document).ready(function () {
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
-                updateNews(data.news);
-                updateReleases(data.releases);
-                loadOnAny('.page-content', true);
+
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadingOnScreenRemove();
             }
         });
     }
@@ -174,7 +211,6 @@ $(document).ready(function () {
     }
 
     function updateReleases(data) {
-
         $('#releases-div').html('');
 
         if (!isEmpty(data)) {
@@ -194,6 +230,27 @@ $(document).ready(function () {
         } else {
             $('#releases-col').hide();
         }
+    }
+
+    function updateCloudFox() {
+
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/get-releases",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                updateReleases(response.releases);
+                updateNews(response.news);
+            }
+        });
     }
     // function verifyPendingData() {
     //     $.ajax({
@@ -271,4 +328,36 @@ $(document).ready(function () {
     $("#closeWelcome").click(function () {
         $("#cardWelcome").slideUp("600");
     });
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    updateCloudFox()
+                    getDataDashboard();
+
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 });

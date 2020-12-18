@@ -3,7 +3,14 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=1') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
+    <style>
+        @font-face {
+            font-family: raty;
+            src: url(https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/fonts/raty.svg);
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -18,7 +25,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container page-project">
+        <div class="page-content container page-project" style="display: none">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -62,6 +69,12 @@
                             <a id="tab_upsell" class="nav-link" data-toggle="tab" href="#tab_upsell-panel"
                                aria-controls="tab_plans" role="tab">
                                 Upsell
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a id="tab_reviews" class="nav-link" data-toggle="tab"
+                               href="#tab_project_reviews"
+                               aria-controls="tab_project_reviews" role="tab"> Reviews
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -138,9 +151,9 @@
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             @include('projectupsellrule::index')
                         </div>
-                        <!-- Painel de Parceiros -->
-                        <div class="tab-pane" id="tab_partners" role="tabpanel">
-                            @include('partners::index')
+                        <!-- Reviews -->
+                        <div class="tab-pane" id="tab_project_reviews" role="tabpanel">
+                            @include('projectreviews::index')
                         </div>
                         <!-- Painel de Configurações  Abre a tela edit-->
                         <div class="tab-pane" id="tab_configuration_project" role="tabpanel">
@@ -194,8 +207,10 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
     @endpush
 @endsection
 

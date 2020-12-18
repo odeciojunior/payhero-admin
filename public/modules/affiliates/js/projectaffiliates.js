@@ -9,8 +9,6 @@ $(document).ready(function () {
         1: "success",
         2: "danger",
     };
-    getAffiliates();
-    getAffiliatesRequest();
 
     $('#tab-affiliates').on('click', function () {
         getAffiliates();
@@ -19,6 +17,48 @@ $(document).ready(function () {
     $('#tab-affiliates-request').on('click', function () {
         getAffiliatesRequest();
     });
+
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    getAffiliates();
+                    getAffiliatesRequest();
+
+                } else {
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 
     function getAffiliates() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
