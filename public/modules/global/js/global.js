@@ -126,7 +126,8 @@ function loadingOnScreenRemove() {
             $(this).html('')
         });
     },2000)
-    $('#btn-modal').show();
+    $('.page-header').fadeIn();
+    $('#btn-modal').fadeIn();
 }
 
 function loadOnNotification(whereToLoad) {

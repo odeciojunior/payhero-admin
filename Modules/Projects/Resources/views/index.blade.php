@@ -5,7 +5,7 @@
     @endpush
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <a href="/projects/create" class="btn btn-floating btn-danger" id="btn-add-project"
                style="position: relative; float: right; display:none" title='Adicionar projeto'>
                 <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>

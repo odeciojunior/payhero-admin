@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     @endpush
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <button id="add-collaborator" title='Adicionar colaborador' type="button"
                     class="btn btn-floating btn-danger"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
