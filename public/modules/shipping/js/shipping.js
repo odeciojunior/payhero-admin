@@ -49,7 +49,8 @@ $(document).ready(function () {
         }
     });
 
-    setSelect2Plugin('#shipping-plans-add')
+    setSelect2Plugin('#shipping-plans-add', '#modal-create-shipping')
+    setSelect2Plugin('#shipping-plans-edit', '#modal-edit-shipping')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -151,6 +152,7 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             }, success: function success(response) {
+
                 $('#modal-edit-shipping .shipping-id').val(response.id_code);
 
                 switch (response.type) {
@@ -171,15 +173,25 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .rule-shipping-value').trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 if (response.status == 1) {
-                    $('#modal-edit-shipping .shipping-status').val(1).prop('checked', true);
+                    $('#modal-edit-shipping .shipping-status').attr('checked', true);
                 } else {
-                    $('#modal-edit-shipping .shipping-status').val(0).prop('checked', false);
+                    $('#modal-edit-shipping .shipping-status').attr('checked', false);
                 }
                 if (response.pre_selected == 1) {
-                    $('#modal-edit-shipping .shipping-pre-selected').val(1).prop('checked', true);
+                    $('#modal-edit-shipping .shipping-pre-selected').attr('checked', true);
                 } else {
-                    $('#modal-edit-shipping .shipping-pre-selecteds').val(0).prop('checked', false);
+                    $('#modal-edit-shipping .shipping-pre-selected').attr('checked', false);
                 }
+
+                // Seleciona a opção do select de acordo com o que vem do banco
+                var plans = $('#modal-edit-shipping .shipping-plans-edit')
+                plans.html('')
+                let applyOnPlans = []
+                for (let plan of response.apply_on_plans) {
+                    applyOnPlans.push(plan.id);
+                    plans.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                }
+                plans.val(applyOnPlans).trigger('change')
 
                 $('#modal-edit-shipping').modal('show');
             }
@@ -312,7 +324,7 @@ $(document).ready(function () {
 
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
-                                        <td style="vertical-align: middle;">${value.type}</td>
+                                        <td style="vertical-align: middle;">${value.type_name}</td>
                                         <td style="vertical-align: middle;">${value.name}</td>
                                         <td style="vertical-align: middle;">${value.value}</td>
                                         <td style="vertical-align: middle;">${value.information}</td>
@@ -337,13 +349,12 @@ $(document).ready(function () {
         });
     }
 
-    function setSelect2Plugin(el) {
+    function setSelect2Plugin(el, dropdownParent) {
         el = $(el)
-        // Search plan
         el.select2({
             placeholder: 'Nome do plano',
             multiple: true,
-            dropdownParent: $('#modal-create-shipping'),
+            dropdownParent: $(dropdownParent),
             language: {
                 noResults: function () {
                     return 'Nenhum plano encontrado';
@@ -374,7 +385,7 @@ $(document).ready(function () {
                 },
                 processResults: function (res) {
                     let elemId = this.$element.attr('id');
-                    if (elemId === 'shipping-plans-add' && res.meta.current_page === 1) {
+                    if ((elemId === 'shipping-plans-add' || elemId === 'shipping-plans-edit') && res.meta.current_page === 1) {
                         let allObject = {
                             id: 'all',
                             name: 'Qualquer plano',

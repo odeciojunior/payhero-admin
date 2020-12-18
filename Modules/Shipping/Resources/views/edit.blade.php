@@ -66,4 +66,12 @@
             <input name='rule_value' type='text' class='input-pad rule-shipping-value' value='0' placeholder=''>
         </div>
     </div>
+    <div class='row'>
+        <div class='form-group col-12'>
+            <label for='shipping-plans-add'>Disponível para os planos: </label>
+            <select name="apply_on_plans[]" id="shipping-plans-edit" class="form-control shipping-plans-edit"
+                    style='width:100%'
+                    data-plugin="select2" multiple='multiple'> </select>
+        </div>
+    </div>
 </form>

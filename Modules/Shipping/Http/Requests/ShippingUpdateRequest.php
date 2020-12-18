@@ -21,6 +21,7 @@ class ShippingUpdateRequest extends FormRequest
             "status"          => "nullable",
             "pre_selected"    => "nullable",
             "rule_value"      => "nullable",
+            "apply_on_plans"  => "required|array"
         ];
     }
 

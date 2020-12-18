@@ -4,7 +4,6 @@ namespace Modules\Shipping\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -212,9 +211,8 @@ class ShippingApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($shipping) {
                         $shipping->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
-                        $shipping->rule_value = number_format($shipping->rule_value / 100, 2, ',', '.');
 
-                        return response()->json($shipping, 200);
+                        return response()->json(ShippingResource::make($shipping), 200);
                     } else {
                         return response()->json(['message' => 'Erro ao tentar editar o frete!'], 400);
                     }
@@ -273,6 +271,16 @@ class ShippingApiController extends Controller
                     if (empty($requestValidated['rule_value'])) {
                         $requestValidated['rule_value'] = 0;
                     }
+
+                    $applyPlanArray = [];
+                    if (in_array('all', $requestValidated['apply_on_plans'])) {
+                        $applyPlanArray[] = 'all';
+                    } else {
+                        foreach ($requestValidated['apply_on_plans'] as $key => $value) {
+                            $applyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $requestValidated['apply_on_plans'] = $applyPlanArray;
 
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
                     $shippingUpdated = $shipping->update($requestValidated);
