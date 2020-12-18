@@ -49,7 +49,7 @@ class LoginController extends Controller
             $this->redirectTo();
 
         if(env('ACCOUNT_FRONT_URL'))
-            return \Redirect::to(env('ACCOUNT_FRONT_URL'));
+            return \Redirect::to(env('ACCOUNT_FRONT_URL')). '?from=sirius';
 
         return view('auth.login');
     }
