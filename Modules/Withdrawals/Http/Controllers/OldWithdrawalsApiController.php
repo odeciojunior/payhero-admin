@@ -154,7 +154,7 @@ class OldWithdrawalsApiController extends Controller
             }
 
             // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company->id);
+            $blockedValue = $companyService->getBlockedBalance($company);
 
             $availableBalance = $company->balance - $blockedValue;
 
