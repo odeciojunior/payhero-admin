@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -58,7 +57,7 @@ class WithdrawalsApiController
                 ->where('automatic_liquidation', 1)
                 ->orderBy('id', 'DESC');
 
-            return WithdrawalResource::collection($withdrawals->paginate(5));
+            return WithdrawalResource::collection($withdrawals->paginate(10));
         } catch (Exception $e) {
             report($e);
 
@@ -71,10 +70,6 @@ class WithdrawalsApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request): JsonResponse
     {
         try {
@@ -89,10 +84,9 @@ class WithdrawalsApiController
                 );
             }
 
-            $userPresent = (new User())->present();
             $user = auth()->user();
 
-            if ($user->status == $userPresent->getStatus('withdrawal blocked')) {
+            if ($user->status == (new User())->present()->getStatus('withdrawal blocked')) {
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
             }
 
@@ -115,7 +109,7 @@ class WithdrawalsApiController
                 CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
             );
 
-            if ($withdrawalValue > $availableBalance) {
+            if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
                 return response()->json(
                     [
                         'message' => 'Valor informado inválido',
@@ -124,8 +118,6 @@ class WithdrawalsApiController
                 );
             }
 
-
-            /** Verifica se é o primeiro saque do usuário */
             $isFirstUserWithdrawal = false;
             $userWithdrawal = $withdrawalModel->whereHas(
                 'company',
@@ -195,7 +187,7 @@ class WithdrawalsApiController
         }
     }
 
-    public function getWithdrawalValues(Request $request)
+    public function getWithdrawalValues(Request $request): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -205,61 +197,6 @@ class WithdrawalsApiController
             $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
-            }
-
-            $userModel = new User();
-            $companyService = new CompanyService();
-
-            $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
-
-            if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved')
-                || $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')
-            ) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'user_documents_status' => 'pending',
-                        ],
-                    ],
-                    200
-                );
-            }
-
-            if (!$user->email_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'email_verified' => 'false',
-                        ],
-                    ],
-                    200
-                );
-            }
-
-            if (!$user->cellphone_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'cellphone_verified' => 'false',
-                        ],
-                    ],
-                    200
-                );
-            }
-
-            if (!$companyService->isDocumentValidated($company->id)) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'documents_status' => 'pending',
-                        ],
-                    ],
-                    200
-                );
             }
 
             $withdrawalValueRequested = FoxUtils::onlyNumbers($data['withdrawal_value']);
@@ -273,7 +210,7 @@ class WithdrawalsApiController
 
             $transactionsSum->chunk(
                 500,
-                $test = function ($transactions) use (
+                function ($transactions) use (
                     $currentValue,
                     $withdrawalValueRequested
                 ) {
@@ -294,7 +231,6 @@ class WithdrawalsApiController
                     }
                 }
             );
-
             return response()->json(
                 [
                     'lower_value' => 0,
@@ -308,10 +244,6 @@ class WithdrawalsApiController
         }
     }
 
-    /**
-     * @return JsonResponse
-     * @throws PresenterException
-     */
     public function checkAllowed(): JsonResponse
     {
         try {
@@ -329,5 +261,4 @@ class WithdrawalsApiController
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
         }
     }
-
 }
