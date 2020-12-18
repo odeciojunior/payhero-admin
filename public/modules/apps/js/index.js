@@ -1,8 +1,9 @@
 $(document).ready(function () {
 
-    updateUsedApps();
 
     function updateUsedApps() {
+        loadOnAny('.page', false);
+
         $.ajax({
             method: 'GET',
             url: '/api/apps',
@@ -12,6 +13,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page', true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -63,9 +65,43 @@ $(document).ready(function () {
                 if (response.notazzIntegrations == 0) {
                     $('.div-notazz-integration').remove();
                 }
+
+                loadOnAny('.page', true);
             }
         });
     }
 
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen()
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove()
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    updateUsedApps();
+
+                } else {
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove()
+            }
+        });
+    }
 });
 

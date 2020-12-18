@@ -5,7 +5,7 @@
     @endpush
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <a href="/projects/create" class="btn btn-floating btn-danger" id="btn-add-project"
                style="position: relative; float: right; display:none" title='Adicionar projeto'>
                 <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
@@ -56,7 +56,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{asset('modules/projects/js/index.js?v=6')}}"></script>
+        <script src="{{asset('modules/projects/js/index.js?v=' . random_int(100, 10000))}}"></script>
     @endpush
 
 @endsection

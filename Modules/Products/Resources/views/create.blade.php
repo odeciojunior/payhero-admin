@@ -8,7 +8,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <h1 class="page-title">Cadastrar novo produto</h1>
             <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
             <div class="page-header-actions">
@@ -169,7 +169,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=6') }}"></script>
+        <script src="{{ asset('modules/products/js/create.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

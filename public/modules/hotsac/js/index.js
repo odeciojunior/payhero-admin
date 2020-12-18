@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     index();
     function index() {
+        loadingOnScreen()
         $.ajax({
             method: "GET",
             url: "/api/apps/hotsac/",
@@ -11,6 +12,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove()
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -38,6 +40,8 @@ $(document).ready(function () {
                     $('#project-empty').hide();
                     $('#integration-actions').show();
                 }
+
+                loadingOnScreenRemove()
             }
         });
     }

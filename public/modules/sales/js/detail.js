@@ -165,7 +165,7 @@ $(() => {
         $('#modal_detalhes').modal('show');
         $("#refundAmount").mask('##.###,#0', {reverse: true});
         $("#refundBilletAmount").mask('##.###,#0', {reverse: true});
-        //alert("AQuii");
+
         $.ajax({
             method: "GET",
             url: '/api/sales/' + sale,

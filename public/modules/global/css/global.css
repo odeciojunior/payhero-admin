@@ -101,6 +101,7 @@ body {
         text-align: justify !important;
     }
 }
+
 @media screen and (min-width: 768px) and (max-width: 814px) {
     .display-sm-none {
         display: none !important;
@@ -230,7 +231,8 @@ body {
             content: attr(aria-label);
             */
             content: attr(data-label);
-        / float: left;/ font-weight: bold;
+        / float: left;
+        / font-weight: bold;
             text-transform: uppercase;
         }
 
@@ -239,6 +241,7 @@ body {
         }
     }
 }
+
 .ellipsis {
     display: inline-block;
     width: 100px;
@@ -292,19 +295,23 @@ body {
     margin-left: 10px;
     text-align: center;
 }
+
 .top-alert-action:hover {
     background: rgba(0, 0, 0, 0.3);
 }
+
 .top-alert-message {
     color: #000000;
     font-size: 20px
 }
+
 .top-alert-message-container {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .top-alert-close {
     margin-right: 15px;
     color: #000000 !important;
@@ -320,6 +327,7 @@ body {
         font-size: inherit;
     }
 }
+
 /* END - TOP ALERT */
 
 .modal-sidebar {
@@ -349,8 +357,76 @@ a.label {
         bottom: 5px !important;
     }
 }
+
 @media (max-width: 768px) {
     .margin-chat-pagination {
         margin-bottom: 90px;
     }
+}
+
+.site-menubar-fold .site-menu-title {
+    width: 20px;
+}
+
+.site-menubar-unfold .site-menu-title,
+.site-menubar-hover .site-menu-title{
+    width: 100%;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item .site-menu-sub {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    transition: all ease .75s;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-sub {
+    display: block;
+    opacity: 1;
+    max-height: 100vh;
+    transition: all ease .75s;
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item .site-menu-arrow {
+    transition: transform 0.5s
+}
+
+.site-menubar:not(.mm-menu) .site-menu-item.active .site-menu-arrow {
+    transform: rotateY(0deg) rotate(90deg);
+    transition: transform 0.5s;
+}
+
+@media (max-width: 968px) {
+    .site-menubar-fold .page, .site-menubar-fold .site-footer {
+        margin-left: 0px;
+        transition: all .25s;
+    }
+}
+
+.ajax-loader {
+    background-color: rgba(255, 255, 255, 1);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1101;
+    text-align: center;
+}
+
+.ajax-loader img {
+    position: relative;
+    top: 37%;
+}
+
+.ajax-loader span {
+    position: fixed;
+    top: 55%;
+    width: 100%;
+    right: 0;
+    font-size: 18px;
+    font-weight: bolder;
+    background: linear-gradient(74deg, #E6774C, #F17227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

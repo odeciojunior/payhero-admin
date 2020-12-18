@@ -17,7 +17,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <h1 class="page-title" style="min-height: 28px"></h1>
             <div class="page-header-actions">
                 <a class="btn btn-success float-right" href="/projects">
@@ -25,7 +25,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container page-project">
+        <div class="page-content container page-project" style="display: none">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">

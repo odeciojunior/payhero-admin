@@ -166,7 +166,6 @@ $(() => {
     }
 
     function renderCheckout(checkout) {
-        console.log(checkout);
         $('#checkout-ip').text('IP: ' + checkout.ip);
         $('#checkout-operational-system').text('Dispositivo: ' + checkout.operational_system);
         $('#checkout-browser').text('Navegador: ' + checkout.browser);

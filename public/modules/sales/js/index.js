@@ -171,7 +171,8 @@ $(document).ready(function () {
 
     // Obtem o os campos dos filtros
     function getProjects() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -181,17 +182,30 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#project").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
+
+                    atualizar();
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
-                loadOnAny('.page-content', true);
-                atualizar();
+
+                loadingOnScreenRemove();
             }
         });
     }
@@ -386,6 +400,7 @@ $(document).ready(function () {
         placeholder: 'Nome do plano',
         // multiple: true,
         allowClear: true,
+        dropdownParent: $('.align-items-baseline'),
         language: {
             noResults: function () {
                 return 'Nenhum plano encontrado';

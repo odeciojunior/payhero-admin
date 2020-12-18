@@ -177,7 +177,7 @@ $(document).ready(function () {
     }
 
     function create() {
-
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -189,6 +189,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -263,6 +264,8 @@ $(document).ready(function () {
 
                     index();
                 }
+
+                loadingOnScreenRemove();
             }
         });
     }

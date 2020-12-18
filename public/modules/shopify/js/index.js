@@ -1,6 +1,5 @@
 $(document).ready(function () {
-
-    loadOnAny('.page-content');
+    loadingOnScreen();
     $('#btn-integration-model').hide();
 
     $.ajax({
@@ -13,13 +12,13 @@ $(document).ready(function () {
         },
         error: function error(response) {
             $("#modal-content").hide();
-            loadOnAny('.page-content', true);
             errorAjaxResponse(response);
         },
         success: function success(response) {
             index();
             verifyDocuments();
             create(response.data);
+            loadingOnScreenRemove();
         }
     });
 
@@ -36,11 +35,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('.page-content', true);
                 createHtmlIntegrations(response.data);
             }
         });
@@ -56,11 +53,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('.page-content', true);
                 if (!response.analyzing && !response.refused) {
                     $('#btn-integration-model').show();
                 } else {

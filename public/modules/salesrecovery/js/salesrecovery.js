@@ -72,6 +72,8 @@ $(document).ready(function () {
      * Busca os projetos para montar o select
      */
     function getProjects() {
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -81,12 +83,16 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
+                console.log('entrei erro')
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
+                    $("#export-excel").show()
+
                     $.each(response.data, function (i, project) {
                         $("#project").append($('<option>', {
                             value: project.id,
@@ -97,9 +103,12 @@ $(document).ready(function () {
                     updateSalesRecovery();
 
                 } else {
+                    $("#export-excel").hide()
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
+
+                loadingOnScreenRemove();
             }
         });
     }
@@ -157,13 +166,13 @@ $(document).ready(function () {
 
                 if (response.data == '' && $('#type_recovery').val() == 1) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado encontrado</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 5) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado encontrado</td></tr>");
                 } else {
 
                     createHTMLTable(response);

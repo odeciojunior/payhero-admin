@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     //Obtém as empresas
     function getCompanies() {
-        loadOnAny('.page', false);
+        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -66,15 +66,14 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAny('.page', true);
-
                 if (isEmpty(response.data)) {
                     $('.page-content').hide();
                     $('.content-error').show();
+                    loadingOnScreenRemove();
                     return;
                 }
 
@@ -98,6 +97,7 @@ $(document).ready(function () {
 
                 if (!itsApprovedTransactGetnet) {
                     $("#companies-not-approved-getnet").show();
+                    loadingOnScreenRemove();
                     return;
                 }
                 $(".card-show-content-finances").show();
@@ -106,9 +106,11 @@ $(document).ready(function () {
                 if (isLocal) {
                     $("#nav-home-tab").css('display', 'block');
                 }
+
                 updateAccountStatementData();
                 updateBalances();
                 checkAllowed();
+                loadingOnScreenRemove();
             }
         });
     }
@@ -313,7 +315,7 @@ $(document).ready(function () {
                                 </div>
                                 </div>
                                 <hr>
-                                <h4>Valor do saque: 
+                                <h4>Valor do saque:
                                     <span id="modal-withdrawal-value" class='greenGradientText'></span>
                                 </h4>
                                 <hr>

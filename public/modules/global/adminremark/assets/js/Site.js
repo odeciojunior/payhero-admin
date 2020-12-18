@@ -12,7 +12,7 @@
   }
 })(this, function (exports, _jquery, _Base2, _Menubar, _Sidebar, _PageAside, _GridMenu) {
   'use strict';
- 
+
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -79,7 +79,7 @@
       key: '_getDefaultMeunbarType',
       value: function _getDefaultMeunbarType() {
         var breakpoint = this.getCurrentBreakpoint(),
-            type = false;
+          type = false;
 
         if ($BODY.data('autoMenubar') === false || $BODY.is('.site-menubar-keep')) {
           if ($BODY.hasClass('site-menubar-fold')) {
@@ -104,6 +104,8 @@
     }, {
       key: 'menubarType',
       value: function menubarType(type) {
+        //Remover esse return em caso de problemas com a navbar
+        return;
         var toggle = function toggle($el) {
           $el.toggleClass('hided', !(type === 'open'));
           $el.toggleClass('unfolded', !(type === 'fold'));
@@ -319,8 +321,8 @@
             return;
           }
           var overflow = (0, _jquery2.default)('body').css('overflow'),
-              self = this,
-              tourOptions = Config.get('tour');
+            self = this,
+            tourOptions = Config.get('tour');
 
           this.tour = introJs();
 

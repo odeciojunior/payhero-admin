@@ -6,7 +6,7 @@
 @section('content')
     <div id='project-content'>
         <div class='page'>
-            <div class="page-header container">
+            <div style="display: none" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações com HotZapp</h1>
@@ -76,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/hotzapp/js/index.js?v=2')}}"></script>
+        <script src="{{asset('modules/hotzapp/js/index.js?v=3')}}"></script>
     @endpush
 @endsection

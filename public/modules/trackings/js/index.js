@@ -122,7 +122,7 @@ $(() => {
      */
     function getProjects() {
 
-        loadOnAny('.page-content');
+        loadingOnScreen();
 
         $.ajax({
             method: 'GET',
@@ -134,16 +134,31 @@ $(() => {
             },
             error: response => {
                 errorAjaxResponse(response);
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
             },
             success: response => {
-                $.each(response.data, function (index, project) {
-                    $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
-                });
-                loadOnAny('.page-content', true);
-                index();
-                getResume();
-                getBlockedBalance();
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#project-select").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    index();
+                    getResume();
+                    getBlockedBalance();
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
             }
         });
     }
@@ -272,12 +287,13 @@ $(() => {
             },
             success: response => {
                 $('#dados_tabela').html('');
+                $('#tabela_trackings').addClass('table-striped');
 
                 let grayRow = false;
                 let lastSale = '';
 
                 if (isEmpty(response.data)) {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='5' style='height: 70px;vertical-align: middle'> Nenhum rastreamento encontrado</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='6' style='height: 70px;vertical-align: middle'> Nenhum rastreamento encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, tracking) {
 
@@ -329,7 +345,6 @@ $(() => {
                     });
 
                     pagination(response, 'trackings', index);
-                    $('#tabela_trackings').removeClass('table-striped');
                 }
             }
         });

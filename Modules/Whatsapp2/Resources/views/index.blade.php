@@ -6,7 +6,7 @@
 @section('content')
     <div id='project-content'>
         <div class='page'>
-            <div class="page-header container">
+            <div style="display: none" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações Whatsapp 2.0</h1>
@@ -39,7 +39,7 @@
                             <div class="pt-10 pr-20 pl-20 modal_integracao_body">
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <label for='email'>Token 
+                                        <label for='email'>Token
                                             <i class="fa-question-circle-o text-info" data-content="Copie o token e adicione uma integração com a CloudFox na sua conta do Whatsapp 2.0 para gerar as urls de pedidos e checkouts. Depois cole as urls abaixo para finalizar sua integração" data-toggle="popover" data-trigger="click"></i>
                                         </label>
                                     </div>
@@ -92,6 +92,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/whatsapp2/js/index.js"></script>
+        <script src="/modules/whatsapp2/js/index.js?v=1"></script>
     @endpush
 @endsection

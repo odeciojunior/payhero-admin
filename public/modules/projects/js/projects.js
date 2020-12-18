@@ -172,6 +172,7 @@ $(() => {
 
     //carrega detalhes do projeto
     function show() {
+        loadingOnScreen();
 
         loadOnAny('#tab_info_geral .card', false, {
             styles: {
@@ -190,6 +191,8 @@ $(() => {
             },
             error: (response) => {
                 window.location.replace(`${location.origin}/projects`);
+                $('.page-content').show()
+                loadingOnScreenRemove();
                 /* errorAjaxResponse(response);
                  loadOnAny('#tab_info_geral .card', true);*/
             },
@@ -211,7 +214,9 @@ $(() => {
                 }
                 $('#show-description').text(project.description);
 
+                $('.page-content').show()
                 loadOnAny('#tab_info_geral .card', true);
+                loadingOnScreenRemove();
             }
         });
     }

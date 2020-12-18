@@ -89,7 +89,6 @@ $(document).ready(function () {
                                 errorAjaxResponse(response);
                             },
                             success: (response) => {
-                                loadingOnScreenRemove();
                                 index();
                                 alertCustom('success', response.message);
                             }
@@ -184,7 +183,6 @@ $(document).ready(function () {
                                         errorAjaxResponse(response);
                                     },
                                     success: function success(response) {
-                                        loadingOnScreenRemove();
                                         $('#modal_add_collaborator').modal('hide');
                                         $(".check").prop('checked', false);
                                         $('#password_edit').attr('disabled', true);
@@ -197,6 +195,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+                loadingOnScreenRemove();
             }
         });
     }
@@ -227,7 +226,6 @@ $(document).ready(function () {
                 },
                 success: function success(response) {
                     // $("#no-integration-found").hide();
-                    loadingOnScreenRemove();
                     $('#modal_add_collaborator').modal('hide');
                     index();
                     clearFields();

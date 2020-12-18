@@ -184,8 +184,10 @@ class TransfersApiController
 
             $filters['status'] = request()->get('status');
             $filters['payment_method'] = request()->get('payment_method');
+            $filters['start_date'] = $startDate;
+            $filters['end_date'] = $endDate;
 
-            $data = (new GetNetStatementService())->performStatement($result, $filters);
+            $data = (new GetNetStatementService())->performWebStatement($result, $filters);
 
             return response()->json($data);
         } catch (Exception $exception) {
