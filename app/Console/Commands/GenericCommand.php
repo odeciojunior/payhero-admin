@@ -6,8 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
 {
@@ -17,25 +19,32 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        dd(DB::statement('update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id'));
-        // $totalCount = Transaction::whereNull('gateway_id')->count();
-        // $currentCount = 0;
+        try {
+            $trackingCodes = collect(DB::select(DB::raw("select tracking_code
+                                                        from trackings
+                                                        group by tracking_code
+                                                        having count(*) > 1")))
+                ->pluck('tracking_code')
+                ->toArray();
 
-        // Transaction::with('sale')->whereNull('gateway_id')->orderBy('id', 'desc')
-        //             ->chunk(100, function ($transactions) use($totalCount, $currentCount) {
+            $trackingService = new TrackingService();
 
-        //                 foreach($transactions as $transaction) {
-        //                     $this->line("Atualizando transaction {$currentCount} de {$totalCount} ");
+            $query = Tracking::with('productPlanSale')
+                ->whereIn('tracking_code', $trackingCodes);
 
-        //                     $transaction->update([
-        //                         'gateway_id' => $transaction->sale->gateway_id
-        //                     ]);
+            $total = $query->count();
+            $count = 0;
 
-        //                     $currentCount++;
-        //                 }
-        //             });
+            $query->chunk(1000, function ($trackings) use (&$count, $total, $trackingService) {
+                foreach ($trackings as $t){
+                    $count++;
+                    $this->line("Checking tracking {$count} de {$total}: $t->tracking_code");
+                    $trackingService->createOrUpdateTracking($t->tracking_code, $t->productPlanSale);
+                }
+            });
+
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
     }
 }
-
-
-//update transactions inner join sales on transactions.sale_id = sales.id set transactions.gateway_id = sales.gateway_id;
