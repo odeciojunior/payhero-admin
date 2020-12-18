@@ -3,6 +3,8 @@ $(document).ready(function () {
     let typeEnum;
     getDataProducts();
     function getDataProducts() {
+        loadingOnScreen();
+
         $.ajax({
             method: 'GET',
             url: '/api/products/' + code + '/edit',
@@ -12,6 +14,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -213,6 +216,8 @@ $(document).ready(function () {
                     alertCustom('success', 'Ocorreu um erro, tente novamente mais tarde');
                     window.location = "/products";
                 }
+
+                loadingOnScreenRemove();
             }
         });
     }

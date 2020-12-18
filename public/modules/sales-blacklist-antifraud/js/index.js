@@ -95,7 +95,7 @@ $(document).ready(function () {
     getProjects();
 
     function getProjects() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: 'GET',
             url: 'api/projects?select=true',
@@ -105,19 +105,29 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append(`<option value='${project.id}'>${project.name}</option>`);
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#text-info").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
-                    loadOnAny('.page-content', true);
+
                     updateList();
                 } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                    loadOnAny('.page-content', true);
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#text-info").hide()
                 }
+
+                    loadingOnScreenRemove();
             }
         });
     }

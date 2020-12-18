@@ -76,10 +76,9 @@ $(document).ready(function () {
     }
 
     getCompanies();
-    getProjects();
 
     function getCompanies() {
-        loadOnAny('.page-content');
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             //url: '/api/projects?select=true',
@@ -89,7 +88,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -97,15 +96,14 @@ $(document).ready(function () {
                     $.each(response.data, function (index, company) {
                         $('#company').append('<option value="' + company.id + '">' + company.name + '</option>')
                     });
+
+                    getProjects();
                 }
-                loadOnAny('.page-content', true);
-                atualizar();
             }
         });
     }
 
     function getProjects() {
-        loadOnAny('.page-content');
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -115,17 +113,30 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#project').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#project").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
                     });
+
+                    atualizar();
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
-                loadOnAny('.page-content', true);
-                atualizar();
+
+                    loadingOnScreenRemove();
             }
         });
     }
@@ -201,10 +212,8 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#body-table-pending').html('');
                 $('.table-pending').addClass('table-striped');
-                console.log(response)
 
                 if (!isEmpty(response.data)) {
-                    console.log(response.data)
                     $.each(response.data, function (index, value) {
 
                         dados = `  <tr>

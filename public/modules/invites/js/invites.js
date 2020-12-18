@@ -18,6 +18,7 @@ $(document).ready(function () {
     var currentPage = 1;
 
     function updateInvites() {
+        loadingOnScreen();
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         var cont = 0;
@@ -37,6 +38,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -141,6 +143,8 @@ $(document).ready(function () {
                         });
                     });
                 });
+
+                loadingOnScreenRemove()
             }
         });
     }

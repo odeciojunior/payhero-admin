@@ -70,13 +70,64 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $('#loadingOnScreen').html('');
-    $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
+    $('#loadingOnScreen').append(
+        `<div class="ajax-loader">
+            <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
+}
+
+function loadOnAnyEllipsis(target, remove = false, options = {}) {
+    //cleanup
+    target = $(target);
+    $('.loader-any-container-ellipsis').fadeOut();
+    target.parent().find('.loader-any-container-ellipsis').remove();
+
+    if (!remove) {
+
+        //create elements
+        let container = $('<div class="loader-any-container-ellipsis"></div>');
+        let loader = $('<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>');
+
+        //apply styles or use default
+        options.styles = options.styles ? options.styles : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
+        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
+        container.css(options.styles.container);
+        if (options.styles.loader) {
+            loader.css(options.styles.loader);
+        }
+
+        //add loader to container
+        container.append(loader);
+
+        //add loader to screen
+        target.hide();
+        if (options.insertBefore) {
+            container.insertBefore(target.parent().find(options.insertBefore));
+        } else {
+            target.parent().append(container);
+        }
+    } else {
+        // show target again with fix to Bootstrap tabs
+        if (!target.hasClass('tab-pane') ||
+            (target.hasClass('tab-pane') &&
+                target.hasClass('active'))) {
+            $(target).fadeIn();
+        }
+    }
 }
 
 function loadingOnScreenRemove() {
-    $('#loadingOnScreen').html('');
-    $('#btn-modal').show();
+    window.setTimeout(function () {
+        $('#loadingOnScreen').fadeOut(function () {
+            $(this).html('')
+        });
+    },2000)
+    $('.page-header').fadeIn();
+    $('#btn-modal').fadeIn();
 }
 
 function loadOnNotification(whereToLoad) {
@@ -91,7 +142,7 @@ function loadOnModal(whereToLoad) {
 
     $(whereToLoad).children().hide('fast');
     $('#modal-title').html('Carregando ...')
-    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
         "<div class='loaderModal'>" +
         "</div>" +
         "</div>");
@@ -111,6 +162,7 @@ function loadOnTable(whereToLoad, tableReference) {
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
+    $('.loader-any-container').fadeOut();
     target.parent().find('.loader-any-container').remove();
 
     if (!remove) {
@@ -144,7 +196,7 @@ function loadOnAny(target, remove = false, options = {}) {
         if (!target.hasClass('tab-pane') ||
             (target.hasClass('tab-pane') &&
                 target.hasClass('active'))) {
-            $(target).show();
+                $(target).fadeIn();
         }
     }
 }

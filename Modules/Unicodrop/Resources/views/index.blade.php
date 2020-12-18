@@ -6,7 +6,7 @@
 @section('content')
     <div id='project-content'>
         <div class='page'>
-            <div class="page-header container">
+            <div style="display: none" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações Unicodrop</h1>
@@ -76,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/unicodrop/js/index.js?v=1"></script>
+        <script src="/modules/unicodrop/js/index.js?v=2"></script>
     @endpush
 @endsection
