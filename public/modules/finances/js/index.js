@@ -226,12 +226,12 @@ $(document).ready(function () {
         }
 
         function verifyWithdrawalIsValid(toTransfer, availableBalance) {
-            /*if (toTransfer < 1) {
+            if (toTransfer < 1) {
                 alertCustom('error', 'Valor do saque inválido!');
                 $('#custom-input-addon').val('');
                 $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
                 return false;
-            }*/
+            }
 
             if (toTransfer > availableBalance) {
                 alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
@@ -260,6 +260,7 @@ $(document).ready(function () {
                 return;
             }
 
+
             $.ajax(
                 {
                     url: "/api/withdrawals/getWithdrawalValues",
@@ -277,26 +278,6 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
-                        if (response.data.user_documents_status == 'pending') {
-                            userDocumentsPendingModal();
-                            return;
-                        }
-
-                        if (response.data.documents_status == 'pending') {
-                            documentsStatusPendingModal();
-                            return;
-                        }
-
-                        if (response.data.email_verified == 'false') {
-                            emailNotVerified();
-                            return;
-                        }
-
-                        if (response.data.cellphone_verified == 'false') {
-                            cellphoneNotVerified();
-                            return;
-                        }
-
                         let withdrawalSingleValue = manipulateModalWithdrawal(response.data);
 
                         $("#bt-confirm-withdrawal").unbind("click");
@@ -332,6 +313,7 @@ $(document).ready(function () {
                                 },
                                 success: (response) => {
                                     loadingOnScreenRemove();
+                                    loadOnAny('.price', true);
                                     manipulateModalSuccessWithdrawal();
 
                                     $('.btn-return').on('click', function () {
@@ -392,12 +374,6 @@ $(document).ready(function () {
             let currentBalance = $('.available-balance').html().replace(',', '').replace('.', '');
             let withdrawal = $('#custom-input-addon').val().replace(',', '').replace('.', '');
             let singleValue = false;
-            /*
-            console.log('Current Balance -> ' + currentBalance);
-            console.log('Lower Balance -> ' + dataWithdrawal.lower_value);
-            console.log('Bigger Balance -> ' + dataWithdrawal.bigger_value);
-            console.log('Saque pedido -> ' + $('#custom-input-addon').val());
-            */
 
             if ((dataWithdrawal.lower_value == 0 || dataWithdrawal.bigger_value == withdrawal || dataWithdrawal.lower_value == withdrawal || currentBalance == dataWithdrawal.bigger_value)) {
                 singleValue = true;
@@ -406,48 +382,57 @@ $(document).ready(function () {
             $('#modal-withdrawal-title').text("Confirmar Saque");
 
             $('#modal_body').html(`
-                <div class="">
-                    <h4>Valor do saque: 
-                        <div class="radio-custom radio-primary" id="more-than-on-values-show" style="${singleValue ? 'display:none;' : 'display:block'}">
-                            <div class="row">
-                                <div class="col-md-6">
-                                     <input hidden id="first-value" value="${dataWithdrawal.bigger_value}">
-                                    <input type="radio" id="inputRadioFirstValue" name="valueWithdrawal" checked>
-                                    <label for="inputRadioFirstValue">
-                                        ${
-                                            ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
-                                                style: 'currency',
-                                                currency: 'BRL',
-                                            }))
-                                        }
-                                    </label>
-                                </div>
-                                 <div class="col-md-6">
-                                    <input hidden id="second-value" value="${dataWithdrawal.lower_value}">
-                                    <input type="radio" id="inputRadioSecondValue" name="valueWithdrawal" >
-                                    <label for="inputRadioSecondValue">
-                                        ${
-                                            ((dataWithdrawal.lower_value / 100).toLocaleString('pt-BR', {
-                                                style: 'currency',
-                                                currency: 'BRL'
-                                            }))
-                                        }                                        
-                                    </label>
+                <div>
+                    <div style="background-color: yellow; color: black; border-radius: 10px">
+                        Os valores disponíveis para saque representam a totalidade de vendas compensadas até o momento.
+                        Após o pagamento ser aprovado, é preciso aguardar o prazo determinado para receber os valores na conta e conseguir sacá-los.
+                        Essa medida tem o objetivo de garantir a segurança de clientes e lojistas durante o andamento das operaçoẽs financeiras.
+                    </div>
+                    <div class="mt-50 mb-50">
+                        <h3 class="text-center">
+                            ${singleValue ? 'Opção de saque disponível:' : 'Opções de saque disponíveis:'}
+                            <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show" style="${singleValue ? 'display:none;' : 'display:block'}">
+                                <div class="text-center">
+                                    <div class="">
+                                        <input hidden id="first-value" value="${dataWithdrawal.bigger_value}">
+                                        <input type="radio" id="inputRadioFirstValue" name="valueWithdrawal" checked>
+                                        <label for="inputRadioFirstValue">
+                                            ${
+                                                ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
+                                                    style: 'currency',
+                                                    currency: 'BRL',
+                                                }))
+                                            }
+                                        </label>
+                                    </div>
+                                     <div class="">
+                                        <input hidden id="second-value" value="${dataWithdrawal.lower_value}">
+                                        <input type="radio" id="inputRadioSecondValue" name="valueWithdrawal" >
+                                        <label for="inputRadioSecondValue">
+                                            ${
+                                                ((dataWithdrawal.lower_value / 100).toLocaleString('pt-BR', {
+                                                    style: 'currency',
+                                                    currency: 'BRL'
+                                                }))
+                                            }                                        
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="just-value-show" style=" ${singleValue ? 'display:block' : 'display:none;'}">
-                            <button id="modal-withdrawal-value" hidden value="${(dataWithdrawal.bigger_value)}"></button>
-                            <span  class="greenGradientText"> 
-                                ${
-                                    ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                    }))
-                                } 
-                            </span>
-                        </div>
-                    </h4>
+                            <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary " style=" ${singleValue ? 'display:block' : 'display:none;'}">
+                                <input hidden id="modal-withdrawal-value" value="${dataWithdrawal.bigger_value}">
+                                <input type="radio" id="inputRadioSingleValue" checked name="valueWithdrawal" >
+                                <label for="inputRadioSingleValue">
+                                    ${
+                                        ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
+                                            style: 'currency',
+                                            currency: 'BRL'
+                                        }))
+                                    }                                        
+                                </label>
+                            </div>
+                        </h3>
+                    </div>
                 </div>`
             );
 
@@ -491,6 +476,7 @@ $(document).ready(function () {
 
         function updateWithdrawalsTable(link = null) {
             $("#withdrawals-table-data").html("");
+            $("#pagination-withdrawals").html("");
             loadOnTable('#withdrawals-table-data', '#transfersTable');
             if (link == null) {
                 link = '/api/withdrawals';
@@ -525,14 +511,7 @@ $(document).ready(function () {
                         tableData += "<td>" + data.account_information + "</td>";
                         tableData += "<td>" + data.date_request + "</td>";
                         tableData += "<td>" + data.date_release + "</td>";
-                        if (data.tax_value < 50000) {
-                            tableData += "<td>" + data.value + '<br><small>(taxa de R$10,00)</small>' + "</td>";
-                        } else {
-                            tableData += "<td>" + data.value + "</td>";
-                        }
-                        if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
-                            tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
-                        }
+                        tableData += "<td>" + data.value + "</td>";
                         tableData += '<td class="shipping-status">';
                         tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
                         tableData += '</td>';
@@ -551,11 +530,6 @@ $(document).ready(function () {
     $(document).on("click", "#bt_filtro", function () {
         $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
         updateTransfersTable();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
-            $("#transferred_value").show();
-        } else {
-            $("#transferred_value").hide();
-        }
     });
 
     function updateTransfersTable(link = null) {
@@ -592,8 +566,9 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-
                 $("#table-transfers-body").html('');
+                $("#pagination-transfers").html("");
+
 
                 let balance_in_period = response.meta.balance_in_period;
                 let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
@@ -662,7 +637,6 @@ $(document).ready(function () {
         });
 
         function paginationTransfersTable(response) {
-            $("#pagination-transfers").html("");
             let primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
             $("#pagination-transfers").append(primeira_pagina);
             if (response.meta.current_page == '1') {

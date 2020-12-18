@@ -264,7 +264,7 @@ class CompanyService
                     $company->address_document_status == $companyPresenter->getAddressDocumentStatus('refused') ||
                     $company->contract_document_status == $companyPresenter->getContractDocumentStatus('refused')) {
                     return $company;
-            }
+                }
             } else {
                 if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused')) {
                     return $company;
