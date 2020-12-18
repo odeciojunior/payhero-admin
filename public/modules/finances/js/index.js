@@ -469,9 +469,9 @@ $(document).ready(function () {
             2: 'primary',
             3: 'success',
             4: 'danger',
-            5: 'primary',
-            6: 'primary',
-            7: 'danger',
+            5: 'secondary',
+            8: 'primary',
+            9: 'partially-liquidating',
         };
 
         function updateWithdrawalsTable(link = null) {
