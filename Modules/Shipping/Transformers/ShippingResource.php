@@ -23,7 +23,7 @@ class ShippingResource extends JsonResource
             'shipping_id'               => Hashids::encode($this->id),
             'name'                      => $this->name,
             'information'               => $this->information,
-            'value'                     => $this->value == null || $this->type_enum != 1 ? 'Calculado automáticamente' : $this->value,
+            'value'                     => $this->value == null || $this->type_enum != 1 ? 'Calculado automaticamente' : $this->value,
             'type'                      => Lang::get('definitions.enum.shipping.type.' . $this->present()->getTypeEnum($this->type_enum)),
             'zip_code_origin'           => $this->zip_code_origin,
             'status'                    => $this->status,

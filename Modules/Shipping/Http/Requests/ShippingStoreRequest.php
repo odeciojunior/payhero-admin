@@ -21,6 +21,7 @@ class ShippingStoreRequest extends FormRequest
             "status"          => "nullable",
             "pre_selected"    => "nullable",
             "rule_value"      => "nullable",
+            "apply_on_plans"  => "required|array"
         ];
     }
 
@@ -41,6 +42,7 @@ class ShippingStoreRequest extends FormRequest
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
             'value.required'           => 'O campo valor é obrigatório',
             'value.max'                => 'O campo Valor do Frete permite apenas 30 caracteres',
+            'apply_on_plans.required'  => 'Necessário informar para quais planos o frete estará disponível'
         ];
     }
 

@@ -41,13 +41,15 @@ $(document).ready(function () {
 
     $('.rule-shipping-value').on('blur', function () {
         if ($(this).val().length == 1) {
-            let val = '0,0'+$(this).val();
+            let val = '0,0' + $(this).val();
             $('.rule-shipping-value').val(val);
-        } else if($(this).val().length == 2) {
-            let val = '0,'+$(this).val();
+        } else if ($(this).val().length == 2) {
+            let val = '0,' + $(this).val();
             $('.rule-shipping-value').val(val);
         }
     });
+
+    setSelect2Plugin('#shipping-plans-add')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -115,14 +117,14 @@ $(document).ready(function () {
                         $('#modal-detail-shipping .shipping-type').html('Estático');
                         break;
                     case 'pac':
-                        $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automáticamente');
+                        $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automaticamente');
                         break;
                     default:
-                        $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automáticamente');
+                        $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automaticamente');
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
-                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automáticamente' : response.value);
+                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automaticamente' : response.value);
                 $('#modal-detail-shipping .shipping-info').html(response.information);
                 $('#modal-detail-shipping .rule-shipping-value').html(response.rule_value);
                 $('#modal-detail-shipping .shipping-status').html(response.status == 1 ? '<span class="badge badge-success text-left">Ativo</span>' : '<span class="badge badge-danger">Desativado</span>');
@@ -331,6 +333,72 @@ $(document).ready(function () {
 
                     pagination(response, 'shippings', atualizarFrete);
                 }
+            }
+        });
+    }
+
+    function setSelect2Plugin(el) {
+        el = $(el)
+        // Search plan
+        el.select2({
+            placeholder: 'Nome do plano',
+            multiple: true,
+            dropdownParent: $('#modal-create-shipping'),
+            language: {
+                noResults: function () {
+                    return 'Nenhum plano encontrado';
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return 'Carregando mais planos...';
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'plan',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1
+                    };
+                },
+                method: "GET",
+                url: "/api/plans/user-plans",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    let elemId = this.$element.attr('id');
+                    if (elemId === 'shipping-plans-add' && res.meta.current_page === 1) {
+                        let allObject = {
+                            id: 'all',
+                            name: 'Qualquer plano',
+                            description: ''
+                        };
+                        res.data.unshift(allObject);
+                    }
+
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
+            }
+        });
+
+        el.on('select2:select', function () {
+            let selectPlan = $(this);
+            if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() !== 'all')) {
+                selectPlan.val('all').trigger("change");
             }
         });
     }

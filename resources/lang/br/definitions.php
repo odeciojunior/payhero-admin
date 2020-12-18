@@ -65,8 +65,8 @@ return [
             ],
             "type"         => [
                 'static' => 'Estático',
-                'sedex'  => 'SEDEX - Calculado automáticamente',
-                'pac'    => 'PAC - Calculado automáticamente',
+                'sedex'  => 'SEDEX - Calculado automaticamente',
+                'pac'    => 'PAC - Calculado automaticamente',
             ],
         ],
         "plan"                  => [

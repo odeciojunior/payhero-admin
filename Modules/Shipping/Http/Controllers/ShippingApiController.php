@@ -108,6 +108,18 @@ class ShippingApiController extends Controller
                         $shippingValidated['rule_value'] = 0;
                     }
                     $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
+
+                    $applyPlanArray = [];
+                    if (in_array('all', $shippingValidated['apply_on_plans'])) {
+                        $applyPlanArray[] = 'all';
+                    } else {
+                        foreach ($shippingValidated['apply_on_plans'] as $key => $value) {
+                            $applyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+
+                    $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
+
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
@@ -123,6 +135,7 @@ class ShippingApiController extends Controller
                 'message' => 'Erro ao tentar cadastrar frete',
             ], 400);
         } catch (Exception $e) {
+            die($e->getTraceAsString());
             Log::warning('Erro ao tentar cadastrar frete (ShippingController - store)');
             report($e);
 
