@@ -65,9 +65,6 @@ class WithdrawalPresenter extends Presenter
         }
     }
 
-    /**
-     * @return string
-     */
     public function getDateReleaseFormatted($releaseDate)
     {
         if (!empty($releaseDate)) {
