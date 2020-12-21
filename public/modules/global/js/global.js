@@ -78,13 +78,56 @@ function loadingOnScreen() {
     )
 }
 
+function loadOnAnyEllipsis(target, remove = false, options = {}) {
+    //cleanup
+    target = $(target);
+    $('.loader-any-container-ellipsis').fadeOut();
+    target.parent().find('.loader-any-container-ellipsis').remove();
+
+    if (!remove) {
+
+        //create elements
+        let container = $('<div class="loader-any-container-ellipsis"></div>');
+        let loader = $('<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>');
+
+        //apply styles or use default
+        options.styles = options.styles ? options.styles : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
+        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
+        container.css(options.styles.container);
+        if (options.styles.loader) {
+            loader.css(options.styles.loader);
+        }
+
+        //add loader to container
+        container.append(loader);
+
+        //add loader to screen
+        target.hide();
+        if (options.insertBefore) {
+            container.insertBefore(target.parent().find(options.insertBefore));
+        } else {
+            target.parent().append(container);
+        }
+    } else {
+        // show target again with fix to Bootstrap tabs
+        if (!target.hasClass('tab-pane') ||
+            (target.hasClass('tab-pane') &&
+                target.hasClass('active'))) {
+            $(target).fadeIn();
+        }
+    }
+}
+
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $('.ajax-loader').fadeOut(function () {
+        $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
         });
     },2000)
-    $('#btn-modal').show();
+    $('.page-header').fadeIn();
+    $('#btn-modal').fadeIn();
 }
 
 function loadOnNotification(whereToLoad) {

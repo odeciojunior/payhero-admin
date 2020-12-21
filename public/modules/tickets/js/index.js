@@ -95,7 +95,7 @@ $(document).ready(function () {
     }
 
     function getTickets(link = null) {
-        loadingOnScreen();
+        loadOnAny('#div-tickets, #div-ticket-empty');
 
         if (link !== null) {
             pageCurrent = link;
@@ -129,7 +129,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadOnAny('#div-tickets, #div-ticket-empty', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -208,16 +208,16 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                             </div>`;
-                        $("#div-tickets").append(data);
+                        $("#div-tickets, #div-ticket-empty").append(data);
                     }
                 } else {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
 
-                loadingOnScreenRemove();
 
                 let filter = {...getFilters(), page: pageCurrent || null};
+                loadOnAny('#div-tickets', true);
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);
             }
@@ -273,7 +273,7 @@ $(document).ready(function () {
         });
     });
     function ticketShow(ticketId) {
-        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: '/api/tickets/' + ticketId,
@@ -283,11 +283,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadingOnScreenRemove();
                 if ($('.card-ticket-color').hasClass('orange')) {
                     $('.card-ticket-color').removeClass('orange');
                     $('.ticket-status').removeClass('orange-gradient');

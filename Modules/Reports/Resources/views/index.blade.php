@@ -11,7 +11,7 @@
     @endpush
 
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <div class="row">
                 <div class="col-12">
                     <h1 class="page-title">Relatório de Vendas</h1>

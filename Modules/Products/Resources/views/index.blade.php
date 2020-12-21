@@ -4,7 +4,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container pb-0">
+        <div style="display: none" class="page-header container pb-0">
             <div class="row align-items-center mb-30" style="min-height:4rem">
                 <div class="col-lg-6">
                     <h1 class="page-title">Produtos</h1>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-           <div class="page-header container pb-0">
+           <div style="display: none" class="page-header container pb-0">
                 <div class="card shadow p-20" id="filter-products">
                     <div class="row">
                         <div class="col-lg-3 col-md-6">

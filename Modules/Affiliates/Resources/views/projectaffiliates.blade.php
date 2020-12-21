@@ -2,7 +2,7 @@
 
 @section('content')
     <div class='page'>
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-6">
                     <h1 class="page-title">Afiliação</h1>

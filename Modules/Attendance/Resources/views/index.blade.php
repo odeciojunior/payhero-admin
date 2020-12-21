@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=5') }}">
     @endpush
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <h1 class="page-title">Atendimento</h1>
         </div>
         <div id="project-not-empty" style="display: none">
@@ -233,7 +233,7 @@
     </div>
     <!-- Modal detalhes do ticket -->
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=15')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=' . random_int(100, 10000))}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
