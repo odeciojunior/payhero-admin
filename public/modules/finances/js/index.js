@@ -78,7 +78,6 @@ $(document).ready(function () {
                 }
 
                 let itsApprovedTransactGetnet = false;
-                let isLocal = false;
 
                 $('.page-content').show();
                 $('.content-error').hide();

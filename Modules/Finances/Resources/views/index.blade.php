@@ -60,7 +60,7 @@
                 <div class="p-30 pt-20" id="tabs-view">
                     <div class="tab-content" id="nav-tabContent">
                         {{-- TRANSFERENCIAS --}}
-                        <div class="tab-pane fade show "
+                        <div class="tab-pane active"
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab"
@@ -184,8 +184,8 @@
                             </div>
                         </div>
                         {{--EXTRATO--}}
-                        <div style=""
-                             class="tab-pane fade show active"
+                        <div
+                             class="tab-pane"
                              id="nav-statement"
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
