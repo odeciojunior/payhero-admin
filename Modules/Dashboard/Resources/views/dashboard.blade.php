@@ -5,6 +5,8 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=5') }}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
@@ -204,20 +206,34 @@
             </div>
             <!-- Notícias e Releases -->
             <div class="row">
-                <div class="col-lg-8" id="news-col" style="display:none">
-                    <div id="carouselNews" class="carousel slide" data-ride="carousel" data-interval="15000">
-                        <ol class="carousel-indicators">
-                        </ol>
-                        <div class="carousel-inner">
+                <div class="col-lg-8">
+                    <div class="card card-shadow bg-white">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                            <div class="font-size-14 gray-600">
+                                <img src="{{ asset('modules/global/img/svg/chargeback.svg') }}" width="30px">
+                                <span class="card-desc">Vendas neste mês</span>
+                            </div>
                         </div>
-                        <a class="carousel-control-prev" href="#carouselNews" role="button" data-slide="prev">
-                            <i class="material-icons font-size-60">navigate_before</i>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselNews" role="button" data-slide="next">
-                            <i class="material-icons font-size-60">navigate_next</i>
-                        </a>
+                        <div class="card-body p-5" style="height: 295px">
+                            <div id="scoreLineToMonth" class="ct-chart ct-golden-section chart-action tab-pane active"></div>
+                        </div>
+                        <div class="card-bottom orange"></div>
                     </div>
                 </div>
+{{--                <div class="col-lg-8" id="news-col" style="display:none">--}}
+{{--                    <div id="carouselNews" class="carousel slide" data-ride="carousel" data-interval="15000">--}}
+{{--                        <ol class="carousel-indicators">--}}
+{{--                        </ol>--}}
+{{--                        <div class="carousel-inner">--}}
+{{--                        </div>--}}
+{{--                        <a class="carousel-control-prev" href="#carouselNews" role="button" data-slide="prev">--}}
+{{--                            <i class="material-icons font-size-60">navigate_before</i>--}}
+{{--                        </a>--}}
+{{--                        <a class="carousel-control-next" href="#carouselNews" role="button" data-slide="next">--}}
+{{--                            <i class="material-icons font-size-60">navigate_next</i>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <div class="col-lg-4" id="releases-col" style="display:none">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white py-10 border-bottom">
@@ -229,7 +245,7 @@
                         </div>
                         <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 280px;">
                         </div>
-                        <div class="card-bottom orange"></div>
+                        <div class="card-bottom red"></div>
                     </div>
                 </div>
             </div>
@@ -312,6 +328,9 @@
 {{--    </div>--}}
 
     @push('scripts')
+        <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
+        <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
+        <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
         <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . random_int(100, 10000)) }}"></script>
     @endpush
