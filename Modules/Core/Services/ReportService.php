@@ -28,7 +28,7 @@ class ReportService
     {
         if ($date['startDate'] == $date['endDate']) {
             return $this->getByHours($date, $projectId, $currency);
-        } else if ($date['startDate'] != $date['endDate']) {
+        } elseif ($date['startDate'] != $date['endDate']) {
             $data       = null;
             $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
             $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
@@ -36,13 +36,13 @@ class ReportService
             if ($projectId) {
                 if ($diffInDays <= 20) {
                     return $this->getByDays($date, $projectId, $currency);
-                } else if ($diffInDays > 20 && $diffInDays <= 40) {
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getByTwentyDays($date, $projectId, $currency);
-                } else if ($diffInDays > 40 && $diffInDays <= 60) {
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getByFortyDays($date, $projectId, $currency);
-                } else if ($diffInDays > 60 && $diffInDays <= 140) {
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getByWeek($date, $projectId, $currency);
-                } else if ($diffInDays > 140) {
+                } elseif ($diffInDays > 140) {
                     return $this->getByMonth($date, $projectId, $currency);
                 }
             } else {
@@ -485,7 +485,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByMonth($date, $projectId, $currency)
+    private function getByMonth($date, $projectId, $currency) //
     {
         try {
             $companyModel   = new Company();
@@ -1039,6 +1039,69 @@ class ReportService
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados');
             report($e);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDashboardChartData($companyId)
+    {
+        try {
+
+            $company = current(Hashids::decode($companyId));
+            $labelList    = [];
+            $startDate = Carbon::now()->subMonth();
+            $endDate   = Carbon::now();
+
+            while ($startDate->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $startDate->format('d/m'));
+                $startDate = $startDate->addDays(7);
+                if ($startDate->diffInDays($endDate) < 7 && $startDate->diffInDays($endDate) > 0) {
+                    array_push($labelList, $startDate->format('d/m'));
+                    $startDate = $startDate->addDays($startDate->diffInDays($endDate));
+                    array_push($labelList, $startDate->format('d/m'));
+                    break;
+                }
+            }
+
+            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->leftJoin('transactions as transaction', function($join) use ($company) {
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->where('transaction.company_id', $company);
+                })
+                ->where('sales.status', 1)
+                ->whereBetween('start_date', [$startDate, $endDate])
+                ->groupBy('date', 'sales.payment_method');
+
+
+            $orders         = $orders->get()->toArray();
+            $valueData      = [];
+            foreach ($labelList as $label) {
+                $value = 0;
+
+                foreach ($orders as $order) {
+                    if ((Carbon::parse($order['date'])
+                                ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                ->format('d/m') == $label)) {
+
+                        $value = FoxUtils::onlyNumbers($order['value']);
+                    }
+                }
+
+                array_push($valueData, substr(intval($value), 0, -2));
+            }
+
+            return [
+                'label_list' => $labelList,
+                'value_data' => $valueData,
+                'currency'   => 'R$',
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+
+            dd('entrei');
         }
     }
 }
