@@ -2,9 +2,11 @@
 
 namespace Modules\Core\Observers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 
 class SaleObserver
 {
@@ -16,11 +18,15 @@ class SaleObserver
 
                 foreach ($sale->transactions as $transaction) {
 
-                    $transaction->update(
-                        [
-                            'is_waiting_withdrawal' => 1,
-                        ]
-                    );
+                    if ($transaction->release_date <= Carbon::now()->format('Y-m-d')
+                        && $transaction->status_enum == (new Transaction())->present()->getStatusEnum('paid')
+                    ) {
+                        $transaction->update(
+                            [
+                                'is_waiting_withdrawal' => 1,
+                            ]
+                        );
+                    }
                 }
             }
         } catch (Exception $e) {
