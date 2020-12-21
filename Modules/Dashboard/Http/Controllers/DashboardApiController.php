@@ -18,8 +18,10 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\ReportService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -325,5 +327,17 @@ class DashboardApiController extends Controller
                 'releases' => $releases,
             ]
         );
+    }
+
+    public function getChartData(Request $request)
+    {
+        $data = \request()->all();
+        $companyId = current(Hashids::decode($data['company']));
+
+        $reportService =  new ReportService();
+
+        $data = $reportService->getDashboardChartData($companyId);
+
+        return response()->json($data, Response::HTTP_OK);
     }
 }
