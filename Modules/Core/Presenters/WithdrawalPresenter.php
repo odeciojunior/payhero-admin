@@ -16,14 +16,13 @@ class WithdrawalPresenter extends Presenter
      */
     public function getStatus($status)
     {
-
-        if(is_numeric($status)){
+        if (is_numeric($status)) {
             switch ($status) {
                 case 1:
                     return 'pending';
                 case 2:
-                    return 'approved'; 
-                case 3: 
+                    return 'approved';
+                case 3:
                     return 'transfered';
                 case 4:
                     return 'refused';
@@ -36,11 +35,10 @@ class WithdrawalPresenter extends Presenter
                 case 8:
                     return 'liquidating';
                 case 9:
-                    return 'partially_liquidating';
+                    return 'partially_liquidated';
             }
             return '';
-        }
-        else{
+        } else {
             switch ($status) {
                 case 'pending':
                     return 1;
@@ -58,7 +56,7 @@ class WithdrawalPresenter extends Presenter
                     return 7;
                 case 'liquidating':
                     return 8;
-                case 'partially_liquidating':
+                case 'partially_liquidated':
                     return 9;
             }
             return '';
