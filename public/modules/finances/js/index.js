@@ -394,8 +394,7 @@ $(document).ready(function () {
             3: 'success',
             4: 'danger',
             5: 'primary',
-            6: 'primary',
-            7: 'danger',
+            8: 'danger',
         };
 
         function updateWithdrawalsTable(link = null) {
