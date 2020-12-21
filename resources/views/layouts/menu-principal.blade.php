@@ -251,14 +251,14 @@
                 </a>
             </li>
         @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub">
-                <a href="{{ route('tools.index') }}">
-                    <i class="material-icons">settings</i>
-                    <span class="site-menu-title">Ferramentas</span>
-                </a>
-            </li>
-        @endif
+{{--        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))--}}
+{{--            <li class="site-menu-item has-sub">--}}
+{{--                <a href="{{ route('tools.index') }}">--}}
+{{--                    <i class="material-icons">settings</i>--}}
+{{--                    <span class="site-menu-title">Ferramentas</span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
+{{--        @endif--}}
         @if(auth()->user()->hasRole('account_owner'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
