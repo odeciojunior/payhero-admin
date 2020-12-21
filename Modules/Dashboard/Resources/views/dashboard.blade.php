@@ -4,13 +4,13 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=5') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=6') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
-    <div class="page">
+    <div class="page dashboard">
         <div style="display: none" style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6 mb-15">
@@ -103,6 +103,23 @@
                                 <div class="card-bottom blue"></div>
                             </div>
                         </div>
+
+                        <div class="col-12">
+                            <div class="card card-shadow bg-white">
+                                <div
+                                    class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                    <div class="font-size-14 gray-600">
+                                        <img src="{{ asset('modules/global/img/svg/chargeback.svg') }}" width="30px">
+                                        <span class="card-desc">Vendas neste mês</span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-5" style="height: 295px">
+                                    <div id="scoreLineToMonth"
+                                         class="ct-chart ct-golden-section chart-action tab-pane active"></div>
+                                </div>
+                                <div class="card-bottom orange"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-4">
@@ -112,153 +129,123 @@
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600 mr-auto">
-                                        <img class="orange-gradient"
-                                             src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
-                                             width="30px">
-                                        <span class="card-desc">Taxa de Chargebacks</span>
+                                        <span class="card-desc">Saúde da Conta</span>
                                     </div>
                                     <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom"
                                        title="Taxa geral de chargeback de sua empresa">help</i>
                                 </div>
-                                <div
-                                    class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
-                                    <div class="col text-center px-0 d-flex justify-content-center">
-                                        <div class="circle text-circle">
-                                            <strong>0.00%</strong>
+                                <div class="card-body">
+                                    <div class="row d-flex align-items-topline align-items-center">
+                                        <div class="col text-center px-0 d-flex justify-content-center">
+                                            <div class="circle text-circle">
+                                                <strong>0.00%</strong>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-10 d-flex flex-wrap justify-content-center">
-                                            <div class="font-size-14 w-p100">Vendas no Cartão</div>
-                                            <span id="total_sales_approved" class="text-money">0</span>
+                                        <div class="col">
+                                            <div class="pb-15"><b>Taxa de Chargeback</b></div>
+                                            <div class="mb-10 d-flex flex-row justify-content-center">
+                                                <span id="total_sales_approved" class="text-money mr-1">0</span>
+                                                <div class="font-size-14 ml-10 w-p100">Vendas no Cartão</div>
+                                            </div>
+                                            <div class="d-flex flex-row justify-content-center">
+                                                <span id="total_sales_chargeback" class="text-money mr-1">0</span>
+                                                <div class="font-size-14 ml-10 w-p100">Chargebacks</div>
+                                            </div>
                                         </div>
-                                        <div class="d-flex flex-wrap justify-content-center">
-                                            <div class="font-size-14 w-p100">Chargebacks</div>
-                                            <span id="total_sales_chargeback" class="text-money">0</span>
+                                        <div class="col-12">
+                                            <div class="row no-gutters1">
+                                                <div class="col-6 align-items-start w-25">
+                                                    <hr class="bg-grey-50 my-20">
+                                                </div>
+                                            </div>
+                                            <div class="row my-1">
+                                                <div class="col-12 pb-15"><b>Atendimento</b></div>
+                                            </div>
+                                            <div class="row my-2">
+                                                <div class="col d-flex justify-content-center">
+                                                    <span id="open-tickets" class="text-money">0</span>
+                                                    <div class="font-size-14 ml-10 w-p100">Abertos</div>
+                                                </div>
+                                                <div class="col d-flex justify-content-center">
+                                                    <span id="closed-tickets" class="text-money">0</span>
+                                                    <div class="font-size-14 ml-10 w-p100">Resolvidos</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-center">
+                                                    <span id="mediation-tickets" class="text-money">0</span>
+                                                    <div class="font-size-14 ml-10 w-p100">Em mediação</div>
+                                                </div>
+                                                <div class="col d-flex justify-content-center">
+                                                    <span id="total-tickets" class="text-money">0</span>
+                                                    <div class="font-size-14 ml-10 w-p100">Total</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row no-gutters1">
+                                                <div class="col-6 align-items-start w-25">
+                                                    <hr class="bg-grey-50 my-20">
+                                                </div>
+                                            </div>
+                                            <div class="row my-1">
+                                                <div class="col-12 pb-15 d-flex justify-content-between">
+                                                    <b>Códigos de Rastreio</b>
+
+                                                    <i class="material-icons gray" data-toggle="tooltip"
+                                                       data-placement="bottom"
+                                                       title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+
+                                            <div class="d-flex">
+                                                <label>Tempo médio de postagem: &nbsp; </label>
+                                                <span class="update-text" id="average_post_time"></span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <label>Venda mais antiga sem código: &nbsp; </label>
+                                                <span class="update-text" id="oldest_sale"></span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <label>Códigos informados com problema: &nbsp; </label>
+                                                <span class="update-text" id="problem"></span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <label>Códigos não informados: &nbsp; </label>
+                                                <span class="update-text" id="unknown"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-bottom red"></div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Tracking e Chargeback -->
-            <div class="row">
-                <div class="col-12 col-lg-4 d-flex align-items-stretch">
-                    <div class="card card-shadow bg-white w-full">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
-                            <div class="font-size-14 gray-600 mr-auto">
-                                <img src="{{ asset('modules/global/img/svg/shipping.svg') }}"
-                                     width="30px">
-                                <span class="card-desc">Códigos de rastreio informados</span>
-                            </div>
-                            <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom"
-                               title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-lg-between py-15">
-                            <div class="d-inline-flex">
-                                <label>Tempo médio de postagem: &nbsp; </label>
-                                <span class="update-text" id="average_post_time"></span>
-                            </div>
-                            <div class="d-inline-flex">
-                                <label>Venda mais antiga sem código: &nbsp; </label>
-                                <span class="update-text" id="oldest_sale"></span>
-                            </div>
-                            <div class="d-inline-flex">
-                                <label>Códigos informados com problema: &nbsp; </label>
-                                <span class="update-text" id="problem"></span>
-                            </div>
-                            <div class="d-inline-flex">
-                                <label>Códigos não informados: &nbsp; </label>
-                                <span class="update-text" id="unknown"></span>
-                            </div>
-                        </div>
-                        <div class="card-bottom orangered"></div>
-                    </div>
-                </div>
 
-                <div class="col-12 col-lg-4 d-flex align-items-stretch">
-                    <div class="card card-shadow bg-white w-full">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
-                            <div class="font-size-14 gray-600 mr-auto">
-                                <img src="{{ asset('modules/global/img/svg/tickets.svg') }}"
-                                     width="30px">
-                                <span class="card-desc">Atendimento</span>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-center">
-                            <div class="row mb-15">
-                                <div class="col text-center d-flex flex-wrap justify-content-center">
-                                    <span id="open-tickets" class="text-money">0</span>
-                                    <div class="font-size-14 w-p100">Abertos</div>
+                        <div class="col-lg-12">
+                            <div class="card card-shadow">
+                                <div
+                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-30 pb-20">
+                                    <div class="font-size-16 text-white">
+                                        <b class="card-desc">A CloudFox mudou.</b>
+                                        <br/>
+                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>
+                                    </div>
+                                    <img class="img-fluid"
+                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}" height="60px"
+                                         width="60px">
                                 </div>
-                                <div class="col text-center d-flex flex-wrap justify-content-center">
-                                    <span id="closed-tickets" class="text-money">0</span>
-                                    <div class="font-size-14 w-p100">Resolvidos</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col text-center d-flex flex-wrap justify-content-center">
-                                    <span id="mediation-tickets" class="text-money">0</span>
-                                    <div class="font-size-14 w-p100">Em mediação</div>
-                                </div>
-                                <div class="col text-center d-flex flex-wrap justify-content-center">
-                                    <span id="total-tickets" class="text-money">0</span>
-                                    <div class="font-size-14 w-p100">Total</div>
+                                <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15">
+                                    <p class="font-size-12">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    </p>
+                                    <a class="font-size-14 text-blue" href="#"><b>Saiba mais ⇾</b></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-bottom blue"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Notícias e Releases -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card card-shadow bg-white">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
-                            <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/chargeback.svg') }}" width="30px">
-                                <span class="card-desc">Vendas neste mês</span>
-                            </div>
-                        </div>
-                        <div class="card-body p-5" style="height: 295px">
-                            <div id="scoreLineToMonth"
-                                 class="ct-chart ct-golden-section chart-action tab-pane active"></div>
-                        </div>
-                        <div class="card-bottom orange"></div>
-                    </div>
-                </div>
-                {{--                <div class="col-lg-8" id="news-col" style="display:none">--}}
-                {{--                    <div id="carouselNews" class="carousel slide" data-ride="carousel" data-interval="15000">--}}
-                {{--                        <ol class="carousel-indicators">--}}
-                {{--                        </ol>--}}
-                {{--                        <div class="carousel-inner">--}}
-                {{--                        </div>--}}
-                {{--                        <a class="carousel-control-prev" href="#carouselNews" role="button" data-slide="prev">--}}
-                {{--                            <i class="material-icons font-size-60">navigate_before</i>--}}
-                {{--                        </a>--}}
-                {{--                        <a class="carousel-control-next" href="#carouselNews" role="button" data-slide="next">--}}
-                {{--                            <i class="material-icons font-size-60">navigate_next</i>--}}
-                {{--                        </a>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
-                <div class="col-lg-4" id="releases-col" style="display:none">
-                    <div class="card card-shadow bg-white">
-                        <div
-                            class="card-header d-flex justify-content-start align-items-center bg-white py-10 border-bottom">
-                            <div class="font-size-14 gray-600 mr-auto">
-                                <img src="{{ asset('modules/global/img/svg/releases.svg') }}"
-                                     width="30px">
-                                <span class="card-desc">Atualizações da Plataforma</span>
-                            </div>
-                        </div>
-                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div"
-                             style="overflow-y: auto; height: 280px;">
-                        </div>
-                        <div class="card-bottom red"></div>
                     </div>
                 </div>
             </div>
