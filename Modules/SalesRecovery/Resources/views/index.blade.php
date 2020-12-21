@@ -35,7 +35,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>

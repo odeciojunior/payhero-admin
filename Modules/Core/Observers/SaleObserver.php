@@ -3,8 +3,8 @@
 namespace Modules\Core\Observers;
 
 use Exception;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
-use Redis;
 
 class SaleObserver
 {

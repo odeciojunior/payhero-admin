@@ -172,22 +172,6 @@ class DashboardApiController extends Controller
                         $chargebackTax = "0.00";
                     }
 
-                    //News and releases
-                    $newsData = settings()->group('dashboard_news')->all(true);
-                    $news = [];
-                    foreach ($newsData as $key => $value) {
-                        $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
-                        if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
-                            $userFirstName = explode(' ', auth()->user()->name)[0];
-                            $newsDecoded->title = str_replace(
-                                '{nome_usuario}',
-                                ucfirst($userFirstName),
-                                $newsDecoded->title
-                            );
-                        }
-                        $news[] = $newsDecoded;
-                    }
-
                     //Trackings
                     $trackingPresenter = (new Tracking())->present();
                     $trackingSystemStatus = [
@@ -242,7 +226,6 @@ class DashboardApiController extends Controller
                         'total_sales_approved' => $totalSalesApproved ?? 0,
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
-                        'news'                   => $news,
                         'trackings'              => $trackingsInfo,
                         'tickets'                => $tickets,
                         'blocked_balance'        => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
@@ -321,8 +304,24 @@ class DashboardApiController extends Controller
             $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
         }
 
+        $newsData = settings()->group('dashboard_news')->all(true);
+        $news = [];
+        foreach ($newsData as $key => $value) {
+            $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
+            if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
+                $userFirstName = explode(' ', auth()->user()->name)[0];
+                $newsDecoded->title = str_replace(
+                    '{nome_usuario}',
+                    ucfirst($userFirstName),
+                    $newsDecoded->title
+                );
+            }
+            $news[] = $newsDecoded;
+        }
+
         return response()->json(
             [
+                'news' => $news,
                 'releases' => $releases,
             ]
         );

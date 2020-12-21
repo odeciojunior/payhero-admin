@@ -69,10 +69,11 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.card-text', false, {
+        loadOnAny('.text-money', false, {
             styles: {
                 container: {
                     minHeight: '30px',
+                    width: '30px',
                     height: 'auto'
                 },
                 loader: {
@@ -80,17 +81,27 @@ $(document).ready(function () {
                     height: '30px',
                     borderWidth: '6px'
                 },
+
             }
         });
 
-        loadOnAny('.update', false, {
+        loadOnAnyEllipsis('.update-text, .text-circle', false, {
             styles: {
                 container: {
-                    minHeight: '100px',
+                    minHeight: '30px',
+                    width: '30px',
                     height: 'auto'
                 },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
             }
-        })
+        });
+
+        $('.circle strong').addClass('loaded')
 
         $.ajax({
             method: "POST",
@@ -102,19 +113,29 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.card-text', true)
-                loadOnAny('.update', true)
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
                 loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
             },
             success: function success(data) {
 
+                let fontSize = '35px'
+                if (
+                    data.pending_balance.length > 8 ||
+                    data.available_balance.length > 8 ||
+                    data.total_balance.length > 8 ||
+                    data.today_balance.length > 8
+                ) {
+                    fontSize = '27px'
+                }
+
                 $(".moeda").html(data.currency);
-                $("#pending_money").html(data.pending_balance);
-                $("#available_money").html(data.available_balance);
-                $("#total_money").html(data.total_balance);
-                $("#today_money").html(data.today_balance);
+                $("#pending_money").html(data.pending_balance).css('font-size', fontSize);
+                $("#available_money").html(data.available_balance).css('font-size', fontSize);
+                $("#total_money").html(data.total_balance).css('font-size', fontSize);
+                $("#today_money").html(data.today_balance).css('font-size', fontSize);
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
@@ -123,12 +144,10 @@ $(document).ready(function () {
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
-                updateNews(data.news);
 
-                loadOnAny('.card-text', true)
-                loadOnAny('.update', true)
+                loadOnAny('.text-money', true)
+                loadOnAnyEllipsis('.update-text, .text-circle', true)
                 loadingOnScreenRemove();
-                $('.ajax-loader').css("visibility", "hidden");
             }
         });
     }
@@ -201,7 +220,29 @@ $(document).ready(function () {
         }
     }
 
-    function updateReleases() {
+    function updateReleases(data) {
+        $('#releases-div').html('');
+
+        if (!isEmpty(data)) {
+            $.each(data, function (index, value) {
+                let item = `<div class="d-flex align-items-center my-15">
+                                <div class="release-progress" id="${index}">
+                                    <strong>${value.progress}%</strong>
+                                </div>
+                                <span class="ml-2">${value.release}</span>
+                            </div>`;
+                $('#releases-div').append(item);
+
+                updateReleasesProgress(index, value.progress);
+            });
+
+            $('#releases-col').show();
+        } else {
+            $('#releases-col').hide();
+        }
+    }
+
+    function updateCloudFox() {
 
         $.ajax({
             method: "GET",
@@ -216,27 +257,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let data = response.releases
-
-                $('#releases-div').html('');
-
-                if (!isEmpty(data)) {
-                    $.each(data, function (index, value) {
-                        let item = `<div class="d-flex align-items-center my-15">
-                                <div class="release-progress" id="${index}">
-                                    <strong>${value.progress}%</strong>
-                                </div>
-                                <span class="ml-2">${value.release}</span>
-                            </div>`;
-                        $('#releases-div').append(item);
-
-                        updateReleasesProgress(index, value.progress);
-                    });
-
-                    $('#releases-col').show();
-                } else {
-                    $('#releases-col').hide();
-                }
+                updateReleases(response.releases);
+                updateNews(response.news);
             }
         });
     }
@@ -336,7 +358,7 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
-                    updateReleases()
+                    updateCloudFox()
                     getDataDashboard();
 
                 } else {

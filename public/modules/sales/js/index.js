@@ -192,7 +192,7 @@ $(document).ready(function () {
                     $("#export-excel").show()
 
                     $.each(response.data, function (i, project) {
-                        $("#project").append($('<option>', {
+                        $("#projeto").append($('<option>', {
                             value: project.id,
                             text: project.name
                         }));
