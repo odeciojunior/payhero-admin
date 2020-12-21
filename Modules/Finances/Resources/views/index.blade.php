@@ -33,18 +33,17 @@
                 <nav class="pt-20" id="menu-tabs-view" style="">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link "
+                            <a class="nav-item nav-link active"
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
                                role="tab"
                                aria-controls="nav-home"
                                aria-selected="true"
-                               style="display:none"
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link active"
+                            <a class="nav-item nav-link"
                                id="nav-statement-tab"
                                data-toggle="tab"
                                href="#nav-statement"
