@@ -121,14 +121,14 @@ $(document).ready(function () {
             },
             success: function success(data) {
 
-                let fontSize = '35px'
+                let fontSize = '30px'
                 if (
                     data.pending_balance.length > 8 ||
                     data.available_balance.length > 8 ||
                     data.total_balance.length > 8 ||
                     data.today_balance.length > 8
                 ) {
-                    fontSize = '27px'
+                    fontSize = '25px'
                 }
 
                 $(".moeda").html(data.currency);
