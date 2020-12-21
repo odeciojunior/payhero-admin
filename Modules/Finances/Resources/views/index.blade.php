@@ -273,7 +273,7 @@
                                                         Aguardando postagem válida
                                                     </option>
                                                     <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
-                                                    <option value="WAITING_WITHDRAWAL" disabled>Aguardando saque (em
+                                                    <option value="WAITING_WITHDRAWAL">Aguardando saque (em
                                                         breve)
                                                     </option>
                                                     <option value="PAID">Liquidado</option>

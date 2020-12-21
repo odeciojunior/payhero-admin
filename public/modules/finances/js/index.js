@@ -383,11 +383,11 @@ $(document).ready(function () {
 
             $('#modal_body').html(`
                 <div>
-                    <div style="background-color: yellow; color: black; border-radius: 10px">
+                    <!--<div style="background-color: yellow; color: black; border-radius: 10px">
                         Os valores disponíveis para saque representam a totalidade de vendas compensadas até o momento.
                         Após o pagamento ser aprovado, é preciso aguardar o prazo determinado para receber os valores na conta e conseguir sacá-los.
                         Essa medida tem o objetivo de garantir a segurança de clientes e lojistas durante o andamento das operaçoẽs financeiras.
-                    </div>
+                    </div>-->
                     <div class="mt-50 mb-50">
                         <h3 class="text-center">
                             ${singleValue ? 'Opção de saque disponível:' : 'Opções de saque disponíveis:'}
@@ -421,7 +421,7 @@ $(document).ready(function () {
                             </div>
                             <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary " style=" ${singleValue ? 'display:block' : 'display:none;'}">
                                 <input hidden id="modal-withdrawal-value" value="${dataWithdrawal.bigger_value}">
-                                <input type="radio" id="inputRadioSingleValue" checked name="valueWithdrawal" >
+                                <input type="radio" id="inputRadioSingleValue" ${singleValue ? 'checked': ''} name="valueWithdrawal" >
                                 <label for="inputRadioSingleValue">
                                     ${
                                         ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
