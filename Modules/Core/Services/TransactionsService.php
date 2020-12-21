@@ -4,7 +4,9 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Transaction;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class TransactionsService
@@ -22,7 +24,9 @@ class TransactionsService
             report($e);
         }
 
-        $transactions = Transaction::with('sale')
+        $transactionModel = new Transaction();
+
+        $transactions = $transactionModel->with('sale')
             ->where(
                 [
                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
@@ -41,9 +45,40 @@ class TransactionsService
                 }
             );
 
+        $getnetService = new GetnetBackOfficeService();
+
         foreach ($transactions->cursor() as $transaction) {
             try {
-                if (!empty($transaction->company_id)) {
+                if (empty($transaction->company_id)) {
+                    continue;
+                }
+                $sale = $transaction->sale;
+                $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
+
+                if ($sale->created_at > '2020-10-30 13:28:51.0') {
+                    $orderId = $saleIdEncoded . '-' . $sale->id . '-' . $sale->attempts;
+                } else {
+                    $orderId = $saleIdEncoded . '-' . $sale->attempts;
+                }
+                if (FoxUtils::isProduction()) {
+                    $subsellerId = $transaction->company->subseller_getnet_id;
+                } else {
+                    $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                }
+
+                $getnetService->setStatementSubSellerId($subsellerId)
+                               ->setStatementSaleHashId($orderId)
+                               ->setStatementDateField(GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE)
+                               ->setStatementStartDate(now()->subYears(2))
+                               ->setStatementEndDate(now());
+                $result = json_decode($getnetService->getStatement());
+
+                if (
+                    !is_null($result->list_transactions[0]) &&
+                    !is_null($result->list_transactions[0]->details[0]) &&
+                    !is_null($result->list_transactions[0]->details[0]->release_status)
+                    && $result->list_transactions[0]->details[0]->release_status == 'N'
+                ) {
                     $transaction->update(
                         [
                             'is_waiting_withdrawal' => 1,

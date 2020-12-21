@@ -2,15 +2,15 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
 use Spatie\Activitylog\Models\Activity;
-use App\Traits\LogsActivity;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property int $company_id
  * @property string $value
  * @property string $release_date
@@ -28,15 +28,11 @@ use App\Traits\LogsActivity;
  */
 class Withdrawal extends Model
 {
-    use PresentableTrait, LogsActivity;
-    /**
-     * @var string
-     */
+    use LogsActivity;
+    use PresentableTrait;
+
     protected $presenter = WithdrawalPresenter::class;
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+
     protected $keyType = 'integer';
 
     protected $dates = [
@@ -45,9 +41,7 @@ class Withdrawal extends Model
         'updated_at',
         'release_date_new'
     ];
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'company_id',
         'value',
@@ -62,12 +56,13 @@ class Withdrawal extends Model
         'agency_digit',
         'account',
         'account_digit',
-        'created_at',
-        'updated_at',
         'release_date_new',
         'file',
         'observation',
-        'automatic_liquidation'
+        'automatic_liquidation',
+        'is_released',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -89,27 +84,20 @@ class Withdrawal extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
             $activity->description = 'Pedido saque foi deletedo.';
-        } else if ($eventName == 'updated') {
+        } elseif ($eventName == 'updated') {
             $activity->description = 'Pedido saque foi atualizado.';
-        } else if ($eventName == 'created') {
+        } elseif ($eventName == 'created') {
             $activity->description = 'Pedido saque foi criado.';
         } else {
             $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
     }
