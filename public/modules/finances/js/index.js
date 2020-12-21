@@ -405,7 +405,7 @@ $(document).ready(function () {
                                             }
                                         </label>
                                     </div>
-                                     <div class="">
+                                     <div class="mt-15">
                                         <input hidden id="second-value" value="${dataWithdrawal.lower_value}">
                                         <input type="radio" id="inputRadioSecondValue" name="valueWithdrawal" >
                                         <label for="inputRadioSecondValue">
