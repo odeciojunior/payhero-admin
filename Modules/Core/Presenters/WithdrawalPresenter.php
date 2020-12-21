@@ -33,6 +33,8 @@ class WithdrawalPresenter extends Presenter
                     return 'processing';
                 case 7:
                     return 'returned';
+                case 8:
+                    return 'liquadating';
             }
 
             return '';
@@ -52,6 +54,8 @@ class WithdrawalPresenter extends Presenter
                     return 6;
                 case 'returned':
                     return 7;
+                case 'liquadating':
+                    return 8;
             }
 
             return '';
