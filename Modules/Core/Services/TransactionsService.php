@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -65,7 +66,11 @@ class TransactionsService
                     $subsellerId = $transaction->company->subseller_getnet_homolog_id;
                 }
 
-                $getnetService->setStatementSubSellerId($subsellerId)->setStatementSaleHashId($orderId);
+                $getnetService->setStatementSubSellerId($subsellerId)
+                               ->setStatementSaleHashId($orderId)
+                               ->setStatementDateField(GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE)
+                               ->setStatementStartDate(now()->subYears(2))
+                               ->setStatementEndDate(now());
                 $result = json_decode($getnetService->getStatement());
 
                 if (
