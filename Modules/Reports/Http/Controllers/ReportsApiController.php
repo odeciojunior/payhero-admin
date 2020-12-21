@@ -680,7 +680,8 @@ class ReportsApiController extends Controller
                 'cupom_code'
             ])->whereIn('project_id', $projects->pluck('project_id'))
                 ->whereIn('status', $status)
-                ->whereNotNull('cupom_code')
+                //->whereNotNull('cupom_code')
+                ->where('cupom_code','!=', '')
                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->groupBy('cupom_code', 'project_id')
                 ->orderByRaw('amount DESC')
