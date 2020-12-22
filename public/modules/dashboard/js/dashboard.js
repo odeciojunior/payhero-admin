@@ -148,7 +148,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-<<<<<<< HEAD
                 if (!isEmpty(data.companies)) {
                     for (let i = 0; i < data.companies.length; i++) {
                         if (data.companies[i].company_type == '1') {
@@ -168,15 +167,7 @@ $(document).ready(function () {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                     loadingOnScreenRemove();
-=======
-                if (isEmpty(data.companies)) {
-                    loadingOnScreenRemove();
-                    $(".content-error").show();
-                    $('#company-select, .page-content').hide();
-                    return;
->>>>>>> master
                 }
-
 
                 for (let i = 0; i < data.companies.length; i++) {
                     if (data.companies[i].company_type == '1') {
@@ -241,12 +232,8 @@ $(document).ready(function () {
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
-<<<<<<< HEAD
                 $('#info-total-balance').attr('title', 'Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance)
                     .tooltip({placement: 'bottom'});
-=======
-                $('#info-total-balance').attr('title', 'Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance);
->>>>>>> master
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
