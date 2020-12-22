@@ -16,7 +16,6 @@ class WithdrawalPresenter extends Presenter
      */
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -33,8 +32,11 @@ class WithdrawalPresenter extends Presenter
                     return 'processing';
                 case 7:
                     return 'returned';
+                case 8:
+                    return 'liquidating';
+                case 9:
+                    return 'partially_liquidated';
             }
-
             return '';
         } else {
             switch ($status) {
@@ -52,15 +54,15 @@ class WithdrawalPresenter extends Presenter
                     return 6;
                 case 'returned':
                     return 7;
+                case 'liquidating':
+                    return 8;
+                case 'partially_liquidated':
+                    return 9;
             }
-
             return '';
         }
     }
 
-    /**
-     * @return string
-     */
     public function getDateReleaseFormatted($releaseDate)
     {
         if (!empty($releaseDate)) {

@@ -33,18 +33,17 @@
                 <nav class="pt-20" id="menu-tabs-view" style="">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link "
+                            <a class="nav-item nav-link active"
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
                                role="tab"
                                aria-controls="nav-home"
                                aria-selected="true"
-                               style="display:none"
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link active"
+                            <a class="nav-item nav-link"
                                id="nav-statement-tab"
                                data-toggle="tab"
                                href="#nav-statement"
@@ -61,7 +60,7 @@
                 <div class="p-30 pt-20" id="tabs-view">
                     <div class="tab-content" id="nav-tabContent">
                         {{-- TRANSFERENCIAS --}}
-                        <div class="tab-pane fade show "
+                        <div class="tab-pane active"
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab"
@@ -185,8 +184,8 @@
                             </div>
                         </div>
                         {{--EXTRATO--}}
-                        <div style=""
-                             class="tab-pane fade show active"
+                        <div
+                             class="tab-pane"
                              id="nav-statement"
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
@@ -273,8 +272,7 @@
                                                         Aguardando postagem válida
                                                     </option>
                                                     <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
-                                                    <option value="WAITING_WITHDRAWAL" disabled>Aguardando saque (em
-                                                        breve)
+                                                    <option value="WAITING_WITHDRAWAL">Aguardando saque
                                                     </option>
                                                     <option value="PAID">Liquidado</option>
                                                     <option value="REVERSED">Estornado</option>

@@ -44,3 +44,7 @@
 #pagination-statement span {
     margin: 0 5px;
 }
+
+.badge-partially-liquidating {
+    background-color: #ffc105;
+}

@@ -264,7 +264,7 @@ class CompanyService
                     $company->address_document_status == $companyPresenter->getAddressDocumentStatus('refused') ||
                     $company->contract_document_status == $companyPresenter->getContractDocumentStatus('refused')) {
                     return $company;
-            }
+                }
             } else {
                 if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused')) {
                     return $company;
@@ -284,7 +284,7 @@ class CompanyService
 
         if(!empty($liquidationType)) {
             if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15]);
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])->where('is_waiting_withdrawal', 0);
             }
             elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
@@ -294,18 +294,16 @@ class CompanyService
         return $pendingBalance->sum('value');
     }
 
-    public function getAvailableBalance(Company $company, ?int $liquidationType = null) 
+    public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
     {
         if($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
             return $company->balance;
-        }
-        elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        } elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $company->transactions()
                            ->whereIn('gateway_id', [14, 15])
                            ->where('is_waiting_withdrawal', 1)
                            ->sum('value');
-        }
-        elseif(empty($liquidationType)) {
+        } elseif(empty($liquidationType)) {
 
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])

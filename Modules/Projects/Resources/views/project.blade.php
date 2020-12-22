@@ -198,7 +198,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>
+{{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>

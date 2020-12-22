@@ -16,7 +16,7 @@ use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Services\UserService;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Withdrawals\Transformers\OldWithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -45,7 +45,7 @@ class OldWithdrawalsApiController extends Controller
                         ->where('automatic_liquidation', 0)
                         ->orderBy('id', 'DESC');
 
-                    return WithdrawalResource::collection($withdrawals->paginate(5));
+                    return OldWithdrawalResource::collection($withdrawals->paginate(5));
                 } else {
                     return response()->json(
                         [
@@ -79,7 +79,6 @@ class OldWithdrawalsApiController extends Controller
     {
         try {
             $settingsWithdrawalRequest = settings()->group('withdrawal_request')->get('withdrawal_request', null, true);
-            $settingsWithdrawalRequest = true;
             if ($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
                 return response()->json(
                     [
@@ -154,7 +153,7 @@ class OldWithdrawalsApiController extends Controller
             }
 
             // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company->id);
+            $blockedValue = $companyService->getBlockedBalance($company);
 
             $availableBalance = $company->balance - $blockedValue;
 

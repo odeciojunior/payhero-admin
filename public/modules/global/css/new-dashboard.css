@@ -8,7 +8,7 @@ body {
 
 
 .green {
-    fill: linear-gradient(to right, rgba(63, 218, 88, 1), rgb(81, 236, 195));
+    fill: #5EE2A1;
 }
 
 
@@ -42,9 +42,9 @@ body {
 }
 
 
-.text-money {
+.page.dashboard .text-money {
     font-family: Muli;
-    font-size: 35px;
+    font-size: 25px;
     color: black;
     font-weight: 700;
     font-style: normal;
@@ -53,36 +53,55 @@ body {
     letter-spacing: 1px;
 }
 
-.card-bottom {
+.page.dashboard .card {
+    font-family: 'Muli', sans-serif;
+    border-radius: 30px !important;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 1px 15px #00000017;
+    opacity: 1;
+}
 
-    height: 10px;
-    background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.page.dashboard .card .card-header:first-child {
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
 
+.page.dashboard .card .card-bottom {
+    display: block;
+    z-index: 2;
+    height: 20px;
+    background-color: #2E85EC;
+    border-radius: 30px 0px;
+    width: 60px;
+    position: relative;
+    left: calc(100% - 60px);
 }
 
 /*bottom*/
-.card-bottom.green {
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ECC3);
+.page.dashboard .card .card-bottom.green {
+    background-color: #5EE2A1;
 }
 
-.card-bottom.blue {
-    background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
+.page.dashboard .card .card-bottom.blue {
+    background-color: #2E85EC;
 }
 
-.card-bottom.orange {
-    background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
+.page.dashboard .card .card-bottom.orange {
+    background-color: #FFB400;
 }
 
-.card-bottom.red {
-    background-image: linear-gradient(to right, rgb(247, 107, 28), rgb(255, 97, 97));
+.page.dashboard .card .card-bottom.red {
+    background-color: #F41C1C;
 }
 
-.card-bottom.orangered {
-    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
+.page.dashboard .card .card-bottom.orangered {
+    background-color: #5D2FEA;
 }
 /*bottom*/
+
+.page.dashboard .bg-blue {
+    background-color: #2E85EC
+}
 
 
 /*left*/
