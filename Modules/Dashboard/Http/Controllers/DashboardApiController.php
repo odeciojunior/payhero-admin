@@ -217,7 +217,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function verifyPendingData()
+    public function verifyPendingData(): JsonResponse
     {
         try {
             $user = auth()->user();
@@ -269,10 +269,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function getReleases()
+    public function getReleases(): JsonResponse
     {
         $releasesData = settings()->group('dashboard_releases')->all(true);
         $releases = [];
