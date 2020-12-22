@@ -68,7 +68,7 @@ class TransactionsService
                                ->setStatementEndDate(now());
                 $result = json_decode($getnetService->getStatement());
 
-                if (
+                if (!empty($result->list_transactions) &&
                     !is_null($result->list_transactions[0]) &&
                     !is_null($result->list_transactions[0]->details[0]) &&
                     !is_null($result->list_transactions[0]->details[0]->release_status)

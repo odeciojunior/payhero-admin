@@ -15,23 +15,14 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class DashboardApiController
- * @package Modules\Dashboard\Http\Controllers
- */
 class DashboardApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function index(Request $request)
+    public function index(): JsonResponse
     {
         try {
             activity()->tap(
@@ -40,22 +31,11 @@ class DashboardApiController extends Controller
                 }
             )->log('Visualizou Dashboard');
 
-            $companyModel = new Company();
-            $userTermsModel = new UserTerms();
-
-            $userLogged = auth()->user();
-
-            $userTerm = true;
-            if (!$request->has('skip')) {
-                $userTerm = $userTermsModel->whereNotNull('accepted_at')
-                    ->where([['term_version', 'v1'], ['user_id', $userLogged->id]])
-                    ->exists();
-            }
-
-            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')
+            $companies = (new Company())->where('user_id', auth()->user()->account_owner_id)
+                    ->orderBy('order_priority')
                     ->get() ?? collect();
 
-            return response()->json(compact('companies', 'userTerm'), 200);
+            return response()->json(['companies' => $companies]);
         } catch (Exception $e) {
             report($e);
 
@@ -68,11 +48,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function getValues(Request $request)
+    public function getValues(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
