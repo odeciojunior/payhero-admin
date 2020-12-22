@@ -107,7 +107,6 @@
                             <div class="card card-shadow bg-white">
                                 <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
-                                        <img src="{{ asset('modules/global/img/svg/chargeback.svg') }}" width="30px">
                                         <span class="card-desc">Vendas neste mês</span>
                                     </div>
                                 </div>
