@@ -5,10 +5,10 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-chart-data`,
-            // dataType: "json",
+            dataType: "json",
             data: {
                 company: $('#company').val(),
-            } ,
+            },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -24,88 +24,106 @@ $(document).ready(function () {
     }
 
     function getChart(chartData) {
-        var scoreChart = function scoreChart(id, labelList, series1List) {
-                var scoreChart = new Chartist.Line("#" + id, {
-                    labels: labelList,
-                    series: [series1List],
-                }, {
-                    lineSmooth: Chartist.Interpolation.simple({
-                        divisor: 2
-                    }),
-                    showPoint: false,
-                    showLine: false,
-                    showArea: true,
-                    fullWidth: true,
-                    chartPadding: {
-                        right: 20,
-                        left: 20,
-                        top: 30,
-                        button: 20
-                    },
-                    axisX: {
-                        showGrid: false,
-                        labelOffset:{x:-14,y:0}
-                    },
-                    axisY: {
-                        labelInterpolationFnc: function labelInterpolationFnc(value) {
-                            value = value * 100;
-                            var str = value.toString();
-                            str = str.replace('.', '');
-                            let complete = 3 - str.length;
-                            if (complete == 1) {
-                                str = '0' + str;
-                            } else if (complete == 2) {
-                                str = '00' + str;
-                            }
-                            str = str.replace(/([0-9]{2})$/g, ",$1");
-                            if (str.length > 6) {
-                                str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-                            }
 
-                            if (value > 0 ) {
-                                str = value / 1e4 + "K"
-                            }
-                                return str;
+        let haveData= parseInt(chartData.value_data[0]) > 0;
+
+        if (haveData > 0) {
+            var scoreChart = function scoreChart(id, labelList, series1List) {
+                    var scoreChart = new Chartist.Line("#" + id, {
+                        labels: labelList,
+                        series: [series1List],
+                    }, {
+                        lineSmooth: Chartist.Interpolation.simple({
+                            divisor: 2
+                        }),
+                        showPoint: false,
+                        showLine: false,
+                        showArea: true,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 20,
+                            left: 20,
+                            top: 30,
+                            button: 20
                         },
-                        scaleMinSpace: 40,
-                        labelOffset:{x:-10,y:0}
-                    },
-                    low: 0,
-                    height: 260,
-                });
-                scoreChart.on("created", function (data) {
-                    var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
-                        filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
-                            x: 0, y: "-10%", id: "shadow" + id
-                        }, "", !0));
-                    return filter.elem("feGaussianBlur", {
-                        in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
-                    }), filter.elem("feOffset", {
-                        dx: "0", dy: "800"
-                    }), filter.elem("feBlend", {
-                        in: "SourceGraphic", mode: "multiply"
-                    }), defs;
-                }).on("draw", function (data) {
-                    "line" === data.type ? data.element.attr({
-                        filter: "url(#shadow" + id + ")"
-                    }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
-                        x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
-                    }), "line" !== data.type && "area" != data.type || data.element.animate({
-                        d: {
-                            begin: 1e3 * data.index,
-                            dur: 1e3,
-                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                            to: data.path.clone().stringify(),
-                            easing: Chartist.Svg.Easing.easeOutQuint
-                        }
+                        axisX: {
+                            showGrid: false,
+                            labelOffset: {x: -14, y: 0},
+                            labelInterpolationFnc: function(value) {
+                                return value;
+                            }
+                        },
+                        axisY: {
+                            labelInterpolationFnc: function labelInterpolationFnc(value) {
+                                value = value * 100;
+                                var str = value.toString();
+                                str = str.replace('.', '');
+                                let complete = 3 - str.length;
+                                if (complete == 1) {
+                                    str = '0' + str;
+                                } else if (complete == 2) {
+                                    str = '00' + str;
+                                }
+                                str = str.replace(/([0-9]{2})$/g, ",$1");
+                                if (str.length > 6) {
+                                    str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                                }
+
+                                if (value > 0) {
+                                    str = value / 1e4 + "K"
+                                }
+                                return str;
+                            },
+                            scaleMinSpace: 40,
+                            labelOffset: {x: -10, y: 0}
+                        },
+                        low: 0,
+                        height: 260,
                     });
-                }).update();
-            },
-            labelList = chartData.label_list,
-            totalSalesData = chartData.value_data;
-        createChart = function createChart() {
-            scoreChart("scoreLineToMonth", labelList, totalSalesData);
-        }, createChart();
+                    scoreChart.on("created", function (data) {
+                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                            filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
+                                x: 0, y: "-10%", id: "shadow" + id
+                            }, "", !0));
+                        return filter.elem("feGaussianBlur", {
+                            in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
+                        }), filter.elem("feOffset", {
+                            dx: "0", dy: "800"
+                        }), filter.elem("feBlend", {
+                            in: "SourceGraphic", mode: "multiply"
+                        }), defs;
+                    }).on("draw", function (data) {
+                        "line" === data.type ? data.element.attr({
+                            filter: "url(#shadow" + id + ")"
+                        }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                            x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
+                        }), "line" !== data.type && "area" != data.type || data.element.animate({
+                            d: {
+                                begin: 1e3 * data.index,
+                                dur: 1e3,
+                                from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                                to: data.path.clone().stringify(),
+                                easing: Chartist.Svg.Easing.easeOutQuint
+                            }
+                        });
+                    });
+
+                    $('#not-empty-sale').fadeIn()
+                },
+                labelList = chartData.label_list,
+                totalSalesData = {
+                    name: "Valor total", value: chartData.value_data
+                }
+            createChart = function createChart() {
+                scoreChart("scoreLineToMonth", labelList, totalSalesData);
+            }, createChart(), $(".chart-action li a").on("click", function () {
+                createChart($(this));
+            });
+
+        } else {
+            $('#empty-sale').fadeIn()
+            $('#scoreLineToMonth').remove()
+        }
 
     }
 
@@ -114,6 +132,7 @@ $(document).ready(function () {
         updateChart();
     });
     let userAccepted = true;
+
     function getDataDashboard() {
         loadingOnScreen();
         $.ajax({
@@ -145,9 +164,9 @@ $(document).ready(function () {
                     updateValues();
                     updateChart();
                 } else {
-                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
+                    loadingOnScreenRemove();
                 }
 
                 if (!data.userTerm) {
@@ -181,28 +200,13 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money, .ct-chart', false, {
+        loadOnAny('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
                     width: '30px',
-                    height: 'auto'
-                },
-                loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
-                },
-
-            }
-        });
-
-        loadOnAnyEllipsis('.update-text, .text-circle', false, {
-            styles: {
-                container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto'
+                    height: 'auto',
+                    margin: 'auto'
                 },
                 loader: {
                     width: '30px',
@@ -225,8 +229,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money, .ct-chart', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadOnAny('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
@@ -234,10 +237,10 @@ $(document).ready(function () {
             success: function success(data) {
 
                 $(".moeda").html(data.currency);
-                $("#pending_money").html(data.pending_balance)
-                $("#available_money").html(data.available_balance)
-                $("#total_money").html(data.total_balance)
-                $("#today_money").html(data.today_balance)
+                $("#pending_money").html(data.pending_balance);
+                $("#available_money").html(data.available_balance);
+                $("#total_money").html(data.total_balance);
+                $("#today_money").html(data.today_balance);
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
@@ -248,8 +251,7 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money, .ct-chart', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadOnAny('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });
@@ -272,8 +274,8 @@ $(document).ready(function () {
     function updateTrackings(trackings) {
         $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
         $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
-        $('#problem').html(trackings.problem + ' (' + trackings.problem_percentage + '%)');
-        $('#unknown').html(trackings.unknown + ' (' + trackings.unknown_percentage + '%)');
+        $('#problem').html(trackings.problem + ' <small>(' + trackings.problem_percentage + '%)</small>');
+        $('#unknown').html(trackings.unknown + ' <small>(' + trackings.unknown_percentage + '%)</small>');
     }
 
     function updateTickets(data) {
@@ -364,6 +366,7 @@ $(document).ready(function () {
             }
         });
     }
+
     // function verifyPendingData() {
     //     $.ajax({
     //         method: "GET",
