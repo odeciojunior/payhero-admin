@@ -32,7 +32,6 @@ $(document).ready(function () {
 });
 
 function alertCustom(type, message) {
-    alert('aqui');
     swal({
         position: 'bottom',
         type: type,
