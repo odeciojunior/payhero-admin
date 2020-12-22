@@ -115,10 +115,8 @@
                                     </div>
                                 </div>
                                 <div class="card-body d-flex justify-content-center align-items-center p-5" style="height: 270px">
-                                    <div style="display: none">
-                                        <div id="scoreLineToMonth" style="display: block"
-                                             class="ct-chart ct-golden-section chart-action tab-pane active"></div>
-                                    </div>
+                                    <div id="scoreLineToMonth"
+                                         class="ct-chart ct-golden-section chart-action tab-pane active"></div>
                                     <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
                                 <div class="card-bottom orange"></div>
