@@ -72,7 +72,7 @@
                         </div>
                         <div class='modal-footer'>
                             <div style='width:100%; text-align: center; padding-top: 3%;'>
-                                <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                                 Retornar
                                 </span>
                             </div>

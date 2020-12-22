@@ -47,7 +47,7 @@
                             <div id="modal_detalhes_body" class="modal-body">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                                 <button id='bt-cancelar' type="button" class="btn btn-gray" data-dismiss="modal"
                                         style="width: 20%;">Cancelar
                                 </button>
-                                <button id="bt-delete" type="button" class="btn btn-danger" style="width: 20%;">
+                                <button id="bt-delete" type="button" class="btn btn-primary" style="width: 20%;">
                                     Excluir
                                 </button>
                             </div>

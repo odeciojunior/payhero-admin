@@ -806,12 +806,12 @@ input[type=radio] {
     margin-top: -2px !important;
 }
 
-.btn-success, .btn-primary, .btn-gray, .btn-outline-primary {
+/* .btn-success, .btn-primary, .btn-gray, .btn-outline-primary {
     border-radius: 6px;
     padding: 8px 15px;
     font-size: 16px;
     font-family: 'Muli', sans-serif;
-}
+} */
 
 #custom-addon {
     height: auto !important;
@@ -841,7 +841,27 @@ input[type=radio] {
     background-color: #0D2C54;
 }
 
-/* .badge-pr a {
-    display: block;
-    color: #2E85EC;
+.site-menubar-unfold .site-navbar .navbar-header {
+    width: 230px;
+}
+
+.site-menubar-fold.site-menubar-hover .site-menubar {
+    width: 230px;
+}
+
+.site-menubar-unfold .site-menubar {
+    width: 230px;
+}
+
+.page {
+    background: #f3f3f3;
+}
+
+/* .btn-danger {
+    border-right: 5px solid #2E85EC;
+    background-color: #2E85EC;
+}
+
+.btn-danger:hover {
+    background-color: #247cf0;
 } */

@@ -85,7 +85,7 @@
                     </div>
                     <div class="modal-footer" style="margin-top: 15px">
                         <button id="btn-store-affiliation" type="button" class="btn btn-success">Enviar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="modal-footer" style="margin-top: 15px">
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
-                          <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                          <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                                 Retornar
                           </span>
                         </div>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="modal-footer" style="margin-top: 15px">
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
-                          <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                          <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                                 Retornar
                           </span>
                         </div>

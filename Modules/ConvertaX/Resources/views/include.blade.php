@@ -51,7 +51,7 @@
             </div>
             <div class="modal-footer">
                 <button id="bt_integration" type="button" class="btn btn-success mt-40" data-dismiss="modal"></button>
-                <button type="button" class="btn btn-danger mt-40" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary mt-40" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
