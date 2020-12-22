@@ -990,12 +990,7 @@ class ReportService
         ];
     }
 
-    /**
-     * @param $companyId
-     * @param $currency
-     * @return array
-     */
-    public function getFinacialProjectionByDays($companyId, $currency)
+    public function getFinacialProjectionByDays($companyId, $currency): array
     {
         try {
             $transactionModel = new Transaction();
@@ -1038,7 +1033,6 @@ class ReportService
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados');
             report($e);
         }
     }

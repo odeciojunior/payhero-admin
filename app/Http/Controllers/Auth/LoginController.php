@@ -43,6 +43,20 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout', 'sendAuthenticated', 'getAuthenticated');
     }
 
+    public function showLoginForm()
+    {
+        if(\Auth::id())
+            $this->redirectTo();
+
+        if(env('ACCOUNT_FRONT_URL')){
+            $url = env('ACCOUNT_FRONT_URL') . '/?from=sirius';
+            return \Redirect::to($url);
+        }
+
+
+        return view('auth.login');
+    }
+
     /**
      * @param Request $request
      * @return RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response|void
@@ -175,7 +189,14 @@ class LoginController extends Controller
                 throw new \Exception('Usuário não existe');
 
             auth()->loginUsingId($user->id);
-            return response()->redirectTo('/dashboard');
+
+
+            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+                return response()->redirectTo('/dashboard');
+            } else {
+                return response()->redirectTo('/sales');
+            }
+
 
         } catch (\Exception $e) {
             return response()->json([
