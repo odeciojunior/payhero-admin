@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
@@ -1048,31 +1049,33 @@ class ReportService
     public function getDashboardChartData($companyId)
     {
         try {
-
-            $company = current(Hashids::decode($companyId));
             $labelList    = [];
-            $startDate = Carbon::now()->subMonth();
-            $endDate   = Carbon::now();
+            $dataFormated = Carbon::parse(Carbon::now()->subMonths(10))->addDays(1);
+            $endDate      = Carbon::parse(Carbon::now());
 
-            while ($startDate->lessThanOrEqualTo($endDate)) {
-                array_push($labelList, $startDate->format('d/m'));
-                $startDate = $startDate->addDays(7);
-                if ($startDate->diffInDays($endDate) < 7 && $startDate->diffInDays($endDate) > 0) {
-                    array_push($labelList, $startDate->format('d/m'));
-                    $startDate = $startDate->addDays($startDate->diffInDays($endDate));
-                    array_push($labelList, $startDate->format('d/m'));
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays(31);
+                if ($dataFormated->diffInDays($endDate) < 31 && $dataFormated->diffInDays($endDate) > 0) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
                     break;
                 }
             }
 
-            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($company) {
+            $startDate = Carbon::now()->addDay()->subMonths(10)->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+
+            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value'))
+                ->leftJoin('transactions as transaction', function($join) use ($companyId) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
-                    $join->where('transaction.company_id', $company);
+                    $join->where('transaction.company_id', $companyId);
                 })
-                ->where('sales.status', 1)
+                ->where('sales.status', (new Sale())->present()->getStatus('approved'))
                 ->whereBetween('start_date', [$startDate, $endDate])
-                ->groupBy('date', 'sales.payment_method');
+                ->groupBy('date');
+
 
 
             $orders         = $orders->get()->toArray();
@@ -1101,7 +1104,10 @@ class ReportService
             Log::warning('Erro ao buscar dados');
             report($e);
 
-            dd('entrei');
+            return
+                [
+                    'message' => 'Não foi possível verificar todos os valores totais de venda'
+                ];
         }
     }
 }

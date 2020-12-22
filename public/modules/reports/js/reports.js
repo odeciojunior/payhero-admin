@@ -170,6 +170,7 @@ $(function () {
     function updateGraph(chartData) {
 
         var scoreChart = function scoreChart(id, labelList, series1List, series2List) {
+                console.log(series1List)
                 var scoreChart = new Chartist.Line("#" + id, {
                     labels: labelList, series: [series1List, series2List]
                 }, {
