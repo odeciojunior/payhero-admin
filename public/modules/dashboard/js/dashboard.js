@@ -164,9 +164,9 @@ $(document).ready(function () {
                     updateValues();
                     updateChart();
                 } else {
-                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
+                    loadingOnScreenRemove();
                 }
 
                 if (!data.userTerm) {
@@ -200,29 +200,13 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money', false, {
+        loadOnAny('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
                     width: '30px',
                     height: 'auto',
                     margin: 'auto'
-                },
-                loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
-                },
-
-            }
-        });
-
-        loadOnAnyEllipsis('.update-text, .text-circle', false, {
-            styles: {
-                container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto'
                 },
                 loader: {
                     width: '30px',
@@ -245,8 +229,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money, .ct-chart', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadOnAny('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove()
 
                 errorAjaxResponse(response);
@@ -268,8 +251,7 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money, .ct-chart', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadOnAny('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });
