@@ -1050,13 +1050,13 @@ class ReportService
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::parse(Carbon::now()->subMonths(10))->addDays(1);
+            $dataFormated = Carbon::parse(Carbon::now()->subMonth())->addDay();
             $endDate      = Carbon::parse(Carbon::now());
 
             while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->addDays(31);
-                if ($dataFormated->diffInDays($endDate) < 31 && $dataFormated->diffInDays($endDate) > 0) {
+                $dataFormated = $dataFormated->addDays(7);
+                if ($dataFormated->diffInDays($endDate) < 7 && $dataFormated->diffInDays($endDate) > 0) {
                     array_push($labelList, $dataFormated->format('d/m'));
                     $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
                     array_push($labelList, $dataFormated->format('d/m'));
@@ -1064,7 +1064,7 @@ class ReportService
                 }
             }
 
-            $startDate = Carbon::now()->addDay()->subMonths(10)->format('Y-m-d');
+            $startDate = Carbon::now()->addDay()->subMonth()->format('Y-m-d');
             $endDate   = Carbon::now()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value'))
