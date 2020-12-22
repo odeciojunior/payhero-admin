@@ -111,11 +111,10 @@
                                         <span class="card-desc">Vendas neste mês</span>
                                     </div>
                                 </div>
-                                <div class="card-body my-15" style="height: 270px">
-                                    <div style="display: block">
-                                        <div id="scoreLineToMonth" style="max-width: 100%"
-                                             class="ct-chart ct-golden-section chart-action tab-pane active"></div>
-                                    </div>
+                                <div class="card-body d-flex justify-content-center align-items-center p-5" style="height: 270px">
+                                    <div id="scoreLineToMonth"
+                                         class="ct-chart ct-golden-section chart-action tab-pane active"></div>
+                                    <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
                                 <div class="card-bottom orange"></div>
                             </div>
@@ -307,7 +306,7 @@
                                         O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era
                                         até este momento: uma empresa de processamento de pagamentos online.
                                     </p>
-                                    {{--                                    <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
+                                    {{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
                                 </div>
                             </div>
                         </div>

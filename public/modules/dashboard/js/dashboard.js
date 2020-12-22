@@ -5,7 +5,7 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-chart-data`,
-            // dataType: "json",
+            dataType: "json",
             data: {
                 company: $('#company').val(),
             },
@@ -24,88 +24,109 @@ $(document).ready(function () {
     }
 
     function getChart(chartData) {
-        var scoreChart = function scoreChart(id, labelList, series1List) {
-                var scoreChart = new Chartist.Line("#" + id, {
-                    labels: labelList,
-                    series: [series1List],
-                }, {
-                    lineSmooth: Chartist.Interpolation.simple({
-                        divisor: 2
-                    }),
-                    showPoint: false,
-                    showLine: false,
-                    showArea: true,
-                    fullWidth: true,
-                    chartPadding: {
-                        right: 20,
-                        left: 20,
-                        top: 30,
-                        button: 20
-                    },
-                    axisX: {
-                        showGrid: false,
-                        labelOffset: {x: -14, y: 0}
-                    },
-                    axisY: {
-                        labelInterpolationFnc: function labelInterpolationFnc(value) {
-                            value = value * 100;
-                            var str = value.toString();
-                            str = str.replace('.', '');
-                            let complete = 3 - str.length;
-                            if (complete == 1) {
-                                str = '0' + str;
-                            } else if (complete == 2) {
-                                str = '00' + str;
-                            }
-                            str = str.replace(/([0-9]{2})$/g, ",$1");
-                            if (str.length > 6) {
-                                str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-                            }
 
-                            if (value > 0) {
-                                str = value / 1e4 + "K"
-                            }
-                            return str;
+        let haveData= parseInt(chartData.value_data[0]) > 0;
+
+        if (haveData > 0) {
+            var scoreChart = function scoreChart(id, labelList, series1List) {
+                    var scoreChart = new Chartist.Line("#" + id, {
+                        labels: labelList,
+                        series: [series1List],
+                    }, {
+                        lineSmooth: Chartist.Interpolation.simple({
+                            divisor: 2
+                        }),
+                        showPoint: false,
+                        showLine: false,
+                        showArea: true,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 20,
+                            left: 20,
+                            top: 30,
+                            button: 20
                         },
-                        scaleMinSpace: 40,
-                        labelOffset: {x: -10, y: 0}
-                    },
-                    low: 0,
-                    height: 260,
-                });
-                scoreChart.on("created", function (data) {
-                    var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
-                        filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
-                            x: 0, y: "-10%", id: "shadow" + id
-                        }, "", !0));
-                    return filter.elem("feGaussianBlur", {
-                        in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
-                    }), filter.elem("feOffset", {
-                        dx: "0", dy: "800"
-                    }), filter.elem("feBlend", {
-                        in: "SourceGraphic", mode: "multiply"
-                    }), defs;
-                }).on("draw", function (data) {
-                    "line" === data.type ? data.element.attr({
-                        filter: "url(#shadow" + id + ")"
-                    }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
-                        x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
-                    }), "line" !== data.type && "area" != data.type || data.element.animate({
-                        d: {
-                            begin: 1e3 * data.index,
-                            dur: 1e3,
-                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                            to: data.path.clone().stringify(),
-                            easing: Chartist.Svg.Easing.easeOutQuint
-                        }
+                        axisX: {
+                            showGrid: false,
+                            labelOffset: {x: -14, y: 0},
+                            labelInterpolationFnc: function(value) {
+                                return value;
+                            }
+                        },
+                        axisY: {
+                            labelInterpolationFnc: function labelInterpolationFnc(value) {
+                                value = value * 100;
+                                var str = value.toString();
+                                str = str.replace('.', '');
+                                let complete = 3 - str.length;
+                                if (complete == 1) {
+                                    str = '0' + str;
+                                } else if (complete == 2) {
+                                    str = '00' + str;
+                                }
+                                str = str.replace(/([0-9]{2})$/g, ",$1");
+                                if (str.length > 6) {
+                                    str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                                }
+
+                                if (value > 0) {
+                                    str = value / 1e4 + "K"
+                                }
+                                return str;
+                            },
+                            scaleMinSpace: 40,
+                            labelOffset: {x: -10, y: 0}
+                        },
+                        low: 0,
+                        height: 260,
+                        width: undefined,
                     });
-                }).update();
-            },
-            labelList = chartData.label_list,
-            totalSalesData = chartData.value_data;
-        createChart = function createChart() {
-            scoreChart("scoreLineToMonth", labelList, totalSalesData);
-        }, createChart();
+                    scoreChart.on("created", function (data) {
+                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                            filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
+                                x: 0, y: "-10%", id: "shadow" + id
+                            }, "", !0));
+                        return filter.elem("feGaussianBlur", {
+                            in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
+                        }), filter.elem("feOffset", {
+                            dx: "0", dy: "800"
+                        }), filter.elem("feBlend", {
+                            in: "SourceGraphic", mode: "multiply"
+                        }), defs;
+                    }).on("draw", function (data) {
+                        "line" === data.type ? data.element.attr({
+                            filter: "url(#shadow" + id + ")"
+                        }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                            x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
+                        }), "line" !== data.type && "area" != data.type || data.element.animate({
+                            d: {
+                                begin: 1e3 * data.index,
+                                dur: 1e3,
+                                from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                                to: data.path.clone().stringify(),
+                                easing: Chartist.Svg.Easing.easeOutQuint
+                            }
+                        });
+                    });
+
+                    $('#not-empty-sale').fadeIn()
+                },
+                labelList = chartData.label_list,
+                totalSalesData = {
+                    name: "Valor total", value: chartData.value_data
+                }
+                // totalSalesData = chartData.value_data;
+            createChart = function createChart() {
+                scoreChart("scoreLineToMonth", labelList, totalSalesData);
+            }, createChart(), $(".chart-action li a").on("click", function () {
+                createChart($(this));
+            });
+
+        } else {
+
+            $('#empty-sale').fadeIn()
+            $('#scoreLineToMonth').remove()
+        }
 
     }
 
