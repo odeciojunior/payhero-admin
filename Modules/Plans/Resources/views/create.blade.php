@@ -66,7 +66,7 @@
                         {{--                        </div>--}}
                         <div class='col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                             {{--                            <label class="display-xsm-none">Remover:</label>--}}
-                            <button class='btn btn-outline btn-danger btnDelete form-control'>
+                            <button class='btn btn-outline btn-primary btnDelete form-control'>
                                 <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i>
                             </button>
                         </div>

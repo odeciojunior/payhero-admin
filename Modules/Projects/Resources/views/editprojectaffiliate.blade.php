@@ -26,7 +26,7 @@
 {{--                            </div>--}}
 {{--                            <input name="suport_contact" value="" type="text" class="input-pad form-control" id="contact" placeholder="Contato" maxlength='40' aria-describedby="addon-contact">--}}
 {{--                        </div>--}}
-{{--                        <span id='contact-error' class='text-danger'></span>--}}
+{{--                        <span id='contact-error' class='text-primary'></span>--}}
 {{--                        <p class='info pt-5' style='font-size: 10px;'>--}}
 {{--                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails--}}
 {{--                        </p>--}}
@@ -41,7 +41,7 @@
                             </div>
                             <input name="suport_phone" value="" type="text" class="input-pad form-control" id="suport_phone" placeholder="Telefone" data-mask="(00) 00000-0000" aria-describedby="addon-suport_phone">
                         </div>
-                        <span id='contact-error' class='text-danger'></span>
+                        <span id='contact-error' class='text-primary'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número
                         </p>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Fechar</button>
-                    <button type="button" class="col-4 btn btn-danger btn-cancel-affiliation" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                    <button type="button" class="col-4 btn btn-primary btn-cancel-affiliation" data-dismiss="modal" style="width: 20%;">Excluir</button>
                 </div>
             </div>
         </div>

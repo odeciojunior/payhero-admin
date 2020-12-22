@@ -9,7 +9,7 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <button id="add-collaborator" title='Adicionar colaborador' type="button"
-                    class="btn btn-floating btn-danger"
+                    class="btn btn-floating btn-primary"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Colaboradores</h2>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="modal-footer" style="margin-top: 15px">
                     <button id="btn_collaborator" type="button" class="btn btn-success"></button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
                     <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal"
                             style="width: 20%;">Cancelar
                     </button>
-                    <button id="btn-delete-collaborator" type="button" class="col-4 btn btn-danger" style="width: 20%;"
+                    <button id="btn-delete-collaborator" type="button" class="col-4 btn btn-primary" style="width: 20%;"
                             data-dismiss="modal">Excluir
                     </button>
                 </div>

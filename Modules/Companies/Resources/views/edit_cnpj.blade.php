@@ -432,7 +432,7 @@
                     </div>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn-danger' data-dismiss='modal'>Fechar</button>
+                    <button type='button' class='btn-primary' data-dismiss='modal'>Fechar</button>
                 </div>
             </div>
         </div>

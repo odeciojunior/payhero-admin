@@ -542,10 +542,12 @@ $(document).ready(function () {
     siteMenuBar.on('mouseenter', function () {
         bodyEl.addClass('site-menubar-hover');
         $('#logoIconSirius').addClass('d-none');
+        $('#logoSirius').removeClass('d-none');
     }).on('mouseleave', function () {
         menuTimeout = setTimeout(function () {
             bodyEl.removeClass('site-menubar-hover');
             $('#logoIconSirius').removeClass('d-none');
+            $('#logoSirius').addClass('d-none');
             //if (!bodyEl.hasClass('site-menubar-unfold')) {
                 //siteMenuItems.removeClass('active')
             //}

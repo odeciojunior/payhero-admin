@@ -55,7 +55,7 @@
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-review-save" style='display:none;'>Salvar</button>
                 <button type="button" class="btn btn-success bt-review-update" style='display:none;'>Atualizar</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
                 @include('projectreviews::config')
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-success bt-review-config-update">Atualizar</button>
             </div>
         </div>
@@ -120,7 +120,7 @@
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
                 <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button type="button" class="col-4 btn btn-danger btn-delete-review" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                <button type="button" class="col-4 btn btn-primary btn-delete-review" data-dismiss="modal" style="width: 20%;">Excluir</button>
             </div>
         </div>
     </div>

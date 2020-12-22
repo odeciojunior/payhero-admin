@@ -15,7 +15,7 @@
                 <div class="page-content container">
                     <div class="mb-15">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
-                            <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
+                            <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #2E85EC">
                                 <li class="nav-item" role="presentation">
                                     <a id="tab-affiliates" class="nav-link active" data-toggle="tab" href="#tab_affiliates_panel"
                                        aria-controls="tab_affiliates" role="tab">Afiliados
@@ -104,7 +104,7 @@
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-center">
                         <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                        <button type="button" class="col-4 btn btn-danger btn-delete" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                        <button type="button" class="col-4 btn btn-primary btn-delete" data-dismiss="modal" style="width: 20%;">Excluir</button>
                     </div>
                 </div>
             </div>
