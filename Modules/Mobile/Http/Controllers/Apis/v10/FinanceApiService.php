@@ -3,6 +3,8 @@
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -13,78 +15,57 @@ use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\BankService;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Withdrawals\Transformers\OldWithdrawalResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class FinanceApiService
- * @package Modules\Mobile\Http\Controllers\Apis\v10
- */
 class FinanceApiService
 {
-    /**
-     * FinanceApiService constructor.
-     */
-    public function __construct() { }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function financeGetData(Request $request)
+    public function __construct()
     {
+    }
 
+    public function financeGetData(Request $request): JsonResponse
+    {
         try {
-
-            $balances     = $this->getBalances($request);
+            $balances = $this->getBalances($request);
             $transactions = $this->getTransactions($request);
 
             return response()->json(compact('balances', 'transactions'), 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (FinanceApiService - financeGetData)');
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
     public function getTransactions(Request $request)
     {
-
         try {
-            /** @var Withdrawal $withdrawalModel */
             $withdrawalModel = new Withdrawal();
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            $companyId    = current(Hashids::decode($request->company));
-            if ($companyId) {
-                //id existe
-                $company = $companyModel->find($companyId);
-                if (Gate::allows('edit', [$company])) {
-                    //se pode editar empresa pode visualizar os saques
-                    $withdrawals = $withdrawalModel->where('company_id', $companyId)
-                                                   ->orderBy('id', 'DESC');
+            $companyId = current(Hashids::decode($request->company));
 
-                    return WithdrawalResource::collection($withdrawals->paginate(5));
-                } else {
-                    return [
-                        'message' => 'Sem permissão para visualizar saques',
-                    ];
-                }
-            } else {
-                //id incorreto
+            if (empty($companyId)) {
                 return [
                     'message' => 'Empresa não encontrada',
                 ];
             }
+
+            $company = $companyModel->find($companyId);
+            if (!Gate::allows('edit', [$company])) {
+                return [
+                    'message' => 'Sem permissão para visualizar saques',
+                ];
+            }
+            $withdrawals = $withdrawalModel->where('company_id', $companyId)->orderBy('id', 'DESC');
+
+            return OldWithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar lista de saques (FinanceApiService - getTransactions)');
             report($e);
 
             return [
@@ -93,39 +74,34 @@ class FinanceApiService
         }
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getBalances(Request $request)
     {
         try {
             $companyModel = new Company();
-            $transactionModel   = new Transaction();
+            $transactionModel = new Transaction();
             $antecipableBalance = 0;
-            $pendingBalance     = 0;
+            $pendingBalance = 0;
             if ($request->has('company') && !empty($request->input('company'))) {
-
                 $companyId = current(Hashids::decode($request->input('company')));
 
                 $company = $companyModel->newQuery()->find($companyId);
                 if (!empty($company)) {
-                    $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                                                ->whereDate('release_date', '>', now()->startOfDay())
-                                                                ->select(DB::raw('sum( value ) as pending_balance'))
-                                                                ->first();
-                    $pendingBalance          += $pendingTransactions->pending_balance;
+                    $pendingTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
+                        ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                        ->whereDate('release_date', '>', now()->startOfDay())
+                        ->select(DB::raw('sum( value ) as pending_balance'))
+                        ->first();
+                    $pendingBalance += $pendingTransactions->pending_balance;
 
-                    $availableBalance   = $company->balance;
-                    $totalBalance       = $availableBalance + $pendingBalance;
+                    $availableBalance = $company->balance;
+                    $totalBalance = $availableBalance + $pendingBalance;
 
                     return [
-                        'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                        'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                         'antecipable_balance' => 0,
-                        'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                        'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                        'currency'            => $company->country == 'usa' ? '$' : 'R$',
+                        'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                        'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                        'currency' => $company->country == 'usa' ? '$' : 'R$',
                     ];
                 } else {
                     return ['message' => 'Ocorreu algum erro, tente novamente!'];
@@ -143,11 +119,6 @@ class FinanceApiService
         }
     }
 
-    /**
-     * @param Request $request
-     * @return array
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
-     */
     public function getAccountInformation(Request $request)
     {
         $companyModel = new Company();
@@ -166,10 +137,11 @@ class FinanceApiService
                 return response()->json(
                     [
                         'message' => 'success',
-                        'data'    => [
+                        'data' => [
                             'user_documents_status' => 'pending',
                         ],
-                    ], 200
+                    ],
+                    200
                 );
             }
 
@@ -177,10 +149,11 @@ class FinanceApiService
                 return response()->json(
                     [
                         'message' => 'success',
-                        'data'    => [
+                        'data' => [
                             'email_verified' => 'false',
                         ],
-                    ], 200
+                    ],
+                    200
                 );
             }
 
@@ -188,41 +161,43 @@ class FinanceApiService
                 return response()->json(
                     [
                         'message' => 'success',
-                        'data'    => [
+                        'data' => [
                             'cellphone_verified' => 'false',
                         ],
-                    ], 200
+                    ],
+                    200
                 );
             }
 
             if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
                 $company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') &&
                 $company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
-
                 // Verificar se telefone e e-mail estão verificados
 
                 return response()->json(
                     [
                         'message' => 'success',
-                        'data'    => [
+                        'data' => [
                             'documents_status' => 'approved',
-                            'bank'             => $bankService->getBankName($company->bank),
-                            'account'          => $company->account,
-                            'account_digit'    => $company->account_digit,
-                            'agency'           => $company->agency,
-                            'agency_digit'     => $company->agency_digit,
-                            'document'         => $company->document,
+                            'bank' => $bankService->getBankName($company->bank),
+                            'account' => $company->account,
+                            'account_digit' => $company->account_digit,
+                            'agency' => $company->agency,
+                            'agency_digit' => $company->agency_digit,
+                            'document' => $company->document,
                         ],
-                    ], 200
+                    ],
+                    200
                 );
             } else {
                 return response()->json(
                     [
                         'message' => 'success',
-                        'data'    => [
+                        'data' => [
                             'documents_status' => 'pending',
                         ],
-                    ], 200
+                    ],
+                    200
                 );
             }
         } else {
@@ -232,7 +207,7 @@ class FinanceApiService
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function store(Request $request)
@@ -244,46 +219,58 @@ class FinanceApiService
         $companyModel = new Company();
         /** @var Company $company */
         $company = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                                ->find(current(Hashids::decode($data['company_id'])));
+            ->find(current(Hashids::decode($data['company_id'])));
         if (Gate::allows('edit', [$company])) {
             if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
                 !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') ||
                 !$company->contract_document_status == $companyModel->present()
-                                                                    ->getContractDocumentStatus('approved')) {
-                return response()->json([
-                                            'message' => 'error',
-                                            'data'    => [
-                                                'documents_status' => 'pending',
-                                            ],
-                                        ], 400);
+                    ->getContractDocumentStatus('approved')) {
+                return response()->json(
+                    [
+                        'message' => 'error',
+                        'data' => [
+                            'documents_status' => 'pending',
+                        ],
+                    ],
+                    400
+                );
             }
             $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
             $companyDocument = preg_replace("/[^0-9]/", "", $company->document);
 
             if ($withdrawalValue < 1000) {
-                return response()->json([
-                                            'message' => 'Valor de saque precisa ser maior que R$ 10,00',
-                                        ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Valor de saque precisa ser maior que R$ 10,00',
+                    ],
+                    400
+                );
             }
             if ($withdrawalValue > $company->balance) {
-                return response()->json([
-                                            'message' => 'Valor informado inválido',
-                                        ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Valor informado inválido',
+                    ],
+                    400
+                );
             }
 
             /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
             if (strlen($companyDocument) == 11) {
-                $startDate  = Carbon::now()->startOfMonth();
-                $endDate    = Carbon::now()->endOfMonth();
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
                 $withdrawal = $withdrawalModel->where('company_id', $company->id)
-                                              ->where('status', $withdrawalModel->present()->getStatus('transfered'))
-                                              ->whereBetween('created_at', [$startDate, $endDate])->get();
+                    ->where('status', $withdrawalModel->present()->getStatus('transfered'))
+                    ->whereBetween('created_at', [$startDate, $endDate])->get();
                 if (count($withdrawal) > 0) {
                     $withdrawalSum = $withdrawal->sum('value');
                     if ($withdrawalSum + $withdrawalValue > 190000) {
-                        return response()->json([
-                                                    'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
-                                                ], 400);
+                        return response()->json(
+                            [
+                                'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                            ],
+                            400
+                        );
                     }
                 }
             }
@@ -297,14 +284,14 @@ class FinanceApiService
 
             $withdrawal = $withdrawalModel->create(
                 [
-                    'value'         => $withdrawalValue,
-                    'company_id'    => $company->id,
-                    'bank'          => $company->bank,
-                    'agency'        => $company->agency,
-                    'agency_digit'  => $company->agency_digit,
-                    'account'       => $company->account,
+                    'value' => $withdrawalValue,
+                    'company_id' => $company->id,
+                    'bank' => $company->bank,
+                    'agency' => $company->agency,
+                    'agency_digit' => $company->agency_digit,
+                    'account' => $company->account,
                     'account_digit' => $company->account_digit,
-                    'status'        => $companyModel->present()->getStatus('pending'),
+                    'status' => $companyModel->present()->getStatus('pending'),
                 ]
             );
             event(new WithdrawalRequestEvent($withdrawal));

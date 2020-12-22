@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
@@ -18,10 +17,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TransfersApiController
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -123,10 +118,6 @@ class TransfersApiController
 
     public function accountStatementData(): JsonResponse
     {
-        if (!auth()->user()) {
-            dd('USUÁRIO NÃO AUTENTICADO');
-        }
-
         try {
             $companyGetNet = Company::whereNotNull('subseller_getnet_id')
                 ->where('user_id', auth()->user()->account_owner_id)
@@ -197,7 +188,6 @@ class TransfersApiController
                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
             ];
 
-            //if (!FoxUtils::isProduction()) {
             $error += [
                 'dev_message' => $exception->getMessage(),
                 'dev_file' => $exception->getFile(),
@@ -205,8 +195,6 @@ class TransfersApiController
                 'dev_code' => $exception->getCode(),
                 'dev_trace' => $exception->getTrace(),
             ];
-            //}
-
             return response()->json($error, 400);
         }
     }

@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @section('content')
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <h1 class="page-title">Ferramentas</h1>
         </div>
         <div class="page-content container">

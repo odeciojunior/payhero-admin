@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    loadOnAny('#card-project');
+    loadingOnScreen();
     $.ajax({
         url: '/api/projects/create',
         dataType: "json",
@@ -9,11 +9,10 @@ $(document).ready(function () {
             'Accept': 'application/json',
         },
         error: (response) => {
-            loadOnAny('#card-project', true);
+            loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
         success: (response) => {
-            loadOnAny('#card-project', true);
             if (!isEmpty(response)) {
                 let countApproved = 0;
                 $.each(response, (key, company) => {
@@ -48,6 +47,8 @@ $(document).ready(function () {
                 $('#card-project').hide();
                 $('.content-error').show();
             }
+
+            loadingOnScreenRemove();
         }
     });
 

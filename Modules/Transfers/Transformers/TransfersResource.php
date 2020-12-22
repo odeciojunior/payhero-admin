@@ -26,20 +26,20 @@ class TransfersResource extends JsonResource
 
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
-        } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
+        } elseif (!empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
-        } else if (empty($this->transaction) && $this->reason == 'chargedback') {
+        } elseif (empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
-        } else if ($this->reason == 'refunded') {
+        } elseif ($this->reason == 'refunded') {
             $reason = 'Estorno da transação';
-        } else if ($this->reason == 'Antecipação') {
+        } elseif ($this->reason == 'Antecipação') {
             $reason = 'Antecipação';
         } else {
             $reason = $this->reason;
         }
 
-        $type             = $this->type_enum == 2 ? '-' : '';
-        $value            = number_format(intval($type . $this->value) / 100, 2, ',', '.');
+        $type = $this->type_enum == 2 ? '-' : '';
+        $value = number_format(intval($type . $this->value) / 100, 2, ',', '.');
 
         $tax = '';
         if (!empty($this->anticipation_id)) {

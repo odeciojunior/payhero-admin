@@ -85,6 +85,8 @@ return [
                 'in_review'  => "Em Revisão",
                 'processing' => "Processando",
                 'returned'   => "Retornado",
+                'liquidating'   => "Liquidando",
+                'partially_liquidated'   => "Parcialmente Liquidado",
             ],
         ],
         "invitation"               => [

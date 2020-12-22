@@ -9,7 +9,7 @@
     @endpush
 
         <div class="page">
-            <div class="page-header container">
+            <div style="display: none" class="page-header container">
                 <div class="row">
                     <div class="col-8">
                         <h1 class="page-title">Utilização de Cupons</h1>

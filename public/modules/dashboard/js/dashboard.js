@@ -121,11 +121,21 @@ $(document).ready(function () {
             },
             success: function success(data) {
 
+                let fontSize = '35px'
+                if (
+                    data.pending_balance.length > 8 ||
+                    data.available_balance.length > 8 ||
+                    data.total_balance.length > 8 ||
+                    data.today_balance.length > 8
+                ) {
+                    fontSize = '27px'
+                }
+
                 $(".moeda").html(data.currency);
-                $("#pending_money").html(data.pending_balance);
-                $("#available_money").html(data.available_balance);
-                $("#total_money").html(data.total_balance);
-                $("#today_money").html(data.today_balance);
+                $("#pending_money").html(data.pending_balance).css('font-size', fontSize);
+                $("#available_money").html(data.available_balance).css('font-size', fontSize);
+                $("#total_money").html(data.total_balance).css('font-size', fontSize);
+                $("#today_money").html(data.today_balance).css('font-size', fontSize);
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);

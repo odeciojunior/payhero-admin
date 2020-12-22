@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=2') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=3') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -59,7 +59,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=12') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=13') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -130,7 +130,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=19') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=22') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

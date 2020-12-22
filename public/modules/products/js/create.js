@@ -3,18 +3,8 @@ $(document).ready(function () {
      * Helper Functions
      */
 
-    function verify() {
-        let ver = true;
-        if ($.trim($('#name').val()) === '') {
-            alertCustom("error", "O campo Nome é obrigatório");
-            ver = false;
-        }
-        if ($.trim($("#description").val()) === '') {
-            alertCustom("error", "O campo Descrição é obrigatório");
-            ver = false;
-        }
-        return ver;
-    }
+    loadingOnScreen();
+    loadingOnScreenRemove();
 
     function verify() {
         let ver = true;

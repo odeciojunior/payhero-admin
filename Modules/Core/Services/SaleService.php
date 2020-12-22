@@ -307,7 +307,7 @@ class SaleService
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue = $affiliateTransaction->value;
-                $affiliateComission = 'R$ ' . number_format($affiliateValue / 100,2, ',', '.');
+                $affiliateComission = 'R$ ' . number_format($affiliateValue / 100, 2, ',', '.');
             }
         }
 
@@ -320,7 +320,7 @@ class SaleService
         } else {
             $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
         }
-        if($taxaReal < 0) $taxaReal *= -1;
+        if ($taxaReal < 0) $taxaReal *= -1;
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
         }
@@ -444,11 +444,11 @@ class SaleService
             foreach ($sale->productsPlansSale as &$pps) {
                 $product = $pps->product->toArray();
                 $product['amount'] = $pps->amount;
-                if($product['type_enum'] == (new Product)->present()->getType('digital') && !empty($product['digital_product_url'])){
-                    $product['digital_product_url'] = FoxUtils::getAwsSignedUrl($product['digital_product_url'],$product['url_expiration_time']);
+                if ($product['type_enum'] == (new Product)->present()->getType('digital') && !empty($product['digital_product_url'])) {
+                    $product['digital_product_url'] = FoxUtils::getAwsSignedUrl($product['digital_product_url'], $product['url_expiration_time']);
                     $pps->update([
-                                     'temporary_url' => $product['digital_product_url'],
-                                 ]);
+                        'temporary_url' => $product['digital_product_url'],
+                    ]);
                 } else {
                     $product['digital_product_url'] = '';
                 }
@@ -464,7 +464,7 @@ class SaleService
      * @param $sale
      * @param $refundAmount
      * @param $response
-     * @param  array  $partialValues
+     * @param array $partialValues
      * @param $refundObservation
      * @return bool
      * @throws Exception
@@ -741,7 +741,7 @@ class SaleService
     }
 
     /**
-     * @param  Sale  $sale
+     * @param Sale $sale
      * @throws PresenterException
      */
     public function refundBillet(Sale $sale)
@@ -777,7 +777,7 @@ class SaleService
                     'type' => 'out',
                     'type_enum' => $transferModel->present()->getTypeEnum('out'),
                     'reason' => 'Taxa de estorno de boleto',
-                    'is_refund_tax'  => 1,
+                    'is_refund_tax' => 1,
                     'company_id' => $transaction->company->id,
                 ]);
 
@@ -805,7 +805,7 @@ class SaleService
                         'type' => 'out',
                         'type_enum' => $transferModel->present()->getTypeEnum('out'),
                         'reason' => 'Taxa de estorno de boleto',
-                        'is_refund_tax'  => 1,
+                        'is_refund_tax' => 1,
                         'company_id' => $transaction->company->id,
                     ]);
 
@@ -1002,7 +1002,7 @@ class SaleService
         $userId = auth()->user()->account_owner_id;
 
         try {
-            
+
             $userCompanies = $companyModel->where('user_id', $userId)
                 ->pluck('id')
                 ->toArray();
@@ -1010,10 +1010,10 @@ class SaleService
             // Filtro Company
             if (!empty($filters["company"])) {
                 $companyId = Hashids::decode($filters["company"]);
-                $userCompanies = $companyModel->where('user_id', $userId)->where('id',$companyId)
-                ->pluck('id')
-                ->toArray();
-            } 
+                $userCompanies = $companyModel->where('user_id', $userId)->where('id', $companyId)
+                    ->pluck('id')
+                    ->toArray();
+            }
 
             $relationsArray = [
                 'sale',
@@ -1024,7 +1024,7 @@ class SaleService
             $transactions = $transactionModel->with($relationsArray)
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->where('transactions.status_enum' , '=',
+                ->where('transactions.status_enum', '=',
                     $transactionModel->present()->getStatusEnum('paid'))
                 ->whereNull('invitation_id');
 
@@ -1101,11 +1101,11 @@ class SaleService
     public function getSalesBlockedBalance($filters)
     {
         try {
-            $companyModel     = new Company();
-            $customerModel    = new Customer();
+            $companyModel = new Company();
+            $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $salesModel       = new Sale();
-            $userId           = auth()->user()->account_owner_id;
+            $salesModel = new Sale();
+            $userId = auth()->user()->account_owner_id;
 
             $userCompanies = $companyModel->where('user_id', $userId)
                 ->pluck('id')
@@ -1118,7 +1118,7 @@ class SaleService
                     'sale.plansSales.plan',
                     'sale.tracking',
                     'sale.productsPlansSale',
-                    'sale.affiliate' => function($funtionTrash) {
+                    'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     }
                 ])
@@ -1127,16 +1127,17 @@ class SaleService
                 ->whereNull('invitation_id')
                 ->where('transactions.status_enum', 1)
                 ->whereNotNull('delivery_id')
-                ->whereHas('sale', function($f1) use($salesModel){
+                ->whereDate('transactions.created_at', '>=', '2020-01-01')
+                ->whereHas('sale', function ($f1) use ($salesModel) {
                     $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                       ->orWhere(function($f2) use($salesModel) {
+                        ->orWhere(function ($f2) use ($salesModel) {
                             $f2->where('sales.status', $salesModel->present()->getStatus('approved'))
-                               ->whereHas('productsPlansSale', function($q) {
+                                ->whereHas('productsPlansSale', function ($q) {
                                     $q->doesntHave('tracking');
                                 });
-                       })->orWhereHas('tracking', function ($queryTracking) {
-                                $presenter = (new Tracking())->present();
-                                $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
+                        })->orWhereHas('tracking', function ($queryTracking) {
+                            $presenter = (new Tracking())->present();
+                            $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
                         });
                 });
 
@@ -1171,7 +1172,7 @@ class SaleService
                 $transactions->where('sales.payment_method', $filters["payment_method"]);
             }
 
-            $status = (!empty($filters['status'])) ? [$filters['status']] : [1,24];
+            $status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
             if (!empty($filters["plan"])) {
                 $planId = current(Hashids::decode($filters["plan"]));
                 $transactions->whereHas('sale.plansSales', function ($query) use ($planId) {
@@ -1182,11 +1183,9 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
             $transactions->whereBetween('sales.' . $filters["date_type"], [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-                         ->whereIn('sales.status', $status)
-                         ->selectRaw('transactions.*, sales.start_date')
-                         ->orderByDesc('sales.start_date');
-
-            $sql = str_replace_array('?', $transactions->getBindings(), $transactions->toSql());
+                ->whereIn('sales.status', $status)
+                ->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
@@ -1269,8 +1268,9 @@ class SaleService
      * @param Sale $sale
      * @return bool
      */
-    public function saleIsGetnet(Sale $sale){
-        if (in_array($sale->gateway_id, [14,15])){
+    public function saleIsGetnet(Sale $sale)
+    {
+        if (in_array($sale->gateway_id, [14, 15])) {
             return true;
         }
 

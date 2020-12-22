@@ -17,7 +17,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <h1 class="page-title" style="min-height: 28px"></h1>
             <div class="page-header-actions">
                 <a class="btn btn-success float-right" href="/projects">
@@ -198,7 +198,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>
+{{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>

@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     @endpush
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container">
             <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-danger"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
