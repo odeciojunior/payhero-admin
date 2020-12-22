@@ -45,7 +45,7 @@ body {
 
 .page.dashboard .text-money {
     font-family: Muli;
-    font-size: 25px;
+    font-size: 20px;
     color: black;
     font-weight: 700;
     font-style: normal;
@@ -57,15 +57,15 @@ body {
 
 .page.dashboard .card {
     font-family: 'Muli', sans-serif;
-    border-radius: 30px !important;
+    border-radius: 16px !important;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 1px 15px #00000017;
     opacity: 1;
 }
 
 .page.dashboard .card .card-header:first-child {
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
 }
 
 .page.dashboard .card .card-bottom {
@@ -73,10 +73,10 @@ body {
     z-index: 2;
     height: 20px;
     background-color: #2E85EC;
-    border-radius: 30px 0px;
-    width: 60px;
+    border-radius: 16px 0px;
+    width: 90px;
     position: relative;
-    left: calc(100% - 60px);
+    left: calc(100% - 90px);
 }
 
 /*bottom*/
@@ -109,14 +109,36 @@ body {
 .page.dashboard .card-text {
     display: flex;
     width: 100% !important;
+    margin: 25px 0;
 }
 
 .page.dashboard .card-text .text-money {
     font-size: 32px
 }
 
+.page.dashboard .text-money small{
+    font-size: 12px;
+    color: gray
+}
+
 .page.dashboard .card-text .loader-any-container {
     width: 100% !important;;
+}
+
+.page.dashboard .card-chargeback .text-money {
+    font-size: 18px !important;
+}
+
+.page.dashboard table,
+.page.dashboard .table-striped > tbody > tr:nth-child(2n+1) > td,
+.page.dashboard table tr {
+    background: #fff !important;
+}
+
+.page.dashboard table td {
+    padding: 0px !important;
+    padding-bottom: 10px;
+    background: #fff !important;
 }
 
 /*left*/

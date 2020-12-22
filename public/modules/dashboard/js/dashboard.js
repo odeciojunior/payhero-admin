@@ -273,8 +273,8 @@ $(document).ready(function () {
     function updateTrackings(trackings) {
         $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
         $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
-        $('#problem').html(trackings.problem + ' (' + trackings.problem_percentage + '%)');
-        $('#unknown').html(trackings.unknown + ' (' + trackings.unknown_percentage + '%)');
+        $('#problem').html(trackings.problem + ' <small>(' + trackings.problem_percentage + '%)</small>');
+        $('#unknown').html(trackings.unknown + ' <small>(' + trackings.unknown_percentage + '%)</small>');
     }
 
     function updateTickets(data) {
