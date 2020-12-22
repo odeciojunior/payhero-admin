@@ -50,7 +50,7 @@
                                 <div class="card-bottom orangered"></div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <div class="card card-shadow bg-white">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -67,7 +67,7 @@
                                 <div class="card-bottom orange"></div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <div class="card card-shadow bg-white">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -84,15 +84,14 @@
                                 <div class="card-bottom green"></div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <div class="card card-shadow bg-white">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600 mr-auto">
                                         <span class="card-desc">Total</span>
                                     </div>
-                                    <i class="material-icons gray" data-toggle="tooltip" id="info-total-balance"
-                                       data-placement="bottom">help</i>
+                                    <i class="material-icons gray" id="info-total-balance">help</i>
                                 </div>
                                 <div class="card-body font-size-24 d-flex align-items-topline">
                                     <div class="card-text align-items-center">
@@ -159,7 +158,7 @@
                                                 </div>
                                             </div>
                                             <div class="row my-1">
-                                                <div class="col-12 pb-15"><b>Atendimento</b></div>
+                                                <div class="col-12 pb-15 text-dark"><b>Atendimento</b></div>
                                             </div>
                                             <div class="row my-2">
                                                 <div class="col d-flex justify-content-center">
@@ -190,7 +189,7 @@
                                             </div>
                                             <div class="row my-1">
                                                 <div class="col-12 pb-15 d-flex justify-content-between">
-                                                    <b>Códigos de Rastreio</b>
+                                                    <b class="text-dark">Códigos de Rastreio</b>
 
                                                     <i class="material-icons gray" data-toggle="tooltip"
                                                        data-placement="bottom"
@@ -199,22 +198,23 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-
-                                            <div class="d-flex">
-                                                <label>Tempo médio de postagem: &nbsp; </label>
-                                                <span class="update-text" id="average_post_time"></span>
-                                            </div>
-                                            <div class="d-flex">
-                                                <label>Venda mais antiga sem código: &nbsp; </label>
-                                                <span class="update-text" id="oldest_sale"></span>
-                                            </div>
-                                            <div class="d-flex">
-                                                <label>Códigos informados com problema: &nbsp; </label>
-                                                <span class="update-text" id="problem"></span>
-                                            </div>
-                                            <div class="d-flex">
-                                                <label>Códigos não informados: &nbsp; </label>
-                                                <span class="update-text" id="unknown"></span>
+                                            <div class="row no-gutters">
+                                                <div class="col-6 mb-25 text-center d-flex flex-wrap flex-column">
+                                                    <label class="update-text text-money font-size-17" id="average_post_time"></label>
+                                                    <span class="font-size-11">Tempo médio de postagem</span>
+                                                </div>
+                                                <div class="col-6 mb-25 text-center d-flex flex-wrap flex-column">
+                                                    <label class="update-text text-money font-size-17" id="oldest_sale"></label>
+                                                    <span class="font-size-11">Venda mais antiga sem código</span>
+                                                </div>
+                                                <div class="col-6 mb-25 text-center d-flex flex-wrap flex-column">
+                                                    <label class="update-text text-money font-size-17" id="problem"></label>
+                                                    <span class="font-size-11">Códigos com problema</span>
+                                                </div>
+                                                <div class="col-6 mb-25 text-center d-flex flex-wrap flex-column">
+                                                    <label class="update-text text-money font-size-17" id="unknown"></label>
+                                                    <span class="font-size-11">Códigos não informados</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -236,7 +236,7 @@
                                          src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}" height="60px"
                                          width="60px">
                                 </div>
-                                <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15">
+                                <div class="card-body d-flex flex-column justify-content-between">
                                     <p class="font-size-12">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                                         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
