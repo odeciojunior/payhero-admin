@@ -111,7 +111,7 @@
                                         <span class="card-desc">Vendas neste mês</span>
                                     </div>
                                 </div>
-                                <div class="card-body d-flex justify-content-center align-items-center p-5" style="height: 270px">
+                                <div class="card-body my-30 d-flex justify-content-center align-items-center p-5" style="height: 270px">
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
