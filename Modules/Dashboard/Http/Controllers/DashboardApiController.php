@@ -306,24 +306,8 @@ class DashboardApiController extends Controller
             $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
         }
 
-        $newsData = settings()->group('dashboard_news')->all(true);
-        $news = [];
-        foreach ($newsData as $key => $value) {
-            $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
-            if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
-                $userFirstName = explode(' ', auth()->user()->name)[0];
-                $newsDecoded->title = str_replace(
-                    '{nome_usuario}',
-                    ucfirst($userFirstName),
-                    $newsDecoded->title
-                );
-            }
-            $news[] = $newsDecoded;
-        }
-
         return response()->json(
             [
-                'news' => $news,
                 'releases' => $releases,
             ]
         );
