@@ -135,7 +135,7 @@
                                         </div>
                                     </div>
                                     <div class='col-lg-12'>
-                                        <a style='display:none;' class="btn btn-danger delete-product white float-right" productname='' product="" data-toggle="modal" data-target="#modal-delete">
+                                        <a style='display:none;' class="btn btn-primary delete-product white float-right" productname='' product="" data-toggle="modal" data-target="#modal-delete">
                                             <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
                                         </a>
                                     </div>
@@ -204,7 +204,7 @@
                         </div>
                         <div class="modal-footer  align-items-center justify-content-center">
                             <button id='bt_cancelar' type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                            <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;">Excluir</button>
+                            <button id="bt_excluir" type="button" class="btn btn-primary" style="width: 20%;">Excluir</button>
                         </div>
                     </div>
                 </div>

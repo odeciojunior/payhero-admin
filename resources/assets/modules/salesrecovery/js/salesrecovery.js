@@ -45,7 +45,7 @@ $(document).ready(function () {
                     if (value.recovery_status == 'Recuperado') {
                         dados += "<td><span class='badge badge-success'>" + value.recovery_status + "</span></td>";
                     } else {
-                        dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
+                        dados += "<td><span class='badge badge-primary'>" + value.recovery_status + "</span></td>";
                     }
                     dados += "<td>" + value.value + "</td>";
                     dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";

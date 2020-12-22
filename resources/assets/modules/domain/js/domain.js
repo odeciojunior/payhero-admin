@@ -466,7 +466,7 @@ $(document).ready(function () {
         if (value.status === 3) {
             dados += '<span class="badge badge-success">' + value.status_translated + '</span>';
         } else {
-            dados += '<span class="badge badge-danger">' + value.status_translated + '</span>';
+            dados += '<span class="badge badge-primary">' + value.status_translated + '</span>';
         }
 
         dados += '</td>';

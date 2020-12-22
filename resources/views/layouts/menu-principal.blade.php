@@ -36,8 +36,9 @@
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                     <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                        <i class="material-icons">notifications_none</i>
-                        <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
+                        <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
+                        <!-- <i class="material-icons">notifications_none</i> -->
+                        <span class="badge badge-primary badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
                     </span>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                             <div class="dropdown-menu-header" style='padding:0px 20px;'>
@@ -101,7 +102,7 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
-                    <img src="{{ asset('modules/global/img/svg2/dashboard.svg') }}" alt="Dashboard">
+                    <img class="svg-menu" src="{{ asset('modules/global/img/svg2/dashboard.svg') }}" alt="Dashboard">
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
             </li>

@@ -13,9 +13,9 @@ body {
 }
 
 .menu-active {
-    /* border-right: 5px solid;
-    border-image-source: linear-gradient(11deg, #E6774C, rgb(249, 34, 120));
-    border-image-slice: 2; */
+    border-right: 5px solid #2E85EC;
+    /* border-image-source: #2E85EC; */
+    /* border-image-slice: 2; */
 }
 
 .menu-active .site-menu-item i {

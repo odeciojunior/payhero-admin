@@ -39,7 +39,7 @@
       value: function getDefaults() {
         return {
           warningClass: 'badge badge-warning',
-          limitReachedClass: 'badge badge-danger'
+          limitReachedClass: 'badge badge-primary'
         };
       }
     }]);

@@ -109,7 +109,7 @@ $(function () {
                         if (value.status == 1) {
                             data += '<span class="badge badge-success">Ativo</span>';
                         } else {
-                            data += '<span class="badge badge-danger">Desativado</span>';
+                            data += '<span class="badge badge-primary">Desativado</span>';
                         }
                         data += '</td>';
 

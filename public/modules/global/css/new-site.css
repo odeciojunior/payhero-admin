@@ -230,7 +230,8 @@ input[type=radio] {
 }
 
 .menu-active .svg-menu {
-    fill: #ff4c52;
+    /* fill: #ff4c52; */
+    fill: #fff;
 }
 
 .page-title {
@@ -396,7 +397,7 @@ input[type=radio] {
     justify-content: center;
     border-radius: 100%;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-    background-color: #ff4c52;
+    background-color: #2E85EC;
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -436,7 +437,7 @@ input[type=radio] {
 }
 
 .menu-active {
-    border-right: 5px solid;
+    border-right: 5px solid #2E85EC;
     /* border-image-source: linear-gradient(11deg, #e6774c, rgb(249, 34, 120)); */
     border-image-slice: 2;
     font-weight: 900;
@@ -465,11 +466,24 @@ input[type=radio] {
 }
 
 .menu-active svg {
-
     /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
     fill: linear-gradient(11deg, #e6774c, rgb(249, 34, 120)) !important; */
+}
 
+.menu-active img {
+    color: #fff;
+    /* background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%); */
+    background: #fff;
+    background-color: #fff;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
+.menu-active img {
+    color: #fff !important;
+    fill: #fff !important;
 }
 
 .br15 {
@@ -603,9 +617,8 @@ input[type=radio] {
 }
 
 .table .material-icons.gradient {
-    color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
-    background: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
+    color: #2E85EC;
+    background-color: #2E85EC;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
@@ -613,9 +626,8 @@ input[type=radio] {
 }
 
 .material-icons.gradient {
-    color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
-    background: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
+    color: #2E85EC;
+    background-color: #2E85EC;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
@@ -706,7 +718,7 @@ input[type=radio] {
 
 .nav-btn.active {
 
-    background-image: linear-gradient(to right, #e6774c, #f92278) !important;
+    background-color:  #2E85EC;
     border-radius: 40px;
     color: white !important;
 
@@ -744,7 +756,7 @@ input[type=radio] {
     border: none;
     outline: none;
     font-weight: normal;
-    background-image: linear-gradient(77deg, #e6774c, rgb(249, 34, 120));
+    background-color: #2E85EC;
 }
 
 .btn-success, .btn-success:focus, .btn-success:active {
@@ -753,7 +765,7 @@ input[type=radio] {
     border: none;
     outline: none;
     font-weight: normal;
-    background-image: linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71));
+    background-color: #41DC8F;     /* linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71)); */
 }
 
 .btn-simple, .btn-simple:focus, .btn-simple:active {
@@ -829,7 +841,7 @@ input[type=radio] {
     background-color: #0D2C54;
 }
 
-/* .site-menu-item a {
+/* .badge-pr a {
     display: block;
     color: #2E85EC;
 } */

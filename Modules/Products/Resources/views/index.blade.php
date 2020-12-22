@@ -10,7 +10,7 @@
                     <h1 class="page-title">Produtos</h1>
                 </div>
                 <div id='div-create' class="col-lg-6" style="display:none">
-                    <a href="/products/create" class="btn btn-floating btn-danger"
+                    <a href="/products/create" class="btn btn-floating btn-primary"
                        style="position: relative; float: right">
                         <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
                     </a>
