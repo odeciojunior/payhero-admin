@@ -123,7 +123,6 @@ $(document).ready(function () {
             });
 
         } else {
-
             $('#empty-sale').fadeIn()
             $('#scoreLineToMonth').remove()
         }
