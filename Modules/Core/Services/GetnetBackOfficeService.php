@@ -16,12 +16,11 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class GetnetBackOfficeService extends GetnetService
 {
-
     use GetnetPrepareCompanyData;
 
-    const STATEMENT_DATE_SCHEDULE = 'schedule';
-    const STATEMENT_DATE_TRANSACTION = 'transaction';
-    const STATEMENT_DATE_LIQUIDATION = 'liquidation';
+    public const STATEMENT_DATE_SCHEDULE = 'schedule';
+    public const STATEMENT_DATE_TRANSACTION = 'transaction';
+    public const STATEMENT_DATE_LIQUIDATION = 'liquidation';
 
     private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
     public string $postFieldsAccessToken, $authorizationToken;
@@ -203,12 +202,9 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatement()
     {
-
         if (empty($this->getStatementDateField())) {
-
             throw new LogicException('É obrigatório especificar um campo de data para a busca');
-        } else if (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_SCHEDULE, self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
-
+        } elseif (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_SCHEDULE, self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
             throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_SCHEDULE . '", "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
@@ -229,18 +225,13 @@ class GetnetBackOfficeService extends GetnetService
             $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
-
         if (!empty($this->getStatementSaleHashId())) {
-
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
 
             if ($sale) {
-
                 if ($sale->created_at > '2020-10-30 13:28:51.0') {
-
                     $orderId = $this->getStatementSaleHashId() . '-' . $sale->id . '-' . $sale->attempts;
                 } else {
-
                     $orderId = $this->getStatementSaleHashId() . '-' . $sale->attempts;
                 }
 
