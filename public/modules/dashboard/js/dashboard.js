@@ -79,7 +79,6 @@ $(document).ready(function () {
                         },
                         low: 0,
                         height: 260,
-                        width: undefined,
                     });
                     scoreChart.on("created", function (data) {
                         var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
@@ -115,7 +114,6 @@ $(document).ready(function () {
                 totalSalesData = {
                     name: "Valor total", value: chartData.value_data
                 }
-                // totalSalesData = chartData.value_data;
             createChart = function createChart() {
                 scoreChart("scoreLineToMonth", labelList, totalSalesData);
             }, createChart(), $(".chart-action li a").on("click", function () {
@@ -202,12 +200,13 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money, .ct-chart', false, {
+        loadOnAny('.text-money', false, {
             styles: {
                 container: {
                     minHeight: '30px',
                     width: '30px',
-                    height: 'auto'
+                    height: 'auto',
+                    margin: 'auto'
                 },
                 loader: {
                     width: '30px',

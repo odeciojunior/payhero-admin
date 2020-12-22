@@ -11,16 +11,16 @@
     @endpush
 
     <div class="page dashboard">
-        <div style="display: none" style="display: none" class="page-header container">
+        <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6 mb-15">
                     <h1 class="page-title" style="color: #aaa">Dashboard</h1>
                 </div>
                 <div class="col-lg-6" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
-{{--                        <div class="mr-10 mb-5 text-lg-right">--}}
-{{--                            Empresa:--}}
-{{--                        </div>--}}
+                        {{--                        <div class="mr-10 mb-5 text-lg-right">--}}
+                        {{--                            Empresa:--}}
+                        {{--                        </div>--}}
                         <div class=" text-lg-right">
                             <select id="company" class="form-control new-select"> </select>
                         </div>
@@ -115,7 +115,6 @@
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
-                                <div class="card-bottom orange"></div>
                             </div>
                         </div>
                     </div>
