@@ -32,7 +32,7 @@ $(document).ready(function () {
 });
 
 function alertCustom(type, message) {
-
+    alert('aqui');
     swal({
         position: 'bottom',
         type: type,
@@ -541,10 +541,12 @@ $(document).ready(function () {
     var siteMenuBar = $('.site-menubar')
     var menuTimeout
     siteMenuBar.on('mouseenter', function () {
-        bodyEl.addClass('site-menubar-hover')
+        bodyEl.addClass('site-menubar-hover');
+        $('#logoIconSirius').addClass('d-none');
     }).on('mouseleave', function () {
         menuTimeout = setTimeout(function () {
-            bodyEl.removeClass('site-menubar-hover')
+            bodyEl.removeClass('site-menubar-hover');
+            $('#logoIconSirius').removeClass('d-none');
             //if (!bodyEl.hasClass('site-menubar-unfold')) {
                 //siteMenuItems.removeClass('active')
             //}
