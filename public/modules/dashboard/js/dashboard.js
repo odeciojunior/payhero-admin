@@ -4,6 +4,7 @@ $(document).ready(function () {
         updateValues();
     });
     let userAccepted = true;
+
     function getDataDashboard() {
         loadingOnScreen();
         $.ajax({
@@ -19,50 +20,27 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                if (!isEmpty(data.companies)) {
-                    for (let i = 0; i < data.companies.length; i++) {
-                        if (data.companies[i].company_type == '1') {
-                            $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
-                        } else {
-                            $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
-                        }
-                    }
-
-                    updateValues();
-
-                    $(".content-error").hide();
-                    $('#company-select').show();
-                } else {
+                if (isEmpty(data.companies)) {
                     loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
+                    return;
                 }
 
-                if (!data.userTerm) {
-                    userAccepted = data.userTerm;
-                    $('#modal-user-term').modal('show');
+
+                for (let i = 0; i < data.companies.length; i++) {
+                    if (data.companies[i].company_type == '1') {
+                        $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
+                    } else {
+                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                    }
                 }
 
-                $("#accepted-terms").unbind('click');
-                $("#accepted-terms").on('click', function () {
-                    $.ajax({
-                        method: "POST",
-                        url: "/api/terms",
-                        dataType: "json",
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        data: {},
-                        error: function error(response) {
-                            errorAjaxResponse(response);
-                        },
-                        success: function success(data) {
-                            $('#modal-user-term').modal('hide');
-                        }
-                    });
-                });
-                // verifyPendingData();
+                updateValues();
+
+                $(".content-error").hide();
+                $('#company-select').show();
+
             }
         });
     }
@@ -139,7 +117,7 @@ $(document).ready(function () {
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
-                $('#info-total-balance').attr('title','Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance);
+                $('#info-total-balance').attr('title', 'Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance);
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
@@ -262,6 +240,7 @@ $(document).ready(function () {
             }
         });
     }
+
     // function verifyPendingData() {
     //     $.ajax({
     //         method: "GET",

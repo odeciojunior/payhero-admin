@@ -13,9 +13,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
-    Route::Resource('tools', 'ToolsController')->names('tools')->middleware('role:account_owner|admin');
-});
+//Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
+//    Route::Resource('tools', 'ToolsController')->names('tools')->middleware('role:account_owner|admin');
+//});
 //Route::prefix('tools')->group(function() {
 //    Route::get('/', 'ToolsController@index');
 //});

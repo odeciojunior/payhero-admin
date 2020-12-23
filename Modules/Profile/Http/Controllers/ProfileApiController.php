@@ -581,16 +581,19 @@ class ProfileApiController
 
             if ($userDocumentRefused) {
                 $refused = true;
-                $link    = '/profile?tab=documents';
+                $link    = '/personal-info#documents';
             } else {
                 $companyDocumentRefused = $companyService->companyDocumentRefused();
-                if (!empty($companyDocumentRefused)) {
+                $companyDocumentApproved = $companyService->companyDocumentApproved();
+                if (empty($companyDocumentApproved) && !empty($companyDocumentRefused)) {
                     $refused     = true;
                     $companyCode = Hashids::encode($companyDocumentRefused->id);
                     if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType('physical person')) {
-                        $link = "/companies/${companyCode}/edit?type=1";
+                        $link = "/personal-info#documents";
+//                        $link = "/company-detail/${companyCode}/edit?type=1";
                     } else {
-                        $link = "/companies/${companyCode}/edit?type=2&tab=documents";
+                        $link = "/companies/company-detail/${companyCode}#documents";
+//                        $link = "/company-detail/${companyCode}/edit?type=2&tab=documents";
                     }
                 } else {
                     $userValid = $userService->isDocumentValidated();
@@ -604,6 +607,9 @@ class ProfileApiController
                     }
                 }
             }
+
+            if(env('ACCOUNT_FRONT_URL'))
+                $link = env('ACCOUNT_FRONT_URL') . $link;
 
             return response()->json(
                 ['message' => 'Documentos verificados!', 'analyzing' => $analyzing,'refused' => $refused,'link' => $link],

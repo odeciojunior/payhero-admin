@@ -275,6 +275,29 @@ class CompanyService
         return null;
     }
 
+    public function companyDocumentApproved()
+    {
+        $companyModel = new Company();
+        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        $companyPresenter = $companyModel->present();
+
+        foreach ($companies as $company) {
+            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
+                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
+                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+                    return $company;
+                }
+            } else {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved')) {
+                    return $company;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getPendingBalance(Company $company, ?int $liquidationType = null)
     {
         $transactionModel = new Transaction();
