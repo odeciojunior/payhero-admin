@@ -337,7 +337,7 @@ class CompanyService
         }
 
         throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-        
+
     }
 
     public function hasCompanyValid()
@@ -589,26 +589,12 @@ class CompanyService
 
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $company->id)
+            ->whereNull('invitation_id')
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
             ->whereDate('created_at', '>=', '2020-01-01')
-            ->where(function ($query) use ($salesModel) {
-                $query->whereHas('sale', function ($query) use ($salesModel) {
-                    $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                })
-                    ->orWhere(function ($queryTracking) use ($salesModel) {
-                        $queryTracking->whereHas('sale', function ($querySale) use ($salesModel) {
-                            $querySale->where('status', $salesModel->present()->getStatus('approved'))
-                                ->whereHas('productsPlansSale', function ($q) {
-                                    $q->doesntHave('tracking');
-                                });
-                        });
-                    })
-                    ->orWhereHas('sale', function ($querySale) {
-                        $querySale->whereHas('tracking', function ($queryTracking) {
-                            $presenter = (new Tracking())->present();
-                            $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
-                        });
-                    });
+            ->whereHas('sale', function ($query) use ($salesModel) {
+                $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                    ->orWhere('sales.has_valid_tracking', 0);
             })->sum('value');
     }
 
