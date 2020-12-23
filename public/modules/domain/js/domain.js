@@ -432,7 +432,7 @@ $(document).ready(function () {
         dados += "<td style='text-align:center;'>"
         dados += "<a role='button' class='mg-responsive details-domain pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>"
         dados += "<a role='button' class='mg-responsive edit-domain    pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'> </a>"
-        dados += "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" + value.id + "' data-target='#modal-delete'  data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
+        dados += "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" + value.id + "' data-target='#modal-delete'  data-toggle='modal'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>";
         dados += "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);

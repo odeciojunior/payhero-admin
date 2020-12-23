@@ -237,7 +237,7 @@ $(function () {
                             data += "<td style='text-align:center' class='mg-responsive'>"
                             data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>"
                             data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
-                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><i class='material-icons gradient'>delete_outline</i></a>";
+                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
                             data += "</td>";
                             data += '</tr>';
                             $("#data-table-plan").append(data);

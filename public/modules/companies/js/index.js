@@ -102,7 +102,7 @@ $(document).ready(function () {
                     dados += `
                             </td>
                                 <td><a title='Editar' href="/companies/${value.id_code}/edit?type=${value.type}" class='edit-company' data-company='${value.id_code}' role='button'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a></td>
-                                <td><a title='Excluir' class='pointer delete-company' company='${value.id_code}' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>
+                                <td><a title='Excluir' class='pointer delete-company' company='${value.id_code}' data-toggle='modal' data-target='#modal-delete' role='button'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a></td>
                             </tr>
                         `;
                     $('#companies_table').addClass('table-striped');

@@ -78,6 +78,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/activecampaign/js/index.js?v=2"></script>
+        <script src="/modules/activecampaign/js/index.js?v=s0"></script>
     @endpush
 @endsection

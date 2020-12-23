@@ -77,6 +77,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/smartfunnel/js/index.js?v=1"></script>
+        <script src="/modules/smartfunnel/js/index.js?v=s0"></script>
     @endpush
 @endsection

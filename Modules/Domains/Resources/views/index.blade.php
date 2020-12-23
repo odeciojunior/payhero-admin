@@ -2,7 +2,9 @@
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
-            <i class="icon wb-info"></i></a>
+            <!-- <i class="icon wb-info"></i> -->
+            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}">
+        </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">

@@ -36,5 +36,5 @@
     </div>
 @endsection
 @push('scripts')
-        <script src="{{ asset('modules/tools/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('modules/tools/js/index.js?v=s0') }}"></script>
 @endpush

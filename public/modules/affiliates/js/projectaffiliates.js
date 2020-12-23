@@ -98,7 +98,7 @@ $(document).ready(function () {
                         data += "<td class='text-center'>";
                         data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>";
                         data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
                         data += "</td>";
                         data += '</tr>';
                         $(".body-table-affiliates").append(data);

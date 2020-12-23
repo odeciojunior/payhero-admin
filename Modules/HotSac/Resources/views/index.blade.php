@@ -76,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/hotsac/js/index.js?v=1"></script>
+        <script src="/modules/hotsac/js/index.js?v=s0"></script>
     @endpush
 @endsection

@@ -58,7 +58,7 @@ $(document).ready(function () {
                         data += '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.date + '</td>';
                         data += "<td class='text-center'><button class='btn pointer edit-collaborator' title='Editar' style='background-color:transparent;' collaborator='" + value.id + "'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></button>" +
-                            "<button class='btn pointer delete-collaborator' title='Excluir' style='background-color:transparent;' collaborator='" + value.id + "'><i class='material-icons gradient'>delete</i></button>" +
+                            "<button class='btn pointer delete-collaborator' title='Excluir' style='background-color:transparent;' collaborator='" + value.id + "'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></button>" +
                             "</td>";
                         data += '</tr>';
                         $("#table-body-collaborators").append(data);
