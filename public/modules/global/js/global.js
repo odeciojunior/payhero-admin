@@ -12,23 +12,23 @@ $(document).ready(function () {
 
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    // $('#accounts-service').click(function (e) {
-    //     e.preventDefault()
-    //     $.ajax({
-    //         method: 'GET',
-    //         url: '/send-authenticated',
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: response => {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: response => {
-    //             window.location.href = response.url
-    //         },
-    //     });
-    // })
+    $('#accounts-service').click(function (e) {
+        e.preventDefault()
+        $.ajax({
+            method: 'GET',
+            url: '/send-authenticated',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                window.location.href = response.url
+            },
+        });
+    })
 });
 
 function alertCustom(type, message) {

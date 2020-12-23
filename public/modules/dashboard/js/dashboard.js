@@ -169,31 +169,19 @@ $(document).ready(function () {
                     loadingOnScreenRemove();
                 }
 
-                if (!data.userTerm) {
-                    userAccepted = data.userTerm;
-                    $('#modal-user-term').modal('show');
+                for (let i = 0; i < data.companies.length; i++) {
+                    if (data.companies[i].company_type == '1') {
+                        $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
+                    } else {
+                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                    }
                 }
 
-                $("#accepted-terms").unbind('click');
-                $("#accepted-terms").on('click', function () {
-                    $.ajax({
-                        method: "POST",
-                        url: "/api/terms",
-                        dataType: "json",
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        data: {},
-                        error: function error(response) {
-                            errorAjaxResponse(response);
-                        },
-                        success: function success(data) {
-                            $('#modal-user-term').modal('hide');
-                        }
-                    });
-                });
-                // verifyPendingData();
+                updateValues();
+
+                $(".content-error").hide();
+                $('#company-select').show();
+
             }
         });
     }

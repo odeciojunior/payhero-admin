@@ -90,14 +90,10 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
-                    $("#project-not-empty").show();
 
                     updateUsedApps();
-
-                } else {
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
                 }
+                $("#project-not-empty").show();
 
                 loadingOnScreenRemove()
             }

@@ -6,7 +6,7 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
-                <div class="col-lg-8 d-flex align-items-center">
+                <div class="col-lg-8  align-items-center">
                     <h1 class="page-title">Integrações com Shopify</h1>
                 </div>
                 <div class="col text-right" id="integration-actions" style="display:none">
@@ -14,8 +14,8 @@
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-plus" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" data-target='#modal_explicacao' class="btn btn-floating"
-                       style="background-color:blue;position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                    <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
+                       style="background-color:blue;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-help" aria-hidden="true"></i>
                     </a>
                 </div>
