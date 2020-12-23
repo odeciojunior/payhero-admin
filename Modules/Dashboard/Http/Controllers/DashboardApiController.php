@@ -105,8 +105,8 @@ class DashboardApiController extends Controller
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance($company);
 
-            $availableBalance = $companyService->getAvailableBalance($company) - $blockedBalance;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
+            $availableBalance = $companyService->getAvailableBalance($company) - $blockedBalance->from_sales - $blockedBalance->from_invites;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance->from_sales + $blockedBalance->from_invites;
 
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
@@ -208,7 +208,8 @@ class DashboardApiController extends Controller
                 'chargeback_tax' => $chargebackTax ?? "0.00%",
                 'trackings' => $trackingsInfo,
                 'tickets' => $tickets,
-                'blocked_balance' => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
+                'blocked_balance' => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
+                'blocked_balance_invite' => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
