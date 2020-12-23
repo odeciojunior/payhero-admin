@@ -79,7 +79,7 @@ function loadingOnScreen() {
 
 function loadingOnChart(target) {
     $(target).append(
-        `<div style="z-index: 5" class="sirius-loading">
+        `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
             <img style="height: 125px; width: 125px;" src="/modules/global/adminremark/assets/images/siriusM.svg"
                  class="img-responsive"/>
         </div>`
