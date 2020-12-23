@@ -2,6 +2,9 @@ $(document).ready(function () {
     getProjects();
 
     function updateChart() {
+        $('#scoreLineToMonth').html('')
+        loadingOnChart('#chart-loading');
+
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-chart-data`,
@@ -116,10 +119,11 @@ $(document).ready(function () {
                 scoreChart("scoreLineToMonth", labelList, totalSalesData);
             };
 
+            $('#empty-sale').fadeOut()
             createChart();
         } else {
             $('#empty-sale').fadeIn()
-            $('#scoreLineToMonth').remove()
+            $('#scoreLineToMonth').html('')
         }
 
     }
@@ -223,7 +227,6 @@ $(document).ready(function () {
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
-                updateChart();
 
                 loadOnAny('.text-money, .update-text, .text-circle', true)
                 loadingOnChartRemove('#chart-loading');

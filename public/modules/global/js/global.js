@@ -78,7 +78,7 @@ function loadingOnScreen() {
 }
 
 function loadingOnChart(target) {
-    $(target).append(
+    $(target).fadeIn().append(
         `<div style="z-index: 5" class="sirius-loading">
             <img style="height: 125px; width: 125px;" src="/modules/global/adminremark/assets/images/siriusM.svg"
                  class="img-responsive"/>
@@ -88,7 +88,7 @@ function loadingOnChart(target) {
 
 function loadingOnChartRemove(target) {
     $(target).fadeOut(function () {
-        $(this).html('').remove();
+        $(target).html('');
     });
 }
 
