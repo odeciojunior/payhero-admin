@@ -1178,7 +1178,7 @@ class SaleService
 
             if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
                 $transactions->whereIn('transactions.gateway_id', [14, 15])
-                    ->whereNotNull('transactions.withdrawal_id')
+                    ->whereNull('transactions.withdrawal_id')
                     ->where('transactions.is_waiting_withdrawal', 0);
             } else {
                 $transactions->whereNotIn('transactions.gateway_id', [14, 15]);
