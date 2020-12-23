@@ -296,7 +296,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
                                         ${observation}
                                 </tr>`;
 

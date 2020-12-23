@@ -50,7 +50,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.value + "</td>";
                     dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
                     dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 
