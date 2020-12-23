@@ -256,10 +256,10 @@ $(function () {
                             data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>';
 
                             if (value.plan_name == '' && value.link != null) {
-                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">edit</i></a>';
+                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>';
                                 data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">delete_outline</i></a>';
                             } else {
-                                data += '<a title="Editar" class="mg-responsive pointer disabled"><i class="material-icons gradient">edit</i></a>';
+                                data += '<a title="Editar" class="mg-responsive pointer disabled"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>';
                                 data += '<a title="Excluir" class="mg-responsive pointer disabled"><i class="material-icons gradient">delete_outline</i></a>';
                             }
                             data += '</td>';

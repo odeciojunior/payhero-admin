@@ -290,7 +290,7 @@ $(function () {
                             </td>
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"> </a>
-                                <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"> </a>
                                 <div class="switch-holder d-inline">
                                    <label class="switch">
                                        <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}>

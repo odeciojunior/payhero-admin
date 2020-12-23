@@ -34,7 +34,7 @@
                         <input id="refund-observation" type="email" name="refund_observation"
                                class="detail-input mr-2 table-title gray fake-label"
                                readonly>
-                        <a class="pointer btn-edit-observation"><i class="material-icons font-size-18">edit</i></a>
+                        <a class="pointer btn-edit-observation"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
                         <a class="pointer btn-save-observation" style="display:none;">
                             <i class="material-icons font-size-18">save</i></a>
                         <a class="pointer btn-close-observation ml-2" style="display:none;">
@@ -188,7 +188,7 @@
                         <div class="d-flex align-items-center">
                             <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
                             <input id="client-telephone" name="client-telephone" class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><i class="material-icons font-size-18">edit</i></a>
+                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">
@@ -197,7 +197,7 @@
                         <div class="d-flex align-items-center">
                             <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
                             <input id="client-email" type="email" name="client-email" class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><i class="material-icons font-size-18">edit</i></a>
+                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">

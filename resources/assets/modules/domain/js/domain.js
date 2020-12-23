@@ -472,7 +472,7 @@ $(document).ready(function () {
         dados += '</td>';
         dados += "<td style='min-width:200px;'>" +
             "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
-            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" +
+            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'> </a>" +
             "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
         "</td>";
         dados += '</tr>';

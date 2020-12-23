@@ -57,7 +57,7 @@ $(document).ready(function () {
                         data += '<span class="badge badge-' + statusRole[value.role_id] + ' text-center">' + value.role_translated + '</span>';
                         data += '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.date + '</td>';
-                        data += "<td class='text-center'><button class='btn pointer edit-collaborator' title='Editar' style='background-color:transparent;' collaborator='" + value.id + "'><i class='material-icons gradient'>edit</i></button>" +
+                        data += "<td class='text-center'><button class='btn pointer edit-collaborator' title='Editar' style='background-color:transparent;' collaborator='" + value.id + "'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></button>" +
                             "<button class='btn pointer delete-collaborator' title='Excluir' style='background-color:transparent;' collaborator='" + value.id + "'><i class='material-icons gradient'>delete</i></button>" +
                             "</td>";
                         data += '</tr>';

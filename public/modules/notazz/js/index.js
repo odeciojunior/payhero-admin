@@ -42,7 +42,7 @@ $(document).ready(function () {
                                             </div>
                                             <div class='col-md-2'>
                                                 <a role='button' class='edit-integration pointer float-right' integration=` + data.id + ` data-toggle='modal' data-target='#modal-edit' type='a'>
-                                                    <i class='material-icons gradient'>edit</i>
+                                                    <img src="/modules/global/img/svg/edit.svg" style="width: 24px">
                                                 </a>
                                                  <a role='button' class='delete-integration pointer float-right mt-10' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
                                                     <i class='material-icons gradient'>delete_outline</i>
