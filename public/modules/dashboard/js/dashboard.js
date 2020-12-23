@@ -17,10 +17,12 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadingOnChartRemove('#chart-loading');
                 getChart(response)
             }
         });
@@ -28,7 +30,7 @@ $(document).ready(function () {
 
     function getChart(chartData) {
 
-        let haveData= parseInt(chartData.value_data[0]) > 0;
+        let haveData = parseInt(chartData.value_data[0]) > 0;
 
         if (haveData > 0) {
             var scoreChart = function scoreChart(id, labelList, series1List) {
@@ -52,7 +54,7 @@ $(document).ready(function () {
                         axisX: {
                             showGrid: false,
                             labelOffset: {x: -14, y: 0},
-                            labelInterpolationFnc: function(value) {
+                            labelInterpolationFnc: function (value) {
                                 return value;
                             }
                         },
@@ -122,7 +124,7 @@ $(document).ready(function () {
             $('#empty-sale').fadeOut()
             createChart();
         } else {
-            $('#empty-sale').show()
+            $('#empty-sale').fadeIn()
             $('#scoreLineToMonth').html('')
         }
 
@@ -206,7 +208,7 @@ $(document).ready(function () {
             data: {company: $('#company').val()},
             error: function error(response) {
                 loadOnAny('.text-money, .update-text, .text-circle', true)
-                loadingOnChartRemove('#chart-loading');
+                //loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
@@ -229,7 +231,7 @@ $(document).ready(function () {
                 updateTickets(data.tickets);
 
                 loadOnAny('.text-money, .update-text, .text-circle', true)
-                loadingOnChartRemove('#chart-loading');
+                //loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
             }
         });
