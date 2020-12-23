@@ -50,9 +50,9 @@ class OldFinancesApiController extends Controller
 
             $totalBalance = $availableBalance + $pendingBalance;
 
-            $availableBalance -= $blockedBalance;
+            $availableBalance -= ($blockedBalance->from_sales + $blockedBalance->from_invites);
 
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance->from_sales + $blockedBalance->from_invites;
 
             return response()->json(
                 [

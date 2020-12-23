@@ -1,5 +1,6 @@
 var currentPage = null;
 var atualizar = null;
+let hasSale = false;
 
 $(document).ready(function () {
 
@@ -62,6 +63,7 @@ $(document).ready(function () {
             'sale_code': $("#sale_code").val().replace('#', ''),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
+            'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val()
         };
 
         if (urlParams) {
@@ -94,8 +96,15 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, company) {
+                        if (company.company_has_sale_before_getnet) {
+                            hasSale = true;
+                        }
                         $('#company').append('<option value="' + company.id + '">' + company.name + '</option>')
                     });
+
+                    if (hasSale) {
+                        $("#select-statement-div").show();
+                    }
 
                     getProjects();
                 }
@@ -136,7 +145,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                 }
 
-                    loadingOnScreenRemove();
+                loadingOnScreenRemove();
             }
         });
     }

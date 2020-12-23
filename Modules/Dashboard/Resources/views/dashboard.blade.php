@@ -14,7 +14,7 @@
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6 mb-15">
-                    <h1 class="page-title" style="color: #aaa">Dashboard</h1>
+                    <h1 class="page-title">Dashboard</h1>
                 </div>
                 <div class="col-lg-6" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
