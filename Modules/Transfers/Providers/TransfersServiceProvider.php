@@ -39,10 +39,10 @@ class TransfersServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('transfers.php'),
+            __DIR__ . '/../Config/config.php' => config_path('transfers.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'transfers'
+            __DIR__ . '/../Config/config.php', 'transfers'
         );
     }
 
@@ -55,7 +55,7 @@ class TransfersServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/transfers');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
             $sourcePath => $viewPath
@@ -78,7 +78,7 @@ class TransfersServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'transfers');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'transfers');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'transfers');
         }
     }
 
