@@ -14,7 +14,7 @@
                     <label for='photo'>Selecione uma imagem capa do projeto</label>
                     <div style="width:100%" class="text-center">
                         <img id='previewimage' alt='Selecione a foto do projeto'
-                             src="{{asset('modules/global/img/projeto.png')}}"
+                             src="{{asset('modules/global/img/projeto.svg')}}"
                              style="min-width: 250px; max-width: 250px;margin: auto">
                     </div>
                     <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden'
@@ -80,7 +80,7 @@
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
                                    style='display:none;'>
                             <img id='image-logo-email' alt='Selecione a foto do projeto'
-                                 src='{{asset('modules/global/img/projeto.png')}}'
+                                 src='{{asset('modules/global/img/projeto.svg')}}'
                                  style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>

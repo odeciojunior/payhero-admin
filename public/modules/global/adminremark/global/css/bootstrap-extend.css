@@ -5942,16 +5942,16 @@ a .badge-pill:hover {
 }
 .badge-danger {
     color: #fff;
-    background-color: #ff4c52;
+    background-color: #F41C1C;
 }
 .badge-danger[href]:focus,
 .badge-danger[href]:hover {
-    background-color: #ff666b;
+    background-color: #D60A0A;
 }
 .badge-danger.badge-outline {
-    color: #ff4c52;
+    color: #F41C1C;
     background-color: transparent;
-    border-color: #ff4c52;
+    border-color: #F41C1C;
 }
 .badge-dark {
     color: #fff;

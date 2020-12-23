@@ -24,7 +24,7 @@
                             <label for='preview-image-project'>Selecione a foto do projeto</label>
                             <br>
                             <img id="preview-image-project" alt='Selecione a foto do projeto' class='img-fluid mb-sm-2'
-                                 src="{{asset('modules/global/img/projeto.png')}}" style="cursor:pointer;">
+                                 src="{{asset('modules/global/img/projeto.svg')}}" style="cursor:pointer;">
                             <br> <input type='hidden' name='photo_x1'/> <input type='hidden' name='photo_y1'/>
                             <input type='hidden' name='photo_w'/> <input type='hidden' name='photo_h'/>
                         </div>
