@@ -33,7 +33,7 @@
                         <label for='name'>Nome do projeto</label>
                         <input name='name' value="" type='text' class='input-pad' id='name'
                                placeholder='Nome do Projeto' maxlength='40' required>
-                        <span id='name-error' class='text-primary'></span>
+                        <span id='name-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
                         </p>
@@ -43,7 +43,7 @@
                         <textarea style='height:100px;' name='description' type='text' class='input-pad'
                                   id='description' placeholder='Fale um pouco sobre seu Projeto' required=''
                                   maxlength='100'></textarea>
-                        <span id='description-error' class='text-primary'></span>
+                        <span id='description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
                         </p>
@@ -99,7 +99,7 @@
                         <label for="url_page">URL da página principal</label>
                         <input name="url_page" value="" type="text" class="input-pad" id="url-page"
                                placeholder="URL da página" maxlength='60'>
-                        <span id='url-page-error' class='text-primary'></span>
+                        <span id='url-page-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> URL da página principal da loja
                         </p>
@@ -114,7 +114,7 @@
                             <input name="contact" value="" type="text" class="input-pad form-control" id="contact"
                                    placeholder="Contato" maxlength='40' aria-describedby="addon-contact">
                         </div>
-                        <span id='contact-error' class='text-primary'></span>
+                        <span id='contact-error' class='text-danger'></span>
                         <small id="message_not_verified_contact" style='color:red; display:none;'>Email não verificado,
                             clique
                             <a href='#' id='btn_verify_contact' onclick='event.preventDefault();' data-toggle='modal'
@@ -137,7 +137,7 @@
                                    id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000"
                                    aria-describedby="addon-support_phone">
                         </div>
-                        <span id='contact-error' class='text-primary'></span>
+                        <span id='contact-error' class='text-danger'></span>
                         <small id="message_not_verified_support_phone" style='color:red; display:none;'>Telefone não
                             verificado, clique
                             <a href='#' id='btn_verify_support_phone' onclick='event.preventDefault();'
@@ -198,7 +198,7 @@
                                 {{--                        <input name='invoice_description' value='{{$project->invoice_description}}' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>--}}
                                 <input name='invoice_description' value='' type='text' class='input-pad'
                                        id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>
-                                <span id='invoice-description-error' class='text-primary'></span>
+                                <span id='invoice-description-error' class='text-danger'></span>
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na
                                     fatura do cartão de crédito
@@ -283,7 +283,7 @@
                                     oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do
                                     produtor)
                                 </p>
-                                <span id='error-juros' class='text-primary' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
+                                <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
@@ -357,14 +357,14 @@
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text'
                                        placeholder='URL' maxlength='60'>
-                                <span id='input-pad-error' class='text-primary'></span>
+                                <span id='input-pad-error' class='text-danger'></span>
                             </div>
                             <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                                 <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                                 <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad'
                                        type='text'
                                        placeholder='URL' maxlength='60'>
-                                <span id='boleto_redirect-error' class='text-primary'></span>
+                                <span id='boleto_redirect-error' class='text-danger'></span>
                             </div>
                             <p class="info mt-5 col-12" style="font-size: 10px;">
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o
@@ -409,7 +409,7 @@
                                         <option value='40'>40%</option>
                                         <option value='50'>50%</option>
                                     </select>
-                                    <span id='discount-recovery-error' class='text-primary'></span>
+                                    <span id='discount-recovery-error' class='text-danger'></span>
                                 </div>
                             </div>
                             <div id='discount-recovery-alert' class='col-sm-6 col-md-6 col-lg-6 col-xl-6 vertical-align'
@@ -671,7 +671,7 @@
                                     <label for='terms-affiliates'>Termos de Afiliação</label>
                                     <input type="hidden" name="terms_affiliates" id="terms_affiliates">
                                     <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
-                                    <span id='terms-affiliates-error' class='text-primary'></span>
+                                    <span id='terms-affiliates-error' class='text-danger'></span>
                                     <p class='info pt-5' style='font-size: 10px;'>
                                         <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na
                                         Vitrine para afiliação
@@ -701,14 +701,14 @@
                                             <option value="180"> 6 meses</option>
                                             <option value="365"> 1 ano</option>
                                         </select>
-                                        <span id='error-cookie-duration' class='text-primary'
+                                        <span id='error-cookie-duration' class='text-danger'
                                               style='display: none'></span>
                                     </div>
                                     <div class='form-group col-md-12 col-sm-12 col-xs-12'>
                                         <label for='percentage-affiliates'>Porcentagem</label>
                                         <input id='percentage-affiliates' name='percentage_affiliates' value=''
                                                class='input-pad' type='text' min="0" max="100" maxlength="3">
-                                        <span id='input-pad-error' class='text-primary'></span>
+                                        <span id='input-pad-error' class='text-danger'></span>
                                     </div>
                                     <div class='form-group col-md-12 col-sm-12'>
                                         <label for='commission-type-enum'>Tipo comissão</label>

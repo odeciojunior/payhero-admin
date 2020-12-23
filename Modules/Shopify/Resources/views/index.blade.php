@@ -10,7 +10,7 @@
                     <h1 class="page-title">Integrações com Shopify</h1>
                 </div>
                 <div class="col text-right" id="integration-actions" style="display:none">
-                    <a data-toggle="modal" id='btn-integration-model'  class="btn btn-floating btn-danger ml-10"
+                    <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-primary ml-10"
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-plus" aria-hidden="true"></i>
                     </a>
@@ -43,7 +43,7 @@
                         <div class="modal-footer" style="margin-top: 15px">
                             <button id="bt_integration" type="button" class="btn btn-success"
                                     data-dismiss="modal"></button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                                     <div class="panel-body justify-content-center">
                                         <div class="d-flex align-items-center">
                                             <span>Agora você tem um novo app criado, para vincular com a nossa plataforma, clique no botão</span>
-                                            <a class="btn btn-floating btn-danger"
+                                            <a class="btn btn-floating btn-primary"
                                                style="margin:15px;color: white;display: flex;align-items: center;justify-content: center;">
                                                 <i class="icon wb-plus" aria-hidden="true"></i></a>
                                         </div>

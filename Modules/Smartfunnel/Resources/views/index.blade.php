@@ -11,7 +11,7 @@
                         <h1 class="page-title">Integrações Smart Funnel</h1>
                     </div>
                     <div class="col text-right" id="integration-actions" style="display:none">
-                        <a id='btn-add-integration' class="btn btn-floating btn-danger"
+                        <a id='btn-add-integration' class="btn btn-floating btn-primary"
                            style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                             <i class="icon wb-plus" aria-hidden="true"></i>
                         </a>
@@ -42,7 +42,7 @@
                             <div class="modal-footer" style="margin-top: 15px">
                                 <button id="bt_integration" type="button" class="btn btn-success"
                                         data-dismiss="modal"></button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>
                     </div>

@@ -5,7 +5,7 @@
         @if($status  == 'Recuperado')
             <span class="clear-fields badge badge-success mr-5"> {{$status}} </span>
         @else
-            <span class="clear-fields badge badge-danger mr-5"> {{$status}} </span>
+            <span class="clear-fields badge badge-primary mr-5"> {{$status}} </span>
         @endif
     </div>
 </div>
