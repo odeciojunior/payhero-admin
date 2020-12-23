@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
     <style>
         .popover {
             left: -50px !important;
@@ -399,7 +399,7 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css')}}">
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=213')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
