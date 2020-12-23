@@ -442,9 +442,10 @@ input[type=radio] {
     border-image-slice: 2;
     font-weight: 900;
     /* color: #ff666b !important; */
+    color: #fff;
 }
 
-.menu-active i {
+.menu-active a{
     /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
     background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
     background: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
@@ -452,6 +453,13 @@ input[type=radio] {
     -moz-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent; */
+    color: #fff;
+    background:  #fff;
+    background:  #fff;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 
@@ -468,6 +476,22 @@ input[type=radio] {
 .menu-active svg {
     /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
     fill: linear-gradient(11deg, #e6774c, rgb(249, 34, 120)) !important; */
+}
+
+.menu-active svg {
+    color: #fff;
+    /* background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%); */
+    background: #fff;
+    background-color: #fff;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.menu-active svg {
+    color: #fff !important;
+    fill: #fff !important;
 }
 
 .menu-active img {
@@ -849,10 +873,22 @@ input[type=radio] {
     width: 230px;
 }
 
+
+
+@media (min-width:768px){
+    .site-menubar-fold.site-menubar-hover .site-navbar .navbar-header {
+        width:230px;
+        transition:width .25s
+    }
+}
+
 .site-menubar-unfold .site-menubar {
     width: 230px;
 }
 
+.site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide {
+
+}
 .page {
     background: #f3f3f3;
 }
