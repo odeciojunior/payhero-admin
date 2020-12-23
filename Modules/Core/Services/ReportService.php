@@ -1061,13 +1061,13 @@ class ReportService
             $startDate = Carbon::now()->addDay()->subMonth()->format('Y-m-d');
             $endDate   = Carbon::now()->format('Y-m-d');
 
-            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value'))
+            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
                 ->leftJoin('transactions as transaction', function($join) use ($companyId) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->where('transaction.company_id', $companyId);
                 })
                 ->where('sales.status', (new Sale())->present()->getStatus('approved'))
-                ->whereBetween('start_date', [$startDate, $endDate])
+                ->whereBetween('end_date', [$startDate, $endDate])
                 ->groupBy('date');
 
 
