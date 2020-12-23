@@ -96,7 +96,7 @@ $(document).ready(function () {
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
                         data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliates[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center'>";
-                        data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>remove_red_eye</i></a>";
+                        data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>";
                         data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><i class='material-icons gradient'>edit</i></a>"
                         data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
                         data += "</td>";

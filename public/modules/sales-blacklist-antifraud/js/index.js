@@ -198,7 +198,7 @@ $(document).ready(function () {
                                 <td class='display-sm-one display-m-one'>${value.start_date}</td>
                                 <td>
                                     <a role='button' class='detalhes-black-antifraud pointer' sale='${value.sale_code}'>
-                                        <i class='material-icons gradient'>remove_red_eye</i>
+                                        <img src="/modules/global/img/svg/eye.svg" style="width: 24px">
                                     </a>
                                 </td>
                             </tr>

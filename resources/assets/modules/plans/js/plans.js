@@ -180,7 +180,7 @@ $(function () {
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" +
+                            "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>" +
                             "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>" +
                             "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>"
                         "</td>";

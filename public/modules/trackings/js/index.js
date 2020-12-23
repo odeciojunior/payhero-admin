@@ -333,7 +333,7 @@ $(() => {
                                              ${
                                                  tracking.tracking_status_enum
                                                      ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
-                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>`
                                                      : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
                                              }
                                             <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
@@ -465,7 +465,7 @@ $(() => {
                         .click();
 
                     let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
-                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`;
+                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>`;
 
                     td.append(buttons);
 

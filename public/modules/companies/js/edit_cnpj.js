@@ -563,7 +563,7 @@ $(document).ready(function () {
 
                 dados += `
                     <td class='text-center'>
-                        <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                        <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
                     </td>
                     </tr>
                 `;
