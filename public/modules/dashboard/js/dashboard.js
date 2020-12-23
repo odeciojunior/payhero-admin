@@ -111,7 +111,7 @@ $(document).ready(function () {
                         });
                     });
 
-                    $('#not-empty-sale').fadeIn()
+                    $('#not-empty-sale').show()
                 },
                 labelList = chartData.label_list,
                 totalSalesData = {value: chartData.value_data}
@@ -122,7 +122,7 @@ $(document).ready(function () {
             $('#empty-sale').fadeOut()
             createChart();
         } else {
-            $('#empty-sale').fadeIn()
+            $('#empty-sale').show()
             $('#scoreLineToMonth').html('')
         }
 
