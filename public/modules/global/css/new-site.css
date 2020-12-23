@@ -50,7 +50,7 @@ input, select, textarea {
 }
 
 .card-text.sm {
-    opacity: 0.5;
+    /* opacity: 0.5; */
     font-size: 12px;
 
 }
@@ -885,9 +885,6 @@ input[type=radio] {
     width: 230px;
 }
 
-.site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide {
-
-}
 .page {
     background: #f3f3f3;
 }
