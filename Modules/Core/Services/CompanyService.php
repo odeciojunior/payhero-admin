@@ -325,12 +325,14 @@ class CompanyService
             return $company->transactions()
                            ->whereIn('gateway_id', [14, 15])
                            ->where('is_waiting_withdrawal', 1)
+                           ->whereNull('withdrawal_id')
                            ->sum('value');
         } elseif(empty($liquidationType)) {
 
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])
                                         ->where('is_waiting_withdrawal', 1)
+                                        ->whereNull('withdrawal_id')
                                         ->sum('value');
 
             return $transactionsValue + $company->balance;
