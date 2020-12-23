@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=3') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=4') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -130,7 +130,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=33') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=35') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

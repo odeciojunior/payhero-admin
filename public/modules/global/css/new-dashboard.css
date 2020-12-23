@@ -116,7 +116,7 @@ body {
     font-size: 32px
 }
 
-.page.dashboard .text-money small{
+.page.dashboard .text-money small {
     font-size: 12px;
     color: gray
 }
@@ -139,6 +139,27 @@ body {
     padding: 0px !important;
     padding-bottom: 10px;
     background: #fff !important;
+}
+
+.page.dashboard .stats-card {
+    height: 200px;
+}
+
+.page.dashboard .chart-card {
+    height: 370px;
+}
+
+.page.dashboard .chargeback-card {
+    height: 500px;
+}
+
+.page.dashboard .sirius-card {
+    height: 300px;
+}
+
+.page.dashboard .ct-chart {
+    position: relative;
+    width: 100%;
 }
 
 /*left*/

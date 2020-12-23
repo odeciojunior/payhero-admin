@@ -34,7 +34,7 @@
                 <div class="col-sm-8">
                     <div class="row">
                         <div class="col-12 col-sm-6">
-                            <div class="card card-shadow bg-white">
+                            <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <div class="card card-shadow bg-white">
+                            <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <div class="card card-shadow bg-white">
+                            <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <div class="card card-shadow bg-white">
+                            <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -104,17 +104,18 @@
                         </div>
 
                         <div class="col-12 d-none d-sm-block">
-                            <div class="card card-shadow bg-white">
+                            <div class="card card-shadow bg-white chart-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
-                                        <span class="card-desc">Vendas neste mês</span>
+                                        <span class="card-desc">Vendas nos últimos 30 dias</span>
                                     </div>
                                 </div>
-                                <div class="card-body my-30 d-flex justify-content-center align-items-center p-5" style="height: 270px">
+                                <div class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5" style="height: 270px">
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
+                                <div id="chart-loading"></div>
                             </div>
                         </div>
                     </div>
@@ -122,7 +123,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="row">
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0">
-                            <div class="card card-shadow bg-white w-full">
+                            <div class="card card-shadow bg-white w-full chargeback-card">
                                 <div
                                     class="card-chargeback card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -282,7 +283,7 @@
                         </div>
 
                         <div class="col-lg-12 order-0 order-sm-1">
-                            <div class="card card-shadow">
+                            <div class="card card-shadow sirius-card">
                                 <div
                                     class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">
                                     <div class="font-size-16 text-white">

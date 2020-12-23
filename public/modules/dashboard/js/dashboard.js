@@ -2,6 +2,9 @@ $(document).ready(function () {
     getProjects();
 
     function updateChart() {
+        $('#scoreLineToMonth').html('')
+        loadingOnChart('#chart-loading');
+
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-chart-data`,
@@ -14,10 +17,12 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadingOnChartRemove('#chart-loading');
                 getChart(response)
             }
         });
@@ -25,7 +30,7 @@ $(document).ready(function () {
 
     function getChart(chartData) {
 
-        let haveData= parseInt(chartData.value_data[0]) > 0;
+        let haveData = parseInt(chartData.value_data[0]) > 0;
 
         if (haveData > 0) {
             var scoreChart = function scoreChart(id, labelList, series1List) {
@@ -49,7 +54,7 @@ $(document).ready(function () {
                         axisX: {
                             showGrid: false,
                             labelOffset: {x: -14, y: 0},
-                            labelInterpolationFnc: function(value) {
+                            labelInterpolationFnc: function (value) {
                                 return value;
                             }
                         },
@@ -108,21 +113,19 @@ $(document).ready(function () {
                         });
                     });
 
-                    $('#not-empty-sale').fadeIn()
+                    $('#not-empty-sale').show()
                 },
                 labelList = chartData.label_list,
-                totalSalesData = {
-                    name: "Valor total", value: chartData.value_data
-                }
+                totalSalesData = {value: chartData.value_data}
             createChart = function createChart() {
                 scoreChart("scoreLineToMonth", labelList, totalSalesData);
-            }, createChart(), $(".chart-action li a").on("click", function () {
-                createChart($(this));
-            });
+            };
 
+            $('#empty-sale').fadeOut()
+            createChart();
         } else {
             $('#empty-sale').fadeIn()
-            $('#scoreLineToMonth').remove()
+            $('#scoreLineToMonth').html('')
         }
 
     }
@@ -134,7 +137,6 @@ $(document).ready(function () {
     let userAccepted = true;
 
     function getDataDashboard() {
-        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -168,20 +170,6 @@ $(document).ready(function () {
                     $('#company-select, .page-content').hide();
                     loadingOnScreenRemove();
                 }
-
-                for (let i = 0; i < data.companies.length; i++) {
-                    if (data.companies[i].company_type == '1') {
-                        $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
-                    } else {
-                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
-                    }
-                }
-
-                updateValues();
-
-                $(".content-error").hide();
-                $('#company-select').show();
-
             }
         });
     }
@@ -205,6 +193,8 @@ $(document).ready(function () {
             }
         });
 
+        loadingOnChart('#chart-loading');
+
         $('.circle strong').addClass('loaded')
 
         $.ajax({
@@ -218,7 +208,8 @@ $(document).ready(function () {
             data: {company: $('#company').val()},
             error: function error(response) {
                 loadOnAny('.text-money, .update-text, .text-circle', true)
-                loadingOnScreenRemove()
+                //loadingOnChartRemove('#chart-loading');
+                loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
             },
@@ -240,6 +231,7 @@ $(document).ready(function () {
                 updateTickets(data.tickets);
 
                 loadOnAny('.text-money, .update-text, .text-circle', true)
+                //loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
             }
         });
