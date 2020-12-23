@@ -70,11 +70,26 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
-        `<div class="ajax-loader">
-            <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
+        `<div class="sirius-loading">
+            <img style="height: 125px; width: 125px" src="/modules/global/adminremark/assets/images/siriusM.svg"
                  class="img-responsive"/>
         </div>`
     )
+}
+
+function loadingOnChart(target) {
+    $(target).append(
+        `<div style="z-index: 5" class="sirius-loading">
+            <img style="height: 125px; width: 125px;" src="/modules/global/adminremark/assets/images/siriusM.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
+}
+
+function loadingOnChartRemove(target) {
+    $(target).fadeOut(function () {
+        $(this).html('').remove();
+    });
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {

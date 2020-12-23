@@ -115,6 +115,7 @@
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
                                 </div>
+                                <div id="chart-loading"></div>
                             </div>
                         </div>
                     </div>

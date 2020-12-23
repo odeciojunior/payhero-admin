@@ -111,15 +111,12 @@ $(document).ready(function () {
                     $('#not-empty-sale').fadeIn()
                 },
                 labelList = chartData.label_list,
-                totalSalesData = {
-                    name: "Valor total", value: chartData.value_data
-                }
+                totalSalesData = {value: chartData.value_data}
             createChart = function createChart() {
                 scoreChart("scoreLineToMonth", labelList, totalSalesData);
-            }, createChart(), $(".chart-action li a").on("click", function () {
-                createChart($(this));
-            });
+            };
 
+            createChart();
         } else {
             $('#empty-sale').fadeIn()
             $('#scoreLineToMonth').remove()
@@ -134,7 +131,6 @@ $(document).ready(function () {
     let userAccepted = true;
 
     function getDataDashboard() {
-        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -168,12 +164,6 @@ $(document).ready(function () {
                     $('#company-select, .page-content').hide();
                     loadingOnScreenRemove();
                 }
-
-                updateValues();
-
-                $(".content-error").hide();
-                $('#company-select').show();
-
             }
         });
     }
@@ -197,6 +187,8 @@ $(document).ready(function () {
             }
         });
 
+        loadingOnChart('#chart-loading');
+
         $('.circle strong').addClass('loaded')
 
         $.ajax({
@@ -210,7 +202,8 @@ $(document).ready(function () {
             data: {company: $('#company').val()},
             error: function error(response) {
                 loadOnAny('.text-money, .update-text, .text-circle', true)
-                loadingOnScreenRemove()
+                loadingOnChartRemove('#chart-loading');
+                loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
             },
@@ -230,8 +223,10 @@ $(document).ready(function () {
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
+                updateChart();
 
                 loadOnAny('.text-money, .update-text, .text-circle', true)
+                loadingOnChartRemove('#chart-loading');
                 loadingOnScreenRemove();
             }
         });
