@@ -36,7 +36,7 @@
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=4') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
@@ -57,7 +57,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=189438493') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=14') }}">
     @stack('css')
