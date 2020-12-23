@@ -103,9 +103,14 @@ class DashboardApiController extends Controller
                 return [];
             }
             $blockedBalance = $companyService->getBlockedBalance($company);
-            $pendingBalance = $companyService->getPendingBalance($company);
+            $pendingBalance = $companyService->getPendingBalance(
+                    $company,
+                    CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+                ) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
-            $availableBalance = $companyService->getAvailableBalance($company) - $blockedBalance->from_sales - $blockedBalance->from_invites;
+            $availableBalance = $companyService->getAvailableBalance(
+                    $company
+                ) - $blockedBalance->from_sales - $blockedBalance->from_invites;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance->from_sales + $blockedBalance->from_invites;
 
             $statusArray = [

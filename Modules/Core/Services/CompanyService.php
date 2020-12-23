@@ -307,7 +307,9 @@ class CompanyService
 
         if(!empty($liquidationType)) {
             if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])->where('is_waiting_withdrawal', 0);
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])
+                    ->where('is_waiting_withdrawal', 0)
+                    ->whereNull('withdrawal_id');
             }
             elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
