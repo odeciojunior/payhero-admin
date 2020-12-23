@@ -170,7 +170,7 @@ $(document).ready(function () {
         form.find('#name').val('');
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         form.find('#review_apply_on_plans').val('').trigger('change');
 
         initStarsPlugin('#review_stars', 5, false);
@@ -226,7 +226,7 @@ $(document).ready(function () {
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
         form.find('.review-id').val(reviewId);
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         previewImageReview.imgAreaSelect({remove: true});
 
         loadingOnScreen();
@@ -246,7 +246,7 @@ $(document).ready(function () {
                 form.find('[name=name]').val(review.name);
                 form.find('[name=description]').val(review.description);
                 form.find('[name=active_flag]').val(review.active_flag);
-                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.png')
+                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.svg')
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 form.find('#review_apply_on_plans').html('');

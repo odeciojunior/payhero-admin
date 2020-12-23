@@ -10,7 +10,7 @@
                style="position: relative; float: right; display:none" title='Adicionar projeto'>
                 <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
             </a>
-            <a id="btn-config" class="mr-20 btn btn-floating bg-primary" style="position: relative; float: right;" title='Configurações'>
+            <a id="btn-config" class="mr-20 btn btn-floating bg-secondary" style="position: relative; float: right;" title='Configurações'>
                 <i class="icon wb-settings text-white" aria-hidden="true" style="margin-top:8px"></i>
             </a>
             <h1 class="page-title">Meus projetos</h1>

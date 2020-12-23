@@ -200,7 +200,7 @@ $(() => {
 
                 let project = response.data;
                 $('.page-title, .title-pad').text(project.name);
-                $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
+                $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);
                 if (project.visibility === 'public') {
                     $('#show-visibility').text('Público').addClass('badge-primary');
@@ -241,7 +241,7 @@ $(() => {
             }
         });
 
-        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
+        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
         $('#update-project #name').val(project.name);
         $('#cost_currency_type').val(project.cost_currency_type);
         $('#update-project #description').text(project.description);
@@ -250,7 +250,7 @@ $(() => {
         } else {
             $('#update-project #visibility').prop('selectedIndex', 1).change();
         }
-        $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.png');
+        $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.svg');
         $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
         $('#update-project #contact').val(project.contact);
         $('#update-project #support_phone').val(project.support_phone);

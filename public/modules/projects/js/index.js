@@ -25,7 +25,7 @@ $(() => {
                                         <div class="card">
                                             ${project.shopify_id != null && !project.affiliated ? '<div class="ribbon"><span>Shopify <a class="ribbon-shopify-default"></a></span></div>' : ''}
                                             ${project.affiliated ? '<div class="ribbon-left"><span>Afiliado</span></div>' : ''}
-                                            <img class="card-img-top" src="${project.photo ? project.photo : '/modules/global/img/projeto.png'}" alt="${project.name}">
+                                            <img class="card-img-top" src="${project.photo ? project.photo : '/modules/global/img/projeto.svg'}" alt="${project.name}">
                                             <div class="card-body">
                                                 <h5 class="card-title">${project.name}</h5>
                                                 <p class="card-text sm">Criado em ${project.created_at}</p>
