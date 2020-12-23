@@ -151,7 +151,7 @@ $(document).ready(function () {
         dados += '<td class="text-center">' + value.domain + '</td>';
         dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
         dados += "<td style='text-align:center;'>"
-        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i> </a>"
+        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>"
         dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
         dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
         dados += "</td>";
