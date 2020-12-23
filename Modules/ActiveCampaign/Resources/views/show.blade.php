@@ -76,8 +76,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/activecampaign/js/edit.js?v=1')}}"></script>
-        <script src="{{asset('modules/activecampaign/js/events.js?v=3')}}"></script>
+        <script src="{{asset('modules/activecampaign/js/edit.js?v=s0')}}"></script>
+        <script src="{{asset('modules/activecampaign/js/events.js?v=s0')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

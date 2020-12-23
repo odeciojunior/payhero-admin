@@ -78,6 +78,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/digitalmanager/js/index.js?v=1"></script>
+        <script src="/modules/digitalmanager/js/index.js?v=s0"></script>
     @endpush
 @endsection

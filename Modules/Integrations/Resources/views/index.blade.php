@@ -156,7 +156,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v=4') }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v=s0') }}"></script>
     @endpush
 
 @endsection

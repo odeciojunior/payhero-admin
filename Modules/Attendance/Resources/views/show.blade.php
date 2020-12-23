@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=s0') }}">
     @endpush
     <div class="page">
         <div class="page-header container">
@@ -83,6 +83,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/show.js?v=3')}}'></script>
+        <script src='{{asset('/modules/tickets/js/show.js?v=s0')}}'></script>
     @endpush
 @endsection

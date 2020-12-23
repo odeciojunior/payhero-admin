@@ -92,6 +92,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/whatsapp2/js/index.js?v=1"></script>
+        <script src="/modules/whatsapp2/js/index.js?v=s0"></script>
     @endpush
 @endsection

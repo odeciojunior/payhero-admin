@@ -76,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/unicodrop/js/index.js?v=2"></script>
+        <script src="/modules/unicodrop/js/index.js?v=s0"></script>
     @endpush
 @endsection

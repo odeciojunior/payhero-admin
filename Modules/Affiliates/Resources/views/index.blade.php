@@ -155,6 +155,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=1') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=s0') }}"></script>
     @endpush
 @endsection
