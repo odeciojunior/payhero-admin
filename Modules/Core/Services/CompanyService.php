@@ -307,7 +307,9 @@ class CompanyService
 
         if(!empty($liquidationType)) {
             if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])->where('is_waiting_withdrawal', 0);
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])
+                    ->where('is_waiting_withdrawal', 0)
+                    ->whereNull('withdrawal_id');
             }
             elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
@@ -325,12 +327,14 @@ class CompanyService
             return $company->transactions()
                            ->whereIn('gateway_id', [14, 15])
                            ->where('is_waiting_withdrawal', 1)
+                           ->whereNull('withdrawal_id')
                            ->sum('value');
         } elseif(empty($liquidationType)) {
 
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])
                                         ->where('is_waiting_withdrawal', 1)
+                                        ->whereNull('withdrawal_id')
                                         ->sum('value');
 
             return $transactionsValue + $company->balance;
@@ -589,13 +593,14 @@ class CompanyService
 
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $company->id)
-            ->whereNull('invitation_id')
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
             ->whereDate('created_at', '>=', '2020-01-01')
             ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
                     ->orWhere('sales.has_valid_tracking', 0);
-            })->sum('value');
+            })->select(DB::raw('sum(if(invitation_id is null, value, 0)) as from_sales'),
+                DB::raw('sum(if(invitation_id is not null, value, 0)) as from_invites'),
+            )->first();
     }
 
     public function getBlockedBalancePending(Company $company)

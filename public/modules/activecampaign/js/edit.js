@@ -30,7 +30,7 @@ $(() => {
             success: (response) => {
                 let project = response.data;
                 $('.page-title, .title-pad').text(project.project_name);
-                $('#show-photo').attr('src', project.project_photo ? project.project_photo : '/modules/global/img/projeto.png');
+                $('#show-photo').attr('src', project.project_photo ? project.project_photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);
 
                 $('#show-description').text(project.project_description);
@@ -83,7 +83,7 @@ $(() => {
 
 //         let {project, companies, userProject, shopifyIntegrations} = data;
 
-//         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
+//         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
 //         $('#update-project #name').val(project.name);
 //         $('#update-project #description').text(project.description);
 //         if (project.visibility === 'public') {
@@ -91,7 +91,7 @@ $(() => {
 //         } else {
 //             $('#update-project #visibility').prop('selectedIndex', 1).change();
 //         }
-//         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.png');
+//         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.svg');
 
 
 //         if (project.shopify_id) {

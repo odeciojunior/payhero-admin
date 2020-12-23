@@ -26,7 +26,7 @@ $(document).ready(function () {
                 if (response.data.status_url_affiliates) {
                     $('.div-project').show();
                     $('.project-header').html(`Afiliação no projeto ${response.data.name}`);
-                    $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.png'}`);
+                    $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.svg'}`);
                     $('#created_by').html(`Produtor: ${response.data.user_name}`);
                     $('.text-about-project').html(response.data.description);
                     if (response.data.url_page != '' && response.data.url_page != null) {

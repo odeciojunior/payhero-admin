@@ -256,7 +256,7 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
                         <div class="panel-body">
                             Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
-                            <i class="material-icons gradient">remove_red_eye</i> para verificar novamente.
+                            <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> para verificar novamente.
                         </div>
                     </div>
                 </div>

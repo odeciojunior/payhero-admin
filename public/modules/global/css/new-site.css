@@ -230,7 +230,7 @@ input[type=radio] {
 }
 
 .menu-active .svg-menu {
-    /* fill: #ff4c52; */
+    /* fill: #2e85ec; */
     fill: #fff;
 }
 
@@ -241,7 +241,7 @@ input[type=radio] {
     font-stretch: normal;
     line-height: 0.88;
     letter-spacing: 0.8px;
-    color: black;
+    color: #404040;
 
 }
 
@@ -308,7 +308,7 @@ input[type=radio] {
     width: 20px;
     height: 20px;
     font-size: 18px;
-    -webkit-text-fill-color: #ff4c52;
+    -webkit-text-fill-color: #2e85ec;
     margin-right: 5px;
     vertical-align: middle;
 }
@@ -335,7 +335,7 @@ input[type=radio] {
     width: 18px;
     height: 18px;
     vertical-align: middle;
-    fill: #ff4c52
+    fill: #2e85ec
 
 }
 
@@ -358,7 +358,7 @@ input[type=radio] {
     top: 20px;
     right: 20px;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-    background-color: #ff4c52;
+    background-color: #2e85ec;
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -368,8 +368,7 @@ input[type=radio] {
 }
 
 .add-btn.added {
-    background: transparent;
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), rgb(81, 236, 195));
+    background-color: #41dc8f;
     color: white;
 }
 
@@ -583,7 +582,7 @@ input[type=radio] {
     border-radius: 100%;
     width: 25px;
     height: 25px;
-    color: #ff4c52 !important;
+    color: #2e85ec !important;
     display: flex;
     text-align: center;
     align-items: center;
@@ -892,12 +891,6 @@ input[type=radio] {
 .page {
     background: #f3f3f3;
 }
-
-/* .btn-danger {
-    border-right: 5px solid #2E85EC;
-    background-color: #2E85EC;
+.dropdown-menu > .dropdown-item > img {
+    margin-right: 10px;
 }
-
-.btn-danger:hover {
-    background-color: #247cf0;
-} */

@@ -74,15 +74,17 @@
                 </span>
                     </a>
                     <div class="dropdown-menu" role="menu">
-                        <a id="accounts-service" class="dropdown-item text-center" href="" role="menuitem">
+                        <a id="accounts-service" class="dropdown-item" href="" role="menuitem">
                             <!-- <i class="material-icons align-middle"> settings </i> Configurações -->
-                            <img  height="32" width="32" src="{{ asset('modules/global/img/svg/ferramentas.svg') }}" /> 
+                            <img  height="32" width="32" src="{{ asset('modules/global/img/svg/settings.svg') }}" /> 
                             Configurações 
                         </a>
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="material-icons align-middle"> power_settings_new </i> Logout
+                            <!-- <i class="material-icons align-middle"> power_settings_new </i> Logout -->
+                            <img  height="32" width="32" src="{{ asset('modules/global/img/svg/power_settings_new.svg') }}" /> 
+                            Logout
                         </a>
                         <form id="logout-form" action="/logout" method="POST" style="display: none;">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">

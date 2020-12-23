@@ -22,8 +22,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadingOnChartRemove('#chart-loading');
                 getChart(response)
+                loadingOnChartRemove('#chart-loading');
             }
         });
     }
@@ -176,7 +176,7 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money, .update-text, .text-circle', false, {
+        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
@@ -207,8 +207,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money, .update-text, .text-circle', true)
-                //loadingOnChartRemove('#chart-loading');
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
@@ -223,15 +222,18 @@ $(document).ready(function () {
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
-                $('#info-total-balance').attr('title', 'Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance)
-                    .tooltip({placement: 'bottom'});
+
+                let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance;
+                if(data.blocked_balance_invite !== "0,00"){
+                    title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
+                }
+                $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money, .update-text, .text-circle', true)
-                //loadingOnChartRemove('#chart-loading');
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });
