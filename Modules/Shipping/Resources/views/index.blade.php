@@ -120,7 +120,7 @@
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
                 <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button frete="" type="button" data-dismiss="modal" class="col-4 btn btn-danger btn-delete" style="width: 20%;">Excluir</button>
+                <button frete="" type="button" data-dismiss="modal" class="col-4 btn btn-primary btn-delete" style="width: 20%;">Excluir</button>
             </div>
         </div>
     </div>
