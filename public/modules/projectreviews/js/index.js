@@ -145,7 +145,7 @@ $(document).ready(function () {
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
                                 <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><i class='material-icons gradient'> edit </i></a>
-                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><i class='material-icons gradient'> delete_outline </i></a>
+                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
                             </td>
                         </tr>
                         `;

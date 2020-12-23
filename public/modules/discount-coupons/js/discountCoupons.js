@@ -231,7 +231,7 @@ $(function () {
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
                                 <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
                             </td>
                         </tr>`;
 

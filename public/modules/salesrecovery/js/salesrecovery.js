@@ -304,7 +304,7 @@ $(document).ready(function () {
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data += "<td><span class='sale_status badge badge-" + statusRecovery[value.status_translate] + "' status='" + value.status_translate + "' sale_id='" + value.id + "'>" + value.status_translate + "</span></td>";
         data += "<td>" + value.value + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img src='/modules/global/img/svg/whatsapp.svg' style='width: 24px'></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><i class='material-icons gradient'>file_copy</i></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
         data += "</tr>";
@@ -329,7 +329,7 @@ $(document).ready(function () {
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id_default + "'>" + value.recovery_status + "</span></td>";
         data += "<td>" + value.total_paid + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img src='/modules/global/img/svg/whatsapp.svg' style='width: 24px'></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><i class='material-icons gradient'>file_copy</i></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id_default + "' ><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
         data += "</tr>";

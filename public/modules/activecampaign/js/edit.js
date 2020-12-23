@@ -237,7 +237,7 @@ $(() => {
     //                                         </div>
     //                                         <div class='col-md-2'>
     //                                             <div role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
-    //                                                 <i class='material-icons gradient'>delete_outline</i>
+    //                                                 <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
     //                                             </div>
     //                                         </div>
     //                                     </div>

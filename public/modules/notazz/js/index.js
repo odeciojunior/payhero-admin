@@ -45,7 +45,7 @@ $(document).ready(function () {
                                                     <i class='material-icons gradient'>edit</i>
                                                 </a>
                                                  <a role='button' class='delete-integration pointer float-right mt-10' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
-                                                    <i class='material-icons gradient'>delete_outline</i>
+                                                    <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
                                                 </a>
                                             </div>
                                         </div>
