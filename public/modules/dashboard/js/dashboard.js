@@ -22,8 +22,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadingOnChartRemove('#chart-loading');
                 getChart(response)
+                loadingOnChartRemove('#chart-loading');
             }
         });
     }
@@ -176,7 +176,7 @@ $(document).ready(function () {
 
     function updateValues() {
 
-        loadOnAny('.text-money, .update-text, .text-circle', false, {
+        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
@@ -207,8 +207,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money, .update-text, .text-circle', true)
-                //loadingOnChartRemove('#chart-loading');
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
@@ -230,8 +229,7 @@ $(document).ready(function () {
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money, .update-text, .text-circle', true)
-                //loadingOnChartRemove('#chart-loading');
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });
