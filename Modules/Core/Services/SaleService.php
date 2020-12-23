@@ -18,7 +18,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
@@ -1125,20 +1124,11 @@ class SaleService
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
-                ->where('transactions.status_enum', 1)
-                ->whereNotNull('delivery_id')
+                ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'))
                 ->whereDate('transactions.created_at', '>=', '2020-01-01')
                 ->whereHas('sale', function ($f1) use ($salesModel) {
                     $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                        ->orWhere(function ($f2) use ($salesModel) {
-                            $f2->where('sales.status', $salesModel->present()->getStatus('approved'))
-                                ->whereHas('productsPlansSale', function ($q) {
-                                    $q->doesntHave('tracking');
-                                });
-                        })->orWhereHas('tracking', function ($queryTracking) {
-                            $presenter = (new Tracking())->present();
-                            $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
-                        });
+                        ->orWhere('sales.has_valid_tracking', 0);
                 });
 
             if (!empty($filters["project"])) {
