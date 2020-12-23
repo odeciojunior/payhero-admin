@@ -584,7 +584,8 @@ class ProfileApiController
                 $link    = '/personal-info#documents';
             } else {
                 $companyDocumentRefused = $companyService->companyDocumentRefused();
-                if (!empty($companyDocumentRefused)) {
+                $companyDocumentApproved = $companyService->companyDocumentApproved();
+                if (empty($companyDocumentApproved) && !empty($companyDocumentRefused)) {
                     $refused     = true;
                     $companyCode = Hashids::encode($companyDocumentRefused->id);
                     if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType('physical person')) {

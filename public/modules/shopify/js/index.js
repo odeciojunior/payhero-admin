@@ -58,8 +58,10 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!response.analyzing && !response.refused) {
                     $('#btn-integration-model').show();
+                    $('#button-information').show().addClass('d-flex').css('display', 'flex');
                 } else {
                     $('#btn-integration-model').hide();
+                    $('#button-information').hide();
                     alertCustom('error', 'Finalize seu cadastro para integrar com Shopify!');
                 }
             }
