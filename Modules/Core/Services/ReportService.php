@@ -700,7 +700,6 @@ class ReportService
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
-            // dd($orders);
 
             if (!empty($affiliate)) {
                 $orders->where('affiliate_id', $affiliate->id);
@@ -1070,8 +1069,6 @@ class ReportService
                 ->whereBetween('end_date', [$startDate, $endDate])
                 ->groupBy('date');
 
-
-
             $orders         = $orders->get()->toArray();
             $valueData      = [];
             foreach ($labelList as $label) {
@@ -1079,7 +1076,7 @@ class ReportService
 
                 foreach ($orders as $order) {
                     if ((Carbon::parse($order['date'])
-                                ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                ->subDay()->format('d/m') == $label) || (Carbon::parse($order['date'])
                                 ->format('d/m') == $label)) {
 
                         $value = FoxUtils::onlyNumbers($order['value']);

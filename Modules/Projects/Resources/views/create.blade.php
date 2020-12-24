@@ -87,7 +87,7 @@
 {{--                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </h4>--}}
             <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
                 e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
-{{--            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>--}}
+{{--            <a href="/companies/create" class="btn btn-primary">Cadastrar empresa</a>--}}
         </div>
     </div>
 
