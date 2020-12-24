@@ -41,8 +41,8 @@ class TestSaleObserverCommand extends Command
     {
 
         $sale = Sale::find(896608);
-        //Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
 
+        Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
         $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$sale->id}");
 
         dd($hasValidTracking);
