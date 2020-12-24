@@ -105,14 +105,14 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="d-flex">
-                                                        <div class="p-2 d-flex flex-column">
-                                                            <span class="details-text">Visibilidade</span>
+                                                        <!-- <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Visibilidade--------------</span>
                                                             <p id="show-visibility"
                                                                class="card-text text-center sm badge-pill"></p>
-                                                        </div>
-                                                        <div class="p-2 d-flex flex-column">
+                                                        </div> -->
+                                                        <div class="p-4 d-flex align-center flex-column">
                                                             <span class="details-text">Status</span>
-                                                            <p id="show-status" class="card-text sm badge-pill"></p>
+                                                            <p id="show-status" class="card-text text-white md p-2 pr-4 pl-4 badge-pill"></p>
                                                         </div>
                                                     </div>
                                                 </div>
