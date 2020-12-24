@@ -104,7 +104,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:getnet-transactions')->dailyAt('06:00');
 
-        $schedule->command('redis:update-sale-tracking')->twiceDaily(10, 22);
+        $schedule->command('redis:update-sale-tracking')->hourly();
     }
 
     /**
