@@ -112,7 +112,7 @@
                                                         </div> -->
                                                         <div class="p-2 d-flex justify-content-center flex-column">
                                                             <span class="details-text text-center">Status</span>
-                                                            <p id="show-status" class="card-text text-white md p-2 pr-4 pl-4 badge-pill"></p>
+                                                            <p id="show-status" class="text-white md p-2 pr-4 pl-4 badge-pill"></p>
                                                         </div>
                                                     </div>
                                                 </div>

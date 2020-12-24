@@ -41,6 +41,10 @@ input, select, textarea {
     color: #404040;;
 }
 
+#show-status {
+ font-weight: 600;
+}
+
 .card-text {
     font-style: normal;
     font-stretch: normal;
@@ -740,11 +744,9 @@ input[type=radio] {
 }
 
 .nav-btn.active {
-
-    background-color:  #2E85EC;
+    background: #2E85EC !important;
     border-radius: 40px;
     color: white !important;
-
 }
 
 .w-450 {
