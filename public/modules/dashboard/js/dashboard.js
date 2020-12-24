@@ -30,7 +30,11 @@ $(document).ready(function () {
 
     function getChart(chartData) {
 
-        let haveData = parseInt(chartData.value_data[0]) > 0;
+        let haveData = 0;
+
+        chartData.value_data.forEach(function(elem, index){
+            if(elem) haveData += parseInt(elem)
+        });
 
         if (haveData > 0) {
             var scoreChart = function scoreChart(id, labelList, series1List) {
@@ -46,7 +50,7 @@ $(document).ready(function () {
                         showArea: true,
                         fullWidth: true,
                         chartPadding: {
-                            right: 20,
+                            right: 50,
                             left: 20,
                             top: 30,
                             button: 20
@@ -60,23 +64,12 @@ $(document).ready(function () {
                         },
                         axisY: {
                             labelInterpolationFnc: function labelInterpolationFnc(value) {
-                                value = value * 100;
-                                var str = value.toString();
-                                str = str.replace('.', '');
-                                let complete = 3 - str.length;
-                                if (complete == 1) {
-                                    str = '0' + str;
-                                } else if (complete == 2) {
-                                    str = '00' + str;
-                                }
-                                str = str.replace(/([0-9]{2})$/g, ",$1");
-                                if (str.length > 6) {
-                                    str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                               let str = parseInt(value)
+
+                                if (str >= 1000) {
+                                    str = str / 1e3 + "K"
                                 }
 
-                                if (value > 0) {
-                                    str = value / 1e4 + "K"
-                                }
                                 return str;
                             },
                             scaleMinSpace: 40,

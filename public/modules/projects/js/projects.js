@@ -202,13 +202,8 @@ $(() => {
                 $('.page-title, .title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);
-                if (project.visibility === 'public') {
-                    $('#show-visibility').text('Público').addClass('badge-primary');
-                } else {
-                    $('#show-visibility').text('Privado').addClass('badge-danger');
-                }
                 if (project.status == '1') {
-                    $('#show-status').text('Ativo').addClass('badge-primary');
+                    $('#show-status').text('Ativo').addClass('badge-success');
                 } else {
                     $('#show-status').text('Inativo').addClass('badge-danger');
                 }

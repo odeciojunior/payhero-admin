@@ -3,7 +3,7 @@
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
             <!-- <i class="icon wb-info"></i> -->
-            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}">
+            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}" style="width: 32px">
         </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
