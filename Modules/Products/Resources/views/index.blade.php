@@ -66,7 +66,7 @@
                         <h1 class="big gray">Zero produtos por aqui!</h1>
                         {{--                    <div class='product-is-empty-cla'>--}}
                         {{--                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}
-                        {{--                        <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>--}}
+                        {{--                        <a href="/products/create" class="btn btn-primary">Novo Produto</a>--}}
                         {{--                    </div>--}}
                     </div>
                 </div>
