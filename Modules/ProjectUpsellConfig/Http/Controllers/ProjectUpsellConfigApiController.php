@@ -128,7 +128,7 @@ class ProjectUpsellConfigApiController extends Controller
                     foreach ($productsPlans as $productPlan) {
                         //se o plano tiver um unico produto, oferecer variantes
                         if ($productsPlans->count() == 1 && $productPlan->product->variants->count()) {
-                            $products = $productPlan->product->variants;
+                            $products = $productPlan->product->variants->sortBy('created_at');
                             foreach ($products as $product) {
                                 $variant = (object) [
                                     'name'        => $product->name,

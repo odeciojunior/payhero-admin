@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
-use Redis;
 
 class UpdateRedisSaleTracking extends Command
 {
@@ -19,19 +20,25 @@ class UpdateRedisSaleTracking extends Command
 
     public function handle()
     {
-        $sales = Sale::where('gateway_id', 15)->chunk(
-            500,
-            function ($sales) {
-                foreach ($sales as $sale) {
-                    $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
-                    Redis::connection('redis-statement')->set(
-                        "sale:has:tracking:{$sale->id}",
-                        $sale->has_valid_tracking
-                    );
-                }
-            }
-        );
+        try{
 
-        return 0;
+            $sales = Sale::where('gateway_id', 15)->chunk(
+                500,
+                function ($sales) {
+                    foreach ($sales as $sale) {
+                        $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
+                        Redis::connection('redis-statement')->set(
+                            "sale:has:tracking:{$sale->id}",
+                            $sale->has_valid_tracking
+                        );
+                    }
+                }
+            );
+    
+            return 0;
+        }
+        catch(Exception $e){
+            report($e);
+        }
     }
 }
