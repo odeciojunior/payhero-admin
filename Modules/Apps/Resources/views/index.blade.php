@@ -126,6 +126,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card" onclick="window.location.href='/integrations'" style='width:270px;'>
+                            <a id="tool_integrations-bt" href="/integrations" class="add-btn">
+                                <i id="tool_integrations-icon" class="icon wb-plus" aria-hidden="true"></i></a>
+                            <img class="card-img-top card-img-controll p-20" src="{!! asset('modules/global/img/svg/api.svg') !!}" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">Integrações</h5>
+                                <p class="card-text sm">Crie chaves de acesso para apps de terceiros</p>
+                            </div>
+                        </div>
+                    </div>
                     {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card" onclick="window.location.href='/apps/digitalmanager'" style='width: 270px;'>
                             <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="icon wb-plus" aria-hidden="true"></i></a>
