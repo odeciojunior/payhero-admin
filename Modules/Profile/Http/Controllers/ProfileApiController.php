@@ -608,9 +608,6 @@ class ProfileApiController
                 }
             }
 
-            if(env('ACCOUNT_FRONT_URL'))
-                $link = env('ACCOUNT_FRONT_URL') . $link;
-
             return response()->json(
                 ['message' => 'Documentos verificados!', 'analyzing' => $analyzing,'refused' => $refused,'link' => $link],
                 200
