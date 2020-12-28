@@ -367,9 +367,7 @@ class CompanyService
                                                     ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
                                                 ])->exists();
 
-        $valid = $existJuridicalCompany || $existPhysicalCompany;
-
-        return $valid;
+        return $existJuridicalCompany || $existPhysicalCompany;
     }
     public function verifyFieldsEmptyBraspag(Company $company)
     {
