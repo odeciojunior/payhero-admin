@@ -85,9 +85,15 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                 $trackingCode = $fulfillment->getTrackingNumber();
                                 if (!empty($trackingCode)) {
                                     foreach ($fulfillment->getLineItems() as $lineItem) {
-                                        $products = $saleProducts->where('shopify_variant_id',
-                                            $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
-
+                                        $products = $saleProducts
+                                            ->where('shopify_variant_id', $lineItem->getVariantId())
+                                            ->where('amount', $lineItem->getQuantity());
+                                        if(!$products->count()){
+                                            $products = $saleProducts
+                                                ->where('name', $lineItem->getTitle())
+                                                ->where('description', $lineItem->getVariantTitle())
+                                                ->where('amount', $lineItem->getQuantity());
+                                        }
                                         if ($products->count()) {
                                             foreach ($products as $product) {
                                                 $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
