@@ -40,7 +40,7 @@ class TestRedisStatementCommand extends Command
     public function handle()
     {
 
-        $sale_id = $this->ask('Redis: ' . env());
+        $sale_id = $this->ask('Redis: ' . env('REDIS_STATEMENT_HOST'));
         $sale_id = $this->ask('Qual o sale_id?');
         $sale = Sale::find($sale_id);
 
