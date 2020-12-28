@@ -329,6 +329,7 @@ class GetNetStatementService
                     $statementItem->order = $orderFromGetNetOrderId;
                     $statementItem->details = $details;
                     $statementItem->amount = $amount;
+                    $statementItem->isInvite = $amount <= 5.00;
                     $statementItem->paidWith = $paidWith;
                     $statementItem->type = $type;
                     $statementItem->transactionDate = $transactionDate;
