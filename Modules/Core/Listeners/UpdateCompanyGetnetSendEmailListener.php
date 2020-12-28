@@ -36,7 +36,7 @@ class UpdateCompanyGetnetSendEmailListener implements ShouldQueue
             $data = [
                 'first_name'      => explode(' ', $user->name)[0],
                 'company_name'    => $company->fantasy_name,
-                'companies_url'   => 'https://app.cloudfox.net/companies',
+                'companies_url'   => 'https://sirius.cloudfox.net/companies',
             ];
 
             $emailService->sendEmail(
