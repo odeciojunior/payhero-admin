@@ -28,7 +28,8 @@ $(document).ready(function () {
             'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
             'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Vitalício': [moment('2018-01-21 00:00:00'), moment()]
         }
     });
 
@@ -405,7 +406,7 @@ $(document).ready(function () {
                                                     style: 'currency',
                                                     currency: 'BRL'
                                                 }))
-                                            }                                        
+                                            }
                                         </label>
                                     </div>
                                 </div>
@@ -419,7 +420,7 @@ $(document).ready(function () {
                                             style: 'currency',
                                             currency: 'BRL'
                                         }))
-                                    }                                        
+                                    }
                                 </label>
                             </div>
                         </h3>
@@ -831,14 +832,9 @@ $(document).ready(function () {
         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
         'Este mês': [moment().startOf('month'), moment().endOf('month')],
-        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        'Vitalício': [moment('2018-01-21 00:00:00'), moment()]
     };
-
-    let envDebug = $("meta[name=app-debug]").attr('content');
-
-    if (envDebug == 'true') {
-        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
-    }
 
     $('#date_range_statement').daterangepicker({
         maxSpan: {
