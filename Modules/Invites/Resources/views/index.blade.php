@@ -7,7 +7,7 @@
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
-            <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-danger"
+            <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-primary"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
@@ -146,7 +146,7 @@
                             </h5>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
-                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                        <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                             Retornar
                         </span>
                         </div>
@@ -166,7 +166,7 @@
                             </h3>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
-                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                        <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                             Retornar
                         </span>
                         </div>
@@ -183,7 +183,7 @@
                             <h3></h3>
                         </div>
                         <div style='width: 100%; text-align: center; padding-top: 3%;'>
-                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                        <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                             Retornar
                         </span>
                         </div>
@@ -206,7 +206,7 @@
                                 poder enviar novos convites!</h3>
                         </div>
                         <div class='modal-footer' style='text-align: center; padding-top: 3%;'>
-                            <button class='btn btn-danger' type='button' data-dismiss='modal' style='font-size: 15px;'>
+                            <button class='btn btn-primary' type='button' data-dismiss='modal' style='font-size: 15px;'>
                                 Fechar
                             </button>
                         </div>
@@ -238,7 +238,7 @@
                     <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal"
                             style="width: 20%;">Cancelar
                     </button>
-                    <button id="btn-delete-invitation" type="button" class="col-4 btn btn-danger" style="width: 20%;"
+                    <button id="btn-delete-invitation" type="button" class="col-4 btn btn-primary" style="width: 20%;"
                             data-dismiss="modal">Excluir
                     </button>
                 </div>
@@ -275,7 +275,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=15') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=s05') }}"></script>
     @endpush
 
 @endsection

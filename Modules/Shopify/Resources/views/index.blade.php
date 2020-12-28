@@ -6,16 +6,16 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
-                <div class="col-lg-8 d-flex align-items-center">
+                <div class="col-lg-8  align-items-center">
                     <h1 class="page-title">Integrações com Shopify</h1>
                 </div>
                 <div class="col text-right" id="integration-actions" style="display:none">
-                    <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-danger ml-10"
+                    <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-primary ml-10"
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-plus" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" data-target='#modal_explicacao' class="btn btn-floating"
-                       style="background-color:blue;position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                    <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
+                       style="background-color:blue;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-help" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -43,7 +43,7 @@
                         <div class="modal-footer" style="margin-top: 15px">
                             <button id="bt_integration" type="button" class="btn btn-success"
                                     data-dismiss="modal"></button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                                     <div class="panel-body justify-content-center">
                                         <div class="d-flex align-items-center">
                                             <span>Agora você tem um novo app criado, para vincular com a nossa plataforma, clique no botão</span>
-                                            <a class="btn btn-floating btn-danger"
+                                            <a class="btn btn-floating btn-primary"
                                                style="margin:15px;color: white;display: flex;align-items: center;justify-content: center;">
                                                 <i class="icon wb-plus" aria-hidden="true"></i></a>
                                         </div>
@@ -282,13 +282,8 @@
 
         </div>
         @include('companies::empty')
-        <div id="no-integration-found" class='row justify-content-center' style="display:none">
-            <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
-                <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre seus projetos com Shopify de forma totalmente automatizada!</p>
-            </div>
-        </div>
+        @include('companies::not_company_approved_getnet')
+        @include('shopify::not-integration')
     </div>
 
     @push('scripts')

@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
     @endpush
 
-    <div class="page">
+    <div class="page" style="display: none">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Cadastrar novo projeto</h1>
             <div class="page-header-actions">
@@ -24,7 +24,7 @@
                             <label for='preview-image-project'>Selecione a foto do projeto</label>
                             <br>
                             <img id="preview-image-project" alt='Selecione a foto do projeto' class='img-fluid mb-sm-2'
-                                 src="{{asset('modules/global/img/projeto.png')}}" style="cursor:pointer;">
+                                 src="{{asset('modules/global/img/projeto.svg')}}" style="cursor:pointer;">
                             <br> <input type='hidden' name='photo_x1'/> <input type='hidden' name='photo_y1'/>
                             <input type='hidden' name='photo_w'/> <input type='hidden' name='photo_h'/>
                         </div>
@@ -72,7 +72,7 @@
                         </div>
                         <div class='modal-footer'>
                             <div style='width:100%; text-align: center; padding-top: 3%;'>
-                                <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
                                 Retornar
                                 </span>
                             </div>
@@ -87,7 +87,7 @@
 {{--                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </h4>--}}
             <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
                 e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
-{{--            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>--}}
+{{--            <a href="/companies/create" class="btn btn-primary">Cadastrar empresa</a>--}}
         </div>
     </div>
 

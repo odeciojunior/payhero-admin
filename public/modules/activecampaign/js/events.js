@@ -54,7 +54,7 @@ $(function () {
                         $(lists.lists).each(function (index, data) {
                             $("#add_list").append("<option value='" + data.id + ";" + data.name + "'>" + data.name + "</option>");
                         });
-                        
+
                         $(lists.lists).each(function (index, data) {
                             $("#remove_list").append("<option value='" + data.id + ";" + data.name + "'>" + data.name + "</option>");
                         });
@@ -67,7 +67,7 @@ $(function () {
                         $(tags.tags).each(function (index, data) {
                             $("#add_tags").append("<option value='" + data.id + ";" + data.tag + "'>" + data.tag + "</option>");
                         });
-                        
+
                         $(tags.tags).each(function (index, data) {
                             $("#remove_tags").append("<option value='" + data.id + ";" + data.tag + "'>" + data.tag + "</option>");
                         });
@@ -224,9 +224,9 @@ $(function () {
                         data += '<td id="" class="" style="vertical-align: middle;">' + rmList + '</td>';
 
                         data += "<td style='text-align:center' class='mg-responsive'>"
-                        data += "<a title='Visualizar' class='mg-responsive pointer details-event' event='" + value.id + "' role='button'><i class='material-icons gradient'>remove_red_eye</i></a>"
-                        data += "<a title='Editar' class='mg-responsive pointer edit-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><i class='material-icons gradient'>edit</i></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><i class='material-icons gradient'>delete_outline</i></a>";
+                        data += "<a title='Visualizar' class='mg-responsive pointer details-event' event='" + value.id + "' role='button'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>"
+                        data += "<a title='Editar' class='mg-responsive pointer edit-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
                         data += "</td>";
                         data += '</tr>';
                         $("#data-table-event").append(data);
@@ -338,7 +338,7 @@ $(function () {
                             $('#event_name_edit').html(response.event.event_text);
                             $(".load-list-tags").hide();
                             $("#btn-modal").removeClass('d-none');
-                            
+
                             var lists = response.lists;
                             $("#add_list_edit").html('<option>Selecione a lista</option>');
                             $("#remove_list_edit").html('<option>Selecione a lista</option>');
@@ -351,7 +351,7 @@ $(function () {
                                     }
                                     $("#add_list_edit").append("<option value='" + data.id + ";" + data.name + "' " + selected + ">" + data.name + "</option>");
                                 });
-                                
+
                                 $(lists.lists).each(function (index, data) {
                                     let selected = '';
                                     let idRemoveList = getIdRemoveList(response);

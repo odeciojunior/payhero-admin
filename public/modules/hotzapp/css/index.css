@@ -43,11 +43,11 @@ label.switch {
 }
 
 input:checked + .slider {
-    background-color: #f78d1e;
+    background-color: #2e85ec;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #f78d1e;
+    box-shadow: 0 0 1px #2e85ec;
 }
 
 input:checked + .slider:before {

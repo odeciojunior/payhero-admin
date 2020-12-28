@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=s0')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=s0')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -215,7 +215,7 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
-                                            <a href="https://app.cloudfox.net/termos" target='_blank' class="mr-10 float-left">
+                                            <a href="https://sirius.cloudfox.net/termos" target='_blank' class="mr-10 float-left">
                                                 Termos de uso
                                             </a>
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password'
@@ -405,7 +405,7 @@
                                    placeholder="Nova senha (confirmação)">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                             <button id="password_update" type="button" class="btn btn-success" data-dismiss="modal"
                                     disabled>Alterar
                             </button>
@@ -440,7 +440,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -471,7 +471,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -529,7 +529,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>

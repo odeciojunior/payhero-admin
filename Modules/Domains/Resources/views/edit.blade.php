@@ -64,7 +64,7 @@
                                     {{--<td class='col-6' style='overflow-x:scroll'>{{ $register['content'] }}</td>--}}
                                     <td class='col-sm-12 col-md-6 col-lg-6'>{{ $register['content'] }}</td>
                                     <td class='col-sm-12 col-md-2 col-lg-2 text-center align-middle'>
-                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro col-12"
+                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-primary remover_registro col-12"
                                             {!! ($register['system_flag'] == 1) ? 'disabled' : '' !!}>Remover</button>
                                     </td>
                                 </tr>

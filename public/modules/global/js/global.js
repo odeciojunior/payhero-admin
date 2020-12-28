@@ -12,6 +12,28 @@ $(document).ready(function () {
 
     $(".mm-panels").css('scrollbar-width', 'none');
 
+    $('.redirect-to-accounts').click(function (e) {
+        e.preventDefault()
+        let url_data = $(this).attr('data-url-value')
+        $.ajax({
+            method: 'GET',
+            url: '/send-authenticated',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                let url = response.url
+                if(url_data)
+                    url = url + url_data
+                window.location.href = url
+            },
+        });
+    })
+
     // $('#accounts-service').click(function (e) {
     //     e.preventDefault()
     //     $.ajax({
@@ -32,7 +54,6 @@ $(document).ready(function () {
 });
 
 function alertCustom(type, message) {
-
     swal({
         position: 'bottom',
         type: type,
@@ -71,11 +92,26 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
-        `<div class="ajax-loader">
-            <img style="height: 125px; width: 125px" src="/modules/global/gif/cloudfox-loading.svg"
+        `<div class="sirius-loading">
+            <img style="height: 125px; width: 125px" src="/modules/global/adminremark/assets/images/siriusM.svg"
                  class="img-responsive"/>
         </div>`
     )
+}
+
+function loadingOnChart(target) {
+    $(target).fadeIn().append(
+        `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
+            <img style="height: 125px; width: 125px;" src="/modules/global/adminremark/assets/images/siriusM.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
+}
+
+function loadingOnChartRemove(target) {
+    $(target).fadeOut(function () {
+        $(target).html('');
+    });
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {
@@ -447,7 +483,7 @@ function ajaxVerifyDocumentPending() {
                 $('.top-alert-message').addClass('top-alert-danger');
                 $('.top-alert-message').html('Um de seus documentos foi recusado');
                 $('#document-pending').show();
-                $('#document-pending .top-alert-action').attr('href', response.link);
+                $('#document-pending .top-alert-action').attr('data-value-url', response.link);
             }
         },
     });
@@ -541,10 +577,14 @@ $(document).ready(function () {
     var siteMenuBar = $('.site-menubar')
     var menuTimeout
     siteMenuBar.on('mouseenter', function () {
-        bodyEl.addClass('site-menubar-hover')
+        bodyEl.addClass('site-menubar-hover');
+        $('#logoIconSirius').addClass('d-none');
+        $('#logoSirius').removeClass('d-none');
     }).on('mouseleave', function () {
         menuTimeout = setTimeout(function () {
-            bodyEl.removeClass('site-menubar-hover')
+            bodyEl.removeClass('site-menubar-hover');
+            $('#logoIconSirius').removeClass('d-none');
+            $('#logoSirius').addClass('d-none');
             //if (!bodyEl.hasClass('site-menubar-unfold')) {
                 //siteMenuItems.removeClass('active')
             //}

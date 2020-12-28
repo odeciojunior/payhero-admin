@@ -4,10 +4,10 @@ namespace Modules\Transfers\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Redis;
 use Modules\Transfers\Getnet\Details;
 use Modules\Transfers\Getnet\Order;
 use Modules\Transfers\Getnet\StatementItem;
-use Redis;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -329,6 +329,7 @@ class GetNetStatementService
                     $statementItem->order = $orderFromGetNetOrderId;
                     $statementItem->details = $details;
                     $statementItem->amount = $amount;
+                    $statementItem->isInvite = $amount <= 5.00;
                     $statementItem->paidWith = $paidWith;
                     $statementItem->type = $type;
                     $statementItem->transactionDate = $transactionDate;

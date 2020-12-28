@@ -13,9 +13,9 @@ body {
 }
 
 .menu-active {
-    border-right: 5px solid;
-    border-image-source: linear-gradient(11deg, #E6774C, rgb(249, 34, 120));
-    border-image-slice: 2;
+    border-right: 5px solid #2E85EC;
+    /* border-image-source: #2E85EC; */
+    /* border-image-slice: 2; */
 }
 
 .menu-active .site-menu-item i {
@@ -364,12 +364,23 @@ a.label {
     }
 }
 
+/**
+ * Menu implementation
+ */
+.site-menu {
+    padding-bottom: 100px !important;
+}
+
+.site-menubar-hover .site-menubar {
+    overflow-y: auto;
+}
+
 .site-menubar-fold .site-menu-title {
     width: 20px;
 }
 
 .site-menubar-unfold .site-menu-title,
-.site-menubar-hover .site-menu-title{
+.site-menubar-hover .site-menu-title {
     width: 100%;
 }
 
@@ -397,6 +408,10 @@ a.label {
 }
 
 @media (max-width: 968px) {
+    .site-menubar-open .site-menubar {
+        overflow-y: auto;
+    }
+
     .site-menubar-fold .page, .site-menubar-fold .site-footer {
         margin-left: 0px;
         transition: all .25s;

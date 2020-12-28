@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <title>CloudFox - Admin</title>
+    <title>Sirius</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -36,9 +36,9 @@
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=3') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=4') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -57,9 +57,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=4565') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=13') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=15') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -96,7 +96,7 @@
     <div class="top-alert warning" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
             <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" class="top-alert-action">Corrigir documento</a>
+            <a href="" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
         </div>
         <a class="top-alert-close">
             <i class="material-icons">close</i>
@@ -130,7 +130,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=22') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=36') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

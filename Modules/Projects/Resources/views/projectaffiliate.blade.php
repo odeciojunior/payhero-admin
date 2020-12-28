@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
 @endpush
 
 @section('content')
@@ -111,9 +111,9 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=9')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=12')}}"></script>
+        <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=s0')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s0')}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v=s04')}}"></script>
     @endpush
 @endsection
 

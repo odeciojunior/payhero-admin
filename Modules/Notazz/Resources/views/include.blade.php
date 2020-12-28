@@ -27,7 +27,7 @@
                                 </div>
                                 <div class='col-md-2'>
                                     <a role='button' class='delete-integration pointer float-right mt-35' project='{{\Hashids::encode($project->id)}}' data-toggle='modal' data-target='#modal-delete' type='a'>
-                                        <i class='material-icons gradient'>delete_outline</i></a>
+                                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="modal-footer">
                 <button id="bt_integration" type="button" class="btn btn-success mt-40" data-dismiss="modal"></button>
-                <button type="button" class="btn btn-danger mt-40" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary mt-40" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>

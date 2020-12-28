@@ -13,6 +13,7 @@ Route::group(
 
         Route::post('/dashboard/getvalues', 'DashboardApiController@getValues');
         Route::get('/dashboard/get-releases', 'DashboardApiController@getReleases');
+        Route::get('/dashboard/get-chart-data', 'DashboardApiController@getChartData');
         Route::get('/dashboard/verifypendingdata', 'DashboardApiController@verifyPendingData');
     }
 );

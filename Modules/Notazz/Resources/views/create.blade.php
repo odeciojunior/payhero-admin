@@ -31,7 +31,7 @@
                 <div class="d-flex input-group">
                     <input type="text" class="input-pad addon" name="token_webhook_create" id="token_webhook_create" placeholder="Digite o Token Webhook" value=''>
                     <small>Endereço de configuração do webhook da notazz</small>
-                    <small>https://app.cloudfox.net/postback/notazz</small>
+                    <small>https://sirius.cloudfox.net/postback/notazz</small>
                 </div>
             </div>
             <div class='form-group col-12'>

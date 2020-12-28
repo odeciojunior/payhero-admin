@@ -2,7 +2,9 @@
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
-            <i class="icon wb-info"></i></a>
+            <!-- <i class="icon wb-info"></i> -->
+            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}" style="width: 32px">
+        </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
@@ -95,7 +97,7 @@
                         </div>
                         <div class='form-group col-lg-10'>
                             <input id='name-register' name='name-register' class='input-pad' placeholder='Nome' required>
-                            <p id='error-name-register-dns' class='text-danger' style='display:none;'>O campo nome é obrigatório</p>
+                            <p id='error-name-register-dns' class='text-primary' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                         <div class='form-group col-lg-3'>
                             <select id='proxy-select' name='proxy' class='input-pad'>
@@ -105,7 +107,7 @@
                         </div>
                         <div class='col-lg-8'>
                             <input id='value-record' name='value-record' class='input-pad' placeholder='Valor' required>
-                            <p id='error-value-record' class='text-danger' style='display:none;'>O campo valor é obrigatório</p>
+                            <p id='error-value-record' class='text-primary' style='display:none;'>O campo valor é obrigatório</p>
                         </div>
                         <div class='col-lg-1'>
                             <button class='btn btn-primary' id='bt-add-record' title='Adicionar novo registro dns'>
@@ -172,7 +174,7 @@
             </div>
             <div class="modal-delete-footer modal-footer d-flex align-items-center justify-content-center">
                 <button id='btn-cancel-delete-domain' type="button" class="col-4 btn btn-gray btn-delete-modal-domain" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button id="btn-delete-domain" type="button" class="col-4 btn btn-danger btn-delete-modal-domain" style="width: 20%;">Excluir</button>
+                <button id="btn-delete-domain" type="button" class="col-4 btn btn-primary btn-delete-modal-domain" style="width: 20%;">Excluir</button>
             </div>
         </div>
     </div>
@@ -256,7 +258,7 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
                         <div class="panel-body">
                             Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
-                            <i class="material-icons gradient">remove_red_eye</i> para verificar novamente.
+                            <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> para verificar novamente.
                         </div>
                     </div>
                 </div>
@@ -340,7 +342,7 @@
                             <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span>
                         </h4>
                         <div style="width:100%;text-align:center;padding-top:3%">
-                            <span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span>
+                            <span class="btn btn-primary" data-dismiss="modal" style="font-size: 25px">Retornar</span>
                         </div>
                     </div>
                 </div>

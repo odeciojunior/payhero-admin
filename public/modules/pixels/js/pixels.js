@@ -402,9 +402,9 @@ $(function () {
                                     <td>${formatPlatform[value.platform_enum]}</td>
                                     <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                                     <td style='text-align:center'>
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><i class='material-icons gradient'>delete_outline</i></a>
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
                                     </td>
                                 </tr>`;
                         $("#data-table-pixel").append(data);

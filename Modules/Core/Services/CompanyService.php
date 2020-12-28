@@ -264,9 +264,32 @@ class CompanyService
                     $company->address_document_status == $companyPresenter->getAddressDocumentStatus('refused') ||
                     $company->contract_document_status == $companyPresenter->getContractDocumentStatus('refused')) {
                     return $company;
-            }
+                }
             } else {
                 if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused')) {
+                    return $company;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function companyDocumentApproved()
+    {
+        $companyModel = new Company();
+        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        $companyPresenter = $companyModel->present();
+
+        foreach ($companies as $company) {
+            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
+                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
+                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+                    return $company;
+                }
+            } else {
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved')) {
                     return $company;
                 }
             }
@@ -284,7 +307,9 @@ class CompanyService
 
         if(!empty($liquidationType)) {
             if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15]);
+                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])
+                    ->where('is_waiting_withdrawal', 0)
+                    ->whereNull('withdrawal_id');
             }
             elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
@@ -294,29 +319,29 @@ class CompanyService
         return $pendingBalance->sum('value');
     }
 
-    public function getAvailableBalance(Company $company, ?int $liquidationType = null) 
+    public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
     {
         if($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
             return $company->balance;
-        }
-        elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        } elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $company->transactions()
                            ->whereIn('gateway_id', [14, 15])
                            ->where('is_waiting_withdrawal', 1)
+                           ->whereNull('withdrawal_id')
                            ->sum('value');
-        }
-        elseif(empty($liquidationType)) {
+        } elseif(empty($liquidationType)) {
 
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])
                                         ->where('is_waiting_withdrawal', 1)
+                                        ->whereNull('withdrawal_id')
                                         ->sum('value');
 
             return $transactionsValue + $company->balance;
         }
 
         throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-        
+
     }
 
     public function hasCompanyValid()
@@ -342,9 +367,7 @@ class CompanyService
                                                     ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
                                                 ])->exists();
 
-        $valid = $existJuridicalCompany || $existPhysicalCompany;
-
-        return $valid;
+        return $existJuridicalCompany || $existPhysicalCompany;
     }
     public function verifyFieldsEmptyBraspag(Company $company)
     {
@@ -570,25 +593,12 @@ class CompanyService
             ->where('company_id', $company->id)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
             ->whereDate('created_at', '>=', '2020-01-01')
-            ->where(function ($query) use ($salesModel) {
-                $query->whereHas('sale', function ($query) use ($salesModel) {
-                    $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                })
-                    ->orWhere(function ($queryTracking) use ($salesModel) {
-                        $queryTracking->whereHas('sale', function ($querySale) use ($salesModel) {
-                            $querySale->where('status', $salesModel->present()->getStatus('approved'))
-                                ->whereHas('productsPlansSale', function ($q) {
-                                    $q->doesntHave('tracking');
-                                });
-                        });
-                    })
-                    ->orWhereHas('sale', function ($querySale) {
-                        $querySale->whereHas('tracking', function ($queryTracking) {
-                            $presenter = (new Tracking())->present();
-                            $queryTracking->where('system_status_enum', $presenter->getSystemStatusEnum('duplicated'));
-                        });
-                    });
-            })->sum('value');
+            ->whereHas('sale', function ($query) use ($salesModel) {
+                $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                    ->orWhere('sales.has_valid_tracking', 0);
+            })->select(DB::raw('sum(if(invitation_id is null, value, 0)) as from_sales'),
+                DB::raw('sum(if(invitation_id is not null, value, 0)) as from_invites'),
+            )->first();
     }
 
     public function getBlockedBalancePending(Company $company)

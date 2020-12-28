@@ -109,14 +109,14 @@ $(function () {
                         if (value.status == 1) {
                             data += '<span class="badge badge-success">Ativo</span>';
                         } else {
-                            data += '<span class="badge badge-danger">Desativado</span>';
+                            data += '<span class="badge badge-primary">Desativado</span>';
                         }
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                            "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>" +
-                            "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>"
+                            "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
+                            "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>" +
+                            "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>"
                         "</td>";
 
                         data += '</tr>';

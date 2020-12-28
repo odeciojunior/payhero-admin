@@ -7,7 +7,7 @@
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
-            <button id="store-integrate" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
+            <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Integrações</h2>
             <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id='btn-cancel-integration' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button id="btn-delete-integration" type="button" class="col-4 btn btn-danger" style="width: 20%;" data-dismiss="modal">Excluir</button>
+                    <button id="btn-delete-integration" type="button" class="col-4 btn btn-primary" style="width: 20%;" data-dismiss="modal">Excluir</button>
                 </div>
             </div>
         </div>
@@ -156,7 +156,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v=4') }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v=s0') }}"></script>
     @endpush
 
 @endsection

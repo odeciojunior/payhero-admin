@@ -4,7 +4,7 @@
             <div class='div-config' style='display:none;'>
                 <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Upsell </span>
-                    <a class="ml-10 rounded-add pointer bg-primary">
+                    <a class="ml-10 rounded-add pointer bg-secondary">
                         <i class="icon wb-settings" aria-hidden="true"></i></a>
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-upsell-save" style='display:none;'>Salvar</button>
                 <button type="button" class="btn btn-success bt-upsell-update" style='display:none;'>Atualizar</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                 @include('projectupsellrule::config')
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
             </div>
         </div>
@@ -119,7 +119,7 @@
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
                 <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button type="button" class="col-4 btn btn-danger btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                <button type="button" class="col-4 btn btn-primary btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
             </div>
         </div>
     </div>

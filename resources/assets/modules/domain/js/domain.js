@@ -454,7 +454,7 @@ $(document).ready(function () {
             '<h4 align="center">Parece que o seu dominio ainda não foi liberado</h4>' +
             '<h4 align="center">Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></h4>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
-            '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span>' +
+            '<span class="btn btn-primary" data-dismiss="modal" style="font-size: 25px">Retornar</span>' +
             '</div>');
     }
 
@@ -466,14 +466,14 @@ $(document).ready(function () {
         if (value.status === 3) {
             dados += '<span class="badge badge-success">' + value.status_translated + '</span>';
         } else {
-            dados += '<span class="badge badge-danger">' + value.status_translated + '</span>';
+            dados += '<span class="badge badge-primary">' + value.status_translated + '</span>';
         }
 
         dados += '</td>';
         dados += "<td style='min-width:200px;'>" +
-            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" +
-            "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
+            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
+            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'> </a>" +
+            "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>"
         "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);
@@ -546,7 +546,7 @@ $(document).ready(function () {
                     "<td>" + $("#valor_registro").val() + "</td>" +
                     "<td hidden='hidden'>" + $("#valor_prioridade").val() + "</td>" +
                     "<td class='col-2 text-center align-middle'>" +
-                    "<button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" +
+                    "<button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-primary remove-record' onclick='deleteRow(this)'>Remover</button>" +
                     "</td></tr>");
                 $('#nome_registro').val('')
                 $('#valor_registro').val('')

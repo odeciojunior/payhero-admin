@@ -158,14 +158,14 @@
                             <span id="boleto-link" class="table-title gray">
                                 Link para o boleto:
                                 <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                    <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                    <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
                                 </a>
                             </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                                 <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                    title='Copiar link'>
-                                    <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                    <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
                                 </a>
                             </span>
                             <br>
@@ -219,6 +219,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/detail.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/detail.js?v=s1') }}"></script>
     @endpush
 </div>

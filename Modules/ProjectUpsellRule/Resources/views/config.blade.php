@@ -39,7 +39,7 @@
             </div>
             <div class="col-md-4 text-right">
                 <button class='btn btn-primary btn-sm btn-view-config mt-md-20' style='display:none;'>
-                    <i class="material-icons">remove_red_eye</i> Visualizar
+                    <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> Visualizar
                 </button>
             </div>
         </div>

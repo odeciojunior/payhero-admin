@@ -6,11 +6,11 @@
     <!-- Page -->
     <div class="page">
         <div style="display: none" class="page-header container">
-            <a href="/projects/create" class="btn btn-floating btn-danger" id="btn-add-project"
+            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project"
                style="position: relative; float: right; display:none" title='Adicionar projeto'>
                 <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
             </a>
-            <a id="btn-config" class="mr-20 btn btn-floating bg-primary" style="position: relative; float: right;" title='Configurações'>
+            <a id="btn-config" class="mr-20 btn btn-floating bg-secondary" style="position: relative; float: right;" title='Configurações'>
                 <i class="icon wb-settings text-white" aria-hidden="true" style="margin-top:8px"></i>
             </a>
             <h1 class="page-title">Meus projetos</h1>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="modal-footer" style="margin-top: 15px">
                     <button id="btn_save_config" type="button" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>

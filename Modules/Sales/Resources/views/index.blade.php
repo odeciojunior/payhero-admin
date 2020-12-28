@@ -241,7 +241,7 @@
                 {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
                 {{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
                 {{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
-                {{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
+                {{--            <a href="/projects" class="btn btn-primary">Meus Projetos</a>--}}
                 {{--        </div>--}}
             </div>
         {{-- Quando não tem projeto cadastrado  --}}

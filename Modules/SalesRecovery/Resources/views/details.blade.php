@@ -5,7 +5,7 @@
         @if($status  == 'Recuperado')
             <span class="clear-fields badge badge-success mr-5"> {{$status}} </span>
         @else
-            <span class="clear-fields badge badge-danger mr-5"> {{$status}} </span>
+            <span class="clear-fields badge badge-primary mr-5"> {{$status}} </span>
         @endif
     </div>
 </div>
@@ -72,7 +72,7 @@
         @if($link == 'Dominio removido')
             <span class="clear-fields table-title gray"> Link: {{$link}} </span>
         @else
-            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}' title='Copiar link'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}' title='Copiar link'><img src="/modules/global/img/svg/copy.svg" style="width: 24px"></a></span>
         @endif
         <br>
         <span class="clear-fields table-title gray"> IP: {{$checkout->ip}}  </span>

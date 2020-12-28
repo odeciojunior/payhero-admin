@@ -143,9 +143,9 @@ $(document).ready(function () {
                             </td>
                             <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
-                                <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><i class='material-icons gradient'> edit </i></a>
-                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><i class='material-icons gradient'> delete_outline </i></a>
+                                <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
+                                <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>
+                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
                             </td>
                         </tr>
                         `;
@@ -170,7 +170,7 @@ $(document).ready(function () {
         form.find('#name').val('');
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         form.find('#review_apply_on_plans').val('').trigger('change');
 
         initStarsPlugin('#review_stars', 5, false);
@@ -226,7 +226,7 @@ $(document).ready(function () {
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
         form.find('.review-id').val(reviewId);
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.png')
+        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         previewImageReview.imgAreaSelect({remove: true});
 
         loadingOnScreen();
@@ -246,7 +246,7 @@ $(document).ready(function () {
                 form.find('[name=name]').val(review.name);
                 form.find('[name=description]').val(review.description);
                 form.find('[name=active_flag]').val(review.active_flag);
-                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.png')
+                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.svg')
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 form.find('#review_apply_on_plans').html('');

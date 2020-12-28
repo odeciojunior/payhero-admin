@@ -1125,7 +1125,7 @@ class ShopifyService
             }
         }
 
-        $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
+        $this->createShopifyIntegrationWebhook($projectId, "https://sirius.cloudfox.net/postback/shopify/");
 
 
         $project = $projectModel->find($projectId);

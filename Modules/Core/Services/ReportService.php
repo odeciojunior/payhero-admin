@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
@@ -28,7 +29,7 @@ class ReportService
     {
         if ($date['startDate'] == $date['endDate']) {
             return $this->getByHours($date, $projectId, $currency);
-        } else if ($date['startDate'] != $date['endDate']) {
+        } elseif ($date['startDate'] != $date['endDate']) {
             $data       = null;
             $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
             $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
@@ -36,13 +37,13 @@ class ReportService
             if ($projectId) {
                 if ($diffInDays <= 20) {
                     return $this->getByDays($date, $projectId, $currency);
-                } else if ($diffInDays > 20 && $diffInDays <= 40) {
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getByTwentyDays($date, $projectId, $currency);
-                } else if ($diffInDays > 40 && $diffInDays <= 60) {
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getByFortyDays($date, $projectId, $currency);
-                } else if ($diffInDays > 60 && $diffInDays <= 140) {
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getByWeek($date, $projectId, $currency);
-                } else if ($diffInDays > 140) {
+                } elseif ($diffInDays > 140) {
                     return $this->getByMonth($date, $projectId, $currency);
                 }
             } else {
@@ -485,7 +486,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByMonth($date, $projectId, $currency)
+    private function getByMonth($date, $projectId, $currency) //
     {
         try {
             $companyModel   = new Company();
@@ -699,7 +700,6 @@ class ReportService
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
-            // dd($orders);
 
             if (!empty($affiliate)) {
                 $orders->where('affiliate_id', $affiliate->id);
@@ -989,12 +989,7 @@ class ReportService
         ];
     }
 
-    /**
-     * @param $companyId
-     * @param $currency
-     * @return array
-     */
-    public function getFinacialProjectionByDays($companyId, $currency)
+    public function getFinacialProjectionByDays($companyId, $currency): array
     {
         try {
             $transactionModel = new Transaction();
@@ -1037,8 +1032,73 @@ class ReportService
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDashboardChartData($companyId)
+    {
+        try {
+            $labelList    = [];
+            $dataFormated = Carbon::parse(Carbon::now()->subMonth())->addDay();
+            $endDate      = Carbon::parse(Carbon::now());
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays(7);
+                if ($dataFormated->diffInDays($endDate) < 7 && $dataFormated->diffInDays($endDate) > 0) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    break;
+                }
+            }
+
+            $startDate = Carbon::now()->addDay()->subMonth()->format('Y-m-d');
+            $endDate   = Carbon::now()->format('Y-m-d');
+
+            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
+                ->leftJoin('transactions as transaction', function($join) use ($companyId) {
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->where('transaction.company_id', $companyId);
+                })
+                ->where('sales.status', (new Sale())->present()->getStatus('approved'))
+                ->whereBetween('end_date', [$startDate, $endDate])
+                ->groupBy('date');
+
+            $orders         = $orders->get()->toArray();
+            $valueData      = [];
+            foreach ($labelList as $label) {
+                $value = 0;
+
+                foreach ($orders as $order) {
+                    if ((Carbon::parse($order['date'])
+                                ->subDay()->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                ->format('d/m') == $label)) {
+
+                        $value = FoxUtils::onlyNumbers($order['value']);
+                    }
+                }
+
+                array_push($valueData, substr(intval($value), 0, -2));
+            }
+
+            return [
+                'label_list' => $labelList,
+                'value_data' => $valueData,
+                'currency'   => 'R$',
+            ];
+        } catch (Exception $e) {
             Log::warning('Erro ao buscar dados');
             report($e);
+
+            return
+                [
+                    'message' => 'Não foi possível verificar todos os valores totais de venda'
+                ];
         }
     }
 }

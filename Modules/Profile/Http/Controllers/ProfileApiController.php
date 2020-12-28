@@ -43,10 +43,13 @@ class ProfileApiController
 
             $user->load(["userNotification", "userDocuments"]);
 
-            return response()->json([
-                'user' => new UserResource($user),
-                'countries' => (new CountryService())->getCountries(),
-            ], 200);
+            return response()->json(
+                [
+                    'user' => new UserResource($user),
+                    'countries' => (new CountryService())->getCountries(),
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -124,7 +127,9 @@ class ProfileApiController
                         !empty($userUpdateChanges['city']) ||
                         !empty($userUpdateChanges['state']) ||
                         !empty($userUpdateChanges['country'])) {
-                        $user->update(['address_document_status' => $user->present()->getAddressDocumentStatus('pending')]);
+                        $user->update(
+                            ['address_document_status' => $user->present()->getAddressDocumentStatus('pending')]
+                        );
                     }
                 }
             }
@@ -289,15 +294,21 @@ class ProfileApiController
             $email = $data["email"] ?? null;
 
             if (FoxUtils::isEmpty($email)) {
-                return response()->json([
-                    'message' => 'Email não pode ser vazio!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Email não pode ser vazio!',
+                    ],
+                    400
+                );
             }
 
             if (!FoxUtils::validateEmail($email)) {
-                return response()->json([
-                    'message' => 'Email inválido!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Email inválido!',
+                    ],
+                    400
+                );
             }
 
 
@@ -353,22 +364,31 @@ class ProfileApiController
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
-                return response()->json([
-                    'message' => 'Código de verificação não pode ser vazio!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação não pode ser vazio!',
+                    ],
+                    400
+                );
             }
             $cookie = Cookie::get("emailverifycode_" . Hashids::encode(auth()->id()));
             if ($verifyCode != $cookie) {
-                return response()->json([
-                    'message' => 'Código de verificação inválido!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação inválido!',
+                    ],
+                    400
+                );
             }
 
             User::where("id", auth()->id())->update(["email_verified" => true]);
 
-            return response()->json([
-                "message" => "Email verificado com sucesso!",
-            ], 200)->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
+            return response()->json(
+                [
+                    "message" => "Email verificado com sucesso!",
+                ],
+                200
+            )->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             report($e);
 
@@ -404,25 +424,31 @@ class ProfileApiController
 
             $documentType = $userModel->present()->getDocumentType($dataForm["document_type"]);
 
-            $documentSaved = $userDocument->create([
-                'user_id' => auth()->user()->account_owner_id,
-                'document_url' => $amazonPath,
-                'document_type_enum' => $documentType,
-                'status' => $userDocument->present()
-                    ->getTypeEnum('analyzing'),
-            ]);
+            $documentSaved = $userDocument->create(
+                [
+                    'user_id' => auth()->user()->account_owner_id,
+                    'document_url' => $amazonPath,
+                    'document_type_enum' => $documentType,
+                    'status' => $userDocument->present()
+                        ->getTypeEnum('analyzing'),
+                ]
+            );
 
             if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
-                $user->update([
-                    'personal_document_status' => $user->present()
-                        ->getPersonalDocumentStatus('analyzing'),
-                ]);
+                $user->update(
+                    [
+                        'personal_document_status' => $user->present()
+                            ->getPersonalDocumentStatus('analyzing'),
+                    ]
+                );
             } else {
                 if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
-                    $user->update([
-                        'address_document_status' => $user->present()
-                            ->getAddressDocumentStatus('analyzing'),
-                    ]);
+                    $user->update(
+                        [
+                            'address_document_status' => $user->present()
+                                ->getAddressDocumentStatus('analyzing'),
+                        ]
+                    );
                 } else {
                     $documentSaved->delete();
 
@@ -430,17 +456,20 @@ class ProfileApiController
                 }
             }
 
-            return response()->json([
-                'message' => 'Arquivo enviado com sucesso.',
-                'personal_document_translate' => Lang::get(
-                    'definitions.enum.personal_document_status.' . $user->present()
-                        ->getPersonalDocumentStatus($user->personal_document_status)
-                ),
-                'address_document_translate' => Lang::get(
-                    'definitions.enum.personal_document_status.' . $user->present()
-                        ->getAddressDocumentStatus($user->address_document_status)
-                ),
-            ], 200);
+            return response()->json(
+                [
+                    'message' => 'Arquivo enviado com sucesso.',
+                    'personal_document_translate' => Lang::get(
+                        'definitions.enum.personal_document_status.' . $user->present()
+                            ->getPersonalDocumentStatus($user->personal_document_status)
+                    ),
+                    'address_document_translate' => Lang::get(
+                        'definitions.enum.personal_document_status.' . $user->present()
+                            ->getAddressDocumentStatus($user->address_document_status)
+                    ),
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -544,9 +573,12 @@ class ProfileApiController
     {
         try {
             if (empty($request->input('document_type'))) {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                    ],
+                    400
+                );
             }
 
             $userDocumentModel = new UserDocument();
@@ -561,9 +593,12 @@ class ProfileApiController
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ],
+                400
+            );
         }
     }
 
@@ -581,16 +616,22 @@ class ProfileApiController
 
             if ($userDocumentRefused) {
                 $refused = true;
-                $link    = '/profile?tab=documents';
+                $link = '/personal-info#documents';
             } else {
                 $companyDocumentRefused = $companyService->companyDocumentRefused();
-                if (!empty($companyDocumentRefused)) {
-                    $refused     = true;
+                $companyDocumentApproved = $companyService->companyDocumentApproved();
+                if (empty($companyDocumentApproved) && !empty($companyDocumentRefused)) {
+                    $refused = true;
                     $companyCode = Hashids::encode($companyDocumentRefused->id);
-                    if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType('physical person')) {
-                        $link = "/companies/${companyCode}/edit?type=1";
+                    if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType(
+                            'physical person'
+                        )
+                    ) {
+                        $link = "/personal-info#documents";
+//                        $link = "/company-detail/${companyCode}/edit?type=1";
                     } else {
-                        $link = "/companies/${companyCode}/edit?type=2&tab=documents";
+                        $link = "/companies/company-detail/${companyCode}#documents";
+//                        $link = "/company-detail/${companyCode}/edit?type=2&tab=documents";
                     }
                 } else {
                     $userValid = $userService->isDocumentValidated();
@@ -605,9 +646,17 @@ class ProfileApiController
                 }
             }
 
+            if (env('ACCOUNT_FRONT_URL')) {
+                $link = env('ACCOUNT_FRONT_URL') . $link;
+            }
+
             return response()->json(
-                ['message' => 'Documentos verificados!', 'analyzing' => $analyzing,'refused' => $refused,'link' => $link],
-                200
+                [
+                    'message' => 'Documentos verificados!',
+                    'analyzing' => $analyzing,
+                    'refused' => $refused,
+                    'link' => $link
+                ]
             );
         } catch (Exception $e) {
             report($e);

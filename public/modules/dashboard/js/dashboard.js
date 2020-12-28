@@ -1,11 +1,135 @@
 $(document).ready(function () {
     getProjects();
+
+    function updateChart() {
+        $('#scoreLineToMonth').html('')
+        loadingOnChart('#chart-loading');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/dashboard/get-chart-data`,
+            dataType: "json",
+            data: {
+                company: $('#company').val(),
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnChartRemove('#chart-loading');
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                getChart(response)
+                loadingOnChartRemove('#chart-loading');
+            }
+        });
+    }
+
+    function getChart(chartData) {
+
+        let haveData = 0;
+
+        chartData.value_data.forEach(function(elem, index){
+            if(elem) haveData += parseInt(elem)
+        });
+
+        if (haveData > 0) {
+            var scoreChart = function scoreChart(id, labelList, series1List) {
+                    var scoreChart = new Chartist.Line("#" + id, {
+                        labels: labelList,
+                        series: [series1List],
+                    }, {
+                        lineSmooth: Chartist.Interpolation.simple({
+                            divisor: 2
+                        }),
+                        showPoint: false,
+                        showLine: false,
+                        showArea: true,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 50,
+                            left: 20,
+                            top: 30,
+                            button: 20
+                        },
+                        axisX: {
+                            showGrid: false,
+                            labelInterpolationFnc: function (value) {
+                                return value;
+                            }
+                        },
+                        axisY: {
+                            labelInterpolationFnc: function labelInterpolationFnc(value) {
+                               let str = parseInt(value)
+
+                                if (str > 0) {
+                                    str = str / 1e3 + "K"
+                                } else {
+                                    str = "0.00"
+                                }
+
+                                return str;
+                            },
+                            scaleMinSpace: 40,
+                        },
+                        low: 0,
+                        height: 260,
+                    });
+                    scoreChart.on("created", function (data) {
+                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                            filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
+                                x: 0, y: "-10%", id: "shadow" + id
+                            }, "", !0));
+                        return filter.elem("feGaussianBlur", {
+                            in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
+                        }), filter.elem("feOffset", {
+                            dx: "0", dy: "800"
+                        }), filter.elem("feBlend", {
+                            in: "SourceGraphic", mode: "multiply"
+                        }), defs;
+                    }).on("draw", function (data) {
+                        "line" === data.type ? data.element.attr({
+                            filter: "url(#shadow" + id + ")"
+                        }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                            x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
+                        }), "line" !== data.type && "area" != data.type || data.element.animate({
+                            d: {
+                                begin: 1e3 * data.index,
+                                dur: 1e3,
+                                from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                                to: data.path.clone().stringify(),
+                                easing: Chartist.Svg.Easing.easeOutQuint
+                            }
+                        });
+                    });
+
+                    $('#not-empty-sale').show()
+                },
+                labelList = chartData.label_list,
+                totalSalesData = {value: chartData.value_data}
+            createChart = function createChart() {
+                scoreChart("scoreLineToMonth", labelList, totalSalesData);
+            };
+
+            $('#empty-sale').fadeOut()
+            createChart();
+        } else {
+            $('#empty-sale').fadeIn()
+            $('#scoreLineToMonth').html('')
+        }
+
+    }
+
     $("#company").on("change", function () {
         updateValues();
+        updateChart();
     });
     let userAccepted = true;
+
     function getDataDashboard() {
-        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -28,53 +152,30 @@ $(document).ready(function () {
                         }
                     }
 
-                    updateValues();
 
                     $(".content-error").hide();
                     $('#company-select').show();
+
+                    updateValues();
+                    updateChart();
                 } else {
-                    loadingOnScreenRemove();
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
+                    loadingOnScreenRemove();
                 }
-
-                if (!data.userTerm) {
-                    userAccepted = data.userTerm;
-                    $('#modal-user-term').modal('show');
-                }
-
-                $("#accepted-terms").unbind('click');
-                $("#accepted-terms").on('click', function () {
-                    $.ajax({
-                        method: "POST",
-                        url: "/api/terms",
-                        dataType: "json",
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        data: {},
-                        error: function error(response) {
-                            errorAjaxResponse(response);
-                        },
-                        success: function success(data) {
-                            $('#modal-user-term').modal('hide');
-                        }
-                    });
-                });
-                // verifyPendingData();
             }
         });
     }
 
     function updateValues() {
 
-        loadOnAny('.text-money', false, {
+        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: '30px',
                     width: '30px',
-                    height: 'auto'
+                    height: 'auto',
+                    margin: 'auto'
                 },
                 loader: {
                     width: '30px',
@@ -85,21 +186,7 @@ $(document).ready(function () {
             }
         });
 
-        loadOnAnyEllipsis('.update-text, .text-circle', false, {
-            styles: {
-                container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto'
-                },
-                loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
-                },
-
-            }
-        });
+        loadingOnChart('#chart-loading');
 
         $('.circle strong').addClass('loaded')
 
@@ -113,40 +200,33 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAny('.text-money', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
-                loadingOnScreenRemove()
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
+                loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
             },
             success: function success(data) {
 
-                let fontSize = '35px'
-                if (
-                    data.pending_balance.length > 8 ||
-                    data.available_balance.length > 8 ||
-                    data.total_balance.length > 8 ||
-                    data.today_balance.length > 8
-                ) {
-                    fontSize = '27px'
-                }
-
                 $(".moeda").html(data.currency);
-                $("#pending_money").html(data.pending_balance).css('font-size', fontSize);
-                $("#available_money").html(data.available_balance).css('font-size', fontSize);
-                $("#total_money").html(data.total_balance).css('font-size', fontSize);
-                $("#today_money").html(data.today_balance).css('font-size', fontSize);
+                $("#pending_money").html(data.pending_balance);
+                $("#available_money").html(data.available_balance);
+                $("#total_money").html(data.total_balance);
+                $("#today_money").html(data.today_balance);
 
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
-                $('#info-total-balance').attr('title','Valor incluindo o saldo bloqueado de R$ ' + data.blocked_balance);
+
+                let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance;
+                if(data.blocked_balance_invite !== "0,00"){
+                    title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
+                }
+                $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
                 updateTickets(data.tickets);
 
-                loadOnAny('.text-money', true)
-                loadOnAnyEllipsis('.update-text, .text-circle', true)
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
             }
         });
@@ -169,8 +249,8 @@ $(document).ready(function () {
     function updateTrackings(trackings) {
         $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
         $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
-        $('#problem').html(trackings.problem + ' (' + trackings.problem_percentage + '%)');
-        $('#unknown').html(trackings.unknown + ' (' + trackings.unknown_percentage + '%)');
+        $('#problem').html(trackings.problem + ' <small>(' + trackings.problem_percentage + '%)</small>');
+        $('#unknown').html(trackings.unknown + ' <small>(' + trackings.unknown_percentage + '%)</small>');
     }
 
     function updateTickets(data) {
@@ -242,7 +322,7 @@ $(document).ready(function () {
         }
     }
 
-    function updateCloudFox() {
+    function getCloudFoxReleases() {
 
         $.ajax({
             method: "GET",
@@ -252,16 +332,16 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {company: $('#company').val()},
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 updateReleases(response.releases);
-                updateNews(response.news);
+                // updateNews(response.news);
             }
         });
     }
+
     // function verifyPendingData() {
     //     $.ajax({
     //         method: "GET",
@@ -358,8 +438,8 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
-                    updateCloudFox()
                     getDataDashboard();
+                    getCloudFoxReleases()
 
                 } else {
                     $("#project-empty").show();

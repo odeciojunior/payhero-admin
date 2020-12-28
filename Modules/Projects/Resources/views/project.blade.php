@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <style>
@@ -105,14 +105,14 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="d-flex">
-                                                        <div class="p-2 d-flex flex-column">
-                                                            <span class="details-text">Visibilidade</span>
+                                                        <!-- <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Visibilidade--------------</span>
                                                             <p id="show-visibility"
                                                                class="card-text text-center sm badge-pill"></p>
-                                                        </div>
-                                                        <div class="p-2 d-flex flex-column">
-                                                            <span class="details-text">Status</span>
-                                                            <p id="show-status" class="card-text sm badge-pill"></p>
+                                                        </div> -->
+                                                        <div class="p-2 d-flex justify-content-center flex-column">
+                                                            <span class="details-text text-center">Status</span>
+                                                            <p id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></p>
                                                         </div>
                                                     </div>
                                                 </div>

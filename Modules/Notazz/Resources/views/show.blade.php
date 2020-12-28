@@ -185,7 +185,7 @@
                  </div>
                  <div class="modal-footer" style="margin-top: 15px">
                      <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
-                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                     <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                  </div>
              </div>
          </div>
@@ -193,7 +193,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/show.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/show.js?v=s1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

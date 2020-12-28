@@ -14,7 +14,7 @@
                     <label for='photo'>Selecione uma imagem capa do projeto</label>
                     <div style="width:100%" class="text-center">
                         <img id='previewimage' alt='Selecione a foto do projeto'
-                             src="{{asset('modules/global/img/projeto.png')}}"
+                             src="{{asset('modules/global/img/projeto.svg')}}"
                              style="min-width: 250px; max-width: 250px;margin: auto">
                     </div>
                     <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden'
@@ -80,7 +80,7 @@
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
                                    style='display:none;'>
                             <img id='image-logo-email' alt='Selecione a foto do projeto'
-                                 src='{{asset('modules/global/img/projeto.png')}}'
+                                 src='{{asset('modules/global/img/projeto.svg')}}'
                                  style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
@@ -731,7 +731,7 @@
                 <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal"
                        data-target="#modal-delete-project" style="float: left;">
-                        <i class="material-icons gray"> delete </i>
+                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
@@ -763,7 +763,7 @@
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar
                     </button>
-                    <button type="button" class="col-4 btn btn-danger btn-delete" data-dismiss="modal"
+                    <button type="button" class="col-4 btn btn-primary btn-delete" data-dismiss="modal"
                             style="width: 20%;">Excluir
                     </button>
                 </div>
@@ -796,7 +796,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
@@ -827,7 +827,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>

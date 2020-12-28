@@ -1,5 +1,6 @@
 var currentPage = null;
 var atualizar = null;
+let hasSale = false;
 
 $(document).ready(function () {
 
@@ -45,7 +46,8 @@ $(document).ready(function () {
             'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
             'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
         }
     }, function (start, end) {
         startDate = start.format('YYYY-MM-DD');
@@ -62,6 +64,7 @@ $(document).ready(function () {
             'sale_code': $("#sale_code").val().replace('#', ''),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
+            'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val()
         };
 
         if (urlParams) {
@@ -94,8 +97,15 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, company) {
+                        if (company.company_has_sale_before_getnet) {
+                            hasSale = true;
+                        }
                         $('#company').append('<option value="' + company.id + '">' + company.name + '</option>')
                     });
+
+                    if (hasSale) {
+                        $("#select-statement-div").show();
+                    }
 
                     getProjects();
                 }
@@ -136,7 +146,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                 }
 
-                    loadingOnScreenRemove();
+                loadingOnScreenRemove();
             }
         });
     }
@@ -227,7 +237,7 @@ $(document).ready(function () {
                                     <td>${value.end_date}</td>
                                     <td>${value.total_paid}</td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
                                     </td>
                                 </tr>`;
 

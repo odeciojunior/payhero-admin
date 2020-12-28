@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>CloudFox @yield('title')</title>
+    <title>Sirius @yield('title')</title>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@
     body {
         font-family: 'Muli', sans-serif;
         min-height: 100vh;
-        background: url(https://app.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
+        background: url(https://sirius.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
     }
 </style>
 @yield('content')

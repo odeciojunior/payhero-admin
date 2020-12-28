@@ -79,7 +79,8 @@ $(document).ready(function () {
             'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
             'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
         }
     }, function (start, end) {
         startDate = start.format('YYYY-MM-DD');
@@ -296,7 +297,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
                                         ${observation}
                                 </tr>`;
 
