@@ -193,79 +193,80 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadingOnScreenRemove();
+
                 if (isEmpty(response.data)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();
-                } else {
-                    $("#select_projects").html('');
-                    $(response.data).each(function (index, data) {
-                        $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
-                    });
-                    $(".modal-title").html('Adicionar nova Integração com ConvertaX');
-                    $("#bt_integration").addClass('btn-save');
-                    $("#bt_integration").text('Adicionar integração');
-                    $("#form_update_integration").hide();
-                    $("#form_add_integration").show();
-
-                    $('#value').mask('#.###,#0', {reverse: true});
-
-                    $('.check').on('click', function () {
-                        if ($(this).is(':checked')) {
-                            $(this).val(1);
-                        } else {
-                            $(this).val(0);
-                        }
-                    });
-
-                    if ($(':checkbox').is(':checked')) {
-                        $(':checkbox').val(1);
-                    } else {
-                        $(':checkbox').val(0);
-                    }
-
-                    $(".btn-save").unbind('click');
-                    $(".btn-save").on('click', function () {
-                        if ($('#link').val() == '' || $('#value').val() == '') {
-                            alertCustom('error', 'Dados informados inválidos');
-                            return false;
-                        }
-                        var form_data = new FormData(document.getElementById('form_add_integration'));
-
-                        $.ajax({
-                            method: "POST",
-                            url: "/api/apps/convertax",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            processData: false,
-                            contentType: false,
-                            cache: false,
-                            data: form_data,
-                            error: function error(response) {
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
-                                } else {
-                                    alertCustom('error', response.responseJSON.message);
-                                }
-                            },
-                            success: function success(response) {
-                                $("#no-integration-found").hide();
-                                index();
-                                alertCustom('success', response.message);
-                            }
-                        });
-                    });
-
-                    $('#project-empty').hide();
-                    $('#integration-actions').show();
-
-                    index();
+                    return;
                 }
 
-                loadingOnScreenRemove();
+
+                $("#select_projects").html('');
+                $(response.data).each(function (index, data) {
+                    $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                });
+                $(".modal-title").html('Adicionar nova Integração com ConvertaX');
+                $("#bt_integration").addClass('btn-save').text('Adicionar integração');
+                $("#form_update_integration").hide();
+                $("#form_add_integration").show();
+
+                $('#value').mask('#.###,#0', {reverse: true});
+
+                $('.check').on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                });
+
+                if ($(':checkbox').is(':checked')) {
+                    $(':checkbox').val(1);
+                } else {
+                    $(':checkbox').val(0);
+                }
+
+                $(".btn-save").unbind('click');
+                $(".btn-save").on('click', function () {
+                    if ($('#link').val() == '' || $('#value').val() == '') {
+                        alertCustom('error', 'Dados informados inválidos');
+                        return false;
+                    }
+                    var form_data = new FormData(document.getElementById('form_add_integration'));
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/apps/convertax",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        data: form_data,
+                        error: function error(response) {
+                            if (response.status === 422) {
+                                for (error in response.errors) {
+                                    alertCustom('error', String(response.errors[error]));
+                                }
+                            } else {
+                                alertCustom('error', response.responseJSON.message);
+                            }
+                        },
+                        success: function success(response) {
+                            $("#no-integration-found").hide();
+                            index();
+                            alertCustom('success', response.message);
+                        }
+                    });
+                });
+
+                $('#project-empty').hide();
+                $('#integration-actions').show();
+
+                index();
             }
         });
     }

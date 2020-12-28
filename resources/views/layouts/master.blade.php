@@ -96,7 +96,7 @@
     <div class="top-alert warning" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
             <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" class="top-alert-action">Corrigir documento</a>
+            <a href="" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
         </div>
         <a class="top-alert-close">
             <i class="material-icons">close</i>
@@ -130,7 +130,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=35') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=36') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

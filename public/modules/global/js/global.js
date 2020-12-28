@@ -12,8 +12,9 @@ $(document).ready(function () {
 
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('#accounts-service').click(function (e) {
+    $('.redirect-to-accounts').click(function (e) {
         e.preventDefault()
+        let url_data = $(this).attr('data-url-value')
         $.ajax({
             method: 'GET',
             url: '/send-authenticated',
@@ -25,10 +26,31 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                window.location.href = response.url
+                let url = response.url
+                if(url_data)
+                    url = url + url_data
+                window.location.href = url
             },
         });
     })
+
+    // $('#accounts-service').click(function (e) {
+    //     e.preventDefault()
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: '/send-authenticated',
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: response => {
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: response => {
+    //             window.location.href = response.url
+    //         },
+    //     });
+    // })
 });
 
 function alertCustom(type, message) {
@@ -461,7 +483,7 @@ function ajaxVerifyDocumentPending() {
                 $('.top-alert-message').addClass('top-alert-danger');
                 $('.top-alert-message').html('Um de seus documentos foi recusado');
                 $('#document-pending').show();
-                $('#document-pending .top-alert-action').attr('href', response.link);
+                $('#document-pending .top-alert-action').attr('data-value-url', response.link);
             }
         },
     });
