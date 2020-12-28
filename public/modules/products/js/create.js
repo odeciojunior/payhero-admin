@@ -4,6 +4,7 @@ $(document).ready(function () {
      */
 
     loadingOnScreen();
+    $('.page').show();
     loadingOnScreenRemove();
 
     function verify() {

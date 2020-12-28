@@ -113,7 +113,7 @@
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=s0')}}"></script>
         <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s0')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=s02')}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v=s04')}}"></script>
     @endpush
 @endsection
 

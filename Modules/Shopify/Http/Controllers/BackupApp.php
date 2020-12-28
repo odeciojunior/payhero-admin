@@ -87,7 +87,7 @@ class BackupApp extends Controller
             $config = new \SocialiteProviders\Manager\Config(
                 env('SHOPIFY_KEY'),
                 env('SHOPIFY_SECRET'),
-                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' :
+                env('APP_ENV') == 'production' ? 'https://sirius.cloudfox.net/apps/shopify/login/callback' :
                     env('APP_URL') ?? 'http://3b52cfbd.ngrok.io/apps/shopify/login/callback',
                 ['subdomain' => $urlStore]
             );

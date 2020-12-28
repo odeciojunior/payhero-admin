@@ -57,7 +57,6 @@ $(document).ready(function () {
                         },
                         axisX: {
                             showGrid: false,
-                            labelOffset: {x: -14, y: 0},
                             labelInterpolationFnc: function (value) {
                                 return value;
                             }
@@ -66,14 +65,15 @@ $(document).ready(function () {
                             labelInterpolationFnc: function labelInterpolationFnc(value) {
                                let str = parseInt(value)
 
-                                if (str >= 1000) {
+                                if (str > 0) {
                                     str = str / 1e3 + "K"
+                                } else {
+                                    str = "0.00"
                                 }
 
                                 return str;
                             },
                             scaleMinSpace: 40,
-                            labelOffset: {x: -10, y: 0}
                         },
                         low: 0,
                         height: 260,

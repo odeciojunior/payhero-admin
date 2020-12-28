@@ -85,7 +85,7 @@ $(document).ready(function () {
             dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
             dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
             dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" title="Copiar token">';
-            dados += '<i class="material-icons gray gradient"> file_copy </i>'
+            dados += '<img src="/modules/global/img/svg/copy.svg" style="width: 24px">'
             dados += '</a></div></div></div>';
             dados += '</div>';
             //-----------------------------------

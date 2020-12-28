@@ -49,19 +49,19 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
         $shopifyService->createShopWebhook([
             "topic" => "products/create",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "products/update",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "orders/updated",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id).'/tracking',
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id).'/tracking',
             "format" => "json",
         ]);
 

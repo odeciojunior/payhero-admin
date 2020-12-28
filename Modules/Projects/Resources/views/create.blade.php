@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
     @endpush
 
-    <div class="page">
+    <div class="page" style="display: none">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Cadastrar novo projeto</h1>
             <div class="page-header-actions">
