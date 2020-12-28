@@ -134,7 +134,6 @@ class ShippingApiController extends Controller
                 'message' => 'Erro ao tentar cadastrar frete',
             ], 400);
         } catch (Exception $e) {
-            die($e->getTraceAsString());
             Log::warning('Erro ao tentar cadastrar frete (ShippingController - store)');
             report($e);
 
