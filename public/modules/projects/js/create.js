@@ -9,6 +9,8 @@ $(document).ready(function () {
             'Accept': 'application/json',
         },
         error: (response) => {
+            $('.page').show()
+
             loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
@@ -48,6 +50,7 @@ $(document).ready(function () {
                 $('.content-error').show();
             }
 
+            $('.page').show()
             loadingOnScreenRemove();
         }
     });
