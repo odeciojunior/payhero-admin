@@ -2,14 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ImportShopifyTrackingCodesJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\User;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Entities\Project;
 
 class GenericCommand extends Command
 {
@@ -20,28 +15,14 @@ class GenericCommand extends Command
     public function handle()
     {
         try {
-            $trackingCodes = collect(DB::select(DB::raw("select tracking_code
-                                                        from trackings
-                                                        group by tracking_code
-                                                        having count(*) > 1")))
-                ->pluck('tracking_code')
-                ->toArray();
+            $projects = Project::with('shopifyIntegrations')
+                ->whereHas('shopifyIntegrations')
+                ->where('status', 1)
+                ->get();
 
-            $trackingService = new TrackingService();
-
-            $query = Tracking::with('productPlanSale')
-                ->whereIn('tracking_code', $trackingCodes);
-
-            $total = $query->count();
-            $count = 0;
-
-            $query->chunk(1000, function ($trackings) use (&$count, $total, $trackingService) {
-                foreach ($trackings as $t){
-                    $count++;
-                    $this->line("Checking tracking {$count} de {$total}: $t->tracking_code");
-                    $trackingService->createOrUpdateTracking($t->tracking_code, $t->productPlanSale);
-                }
-            });
+            foreach ($projects as $project){
+                ImportShopifyTrackingCodesJob::dispatch($project);
+            }
 
         } catch (\Exception $e) {
             $this->error($e->getMessage());
