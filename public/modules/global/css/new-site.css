@@ -889,3 +889,20 @@ input[type=radio] {
 .dropdown-menu > .dropdown-item > img {
     margin-right: 10px;
 }
+ 
+.btnDelete {
+    color: #F41C1C;
+    background-color: #FFF;
+    border-color: #F41C1C;
+    box-shadow: none;
+}
+.btnDelete span {
+    font-size: 20px;
+}
+
+.btnDelete:hover {
+    color: #C30909;
+    background-color: #FFF;
+    border-color: #C30909;
+    box-shadow: none;
+}

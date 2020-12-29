@@ -1,0 +1,72 @@
+/*
+    Icon Font orion-font generated from orioniconlibrary.com
+  */
+
+  @font-face {
+  font-family: "orion-font";
+  src: url("./orion-font.eot");
+  src: url("./orion-font.eot?#iefix") format("embedded-opentype"),
+       url("./orion-font.woff2") format("woff2"),
+       url("./orion-font.woff") format("woff"),
+       url("./orion-font.ttf") format("truetype"),
+       url("./orion-font.svg#orion-font") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "orion-font";
+    src: url("./orion-font.svg#orion-font") format("svg");
+  }
+}
+
+  [data-icon]::before { content: attr(data-icon); }
+
+  [data-icon]::before,
+  .o-agenda-1::before,
+.o-bin-1::before,
+.o-copy-1::before,
+.o-credit-card-1::before,
+.o-edit-1::before,
+.o-export-1::before,
+.o-eye-1::before,
+.o-imac-screen-1::before,
+.o-info-help-1::before,
+.o-iphone-1::before,
+.o-loop-1::before,
+.o-paper-1::before,
+.o-question-help-1::before,
+.o-settings-1::before,
+.o-whatsapp-1::before {
+    display: inline-block;
+  font-family: "orion-font";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  }
+
+  .o-agenda-1::before { content: "\f9cd"; }
+.o-bin-1::before { content: "\f9ce"; }
+.o-copy-1::before { content: "\f9cf"; }
+.o-credit-card-1::before { content: "\f9d0"; }
+.o-edit-1::before { content: "\f9d1"; }
+.o-export-1::before { content: "\f9d2"; }
+.o-eye-1::before { content: "\f9d3"; }
+.o-imac-screen-1::before { content: "\f9d4"; }
+.o-info-help-1::before { content: "\f9d5"; }
+.o-iphone-1::before { content: "\f9d6"; }
+.o-loop-1::before { content: "\f9d7"; }
+.o-paper-1::before { content: "\f9d8"; }
+.o-question-help-1::before { content: "\f9d9"; }
+.o-settings-1::before { content: "\f9da"; }
+.o-whatsapp-1::before { content: "\f9db"; }
+
+  
