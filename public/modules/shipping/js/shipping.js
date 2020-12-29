@@ -49,8 +49,8 @@ $(document).ready(function () {
         }
     });
 
-    setSelect2Plugin('#shipping-plans-add', '#modal-create-shipping')
-    setSelect2Plugin('#shipping-plans-edit', '#modal-edit-shipping')
+    setSelect2Plugin('#shipping-plans-add', '.shipping-plans-add-container')
+    setSelect2Plugin('#shipping-plans-edit', '.shipping-plans-edit-container')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {

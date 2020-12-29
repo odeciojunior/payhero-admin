@@ -95,7 +95,7 @@ class ShippingApiController extends Controller
                     }
                     if ($shippingValidated['pre_selected']) {
                         $shippings = $shippingModel->where([
-                            'project_id' => $shippingValidated['project_id'],
+                            'project_id'   => $shippingValidated['project_id'],
                             'pre_selected' => 1,
                         ])->first();
                         if ($shippings) {
@@ -281,6 +281,10 @@ class ShippingApiController extends Controller
                     }
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
 
+                    if (!$this->verifyAllPlansHasShippings($shipping, $applyPlanArray)) {
+                        return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
+                    }
+
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
                     $shippingUpdated = $shipping->update($requestValidated);
 
@@ -353,8 +357,7 @@ class ShippingApiController extends Controller
                     ->find(current(Hashids::decode($id)));
 
                 if ($shipping->sales_count > 0) {
-                    return response()->json(['message' => 'Impossivel excluir, existem vendas associados a este frete!'],
-                        400);
+                    return response()->json(['message' => 'Impossível excluir, existem vendas associados a este frete!'], 400);
                 }
 
                 if ($shipping) {
@@ -363,6 +366,11 @@ class ShippingApiController extends Controller
                         return response()->json(['message' => 'Impossivel excluir, o projeto deve ter no minímo 1 frete cadastrado!'],
                             400);
                     }
+
+                    if (!$this->verifyAllPlansHasShippings($shipping)) {
+                        return response()->json(['message' => 'Impossível excluir, existem planos que ficarão sem nenhum frete vinculado!'], 400);
+                    }
+
                     if (Gate::allows('edit', [$project])) {
 
                         if ($shipping->pre_selected) {
@@ -378,7 +386,6 @@ class ShippingApiController extends Controller
                         }
 
                         if ($shipping->delete()) {
-
                             return response()->json(['message' => 'Frete removido com sucesso!'], 200);
                         } else {
                             return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
@@ -402,7 +409,43 @@ class ShippingApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao tentar excluir dados!',
-            ], 400);
+            ], 500);
         }
+    }
+
+    private function verifyAllPlansHasShippings($shipping, array $currentApplyOnPlans = []): bool
+    {
+        $otherShippings = $shipping->where([
+            ['project_id', $shipping->project_id],
+            ['id', '!=', $shipping->id],
+        ])->get();
+
+        $plansHasShipping = [];
+        foreach ($shipping->project->plans as $plan) {
+            if (!isset($plansHasShipping[$plan->id])) {
+                $plansHasShipping[$plan->id] = false;
+            }
+
+            foreach ($otherShippings as $otherShipping) {
+                $applyOnPlans = json_decode($otherShipping->apply_on_plans);
+
+                if (!empty($currentApplyOnPlans) &&
+                    ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
+                    $plansHasShipping[$plan->id] = true;
+                }
+
+                if (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all') {
+                    $plansHasShipping[$plan->id] = true;
+                }
+            }
+        }
+
+        foreach ($plansHasShipping as $hasShipping) {
+            if (!$hasShipping) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

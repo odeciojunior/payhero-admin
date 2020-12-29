@@ -53,7 +53,7 @@
                 <label for="cartao">Pré-selecionado</label>
                 <br>
                 <label class='switch'>
-                    <input name='pre_selected' value='1' class='check shipping-pre-selected' type="checkbox" checked>
+                    <input name='pre_selected' value="" class='check shipping-pre-selected' type="checkbox">
                     <span class='slider round'></span>
                 </label>
             </div>
@@ -66,7 +66,7 @@
         </div>
     </div>
     <div class='row'>
-        <div class='form-group col-12'>
+        <div class="form-group col-12 shipping-plans-add-container">
             <label for='shipping-plans-add'>Disponível para os planos: </label>
             <select name="apply_on_plans[]" id="shipping-plans-add" class="form-control shipping-plans-add"
                     style='width:100%'
