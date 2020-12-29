@@ -44,32 +44,32 @@ class RestartShopifyWebhooks extends Command
 
             try{
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
-    
+
                 $shopifyService->deleteShopWebhook();
-    
+
                 $shopifyService->createShopWebhook([
                     "topic"   => "products/create",
-                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
                     "format"  => "json",
                 ]);
-    
+
                 $shopifyService->createShopWebhook([
                     "topic"   => "products/update",
-                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
                     "format"  => "json",
                 ]);
-    
+
                 $shopifyService->createShopWebhook([
                     "topic"   => "orders/updated",
-                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
                     "format"  => "json",
                 ]);
-    
+
             }
             catch(\Exception $e){
                 //
             }
-    
+
         }
     }
 

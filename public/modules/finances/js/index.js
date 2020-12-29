@@ -405,7 +405,7 @@ $(document).ready(function () {
                                                     style: 'currency',
                                                     currency: 'BRL'
                                                 }))
-                                            }                                        
+                                            }
                                         </label>
                                     </div>
                                 </div>
@@ -419,7 +419,7 @@ $(document).ready(function () {
                                             style: 'currency',
                                             currency: 'BRL'
                                         }))
-                                    }                                        
+                                    }
                                 </label>
                             </div>
                         </h3>

@@ -41,7 +41,7 @@ trait BraspagPrepareCompanyData
 //                "MdrPercentage" => $company->credit_card_tax,
             ],
             'Notification' => [
-                'Url' => 'https://app.cloudfox.net/postback/braspag',
+                'Url' => 'https://sirius.cloudfox.net/postback/braspag',
                 'Headers' => [
                     [
                         'Key' => 'cf-auth1',

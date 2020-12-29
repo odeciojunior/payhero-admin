@@ -7,7 +7,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page" style="display: none">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Cadastrar novo produto</h1>
             <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>

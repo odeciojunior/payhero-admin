@@ -256,14 +256,14 @@
                         <div id="details-boleto" style="display:none">
                         <span id="boleto-link" class="table-title gray">Link para o boleto:
                             <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
                             </a>
                         </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                             <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                title='Copiar link'>
-                                <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
                             </a>
                         </span>
                             <br>
@@ -280,7 +280,7 @@
                         <br>
                         <span id="thank-page-url" class="table-title gray" style="display:none"></span>
                         <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;" link="" title="Copiar link">
-                            <i class="material-icons gradient" style="font-size:17px;">file_copy</i>
+                            <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
                         </a>
                         <br>
                         <h4> Conversão </h4>
@@ -326,5 +326,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=s07') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=s08') }}"></script>
 @endpush

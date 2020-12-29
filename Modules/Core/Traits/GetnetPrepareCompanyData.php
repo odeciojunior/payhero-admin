@@ -8,7 +8,7 @@ use Modules\Core\Services\FoxUtils;
 
 trait GetnetPrepareCompanyData
 {
-    private string $urlCallback = 'https://app.cloudfox.net/postback/getnet';
+    private string $urlCallback = 'https://sirius.cloudfox.net/postback/getnet';
 
     public function getPrepareDataCreatePfCompany(Company $company)
     {
