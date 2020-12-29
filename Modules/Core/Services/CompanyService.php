@@ -595,7 +595,8 @@ class CompanyService
             ->whereDate('created_at', '>=', '2020-01-01')
             ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                    ->orWhere('sales.has_valid_tracking', 0);
+                    ->orWhere('sales.has_valid_tracking', 0)
+                    ->whereNotNull('delivery_id');
             })->select(DB::raw('sum(if(invitation_id is null, value, 0)) as from_sales'),
                 DB::raw('sum(if(invitation_id is not null, value, 0)) as from_invites'),
             )->first();
