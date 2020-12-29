@@ -122,7 +122,10 @@ class PostBackShopifyController extends Controller
                 ], 200);
             }
 
-            $variant = current($requestData['variants']);
+            if (!empty($requestData['variants']) && count($requestData['variants']) > 0){
+                $variant = current($requestData['variants']);
+            }
+
 
             if (empty($variant['product_id'])){
                 $variant['product_id'] = $requestData['id'];
