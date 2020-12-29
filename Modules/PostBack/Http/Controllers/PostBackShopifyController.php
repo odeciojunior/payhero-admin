@@ -125,7 +125,7 @@ class PostBackShopifyController extends Controller
             $variant = current($requestData['variants']);
 
             if (empty($variant['product_id'])){
-                $variant['product_id'] = $requestData('id');
+                $variant['product_id'] = $requestData['id'];
             }
 
             $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
