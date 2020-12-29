@@ -28,7 +28,7 @@ $(document).ready(function () {
             'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
             'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
 
@@ -831,9 +831,14 @@ $(document).ready(function () {
         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
         'Este mês': [moment().startOf('month'), moment().endOf('month')],
-        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-        'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     };
+
+    let envDebug = $("meta[name=app-debug]").attr('content');
+
+    if (envDebug == 'true') {
+        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    }
 
     $('#date_range_statement').daterangepicker({
         maxSpan: {
