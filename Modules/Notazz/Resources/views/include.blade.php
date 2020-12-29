@@ -27,7 +27,7 @@
                                 </div>
                                 <div class='col-md-2'>
                                     <a role='button' class='delete-integration pointer float-right mt-35' project='{{\Hashids::encode($project->id)}}' data-toggle='modal' data-target='#modal-delete' type='a'>
-                                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
+                                        <span class='orion-icon-lixo'></span></a>
                                 </div>
                             </div>
                         </div>

@@ -262,7 +262,7 @@ $(document).ready(function () {
                              `;
                 }
                 dados += `<td class='text-center'>
-                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><span class="orion-icon-eye"></span></a>
                         </td>
 
                     </tr>`;
@@ -361,7 +361,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
                     }
                     dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
-                            <img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
+                            <span class="orion-icon-eye"></span></a>
                         </td>
 
                     </tr>`;

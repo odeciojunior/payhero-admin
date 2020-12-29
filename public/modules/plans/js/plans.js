@@ -231,13 +231,13 @@ $(function () {
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
                             data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="vertical-align: middle;cursor:pointer;" link="' + value.code + '">' + value.code + '</td>';
-                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"> <img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a></td>';
+                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"> <span class="orion-icon-copy"></span> </a></td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
                             data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                             data += "<td style='text-align:center' class='mg-responsive'>"
-                            data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>"
-                            data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
-                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
+                            data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'><span class='orion-icon-eye'></span></a>"
+                            data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><span class='orion-icon-edit'></span></a>"
+                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><span class='orion-icon-lixo'></span></a>";
                             data += "</td>";
                             data += '</tr>';
                             $("#data-table-plan").append(data);

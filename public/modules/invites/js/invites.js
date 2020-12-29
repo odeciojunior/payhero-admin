@@ -70,11 +70,11 @@ $(document).ready(function () {
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
                         if (value.status != '2') {
                             dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='orion-icon-lixo'></span></button></td>";
 
                         } else {
                             dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><span class='orion-icon-lixo'></span></button></td>";
                         }
                         dados += '</tr>';
                         $("#table-body-invites").append(dados);

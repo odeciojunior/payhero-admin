@@ -731,7 +731,7 @@
                 <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal"
                        data-target="#modal-delete-project" style="float: left;">
-                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
+                        <span class='orion-icon-lixo'></span>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>

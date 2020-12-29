@@ -60,7 +60,7 @@ $(document).ready(function () {
                                             </div>
                                             <div class='col-md-2'>
                                                 <a role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
-                                                    <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
+                                                    <span class='orion-icon-lixo'></span>
                                                 </a>
                                             </div>
                                         </div>

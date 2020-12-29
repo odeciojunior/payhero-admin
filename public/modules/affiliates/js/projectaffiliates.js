@@ -96,9 +96,9 @@ $(document).ready(function () {
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
                         data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliates[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center'>";
-                        data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>";
-                        data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
+                        data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><span class='orion-icon-eye'></span></a>";
+                        data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><span class='orion-icon-edit'></span></a>"
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><span class='orion-icon-lixo'></span></a>";
                         data += "</td>";
                         data += '</tr>';
                         $(".body-table-affiliates").append(data);

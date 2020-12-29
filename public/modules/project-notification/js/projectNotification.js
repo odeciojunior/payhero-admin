@@ -289,14 +289,14 @@ $(function () {
                             </td>
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}">
-                                    <img src="/modules/global/img/svg/eye.svg" style="width: 24px">
+                                    <span class="orion-icon-eye"></span>
                                 </a>
                                  ${value.notification_enum != 11 ?
                             `<a role="button" title="Editar" class="mg-responsive edit-project-notification pointer" project-notification='${value.id}'>
-                                    <img src="/modules/global/img/svg/edit.svg" style="width: 24px">
+                                    <span class="orion-icon-edit"></span>
                                  </a>` :
                             `<button style="background-color: transparent;" role="button" class="btn pointer" disabled="">
-                                     <img src="/modules/global/img/svg/edit.svg" style="width: 24px">
+                                     <span class="orion-icon-edit"></span>
                                  </button>`}
                                 <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style=" opacity: 0.5;"' : ''}>
                                    <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style="cursor: not-allowed"' : ''}>

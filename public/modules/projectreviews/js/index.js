@@ -143,9 +143,9 @@ $(document).ready(function () {
                             </td>
                             <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
-                                <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>
-                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
+                                <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><span class="orion-icon-eye"></span></a>
+                                <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><span class='orion-icon-edit'></span></a>
+                                <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review"><span class='orion-icon-lixo'></span></a>
                             </td>
                         </tr>
                         `;
