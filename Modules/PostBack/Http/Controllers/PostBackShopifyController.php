@@ -11,9 +11,9 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ShopifyIntegration;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class PostBackShopifyController
@@ -28,42 +28,50 @@ class PostBackShopifyController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-
             $postBackLogModel = new PostbackLog();
             $projectModel = new Project();
 
             $requestData = $request->all();
 
-            $postBackLogModel->create([
-                'origin' => 5,
-                'data' => json_encode($requestData),
-                'description' => 'shopify-tracking',
-            ]);
+            $postBackLogModel->create(
+                [
+                    'origin' => 5,
+                    'data' => json_encode($requestData),
+                    'description' => 'shopify-tracking',
+                ]
+            );
 
             $projectId = current(Hashids::decode($request->project_id));
             $project = $projectModel->find($projectId);
 
             if (!empty($project)) {
-
                 ProcessShopifyPostbackJob::dispatch($projectId, $requestData)
                     ->onQueue('high');
 
-                return response()->json([
-                    'message' => 'success',
-                ], 200);
+                return response()->json(
+                    [
+                        'message' => 'success',
+                    ],
+                    200
+                );
             } else {
                 Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
 
                 //projeto nao existe
-                return response()->json([
-                    'message' => 'project not found',
-                ], 200);
+                return response()->json(
+                    [
+                        'message' => 'project not found',
+                    ],
+                    200
+                );
             }
-
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'error processing postback',
-            ], 200);
+            return response()->json(
+                [
+                    'message' => 'error processing postback',
+                ],
+                200
+            );
         }
     }
 
@@ -74,7 +82,6 @@ class PostBackShopifyController extends Controller
      */
     public function postBackListener(Request $request)
     {
-
         $postBackLogModel = new PostbackLog();
         $projectModel = new Project();
         $userProjectModel = new UserProject();
@@ -82,66 +89,90 @@ class PostBackShopifyController extends Controller
 
         $requestData = $request->all();
 
-        $postBackLogModel->create([
-            'origin' => 3,
-            'data' => json_encode($requestData),
-            'description' => 'shopify',
-        ]);
+        $postBackLogModel->create(
+            [
+                'origin' => 3,
+                'data' => json_encode($requestData),
+                'description' => 'shopify',
+            ]
+        );
 
         $projectId = current(Hashids::decode($request->project_id));
 
-        if ($projectId) {
-            //hash ok
-            $project = $projectModel->find($projectId);
+        if (empty($projectId)) {
+            return response()->json(
+                [
+                    'message' => 'Projeto não encontrado',
+                ],
+                200
+            );
+        }
+        //hash ok
+        $project = $projectModel->find($projectId);
 
-            if (!$project) {
-
-                return response()->json([
+        if (empty($project)) {
+            return response()->json(
+                [
                     'message' => 'error',
-                ], 200);
-            }
+                ],
+                200
+            );
+        }
 
-            $userProject = $userProjectModel->where([
+        $userProject = $userProjectModel->with('user')->where(
+            [
                 ['project_id', $project->id],
                 ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
-            ])->first();
+            ]
+        )->first();
 
-            try {
-                $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
-
-                if (empty($shopIntegration)) {
-                    return response()->json([
-                        'message' => 'Integração não encontrada',
-                    ], 200);
-                }
-
-                $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Dados do shopify inválidos, revise os dados informados',
-                ], 200);
-            }
-
-            if (!empty($requestData['variants']) && count($requestData['variants']) > 0){
-                $variant = current($requestData['variants']);
-            }
-
-
-            if (empty($variant['product_id'])){
-                $variant['product_id'] = $requestData['id'];
-            }
-
-            $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
-
-            return response()->json([
-                'message' => 'success',
-            ], 200);
-        } else {
-            //hash invalido
-            return response()->json([
-                'message' => 'Projeto não encontrado',
-            ], 200);
+        if (empty($userProject->user)) {
+            return response()->json(
+                [
+                    'message' => 'Usuario não encontrado',
+                ],
+                200
+            );
         }
+
+        try {
+            $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
+
+            if (empty($shopIntegration)) {
+                return response()->json(
+                    [
+                        'message' => 'Integração não encontrada',
+                    ],
+                    200
+                );
+            }
+
+            $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Dados do shopify inválidos, revise os dados informados',
+                ],
+                200
+            );
+        }
+
+        if (!empty($requestData['variants']) && count($requestData['variants']) > 0) {
+            $variant = current($requestData['variants']);
+        }
+
+        if (empty($variant['product_id'])) {
+            $variant['product_id'] = $requestData['id'];
+        }
+
+        $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
+
+        return response()->json(
+            [
+                'message' => 'success',
+            ],
+            200
+        );
     }
 }
 
