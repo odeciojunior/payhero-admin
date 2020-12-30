@@ -231,7 +231,7 @@ $(function () {
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
                             data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="vertical-align: middle;cursor:pointer;" link="' + value.code + '">' + value.code + '</td>';
-                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
+                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"> <img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a></td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
                             data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                             data += "<td style='text-align:center' class='mg-responsive'>"

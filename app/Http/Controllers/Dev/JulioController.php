@@ -160,19 +160,19 @@ class JulioController extends Controller
 
                     $this->createShopWebhook([
                         "topic"   => "products/create",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
                         "format"  => "json",
                     ]);
 
                     $this->createShopWebhook([
                         "topic"   => "products/update",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
                         "format"  => "json",
                     ]);
 
                     $this->createShopWebhook([
                         "topic"   => "orders/updated",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
                         "format"  => "json",
                     ]);
 

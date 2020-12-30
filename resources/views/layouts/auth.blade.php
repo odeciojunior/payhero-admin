@@ -43,7 +43,7 @@
     body {
         font-family: 'Muli', sans-serif;
         min-height: 100vh;
-        background: url(https://app.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
+        background: url(https://sirius.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
     }
 </style>
 @yield('content')

@@ -49,19 +49,19 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
         $shopifyService->createShopWebhook([
             "topic" => "products/create",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "products/update",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "orders/updated",
-            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id).'/tracking',
+            "address" => 'https://sirius.cloudfox.net/postback/shopify/'.Hashids::encode($project->id).'/tracking',
             "format" => "json",
         ]);
 
@@ -85,9 +85,15 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                 $trackingCode = $fulfillment->getTrackingNumber();
                                 if (!empty($trackingCode)) {
                                     foreach ($fulfillment->getLineItems() as $lineItem) {
-                                        $products = $saleProducts->where('shopify_variant_id',
-                                            $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
-
+                                        $products = $saleProducts
+                                            ->where('shopify_variant_id', $lineItem->getVariantId())
+                                            ->where('amount', $lineItem->getQuantity());
+                                        if(!$products->count()){
+                                            $products = $saleProducts
+                                                ->where('name', $lineItem->getTitle())
+                                                ->where('description', $lineItem->getVariantTitle())
+                                                ->where('amount', $lineItem->getQuantity());
+                                        }
                                         if ($products->count()) {
                                             foreach ($products as $product) {
                                                 $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);

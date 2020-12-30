@@ -243,10 +243,10 @@ $(function () {
                             // }
                             data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
 
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="' + value.link + '"> file_copy</a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a></td>';
 
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> file_copy</a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
                             if (value.price != '' && value.commission != '') {
                                 data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';
                             } else {

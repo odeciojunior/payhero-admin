@@ -1308,7 +1308,8 @@ class SaleService
                     'sale',
                     function ($f1) use ($salesModel) {
                         $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                            ->orWhere('sales.has_valid_tracking', 0);
+                            ->orWhere('sales.has_valid_tracking', 0)
+                            ->whereNotNull('delivery_id');
                     }
                 );
 
