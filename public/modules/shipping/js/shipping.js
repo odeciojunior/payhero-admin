@@ -172,16 +172,8 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value);
                 $('#modal-edit-shipping .rule-shipping-value').trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
-                if (response.status == 1) {
-                    $('#modal-edit-shipping .shipping-status').attr('checked', true);
-                } else {
-                    $('#modal-edit-shipping .shipping-status').attr('checked', false);
-                }
-                if (response.pre_selected == 1) {
-                    $('#modal-edit-shipping .shipping-pre-selected').attr('checked', true);
-                } else {
-                    $('#modal-edit-shipping .shipping-pre-selected').attr('checked', false);
-                }
+                $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
+                $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 var plans = $('#modal-edit-shipping .shipping-plans-edit')
@@ -238,8 +230,8 @@ $(document).ready(function () {
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
-        formData.append('status', $('#modal-edit-shipping .shipping-status').val());
-        formData.append('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').val());
+        formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
+        formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
         loadingOnScreen();
         $.ajax({

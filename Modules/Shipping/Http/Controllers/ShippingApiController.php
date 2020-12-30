@@ -89,11 +89,12 @@ class ShippingApiController extends Controller
                     }
                     if (empty($shippingValidated['status'])) {
                         $shippingValidated['status'] = 0;
+                        $shippingValidated['pre_selected'] = 0;
                     }
                     if (empty($shippingValidated['pre_selected'])) {
                         $shippingValidated['pre_selected'] = 0;
                     }
-                    if ($shippingValidated['pre_selected']) {
+                    if ($shippingValidated['pre_selected'] && $shippingValidated['status']) {
                         $shippings = $shippingModel->where([
                             'project_id'   => $shippingValidated['project_id'],
                             'pre_selected' => 1,
@@ -239,6 +240,7 @@ class ShippingApiController extends Controller
             }
             if (empty($requestValidated['status'])) {
                 $requestValidated['status'] = 0;
+                $requestValidated['pre_selected'] = 0;
             }
 
             if (isset($requestValidated) && isset($projectId) && isset($id)) {

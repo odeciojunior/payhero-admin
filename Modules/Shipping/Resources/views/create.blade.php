@@ -53,7 +53,7 @@
                 <label for="cartao">Pré-selecionado</label>
                 <br>
                 <label class='switch'>
-                    <input name='pre_selected' value="" class='check shipping-pre-selected' type="checkbox">
+                    <input name='pre_selected' value='1' class='check shipping-pre-selected' type="checkbox">
                     <span class='slider round'></span>
                 </label>
             </div>
