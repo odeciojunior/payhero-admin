@@ -1,9 +1,8 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
-            <!-- <i class="icon wb-info"></i> -->
-            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}" style="width: 32px">
+        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;" >
+            <span class="o-info-1" style="font-size: 24px;"></span>
         </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
@@ -173,8 +172,14 @@
                 <p class="gray not-domain-none" id='description-delete-domain'> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-delete-footer modal-footer d-flex align-items-center justify-content-center">
-                <button id='btn-cancel-delete-domain' type="button" class="col-4 btn btn-gray btn-delete-modal-domain" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button id="btn-delete-domain" type="button" class="col-4 btn btn-primary btn-delete-modal-domain" style="width: 20%;">Excluir</button>
+                <button id='btn-cancel-delete-domain' type="button" class="col-4 btn btn-gray btn-cancel-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Cancelar </b>
+                    <!-- <b><span class="o-bin-1"></span></b> -->
+                </button>
+                <button id="btn-delete-domain" type="button" class="col-4 btn btn-outline btn-delete-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>

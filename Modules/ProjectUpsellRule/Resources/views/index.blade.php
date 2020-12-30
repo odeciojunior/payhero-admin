@@ -54,7 +54,6 @@
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-upsell-save" style='display:none;'>Salvar</button>
                 <button type="button" class="btn btn-success bt-upsell-update" style='display:none;'>Atualizar</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -75,7 +74,7 @@
                 @include('projectupsellrule::config')
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button> -->
                 <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
             </div>
         </div>

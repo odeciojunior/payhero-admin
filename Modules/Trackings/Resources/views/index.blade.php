@@ -49,10 +49,8 @@
                         </div>
                         <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                             <div class="d-flex align-items-center">
-                                <a class="btn rounded-circle btn-default btn-outline"
-                                   style="padding: 6px 0px;height: 36px;width: 36px; min-width:36px"
-                                   data-toggle="modal" data-target="#modal-detalhes-importar">
-                                    <i class="icon wb-info"></i>
+                                <a class="rounded-info btn mr-3 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-importar"  >
+                                    <span class="o-info-1" style="font-size: 24px;"></span>
                                 </a>
                                 <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer"
                                       style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
