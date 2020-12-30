@@ -53,6 +53,20 @@ return [
             'strict' => true,
             'engine' => null,
         ],
+        'mysql_getnet' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_GETNET', '127.0.0.1'),
+            'port' => env('DB_PORT_GETNET', '3306'),
+            'database' => env('DB_DATABASE_GETNET', 'forge'),
+            'username' => env('DB_USERNAME_GETNET', 'forge'),
+            'password' => env('DB_PASSWORD_GETNET', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',
