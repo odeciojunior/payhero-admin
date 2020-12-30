@@ -152,6 +152,13 @@ class GetNetStatementService
     public function performStatement(stdClass $data, array $filters = [])
     {
 
+        if (isset($data->errors)) {
+
+            //dd($data->errors);
+            $exception = new Exception('Houve um erro ao processar a requisição na getnet em ' . __METHOD__ . ' :: ' . $data->errors[0]->message);
+            report($exception);
+        }
+
         $this->filters = $filters;
 
         $transactions = array_reverse($data->list_transactions) ?? [];
