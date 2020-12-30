@@ -322,9 +322,9 @@ $(function () {
                                     <td>${value.platform}</td>
                                     <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                                     <td style='text-align:center'>
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="orion-icon-eye"></span></a>
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="orion-icon-edit"></span></a>
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='orion-icon-lixo'></span></a>
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
                                     </td>
                                 </tr>`;
                         $("#data-table-pixel").append(data);

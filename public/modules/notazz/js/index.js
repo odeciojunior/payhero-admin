@@ -42,10 +42,10 @@ $(document).ready(function () {
                                             </div>
                                             <div class='col-md-2'>
                                                 <a role='button' class='edit-integration pointer float-right' integration=` + data.id + ` data-toggle='modal' data-target='#modal-edit' type='a'>
-                                                    <span class="orion-icon-edit"></span>
+                                                    <span class="o-edit-1"></span>
                                                 </a>
                                                  <a role='button' class='delete-integration pointer float-right mt-10' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
-                                                    <span class='orion-icon-lixo'></span>
+                                                    <span class='o-bin-1'></span>
                                                 </a>
                                             </div>
                                         </div>

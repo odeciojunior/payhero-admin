@@ -321,9 +321,9 @@ $(document).ready(function () {
                                             <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>
                                         </td>
                                         <td style='text-align:center'>
-                                            <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="orion-icon-eye"></span></a>
-                                            <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='orion-icon-edit'></span></a>
-                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><span class='orion-icon-lixo'></span></a>
+                                            <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
+                                            <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
+                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><span class='o-bin-1'></span></a>
                                         </td>
                                      </tr>`;
                         $("#dados-tabela-frete").append(dados);

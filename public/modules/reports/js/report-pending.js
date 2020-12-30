@@ -237,7 +237,7 @@ $(document).ready(function () {
                                     <td>${value.end_date}</td>
                                     <td>${value.total_paid}</td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="orion-icon-eye"></span></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
                                     </td>
                                 </tr>`;
 

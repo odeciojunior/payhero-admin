@@ -73,8 +73,8 @@ $(document).ready(function () {
                                                 <p class="card-text sm">Criado em ` + data.created_at + `</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
-                                                    <span class='orion-icon-lixo'></span>
+                                                <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` + data.id + `>
+                                                    <span class='o-bin-1 pointer'></span>
                                                 </a>
                                             </div>
                                         </div>

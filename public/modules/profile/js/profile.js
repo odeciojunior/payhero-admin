@@ -774,7 +774,7 @@ $(document).ready(function () {
                              `;
                 }
                 dados += `<td class='text-center'>
-                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><span class="orion-icon-eye"></span></a>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><span class="o-eye-1"></span></a>
                         </td>
 
                     </tr>`;
@@ -964,7 +964,7 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
                              `;
                         }
                         dados += `<td class='text-center'>
-                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><span class="orion-icon-eye"></span></a>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><span class="o-eye-1"></span></a>
                         </td>
 
                     </tr>`;

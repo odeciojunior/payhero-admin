@@ -588,7 +588,7 @@ $(() => {
                 let return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 let status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='orion-icon-copy'></span></a>" : '';
+                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='o-copy-1'></span></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -658,7 +658,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='orion-icon-copy'></span></a>" : '';
+                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='o-copy-1'></span></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}

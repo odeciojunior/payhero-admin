@@ -199,7 +199,7 @@ $(document).ready(function () {
                                 <td class='display-sm-one display-m-one'>${value.start_date}</td>
                                 <td>
                                     <a role='button' class='detalhes-black-antifraud pointer' sale='${value.sale_code}'>
-                                        <span class="orion-icon-eye"></span>
+                                        <span class="o-eye-1"></span>
                                     </a>
                                 </td>
                             </tr>

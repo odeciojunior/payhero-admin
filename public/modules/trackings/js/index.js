@@ -333,8 +333,8 @@ $(() => {
                                              style="display:none"><i class='material-icons gradient'>save</i></a>
                                              ${
                                                  tracking.tracking_status_enum
-                                                     ? `<a class='tracking-edit pointer mr-10' title="Editar"><span class="orion-icon-edit"></span></a>
-                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="orion-icon-eye"></span></a>`
+                                                     ? `<a class='tracking-edit pointer mr-10' title="Editar"><span class="o-edit-1"></span></a>
+                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`
                                                      : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
                                              }
                                             <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
@@ -465,8 +465,8 @@ $(() => {
                     td.find('.tracking-close')
                         .click();
 
-                    let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><span class="orion-icon-edit"></span></a>
-                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="orion-icon-eye"></span></a>`;
+                    let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><span class="o-edit-1"></span></a>
+                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`;
 
                     td.append(buttons);
 

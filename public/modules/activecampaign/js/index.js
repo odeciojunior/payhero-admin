@@ -79,7 +79,7 @@ $(document).ready(function () {
                                             </div>
                                             <div class='col-md-2'>
                                                 <div role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
-                                                    <span class='orion-icon-lixo'></span>
+                                                    <span class='o-bin-1'></span>
                                                 </div>
                                             </div>
                                         </div>

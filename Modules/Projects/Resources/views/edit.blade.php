@@ -570,7 +570,7 @@
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"></span>
                             </a>
                             <div id="shopify-integration-pending" style="display:none">
@@ -582,7 +582,7 @@
                             <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar produtos com shopify </span>
                             </a>
                         </div>
@@ -591,7 +591,7 @@
                                integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar template com shopify </span>
                             </a>
                         </div>
@@ -612,7 +612,7 @@
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-verify-permissions" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
                         </div>
@@ -630,7 +630,7 @@
                         <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-sync-trackings" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar códigos de rastreio</span>
                             </a>
                         </div>

@@ -224,9 +224,9 @@ $(function () {
                         data += '<td id="" class="" style="vertical-align: middle;">' + rmList + '</td>';
 
                         data += "<td style='text-align:center' class='mg-responsive'>"
-                        data += "<a title='Visualizar' class='mg-responsive pointer details-event' event='" + value.id + "' role='button'><span class='orion-icon-eye'></span></a>"
-                        data += "<a title='Editar' class='mg-responsive pointer edit-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><span class='orion-icon-edit'></span></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><span class='orion-icon-lixo'></span></a>";
+                        data += "<a title='Visualizar' class='mg-responsive pointer details-event' event='" + value.id + "' role='button'><span class='o-eye-1'></span></a>"
+                        data += "<a title='Editar' class='mg-responsive pointer edit-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><span class='o-edit-1'></span></a>"
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><span class='o-bin-1'></span></a>";
                         data += "</td>";
                         data += '</tr>';
                         $("#data-table-event").append(data);

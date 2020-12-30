@@ -85,13 +85,13 @@ $(document).ready(function () {
             dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
             dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
             dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" title="Copiar token">';
-            dados += '<span class="orion-icon-copy"></span>'
+            dados += '<span class="o-copy-1"></span>'
             dados += '</a></div></div></div>';
             dados += '</div>';
             //-----------------------------------
             dados += '</td>';
-            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button>';
-            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="orion-icon-lixo"></span></button></td>';
+            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
+            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button></td>';
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
         });
