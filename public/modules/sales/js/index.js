@@ -269,7 +269,7 @@ $(document).ready(function () {
                         let observation = ''
                         if (!isEmpty(value.observation) || (value.observation === null && false) || (value.observation === '' && false)) {
                              observation = `<a data-toggle="tooltip" title="${value.observation}"
-                                                role="button" class="sale_observation" venda="${value.id}" style='margin-right:10px;'>
+                                                role="button" class="sale_observation" venda="${value.id}">
                                                     <span style="color: #44a44b" class="o-info-help-1"></span>
                                             </a>`
                         }
@@ -296,9 +296,12 @@ $(document).ready(function () {
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
+                                    <td style="text-align: center">
                                         ${observation}
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                            <span class="o-eye-1"></span>
+                                        </a>
+                                    </td>
                                 </tr>`;
 
                         $(function () {
