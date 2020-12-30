@@ -48,11 +48,11 @@ class GetnetBackOfficeService extends GetnetService
     }
 
     /**
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getStatementStartDate(): Carbon
+    public function getStatementStartDate(): ?Carbon
     {
-        return $this->statementStartDate;
+        return $this->statementStartDate ?? null;
     }
 
     /**
@@ -66,11 +66,11 @@ class GetnetBackOfficeService extends GetnetService
     }
 
     /**
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getStatementEndDate(): Carbon
+    public function getStatementEndDate(): ?Carbon
     {
-        return $this->statementEndDate;
+        return $this->statementEndDate ?? null;
     }
 
     /**
@@ -88,7 +88,7 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatementDateField(): ?string
     {
-        return $this->statementDateField;
+        return $this->statementDateField ?? null;
     }
 
     /**
@@ -106,7 +106,7 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatementSaleHashId(): ?string
     {
-        return $this->statementSaleHashId;
+        return $this->statementSaleHashId ?? null;
     }
 
     /**
@@ -116,24 +116,6 @@ class GetnetBackOfficeService extends GetnetService
     public function setStatementSaleHashId(?string $statementSaleHashId): GetnetBackOfficeService
     {
         $this->statementSaleHashId = $statementSaleHashId;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatementPage(): int
-    {
-        return $this->statementPage;
-    }
-
-    /**
-     * @param int $statementPage
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementPage(int $statementPage): GetnetBackOfficeService
-    {
-        $this->statementPage = $statementPage;
         return $this;
     }
 
@@ -202,23 +184,28 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getStatement()
     {
-        if (empty($this->getStatementDateField())) {
-            throw new LogicException('É obrigatório especificar um campo de data para a busca');
-        } elseif (!in_array($this->getStatementDateField(), [self::STATEMENT_DATE_SCHEDULE, self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
+        if (empty($this->getStatementDateField()) && empty($this->getStatementSaleHashId())) {
+            throw new LogicException('É obrigatório especificar um campo de data para a busca quando não é enviado um OrderId');
+        } elseif (!empty($this->getStatementDateField()) && !in_array($this->getStatementDateField(),
+                [self::STATEMENT_DATE_SCHEDULE, self::STATEMENT_DATE_LIQUIDATION, self::STATEMENT_DATE_TRANSACTION])) {
             throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_SCHEDULE . '", "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
-        $startDate = $this->getStatementStartDate()->format('Y-m-d');
-        $endDate = $this->getStatementEndDate()->format('Y-m-d');
-
-        $startDate .= ' 00:00:00';
-        $endDate .= ' 23:59:59';
-
         $queryParameters = [
             'seller_id' => $this->sellerId,
-            $this->getStatementDateField() . '_date_init' => $startDate,
-            $this->getStatementDateField() . '_date_end' => $endDate,
         ];
+
+        if ($this->getStatementStartDate() && $this->getStatementEndDate()) {
+
+            $startDate = $this->getStatementStartDate()->format('Y-m-d');
+            $endDate = $this->getStatementEndDate()->format('Y-m-d');
+
+            $startDate .= ' 00:00:00';
+            $endDate .= ' 23:59:59';
+
+            $queryParameters[$this->getStatementDateField() . '_date_init'] = $startDate;
+            $queryParameters[$this->getStatementDateField() . '_date_end'] = $endDate;
+        }
 
         if (!empty($this->getStatementSubSellerId())) {
 
@@ -247,12 +234,8 @@ class GetnetBackOfficeService extends GetnetService
             echo '<hr>';
         }
 
-        // https://developers.getnet.com.br/backoffice#tag/Statement
-        // https://api-homologacao.getnet.com.br/v1/mgm/paginatedstatement
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
         //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
-
-        //dd($startDate, $endDate, $url);
         return $this->sendCurl($url, 'GET', null, null, false);
     }
 

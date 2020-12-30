@@ -18,7 +18,5 @@ Route::group(
          * Old routes before getnet
          */
         Route::get('/old_transfers', 'OldTransfersApiController@index');
-
-        Route::get('/old_transfers/account-statement-data', 'OldTransfersApiController@accountStatementData');
     }
 );

@@ -75,15 +75,9 @@ class VerifyTransfersGetnet extends Command
                     if (in_array($transaction->sale->gateway_id, $gatewayIds)) {
 
                         $subSeller = $company->subseller_getnet_id;
-                        $startDate = Carbon::createFromFormat('Y-m-d', '2020-07-01');
-                        $endDate = today();
-                        $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
 
                         $getNetBackOfficeService = new GetnetBackOfficeService();
                         $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-                            ->setStatementStartDate($startDate)
-                            ->setStatementEndDate($endDate)
-                            ->setStatementDateField($statementDateField)
                             ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
 
                         $originalResult = $getNetBackOfficeService->getStatement();
