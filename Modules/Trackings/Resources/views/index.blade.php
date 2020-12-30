@@ -257,7 +257,7 @@
                 <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10"
                      style="display:none;">
                     <div class="d-flex">
-                        <i class="material-icons mr-10">info</i>
+                        <span class="o-info-help-1"></span>
                         <div class="w-full">
                             <strong class="font-size-16">Saldo Bloqueado</strong>
                             <p class="font-size-14 pr-md-100 mb-5">
@@ -276,7 +276,7 @@
                 <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
                      style="display:none;">
                     <div class="d-flex">
-                        <i class="material-icons mr-10">info</i>
+                        <span class="o-info-help-1"></span>
                         <div class="w-full">
                             <strong class="font-size-16">Exportando seu relatório</strong>
                             <p class="font-size-14 pr-md-100 mb-5">Sua exportação será entregue por e-mail para:

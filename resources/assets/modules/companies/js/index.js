@@ -21,8 +21,8 @@ $(document).ready(function () {
                     dados += "<td>" + value.fantasy_name + "</td>";
                     dados += "<td>" + value.company_document + "</td>";
                     dados += "<td>" + value.document_status + "</td>";
-                    dados += "<td><a href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a></td>";
-                    dados += "<td><a class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a></td>";
+                    dados += "<td><a href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><span class='orion-icon-edit'></span></a></td>";
+                    dados += "<td><a class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><span class='orion-icon-lixo'></span></a></td>";
                     dados += "</tr>";
 
                     $("#companies_table_data").append(dados);

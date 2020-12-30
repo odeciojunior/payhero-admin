@@ -39,8 +39,7 @@
             </div>
             <div class="col-md-4 text-right">
                 <button class='btn btn-primary btn-sm btn-view-config mt-md-20 text-white' style='display:none;'>
-                    <!-- <span class="o-eye-1"></span> -->
-                    <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> 
+                    <span class="o-eye-1"></span>
                     Visualizar
                 </button>
             </div>

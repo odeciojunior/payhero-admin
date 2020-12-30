@@ -104,7 +104,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.start_date + "</td>";
                     dados += "<td>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' style='margin-right:10px'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></a></td>";
+                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' style='margin-right:10px'><span class='orion-icon-eye'></span></button></a></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
 
