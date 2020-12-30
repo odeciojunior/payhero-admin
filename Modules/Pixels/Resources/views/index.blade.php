@@ -1,8 +1,8 @@
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-info-pixel"
-           style='background-color: #4c6aff;'>
-            <i class="icon wb-info"></i></a>
+        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;" >
+            <span class="o-info-1" style="font-size: 24px;"></span>
+        </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-info-pixel"
               style='margin-left:5px'>Como configurar os eventos pixel?</span>
     </div>

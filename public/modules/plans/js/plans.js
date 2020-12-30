@@ -375,8 +375,10 @@ $(function () {
 
                                                 <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                                                    <!--<label class="display-xsm-none">Remover:</label>-->
-                                                   <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                        <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i></button>
+
+                                                   <button class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                                        <b>Remover </b>
+                                                        <span class="o-bin-1"></span>
                                                     </button>
                                                 </div>
                                             </div>

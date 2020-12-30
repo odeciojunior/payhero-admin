@@ -54,8 +54,7 @@
             </div>
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-review-save" style='display:none;'>Salvar</button>
-                <button type="button" class="btn btn-success bt-review-update" style='display:none;'>Atualizar</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success bt-review-update" style='display:none;'>Atualizar</button>                
             </div>
         </div>
     </div>
@@ -75,8 +74,7 @@
             <div class="pt-10 pr-20 pl-20 modal_review_body">
                 @include('projectreviews::config')
             </div>
-            <div class="modal-footer pt-0">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            <div class="modal-footer pt-0">                
                 <button type="button" class="btn btn-success bt-review-config-update">Atualizar</button>
             </div>
         </div>

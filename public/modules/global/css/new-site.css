@@ -322,7 +322,8 @@ input[type=radio] {
 .btn-outline-default, .btn-outline.btn-default {
     color: #76838f !important;
     background-color: transparent;
-    border-color: #cdcdcd !important;
+    /* border-color: #cdcdcd !important; */
+    border-color: #cdcdcd;
 }
 
 .h1, .h2, .h3, h1, h2, h3 {
@@ -403,6 +404,14 @@ input[type=radio] {
 .rounded-add i {
     color: white;
     fill: white;
+}
+
+.rounded-info {
+    height: 36px;
+    width: 36px;
+    min-width:36px;
+    border-radius: 50%;
+    border-color: #76838f;
 }
 
 .topbar-icon {
@@ -896,13 +905,54 @@ input[type=radio] {
     border-color: #F41C1C;
     box-shadow: none;
 }
-.btnDelete span {
-    font-size: 20px;
+
+button.btnDelete span {
+    font-size: 24px;
+}
+
+button.btn img {
+    filter: brightness(0) invert(1);
 }
 
 .btnDelete:hover {
     color: #C30909;
     background-color: #FFF;
     border-color: #C30909;
+    box-shadow: none;
+}
+
+.btnDelete:focus, .btn-delete-modal:focus {
+    border-color: #C30909;
+    box-shadow: none;
+}
+
+.btn-delete-modal > span, .btn-cancel-modal > span {
+    font-size: 17px;
+}
+
+.btn-delete-modal {
+    color: #fff;
+    background-color: #F41C1C;
+    border-color: #F41C1C;
+    box-shadow: none;
+}
+
+.btn-delete-modal:hover {
+    color: #fff;
+    background-color: #C30909;
+    border-color: #C30909;
+    box-shadow: none;
+}
+
+.btn-cancel-modal {
+    color: #76838f;
+    background-color: #ffffff;
+    border:none;
+    box-shadow: none;
+}
+
+.btn-cancel-modal:hover {
+    color: #343A40;
+    border:none;
     box-shadow: none;
 }

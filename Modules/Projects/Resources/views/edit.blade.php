@@ -621,7 +621,7 @@
                                 <div class="gray mb-5">Skip to cart</div>
                                 <label class="switch">
                                     <input id="skiptocart-input" type="checkbox" value="0" class="check">
-                                    <span class="slider gray round"></span>
+                                    <span class="slider round"></span>
                                 </label>
                             </div>
                         </div>
