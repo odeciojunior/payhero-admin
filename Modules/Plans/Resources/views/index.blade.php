@@ -122,8 +122,13 @@
                 <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
-                <button id='btn-plan-cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button id="btn-delete-plan" type="button" class="col-4 btn btn-danger" style="width: 20%;">Excluir</button>
+                <button id="btn-plan-cancel" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
+                </button>
+                <button id="btn-delete-plan" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>

@@ -4,8 +4,9 @@
             <div class='div-config'>
                 <div id="config-review" class="btn-holder d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Review </span>
-                    <a class="ml-10 rounded-add pointer bg-primary">
-                        <i class="icon wb-settings" aria-hidden="true"></i></a>
+                    <a class="ml-10 rounded-add pointer bg-secondary text-white">
+                        <span class="o-cogwheel-1" style="font-size: 18px; font-weight: 900 !important;"></span> 
+                    </a>
                 </div>
             </div>
             <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
@@ -117,8 +118,13 @@
                 <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
-                <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button type="button" class="col-4 btn btn-primary btn-delete-review" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
+                </button>
+                <button type="button" class="col-4 btn border-0 btn-outline btn-delete-review btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>

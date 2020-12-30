@@ -921,7 +921,7 @@ button.btn img {
     box-shadow: none;
 }
 
-.btnDelete:focus, .btn-delete-modal:focus {
+.btnDelete:focus {
     border-color: #C30909;
     box-shadow: none;
 }
@@ -933,26 +933,26 @@ button.btn img {
 .btn-delete-modal {
     color: #fff;
     background-color: #F41C1C;
-    border-color: #F41C1C;
     box-shadow: none;
 }
 
 .btn-delete-modal:hover {
     color: #fff;
     background-color: #C30909;
-    border-color: #C30909;
     box-shadow: none;
+}
+
+.btn-delete-modal:active:focus , .btn-cancel-modal:active:focus {
+    box-shadow: none !important;
 }
 
 .btn-cancel-modal {
     color: #76838f;
     background-color: #ffffff;
-    border:none;
     box-shadow: none;
 }
 
 .btn-cancel-modal:hover {
     color: #343A40;
-    border:none;
     box-shadow: none;
 }

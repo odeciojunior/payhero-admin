@@ -413,7 +413,7 @@ $(document).ready(function () {
         $('#modal-add-body').children().hide('slow');
         $('#btn-modal').hide();
         $('#modal-title').html('Tudo certo!');
-        $('#modal-add-body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Domínio registrado</strong></h3>' + '<h4 align="center">Tudo pronto já podemos começar</h4>' + '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-success" onclick="' + updateDomains() + '" data-dismiss="modal" style="font-size: 25px">Começar</span>' + '</div>');
+        $('#modal-add-body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Domínio registrado</strong></h3>' + '<h4 align="center">Tudo pronto já podemos começar</h4>' + '<p align="center" style="font-size: 16px">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</p>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-success" onclick="' + updateDomains() + '" data-dismiss="modal" style="font-size: 16px">Começar</span>' + '</div>');
     }
 
     function modalErrorRegistry() {
@@ -421,7 +421,7 @@ $(document).ready(function () {
         $('#modal-add-body').children().hide('slow');
         $('#btn-modal').hide();
         $('#modal-title').html('Oppsssss...');
-        $('#modal-add-body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' + '<h4 align="center">Parece que o seu domínio ainda não foi liberado</h4>' + '<h4 align="center">Seria bom conferir as configurações no seu provedor de domínio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></h4>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span>' + '</div>');
+        $('#modal-add-body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' + '<h4 align="center">Parece que o seu domínio ainda não foi liberado</h4>' + '<p align="center" style="font-size: 16px">Seria bom conferir as configurações no seu provedor de domínio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></p>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 16px">Retornar</span>' + '</div>');
     }
 
     function modalUpdateDomains(index, value) {
@@ -447,14 +447,14 @@ $(document).ready(function () {
         $('#modal-add-body').append('<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' +
             '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
             '<h4 align="center">Agora falta pouco</h4>' +
-            '<h4 align="center">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
-            ' onde você registrou seu domínio' + responseDomain.data["domainHost"] + '. Logo após clique em <strong style="color:green">verificar</strong>!</h4>' +
+            '<p align="center" style="font-size: 16px">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
+            ' onde você registrou seu domínio' + responseDomain.data["domainHost"] + '. Logo após clique em <strong style="color:green">verificar</strong>!</p>' +
             '<div id="tableDomain" style="width:100%">' +
             '<table class="table table-striped">' + '<thead></thead>' +
             '<tbody id="tableDomainBody">' +
             '</tbody></table></div>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
-            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' +
+            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 16px">Verificar</button>' +
             '</div>').show('slow');
         $.each(responseDomain.data['zones'], function (index, value) {
             $('#tableDomainBody').append('<tr>' + '<td class="table-title"><b>Novo servidor DNS :</b></td>' + '<td>' + value + '</td>' + '</tr>');
@@ -471,9 +471,9 @@ $(document).ready(function () {
             '<h3 align="center"><strong>Domínio verificado</strong></h3>' +
             '<h4 align="center">Tudo pronto</h4>' +
             '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
-            '<h6 align="center">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</h6>' +
+            '<p align="center" style="font-size: 16px">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</p>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
-            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' +
+            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 16px">Verificar</button>' +
             '</div>').show('slow');
         $('#modal-add-body').show('slow');
     }
