@@ -2,16 +2,12 @@
 
 namespace Modules\Transfers\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -117,94 +113,6 @@ class OldTransfersApiController
                 ],
                 400
             );
-        }
-    }
-
-    public function accountStatementData(): JsonResponse
-    {
-        if (!auth()->user()) {
-            dd('USUÁRIO NÃO AUTENTICADO');
-        }
-
-        try {
-            $companyGetNet = Company::whereNotNull('subseller_getnet_id')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->whereGetNetStatus(1)
-                ->whereId(current(Hashids::decode(request()->get('company'))))
-                ->first();
-
-            if (empty($companyGetNet)) {
-                return response()->json([]);
-            }
-
-            $subseller = $companyGetNet->subseller_getnet_homolog_id;
-            if (FoxUtils::isProduction()) {
-                $subseller = $companyGetNet->subseller_getnet_id;
-            }
-
-            try {
-                $dates = explode(' - ', request('dateRange') ?? '');
-
-                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
-                $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-            } catch (Exception $exception) {
-            }
-
-            if (!isset($startDate) || !isset($endDate)) {
-                $today = today();
-                $startDate = $today;
-                $endDate = $today;
-            }
-
-            if (request('statement_data_type') == 'schedule_date') {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
-            } elseif (request('statement_data_type') == 'liquidation_date') {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
-            } else {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
-            }
-
-            $getNetBackOfficeService = new GetnetBackOfficeService();
-            $getNetBackOfficeService->setStatementSubSellerId($subseller)
-                ->setStatementStartDate($startDate)
-                ->setStatementEndDate($endDate)
-                ->setStatementDateField($statementDateField);
-
-            if (!empty(request('sale'))) {
-                $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
-            }
-
-            $result = $getNetBackOfficeService->getStatement();
-            $result = json_decode($result);
-
-            if (isset($result->errors)) {
-                return response()->json($result->errors, 400);
-            }
-
-            $filters['status'] = request()->get('status');
-            $filters['payment_method'] = request()->get('payment_method');
-
-            $data = (new GetNetStatementService())->performStatement($result, $filters);
-
-            return response()->json($data);
-        } catch (Exception $exception) {
-            report($exception);
-
-            $error = [
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ];
-
-            //if (!FoxUtils::isProduction()) {
-            $error += [
-                'dev_message' => $exception->getMessage(),
-                'dev_file' => $exception->getFile(),
-                'dev_line' => $exception->getLine(),
-                'dev_code' => $exception->getCode(),
-                'dev_trace' => $exception->getTrace(),
-            ];
-            //}
-
-            return response()->json($error, 400);
         }
     }
 
