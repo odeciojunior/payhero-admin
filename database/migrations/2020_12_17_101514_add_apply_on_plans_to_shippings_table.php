@@ -16,8 +16,9 @@ class AddApplyOnPlansToShippingsTable extends Migration
     {
         Schema::table('shippings', function (Blueprint $table) {
             $table->json('apply_on_plans')->after('pre_selected')->nullable();
+            $table->json('not_apply_on_plans')->after('apply_on_plans')->nullable();
         });
-        DB::statement('update shippings set apply_on_plans = \'["all"]\'');
+        DB::statement('update shippings set apply_on_plans = \'["all"]\', not_apply_on_plans = \'[]\'');
     }
 
     /**
@@ -29,6 +30,7 @@ class AddApplyOnPlansToShippingsTable extends Migration
     {
         Schema::table('shippings', function (Blueprint $table) {
             $table->removeColumn('apply_on_plans');
+            $table->removeColumn('not_apply_on_plans');
         });
     }
 }
