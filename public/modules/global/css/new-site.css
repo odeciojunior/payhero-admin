@@ -224,16 +224,6 @@ input[type=radio] {
     width: 24px;
 }
 
-.svg-menu {
-    fill: rgba(163, 175, 183, .9);
-    width: 24px;
-}
-
-.menu-active .svg-menu {
-    /* fill: #2e85ec; */
-    fill: #fff;
-}
-
 .page-title {
     font-size: 32px;
     font-weight: 300 !important;
@@ -442,80 +432,6 @@ input[type=radio] {
 .site-menu > .site-menu-item > a {
     padding: 0 20px !important;
     line-height: 46px;
-}
-
-.menu-active {
-    border-right: 5px solid #2E85EC;
-    /* border-image-source: linear-gradient(11deg, #e6774c, rgb(249, 34, 120)); */
-    border-image-slice: 2;
-    font-weight: 900;
-    /* color: #ff666b !important; */
-    color: #fff;
-}
-
-.menu-active a{
-    /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
-    background: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent; */
-    color: #fff;
-    background:  #fff;
-    background:  #fff;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-
-.menu-active svg {
-    /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%);
-    background: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent; */
-}
-
-.menu-active svg {
-    /* color: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-    fill: linear-gradient(11deg, #e6774c, rgb(249, 34, 120)) !important; */
-}
-
-.menu-active svg {
-    color: #fff;
-    /* background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%); */
-    background: #fff;
-    background-color: #fff;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.menu-active svg {
-    color: #fff !important;
-    fill: #fff !important;
-}
-
-.menu-active img {
-    color: #fff;
-    /* background: -moz-linear-gradient(top, #e72c83 0%, #a742c6 100%); */
-    background: #fff;
-    background-color: #fff;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.menu-active img {
-    color: #fff !important;
-    fill: #fff !important;
 }
 
 .br15 {

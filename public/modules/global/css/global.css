@@ -12,10 +12,10 @@ body {
     overflow-y: hidden;
 }
 
-.menu-active {
-    border-right: 5px solid #2E85EC;
-    /* border-image-source: #2E85EC; */
-    /* border-image-slice: 2; */
+.menu-active > .bg-menu {
+    background: #2E85EC;
+    border-radius: 0 44px 44px 0;
+    display: inline flow-root list-item;
 }
 
 .menu-active .site-menu-item i {
@@ -444,4 +444,55 @@ a.label {
     background: linear-gradient(74deg, #E6774C, #F17227);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+.site-menu-item.has-sub > a, .site-menu-item > .site-menu-sub > li {
+    margin-bottom: 5px;
+    padding-left: 0 !important;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.site-menu-item:hover > a > span:first-child{
+    background: #2E85EC;
+    border-radius: 0 44px 44px 0;
+    display: inline flow-root list-item;
+    margin-right: 10px;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.site-menu-item:hover > a > span > img  {
+    filter: brightness(0) invert(1);
+}
+
+.menu-active {
+    border-image-slice: 2;
+    font-weight: 900;
+    color: #fff;
+    margin-right: 10px;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.menu-active > span {
+    color: #fff;
+    background:  #fff;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.menu-active > span > img {
+    filter: brightness(0) invert(1);
+}
+
+.bg-menu {
+    padding: 0 10px 0 15px;
 }
