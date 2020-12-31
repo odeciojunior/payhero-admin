@@ -283,7 +283,7 @@ class ShippingApiController extends Controller
                     }
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
 
-                    if (!$this->verifyAllPlansHasShippings($shipping, $applyPlanArray)) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, $applyPlanArray, $requestValidated['status'])) {
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -369,7 +369,7 @@ class ShippingApiController extends Controller
                             400);
                     }
 
-                    if (!$this->verifyAllPlansHasShippings($shipping)) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping)) {
                         return response()->json(['message' => 'Impossível excluir, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -415,11 +415,12 @@ class ShippingApiController extends Controller
         }
     }
 
-    private function verifyAllPlansHasShippings($shipping, array $currentApplyOnPlans = []): bool
+    private function verifyAllPlansHasActiveShippings($shipping, array $currentApplyOnPlans = [], $active_flag = false): bool
     {
         $otherShippings = $shipping->where([
             ['project_id', $shipping->project_id],
             ['id', '!=', $shipping->id],
+            ['status', true],
         ])->get();
 
         $plansHasShipping = [];
@@ -431,7 +432,7 @@ class ShippingApiController extends Controller
             foreach ($otherShippings as $otherShipping) {
                 $applyOnPlans = json_decode($otherShipping->apply_on_plans);
 
-                if (!empty($currentApplyOnPlans) &&
+                if (!empty($currentApplyOnPlans) && $active_flag &&
                     ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
                     $plansHasShipping[$plan->id] = true;
                 }
