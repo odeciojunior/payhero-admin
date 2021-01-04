@@ -44,10 +44,6 @@ body {
     .mg-responsive {
         margin: 0px 15px;
     }
-
-    .table td {
-        padding: 10px 13px !important;
-    }
 }
 
 @media screen and (min-width: 992px) and (max-width: 1200px) {
@@ -507,9 +503,40 @@ a.label {
 }
 
 .nav-btn.active {
-    background: #2E85EC !important;
+    background-color: #2E85EC !important;
     border: 1px solid #2E85EC;
     border-radius: 11px;
     opacity: 1 !important;
     color: white !important;
+}
+
+.card-header {
+    background-color: transparent;
+}
+
+.card {
+    font-family: 'Muli', sans-serif;
+    border-radius: 21px;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead > tr > td:first-child, .table thead > tr > th:first-child {
+    border-radius: 21px 0 0 0!important;
+    -webkit-border-radius: 21px 0 0 0 !important;
+    -moz-border-radius: 21px 0 0 0 !important;
+}
+
+.table thead > tr > td:last-child,.table thead > tr > th:last-child {
+
+    border-radius: 0 21px 0 0!important;
+    -webkit-border-radius: 0 21px 0 0 !important;
+    -moz-border-radius: 0 21px 0 0 !important;
+}
+
+.table thead > tr > td, .table thead > tr > th {
+    background-color: #EFF7FF;
+}
+
+.table thead > tr > td, .table thead > tr > th {
+    padding: 20px 0 20px 20px !important;
 }

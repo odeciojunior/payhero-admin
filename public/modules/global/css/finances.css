@@ -172,13 +172,6 @@
     background: #44a44b;
 }
 
-.table th {
-    border-top: none;
-    font-weight: 700 !important;
-    border-top: none;
-    color: black !important;
-}
-
 .money-td {
     color: black;
     font-weight: 700;
