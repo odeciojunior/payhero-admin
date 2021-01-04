@@ -68,6 +68,12 @@ $(function () {
 
                     $('.products_amount').mask('0#');
 
+                    if($('#currency_type_project').val() == 1) {
+                        $('#select_currency').prop('selectedIndex', 0);
+                    } else {
+                        $('#select_currency').prop('selectedIndex', 1);
+                    }
+
                     $(document).on('click', '.btnDelete', function (event) {
                         event.preventDefault();
                         $(this).parent().parent().remove();
@@ -104,6 +110,12 @@ $(function () {
                         $('#products').after('<div class="card container">' + new_div.html() + '</div>');
                         $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
                         $('.products_amount').mask('0#');
+
+                        if($('#currency_type_project').val() == 1) {
+                            $('.card.container .select_currency_create').prop('selectedIndex', 0);
+                        } else {
+                            $('.card.container .select_currency_create').prop('selectedIndex', 1);
+                        }
                         bindModalKeys();
                     });
 
@@ -242,6 +254,7 @@ $(function () {
                             data += '</tr>';
                             $("#data-table-plan").append(data);
                             $('#table-plans').addClass('table-striped');
+                            $('#currency_type_project').val(value.currency_project);
                         });
 
                         pagination(response, 'plans', index);

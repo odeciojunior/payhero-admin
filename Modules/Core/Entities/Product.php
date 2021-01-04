@@ -21,7 +21,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $description
  * @property string $guarantee
  * @property boolean $format
- * @property string $cost
  * @property string $photo
  * @property string $height
  * @property string $width
@@ -75,7 +74,6 @@ class Product extends Model
         'description',
         'guarantee',
         'format',
-        'cost',
         'photo',
         'height',
         'width',
@@ -91,7 +89,6 @@ class Product extends Model
         'shopify_id',
         'shopify_variant_id',
         'project_id',
-        'currency_type_enum',
         'type_enum',
         'status_enum',
     ];

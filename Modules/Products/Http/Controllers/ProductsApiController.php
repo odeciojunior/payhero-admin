@@ -133,10 +133,8 @@ class ProductsApiController extends Controller
             $data = $request->validated();
             $data['shopify'] = 0;
             $data['user'] = auth()->user()->account_owner_id;
-            $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
             $data['user_id'] = auth()->user()->account_owner_id;
             //            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
-            $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
             $data['name'] = FoxUtils::removeSpecialChars($data['name']);
             $data['description'] = FoxUtils::removeSpecialChars($data['description']);
 
@@ -270,7 +268,6 @@ class ProductsApiController extends Controller
             $category = $categoryModel->where('name', 'like', '%'.'Outros'.'%')->first();
             $data['category'] = $category->id;
 
-            $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
             $productId = current(Hashids::decode($id));
 
             if (empty($productId) && empty($data['category'])) {
@@ -282,10 +279,6 @@ class ProductsApiController extends Controller
             $product = $productModel->find($productId);
             if (!Gate::allows('update', [$product])) {
                 return response()->json(['message' => 'Sem permissão para atualizar este produto!'], 400);
-            }
-
-            if (isset($data['cost'])) {
-                $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
             }
 
             $data['name'] = FoxUtils::removeSpecialChars($data['name']);
