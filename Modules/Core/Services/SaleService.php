@@ -4,12 +4,8 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
@@ -32,12 +28,6 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SaleService
 {
-    /**
-     * @param $filters
-     * @param bool $withProducts
-     * @param int $userId
-     * @return Builder
-     */
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
         try {
@@ -216,10 +206,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param $filters
-     * @return LengthAwarePaginator
-     */
     public function getPaginetedSales($filters)
     {
         $transactions = $this->getSalesQueryBuilder($filters);
@@ -227,11 +213,6 @@ class SaleService
         return $transactions->paginate(10);
     }
 
-    /**
-     * @param $filters
-     * @return array
-     * @throws PresenterException
-     */
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
@@ -265,11 +246,6 @@ class SaleService
         return $resume;
     }
 
-    /**
-     * @param $saleId
-     * @return Sale
-     * @throws Exception
-     */
     public function getSaleWithDetails($saleId)
     {
         $companyModel = new Company();
@@ -300,11 +276,6 @@ class SaleService
         return $sale;
     }
 
-    /**
-     * @param $sale
-     * @param $userCompanies
-     * @throws Exception
-     */
     public function getDetails($sale, $userCompanies)
     {
         $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
@@ -452,10 +423,6 @@ class SaleService
         ];
     }
 
-    /**
-     * @param Sale $sale
-     * @return array
-     */
     public function getPagarmeItensList(Sale $sale)
     {
         $itens = [];
@@ -473,10 +440,6 @@ class SaleService
         return $itens;
     }
 
-    /**
-     * @param null $saleId
-     * @return AnonymousResourceCollection|null
-     */
     public function getProducts($saleId = null)
     {
         try {
@@ -495,10 +458,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param $saleId
-     * @return array
-     */
     public function getEmailProducts($saleId)
     {
         $saleModel = new Sale();
@@ -536,15 +495,6 @@ class SaleService
         return $productsSale;
     }
 
-    /**
-     * @param $sale
-     * @param $refundAmount
-     * @param $response
-     * @param array $partialValues
-     * @param $refundObservation
-     * @return bool
-     * @throws Exception
-     */
     public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [], $refundObservation)
     {
         try {
@@ -630,13 +580,7 @@ class SaleService
         }
     }
 
-    /**
-     * @param Sale $sale
-     * @param int $refundAmount
-     * @return bool
-     * @throws Exception
-     */
-    public function recalcSaleRefund($sale, $refundAmount)
+    public function recalcSaleRefund($sale, $refundAmount): bool
     {
         try {
             $companyModel = new Company();
@@ -654,12 +598,14 @@ class SaleService
                 //calcula valor que deve ser estornado da transação
                 $transactionValue = (int)$refundTransaction->value;
                 $transactionRefundAmount = (int)round(($transactionValue * ($percentRefund / 100)));
-                //calcula novo valor da transação
-                //todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
-                //                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
-                //Caso transaction ja esteja como transfered, criar transfer de saida
+                /**
+                 * calcula novo valor da transação
+                 * todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
+                 * $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+                 * Caso transaction ja esteja como transfered, criar transfer de saida
+                 */
                 $company = $companyModel->find($refundTransaction->company_id);
-                if ($refundTransaction->status == 'transfered') {
+                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
                     $transferModel->create(
                         [
                             'transaction_id' => $refundTransaction->id,
@@ -677,33 +623,8 @@ class SaleService
                             'balance' => $company->balance -= $transactionRefundAmount,
                         ]
                     );
-                } else {
-                    if ($refundTransaction->status == 'anticipated') {
-                        $company = $companyModel->find($refundTransaction->company_id);
-
-                        $transactionAnticipatedValue = $refundTransaction->value - $refundTransaction->anticipatedTransactions(
-                            )
-                                ->first()->value;
-
-                        $transferModel->create(
-                            [
-                                'transaction_id' => $refundTransaction->id,
-                                'user_id' => $company->user_id,
-                                'value' => $transactionAnticipatedValue,
-                                'type' => 'out',
-                                'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                                'reason' => 'refunded',
-                                'company_id' => $company->id,
-                            ]
-                        );
-
-                        $company->update(
-                            [
-                                'balance' => $company->balance -= $transactionAnticipatedValue,
-                            ]
-                        );
-                    }
                 }
+
                 if ($transactionRefundAmount == $transactionValue) {
                     $refundTransaction->status = 'refunded';
                     $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
@@ -712,17 +633,11 @@ class SaleService
             }
 
             return true;
-        } catch
-        (Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
 
-    /**
-     * @param $transactionId
-     * @param null $refundObservation
-     * @return string[]
-     */
     public function refund($transactionId, $refundObservation = null)
     {
         try {
@@ -851,10 +766,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param Sale $sale
-     * @throws PresenterException
-     */
     public function refundBillet(Sale $sale)
     {
         $transferModel = new Transfer();
@@ -986,12 +897,6 @@ class SaleService
         event(new BilletRefundedEvent($sale));
     }
 
-    /**
-     * @param $sale
-     * @param $partialValues
-     * @return bool
-     * @throws PresenterException
-     */
     public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {
@@ -1003,7 +908,7 @@ class SaleService
             // criar tranfer de saida e apagar transacoes
             foreach ($refundTransactions as $refundTransaction) {
                 $company = $companyModel->find($refundTransaction->company_id);
-                if ($refundTransaction->status == 'transfered') {
+                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
                     $transferModel->create(
                         [
                             'transaction_id' => $refundTransaction->id,
@@ -1042,8 +947,8 @@ class SaleService
             }
 
             // verify transfers
-            $transfersSerice = new TransfersService();
-            $transfersSerice->verifyTransactions($sale->id);
+            $transfersService = new TransfersService();
+            $transfersService->verifyTransactions($sale->id);
 
             return true;
         } catch (Exception $ex) {
@@ -1051,12 +956,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param $sale
-     * @param $refundValue
-     * @return array
-     * @throws PresenterException
-     */
     public function getValuesPartialRefund($sale, $refundValue)
     {
         $totalPaidValue = intval(strval($sale->total_paid_value * 100));
@@ -1115,9 +1014,6 @@ class SaleService
         ];
     }
 
-    /**
-     * @param $sale
-     */
     public function updateInterestTotalValue($sale)
     {
         $shopifyDiscount = (!is_null($sale->shopify_discount)) ? intval(
@@ -1136,10 +1032,6 @@ class SaleService
         $sale->update(['interest_total_value' => $interesetTotalValue]);
     }
 
-    /**
-     * @param $filters
-     * @return Builder|null
-     */
     public function getSalesPendingBalance($filters)
     {
         $companyModel = new Company();
@@ -1270,10 +1162,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param $filters
-     * @return Builder|null
-     */
     public function getSalesBlockedBalance($filters)
     {
         try {
@@ -1378,11 +1266,6 @@ class SaleService
         }
     }
 
-    /**
-     * @param $filters
-     * @return array
-     * @throws PresenterException
-     */
     public function getResumeBlocked($filters)
     {
         $transactionModel = new Transaction();
@@ -1439,10 +1322,6 @@ class SaleService
         return $resume;
     }
 
-    /**
-     * @param $filters
-     * @return LengthAwarePaginator
-     */
     public function getPendingBalance($filters)
     {
         $transactions = $this->getSalesPendingBalance($filters);
@@ -1450,10 +1329,6 @@ class SaleService
         return $transactions->paginate(10);
     }
 
-    /**
-     * @param $filters
-     * @return LengthAwarePaginator
-     */
     public function getPaginetedBlocked($filters)
     {
         $transactions = $this->getSalesBlockedBalance($filters);
@@ -1461,11 +1336,7 @@ class SaleService
         return $transactions->paginate(10);
     }
 
-    /**
-     * @param Sale $sale
-     * @return bool
-     */
-    public function saleIsGetnet(Sale $sale)
+    public function saleIsGetnet(Sale $sale): bool
     {
         if (in_array($sale->gateway_id, [14, 15])) {
             return true;
