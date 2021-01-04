@@ -654,24 +654,6 @@ input[type=radio] {
     align-content: center;
 }
 
-
-.nav-btn {
-    margin-right: 5px;
-    background: transparent;
-    color: #888;
-    border-radius: 11px;
-    border: 1px solid #D2D2D2;
-    font-weight: 700;
-}
-
-.nav-btn.active {
-    background: #2E85EC !important;
-    border: 1px solid #2E85EC;
-    border-radius: 11px;
-    opacity: 1 !important;
-    color: white !important;
-}
-
 .w-450 {
     width: 450px;
 }

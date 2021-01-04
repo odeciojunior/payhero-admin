@@ -567,10 +567,17 @@ $.fn.shake = function () {
 $(document).ready(function () {
     var bodyEl = $('body')
     var menuBarToggle = $('[data-toggle="menubar"]');
+    var toggle = $('[data-toggle="menubar"].nav-link');
     menuBarToggle.off().on('click', function () {
         bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
         menuBarToggle.toggleClass('hided')
-        //$('.site-menu-item.has-sub').removeClass('active')
+        if (toggle.hasClass('hided')) {
+            $('#logoIconSirius').fadeOut().addClass('d-none');
+            $('#logoSirius').fadeIn().removeClass('d-none');
+        } else {
+            $('#logoIconSirius').fadeIn().removeClass('d-none');
+            $('#logoSirius').fadeOut().addClass('d-none');
+        }
     })
 
     var siteMenuItems = $('.site-menu-item.has-sub')
@@ -578,17 +585,16 @@ $(document).ready(function () {
     var menuTimeout
     siteMenuBar.on('mouseenter', function () {
         bodyEl.addClass('site-menubar-hover');
-        $('#logoIconSirius').addClass('d-none');
-        $('#logoSirius').removeClass('d-none');
+        $('#logoIconSirius').fadeOut().addClass('d-none');
+        $('#logoSirius').fadeIn().removeClass('d-none');
     }).on('mouseleave', function () {
         menuTimeout = setTimeout(function () {
             bodyEl.removeClass('site-menubar-hover');
-            $('#logoIconSirius').removeClass('d-none');
-            $('#logoSirius').addClass('d-none');
-            //if (!bodyEl.hasClass('site-menubar-unfold')) {
-                //siteMenuItems.removeClass('active')
-            //}
-        }, 1000)
+            if (!toggle.hasClass('hided')) {
+                $('#logoIconSirius').fadeIn().removeClass('d-none');
+                $('#logoSirius').fadeOut().addClass('d-none');
+            }
+        }, 500)
     }).find('*').on('mouseenter', function (event) {
         clearTimeout(menuTimeout)
         bodyEl.addClass('site-menubar-hover')

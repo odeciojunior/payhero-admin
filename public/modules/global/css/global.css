@@ -455,7 +455,7 @@ a.label {
 }
 
 .site-menu-item:hover > a > span:first-child{
-    background: #2E85EC;
+    background: rgba(46, 133, 236, 0.3);
     border-radius: 0 44px 44px 0;
     display: inline flow-root list-item;
     margin-right: 10px;
@@ -495,4 +495,21 @@ a.label {
 
 .bg-menu {
     padding: 0 10px 0 15px;
+}
+
+.nav-btn {
+    margin-right: 5px;
+    background: transparent;
+    color: #888;
+    border-radius: 11px;
+    border: 1px solid #D2D2D2;
+    font-weight: 700;
+}
+
+.nav-btn.active {
+    background: #2E85EC !important;
+    border: 1px solid #2E85EC;
+    border-radius: 11px;
+    opacity: 1 !important;
+    color: white !important;
 }
