@@ -895,6 +895,9 @@ class ShopifyService
                     ->first();
                 if (!empty($productPlan)) {
                     $plan = $planModel->find($productPlan->plan_id);
+                    $productPlan->update([
+                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
+                    ]);
                     $plan->update(
                         [
                             'name' => $title,
@@ -951,6 +954,7 @@ class ShopifyService
                             'product_id' => $product->id,
                             'plan_id' => $plan->id,
                             'amount' => 1,
+                            'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
                         ]
                     );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
@@ -1001,6 +1005,7 @@ class ShopifyService
                         'product_id' => $product->id,
                         'plan_id' => $plan->id,
                         'amount' => '1',
+                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
                     ]
                 );
                 $photo = '';

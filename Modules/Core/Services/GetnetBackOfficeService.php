@@ -226,6 +226,7 @@ class GetnetBackOfficeService extends GetnetService
             }
         }
 
+
         if (request('debug')) {
 
             echo '<pre>';

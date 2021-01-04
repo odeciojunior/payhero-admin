@@ -35,6 +35,7 @@ class PlansResource extends JsonResource
             'status_code'       => $this->status,
             'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
             'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            'currency_project'  => $this->project->cost_currency_type,
         ];
     }
 }

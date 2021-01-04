@@ -86,15 +86,18 @@ class GetNetStatementService
         $isValidStatusFilter = true;
         $isValidPaymentMethodFilter = true;
 
-        if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
+        if (!array_key_exists('sale', $this->filters)) {
 
-            $startDate = $this->filters['start_date']->format('Ymd');
-            $endDate = $this->filters['end_date']->format('Ymd');
-            $date = Carbon::createFromFormat('d/m/Y', $date)->format('Ymd');
+            if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
 
-            if ($date < $startDate || $date > $endDate) {
+                $startDate = $this->filters['start_date']->format('Ymd');
+                $endDate = $this->filters['end_date']->format('Ymd');
+                $date = Carbon::createFromFormat('d/m/Y', $date)->format('Ymd');
 
-                return false;
+                if ($date < $startDate || $date > $endDate) {
+
+                    return false;
+                }
             }
         }
 

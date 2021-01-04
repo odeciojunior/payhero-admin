@@ -164,6 +164,7 @@ class TransfersApiController
 
             if (!empty(request('sale'))) {
                 $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
+                $filters['sale'] = $endDate;
             }
 
             $result = $getNetBackOfficeService->getStatement();
