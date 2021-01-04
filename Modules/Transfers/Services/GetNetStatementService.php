@@ -86,7 +86,7 @@ class GetNetStatementService
         $isValidStatusFilter = true;
         $isValidPaymentMethodFilter = true;
 
-        if (!array_key_exists('order_id', $this->filters)) {
+        if (!array_key_exists('sale', $this->filters)) {
 
             if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
 
