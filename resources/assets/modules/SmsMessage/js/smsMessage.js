@@ -103,8 +103,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -119,8 +119,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -135,8 +135,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -151,8 +151,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -167,8 +167,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -183,8 +183,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -199,8 +199,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -215,8 +215,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -231,8 +231,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 
@@ -247,8 +247,8 @@ $(function () {
         data += '</td>';
         data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
         data += '</td>';
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="orion-icon-eye"></span> </a></td>";
-        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <span class="o-eye-1"></span> </a></td>";
+        data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a></td>";
         data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <span class='orion-icon-lixo'></span> </a></td>";
         data += '</tr>';
 

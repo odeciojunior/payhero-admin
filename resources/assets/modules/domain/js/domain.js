@@ -471,8 +471,8 @@ $(document).ready(function () {
 
         dados += '</td>';
         dados += "<td style='min-width:200px;'>" +
-            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='orion-icon-eye'></span> </a>" +
-            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='orion-icon-edit'></span> </a>" +
+            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>" +
+            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>" +
             "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><span class='orion-icon-lixo'></span> </a>"
         "</td>";
         dados += '</tr>';

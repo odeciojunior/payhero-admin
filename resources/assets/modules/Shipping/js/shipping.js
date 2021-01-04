@@ -165,8 +165,8 @@ $(document).ready(function () {
                         }
                         dados += '</td>';
                         dados += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-eye'></span> </a>" +
-                            "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <span class='orion-icon-edit'></span> </a>" +
+                            "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <span class='o-eye-1'></span> </a>" +
+                            "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <span class='o-edit-1'></span> </a>" +
                             "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <span class='orion-icon-lixo'></span></a>"
                         "</td>";
                         dados += '</tr>';

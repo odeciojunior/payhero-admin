@@ -158,14 +158,14 @@
                             <span id="boleto-link" class="table-title gray">
                                 Link para o boleto:
                                 <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                    <span class="orion-icon-copy"></span>
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
                                 </a>
                             </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                                 <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                    title='Copiar link'>
-                                    <span class="orion-icon-copy"></span>
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
                                 </a>
                             </span>
                             <br>

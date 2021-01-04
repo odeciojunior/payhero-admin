@@ -15,7 +15,7 @@ body {
 .menu-active > .bg-menu {
     background: #2E85EC;
     border-radius: 0 44px 44px 0;
-    display: inline flow-root list-item;
+    display: inline-block;
 }
 
 .menu-active .site-menu-item i {
@@ -453,7 +453,7 @@ a.label {
 .site-menu-item:hover > a > span:first-child{
     background: rgba(46, 133, 236, 0.3);
     border-radius: 0 44px 44px 0;
-    display: inline flow-root list-item;
+    display: inline-block;
     margin-right: 10px;
 
     -webkit-transition: all 0.3s;
@@ -508,10 +508,6 @@ a.label {
     border-radius: 11px;
     opacity: 1 !important;
     color: white !important;
-}
-
-.card-header {
-    background-color: transparent;
 }
 
 .card {

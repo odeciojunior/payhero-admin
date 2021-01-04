@@ -263,7 +263,7 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
                         <div class="panel-body">
                             Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
-                            <span class="orion-icon-eye"></span> para verificar novamente.
+                            <span class="o-eye-1"></span> para verificar novamente.
                         </div>
                     </div>
                 </div>

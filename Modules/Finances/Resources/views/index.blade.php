@@ -279,10 +279,11 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="statement_sale">
-                                                    Transação <i class="material-icons gray ml-5 font-size-18"
+                                                    Transação <i style="font-weight: normal"
+                                                                 class="o-question-help-1 ml-5 font-size-14"
                                                                  data-toggle="tooltip"
                                                                  title=""
-                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">help</i>
+                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data"></i>
                                                 </label>
                                                 <input name="statement_sale" id="statement_sale"
                                                        class="select-pad" placeholder="Transação">
@@ -304,10 +305,11 @@
                                             <th scope="col" class="headCenter" style="width:30%">Razão</th>
                                             <th scope="col" class="headCenter" style="width:30%">Status</th>
                                             <th scope="col" class="headCenter" style="width:30%">Data prevista
-                                                <i class="material-icons gray ml-5 font-size-18"
+                                                <i style="font-weight: normal"
+                                                   class="o-question-help-1 ml-5 font-size-14"
                                                    data-toggle="tooltip"
                                                    title=""
-                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
                                             </th>
                                             <th scope="col" class="headCenter" style="width:10%">Valor</th>
                                         </tr>

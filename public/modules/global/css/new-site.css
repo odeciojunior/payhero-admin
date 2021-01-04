@@ -807,6 +807,7 @@ button.btn img {
     transition: 0.3s;
 }
 
+.icon-copy-1,
 .o-add-user-1,
 .o-agenda-1,
 .o-bank-cards-1,
@@ -851,11 +852,15 @@ button.btn img {
     -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
 }
 
+.icon-copy-1 {
+
+}
 
 .o-eye-1 {
     font-size: 30px;
 }
 
+.icon-copy-1:hover,
 .o-add-user-1:hover,
 .o-agenda-1:hover,
 .o-bank-cards-1:hover,
@@ -942,3 +947,21 @@ button.btn img {
     color: #343A40;
     box-shadow: none;
 }
+
+.ribbon span a {
+    filter: brightness(0) invert(1);
+}
+
+.ribbon span {
+    background: #79A70A;
+}
+
+.s-card-header {
+    border-radius: 21px 21px 0 0 !important;
+    background-color: #EFF7FF;
+}
+
+.s-card-header > h4{
+    color: #002654;
+}
+
