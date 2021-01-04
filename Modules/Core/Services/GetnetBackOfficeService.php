@@ -223,8 +223,11 @@ class GetnetBackOfficeService extends GetnetService
                 }
 
                 $queryParameters['order_id'] = $orderId;
+
+                unset($queryParameters[$this->getStatementDateField() . '_date_init'], $queryParameters[$this->getStatementDateField() . '_date_end']);
             }
         }
+
 
         if (request('debug')) {
 
