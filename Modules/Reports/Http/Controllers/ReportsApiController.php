@@ -32,11 +32,7 @@ use Modules\Reports\Transformers\TransactionBlockedResource;
 
 class ReportsApiController extends Controller
 {
-    /**
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function index(request $request)
+    public function index(request $request): JsonResponse
     {
         try {
             $userProjectModel = new UserProject();
@@ -81,7 +77,7 @@ class ReportsApiController extends Controller
                     }
                 }
 
-                $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+                $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(5)->get()->toArray();
                 $plans = [];
                 foreach ($itens as $key => $iten) {
                     $plan = $planModel->with('products')->find($iten['plan_id']);
