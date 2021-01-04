@@ -67,10 +67,19 @@
     </div>
     <div class='row'>
         <div class="form-group col-12 shipping-plans-add-container">
-            <label for='shipping-plans-add'>Disponível para os planos: </label>
+            <label for='shipping-plans-add'>Oferecer o frete para os planos: </label>
             <select name="apply_on_plans[]" id="shipping-plans-add" class="form-control shipping-plans-add"
                     style='width:100%'
                     data-plugin="select2" multiple='multiple'> </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='form-group col-12 shipping-not-apply-plans-add-container'>
+            <label for='shipping-not-apply-plans-add'>Não oferecer o frete para os planos: </label>
+            <select name="not_apply_on_plans[]" id="shipping-not-apply-plans-add"
+                    class="form-control shipping-not-apply-plans-add"
+                    style='width:100%'
+                    data-plugin="select2" multiple='multiple'></select>
         </div>
     </div>
     {{--    <div class='row'>

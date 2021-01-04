@@ -51,6 +51,8 @@ $(document).ready(function () {
 
     setSelect2Plugin('#shipping-plans-add', '.shipping-plans-add-container')
     setSelect2Plugin('#shipping-plans-edit', '.shipping-plans-edit-container')
+    setSelect2Plugin('#shipping-not-apply-plans-add', '.shipping-not-apply-plans-add-container')
+    setSelect2Plugin('#shipping-not-apply-plans-edit', '.shipping-not-apply-plans-edit-container')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -67,6 +69,8 @@ $(document).ready(function () {
         $('.shipping-value').val('');
         $('.shipping-zipcode').val('');
         $('.rule-shipping-value').val('');
+        $('#shipping-plans-add').html('');
+        $('#shipping-not-apply-plans-add').html('');
     }
 
     $(".shipping-description").keyup(function () {
@@ -176,14 +180,23 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
 
                 // Seleciona a opção do select de acordo com o que vem do banco
-                var plans = $('#modal-edit-shipping .shipping-plans-edit')
-                plans.html('')
-                let applyOnPlans = []
+                var applyOnPlansEl = $('#modal-edit-shipping .shipping-plans-edit')
+                applyOnPlansEl.html('')
+                var applyOnPlans = []
                 for (let plan of response.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    plans.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    applyOnPlansEl.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
-                plans.val(applyOnPlans).trigger('change')
+                applyOnPlansEl.val(applyOnPlans).trigger('change')
+
+                var notApplyOnPlansEl = $('#modal-edit-shipping .shipping-not-apply-plans-edit')
+                notApplyOnPlansEl.html('')
+                var notApplyOnPlans = []
+                for (let plan of response.not_apply_on_plans) {
+                    notApplyOnPlans.push(plan.id);
+                    notApplyOnPlansEl.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                }
+                notApplyOnPlansEl.val(notApplyOnPlans).trigger('change')
 
                 $('#modal-edit-shipping').modal('show');
             }

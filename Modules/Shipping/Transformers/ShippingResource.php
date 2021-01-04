@@ -21,6 +21,7 @@ class ShippingResource extends JsonResource
     public function toArray($request)
     {
         $applyPlanArray = [];
+        $notApplyPlanArray = [];
         $planModel = new Plan();
 
         if (!empty($this->apply_on_plans)) {
@@ -32,6 +33,24 @@ class ShippingResource extends JsonResource
                     $plan = $planModel->find($value);
                     if (!empty($plan)) {
                         $applyPlanArray[] = [
+                            'id'          => Hashids::encode($plan->id),
+                            'name'        => $plan->name,
+                            'description' => $plan->description,
+                        ];
+                    }
+                }
+            }
+        }
+
+        if (!empty($this->not_apply_on_plans)) {
+            $notApplyPlanDecoded = json_decode($this->not_apply_on_plans);
+            if (in_array('all', $notApplyPlanArray)) {
+                $notApplyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
+            } else {
+                foreach ($notApplyPlanDecoded as $key => $value) {
+                    $plan = $planModel->find($value);
+                    if (!empty($plan)) {
+                        $notApplyPlanArray[] = [
                             'id'          => Hashids::encode($plan->id),
                             'name'        => $plan->name,
                             'description' => $plan->description,
@@ -56,7 +75,8 @@ class ShippingResource extends JsonResource
             'status_translated'       => Lang::get('definitions.enum.shipping.status.' . $this->present()->getStatus($this->status)),
             'pre_selected'            => $this->pre_selected,
             'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->present()->getPreSelectedStatus($this->pre_selected)),
-            'apply_on_plans'          => $applyPlanArray
+            'apply_on_plans'          => $applyPlanArray,
+            'not_apply_on_plans'      => $notApplyPlanArray,
         ];
     }
 }

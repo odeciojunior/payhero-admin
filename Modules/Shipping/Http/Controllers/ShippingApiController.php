@@ -117,8 +117,17 @@ class ShippingApiController extends Controller
                             $applyPlanArray[] = current(Hashids::decode($value));
                         }
                     }
-
                     $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
+
+                    $notApplyPlanArray = [];
+                    if (in_array('all', $shippingValidated['not_apply_on_plans'])) {
+                        $notApplyPlanArray[] = 'all';
+                    } else {
+                        foreach ($shippingValidated['not_apply_on_plans'] as $key => $value) {
+                            $notApplyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $shippingValidated['not_apply_on_plans'] = json_encode($notApplyPlanArray);
 
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
@@ -140,7 +149,7 @@ class ShippingApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao tentar cadastrar frete',
-            ], 400);
+            ], 500);
         }
     }
 
@@ -282,6 +291,16 @@ class ShippingApiController extends Controller
                         }
                     }
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
+
+                    $notApplyPlanArray = [];
+                    if (in_array('all', $requestValidated['not_apply_on_plans'])) {
+                        $notApplyPlanArray[] = 'all';
+                    } else {
+                        foreach ($requestValidated['not_apply_on_plans'] as $key => $value) {
+                            $notApplyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $requestValidated['not_apply_on_plans'] = $notApplyPlanArray;
 
                     if (!$this->verifyAllPlansHasActiveShippings($shipping, $applyPlanArray, $requestValidated['status'])) {
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
@@ -431,6 +450,8 @@ class ShippingApiController extends Controller
 
             foreach ($otherShippings as $otherShipping) {
                 $applyOnPlans = json_decode($otherShipping->apply_on_plans);
+                $notApplyOnPlans = json_decode($otherShipping->not_apply_on_plans);
+                $applyOnPlans = array_diff($applyOnPlans, $notApplyOnPlans);
 
                 if (!empty($currentApplyOnPlans) && $active_flag &&
                     ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
@@ -450,5 +471,17 @@ class ShippingApiController extends Controller
         }
 
         return true;
+    }
+
+    private function getDecodedPlanIds(array $encodedIds)
+    {
+        $decodedIds = [];
+        if (in_array('all', $encodedIds)) {
+            $decodedIds[] = 'all';
+        } else {
+            foreach ($encodedIds as $key => $value) {
+                $decodedIds[] = current(Hashids::decode($value));
+            }
+        }
     }
 }

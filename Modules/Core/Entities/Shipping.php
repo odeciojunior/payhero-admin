@@ -61,13 +61,15 @@ class Shipping extends Model
         'rule_value',
         'pre_selected',
         'apply_on_plans',
+        'not_apply_on_plans',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
 
     protected $attributes = [
-        'apply_on_plans' => ['all']
+        'apply_on_plans' => ['all'],
+        'not_apply_on_plans' => []
     ];
 
     /**
