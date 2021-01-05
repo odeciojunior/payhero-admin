@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     // COMPORTAMENTOS DA JANELA
-
+    getIntegrationNotazz();
     $("#bt_get_csv").on("click", function () {
         invoicesExport('csv');
     });
@@ -22,6 +22,25 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
+    function getIntegrationNotazz() {
+
+        $.ajax({
+            method: "GET",
+            url: '/api/apps/notazz/' + extractIdFromPathName(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                $('#title_integration').html(response.data.project_name);
+            }
+        });
+    }
 
 
     function invoicesExport(fileFormat) {
@@ -179,9 +198,8 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>#${value.sale_code}</td>
-                                    <td>${value.project}
-                                    <br>
-                                    <small>${value.product}</small>
+                                    <td>
+                                        <small>${value.product}</small>
                                     </td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
