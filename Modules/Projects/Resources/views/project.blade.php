@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet"
-          href="{{ asset('modules/global/adminremark/global/vendor/ascolorpicker/asColorPicker.css') }}?v={{rand(1,1000)}}">
+          href="{{ asset('modules/global/js-extra/jquery-asColorPicker/dist/css/asColorPicker.css?v=33')}}">
 
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
@@ -234,9 +234,9 @@
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
 
-        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asColor/dist/jquery-asColor.js') }}?v={{rand(1,1000)}}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asGradient/dist/jquery-asGradient.js') }}?v={{rand(1,1000)}}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asColorPicker/dist/jquery-asColorPicker.js') }}?v={{rand(1,1000)}}"></script>
+        <script src="{{ asset('modules/global/js-extra/jquery-asColor/dist/jquery-asColor.js?v='.uniqid()) }}"></script>
+        <script src="{{ asset('modules/global/js-extra/jquery-asGradient/dist/jquery-asGradient.js?v='.uniqid()) }}"></script>
+        <script src="{{ asset('modules/global/js-extra/jquery-asColorPicker/dist/jquery-asColorPicker.js?v='.uniqid()) }}"></script>
 
     @endpush
 @endsection
