@@ -71,7 +71,14 @@ $(document).ready(function () {
         $('.rule-shipping-value').val('');
         $('#shipping-plans-add').html('');
         $('#shipping-not-apply-plans-add').html('');
+
+        var elem = $('#shipping-plans-add')
+        elem.html('')
+        elem.append('<option value="all">Qualquer plano</option>');
+        elem.val('all').trigger('change')
     }
+
+    clearFields()
 
     $(".shipping-description").keyup(function () {
         if ($(this).val().length > 60) {
