@@ -66,7 +66,7 @@
                     <div class="fixhalf"></div>
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
-                            <div class="row align-items-baseline">
+                            <div class="row align-items-baseline mb-md-15">
                                 <div class="col-sm-6 col-md">
                                     <label for="projeto">Projeto</label>
                                     <select name='select_project' id="projeto" class="form-control select-pad">
@@ -96,7 +96,7 @@
                                     <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
-                            <div class="row mt-md-15 collapse" id="bt_collapse">
+                            <div class="row collapse" id="bt_collapse">
                                 <div class="d-flex">
                                     <div class="col-sm-8 col-md">
                                         <label for="comprador">Nome do cliente</label>
