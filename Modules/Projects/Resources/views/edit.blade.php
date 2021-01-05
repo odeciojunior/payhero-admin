@@ -571,12 +571,12 @@
                         <div class="row">
                             <div class='col-12 '>
                                 <div class="switch-holder">
-                                    <label for='finalizing_purchase_configs'
+                                    <label for='finalizing_purchase_config'
                                            style='margin-right:15px;margin-bottom: 3px'>Pessoas finalizando
                                         compra</label>
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="finalizing_purchase_configs"
-                                               name="finalizing_purchase_configs" class='check'
+                                        <input type="checkbox" id="finalizing_purchase_config"
+                                               name="finalizing_purchase_config_toogle" class='check'
                                                value='0'>
                                         <span class="slider round"></span>
                                     </label>
@@ -586,11 +586,11 @@
                                         estão finalizando uma compra na página de checkout.
                                     </p>
 
-                                    <label for='finalizing_purchase_config_max_visitante_value'
+                                    <label for='finalizing_purchase_config_text'
                                            class="finalizing_purchase_config d-none"
                                            style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
 
-                                    <input id='finalizing_purchase_config_value' name='finalizing_purchase_config_value'
+                                    <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
                                            value="Outras [min_visitante] [max_visitante] pessoas estão finalizando a compra neste momento"
                                            class='form-control select-pad finalizing_purchase_config d-none '>
 
@@ -599,49 +599,57 @@
                                         Você pode mover o máximo e o mínimo de visitante em qualquer lugar do texto.
                                     </p>
 
-                                    <span id='finalizing_purchase_config_error' class='text-danger'></span>
+                                    <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
 
                                 </div>
                             </div>
                             <div class='col-1 finalizing_purchase_config d-none'>
                                 <div class="switch-holder">
-                                    <label for='finalizing_purchase_config_min_visitante_value'
+                                    <label for='finalizing_purchase_config_min_value'
                                            style='margin-right:15px;margin-bottom: 3px'>Mínimo</label>
 
-                                    <input name='finalizing_purchase_config_min_visitante_value'
+                                    <input id="finalizing_purchase_config_min_value" name='finalizing_purchase_config_min_value'
                                            type="number"
                                            value="1"
                                            class='form-control select-pad  '>
+
+                                    <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
                                 </div>
                             </div>
                             <div class='col-1 finalizing_purchase_config d-none'>
                                 <div class="switch-holder">
-                                    <label for='finalizing_purchase_config_max_visitante_value'
+                                    <label for='finalizing_purchase_config_max_value'
                                            style='margin-right:15px;margin-bottom: 3px'>Máximo</label>
 
-                                    <input name='finalizing_purchase_config_max_visitante_value'
+                                    <input name='finalizing_purchase_config_max_value'
                                            type="number"
                                            value="15"
                                            class='form-control select-pad  '>
+
+                                    <span id='finalizing_purchase_config_max_value_error' class='text-danger'></span>
                                 </div>
                             </div>
                             <div class='col-5 finalizing_purchase_config d-none'>
 
-                                <label for='finalizing_purchase_config_min_visitante_value'
+                                <label for='finalizing_purchase_config_eye_color'
                                        style='margin-right:15px;margin-bottom: 3px'>Cor do ícone de olho</label>
 
-                                <input type="text" class="asColorpicker form-control "  style="width:100%" data-plugin="asColorPicker"
+                                <input type="text" name="finalizing_purchase_config_eye_color" class="asColorpicker form-control "  style="width:100%" data-plugin="asColorPicker"
                                        data-mode="simple" value="#ff666b"/>
+
+                                <span id='finalizing_purchase_config_eye_color_error' class='text-danger'></span>
 
 
                             </div>
                             <div class='col-5 finalizing_purchase_config d-none'>
 
-                                <label for='finalizing_purchase_config_max_visitante_value'
+                                <label for='finalizing_purchase_config_text_color'
                                        style='margin-right:15px;margin-bottom: 3px'>Cor do texto</label>
 
-                                <input type="text" class="form-control asColorpicker " style="width:100%" data-plugin="asColorPicker"
+                                <input type="text" name="finalizing_purchase_config_text_color" class="form-control asColorpicker " style="width:100%" data-plugin="asColorPicker"
                                        data-mode="simple" value="#ff666b"/>
+
+                                <span id='finalizing_purchase_config_text_color_error' class='text-danger'></span>
 
                             </div>
 
