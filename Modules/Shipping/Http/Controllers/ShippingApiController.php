@@ -120,9 +120,7 @@ class ShippingApiController extends Controller
                     $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
 
                     $notApplyPlanArray = [];
-                    if (in_array('all', $shippingValidated['not_apply_on_plans'])) {
-                        $notApplyPlanArray[] = 'all';
-                    } else {
+                    if (isset($shippingValidated['not_apply_on_plans']) && !in_array('all', $shippingValidated['not_apply_on_plans'])) {
                         foreach ($shippingValidated['not_apply_on_plans'] as $key => $value) {
                             $notApplyPlanArray[] = current(Hashids::decode($value));
                         }
@@ -293,9 +291,7 @@ class ShippingApiController extends Controller
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
 
                     $notApplyPlanArray = [];
-                    if (in_array('all', $requestValidated['not_apply_on_plans'])) {
-                        $notApplyPlanArray[] = 'all';
-                    } else {
+                    if (isset($requestValidated['not_apply_on_plans']) && !in_array('all', $requestValidated['not_apply_on_plans'])) {
                         foreach ($requestValidated['not_apply_on_plans'] as $key => $value) {
                             $notApplyPlanArray[] = current(Hashids::decode($value));
                         }

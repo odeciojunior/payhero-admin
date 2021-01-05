@@ -22,7 +22,7 @@ class ShippingStoreRequest extends FormRequest
             "pre_selected"       => "nullable",
             "rule_value"         => "nullable",
             "apply_on_plans"     => "required|array",
-            "not_apply_on_plans" => "required|array"
+            "not_apply_on_plans" => "sometimes|required|array"
         ];
     }
 
