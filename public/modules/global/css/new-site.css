@@ -114,8 +114,7 @@ select.form-control {
 label, .label-pad {
     display: inline-block;
     margin-bottom: .5rem;
-    font-weight: 700;
-    color: black;
+    color: #707070;
 }
 
 select, .select-pad {
@@ -169,7 +168,7 @@ input[type=radio] {
 }
 
 .gray {
-    color: #aaaaaa;
+    color: #959595;
 }
 
 .gray-svg svg {
@@ -808,45 +807,53 @@ button.btn img {
 }
 
 .icon-copy-1,
-.o-add-user-1,
+.o-add-circle,
+.o-add-user,
 .o-agenda-1,
-.o-bank-cards-1,
+.o-bank-cards,
 .o-bin-1,
-.o-cash-dispenser-1,
-.o-checked-circle-1,
-.o-checkout-cart-1,
+.o-cash-dispenser,
+.o-checkbox-confirm,
+.o-checked-circle,
+.o-checkmark-1,
+.o-checkout-cart,
+.o-clouds-1,
+.o-cloudy-fog,
 .o-cogwheel-1,
 .o-comments-1,
 .o-config-1,
 .o-copy-1,
-.o-credit-card-1,
+.o-credit-card,
 .o-currency-1,
 .o-display-1,
-.o-dollar-sign-1,
+.o-dollar-sign,
+.o-download-cloud,
 .o-edit-1,
 .o-export-1,
-.o-file-explorer-1,
+.o-eye-1,
+.o-file-explorer,
 .o-gear-1,
-.o-imac-screen-1,
+.o-imac-screen,
 .o-info-1,
-.o-info-help-1,
+.o-info-help,
 .o-iphone-1,
 .o-loop-1,
 .o-money-1,
-.o-money-bag-1,
-.o-new-message-1,
+.o-money-bag,
+.o-new-message,
 .o-paper-1,
-.o-portfolio-grid-1,
+.o-portfolio-grid,
 .o-question-1,
-.o-question-help-1,
+.o-question-help,
 .o-reload-1,
-.o-sales-up-1,
-.o-shipping-box-1,
+.o-sales-up,
+.o-shipping-box,
 .o-social-1,
 .o-speed-1,
 .o-store-1,
-.o-eye-1,
-.o-whatsapp-1 {
+.o-upload-to,
+.o-whatsapp-1
+ {
     font-size: 24px;
     color: #0d2c54;
     -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
@@ -861,43 +868,52 @@ button.btn img {
 }
 
 .icon-copy-1:hover,
-.o-add-user-1:hover,
+.o-add-circle:hover,
+.o-add-user:hover,
 .o-agenda-1:hover,
-.o-bank-cards-1:hover,
-.o-cash-dispenser-1:hover,
-.o-checked-circle-1:hover,
-.o-checkout-cart-1:hover,
+.o-bank-cards:hover,
+.o-bin-1:hover,
+.o-cash-dispenser:hover,
+.o-checkbox-confirm:hover,
+.o-checked-circle:hover,
+.o-checkmark-1:hover,
+.o-checkout-cart:hover,
+.o-clouds-1:hover,
+.o-cloudy-fog:hover,
 .o-cogwheel-1:hover,
 .o-comments-1:hover,
 .o-config-1:hover,
 .o-copy-1:hover,
-.o-credit-card-1:hover,
+.o-credit-card:hover,
 .o-currency-1:hover,
 .o-display-1:hover,
-.o-dollar-sign-1:hover,
+.o-dollar-sign:hover,
+.o-download-cloud:hover,
 .o-edit-1:hover,
 .o-export-1:hover,
 .o-eye-1:hover,
-.o-file-explorer-1:hover,
+.o-file-explorer:hover,
 .o-gear-1:hover,
-.o-imac-screen-1:hover,
+.o-imac-screen:hover,
 .o-info-1:hover,
-.o-info-help-1:hover,
+.o-info-help:hover,
 .o-iphone-1:hover,
 .o-loop-1:hover,
 .o-money-1:hover,
-.o-money-bag-1:hover,
-.o-new-message-1:hover,
+.o-money-bag:hover,
+.o-new-message:hover,
 .o-paper-1:hover,
-.o-portfolio-grid-1:hover,
+.o-portfolio-grid:hover,
 .o-question-1:hover,
-.o-question-help-1:hover,
+.o-question-help:hover,
 .o-reload-1:hover,
-.o-sales-up-1:hover,
-.o-shipping-box-1:hover,
+.o-sales-up:hover,
+.o-shipping-box:hover,
 .o-social-1:hover,
 .o-speed-1:hover,
-.o-store-1:hover {
+.o-store-1:hover,
+.o-upload-to:hover,
+.o-whatsapp-1 :hover{
     color: #2E85EC;
     transition: 0.3s;
 }
@@ -964,4 +980,3 @@ button.btn img {
 .s-card-header > h4{
     color: #002654;
 }
-

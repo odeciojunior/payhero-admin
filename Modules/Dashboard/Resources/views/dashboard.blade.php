@@ -38,7 +38,7 @@
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
-                                        <span class="card-desc">Recebimentos Hoje</span>
+                                        <span class="card-desc">Vendas aprovadas hoje</span>
                                     </div>
                                 </div>
                                 <div class="card-body font-size-24 d-flex align-items-topline">

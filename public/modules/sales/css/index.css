@@ -19,3 +19,87 @@
     padding: 0 !important;
     margin: 0 !important;
 }
+
+.card-bottom {
+    display: block;
+    z-index: 2;
+    height: 20px;
+    background-color: #2E85EC;
+    border-radius: 16px 0px;
+    width: 90px;
+    position: relative;
+    left: calc(100% - 90px);
+}
+
+.card .card-bottom.green {
+    background-color: #5EE2A1;
+}
+
+.card .card-bottom.red {
+    background-color: #F41C1C;
+}
+
+.quick-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.quick-list > li a {
+    color: #0D2C54;
+    font-weight: bold;
+    font-size: 18px
+}
+
+.quick-list > li a:hover {
+    color: #2E85EC;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.btn-light-1, .btn-primary-1 {
+    box-shadow: 0 1px 15px #00000017;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.btn-light-1 {
+    background-color: #FFF;
+    color: #707070
+}
+
+.btn-light-1:hover {
+    background-color: #F3F3F3;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.btn-primary-1 {
+    background-color: #2E85EC;
+    color: #FFF;
+}
+
+.btn-primary-1:hover {
+    background-color: #0D2C54;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.switch-text {
+    font-size: 8px;
+    position: relative;
+    top: -5px;
+    left: 25px;
+}
+
+.wb-chevron-down {
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
