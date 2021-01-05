@@ -1,6 +1,9 @@
 @extends("layouts.master")
 
 @push('css')
+    <link rel="stylesheet"
+          href="{{ asset('modules/global/adminremark/global/vendor/ascolorpicker/asColorPicker.css') }}?v={{rand(1,1000)}}">
+
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
@@ -10,7 +13,26 @@
             font-family: raty;
             src: url(https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/fonts/raty.svg);
         }
+
+        .asColorPicker-alpha {
+            display:none
+        }
+        .asColorPicker-input, .asColorPicker-wrap {
+            width:100% !important;
+        }
+        .asColorPicker-input {
+            width:80% !important;
+            display:inline-block !important;
+        }
+
+
+        .asColorPicker-trigger {
+            width: 33px;
+            height: 33px;
+        }
     </style>
+
+
 @endpush
 
 @section('content')
@@ -211,6 +233,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
+
+        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asColor/dist/jquery-asColor.js') }}?v={{rand(1,1000)}}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asGradient/dist/jquery-asGradient.js') }}?v={{rand(1,1000)}}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-asColorPicker/dist/jquery-asColorPicker.js') }}?v={{rand(1,1000)}}"></script>
+
     @endpush
 @endsection
 

@@ -394,7 +394,8 @@
                             </div>
                             <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
                                 <div class="switch-holder">
-                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>
+                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança
+                                        com desconto</label>
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="discount_recovery_status"
                                                name="discount_recovery_status" class='check discount-recovery'
@@ -442,13 +443,15 @@
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad' id="document_type_checkout">
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
                                     <option value='1'>CPF</option>
                                     <option value='2'>CNPJ</option>
                                     <option value='3'>CPF/CNPJ</option>
                                 </select>
                                 <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento aceito no checkout.
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito no checkout.
                                 </p>
                             </div>
                         </div>
@@ -551,7 +554,8 @@
 
                                     <div class='col-12 col-sm-6 mb-20 mt-2'>
                                         <label for="link">Mensagem ao encerrar contador regressivo</label>
-                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message"
+                                        <textarea type="text" class="form-control"
+                                                  name="countdown_timer_finished_message"
                                                   maxlength="255" placeholder="Informe a mensagem"></textarea>
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
@@ -562,6 +566,89 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class='col-12 '>
+                                <div class="switch-holder">
+                                    <label for='finalizing_purchase_configs'
+                                           style='margin-right:15px;margin-bottom: 3px'>Pessoas finalizando
+                                        compra</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="finalizing_purchase_configs"
+                                               name="finalizing_purchase_configs" class='check'
+                                               value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p class='info pt-5' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        Ao habilitar esta função, será exibido um texto com a quantidade de pessoas que
+                                        estão finalizando uma compra na página de checkout.
+                                    </p>
+
+                                    <label for='finalizing_purchase_config_max_visitante_value'
+                                           class="finalizing_purchase_config d-none"
+                                           style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
+
+                                    <input id='finalizing_purchase_config_value' name='finalizing_purchase_config_value'
+                                           value="Outras [min_visitante] [max_visitante] pessoas estão finalizando a compra neste momento"
+                                           class='form-control select-pad finalizing_purchase_config d-none '>
+
+                                    <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        Você pode mover o máximo e o mínimo de visitante em qualquer lugar do texto.
+                                    </p>
+
+                                    <span id='finalizing_purchase_config_error' class='text-danger'></span>
+
+                                </div>
+                            </div>
+                            <div class='col-1 finalizing_purchase_config d-none'>
+                                <div class="switch-holder">
+                                    <label for='finalizing_purchase_config_min_visitante_value'
+                                           style='margin-right:15px;margin-bottom: 3px'>Mínimo</label>
+
+                                    <input name='finalizing_purchase_config_min_visitante_value'
+                                           type="number"
+                                           value="1"
+                                           class='form-control select-pad  '>
+                                </div>
+                            </div>
+                            <div class='col-1 finalizing_purchase_config d-none'>
+                                <div class="switch-holder">
+                                    <label for='finalizing_purchase_config_max_visitante_value'
+                                           style='margin-right:15px;margin-bottom: 3px'>Máximo</label>
+
+                                    <input name='finalizing_purchase_config_max_visitante_value'
+                                           type="number"
+                                           value="15"
+                                           class='form-control select-pad  '>
+                                </div>
+                            </div>
+                            <div class='col-5 finalizing_purchase_config d-none'>
+
+                                <label for='finalizing_purchase_config_min_visitante_value'
+                                       style='margin-right:15px;margin-bottom: 3px'>Cor do ícone de olho</label>
+
+                                <input type="text" class="asColorpicker form-control "  style="width:100%" data-plugin="asColorPicker"
+                                       data-mode="simple" value="#ff666b"/>
+
+
+                            </div>
+                            <div class='col-5 finalizing_purchase_config d-none'>
+
+                                <label for='finalizing_purchase_config_max_visitante_value'
+                                       style='margin-right:15px;margin-bottom: 3px'>Cor do texto</label>
+
+                                <input type="text" class="form-control asColorpicker " style="width:100%" data-plugin="asColorPicker"
+                                       data-mode="simple" value="#ff666b"/>
+
+                            </div>
+
+
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">

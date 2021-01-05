@@ -1013,4 +1013,16 @@ $(() => {
         $(this).addClass('active');
     });
 
+    $('#finalizing_purchase_configs').on("click", function () {
+        let is_checked = $('#finalizing_purchase_configs').prop('checked');
+
+        if (is_checked) {
+            $('.finalizing_purchase_config').removeClass('d-none')
+            $('#finalizing_purchase_config_error').show('fast', 'linear')
+        } else {
+            $('.finalizing_purchase_config').addClass('d-none')
+            $('#finalizing_purchase_config_error').hide('fast', 'linear')
+        }
+    })
+
 });

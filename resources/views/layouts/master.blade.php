@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=4565') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=15') }}">
+
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
