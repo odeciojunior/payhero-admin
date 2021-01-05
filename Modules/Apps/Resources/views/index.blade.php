@@ -157,6 +157,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/apps/js/index.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection
 

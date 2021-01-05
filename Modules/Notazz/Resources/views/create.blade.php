@@ -34,12 +34,12 @@
                     <small>https://sirius.cloudfox.net/postback/notazz</small>
                 </div>
             </div>
-            <div class='form-group col-12'>
+{{--             <div class='form-group col-12'>
                 <label for="url_store">Token Logística</label>
                 <div class="d-flex input-group">
                     <input type="text" class="input-pad addon" name="token_logistics_create" id="token_logistics_create" placeholder="Digite o Token Logística" value=''>
                 </div>
-            </div>
+            </div> --}}
             <div class='form-group col-12'>
                 <label for="url_store">Data inicial</label>
                 <div class="d-flex input-group">
