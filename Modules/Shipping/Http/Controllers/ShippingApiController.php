@@ -298,7 +298,7 @@ class ShippingApiController extends Controller
                     }
                     $requestValidated['not_apply_on_plans'] = $notApplyPlanArray;
 
-                    if (!$this->verifyAllPlansHasActiveShippings($shipping, true, $applyPlanArray, $requestValidated['status'])) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, array_diff($applyPlanArray, $notApplyPlanArray), $requestValidated['status'])) {
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -387,7 +387,7 @@ class ShippingApiController extends Controller
                             400);
                     }
 
-                    if (!$this->verifyAllPlansHasActiveShippings($shipping, false)) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping)) {
                         return response()->json(['message' => 'Impossível excluir, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -433,16 +433,12 @@ class ShippingApiController extends Controller
         }
     }
 
-    private function verifyAllPlansHasActiveShippings($shipping, $includeCurrentShipping = true, array $currentApplyOnPlans = [], $active_flag = false): bool
+    private function verifyAllPlansHasActiveShippings($shipping, array $currentApplyOnPlans = [], $active_flag = false): bool
     {
         $where = [
             ['project_id', $shipping->project_id],
             ['status', true],
         ];
-
-        if (!$includeCurrentShipping) {
-            $where[] = ['id', '!=', $shipping->id];
-        }
 
         $otherShippings = $shipping->where($where)->get();
 
@@ -457,12 +453,13 @@ class ShippingApiController extends Controller
                 $notApplyOnPlans = json_decode($otherShipping->not_apply_on_plans);
                 $applyOnPlans = array_diff($applyOnPlans, $notApplyOnPlans);
 
-                if (!empty($currentApplyOnPlans) && $active_flag &&
-                    ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
+                if ($shipping->id == $otherShipping->id
+                    && !empty($currentApplyOnPlans)
+                    && $active_flag
+                    && ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
                     $plansHasShipping[$plan->id] = true;
-                }
-
-                if (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all') {
+                } else if ($shipping->id != $otherShipping->id
+                    && (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all')) {
                     $plansHasShipping[$plan->id] = true;
                 }
             }
