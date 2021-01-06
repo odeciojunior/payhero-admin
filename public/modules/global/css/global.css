@@ -537,6 +537,10 @@ a.label {
     padding: 20px 0 20px 20px !important;
 }
 
+.table thead > tr > td:last-child, .table thead > tr > th:last-child {
+    padding-right: 20px !important;
+}
+
 .bold {
     font-weight: bold;
 }
