@@ -172,13 +172,6 @@
     background: #44a44b;
 }
 
-.table th {
-    border-top: none;
-    font-weight: 700 !important;
-    border-top: none;
-    color: black !important;
-}
-
 .money-td {
     color: black;
     font-weight: 700;
@@ -196,6 +189,23 @@
     text-transform: uppercase;
     font-weight: 700;
     font-size: 12px;
+}
+
+.nav-btn {
+    margin-right: 5px !important;
+    background: transparent;
+    color: #888;
+    border-radius: 11px !important;
+    border: 1px solid #D2D2D2 !important;
+    font-weight: 700;
+}
+
+.nav-btn.active {
+    background: #2E85EC !important;
+    border: 1px solid #2E85EC !important;
+    border-radius: 11px;
+    opacity: 1 !important;
+    color: white !important;
 }
 
 

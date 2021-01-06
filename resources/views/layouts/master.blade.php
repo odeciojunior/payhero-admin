@@ -36,9 +36,9 @@
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2545') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=4') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=5') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -51,16 +51,16 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=2') }}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=1234') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=4565') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=546231') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=15') }}">
-
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=21') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -97,7 +97,7 @@
     <div class="top-alert warning" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
             <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            <a href="/companies" class="top-alert-action">Corrigir documento</a>
         </div>
         <a class="top-alert-close">
             <i class="material-icons">close</i>
@@ -143,7 +143,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
     <script type="text/javascript">
 

@@ -12,7 +12,7 @@
                 <div id='div-create' class="col-lg-6" style="display:none">
                     <a href="/products/create" class="btn btn-floating btn-primary"
                        style="position: relative; float: right">
-                        <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
+                        <span style="color: white; font-size: 35px" class='o-add-1'></span>
                     </a>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
-                        <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="150px">
+                        <img src="{!! asset('modules/global/img/empty.svg') !!}" width="150px">
                         <h1 class="big gray">Zero produtos por aqui!</h1>
                         {{--                    <div class='product-is-empty-cla'>--}}
                         {{--                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}

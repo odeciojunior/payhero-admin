@@ -72,7 +72,7 @@
         @if($link == 'Dominio removido')
             <span class="clear-fields table-title gray"> Link: {{$link}} </span>
         @else
-            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}' title='Copiar link'><img src="/modules/global/img/svg/copy.svg" style="width: 24px"></a></span>
+            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}' title='Copiar link'><span class="material-icons icon-copy-1"> content_copy </span></a></span>
         @endif
         <br>
         <span class="clear-fields table-title gray"> IP: {{$checkout->ip}}  </span>

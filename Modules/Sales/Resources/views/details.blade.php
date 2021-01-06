@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=01') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
@@ -36,7 +36,7 @@
                         <input id="refund-observation" type="email" name="refund_observation"
                                class="detail-input mr-2 table-title gray fake-label"
                                readonly>
-                        <a class="pointer btn-edit-observation"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                        <a class="pointer btn-edit-observation"><span class="o-edit-1"></span></a>
                         <a class="pointer btn-save-observation" style="display:none;">
                             <i class="material-icons font-size-18">save</i></a>
                         <a class="pointer btn-close-observation ml-2" style="display:none;">
@@ -225,7 +225,7 @@
                             <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
                             <input id="client-telephone" name="client-telephone"
                                    class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">
@@ -235,7 +235,7 @@
                             <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
                             <input id="client-email" type="email" name="client-email"
                                    class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">
@@ -296,14 +296,14 @@
                         <div id="details-boleto" style="display:none">
                         <span id="boleto-link" class="table-title gray">Link para o boleto:
                             <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
                         </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                             <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                title='Copiar link'>
-                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
                         </span>
                             <br>
@@ -321,7 +321,7 @@
                         <span id="thank-page-url" class="table-title gray" style="display:none"></span>
                         <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;"
                            link="" title="Copiar link">
-                            <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                            <span class="material-icons icon-copy-1"> content_copy </span>
                         </a>
                         <br>
                         <h4> Conversão </h4>

@@ -640,7 +640,7 @@
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"></span>
                             </a>
                             <div id="shopify-integration-pending" style="display:none">
@@ -652,7 +652,7 @@
                             <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar produtos com shopify </span>
                             </a>
                         </div>
@@ -661,7 +661,7 @@
                                integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar template com shopify </span>
                             </a>
                         </div>
@@ -682,7 +682,7 @@
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-verify-permissions" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
                         </div>
@@ -691,7 +691,7 @@
                                 <div class="gray mb-5">Skip to cart</div>
                                 <label class="switch">
                                     <input id="skiptocart-input" type="checkbox" value="0" class="check">
-                                    <span class="slider gray round"></span>
+                                    <span class="slider round"></span>
                                 </label>
                             </div>
                         </div>
@@ -700,7 +700,7 @@
                         <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-sync-trackings" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar códigos de rastreio</span>
                             </a>
                         </div>
@@ -803,7 +803,7 @@
                 <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal"
                        data-target="#modal-delete-project" style="float: left;">
-                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
+                        <span class='orion-icon-lixo'></span>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
@@ -833,10 +833,12 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar
+                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b>Cancelar</b>
                     </button>
-                    <button type="button" class="col-4 btn btn-primary btn-delete" data-dismiss="modal"
-                            style="width: 20%;">Excluir
+                    <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b class="mr-2">Excluir </b>
+                        <span class="o-bin-1"></span>
                     </button>
                 </div>
             </div>

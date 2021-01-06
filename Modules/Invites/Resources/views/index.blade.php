@@ -48,13 +48,13 @@
         <div class="page-content container" id='page-invites'>
             <div id="content-error" class='' style='display:none;'>
                 <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/emptyconvites.svg" width="250px"/>
+                    <img src="modules/global/img/empty.svg" width="250px"/>
                     <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
                     <p class="desc gray" style='width:100%'>Envie convites, e
                         <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
                 </div>
             </div>
-            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
+            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead class="text-center">
@@ -64,6 +64,8 @@
                         <th class="text-center">Status</th>
                         <th class="text-center">Data cadastro</th>
                         <th class="text-center">Data expiração</th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
                         </thead>
                         <tbody id='table-body-invites'>
                         {{-- js invites carrega  --}}
@@ -117,11 +119,10 @@
                                     </div>
                                 </div>
                                 <div class='row' style='margin-top: 35px'>
-                                    <div class='form-group col-12'>
+                                    <div class='form-group col-12 text-right'>
                                         <input id='btn-send-invite' type='button'
-                                               class='form-control btn col-sm-12 col-m-3 col-lg-3'
-                                               value='Enviar Convite'
-                                               style='color:white; background-image: linear-gradient(to right, #e6774c, #f92278); position: relative; float: right;'>
+                                               class='form-control btn btn-primary col-sm-12 col-m-3 col-lg-3'
+                                               value='Enviar Convite' >
                                     </div>
                                 </div>
                             </div>
@@ -160,13 +161,13 @@
                                 <span class='swal2-x-mark-line-right'></span>
                             </span>
                             </div>
-                            <h3 align='center'>
+                            <p align='center' style='font-size: 16px;'>
                                 Para enviar convites você precisa ter pelo menos uma empresa aprovada para transacionar
                                 e todos os documentos da empresa e do seu perfil precisam estar aprovados!
-                            </h3>
+                            </p>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
-                        <span class='btn btn-primary' data-dismiss='modal' style='font-size: 25px;'>
+                        <span class='btn btn-primary' data-dismiss='modal' style='font-size: 16px;'>
                             Retornar
                         </span>
                         </div>
@@ -206,7 +207,7 @@
                                 poder enviar novos convites!</h3>
                         </div>
                         <div class='modal-footer' style='text-align: center; padding-top: 3%;'>
-                            <button class='btn btn-primary' type='button' data-dismiss='modal' style='font-size: 15px;'>
+                            <button class='btn btn-primary' type='button' data-dismiss='modal' style='font-size: 16px;'>
                                 Fechar
                             </button>
                         </div>
@@ -235,11 +236,12 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal"
-                            style="width: 20%;">Cancelar
+                    <button id="btn-cancel-invitation" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b>Cancelar</b>
                     </button>
-                    <button id="btn-delete-invitation" type="button" class="col-4 btn btn-primary" style="width: 20%;"
-                            data-dismiss="modal">Excluir
+                    <button id="btn-delete-invitation" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b class="mr-2">Excluir </b>
+                        <span class="o-bin-1"></span>
                     </button>
                 </div>
             </div>
@@ -275,7 +277,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=s05') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=06') }}"></script>
     @endpush
 
 @endsection

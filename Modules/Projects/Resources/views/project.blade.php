@@ -1,11 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet"
-          href="{{ asset('modules/global/js-extra/jquery-asColorPicker/dist/css/asColorPicker.css?v=33')}}">
-
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=01') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <style>
@@ -13,26 +10,7 @@
             font-family: raty;
             src: url(https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/fonts/raty.svg);
         }
-
-        .asColorPicker-alpha {
-            display:none
-        }
-        .asColorPicker-input, .asColorPicker-wrap {
-            width:100% !important;
-        }
-        .asColorPicker-input {
-            width:80% !important;
-            display:inline-block !important;
-        }
-
-
-        .asColorPicker-trigger {
-            width: 33px;
-            height: 33px;
-        }
     </style>
-
-
 @endpush
 
 @section('content')
@@ -196,8 +174,7 @@
                                 </div>
                                 <div class="modal-body text-center p-20">
                                     <div class="d-flex justify-content-center">
-                                        <i class="material-icons gradient"
-                                           style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
+                                        <span class="o-reload-1"></span>
                                     </div>
                                     <h3 class="black" id="modal-change-shopify-integration-title"> Você tem
                                         certeza? </h3>
@@ -233,11 +210,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
-
-        <script src="{{ asset('modules/global/js-extra/jquery-asColor/dist/jquery-asColor.js?v='.uniqid()) }}"></script>
-        <script src="{{ asset('modules/global/js-extra/jquery-asGradient/dist/jquery-asGradient.js?v='.uniqid()) }}"></script>
-        <script src="{{ asset('modules/global/js-extra/jquery-asColorPicker/dist/jquery-asColorPicker.js?v='.uniqid()) }}"></script>
-
     @endpush
 @endsection
 
