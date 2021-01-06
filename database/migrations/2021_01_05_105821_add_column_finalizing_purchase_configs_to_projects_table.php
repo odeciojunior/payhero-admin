@@ -29,7 +29,7 @@ class AddColumnFinalizingPurchaseConfigsToProjectsTable extends Migration
     public function down()
     {
         Schema::table(
-            'withdrawals',
+            'projects',
             function (Blueprint $table) {
                 $table->dropColumn(['finalizing_purchase_configs']);
             }
