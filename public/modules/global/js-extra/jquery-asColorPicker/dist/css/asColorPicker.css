@@ -20,15 +20,15 @@
 
 .asColorPicker-dropdown {
   position: absolute;
-  z-index: 9999;
+  z-index: 9999; 
   display: none;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .asColorPicker-dropdown * {
-  padding: 0;
+  padding: 0; 
   margin: 0;
 }
 
@@ -40,13 +40,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9998;
+  z-index: 9998; 
   width: 100%;
   height: 100%;
 }
 
 .asColorPicker-trigger {
-  position: relative;
+  position: relative; 
   display: inline-block;
 }
 
@@ -57,7 +57,7 @@
   background-image: url("../images/transparent.png");
 }
 .asColorPicker-trigger span {
-  display: inline-block;
+  display: inline-block; 
   width: 100%;
   height: 100%;
 }
@@ -95,7 +95,7 @@
   *zoom: 1;
 }
 .asColorPicker-preview li span {
-  display: block;
+  display: block; 
   height: 100%;
 }
 .asColorPicker-preview-previous {
@@ -106,7 +106,7 @@
   display: block;
 }
 .asColorPicker-palettes ul:before, .asColorPicker-palettes ul:after {
-  display: table;
+  display: table; 
   content: "";
 }
 .asColorPicker-palettes ul:after {
@@ -119,11 +119,11 @@
   overflow: hidden;
   text-indent: 100%;
   white-space: nowrap;
-  cursor: pointer;
+  cursor: pointer; 
   background-image: url("../images/transparent.png");
 }
 .asColorPicker-palettes li span {
-  display: block;
+  display: block; 
   height: 100%;
 }
 
@@ -133,7 +133,7 @@
   width: 175px;
   height: 175px;
   clear: both;
-  background-image: url("../images/saturation.png");
+  background-image: url("../images/saturation.png"); 
 
   *display: inline;
   *zoom: 1;
@@ -146,7 +146,7 @@
   position: relative;
   display: inline-block;
   width: 20px;
-  height: 175px;
+  height: 175px; 
   cursor: pointer;
 
   *display: inline;
@@ -192,7 +192,7 @@
   position: relative;
   float: left;
   width: 20px;
-  height: 20px;
+  height: 20px; 
   border: 1px solid #bbb;
   border-radius: 100%;
 }
@@ -208,7 +208,7 @@
 
 .asColorPicker-dropdown {
   min-width: 205px;
-  max-width: 235px;
+  max-width: 235px; 
   padding: 10px;
   background: #fefefe;
   border: 1px solid #bbb;
@@ -224,21 +224,21 @@
 
 .asColorPicker-saturation {
   -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
 }
 .asColorPicker-saturation i {
   width: 5px;
   height: 5px;
   margin-top: -2px;
   margin-left: -2px;
-  border: 2px solid #fff;
+  border: 2px solid #fff; 
   border-radius: 100%;
 }
 
 .asColorPicker-hue, .asColorPicker-alpha {
   margin-left: 10px;
   -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
 }
 .asColorPicker-hue i, .asColorPicker-alpha i {
   left: -2px;
@@ -251,7 +251,7 @@
 .asColorPicker-preview {
   position: relative;
   height: 33px;
-  margin-right: 10px;
+  margin-right: 10px; 
   margin-bottom: 10px;
 }
 .asColorPicker-preview:after {
@@ -260,10 +260,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  pointer-events: none; 
   content: "";
   -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
 }
 .asColorPicker-preview li {
   width: 48px;
@@ -283,7 +283,7 @@
 }
 .asColorPicker-palettes li span {
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   border: 1px solid rgba(0, 0, 0, .05);
 }
 .asColorPicker-palettes li:nth-child(5n) {
@@ -314,7 +314,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
+  z-index: -1; 
   width: 100%;
   height: 100%;
   content: "";
@@ -325,7 +325,7 @@
   display: block;
   width: 160px;
   height: 16px;
-  padding: 0;
+  padding: 0; 
   margin: 0;
   list-style: none;
 }
@@ -333,7 +333,7 @@
   width: 10px;
   height: 10px;
   margin-left: -6px;
-  background: #fff;
+  background: #fff; 
   border: 1px solid #bbb;
 }
 .asColorPicker-gradient-marker span {
@@ -353,10 +353,10 @@
   border-bottom-color: rgba(0, 0, 0, .05);
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+      transform: rotate(45deg);
 }
 .asColorPicker-gradient-marker_active {
-  z-index: 1;
+  z-index: 1; 
   border: 2px solid #41a9e5;
 }
 .asColorPicker-gradient-marker_active i {
@@ -372,6 +372,6 @@
   background-color: #888;
 }
 .asColorPicker-gradient-angle {
-  width: 24px;
+  width: 24px; 
   margin-left: 10px;
 }
