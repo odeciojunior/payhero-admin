@@ -1022,7 +1022,7 @@ input[type=radio] {
 #notifications_card {
     top: 80%;
     width: 370px;
-    min-height: 250px;
+    min-height: 150px;
     background-color: #FFFFFF;
     box-shadow: 0px 1px 30px #00000026;
     border-radius: 16px !important;
@@ -1035,7 +1035,6 @@ input[type=radio] {
 }
 
 #notifications_card > #notificationTemplate > a.list-group-item {
-
     margin: 0;    
     border-radius: 16px !important;
     padding: 10px;

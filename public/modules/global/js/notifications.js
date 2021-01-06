@@ -68,6 +68,7 @@ $(document).ready(function () {
 
     // monta html com as notificações
     function getNotifications() {
+        $("#notificationTemplate").css({'height': '150px'});
         loadOnNotification('#notificationTemplate');
         $.ajax({
             method: 'GET',
@@ -83,33 +84,6 @@ $(document).ready(function () {
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").css({'height': '300px', 'overflow-y': 'scroll'});
 
-            //     $("#notificationTemplate").append(`<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href='/sales' role="menuitem" id='item-notification'>
-                
-            //         <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" >
-            //             <span class='o-dollar-sign-1' style='color:#5EE2A1;'></span>
-            //         </div>
-            //         <div class="media-body description-notification">
-            //             <h6 class="media-heading" style='white-space:normal'>
-            //             O valor de R$187,90 foi acrescentado ao saldo disponível.
-            //             </h6>
-            //             <time class="media-meta"> 04/01/2021 17:01:01 </time>
-            //         </div>
-                
-            // </a>` + 
-            // `<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href='/sales' role="menuitem" id='item-notification'>
-                
-            //         <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" >
-            //             <span class='o-dollar-sign-1' style='color:#5EE2A1;'></span>
-            //         </div>
-            //         <div class="media-body description-notification">
-            //             <h6 class="media-heading" style='white-space:normal'>
-            //             O valor de R$187,90 foi acrescentado ao saldo disponível.
-            //             </h6>
-            //             <time class="media-meta"> 04/01/2021 17:01:01 </time>
-            //         </div>
-                
-            // </a>`);
-                // <div class="media d-flex flex-row justify-content-around align-self-center"></div>
                 $(response.data).each(function(index, data){
                     $("#notificationTemplate").append(notificationTemplate(data));
                 });
@@ -122,7 +96,7 @@ $(document).ready(function () {
     function notificationTemplate(data){
 
         data = getNotificationData(data);
-        //width:100%; 
+
         return `<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href=` + data.link + ` role="menuitem" id='item-notification' style='` + data.background + `'>
                     
                         <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" style='` + data.iconBackgroundColor + `'>
@@ -132,25 +106,11 @@ $(document).ready(function () {
                             <h6 class="media-heading" style='white-space:normal'>
                                 ` + data.message + `
                             </h6>
-                            <time class="media-meta">` + data.date + `</time>
+                            <time class="media-meta"> ` + data.time + `</time>
                         </div>
-                    
                 </a>`;
     }
 
-    // $("#notificationTemplate").append(`<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href='/sales' role="menuitem" id='item-notification'>
-                
-    //                 <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" >
-    //                     <span class='o-dollar-sign-1' style='color:#5EE2A1;'></span>
-    //                 </div>
-    //                 <div class="media-body description-notification">
-    //                     <h6 class="media-heading" style='white-space:normal'>
-    //                     O valor de R$187,90 foi acrescentado ao saldo disponível.
-    //                     </h6>
-    //                     <time class="media-meta"> 04/01/2021 17:01:01 </time>
-    //                 </div>
-                
-    //         </a>` + 
     // prepare data to create a template
     function getNotificationData(data){
         var message = '', iconClass = '', iconColor = '', iconBackgroundColor = '', link = '';
@@ -242,7 +202,7 @@ $(document).ready(function () {
             var backgroundColor = 'background-color:#F2FFF9';
         }
 
-        return { message: message, iconClass: iconClass, iconColor: iconColor, iconBackgroundColor: iconBackgroundColor, link: link, date: data.date, background: backgroundColor};
+        return { message: message, iconClass: iconClass, iconColor: iconColor, iconBackgroundColor: iconBackgroundColor, link: link, time: data.time, background: backgroundColor};
     }
 
 });
