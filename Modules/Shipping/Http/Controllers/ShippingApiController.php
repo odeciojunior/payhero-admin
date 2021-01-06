@@ -298,7 +298,7 @@ class ShippingApiController extends Controller
                     }
                     $requestValidated['not_apply_on_plans'] = $notApplyPlanArray;
 
-                    if (!$this->verifyAllPlansHasActiveShippings($shipping, $applyPlanArray, $requestValidated['status'])) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, true, $applyPlanArray, $requestValidated['status'])) {
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -312,7 +312,10 @@ class ShippingApiController extends Controller
                         ])->get();
 
                         if (count($sp) == 0) {
-                            $shipp = $shippingModel->where('project_id', $shipping->project_id)->first();
+                            $shipp = $shippingModel->where([
+                                'project_id' => $shipping->project_id,
+                                'status'     => 1
+                            ])->first();
                             $shipp->update(['pre_selected' => 1]);
                         }
                     }
@@ -384,7 +387,7 @@ class ShippingApiController extends Controller
                             400);
                     }
 
-                    if (!$this->verifyAllPlansHasActiveShippings($shipping)) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, false)) {
                         return response()->json(['message' => 'Impossível excluir, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -430,13 +433,18 @@ class ShippingApiController extends Controller
         }
     }
 
-    private function verifyAllPlansHasActiveShippings($shipping, array $currentApplyOnPlans = [], $active_flag = false): bool
+    private function verifyAllPlansHasActiveShippings($shipping, $includeCurrentShipping = true, array $currentApplyOnPlans = [], $active_flag = false): bool
     {
-        $otherShippings = $shipping->where([
+        $where = [
             ['project_id', $shipping->project_id],
-            ['id', '!=', $shipping->id],
             ['status', true],
-        ])->get();
+        ];
+
+        if (!$includeCurrentShipping) {
+            $where[] = ['id', '!=', $shipping->id];
+        }
+
+        $otherShippings = $shipping->where($where)->get();
 
         $plansHasShipping = [];
         foreach ($shipping->project->plans as $plan) {
