@@ -5,11 +5,8 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Transfers\Services\GetNetStatementService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class GetnetTransferWithoutDetails extends Command
 {
@@ -25,7 +22,7 @@ class GetnetTransferWithoutDetails extends Command
      *
      * @var string
      */
-    protected $description = 'routine responsible for transferring the available money from the transactions to the users company registered getnet account';
+    protected $description = '';
 
     /**
      * Create a new command instance.
@@ -42,84 +39,200 @@ class GetnetTransferWithoutDetails extends Command
         $companyModel = new Company();
         $transactionModel = new Transaction();
 
-        $gatewayIds = Gateway::whereIn(
-            'name',
-            [
-                'getnet_sandbox',
-                'getnet_production'
-            ]
-        )
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
         $transactions = $transactionModel->with('sale')
             ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-            ->whereIn('gateway_id', $gatewayIds);
+            ->whereNotNull('company_id')
+            ->where('company_id', '<>', '')
+            //->where('id', '>=', 2259480)
+            //->whereIn('sale_id', [805336, 892541, 916439])
+            ->whereIn('gateway_id', [15]);
+
+        // sale_id = 805336 -> { "list_transactions": [], "commission": [], "adjustments": [], "chargeback": [] }
+        // sale_id = 892541, 916439 -> "details": []"
+        $transactionsCount = (clone $transactions)->get()->count();
+        $this->info("Vamos percorrer " . $transactionsCount . " transactions");
+
+        $limit = $transactionsCount / 20;
+        $count = 0;
+        $percentage = 0;
+
+        $withoutListTransactions['id'] = [];
+        $withoutListTransactions['hashId'] = [];
+        $withoutListTransactions['orderId'] = [];
+
+        $zeroListTransactions['id'] = [];
+        $zeroListTransactions['hashId'] = [];
+        $zeroListTransactions['orderId'] = [];
+
+        $withoutSummary['id'] = [];
+        $withoutSummary['hashId'] = [];
+        $withoutSummary['orderId'] = [];
+
+        $zeroSummary['id'] = [];
+        $zeroSummary['hashId'] = [];
+        $zeroSummary['orderId'] = [];
+
+        $withoutDetails['id'] = [];
+        $withoutDetails['hashId'] = [];
+        $withoutDetails['orderId'] = [];
+
+        $zeroDetails['id'] = [];
+        $zeroDetails['hashId'] = [];
+        $zeroDetails['orderId'] = [];
 
         foreach ($transactions->cursor() as $transaction) {
 
+            $count++;
+
+            if ($count >= $limit) {
+
+                $count = 0;
+                $percentage += 5;
+
+                $this->info(' - ' . $percentage . '%');
+            }
+
             try {
-                if (!empty($transaction->company_id)) {
 
-                    $company = $companyModel->find($transaction->company_id);
+                $company = $companyModel->find($transaction->company_id);
 
-                    if (in_array($transaction->sale->gateway_id, $gatewayIds)) {
+                $subSeller = $company->subseller_getnet_id;
+                $saleId = $transaction->sale_id;
+                $hashId = $transaction->sale->hash_id;
 
-                        $subSeller = $company->subseller_getnet_id;
+                $getNetBackOfficeService = new GetnetBackOfficeService();
+                $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+                    ->setStatementSaleHashId($hashId);
 
-                        $getNetBackOfficeService = new GetnetBackOfficeService();
-                        $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-                            ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
+                $originalResult = $getNetBackOfficeService->getStatement();
+                $result = json_decode($originalResult);
 
-                        $originalResult = $getNetBackOfficeService->getStatement();
-                        $result = json_decode($originalResult);
+                if ($transaction->sale->created_at > '2020-10-30 13:28:51.0') {
 
-                        $transactionsGetNet = (new GetNetStatementService())->performStatement($result);
+                    $orderId = $hashId . '-' . $saleId . '-' . $transaction->sale->attempts;
+                } else {
 
-                        if (array_key_exists('items', $transactionsGetNet)) {
+                    $orderId = $hashId . '-' . $transaction->sale->attempts;
+                }
 
-                            $transactionGetNet = collect($transactionsGetNet['items'])->first();
+                //print_r($orderId . ', ');
 
-                            if (!$transactionGetNet) {
+                if (isset($result->list_transactions)) {
 
-                                $this->info(' - NOT FOUND AFTER  (new GetNetStatementService())->performStatement(...) | sale_id = ' . $transaction->sale->id);
+                    if (count($result->list_transactions)) {
 
-                                if ($transaction->sale->created_at > '2020-10-30 13:28:51.0') {
+                        foreach ($result->list_transactions as $statement) {
 
-                                    $orderId = $transaction->sale->hash_id . '-' . $transaction->sale->id . '-' . $transaction->sale->attempts;
-                                } else {
+                            if (!isset($statement->summary)) {
 
-                                    $orderId = $transaction->sale->hash_id . '-' . $transaction->sale->attempts;
+                                /*$summary = $statement->summary;
+                                $details = $statement->details;
+                                } else {*/
+
+                                $withoutSummary['id'][] = $saleId;
+                                $withoutSummary['hashId'][] = $hashId;
+                                $withoutSummary['orderId'][] = $orderId;
+
+                                $this->error('Nao existe summary para: ' . $saleId . '  |  ' . $hashId . '  |  ' . $orderId);
+                            }
+
+                            if (isset($statement->details)) {
+
+                                if (!count($statement->details)) {
+
+                                    $zeroDetails['id'][] = $saleId;
+                                    $zeroDetails['hashId'][] = $hashId;
+                                    $zeroDetails['orderId'][] = $orderId;
+
+                                    $this->error('ZERO details para: ' . $saleId . '  |  ' . $hashId . '  |  ' . $orderId);
                                 }
 
-                                print_r($orderId . ', ');
-                                //print_r($transaction->sale->id.', ');
-                                //print_r($transaction->sale->hash_id.', ');
                             } else {
 
-                                /*if (!empty($transactionGetNet->subSellerRateConfirmDate)) {
+                                $withoutDetails['id'][] = $saleId;
+                                $withoutDetails['hashId'][] = $hashId;
+                                $withoutDetails['orderId'][] = $orderId;
 
-                                    $this->info(' - UPDATE - ' . $transactionGetNet->order->getSaleId() . ' :: ' . $transactionGetNet->details->getStatus() . ' :: subSellerRateConfirmDate = ' . $transactionGetNet->subSellerRateConfirmDate);
+                                $this->error('Nao existe details para: ' . $saleId . '  |  ' . $hashId . '  |  ' . $orderId);
 
-                                    $transaction->update(
-                                        [
-                                            'status' => 'transfered',
-                                            'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                                        ]
-                                    );
-                                } else {
-
-                                    $this->comment(' - ' . $transactionGetNet->order->getSaleId() . ' :: ' . $transactionGetNet->details->getStatus());
-
-                                }*/
                             }
+
                         }
+                    } else {
+
+                        $zeroListTransactions['id'][] = $saleId;
+                        $zeroListTransactions['hashId'][] = $hashId;
+                        $zeroListTransactions['orderId'][] = $orderId;
+
+                        $this->error('ZERO list_transactions para: ' . $saleId . '  |  ' . $hashId . '  |  ' . $orderId);
                     }
+
+                } else {
+
+                    $withoutListTransactions['id'][] = $saleId;
+                    $withoutListTransactions['hashId'][] = $hashId;
+                    $withoutListTransactions['orderId'][] = $orderId;
+
+                    $this->error('Nao existe list_transactions para: ' . $saleId . '  |  ' . $hashId . '  |  ' . $orderId);
                 }
             } catch (Exception $e) {
                 report($e);
             }
         }
+
+        $this->info("");
+        $this->info("");
+
+        foreach ([
+                     'withoutListTransactions',
+                     'zeroListTransactions',
+                     'withoutSummary',
+                     'zeroSummary',
+                     'withoutDetails',
+                     'zeroDetails'
+                 ] as $arrayToPrint) {
+
+            if (
+                count(${$arrayToPrint}['id']) > 0 ||
+                count(${$arrayToPrint}['hashId']) > 0 ||
+                count(${$arrayToPrint}['orderId']) > 0
+            ) {
+
+
+                $this->info(". . . . . . . . ");
+                $this->info("");
+                $this->info($arrayToPrint);
+            }
+
+            foreach (${$arrayToPrint} as $index => $values) {
+
+                if (count($values)) {
+
+                    $this->info("");
+                    $this->info(' #### ' . $index);
+
+                    if ($index == 'id') {
+
+                        $content = $this->implodeInteger($values);
+                    } else {
+
+                        $content = $this->implodeString($values);
+                    }
+                    $this->comment($content);
+                }
+            }
+        }
+    }
+
+    private function implodeString($array)
+    {
+
+        return "'" . implode("', '", $array) . "'";
+    }
+
+    private function implodeInteger($array)
+    {
+
+        return implode(", ", $array);
     }
 }
