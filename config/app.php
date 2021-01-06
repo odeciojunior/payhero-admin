@@ -171,6 +171,7 @@ return [
         \SocialiteProviders\Manager\ServiceProvider::class,
 
         \Torann\GeoIP\GeoIPServiceProvider::class,
+        App\Rules\ValidatorProvider::class,
 
     ],
 
