@@ -572,8 +572,7 @@
                             <div class='col-12 '>
                                 <div class="switch-holder">
                                     <label for='finalizing_purchase_config'
-                                           style='margin-right:15px;margin-bottom: 3px'>Pessoas finalizando
-                                        compra</label>
+                                           style='margin-right:15px;margin-bottom: 3px'>Mostrar pessoas finalizando compra no checkout</label>
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="finalizing_purchase_config"
                                                name="finalizing_purchase_config_toogle" class='check'
@@ -591,68 +590,32 @@
                                            style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
 
                                     <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
-                                           value="Outras [min_visitante] [max_visitante] pessoas estão finalizando a compra neste momento"
+                                           value="Outras {visitantes} pessoas estão finalizando a compra neste momento."
                                            class='form-control select-pad finalizing_purchase_config d-none '>
 
                                     <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
                                         <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        Você pode mover o máximo e o mínimo de visitante em qualquer lugar do texto.
+                                        Você pode mover o template do contador de visitantes em qualquer lugar do texto.
                                     </p>
 
                                     <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
 
                                 </div>
                             </div>
-                            <div class='col-1 finalizing_purchase_config d-none'>
+                            <div class='col-6 finalizing_purchase_config d-none'>
                                 <div class="switch-holder">
                                     <label for='finalizing_purchase_config_min_value'
-                                           style='margin-right:15px;margin-bottom: 3px'>Mínimo</label>
+                                           style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para mensagem ser exibida</label>
 
                                     <input id="finalizing_purchase_config_min_value" name='finalizing_purchase_config_min_value'
                                            type="number"
-                                           value="1"
+                                           value="10"
+                                           min='1'
                                            class='form-control select-pad  '>
 
                                     <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
                                 </div>
                             </div>
-                            <div class='col-1 finalizing_purchase_config d-none'>
-                                <div class="switch-holder">
-                                    <label for='finalizing_purchase_config_max_value'
-                                           style='margin-right:15px;margin-bottom: 3px'>Máximo</label>
-
-                                    <input name='finalizing_purchase_config_max_value'
-                                           type="number"
-                                           value="15"
-                                           class='form-control select-pad  '>
-
-                                    <span id='finalizing_purchase_config_max_value_error' class='text-danger'></span>
-                                </div>
-                            </div>
-                            <div class='col-5 finalizing_purchase_config d-none'>
-
-                                <label for='finalizing_purchase_config_eye_color'
-                                       style='margin-right:15px;margin-bottom: 3px'>Cor do ícone de olho</label>
-
-                                <input type="text" name="finalizing_purchase_config_eye_color" class="asColorpicker form-control "  style="width:100%" data-plugin="asColorPicker"
-                                       data-mode="simple" value="#ff666b"/>
-
-                                <span id='finalizing_purchase_config_eye_color_error' class='text-danger'></span>
-
-
-                            </div>
-                            <div class='col-5 finalizing_purchase_config d-none'>
-
-                                <label for='finalizing_purchase_config_text_color'
-                                       style='margin-right:15px;margin-bottom: 3px'>Cor do texto</label>
-
-                                <input type="text" name="finalizing_purchase_config_text_color" class="form-control asColorpicker " style="width:100%" data-plugin="asColorPicker"
-                                       data-mode="simple" value="#ff666b"/>
-
-                                <span id='finalizing_purchase_config_text_color_error' class='text-danger'></span>
-
-                            </div>
-
 
                         </div>
 

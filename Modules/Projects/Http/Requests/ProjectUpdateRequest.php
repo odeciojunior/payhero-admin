@@ -61,11 +61,8 @@ class ProjectUpdateRequest extends FormRequest
             'countdown_timer_time'             => 'int|min:1',
             'countdown_timer_description'      => 'nullable|string|max:255',
             'finalizing_purchase_config_toogle' => 'required|boolean',
-            'finalizing_purchase_config_text' => 'required_if:finalizing_purchase_config_toogle,1|string',
-            'finalizing_purchase_config_max_value' =>  'required_if:finalizing_purchase_config_toogle,1|string',
-            'finalizing_purchase_config_min_value' =>  'required_if:finalizing_purchase_config_toogle,1|string',
-            'finalizing_purchase_config_eye_color' =>  'required_if:finalizing_purchase_config_toogle,1|string|max:255',
-            'finalizing_purchase_config_text_color' =>  'required_if:finalizing_purchase_config_toogle,1|string|max:255',
+            'finalizing_purchase_config_text' => 'required_if:finalizing_purchase_config_toogle,1|string|templateStringMinVisitorInFinalizingPurchaseConfig',
+            'finalizing_purchase_config_min_value' =>  'required_if:finalizing_purchase_config_toogle,1|digits_between:1,9999999',
         ];
     }
 
@@ -79,10 +76,7 @@ class ProjectUpdateRequest extends FormRequest
             'countdown_timer_finished_message.min'    => 'O campo da mensagem ao finalizar o contador precisa ter entre 20 e 255 caracteres',
             'countdown_timer_finished_message.string' => 'O campo da mensagem ao finalizar o contador não pode estar vazio',
             'finalizing_purchase_config_text.required_if' => 'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
-            'finalizing_purchase_config_max_value.required_if' => 'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
             'finalizing_purchase_config_min_value.required_if' =>  'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
-            'finalizing_purchase_config_eye_color.required_if' =>  'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
-            'finalizing_purchase_config_text_color.required_if' =>  'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
         ];
     }
 
