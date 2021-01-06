@@ -196,9 +196,9 @@
             @if(!auth()->user()->has_sale_before_getnet)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
-                        <div>
+                        <span class="bg-menu">
                             <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
-                        </div>
+                        </span>
                         <span class="site-menu-title">Finanças</span>
                     </a>
                 </li>
