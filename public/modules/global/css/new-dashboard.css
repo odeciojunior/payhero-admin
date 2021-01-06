@@ -168,6 +168,9 @@ body {
     background-image: linear-gradient(to top, rgb(15, 4, 41), #000011);
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-right: 10px solid #fff !important;
 }
 
 .card-left.orange {
@@ -190,6 +193,10 @@ body {
     background-image: linear-gradient(to right, rgb(20, 105, 217), rgb(20, 105, 217));
 }
 
+.card-left > .card-header:first-child {
+    border-radius: 0;
+    background-color: #FFFFFF;
+}
 /*rgb(0, 229, 255)*/
 /*left*/
 
