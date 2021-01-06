@@ -592,21 +592,23 @@
                                         estão finalizando uma compra na última hora.
                                     </p>
 
-                                    <label for='finalizing_purchase_config_text'
-                                           class="finalizing_purchase_config d-none"
-                                           style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
-
-                                    <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
-                                           class='form-control select-pad finalizing_purchase_config d-none '>
-
-                                    <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        Você pode mover o template do contador de visitantes em qualquer lugar do texto.
-                                    </p>
-
-                                    <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
-
                                 </div>
+                            </div>
+
+                            <div class="col-6">
+                                <label for='finalizing_purchase_config_text'
+                                       class="finalizing_purchase_config d-none"
+                                       style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
+
+                                <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
+                                       class='form-control select-pad finalizing_purchase_config d-none '>
+
+                                <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                    Mensagem que será exibida no checkout. Número de visitantes = {visitantes}.
+                                </p>
+
+                                <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
                             </div>
                             <div class='col-6 finalizing_purchase_config d-none'>
                                 <div class="switch-holder">
@@ -614,11 +616,17 @@
                                            style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para
                                         mensagem ser exibida</label>
 
-                                    <input id="finalizing_purchase_config_min_value"
-                                           name='finalizing_purchase_config_min_value'
-                                           type="number"
+                                    <input class="form-control"
+                                           id="finalizing_purchase_config_min_value"
+                                           name="finalizing_purchase_config_min_value" data-mask="000"
                                            min='1'
-                                           class='form-control select-pad  '>
+                                           type='text' placeholder='1' maxlength='4' class="form-control">
+
+
+                                    <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        A mensagem só será exibida se o número de visitantes for maior que o informado.
+                                    </p>
 
                                     <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
                                 </div>
