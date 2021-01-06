@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=01') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <style>

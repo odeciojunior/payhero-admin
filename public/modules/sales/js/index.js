@@ -441,13 +441,17 @@ $(document).ready(function () {
     });
 
     $('.btn-light-1').click(function () {
-        var collapse = $('.wb-chevron-down')
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
 
-        console.log(collapse.css('transform'))
-        if(collapse.css('transform') == 'matrix(-1, 0, 0, -1, 0, 0)')
+        text.fadeOut(10);
+        if(collapse.css('transform') == 'matrix(-1, 0, 0, -1, 0, 0)') {
             collapse.css('transform', 'rotate(0deg)')
-        else
+            text.text('Filtros avançado').fadeIn()
+        } else {
             collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        }
     })
 
     $(document).on('keypress', function (e) {

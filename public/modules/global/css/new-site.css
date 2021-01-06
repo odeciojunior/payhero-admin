@@ -1,58 +1,54 @@
 .icon-copy-1,
-.o-add-circle,
-.o-add-user,
+.o-add-1,
+.o-add-circle-1,
+.o-add-user-1,
 .o-agenda-1,
-.o-bank-cards,
+.o-bank-cards-1,
 .o-bin-1,
-.o-cash-dispenser,
-.o-checkbox-confirm,
-.o-checked-circle,
+.o-cash-dispenser-1,
+.o-checkbox-confirm-circle-1,
+.o-checked-circle-1,
 .o-checkmark-1,
-.o-checkout-cart,
+.o-checkout-cart-1,
 .o-clouds-1,
-.o-cloudy-fog,
+.o-cloudy-fog-1,
 .o-cogwheel-1,
 .o-comments-1,
 .o-config-1,
 .o-copy-1,
-.o-credit-card,
+.o-credit-card-1,
 .o-currency-1,
 .o-display-1,
-.o-dollar-sign,
-.o-download-cloud,
+.o-dollar-sign-1,
+.o-download-cloud-1,
 .o-edit-1,
 .o-export-1,
 .o-eye-1,
-.o-file-explorer,
+.o-file-explorer-1,
 .o-gear-1,
-.o-imac-screen,
+.o-imac-screen-1,
 .o-info-1,
-.o-info-help,
+.o-info-help-1,
 .o-iphone-1,
 .o-loop-1,
 .o-money-1,
-.o-money-bag,
-.o-new-message,
+.o-money-bag-1,
+.o-new-message-1,
 .o-paper-1,
-.o-portfolio-grid,
+.o-portfolio-grid-1,
 .o-question-1,
-.o-question-help,
+.o-question-help-1,
 .o-reload-1,
-.o-sales-up,
-.o-shipping-box,
+.o-sales-up-1,
+.o-shipping-box-1,
 .o-social-1,
 .o-speed-1,
 .o-store-1,
-.o-upload-to,
-.o-whatsapp-1
- {
+.o-upload-to-cloud-1,
+.o-whatsapp-1 {
     font-size: 24px;
     color: #0d2c54;
     -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
-}
-
-.icon-copy-1 {
-
 }
 
 .o-eye-1 {
@@ -60,59 +56,59 @@
 }
 
 .icon-copy-1:hover,
-.o-add-circle:hover,
-.o-add-user:hover,
+.o-add-1:hover,
+.o-add-circle-1:hover,
+.o-add-user-1:hover,
 .o-agenda-1:hover,
-.o-bank-cards:hover,
+.o-bank-cards-1:hover,
 .o-bin-1:hover,
-.o-cash-dispenser:hover,
-.o-checkbox-confirm:hover,
-.o-checked-circle:hover,
+.o-cash-dispenser-1:hover,
+.o-checkbox-confirm-circle-1:hover,
+.o-checked-circle-1:hover,
 .o-checkmark-1:hover,
-.o-checkout-cart:hover,
+.o-checkout-cart-1:hover,
 .o-clouds-1:hover,
-.o-cloudy-fog:hover,
+.o-cloudy-fog-1:hover,
 .o-cogwheel-1:hover,
 .o-comments-1:hover,
 .o-config-1:hover,
 .o-copy-1:hover,
-.o-credit-card:hover,
+.o-credit-card-1:hover,
 .o-currency-1:hover,
 .o-display-1:hover,
-.o-dollar-sign:hover,
-.o-download-cloud:hover,
+.o-dollar-sign-1:hover,
+.o-download-cloud-1:hover,
 .o-edit-1:hover,
 .o-export-1:hover,
 .o-eye-1:hover,
-.o-file-explorer:hover,
+.o-file-explorer-1:hover,
 .o-gear-1:hover,
-.o-imac-screen:hover,
+.o-imac-screen-1:hover,
 .o-info-1:hover,
-.o-info-help:hover,
+.o-info-help-1:hover,
 .o-iphone-1:hover,
 .o-loop-1:hover,
 .o-money-1:hover,
-.o-money-bag:hover,
-.o-new-message:hover,
+.o-money-bag-1:hover,
+.o-new-message-1:hover,
 .o-paper-1:hover,
-.o-portfolio-grid:hover,
+.o-portfolio-grid-1:hover,
 .o-question-1:hover,
-.o-question-help:hover,
+.o-question-help-1:hover,
 .o-reload-1:hover,
-.o-sales-up:hover,
-.o-shipping-box:hover,
+.o-sales-up-1:hover,
+.o-shipping-box-1:hover,
 .o-social-1:hover,
 .o-speed-1:hover,
 .o-store-1:hover,
-.o-upload-to:hover,
-.o-whatsapp-1 :hover{
+.o-upload-to-cloud-1:hover,
+.o-whatsapp-1:hover {
     color: #2E85EC;
     transition: 0.3s;
 }
 
 .o-whatsapp-1:hover {
     color: #41DC8F;
-    transition: 0.3s;
 }
 
 .o-bin-1:hover {
@@ -608,7 +604,7 @@ input[type=radio] {
 }
 
 .badge-notification-false {
-    
+
 }
 
 .badge-pendente, .badge-pending {

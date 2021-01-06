@@ -8,7 +8,7 @@
         <div style="display: none" class="page-header container">
             <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project"
                style="position: relative; float: right; display:none" title='Adicionar projeto'>
-                <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
+                <span style="color: white; font-size: 35px" class='o-add-1'></span>
             </a>
             <a id="btn-config" class="mr-20 btn-config btn btn-floating bg-secondary d-flex justify-content-center align-items-center" style="position: relative; float: right;" title='Configurações'>
                 <span class="o-cogwheel-1 text-white" style="font-size: 26px; font-weight: 900 !important;"></span>

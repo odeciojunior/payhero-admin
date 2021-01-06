@@ -12,7 +12,7 @@
                 <div id='div-create' class="col-lg-6" style="display:none">
                     <a href="/products/create" class="btn btn-floating btn-primary"
                        style="position: relative; float: right">
-                        <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
+                        <span style="color: white; font-size: 35px" class='o-add-1'></span>
                     </a>
                 </div>
             </div>
