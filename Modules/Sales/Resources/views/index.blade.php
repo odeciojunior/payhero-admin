@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=1') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
@@ -165,7 +165,7 @@
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
                                         <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                        <span id="text-filtro">Filtros avançado</span>
+                                        <span id="text-filtro">Filtros avançados</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-xl-3 text-right mt-20">
