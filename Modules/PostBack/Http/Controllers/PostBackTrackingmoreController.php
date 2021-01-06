@@ -36,9 +36,13 @@ class PostBackTrackingmoreController extends Controller
             foreach ($trackings as $tracking) {
                 $tracking->tracking_status_enum = $trackingStatus;
                 if (!in_array($trackingStatus, [
-                    $trackingModel->present()->getTrackingStatusEnum('posted'),
-                    $trackingModel->present()->getTrackingStatusEnum('exception')
-                ]) && $tracking->system_status_enum != $trackingModel->present()->getSystemStatusEnum('duplicated')) {
+                        $trackingModel->present()->getTrackingStatusEnum('posted'),
+                        $trackingModel->present()->getTrackingStatusEnum('exception')
+                    ]) &&
+                    in_array($tracking->system_status_enum, [
+                        $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
+                        $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
+                    ])) {
                     $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
                     $tracking->save();
                     event(new CheckSaleHasValidTrackingEvent($tracking->sale_id));
