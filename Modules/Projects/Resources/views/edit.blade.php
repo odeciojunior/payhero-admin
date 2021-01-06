@@ -403,7 +403,7 @@
                                 </div>
                             </div>
                         </div>
-{{--                        <div class="row my-15">--}}
+                        <div class="row mt-5 mb-10">
 {{--                            <div class='col-6'>--}}
 {{--                                <div class="switch-holder">--}}
 {{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
@@ -437,7 +437,25 @@
 {{--                                    máximo que poderá ser aplicado.--}}
 {{--                                </p>--}}
 {{--                            </div>--}}
-{{--                        </div>--}}
+                            <div class='col'>
+                                <div class="switch-holder">
+                                    <label for='product_amount_selector' style='margin-right:15px;margin-bottom: 3px'>
+                                        Seletor de quantidade de produtos no carrinho</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="product_amount_selector"
+                                               name="product_amount_selector" class='check'
+                                               value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <p class="info mt-5" style="font-size: 10px;">
+                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Se esta opção estiver habilitada,
+                                    a página de checkout permitirá que o usuário selecione a quantidade de produtos no
+                                    carrinho.
+                                    <b>Nota:</b> Esta opção não se aplica à planos que possuem mais de um produto.
+                                </p>
+                            </div>
+                        </div>
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="required_email_checkout">Email obrigatório no checkout</label>
