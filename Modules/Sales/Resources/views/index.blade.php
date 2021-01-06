@@ -67,19 +67,19 @@
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
                             <div class="row align-items-baseline mb-md-15">
-                                <div class="col-sm-6 col-md">
+                                <div class="col-sm-12 col-md">
                                     <label for="projeto">Projeto</label>
                                     <select name='select_project' id="projeto" class="form-control select-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-6 col-md">
+                                <div class="col-sm-12 col-md">
                                     <label for="plan">Plano</label>
                                     <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
                                         <option value="">Todos planos</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-6 col-md">
+                                <div class="col-sm-12 col-md">
                                     <label for="transaction">Transação</label>
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
@@ -97,16 +97,16 @@
                                 </div>
                             </div>
                             <div class="row collapse" id="bt_collapse">
-                                <div class="d-flex">
-                                    <div class="col-sm-8 col-md">
+                                <div class="d-flex flex-wrap">
+                                    <div class="col-sm-12 col-md">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
                                     </div>
-                                    <div class="col-sm-8 col-md">
+                                    <div class="col-sm-12 col-md">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
-                                    <div class="col-sm-6 col-md">
+                                    <div class="col-sm-12 col-md">
                                         <label for="status">Status</label>
                                         <select name='sale_status' id="status" class="form-control select-pad">
                                             <option value="">Todos status</option>
@@ -121,7 +121,7 @@
                                             <option value="24">Em disputa</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-6 col-md">
+                                    <div class="col-sm-12 col-md">
                                         <label for="forma">Forma de pagamento</label>
                                         <select name='select_payment_method' id="forma" class="form-control select-pad">
                                             <option value="">Boleto e cartão de crédito</option>
@@ -141,39 +141,39 @@
                                     {{--                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
                                     {{--                            </button>--}}
                                     {{--                        </div>--}}
-                                    <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
-                                        <div class='row mt-15'>
-                                            <div class='col-8 nowarp'>
-                                                <label class="switch m-0 mx-5">
-                                                    <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
-                                                    <span class="slider round"></span>
-                                                    <span class="switch-text"> Upsell </span>
-                                                </label>
-                                            </div>
-                                            <div class='col-4 nowarp'>
-                                                <label class="switch m-0">
-                                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
-                                                    <span class="slider round"></span>
-                                                    <span class="switch-text"> Shopify Erros </span>
-                                                </label>
-                                            </div>
+                                    <div class="col-sm-12 col-md d-flex align-items-center flex-wrap mt-15">
+                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <label class="switch mr-2">
+                                                <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <span class="switch-text"> Upsell </span>
+                                        </div>
+                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <label class="switch mr-2">
+                                                <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <span class="switch-text"> Shopify Erros </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="height: 30px">
                                 <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
-                                    <div class="btn btn-light-1 w-p100 bold"
+                                    <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                          data-toggle="collapse"
                                          data-target="#bt_collapse"
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
-                                        <i class="icon  wb-chevron-down" aria-hidden="true"></i>Minimizar filtros
+                                        <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                        <span id="text-filtro">Filtros avançado</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-xl-3 text-right mt-20">
-                                    <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold">
-                                        <i style="transform: rotate(0deg);" class="icon wb-check" aria-hidden="true"></i>Aplicar filtros
+                                    <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                        Aplicar filtros
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +226,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-3 d-sm-none d-md-block">
                                 <div style='display:block;'>
                                     <div class="mt-30">
                                         <h5 class="gray font-size-16"> Acesso rápido </h5>
