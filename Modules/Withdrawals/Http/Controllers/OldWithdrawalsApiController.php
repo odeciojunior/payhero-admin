@@ -181,7 +181,9 @@ class OldWithdrawalsApiController extends Controller
                                 $withdrawalModel->present()->getStatus('refused'),
                             ]
                         )
-                    )->whereBetween('created_at', [$startDate, $endDate])->get();
+                    )
+                    ->where('automatic_liquidation', false)
+                    ->whereBetween('created_at', [$startDate, $endDate])->get();
                 $withdrawalSum = 0;
                 if (count($withdrawal) > 0) {
                     $withdrawalSum = $withdrawal->sum('value');
@@ -208,7 +210,8 @@ class OldWithdrawalsApiController extends Controller
                         $companyModel->present()->getStatus('pending')
                     ],
                 ]
-            )->first();
+            )->where('automatic_liquidation', false)
+                ->first();
 
             if (empty($withdrawal)) {
                 $tax = 0;
@@ -225,7 +228,9 @@ class OldWithdrawalsApiController extends Controller
                     function ($query) {
                         $query->where('user_id', auth()->user()->account_owner_id);
                     }
-                )->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
+                )->where('automatic_liquidation', false)
+                    ->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
+
                 if (empty($userWithdrawal)) {
                     $isFirstUserWithdrawal = true;
                 }
