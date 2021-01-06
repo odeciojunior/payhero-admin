@@ -219,6 +219,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/detail.js?v=s1') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/detail.js?v=s2') }}"></script>
     @endpush
 </div>

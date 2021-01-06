@@ -845,7 +845,7 @@ $(document).ready(function () {
             days: 31,
         },
         startDate: moment().subtract(7, 'days'),
-        endDate: moment().add(0, 'days'),
+        endDate: moment().add(7, 'days'),
         opens: 'center',
         maxDate: moment().add(1, 'month'),
         alwaysShowCalendar: true,

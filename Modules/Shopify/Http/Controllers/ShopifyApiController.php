@@ -204,14 +204,16 @@ class ShopifyApiController extends Controller
 
             $shippingCreated = $shippingModel->create(
                 [
-                    'project_id' => $projectCreated->id,
-                    'name' => 'Frete gratis',
-                    'information' => 'de 15 até 30 dias',
-                    'value' => '0,00',
-                    'type' => 'static',
-                    'type_enum' => $shippingModel->present()->getTypeEnum('static'),
-                    'status' => '1',
-                    'pre_selected' => '1',
+                    'project_id'         => $projectCreated->id,
+                    'name'               => 'Frete gratis',
+                    'information'        => 'de 15 até 30 dias',
+                    'value'              => '0,00',
+                    'type'               => 'static',
+                    'type_enum'          => $shippingModel->present()->getTypeEnum('static'),
+                    'status'             => '1',
+                    'pre_selected'       => '1',
+                    'apply_on_plans'     => '["all"]',
+                    'not_apply_on_plans' => '[]'
                 ]
             );
 

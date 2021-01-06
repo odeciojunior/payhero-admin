@@ -13,14 +13,16 @@ class ShippingStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "type"            => "required|string",
-            "name"            => "required|string|max:60",
-            "information"     => "required|string|max:100",
-            "value"           => $this->get('type') == 'static' ? "required|max:8" : "",
-            "zip_code_origin" => $this->get('type') != 'static' ? "required|min:9" : "",
-            "status"          => "nullable",
-            "pre_selected"    => "nullable",
-            "rule_value"      => "nullable",
+            "type"               => "required|string",
+            "name"               => "required|string|max:60",
+            "information"        => "required|string|max:100",
+            "value"              => $this->get('type') == 'static' ? "required|max:8" : "",
+            "zip_code_origin"    => $this->get('type') != 'static' ? "required|min:9" : "",
+            "status"             => "nullable",
+            "pre_selected"       => "nullable",
+            "rule_value"         => "nullable",
+            "apply_on_plans"     => "required|array",
+            "not_apply_on_plans" => "sometimes|required|array"
         ];
     }
 
@@ -41,6 +43,7 @@ class ShippingStoreRequest extends FormRequest
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
             'value.required'           => 'O campo valor é obrigatório',
             'value.max'                => 'O campo Valor do Frete permite apenas 30 caracteres',
+            'apply_on_plans.required'  => 'Necessário informar para quais planos o frete estará disponível'
         ];
     }
 

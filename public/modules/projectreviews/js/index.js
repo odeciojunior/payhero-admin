@@ -180,6 +180,9 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.bt-review-save', function () {
+        var btReviewSave = $('.bt-review-save');
+        btReviewSave.attr("disabled", "disabled");
+
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('project_id', projectId);
@@ -209,6 +212,7 @@ $(document).ready(function () {
             },
             complete: function () {
                 previewImageReview.imgAreaSelect({remove: true});
+                btReviewSave.attr("disabled", false);
             }
         });
     });
@@ -297,6 +301,10 @@ $(document).ready(function () {
 
     $(document).on('click', '.bt-review-update', function (event) {
         event.preventDefault();
+
+        var btReviewUpdate = $('.bt-review-update');
+        btReviewUpdate.attr("disabled", "disabled");
+
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('_method', 'PUT');
@@ -325,6 +333,7 @@ $(document).ready(function () {
             },
             complete: function () {
                 previewImageReview.imgAreaSelect({remove: true});
+                btReviewUpdate.attr("disabled", false);
             }
         });
     });

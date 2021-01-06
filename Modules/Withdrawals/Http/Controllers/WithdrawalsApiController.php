@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
@@ -124,9 +125,10 @@ class WithdrawalsApiController
                 function ($query) {
                     $query->where('user_id', auth()->user()->account_owner_id);
                 }
-            )->exists();
+            )->where('status', '!=', $withdrawalModel->present()->getStatus('refused'))
+                ->exists();
 
-            if (empty($userWithdrawal)) {
+            if (!$userWithdrawal) {
                 $isFirstUserWithdrawal = true;
             }
 
@@ -177,6 +179,8 @@ class WithdrawalsApiController
                     }
                 }
             );
+
+            $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
 
             event(new WithdrawalRequestEvent($withdrawal));
 

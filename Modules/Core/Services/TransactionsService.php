@@ -14,7 +14,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TransactionsService
 {
 
-    public function verifyTransactions()
+    public function verifyGetnetTransactions()
     {
         try {
             // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
@@ -62,10 +62,8 @@ class TransactionsService
                 }
 
                 $getnetService->setStatementSubSellerId($subsellerId)
-                    ->setStatementSaleHashId($saleIdEncoded)
-                               ->setStatementDateField(GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE)
-                               ->setStatementStartDate(now()->subYears(2))
-                               ->setStatementEndDate(now());
+                    ->setStatementSaleHashId($saleIdEncoded);
+
                 $result = json_decode($getnetService->getStatement());
 
                 if (!empty($result->list_transactions) &&

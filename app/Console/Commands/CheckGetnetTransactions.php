@@ -33,6 +33,6 @@ class CheckGetnetTransactions extends Command
 
     public function handle()
     {
-        (new TransactionsService())->verifyTransactions();
+        (new TransactionsService())->verifyGetnetTransactions();
     }
 }

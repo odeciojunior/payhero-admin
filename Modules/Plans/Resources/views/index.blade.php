@@ -18,6 +18,7 @@
     </div>
 </div>
 <div class="card shadow">
+    <input type="hidden" id="currency_type_project">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
             <table id='table-plans' class='table text-left table-pixels table-striped unify' style='width:100%'>

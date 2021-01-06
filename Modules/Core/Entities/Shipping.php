@@ -22,6 +22,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $zip_code_origin
  * @property boolean $status
  * @property boolean $pre_selected
+ * @property string $apply_on_plans
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -31,6 +32,7 @@ use Spatie\Activitylog\Models\Activity;
 class Shipping extends Model
 {
     use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -58,10 +60,18 @@ class Shipping extends Model
         'status',
         'rule_value',
         'pre_selected',
+        'apply_on_plans',
+        'not_apply_on_plans',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
+
+    protected $attributes = [
+        'apply_on_plans' => ['all'],
+        'not_apply_on_plans' => []
+    ];
+
     /**
      * @var bool
      */

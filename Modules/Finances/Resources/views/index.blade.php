@@ -66,6 +66,19 @@
                              aria-labelledby="nav-home-tab"
                         >
                             <div class="row justify-content-start align-items-center">
+                                <div class="col-12 mb-3">
+                                    <div class="alert alert-info alert-dismissible fade show text-center" id=''
+                                         role="alert">
+                                        <strong>ATENÇÃO!</strong><br> Após a liberação do saque, o prazo para a iniciar a
+                                        liquidação é de 2 dias úteis.
+                                        <br>
+                                        As informações necessárias podem ser acompanhadas na tela Finanças > Extrato >
+                                        Agenda Financeira.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="col-8 mb-3">
                                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
                                          role="alert" style='display:none;'>
@@ -101,6 +114,11 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
+<!--                                                <div class='input-group-prepend'>
+                                                        <span class="input-group-text custom-addon" id="basic-addon1"
+                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
+                                                                    class="currency">$</span></span>
+                                                </div>-->
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"

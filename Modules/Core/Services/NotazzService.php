@@ -127,18 +127,6 @@ class NotazzService
                             $product['product_cost']
                         )) ? $product['product_cost'] : 0;
                         $product['currency_type_enum'] = $productPlan->currency_type_enum;
-                    } else {
-                        //pega os valores de produto
-                        if (!empty($product->cost)) {
-                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
-                            $product['product_cost'] = (is_numeric(
-                                $product['product_cost']
-                            )) ? $product['product_cost'] : 0;
-                        } else {
-                            $product['product_cost'] = 0;
-                        }
-
-                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
                     }
 
                     $product['product_amount'] = ($planSale->amount * $productPlan->amount) ?? 1;

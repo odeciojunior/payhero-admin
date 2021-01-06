@@ -62,9 +62,9 @@ $(document).ready(function () {
                     $('#smartfunnel-icon').removeClass('wb-plus').addClass('wb-check');
                 }
 
-                if (response.notazzIntegrations == 0) {
-                    $('.div-notazz-integration').remove();
-                }
+                // if (response.notazzIntegrations == 0) {
+                //     $('.div-notazz-integration').remove();
+                // }
 
                 loadOnAny('.page', true);
             }

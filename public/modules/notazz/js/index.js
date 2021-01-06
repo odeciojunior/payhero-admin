@@ -358,7 +358,7 @@ $(document).ready(function () {
 //reset the intergation modal
     function clearForm() {
         $('#integration_id').val('');
-        $('#start_date_create').val('');
+        $('#start_date_create').val(moment().format('YYYY-MM-DD'));
         $('#token_api_create').val('');
         $('#token_webhook_create').val('');
         $('#token_logistics_create').val('');

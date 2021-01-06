@@ -6,7 +6,7 @@
 @section('content')
     <div id='project-content'>
         <div class='page'>
-            <div style="display: none" class="page-header container">
+            <div style="" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações com Notazz</h1>
@@ -56,7 +56,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/notazz/js/index.js?v=s0')}}"></script>
+        <script src="{{asset('modules/notazz/js/index.js?v=s1')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection
