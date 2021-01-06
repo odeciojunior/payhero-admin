@@ -442,10 +442,10 @@ class ShippingApiController extends Controller
                 if ($shipping->id == $otherShipping->id
                     && !empty($currentApplyOnPlans)
                     && $active_flag
-                    && ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
+                    && ((isset($currentApplyOnPlans[0]) && $currentApplyOnPlans[0] == 'all') || in_array($plan->id, $currentApplyOnPlans))) {
                     $plansHasShipping[$plan->id] = true;
                 } else if ($shipping->id != $otherShipping->id
-                    && (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all')) {
+                    && (in_array($plan->id, $applyOnPlans) || (isset($applyOnPlans[0]) && $applyOnPlans[0] == 'all'))) {
                     $plansHasShipping[$plan->id] = true;
                 }
             }
