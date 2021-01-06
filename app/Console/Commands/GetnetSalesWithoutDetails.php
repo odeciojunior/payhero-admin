@@ -46,6 +46,7 @@ class GetnetSalesWithoutDetails extends Command
         $search = new Search();
         $search->save();
 
+        $start = now();
         $this->comment(now()->format('H:i:s'));
         $this->comment('............');
 
@@ -210,5 +211,7 @@ class GetnetSalesWithoutDetails extends Command
 
         $this->comment('............');
         $this->comment(now()->format('H:i:s'));
+        $this->comment('Tempo em minutos: ' . now()->diffInMinutes($start));
+        $this->comment('............');
     }
 }

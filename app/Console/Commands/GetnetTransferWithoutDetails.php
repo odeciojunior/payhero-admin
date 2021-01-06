@@ -55,7 +55,9 @@ class GetnetTransferWithoutDetails extends Command
             $this->info('..USANDO DISTINCT..');
         }
 
-        //dd($transactions->get()->toArray());
+        $start = now();
+        $this->comment(now()->format('H:i:s'));
+        $this->comment('............');
 
         // sale_id = 805336 -> { "list_transactions": [], "commission": [], "adjustments": [], "chargeback": [] }
         // sale_id = 892541, 916439 -> "details": []"
@@ -237,6 +239,10 @@ class GetnetTransferWithoutDetails extends Command
                 }
             }
         }
+        $this->comment('............');
+        $this->comment(now()->format('H:i:s'));
+        $this->comment('Tempo em minutos: ' . now()->diffInMinutes($start));
+        $this->comment('............');
     }
 
     private function implodeString($array)
