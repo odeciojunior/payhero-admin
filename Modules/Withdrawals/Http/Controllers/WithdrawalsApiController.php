@@ -125,9 +125,10 @@ class WithdrawalsApiController
                 function ($query) {
                     $query->where('user_id', auth()->user()->account_owner_id);
                 }
-            )->exists();
+            )->where('status', '!=', $withdrawalModel->present()->getStatus('refused'))
+                ->exists();
 
-            if (empty($userWithdrawal)) {
+            if (!$userWithdrawal) {
                 $isFirstUserWithdrawal = true;
             }
 

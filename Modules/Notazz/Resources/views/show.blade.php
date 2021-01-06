@@ -21,15 +21,15 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
-                <div class="col-6">
+                <div class="col-sm-8 col-12">
                     <h1 class="page-title">
                         <a href='/apps/notazz' class='fa fa-arrow-circle-left' style='color:#e7714f'></a>
-                        Relatorios Notazz
+                        Notas fiscais do projeto <span id="title_integration"></span>
                     </h1>
                 </div>
-                <div class="col-6 text-right">
+                <div class="col-sm-4 col-12 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                         <div class="p-2 align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
@@ -193,7 +193,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/show.js?v=s1') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/show.js?v=s2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
