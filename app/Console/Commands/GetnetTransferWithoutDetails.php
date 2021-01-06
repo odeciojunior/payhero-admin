@@ -39,13 +39,23 @@ class GetnetTransferWithoutDetails extends Command
         $companyModel = new Company();
         $transactionModel = new Transaction();
 
-        $transactions = $transactionModel->with('sale')
+        $withoutCompany = $this->ask('Sem verificar a company?', true);
+
+        $transactions = $transactionModel->select('sale_id')
+            ->with('sale')
             ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
             ->whereNotNull('company_id')
             ->where('company_id', '<>', '')
-            //->where('id', '>=', 2259480)
             //->whereIn('sale_id', [805336, 892541, 916439])
             ->whereIn('gateway_id', [15]);
+
+        if ($withoutCompany == true) {
+
+            $transactions = $transactions->distinct();
+            $this->info('..USANDO DISTINCT..');
+        }
+
+        //dd($transactions->get()->toArray());
 
         // sale_id = 805336 -> { "list_transactions": [], "commission": [], "adjustments": [], "chargeback": [] }
         // sale_id = 892541, 916439 -> "details": []"
@@ -94,15 +104,20 @@ class GetnetTransferWithoutDetails extends Command
 
             try {
 
-                $company = $companyModel->find($transaction->company_id);
 
-                $subSeller = $company->subseller_getnet_id;
                 $saleId = $transaction->sale_id;
                 $hashId = $transaction->sale->hash_id;
 
                 $getNetBackOfficeService = new GetnetBackOfficeService();
-                $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-                    ->setStatementSaleHashId($hashId);
+                $getNetBackOfficeService->setStatementSaleHashId($hashId);
+
+                if ($withoutCompany == false) {
+
+                    $company = $companyModel->find($transaction->company_id);
+
+                    $subSeller = $company->subseller_getnet_id;
+                    $getNetBackOfficeService->setStatementSubSellerId($subSeller);
+                }
 
                 $originalResult = $getNetBackOfficeService->getStatement();
                 $result = json_decode($originalResult);
