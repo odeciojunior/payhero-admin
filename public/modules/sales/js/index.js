@@ -383,8 +383,8 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.number', true);
-                $('#total-sales').text('<span class="font-size-30 bold">0</span>');
-                $('#commission, #total').text('<span class="font-size-30 bold">R$ 0,00</span>');
+                $('#total-sales').html('<span class="font-size-30 bold">0</span>');
+                $('#commission, #total').html('<span class="font-size-30 bold">R$ 0,00</span>');
 
                 if (response.total_sales) {
                     $('#total-sales, #commission, #total').text('');
