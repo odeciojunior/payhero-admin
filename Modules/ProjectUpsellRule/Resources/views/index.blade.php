@@ -4,8 +4,8 @@
             <div class='div-config' style='display:none;'>
                 <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Upsell </span>
-                    <a class="ml-10 rounded-add pointer bg-secondary text-white">
-                        <span class="o-cogwheel-1" style="font-size: 18px; font-weight: 900 !important;"></span> 
+                    <a class="ml-10 btn-config rounded-add pointer bg-secondary text-white">
+                        <span class="o-cogwheel-1" style="font-size: 18px;"></span> 
                     </a>
                 </div>
             </div>

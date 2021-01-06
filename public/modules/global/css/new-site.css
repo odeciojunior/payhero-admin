@@ -1,3 +1,103 @@
+.o-add-user-1,
+.o-agenda-1,
+.o-bank-cards-1,
+.o-bin-1,
+.o-cash-dispenser-1,
+.o-checked-circle-1,
+.o-checkout-cart-1,
+.o-cogwheel-1,
+.o-comments-1,
+.o-config-1,
+.o-copy-1,
+.o-credit-card-1,
+.o-currency-1,
+.o-display-1,
+.o-dollar-sign-1,
+.o-edit-1,
+.o-export-1,
+.o-file-explorer-1,
+.o-gear-1,
+.o-imac-screen-1,
+.o-info-1,
+.o-info-help-1,
+.o-iphone-1,
+.o-loop-1,
+.o-money-1,
+.o-money-bag-1,
+.o-new-message-1,
+.o-paper-1,
+.o-portfolio-grid-1,
+.o-question-1,
+.o-question-help-1,
+.o-reload-1,
+.o-sales-up-1,
+.o-shipping-box-1,
+.o-social-1,
+.o-speed-1,
+.o-store-1,
+.o-eye-1,
+.o-whatsapp-1 {
+    font-size: 24px;
+    color: #0d2c54;
+    -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
+}
+
+
+.o-eye-1 {
+    font-size: 30px;
+}
+
+.o-add-user-1:hover,
+.o-agenda-1:hover,
+.o-bank-cards-1:hover,
+.o-cash-dispenser-1:hover,
+.o-checked-circle-1:hover,
+.o-checkout-cart-1:hover,
+.o-cogwheel-1:hover,
+.o-comments-1:hover,
+.o-config-1:hover,
+.o-copy-1:hover,
+.o-credit-card-1:hover,
+.o-currency-1:hover,
+.o-display-1:hover,
+.o-dollar-sign-1:hover,
+.o-edit-1:hover,
+.o-export-1:hover,
+.o-eye-1:hover,
+.o-file-explorer-1:hover,
+.o-gear-1:hover,
+.o-imac-screen-1:hover,
+.o-info-1:hover,
+.o-info-help-1:hover,
+.o-iphone-1:hover,
+.o-loop-1:hover,
+.o-money-1:hover,
+.o-money-bag-1:hover,
+.o-new-message-1:hover,
+.o-paper-1:hover,
+.o-portfolio-grid-1:hover,
+.o-question-1:hover,
+.o-question-help-1:hover,
+.o-reload-1:hover,
+.o-sales-up-1:hover,
+.o-shipping-box-1:hover,
+.o-social-1:hover,
+.o-speed-1:hover,
+.o-store-1:hover {
+    color: #2E85EC;
+    transition: 0.3s;
+}
+
+.o-whatsapp-1:hover {
+    color: #41DC8F;
+    transition: 0.3s;
+}
+
+.o-bin-1:hover {
+    color: #F41C1C;
+    transition: 0.3s;
+}
+
 a, a:hover {
     text-decoration: none;
 }
@@ -326,6 +426,11 @@ input[type=radio] {
     border-color: #cdcdcd;
 }
 
+.btn-outline.btn-default > span {
+    color: #76838f !important;
+    -webkit-text-stroke: 0;
+}
+
 .h1, .h2, .h3, h1, h2, h3 {
     margin-top: 0px !important;
     margin-bottom: 11px;
@@ -547,12 +652,32 @@ input[type=radio] {
     padding: 0px !important;
     display: flex !important;
     position: absolute !important;
-    top: 1.5em;
-    right: 1em;
+    top: 2.1em;
+    right: 1.6em;
     align-items: center;
     justify-content: center;
-    height: 18px !important;
-    width: 18px !important;
+    height: 8px !important;
+    width: 8px !important;
+    background-color: #F41C1C;
+}
+
+.badge-notification-true {
+    color: white;
+    border-radius: 30px !important;
+    font-weight: 700;
+    padding: 0px !important;
+    display: flex !important;
+    position: absolute !important;
+    top: 2.1em;
+    right: 1.6em;
+    align-items: center;
+    justify-content: center;
+    height: 8px !important;
+    width: 8px !important;
+}
+
+.badge-notification-false {
+    
 }
 
 .badge-pendente, .badge-pending {
@@ -576,8 +701,12 @@ input[type=radio] {
 }
 
 .site-navbar {
+    top: 0px;
+    left: 0px;
     height: 4.286rem !important;
     min-height: auto !important;
+    box-shadow: 0px 3px 6px #00000029;
+    opacity: 1;
 
 }
 
@@ -908,13 +1037,15 @@ input[type=radio] {
     box-shadow: none;
 }
 
-button.btnDelete span {
+.btnDelete span {
     font-size: 24px;
+    color: #F41C1C;
+    -webkit-text-stroke: 0.6px #F41C1C;
 }
 
-button.btn img {
+/* button.btn img {
     filter: brightness(0) invert(1);
-}
+} */
 
 .btnDelete:hover {
     color: #C30909;
@@ -924,113 +1055,14 @@ button.btn img {
     transition: 0.3s;
 }
 
-.o-add-user-1,
-.o-agenda-1,
-.o-bank-cards-1,
-.o-bin-1,
-.o-cash-dispenser-1,
-.o-checked-circle-1,
-.o-checkout-cart-1,
-.o-cogwheel-1,
-.o-comments-1,
-.o-config-1,
-.o-copy-1,
-.o-credit-card-1,
-.o-currency-1,
-.o-display-1,
-.o-dollar-sign-1,
-.o-edit-1,
-.o-export-1,
-.o-file-explorer-1,
-.o-gear-1,
-.o-imac-screen-1,
-.o-info-1,
-.o-info-help-1,
-.o-iphone-1,
-.o-loop-1,
-.o-money-1,
-.o-money-bag-1,
-.o-new-message-1,
-.o-paper-1,
-.o-portfolio-grid-1,
-.o-question-1,
-.o-question-help-1,
-.o-reload-1,
-.o-sales-up-1,
-.o-shipping-box-1,
-.o-social-1,
-.o-speed-1,
-.o-store-1,
-.o-eye-1,
-.o-whatsapp-1 {
-    font-size: 24px;
-    color: #0d2c54;
-    -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
-}
-
-
-.o-eye-1 {
-    font-size: 30px;
-}
-
-.o-add-user-1:hover,
-.o-agenda-1:hover,
-.o-bank-cards-1:hover,
-.o-cash-dispenser-1:hover,
-.o-checked-circle-1:hover,
-.o-checkout-cart-1:hover,
-.o-cogwheel-1:hover,
-.o-comments-1:hover,
-.o-config-1:hover,
-.o-copy-1:hover,
-.o-credit-card-1:hover,
-.o-currency-1:hover,
-.o-display-1:hover,
-.o-dollar-sign-1:hover,
-.o-edit-1:hover,
-.o-export-1:hover,
-.o-eye-1:hover,
-.o-file-explorer-1:hover,
-.o-gear-1:hover,
-.o-imac-screen-1:hover,
-.o-info-1:hover,
-.o-info-help-1:hover,
-.o-iphone-1:hover,
-.o-loop-1:hover,
-.o-money-1:hover,
-.o-money-bag-1:hover,
-.o-new-message-1:hover,
-.o-paper-1:hover,
-.o-portfolio-grid-1:hover,
-.o-question-1:hover,
-.o-question-help-1:hover,
-.o-reload-1:hover,
-.o-sales-up-1:hover,
-.o-shipping-box-1:hover,
-.o-social-1:hover,
-.o-speed-1:hover,
-.o-store-1:hover {
-    color: #2E85EC;
+.btnDelete:hover > span {
+    color: #C30909;
     transition: 0.3s;
-}
-
-.o-whatsapp-1:hover {
-    color: #41DC8F;
-    transition: 0.3s;
-}
-
-.o-bin-1:hover {
-    color: #F41C1C;
-    transition: 0.3s;
+    -webkit-text-stroke: 0.6px #C30909;
 }
 
 .btnDelete:focus {
     border-color: #C30909;
-    box-shadow: none;
-}
-
-.btn-delete-modal > span, .btn-cancel-modal > span {
-    font-size: 17px;
 }
 
 .btn-delete-modal {
@@ -1039,13 +1071,19 @@ button.btn img {
     box-shadow: none;
 }
 
+.btn-delete-modal > span {
+    font-size: 17px;
+    color: #fff !important;
+    -webkit-text-stroke: 0.6px #fff;
+}
+
 .btn-delete-modal:hover {
     color: #fff;
     background-color: #C30909;
     box-shadow: none;
 }
 
-.btn-delete-modal:active:focus , .btn-cancel-modal:active:focus {
+.btnDelete:active:focus, .btn-delete-modal:active:focus , .btn-cancel-modal:active:focus {
     box-shadow: none !important;
 }
 
@@ -1058,4 +1096,75 @@ button.btn img {
 .btn-cancel-modal:hover {
     color: #343A40;
     box-shadow: none;
+}
+
+.btn-config > span {
+    color: #fff;
+    -webkit-text-stroke: 0.8px #fff;
+}
+
+.btn-config:hover > span {
+    color: #fff;
+    -webkit-text-stroke: 0.8px #fff;
+}
+
+#notification > img {
+    top: 39px;
+    left: 1683px;
+    width: 23px;
+    height: 22px;
+}
+
+#notifications_card {
+    top: 80%;
+    width: 370px;
+    min-height: 250px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 1px 30px #00000026;
+    border-radius: 16px !important;
+    padding: 8px;
+}
+
+#notifications_card > #notificationTemplate {
+    /* width: 358px;  */
+    height:100%
+}
+
+#notifications_card > #notificationTemplate > a.list-group-item {
+
+    margin: 0;    
+    border-radius: 16px !important;
+    padding: 10px;
+}
+
+#notifications_card > #notificationTemplate > a.list-group-item:focus, #notifications_card > #notificationTemplate > a.list-group-item:hover {
+    background-color: #F2FFF9;
+}
+
+.not-read-notification {
+    background-color:#F2FFF9;
+}
+
+#notificationTemplate {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.item-notification > .icon-notification {
+    width: 60px;
+    height: 60px;
+    background: #E2FFF1 0% 0% no-repeat padding-box;
+    border-radius: 100%;
+    opacity: 1;
+}
+
+.item-notification > .icon-notification > span {
+    font-size: 34px;
+}
+
+.item-notification > .description-notification > h6 {
+    font-size:  13px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #6E6E6E;
+    opacity: 1;
 }

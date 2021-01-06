@@ -40,24 +40,18 @@
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 @if(!auth()->user()->hasRole('attendance'))
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
-                          aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                        <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
-                        <span class="badge badge-primary badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
-                    </span>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
-                            <div class="dropdown-menu-header" style='padding:0px 20px;'>
-                                <h6><strong>NOTIFICAÇÕES</strong></h6>
-                            </div>
-                            <div class="list-group scrollable scrollable-vertical" style="position: relative;">
-                                <div class="scrollable-container" style="min-height: 250px; width: 358px;">
-                                    <div id='notificationTemplate' class="scrollable-content"
-                                         style="width: 358px; height:100%">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown-menu-footer"
-                                 style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
+                        <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
+                            aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
+                            <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
+
+                            @if( count(auth()->user()->unreadNotifications) > 0)
+                                <span class="badge badge-notification" id="notification-amount"></span>
+                            @else
+                                <span class="badge badge-notification-false" id="notification-amount"></span>
+                            @endif
+                        </span>
+                        <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
+                            <div id='notificationTemplate' class="scrollable-content">
                             </div>
                         </div>
                     </li>
