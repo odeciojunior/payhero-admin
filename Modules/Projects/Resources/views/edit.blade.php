@@ -582,7 +582,7 @@
                                     <p class='info pt-5' style='font-size: 10px;'>
                                         <i class='icon wb-info-circle' aria-hidden='true'></i>
                                         Ao habilitar esta função, será exibido um texto com a quantidade de pessoas que
-                                        estão finalizando uma compra na página de checkout.
+                                        estão finalizando uma compra na última hora.
                                     </p>
 
                                     <label for='finalizing_purchase_config_text'
