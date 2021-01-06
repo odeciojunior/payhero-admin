@@ -523,6 +523,50 @@ class FoxUtils
     {
         return $length != null ? substr($string, $start, $length) : substr($string, $start);
     }
+
+    public static function calcTime($time) {
+        $currentDate = date("Y-m-d H:i:s");
+        $dateDiff = $time->diff($currentDate);
+
+        $return = '';
+        if ( $dateDiff->y > 1 ) {
+            $return = 'Há ' . $dateDiff->y .' anos';
+        }
+        elseif ( $dateDiff->y === 1 ) {
+            $return = 'Há um ano';
+        }
+        elseif ( $dateDiff->m > 1 ) {
+            $return = 'Há ' . $dateDiff->m .' meses';
+        }
+        elseif ( $dateDiff->m === 1 ) {
+            $return = 'Há um mês';
+        }
+        elseif ( $dateDiff->d >= 14 ) {
+             $semanas = floor($dateDiff->d / 7);
+            $return = 'Há ' . $semanas .' semanas';
+        }
+        elseif ( $dateDiff->d >= 7 ) {
+           $return = 'Há uma semana';
+       }
+       elseif ( $dateDiff->d > 1 ) {
+            $return = 'Há ' . $dateDiff->d .' dias';
+        }
+        elseif ( $dateDiff->d === 1 ) {
+            $return = 'Há um dia';
+        }
+        elseif ( $dateDiff->h > 1 ) {
+            $return = 'Há ' . $dateDiff->h .' horas';
+        }
+        elseif ( $dateDiff->h === 1 ) {
+            $return = 'Há um hora';
+        }
+        elseif ( $dateDiff->i >= 1 ) {
+            $return = 'Há ' . $dateDiff->i  . ' minutos';
+        }
+        elseif ( $dateDiff->i < 1 ) {
+            $return = 'Há um minuto';
+        }
+       
+        return $return;
+    }
 }
-
-

@@ -269,8 +269,8 @@ $(document).ready(function () {
                         let observation = ''
                         if (!isEmpty(value.observation) || (value.observation === null && false) || (value.observation === '' && false)) {
                              observation = `<a data-toggle="tooltip" title="${value.observation}"
-                                                role="button" class="sale_observation" venda="${value.id}" style='margin-right:10px;'>
-                                                    <i style="color: #44a44b" class='icon-observation-value  material-icons'>info</i>
+                                                role="button" class="sale_observation" venda="${value.id}">
+                                                    <span style="color: #44a44b" class="o-info-help-1"></span>
                                             </a>`
                         }
 
@@ -296,9 +296,12 @@ $(document).ready(function () {
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
+                                    <td style="text-align: center">
                                         ${observation}
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                            <span class="o-eye-1"></span>
+                                        </a>
+                                    </td>
                                 </tr>`;
 
                         $(function () {
@@ -382,11 +385,12 @@ $(document).ready(function () {
                 loadOnAny('.number', true);
                 $('#total-sales').text('0');
                 $('#commission, #total').text('R$ 0,00');
+
                 if (response.total_sales) {
                     $('#total-sales, #commission, #total').text('');
-                    $('#total-sales').text(response.total_sales);
-                    $('#commission').text(`R$ ${response.commission}`);
-                    $('#total').text(`R$ ${response.total}`);
+                    $('#total-sales').html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+                    $('#commission').html(`R$ <span class="font-size-30 bold"> ${response.commission} </span>`);
+                    $('#total').html(`R$ <span class="font-size-30 bold"> ${response.total} </span>`);
                 }
 
             }
@@ -435,6 +439,21 @@ $(document).ready(function () {
             },
         }
     });
+
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if(collapse.css('transform') == 'matrix(-1, 0, 0, -1, 0, 0)') {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançado').fadeIn()
+        } else {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        }
+    })
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             atualizar();

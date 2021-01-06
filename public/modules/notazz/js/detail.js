@@ -257,7 +257,7 @@ $(() => {
                 var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><img src='/modules/global/img/svg/copy.svg' style='width: 24px'></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -327,7 +327,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><img src='/modules/global/img/svg/copy.svg' style='width: 24px'></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}

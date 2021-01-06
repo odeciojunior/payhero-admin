@@ -305,9 +305,9 @@ $(document).ready(function () {
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data += "<td><span class='sale_status badge badge-" + statusRecovery[value.status_translate] + "' status='" + value.status_translate + "' sale_id='" + value.id + "'>" + value.status_translate + "</span></td>";
         data += "<td>" + value.value + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img src='/modules/global/img/svg/whatsapp.svg' style='width: 24px'></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><img src='/modules/global/img/svg/copy.svg' style='width: 24px'></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><span class='o-eye-1'></span></button></td>";
         data += "</tr>";
 
         return data;
@@ -330,9 +330,9 @@ $(document).ready(function () {
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id_default + "'>" + value.recovery_status + "</span></td>";
         data += "<td>" + value.total_paid + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><img src='/modules/global/img/svg/whatsapp.svg' style='width: 24px'></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><img src='/modules/global/img/svg/copy.svg' style='width: 24px'></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id_default + "' ><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id_default + "' ><span class='o-eye-1'></span></button></td>";
         data += "</tr>";
 
         return data;
@@ -427,7 +427,7 @@ $(document).ready(function () {
             $('#div_delivery').show();
         }
         if (!isEmpty(data.link)) {
-            $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + data.link + '" title="Copiar link"><img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a> ');
+            $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + data.link + '" title="Copiar link"><span class="o-copy-1"></span> </a> ');
         } else {
             $("#link-sale").html('Link: ' + data.link);
         }

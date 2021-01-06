@@ -43,9 +43,9 @@ $(document).ready(function () {
                             <td>${value.description}</td>
                             <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
-                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>
-                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
+                                <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
+                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
                             </td>
                         </tr>
                         `;

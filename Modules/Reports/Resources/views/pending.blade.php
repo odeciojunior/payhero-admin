@@ -147,6 +147,7 @@
                                         <th class="table-title display-sm-none display-m-none display-lg-none">Data</th>
                                         <th class="table-title">Pagamento</th>
                                         <th class="table-title">Comissão</th>
+                                        <th class="table-title"></th>
                                     </tr>
                                     </thead>
                                     <tbody id="body-table-pending">
