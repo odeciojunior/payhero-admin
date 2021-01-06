@@ -590,7 +590,6 @@
                                            style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
 
                                     <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
-                                           value="Outras {visitantes} pessoas estão finalizando a compra neste momento."
                                            class='form-control select-pad finalizing_purchase_config d-none '>
 
                                     <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
@@ -609,7 +608,6 @@
 
                                     <input id="finalizing_purchase_config_min_value" name='finalizing_purchase_config_min_value'
                                            type="number"
-                                           value="10"
                                            min='1'
                                            class='form-control select-pad  '>
 

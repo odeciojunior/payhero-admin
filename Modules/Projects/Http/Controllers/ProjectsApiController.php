@@ -339,6 +339,21 @@ class ProjectsApiController extends Controller
 
             $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
+
+            if(isset($requestValidated['finalizing_purchase_config_toogle'])) {
+
+                $array = [
+                    'toogle' => $requestValidated['finalizing_purchase_config_toogle'],
+                    'text' => $requestValidated['finalizing_purchase_config_text'],
+                    'min_value' => $requestValidated['finalizing_purchase_config_min_value']
+                ];
+
+                $requestValidated['finalizing_purchase_configs'] = json_encode($array);
+
+            }else{
+                $requestValidated['finalizing_purchase_configs'] = null;
+            }
+
             $projectUpdate = $project->fill($requestValidated)->save();
             $projectChanges = $project->getChanges();
             if (isset($projectChanges["support_phone"])) {
