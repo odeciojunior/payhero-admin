@@ -27,7 +27,7 @@ class VerifyTransfersGetnetWithoutDetails extends Command
      *
      * @var string
      */
-    protected $description = '';
+    protected $description = 'Faz uma varredura e salva em um banco paralelo o extrato da GETNET';
 
     /**
      * Create a new command instance.
