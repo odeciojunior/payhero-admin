@@ -403,41 +403,41 @@
                                 </div>
                             </div>
                         </div>
-{{--                        <div class="row my-15">--}}
-{{--                            <div class='col-6'>--}}
-{{--                                <div class="switch-holder">--}}
-{{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
-{{--                                        com--}}
-{{--                                        desconto</label>--}}
-{{--                                    <label class="switch" style='top:3px'>--}}
-{{--                                        <input type="checkbox" id="discount_recovery_status"--}}
-{{--                                               name="discount_recovery_status" class='check discount-recovery'--}}
-{{--                                               value='0'>--}}
-{{--                                        <span class="slider round"></span>--}}
-{{--                                    </label>--}}
-{{--                                    <select id='discount_recovery_value' name='discount_recovery_value'--}}
-{{--                                            class='form-control select-pad' id="checkout_type">--}}
-{{--                                        <option value='10'>10%</option>--}}
-{{--                                        <option value='20'>20%</option>--}}
-{{--                                        <option value='30'>30%</option>--}}
-{{--                                        <option value='40'>40%</option>--}}
-{{--                                        <option value='50'>50%</option>--}}
-{{--                                    </select>--}}
-{{--                                    <span id='discount-recovery-error' class='text-danger'></span>--}}
-{{--                                </div>--}}
-{{--                                <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
-{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
-{{--                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
-{{--                                    pertencentes a este projeto.--}}
-{{--                                </p>--}}
-{{--                                <p class="info mt-5" style="font-size: 10px;">--}}
-{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
-{{--                                    tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
-{{--                                    cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
-{{--                                    máximo que poderá ser aplicado.--}}
-{{--                                </p>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="row my-15">--}}
+                        {{--                            <div class='col-6'>--}}
+                        {{--                                <div class="switch-holder">--}}
+                        {{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
+                        {{--                                        com--}}
+                        {{--                                        desconto</label>--}}
+                        {{--                                    <label class="switch" style='top:3px'>--}}
+                        {{--                                        <input type="checkbox" id="discount_recovery_status"--}}
+                        {{--                                               name="discount_recovery_status" class='check discount-recovery'--}}
+                        {{--                                               value='0'>--}}
+                        {{--                                        <span class="slider round"></span>--}}
+                        {{--                                    </label>--}}
+                        {{--                                    <select id='discount_recovery_value' name='discount_recovery_value'--}}
+                        {{--                                            class='form-control select-pad' id="checkout_type">--}}
+                        {{--                                        <option value='10'>10%</option>--}}
+                        {{--                                        <option value='20'>20%</option>--}}
+                        {{--                                        <option value='30'>30%</option>--}}
+                        {{--                                        <option value='40'>40%</option>--}}
+                        {{--                                        <option value='50'>50%</option>--}}
+                        {{--                                    </select>--}}
+                        {{--                                    <span id='discount-recovery-error' class='text-danger'></span>--}}
+                        {{--                                </div>--}}
+                        {{--                                <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
+                        {{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
+                        {{--                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
+                        {{--                                    pertencentes a este projeto.--}}
+                        {{--                                </p>--}}
+                        {{--                                <p class="info mt-5" style="font-size: 10px;">--}}
+                        {{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
+                        {{--                                    tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
+                        {{--                                    cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
+                        {{--                                    máximo que poderá ser aplicado.--}}
+                        {{--                                </p>--}}
+                        {{--                            </div>--}}
+                        {{--                        </div>--}}
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="required_email_checkout">Email obrigatório no checkout</label>
@@ -574,13 +574,12 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="row">
                             <div class='col-12 '>
                                 <div class="switch-holder">
                                     <label for='finalizing_purchase_config'
-                                           style='margin-right:15px;margin-bottom: 3px'>Mostrar pessoas finalizando compra no checkout</label>
+                                           style='margin-right:15px;margin-bottom: 3px'>Mostrar pessoas finalizando
+                                        compra no checkout</label>
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="finalizing_purchase_config"
                                                name="finalizing_purchase_config_toogle" class='check'
@@ -612,9 +611,11 @@
                             <div class='col-6 finalizing_purchase_config d-none'>
                                 <div class="switch-holder">
                                     <label for='finalizing_purchase_config_min_value'
-                                           style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para mensagem ser exibida</label>
+                                           style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para
+                                        mensagem ser exibida</label>
 
-                                    <input id="finalizing_purchase_config_min_value" name='finalizing_purchase_config_min_value'
+                                    <input id="finalizing_purchase_config_min_value"
+                                           name='finalizing_purchase_config_min_value'
                                            type="number"
                                            min='1'
                                            class='form-control select-pad  '>
@@ -622,10 +623,7 @@
                                     <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
                                 </div>
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
