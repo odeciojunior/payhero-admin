@@ -109,14 +109,7 @@ class ShippingApiController extends Controller
                     }
                     $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
 
-                    $applyPlanArray = [];
-                    if (in_array('all', $shippingValidated['apply_on_plans'])) {
-                        $applyPlanArray[] = 'all';
-                    } else {
-                        foreach ($shippingValidated['apply_on_plans'] as $key => $value) {
-                            $applyPlanArray[] = current(Hashids::decode($value));
-                        }
-                    }
+                    $applyPlanArray = $this->getDecodedPlanIds($shippingValidated['apply_on_plans']);
                     $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
 
                     $notApplyPlanArray = [];
@@ -280,14 +273,7 @@ class ShippingApiController extends Controller
                         $requestValidated['rule_value'] = 0;
                     }
 
-                    $applyPlanArray = [];
-                    if (in_array('all', $requestValidated['apply_on_plans'])) {
-                        $applyPlanArray[] = 'all';
-                    } else {
-                        foreach ($requestValidated['apply_on_plans'] as $key => $value) {
-                            $applyPlanArray[] = current(Hashids::decode($value));
-                        }
-                    }
+                    $applyPlanArray = $this->getDecodedPlanIds($requestValidated['apply_on_plans']);
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
 
                     $notApplyPlanArray = [];
@@ -484,5 +470,6 @@ class ShippingApiController extends Controller
                 $decodedIds[] = current(Hashids::decode($value));
             }
         }
+        return $decodedIds;
     }
 }
