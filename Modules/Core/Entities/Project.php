@@ -49,6 +49,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $countdown_timer_finished_message
  * @property string $reviews_config_icon_type
  * @property string $reviews_config_icon_color
+ * @property bool $product_amount_selector
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $checkouts
@@ -131,6 +132,7 @@ class Project extends Model
         'countdown_timer_finished_message',
         'reviews_config_icon_type',
         'reviews_config_icon_color',
+        'product_amount_selector',
         'created_at',
         'updated_at',
         'deleted_at',

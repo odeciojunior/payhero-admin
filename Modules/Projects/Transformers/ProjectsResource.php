@@ -108,7 +108,8 @@ class ProjectsResource extends JsonResource
             'countdown_timer_description'      => $this->countdown_timer_description,
             'countdown_timer_finished_message' => $this->countdown_timer_finished_message,
             'reviews_config_icon_type'         => $this->reviews_config_icon_type,
-            'reviews_config_icon_color'        => $this->reviews_config_icon_color
+            'reviews_config_icon_color'        => $this->reviews_config_icon_color,
+            'product_amount_selector'          => $this->product_amount_selector,
         ];
     }
 }

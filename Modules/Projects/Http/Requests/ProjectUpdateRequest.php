@@ -61,6 +61,7 @@ class ProjectUpdateRequest extends FormRequest
             'countdown_timer_time'             => 'int|min:1',
             'countdown_timer_description'      => 'nullable|string|max:255',
             'countdown_timer_finished_message' => 'string|min:20|max:255',
+            'product_amount_selector'          => 'boolean',
         ];
     }
 

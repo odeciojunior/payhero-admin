@@ -404,6 +404,8 @@ $(() => {
         } else {
             $('.countdown-config').hide('fast', 'linear')
         }
+
+        $('#product_amount_selector').prop('checked', !!(project.product_amount_selector));
     }
 
     function supportphoneVerified() {
@@ -662,6 +664,7 @@ $(() => {
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
+        formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
 
         if (!verify) {
             $.ajax({

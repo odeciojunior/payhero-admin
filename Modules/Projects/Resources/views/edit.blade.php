@@ -444,7 +444,7 @@
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="product_amount_selector"
                                                name="product_amount_selector" class='check'
-                                               value='0'>
+                                               value='1'>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
