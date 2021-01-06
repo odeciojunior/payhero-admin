@@ -89,7 +89,7 @@ class NotazzApiController extends Controller
                                 'token_api' => $data['token_api_create'],
                                 'invoice_type' => $data['select_invoice_type_create'],
                                 'token_webhook' => $data['token_webhook_create'],
-                                'token_logistics' => $data['token_logistics_create'] ?? null,
+                                // 'token_logistics' => $data['token_logistics_create'] ?? null,
                                 'project_id' => $projectId,
                                 'user_id' => auth()->user()->account_owner_id,
                                 'start_date' => $data['start_date_create'],
@@ -208,7 +208,7 @@ class NotazzApiController extends Controller
                         [
                             'token_webhook' => $dataRequest['token_webhook_edit'],
                             'token_api' => $dataRequest['token_api_edit'],
-                            'token_logistics' => $dataRequest['token_logistics_edit'],
+                            // 'token_logistics' => $dataRequest['token_logistics_edit'],
                             'pending_days' => $dataRequest['select_pending_days_edit'],
                             'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
                             'generate_zero_invoice_flag' => $dataRequest['emit_zero_edit'] ?? null,

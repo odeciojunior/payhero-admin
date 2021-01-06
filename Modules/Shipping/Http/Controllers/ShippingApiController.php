@@ -4,7 +4,6 @@ namespace Modules\Shipping\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -90,13 +89,14 @@ class ShippingApiController extends Controller
                     }
                     if (empty($shippingValidated['status'])) {
                         $shippingValidated['status'] = 0;
+                        $shippingValidated['pre_selected'] = 0;
                     }
                     if (empty($shippingValidated['pre_selected'])) {
                         $shippingValidated['pre_selected'] = 0;
                     }
-                    if ($shippingValidated['pre_selected']) {
+                    if ($shippingValidated['pre_selected'] && $shippingValidated['status']) {
                         $shippings = $shippingModel->where([
-                            'project_id' => $shippingValidated['project_id'],
+                            'project_id'   => $shippingValidated['project_id'],
                             'pre_selected' => 1,
                         ])->first();
                         if ($shippings) {
@@ -108,6 +108,25 @@ class ShippingApiController extends Controller
                         $shippingValidated['rule_value'] = 0;
                     }
                     $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
+
+                    $applyPlanArray = [];
+                    if (in_array('all', $shippingValidated['apply_on_plans'])) {
+                        $applyPlanArray[] = 'all';
+                    } else {
+                        foreach ($shippingValidated['apply_on_plans'] as $key => $value) {
+                            $applyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
+
+                    $notApplyPlanArray = [];
+                    if (isset($shippingValidated['not_apply_on_plans']) && !in_array('all', $shippingValidated['not_apply_on_plans'])) {
+                        foreach ($shippingValidated['not_apply_on_plans'] as $key => $value) {
+                            $notApplyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $shippingValidated['not_apply_on_plans'] = json_encode($notApplyPlanArray);
+
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
@@ -128,7 +147,7 @@ class ShippingApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao tentar cadastrar frete',
-            ], 400);
+            ], 500);
         }
     }
 
@@ -199,9 +218,8 @@ class ShippingApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($shipping) {
                         $shipping->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
-                        $shipping->rule_value = number_format($shipping->rule_value / 100, 2, ',', '.');
 
-                        return response()->json($shipping, 200);
+                        return response()->json(ShippingResource::make($shipping), 200);
                     } else {
                         return response()->json(['message' => 'Erro ao tentar editar o frete!'], 400);
                     }
@@ -229,6 +247,7 @@ class ShippingApiController extends Controller
             }
             if (empty($requestValidated['status'])) {
                 $requestValidated['status'] = 0;
+                $requestValidated['pre_selected'] = 0;
             }
 
             if (isset($requestValidated) && isset($projectId) && isset($id)) {
@@ -261,6 +280,28 @@ class ShippingApiController extends Controller
                         $requestValidated['rule_value'] = 0;
                     }
 
+                    $applyPlanArray = [];
+                    if (in_array('all', $requestValidated['apply_on_plans'])) {
+                        $applyPlanArray[] = 'all';
+                    } else {
+                        foreach ($requestValidated['apply_on_plans'] as $key => $value) {
+                            $applyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $requestValidated['apply_on_plans'] = $applyPlanArray;
+
+                    $notApplyPlanArray = [];
+                    if (isset($requestValidated['not_apply_on_plans']) && !in_array('all', $requestValidated['not_apply_on_plans'])) {
+                        foreach ($requestValidated['not_apply_on_plans'] as $key => $value) {
+                            $notApplyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+                    $requestValidated['not_apply_on_plans'] = $notApplyPlanArray;
+
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, array_diff($applyPlanArray, $notApplyPlanArray), $requestValidated['status'])) {
+                        return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
+                    }
+
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
                     $shippingUpdated = $shipping->update($requestValidated);
 
@@ -271,7 +312,10 @@ class ShippingApiController extends Controller
                         ])->get();
 
                         if (count($sp) == 0) {
-                            $shipp = $shippingModel->where('project_id', $shipping->project_id)->first();
+                            $shipp = $shippingModel->where([
+                                'project_id' => $shipping->project_id,
+                                'status'     => 1
+                            ])->first();
                             $shipp->update(['pre_selected' => 1]);
                         }
                     }
@@ -333,8 +377,7 @@ class ShippingApiController extends Controller
                     ->find(current(Hashids::decode($id)));
 
                 if ($shipping->sales_count > 0) {
-                    return response()->json(['message' => 'Impossivel excluir, existem vendas associados a este frete!'],
-                        400);
+                    return response()->json(['message' => 'Impossível excluir, existem vendas associados a este frete!'], 400);
                 }
 
                 if ($shipping) {
@@ -343,6 +386,11 @@ class ShippingApiController extends Controller
                         return response()->json(['message' => 'Impossivel excluir, o projeto deve ter no minímo 1 frete cadastrado!'],
                             400);
                     }
+
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping)) {
+                        return response()->json(['message' => 'Impossível excluir, existem planos que ficarão sem nenhum frete vinculado!'], 400);
+                    }
+
                     if (Gate::allows('edit', [$project])) {
 
                         if ($shipping->pre_selected) {
@@ -358,7 +406,6 @@ class ShippingApiController extends Controller
                         }
 
                         if ($shipping->delete()) {
-
                             return response()->json(['message' => 'Frete removido com sucesso!'], 200);
                         } else {
                             return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
@@ -382,7 +429,60 @@ class ShippingApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao tentar excluir dados!',
-            ], 400);
+            ], 500);
+        }
+    }
+
+    private function verifyAllPlansHasActiveShippings($shipping, array $currentApplyOnPlans = [], $active_flag = false): bool
+    {
+        $where = [
+            ['project_id', $shipping->project_id],
+            ['status', true],
+        ];
+
+        $otherShippings = $shipping->where($where)->get();
+
+        $plansHasShipping = [];
+        foreach ($shipping->project->plans as $plan) {
+            if (!isset($plansHasShipping[$plan->id])) {
+                $plansHasShipping[$plan->id] = false;
+            }
+
+            foreach ($otherShippings as $otherShipping) {
+                $applyOnPlans = json_decode($otherShipping->apply_on_plans);
+                $notApplyOnPlans = json_decode($otherShipping->not_apply_on_plans);
+                $applyOnPlans = array_diff($applyOnPlans, $notApplyOnPlans);
+
+                if ($shipping->id == $otherShipping->id
+                    && !empty($currentApplyOnPlans)
+                    && $active_flag
+                    && ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
+                    $plansHasShipping[$plan->id] = true;
+                } else if ($shipping->id != $otherShipping->id
+                    && (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all')) {
+                    $plansHasShipping[$plan->id] = true;
+                }
+            }
+        }
+
+        foreach ($plansHasShipping as $hasShipping) {
+            if (!$hasShipping) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function getDecodedPlanIds(array $encodedIds)
+    {
+        $decodedIds = [];
+        if (in_array('all', $encodedIds)) {
+            $decodedIds[] = 'all';
+        } else {
+            foreach ($encodedIds as $key => $value) {
+                $decodedIds[] = current(Hashids::decode($value));
+            }
         }
     }
 }

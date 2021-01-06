@@ -53,7 +53,7 @@
                 <label for="cartao">Pré-selecionado</label>
                 <br>
                 <label class='switch'>
-                    <input name='pre_selected' value='1' class='check shipping-pre-selected' type="checkbox" checked>
+                    <input name='pre_selected' value='1' class='check shipping-pre-selected' type="checkbox">
                     <span class='slider round'></span>
                 </label>
             </div>
@@ -61,8 +61,25 @@
     </div>
     <div class='row'>
         <div class='form-group col-12'>
-            <label for='zip-code-origin'>Disponível para compras acima de: </label>
+            <label>Disponível para compras acima de: </label>
             <input name='rule_value' type='text' class='input-pad rule-shipping-value' value='0,00' placeholder='0,00'>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="form-group col-12 shipping-plans-add-container">
+            <label for='shipping-plans-add'>Oferecer o frete para os planos: </label>
+            <select name="apply_on_plans[]" id="shipping-plans-add" class="form-control shipping-plans-add"
+                    style='width:100%'
+                    data-plugin="select2" multiple='multiple'> </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='form-group col-12 shipping-not-apply-plans-add-container'>
+            <label for='shipping-not-apply-plans-add'>Não oferecer o frete para os planos: </label>
+            <select name="not_apply_on_plans[]" id="shipping-not-apply-plans-add"
+                    class="form-control shipping-not-apply-plans-add"
+                    style='width:100%'
+                    data-plugin="select2" multiple='multiple'></select>
         </div>
     </div>
     {{--    <div class='row'>

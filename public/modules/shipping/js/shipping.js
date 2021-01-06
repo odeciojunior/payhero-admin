@@ -41,13 +41,18 @@ $(document).ready(function () {
 
     $('.rule-shipping-value').on('blur', function () {
         if ($(this).val().length == 1) {
-            let val = '0,0'+$(this).val();
+            let val = '0,0' + $(this).val();
             $('.rule-shipping-value').val(val);
-        } else if($(this).val().length == 2) {
-            let val = '0,'+$(this).val();
+        } else if ($(this).val().length == 2) {
+            let val = '0,' + $(this).val();
             $('.rule-shipping-value').val(val);
         }
     });
+
+    setSelect2Plugin('#shipping-plans-add', '.shipping-plans-add-container')
+    setSelect2Plugin('#shipping-plans-edit', '.shipping-plans-edit-container')
+    setSelect2Plugin('#shipping-not-apply-plans-add', '.shipping-not-apply-plans-add-container')
+    setSelect2Plugin('#shipping-not-apply-plans-edit', '.shipping-not-apply-plans-edit-container')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -64,7 +69,16 @@ $(document).ready(function () {
         $('.shipping-value').val('');
         $('.shipping-zipcode').val('');
         $('.rule-shipping-value').val('');
+        $('#shipping-plans-add').html('');
+        $('#shipping-not-apply-plans-add').html('');
+
+        var elem = $('#shipping-plans-add')
+        elem.html('')
+        elem.append('<option value="all">Qualquer plano</option>');
+        elem.val('all').trigger('change')
     }
+
+    clearFields()
 
     $(".shipping-description").keyup(function () {
         if ($(this).val().length > 60) {
@@ -115,14 +129,14 @@ $(document).ready(function () {
                         $('#modal-detail-shipping .shipping-type').html('Estático');
                         break;
                     case 'pac':
-                        $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automáticamente');
+                        $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automaticamente');
                         break;
                     default:
-                        $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automáticamente');
+                        $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automaticamente');
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
-                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automáticamente' : response.value);
+                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automaticamente' : response.value);
                 $('#modal-detail-shipping .shipping-info').html(response.information);
                 $('#modal-detail-shipping .rule-shipping-value').html(response.rule_value);
                 $('#modal-detail-shipping .shipping-status').html(response.status == 1 ? '<span class="badge badge-success text-left">Ativo</span>' : '<span class="badge badge-danger">Desativado</span>');
@@ -149,6 +163,7 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             }, success: function success(response) {
+
                 $('#modal-edit-shipping .shipping-id').val(response.id_code);
 
                 switch (response.type) {
@@ -168,16 +183,27 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value);
                 $('#modal-edit-shipping .rule-shipping-value').trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
-                if (response.status == 1) {
-                    $('#modal-edit-shipping .shipping-status').val(1).prop('checked', true);
-                } else {
-                    $('#modal-edit-shipping .shipping-status').val(0).prop('checked', false);
+                $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
+                $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
+
+                // Seleciona a opção do select de acordo com o que vem do banco
+                var applyOnPlansEl = $('#modal-edit-shipping .shipping-plans-edit')
+                applyOnPlansEl.html('')
+                var applyOnPlans = []
+                for (let plan of response.apply_on_plans) {
+                    applyOnPlans.push(plan.id);
+                    applyOnPlansEl.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
-                if (response.pre_selected == 1) {
-                    $('#modal-edit-shipping .shipping-pre-selected').val(1).prop('checked', true);
-                } else {
-                    $('#modal-edit-shipping .shipping-pre-selecteds').val(0).prop('checked', false);
+                applyOnPlansEl.val(applyOnPlans).trigger('change')
+
+                var notApplyOnPlansEl = $('#modal-edit-shipping .shipping-not-apply-plans-edit')
+                notApplyOnPlansEl.html('')
+                var notApplyOnPlans = []
+                for (let plan of response.not_apply_on_plans) {
+                    notApplyOnPlans.push(plan.id);
+                    notApplyOnPlansEl.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
+                notApplyOnPlansEl.val(notApplyOnPlans).trigger('change')
 
                 $('#modal-edit-shipping').modal('show');
             }
@@ -224,8 +250,8 @@ $(document).ready(function () {
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
-        formData.append('status', $('#modal-edit-shipping .shipping-status').val());
-        formData.append('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').val());
+        formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
+        formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
         loadingOnScreen();
         $.ajax({
@@ -310,7 +336,7 @@ $(document).ready(function () {
 
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
-                                        <td style="vertical-align: middle;">${value.type}</td>
+                                        <td style="vertical-align: middle;">${value.type_name}</td>
                                         <td style="vertical-align: middle;">${value.name}</td>
                                         <td style="vertical-align: middle;">${value.value}</td>
                                         <td style="vertical-align: middle;">${value.information}</td>
@@ -331,6 +357,71 @@ $(document).ready(function () {
 
                     pagination(response, 'shippings', atualizarFrete);
                 }
+            }
+        });
+    }
+
+    function setSelect2Plugin(el, dropdownParent) {
+        el = $(el)
+        el.select2({
+            placeholder: 'Nome do plano',
+            multiple: true,
+            dropdownParent: $(dropdownParent),
+            language: {
+                noResults: function () {
+                    return 'Nenhum plano encontrado';
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return 'Carregando mais planos...';
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'plan',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1
+                    };
+                },
+                method: "GET",
+                url: "/api/plans/user-plans",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    let elemId = this.$element.attr('id');
+                    if ((elemId === 'shipping-plans-add' || elemId === 'shipping-plans-edit') && res.meta.current_page === 1) {
+                        let allObject = {
+                            id: 'all',
+                            name: 'Qualquer plano',
+                            description: ''
+                        };
+                        res.data.unshift(allObject);
+                    }
+
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
+            }
+        });
+
+        el.on('select2:select', function () {
+            let selectPlan = $(this);
+            if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() !== 'all')) {
+                selectPlan.val('all').trigger("change");
             }
         });
     }

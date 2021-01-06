@@ -13,14 +13,16 @@ class ShippingUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "type"            => "required|string",
-            "name"            => "required|string|max:60",
-            "information"     => "required|string|max:100",
-            "value"           => $this->get('type') == 'static' ? "required|max:8" : "",
-            "zip_code_origin" => $this->get('type') != 'static' ? "required|min:9" : "",
-            "status"          => "nullable",
-            "pre_selected"    => "nullable",
-            "rule_value"      => "nullable",
+            "type"               => "required|string",
+            "name"               => "required|string|max:60",
+            "information"        => "required|string|max:100",
+            "value"              => $this->get('type') == 'static' ? "required|max:8" : "",
+            "zip_code_origin"    => $this->get('type') != 'static' ? "required|min:9" : "",
+            "status"             => "nullable",
+            "pre_selected"       => "nullable",
+            "rule_value"         => "nullable",
+            "apply_on_plans"     => "required|array",
+            "not_apply_on_plans" => "sometimes|required|array",
         ];
     }
 
