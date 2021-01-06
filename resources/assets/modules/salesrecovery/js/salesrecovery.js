@@ -48,9 +48,9 @@ $(document).ready(function () {
                         dados += "<td><span class='badge badge-primary'>" + value.recovery_status + "</span></td>";
                     }
                     dados += "<td>" + value.value + "</td>";
-                    dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img src='/modules/global/img/svg/whatsapp.svg' style='width: 24px'></a></td>";
-                    dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><img src='/modules/global/img/svg/copy.svg' style='width: 24px'></a></td>";
-                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></button></td>";
+                    dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><span class='o-whatsapp-1'></span></a></td>";
+                    dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><span class='o-eye-1'></span></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 

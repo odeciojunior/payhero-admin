@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     $("#notification").on('click', function () {
         getNotifications();
-        updateUnreadNotificationsAmount();
+        //updateUnreadNotificationsAmount();
     });
 
     // autaliza status das notificações para lidas
@@ -34,7 +34,7 @@ $(document).ready(function () {
                 //
             },
             success: function (response) {
-                //
+                updateUnreadNotificationsAmount();
             }
         });
     }
@@ -52,7 +52,15 @@ $(document).ready(function () {
                 //
             },
             success: function (response) {
-                $("#notification-amount").html(response.qtd_notification);
+                // $("#notification-amount").html(response.qtd_notification);
+                if (parseInt(response.qtd_notification) > 0) {
+                    $("#notification-amount").removeClass("badge-notification-false");
+                    $("#notification-amount").addClass("badge-notification");
+                }else {
+                    $("#notification-amount").removeClass("badge-notification");
+                    $("#notification-amount").addClass("badge-notification-false");
+                }
+                
                 $('#notificationBadge').html('New ' + response.qtd_notification)
             }
         });
@@ -60,6 +68,7 @@ $(document).ready(function () {
 
     // monta html com as notificações
     function getNotifications() {
+        $("#notificationTemplate").css({'height': '150px'});
         loadOnNotification('#notificationTemplate');
         $.ajax({
             method: 'GET',
@@ -73,7 +82,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#notificationTemplate").html('');
-                $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
+                $("#notificationTemplate").css({'height': '300px', 'overflow-y': 'scroll'});
+
                 $(response.data).each(function(index, data){
                     $("#notificationTemplate").append(notificationTemplate(data));
                 });
@@ -87,78 +97,99 @@ $(document).ready(function () {
 
         data = getNotificationData(data);
 
-        return `<a class="list-group-item dropdown-item" href=` + data.link + ` role="menuitem" id='item-notification' style='width:100%;` + data.background + `'>
-                    <div class="media">
-                        <div class="pr-10" style='margin:auto'>
-                            <span class='` + data.iconClass + `'></span>
+        return `<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href=` + data.link + ` role="menuitem" id='item-notification' style='` + data.background + `'>
+                    
+                        <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" style='` + data.iconBackgroundColor + `'>
+                            <span class='` + data.iconClass + `' style='` + data.iconColor + `'></span>
                         </div>
-                        <div class="media-body">
+                        <div class="media-body description-notification">
                             <h6 class="media-heading" style='white-space:normal'>
                                 ` + data.message + `
                             </h6>
-                            <time class="media-meta">` + data.date + `</time>
+                            <time class="media-meta"> ` + data.time + `</time>
                         </div>
-                    </div>
                 </a>`;
     }
 
     // prepare data to create a template
     function getNotificationData(data){
-        var message = '', iconClass = '', link = '';
+        var message = '', iconClass = '', iconColor = '', iconBackgroundColor = '', link = '';
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
                 message   = data.message + (data.message > 1 ? ' boletos compensados' : ' boleto compensado');
-                iconClass = 'money-success';
+                iconClass = 'o-currency-1'; 
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/sales';
                 break;
-            case 'DomainApprovedNotification' :
+                case 'DomainApprovedNotification' :
                 message   = data.message;
-                iconClass = 'cloud-success';
+                iconClass = 'o-config-1'; // 'cloud-success';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/projects';
                 break;
             case 'ReleasedBalanceNotification' :
                 message   = data.message;
-                iconClass = 'money-success';
+                iconClass = 'o-money-bag-1';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/finances';
                 break;
             case 'SaleNotification' :
                 message   = data.message + (data.message > 1 ? ' novas vendas' : ' nova venda');
-                iconClass = 'money-success';
+                iconClass = 'o-checkout-cart-1';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/sales';
                 break;
             case 'ShopifyIntegrationReadyNotification' :
                 message   = data.message;
-                iconClass = 'shopify-success';
+                iconClass = 'o-checked-circle-1';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/projects';
                 break;
             case 'UserShopifyIntegrationStoreNotification' :
                 message   = data.message;
-                iconClass = 'shopify-success';
+                iconClass = 'o-checked-circle-1';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/projects';
                 break;
             case 'WithdrawalApprovedNotification' :
                 message   = data.message;
-                iconClass = 'money-success';
+                iconClass = 'o-cash-dispenser-1';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/finances';
                 break;
             case 'TrackingsImportedNotification':
                 message   = data.message;
-                iconClass = 'tracking-success';
+                iconClass = 'o-config-1'; // 'tracking-success';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/trackings';
                 break;
             case 'SalesExportedNotification':
                 message   = 'Exportação do relatório de vendas concluída.';
-                iconClass = 'money-success';
+                iconClass = 'o-sales-up-1';
+                iconColor = 'color:#2E85EC;';
+                iconBackgroundColor = 'background: #D5F6FF;';
                 link      = '/sales/download/' + data.message;
                 break;
             case 'TrackingsExportedNotification':
                 message   = 'Exportação do relatório de códigos de rastreio concluída.';
-                iconClass = 'tracking-success';
+                iconClass = 'o-config-1'; // 'tracking-success';
+                iconColor = 'color:#5EE2A1;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/trackings/download/' + data.message;
                 break;
             case 'WithdrawalBlockedNotification':
                 message   = 'O saque está bloqueado. Entre em contato com o suporte para mais informações.';
-                iconClass = 'money-error';
+                iconClass = 'o-money-bag-1';
+                iconColor = 'color:#f41c1c;';
+                iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/finances';
             default:
                 break;
@@ -168,10 +199,10 @@ $(document).ready(function () {
             var backgroundColor = '';
         }
         else{
-            var backgroundColor = 'background-color:#b5e0ee5e';
+            var backgroundColor = 'background-color:#F2FFF9';
         }
 
-        return { message: message, iconClass: iconClass, link: link, date: data.date, background: backgroundColor};
+        return { message: message, iconClass: iconClass, iconColor: iconColor, iconBackgroundColor: iconBackgroundColor, link: link, time: data.time, background: backgroundColor};
     }
 
 });

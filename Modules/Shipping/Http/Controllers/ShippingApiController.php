@@ -109,14 +109,7 @@ class ShippingApiController extends Controller
                     }
                     $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
 
-                    $applyPlanArray = [];
-                    if (in_array('all', $shippingValidated['apply_on_plans'])) {
-                        $applyPlanArray[] = 'all';
-                    } else {
-                        foreach ($shippingValidated['apply_on_plans'] as $key => $value) {
-                            $applyPlanArray[] = current(Hashids::decode($value));
-                        }
-                    }
+                    $applyPlanArray = $this->getDecodedPlanIds($shippingValidated['apply_on_plans']);
                     $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
 
                     $notApplyPlanArray = [];
@@ -280,14 +273,7 @@ class ShippingApiController extends Controller
                         $requestValidated['rule_value'] = 0;
                     }
 
-                    $applyPlanArray = [];
-                    if (in_array('all', $requestValidated['apply_on_plans'])) {
-                        $applyPlanArray[] = 'all';
-                    } else {
-                        foreach ($requestValidated['apply_on_plans'] as $key => $value) {
-                            $applyPlanArray[] = current(Hashids::decode($value));
-                        }
-                    }
+                    $applyPlanArray = $this->getDecodedPlanIds($requestValidated['apply_on_plans']);
                     $requestValidated['apply_on_plans'] = $applyPlanArray;
 
                     $notApplyPlanArray = [];
@@ -298,7 +284,7 @@ class ShippingApiController extends Controller
                     }
                     $requestValidated['not_apply_on_plans'] = $notApplyPlanArray;
 
-                    if (!$this->verifyAllPlansHasActiveShippings($shipping, $applyPlanArray, $requestValidated['status'])) {
+                    if (!$this->verifyAllPlansHasActiveShippings($shipping, array_diff($applyPlanArray, $notApplyPlanArray), $requestValidated['status'])) {
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
@@ -312,7 +298,10 @@ class ShippingApiController extends Controller
                         ])->get();
 
                         if (count($sp) == 0) {
-                            $shipp = $shippingModel->where('project_id', $shipping->project_id)->first();
+                            $shipp = $shippingModel->where([
+                                'project_id' => $shipping->project_id,
+                                'status'     => 1
+                            ])->first();
                             $shipp->update(['pre_selected' => 1]);
                         }
                     }
@@ -432,11 +421,12 @@ class ShippingApiController extends Controller
 
     private function verifyAllPlansHasActiveShippings($shipping, array $currentApplyOnPlans = [], $active_flag = false): bool
     {
-        $otherShippings = $shipping->where([
+        $where = [
             ['project_id', $shipping->project_id],
-            ['id', '!=', $shipping->id],
             ['status', true],
-        ])->get();
+        ];
+
+        $otherShippings = $shipping->where($where)->get();
 
         $plansHasShipping = [];
         foreach ($shipping->project->plans as $plan) {
@@ -449,12 +439,13 @@ class ShippingApiController extends Controller
                 $notApplyOnPlans = json_decode($otherShipping->not_apply_on_plans);
                 $applyOnPlans = array_diff($applyOnPlans, $notApplyOnPlans);
 
-                if (!empty($currentApplyOnPlans) && $active_flag &&
-                    ($currentApplyOnPlans[0] == 'all' || in_array($plan->id, $currentApplyOnPlans))) {
+                if ($shipping->id == $otherShipping->id
+                    && !empty($currentApplyOnPlans)
+                    && $active_flag
+                    && ((isset($currentApplyOnPlans[0]) && $currentApplyOnPlans[0] == 'all') || in_array($plan->id, $currentApplyOnPlans))) {
                     $plansHasShipping[$plan->id] = true;
-                }
-
-                if (in_array($plan->id, $applyOnPlans) || $applyOnPlans[0] == 'all') {
+                } else if ($shipping->id != $otherShipping->id
+                    && (in_array($plan->id, $applyOnPlans) || (isset($applyOnPlans[0]) && $applyOnPlans[0] == 'all'))) {
                     $plansHasShipping[$plan->id] = true;
                 }
             }
@@ -479,5 +470,6 @@ class ShippingApiController extends Controller
                 $decodedIds[] = current(Hashids::decode($value));
             }
         }
+        return $decodedIds;
     }
 }

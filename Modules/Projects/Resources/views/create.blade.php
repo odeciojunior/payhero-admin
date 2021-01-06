@@ -8,7 +8,7 @@
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Cadastrar novo projeto</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/projects">
+                <a class="btn btn-success float-right" href="/projects">
                     Meus projetos
                 </a>
             </div>
@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="text-center" id="empty-companies-error" style="display:none;color: black;display: flex;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
-            <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
+            <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
 {{--            <h4 class="big gray">Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar--}}
 {{--                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </h4>--}}
             <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar

@@ -31,8 +31,8 @@
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="row align-items-center">
-                            <i class="material-icons gradient"> calendar_today </i>
-                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14" style="width: 85%" value="" readonly>
+                            <span class="o-agenda-1"></span>
+                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" style="width: 85%" value="" readonly>
                         </div>
                     </div>
                 </div>
@@ -123,16 +123,16 @@
                     </div>
                     <div class="col-lg-4 gutter_top">
                         <div class="card shadow">
-                            <div class="card-header">
+                            <div class="card-header s-card-header">
                                 <h4> Dispositivos </h4>
                             </div>
                             <div class="custom-table min-250">
                                 <div class="row">
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
-                                                <div class="col-lg-6">
-                                                    <i class="material-icons"> desktop_mac </i> Desktop
+                                            <div class="row wrap justify-content-between align-items-center">
+                                                <div class="col-lg-6 align-items-center">
+                                                    <span class="o-imac-screen-1"></span> Desktop
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <span class="money-td green" id='percent-desktop'>0</span>
@@ -142,9 +142,9 @@
                                     </div>
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
-                                                <div class="col-lg-6">
-                                                    <i class="material-icons"> stay_current_portrait </i> Mobile
+                                            <div class="row wrap justify-content-between align-items-center">
+                                                <div class="col-lg-6 align-items-center">
+                                                    <span class="o-iphone-1"></span> Mobile
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <span class="money-td green" id='percent-mobile'>0</span>
@@ -158,16 +158,16 @@
                     </div>
                     <div class="col-lg-4 gutter_top">
                         <div class="card shadow">
-                            <div class="card-header">
+                            <div class="card-header s-card-header">
                                 <h4> Conversão </h4>
                             </div>
                             <div class="custom-table min-250">
                                 <div class="row">
                                     <div class="col-6 col-md-12 col-lg-12  ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
+                                            <div class="row wrap justify-content-between align-items-center">
                                                 <div class="col-lg-4">
-                                                    <i class="material-icons"> credit_card </i> Cartão
+                                                    <span class="o-bank-cards-1"></span> Cartão
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <span class="" id='qtd-cartao-convert'>0</span>
@@ -180,9 +180,9 @@
                                     </div>
                                     <div class="col-6 col-md-12 col-lg-12  ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
+                                            <div class="row wrap justify-content-between align-items-center">
                                                 <div class="col-lg-4">
-                                                    <i class="material-icons">view_column</i> Boleto
+                                                    <span class="o-cash-dispenser-1"></span> Boleto
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <span class="" id='qtd-boleto-convert'>0</span>
@@ -199,16 +199,16 @@
                     </div>
                     <div class="col-lg-4 gutter_top">
                         <div class="card shadow">
-                            <div class="card-header">
+                            <div class="card-header s-card-header">
                                 <h4> Meios de Pagamento </h4>
                             </div>
                             <div class="custom-table">
                                 <div class="row">
                                     <div class="col-6 col-md-12 col-lg-12  ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
+                                            <div class="row wrap justify-content-between align-items-center">
                                                 <div class="col-lg-4">
-                                                    <i class="material-icons"> credit_card </i> Cartão
+                                                    <span class="o-bank-cards-1"></span> Cartão
                                                 </div>
                                                 <div class="col-lg-3" id='percent-credit-card'>
                                                     0
@@ -221,9 +221,9 @@
                                     </div>
                                     <div class="col-6 col-md-12 col-lg-12  ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between">
+                                            <div class="row wrap justify-content-between align-items-center">
                                                 <div class="col-lg-4">
-                                                    <i class="material-icons"> view_column </i> Boleto
+                                                    <span class="o-cash-dispenser-1"></span> Boleto
                                                 </div>
                                                 <div class="col-lg-3" id='percent-values-boleto'>
                                                     0
@@ -240,11 +240,11 @@
                     </div>
                     <div class='col-lg-8'>
                         <div class="card shadow ">
-                            <div class="card-header">
+                            <div class="card-header s-card-header">
                                 <h4> Mais Vendidos </h4>
                             </div>
                             <div style=' max-height: 150px; overflow-y: auto; height: 150px;'>
-                                <div class=" card-body data-holder">
+                                <div style="padding: 0 20px;" class=" card-body data-holder">
                                     <table class="table-vendas-itens table table-striped"
                                            style="width:100%;margin: auto; margin-top:15px">
                                         <tbody id="origins-table-itens">
@@ -258,7 +258,7 @@
                     </div>
                     <div class='col-lg-4'>
                         <div class='card shadow'>
-                            <div class='card-header'>
+                            <div class='card-header s-card-header'>
                                 <h4>Ticket Médio</h4>
                             </div>
                             <div style='height: 150px; '>
@@ -280,7 +280,7 @@
                     </div>
                     <div class="col-lg-12 mt-10">
                         <div class="card shadow">
-                            <div class="card-header">
+                            <div class="card-header s-card-header">
                                 <div class="row">
                                     <div class='col-8'>
                                         <h4 class='float-left'> Origens</h4>

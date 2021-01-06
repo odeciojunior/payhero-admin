@@ -438,9 +438,9 @@ $(document).ready(function () {
         $('#modal-add-body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
             '<h3 align="center"><strong>Domínio registrado</strong></h3>' +
             '<h4 align="center">Tudo pronto já podemos começar</h4>' +
-            '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
+            '<p align="center" style="font-size: 16px">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</p>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
-            '<span class="btn btn-success" onclick="' + updateDomains() + '" data-dismiss="modal" style="font-size: 25px">Começar</span>' +
+            '<span class="btn btn-success" onclick="' + updateDomains() + '" data-dismiss="modal" style="font-size: 16px">Começar</span>' +
             '</div>');
     }
 
@@ -471,9 +471,9 @@ $(document).ready(function () {
 
         dados += '</td>';
         dados += "<td style='min-width:200px;'>" +
-            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
-            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'> </a>" +
-            "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>"
+            "<a role='button' class='details-domain pointer mr-30' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>" +
+            "<a role='button' class='edit-domain pointer' status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>" +
+            "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><span class='orion-icon-lixo'></span> </a>"
         "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);

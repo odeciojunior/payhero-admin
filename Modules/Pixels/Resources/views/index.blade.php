@@ -1,8 +1,8 @@
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-info-pixel"
-           style='background-color: #4c6aff;'>
-            <i class="icon wb-info"></i></a>
+        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;" >
+            <span class="o-info-1" style="font-size: 24px;"></span>
+        </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-info-pixel"
               style='margin-left:5px'>Como configurar os eventos pixel?</span>
     </div>
@@ -135,10 +135,12 @@
                 <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
-                <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar
+                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
                 </button>
-                <button pixel="" type="button" data-dismiss="modal" class="col-4 btn btn-primary btn-delete"
-                        style="width: 20%;">Excluir
+                <button pixel="" type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
                 </button>
             </div>
         </div>

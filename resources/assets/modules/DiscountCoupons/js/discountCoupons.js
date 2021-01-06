@@ -124,9 +124,9 @@ $(function () {
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
-                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'> </a>" +
-                            "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>"
+                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>" +
+                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>" +
+                            "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><span class='orion-icon-lixo'></span> </a>"
                         "</td>";
                         data += '</tr>';
                         $("#data-table-coupon").append(data);

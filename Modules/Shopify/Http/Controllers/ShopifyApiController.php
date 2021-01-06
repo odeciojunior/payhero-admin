@@ -624,7 +624,7 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function synchronizeTemplates(Request $request)
+    public function synchronizeTemplates(Request $request): JsonResponse
     {
         try {
             $requestData = $request->all();

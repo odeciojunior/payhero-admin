@@ -285,6 +285,8 @@
                                 </p>
                                 <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
                                 <select class='form-control select-pad' id='boleto_due_days' name='boleto_due_days'>
@@ -308,6 +310,8 @@
                                     com boleto no checkout
                                 </p>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="cost_currency_type">Moeda padrão de custo</label>
                                 <select name='cost_currency_type' class='form-control select-pad'
@@ -332,6 +336,8 @@
                                     com cartão de crédito no checkout
                                 </p>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="default_currency">Tipo de checkout</label>
                                 <select name='checkout_type' class='form-control select-pad' id="checkout_type">
@@ -353,6 +359,8 @@
                                     pelo Whatsapp na página de obrigado do checkout
                                 </p>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text'
@@ -372,6 +380,8 @@
                                 <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para
                                 a pagina de obrigado padrão do cloudfox.
                             </p>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                 <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
                                 <div class="input-group">
@@ -392,41 +402,42 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
-                                <div class="switch-holder">
-                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="discount_recovery_status"
-                                               name="discount_recovery_status" class='check discount-recovery'
-                                               value='0'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <select id='discount_recovery_value' name='discount_recovery_value'
-                                            class='form-control select-pad' id="checkout_type">
-                                        <option value='10'>10%</option>
-                                        <option value='20'>20%</option>
-                                        <option value='30'>30%</option>
-                                        <option value='40'>40%</option>
-                                        <option value='50'>50%</option>
-                                    </select>
-                                    <span id='discount-recovery-error' class='text-danger'></span>
-                                </div>
-                            </div>
-                            <div id='discount-recovery-alert' class='col-sm-6 col-md-6 col-lg-6 col-xl-6 vertical-align'
-                                 style='height: 20px !important'>
-                                <p class="info col-12" style="font-size: 10px; color:#d55b25;">
-                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor
-                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos
-                                    pertencentes a este projeto.
-                                </p>
-                            </div>
-                            <p class="info mt-5 col-12" style="font-size: 10px;">
-                                <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,
-                                tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do
-                                cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor
-                                máximo que poderá ser aplicado.
-                            </p>
                         </div>
+{{--                        <div class="row my-15">--}}
+{{--                            <div class='col-6'>--}}
+{{--                                <div class="switch-holder">--}}
+{{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
+{{--                                        com--}}
+{{--                                        desconto</label>--}}
+{{--                                    <label class="switch" style='top:3px'>--}}
+{{--                                        <input type="checkbox" id="discount_recovery_status"--}}
+{{--                                               name="discount_recovery_status" class='check discount-recovery'--}}
+{{--                                               value='0'>--}}
+{{--                                        <span class="slider round"></span>--}}
+{{--                                    </label>--}}
+{{--                                    <select id='discount_recovery_value' name='discount_recovery_value'--}}
+{{--                                            class='form-control select-pad' id="checkout_type">--}}
+{{--                                        <option value='10'>10%</option>--}}
+{{--                                        <option value='20'>20%</option>--}}
+{{--                                        <option value='30'>30%</option>--}}
+{{--                                        <option value='40'>40%</option>--}}
+{{--                                        <option value='50'>50%</option>--}}
+{{--                                    </select>--}}
+{{--                                    <span id='discount-recovery-error' class='text-danger'></span>--}}
+{{--                                </div>--}}
+{{--                                <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
+{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
+{{--                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
+{{--                                    pertencentes a este projeto.--}}
+{{--                                </p>--}}
+{{--                                <p class="info mt-5" style="font-size: 10px;">--}}
+{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
+{{--                                    tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
+{{--                                    cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
+{{--                                    máximo que poderá ser aplicado.--}}
+{{--                                </p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="required_email_checkout">Email obrigatório no checkout</label>
@@ -442,19 +453,21 @@
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad' id="document_type_checkout">
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
                                     <option value='1'>CPF</option>
                                     <option value='2'>CNPJ</option>
                                     <option value='3'>CPF/CNPJ</option>
                                 </select>
                                 <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento aceito no checkout.
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito
+                                    no checkout.
                                 </p>
                             </div>
                         </div>
-
                         <div class='row'>
-                            <div class='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                            <div class='col-12 col-6'>
                                 <div class="switch-holder mb-3">
                                     <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>
                                         Mostrar contador regressivo no checkout
@@ -551,18 +564,19 @@
 
                                     <div class='col-12 col-sm-6 mb-20 mt-2'>
                                         <label for="link">Mensagem ao encerrar contador regressivo</label>
-                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message"
+                                        <textarea type="text" class="form-control"
+                                                  name="countdown_timer_finished_message"
                                                   maxlength="255" placeholder="Informe a mensagem"></textarea>
                                         <p class='info pt-5' style='font-size: 10px;'>
                                             <i class='icon wb-info-circle' aria-hidden='true'></i>
                                             Informe uma mensagem que será exibida após o contador regressivo finalizar
                                         </p>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <hr>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
                     <div class='row justify-content-center mx-20 mt-30'>
@@ -570,7 +584,7 @@
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"></span>
                             </a>
                             <div id="shopify-integration-pending" style="display:none">
@@ -582,7 +596,7 @@
                             <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar produtos com shopify </span>
                             </a>
                         </div>
@@ -591,7 +605,7 @@
                                integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar template com shopify </span>
                             </a>
                         </div>
@@ -612,7 +626,7 @@
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-verify-permissions" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
                         </div>
@@ -621,7 +635,7 @@
                                 <div class="gray mb-5">Skip to cart</div>
                                 <label class="switch">
                                     <input id="skiptocart-input" type="checkbox" value="0" class="check">
-                                    <span class="slider gray round"></span>
+                                    <span class="slider round"></span>
                                 </label>
                             </div>
                         </div>
@@ -630,11 +644,12 @@
                         <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-sync-trackings" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1"></span>
                                 <span class="gray"> Sincronizar códigos de rastreio</span>
                             </a>
                         </div>
                     </div>
+                    <hr>
                 </div>
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
                     <div class='my-30 mx-30'>
@@ -722,6 +737,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                 </div>
             </div>
         </div>
@@ -731,7 +747,7 @@
                 <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal"
                        data-target="#modal-delete-project" style="float: left;">
-                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
+                        <span class='orion-icon-lixo'></span>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
@@ -761,10 +777,12 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar
+                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b>Cancelar</b>
                     </button>
-                    <button type="button" class="col-4 btn btn-primary btn-delete" data-dismiss="modal"
-                            style="width: 20%;">Excluir
+                    <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b class="mr-2">Excluir </b>
+                        <span class="o-bin-1"></span>
                     </button>
                 </div>
             </div>
