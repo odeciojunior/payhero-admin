@@ -180,8 +180,8 @@ $(function () {
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><span class='orion-icon-eye'></span></a>" +
-                            "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><span class='orion-icon-edit'></span></a>" +
+                            "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><span class='o-eye-1'></span></a>" +
+                            "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><span class='o-edit-1'></span></a>" +
                             "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><span class='orion-icon-lixo'></span></a>"
                         "</td>";
 

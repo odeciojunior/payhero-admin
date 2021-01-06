@@ -243,7 +243,7 @@ $(function () {
                             // }
                             data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
 
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="o-copy-1"></span> </a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
 
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';

@@ -124,8 +124,8 @@ $(function () {
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='orion-icon-eye'></span> </a>" +
-                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='orion-icon-edit'></span> </a>" +
+                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>" +
+                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>" +
                             "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><span class='orion-icon-lixo'></span> </a>"
                         "</td>";
                         data += '</tr>';

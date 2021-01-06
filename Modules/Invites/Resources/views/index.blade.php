@@ -54,7 +54,7 @@
                         <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
                 </div>
             </div>
-            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
+            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead class="text-center">
@@ -64,6 +64,8 @@
                         <th class="text-center">Status</th>
                         <th class="text-center">Data cadastro</th>
                         <th class="text-center">Data expiração</th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
                         </thead>
                         <tbody id='table-body-invites'>
                         {{-- js invites carrega  --}}

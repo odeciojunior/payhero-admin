@@ -90,7 +90,7 @@
                             <h4>Saldo a liberar por dia</h4>
                         </div>
                         <div class=" card-body data-holder" style="height: 400px; overflow-y: auto;">
-                            <table class="table-transaction-itens table table-striped" style="width:100%;margin: auto; margin-top:15px;">
+                            <table class="table-transaction-itens table table-striped" style="width:100%;margin: auto;">
                                 <thead>
                                     <tr>
                                         <th>Data</th>

@@ -66,7 +66,7 @@
                     <div class="fixhalf"></div>
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
-                            <div class="row align-items-baseline">
+                            <div class="row align-items-baseline mb-md-15">
                                 <div class="col-sm-6 col-md">
                                     <label for="projeto">Projeto</label>
                                     <select name='select_project' id="projeto" class="form-control select-pad">
@@ -80,41 +80,8 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6 col-md">
-                                    <label for="forma">Forma de pagamento</label>
-                                    <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                        <option value="">Boleto e cartão de crédito</option>
-                                        <option value="1">Cartão de crédito</option>
-                                        <option value="2">Boleto</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md">
-                                    <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control select-pad">
-                                        <option value="">Todos status</option>
-                                        <option value="1">Aprovado</option>
-                                        <option value="2">Aguardando pagamento</option>
-                                        <option value="4">Chargeback</option>
-                                        <option value="7">Estornado</option>
-                                        {{--                                <option value="6">Em análise</option>--}}
-                                        {{--                                <option value="8">Parcialmente estornado</option>--}}
-                                        <option value="chargeback_recovered">Chargeback recuperado</option>
-                                        <option value="20">Revisão Antifraude</option>
-                                        <option value="24">Em disputa</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md">
-                                    <label for="comprador">Transação</label>
-                                    <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
-                                </div>
-                            </div>
-                            <div class="row mt-md-15">
-                                <div class="col-sm-8 col-md">
-                                    <label for="comprador">Nome do cliente</label>
-                                    <input name='client' id="comprador" class="input-pad" placeholder="cliente">
-                                </div>
-                                <div class="col-sm-8 col-md">
-                                    <label for="customer_document">CPF do cliente</label>
-                                    <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
+                                    <label for="transaction">Transação</label>
+                                    <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
                                 <div class="col-sm-6 col-md">
                                     <label for="date_type">Data</label>
@@ -123,45 +90,91 @@
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-6 col-md">
-                                    <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
+                                <div class="col-sm-6 col-md form-icons">
+                                    <label for="date_range">&nbsp;</label>
+                                    <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
-                                {{--                        <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">--}}
-                                {{--                            <div class="mr-10 d-flex flex-column">--}}
-                                {{--                                <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>--}}
-                                {{--                                <label class="switch m-0">--}}
-                                {{--                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>--}}
-                                {{--                                    <span class="slider round"></span>--}}
-                                {{--                                </label>--}}
-                                {{--                            </div>--}}
-                                {{--                            <button id="bt_filtro" class="btn btn-primary col">--}}
-                                {{--                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
-                                {{--                            </button>--}}
-                                {{--                        </div>--}}
-                                <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
-                                    <div class='row'>
-                                        <div class='col-6'>
-                                            <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>
-                                            <label class="switch m-0">
-                                                <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class='col-6'>
-                                            <label for="upsell" class='mb-10 font-size-10'>Upsell</label>
-                                            <br>
-                                            <label class="switch m-0 mx-5">
-                                                <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
-                                                <span class="slider round"></span>
-                                            </label>
+                            </div>
+                            <div class="row collapse" id="bt_collapse">
+                                <div class="d-flex">
+                                    <div class="col-sm-8 col-md">
+                                        <label for="comprador">Nome do cliente</label>
+                                        <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
+                                    </div>
+                                    <div class="col-sm-8 col-md">
+                                        <label for="customer_document">CPF do cliente</label>
+                                        <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
+                                    </div>
+                                    <div class="col-sm-6 col-md">
+                                        <label for="status">Status</label>
+                                        <select name='sale_status' id="status" class="form-control select-pad">
+                                            <option value="">Todos status</option>
+                                            <option value="1">Aprovado</option>
+                                            <option value="2">Aguardando pagamento</option>
+                                            <option value="4">Chargeback</option>
+                                            <option value="7">Estornado</option>
+                                            {{--                                <option value="6">Em análise</option>--}}
+                                            {{--                                <option value="8">Parcialmente estornado</option>--}}
+                                            <option value="chargeback_recovered">Chargeback recuperado</option>
+                                            <option value="20">Revisão Antifraude</option>
+                                            <option value="24">Em disputa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 col-md">
+                                        <label for="forma">Forma de pagamento</label>
+                                        <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                            <option value="">Boleto e cartão de crédito</option>
+                                            <option value="1">Cartão de crédito</option>
+                                            <option value="2">Boleto</option>
+                                        </select>
+                                    </div>
+                                    {{--                        <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">--}}
+                                    {{--                            <div class="mr-10 d-flex flex-column">--}}
+                                    {{--                                <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>--}}
+                                    {{--                                <label class="switch m-0">--}}
+                                    {{--                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>--}}
+                                    {{--                                    <span class="slider round"></span>--}}
+                                    {{--                                </label>--}}
+                                    {{--                            </div>--}}
+                                    {{--                            <button id="bt_filtro" class="btn btn-primary col">--}}
+                                    {{--                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
+                                    {{--                            </button>--}}
+                                    {{--                        </div>--}}
+                                    <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
+                                        <div class='row mt-15'>
+                                            <div class='col-8 nowarp'>
+                                                <label class="switch m-0 mx-5">
+                                                    <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
+                                                    <span class="slider round"></span>
+                                                    <span class="switch-text"> Upsell </span>
+                                                </label>
+                                            </div>
+                                            <div class='col-4 nowarp'>
+                                                <label class="switch m-0">
+                                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                                    <span class="slider round"></span>
+                                                    <span class="switch-text"> Shopify Erros </span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-9'></div>
-                                <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right mt-20">
-                                    <button id="bt_filtro" class="btn btn-primary col-9">
-                                        <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                                    </button>
+                            </div>
+                            <div class="row" style="height: 30px">
+                                <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                    <div class="btn btn-light-1 w-p100 bold"
+                                         data-toggle="collapse"
+                                         data-target="#bt_collapse"
+                                         aria-expanded="false"
+                                         aria-controls="bt_collapse">
+                                        <i class="icon  wb-chevron-down" aria-hidden="true"></i>Minimizar filtros
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xl-3 text-right mt-20">
+                                    <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold">
+                                        <i style="transform: rotate(0deg);" class="icon wb-check" aria-hidden="true"></i>Aplicar filtros
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -182,27 +195,56 @@
                     <!-- Resumo -->
                     <div class="fixhalf"></div>
                     @if(!auth()->user()->hasRole('attendance'))
-                        <div class="card shadow p-20" style='display:block;'>
-                            <div class="row justify-content-center">
-                                <div class="col-md-4">
-                                    <h6 class="text-center green-gradient">
-                                        <i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas
-                                    </h6>
-                                    <h4 id="total-sales" class="number text-center green-gradient"></h4>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6 class="text-center orange-gradient">
-                                        <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão
-                                    </h6>
-                                    <h4 id="commission" class="number text-center orange-gradient"></h4>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6 class="text-center green-gradient">
-                                        <i class="material-icons align-middle green-gradient mr-1"> trending_up </i> Total </h6>
-                                    <h4 id="total" class="number text-center green-gradient">
-                                    </h4>
+                        <div class="row justify-content-center">
+                            <div class="col-md-3">
+                                <div class="card shadow" style='display:block;'>
+                                    <div class="card-body">
+                                        <h5 class="gray font-size-16"> Quantidade de vendas </h5>
+                                        <h4 id="total-sales" class="number"></h4>
+                                    </div>
+                                    <div class="card-bottom green"></div>
                                 </div>
                             </div>
+
+                                <div class="col-md-3">
+                                    <div class="card shadow" style='display:block;'>
+                                        <div class="card-body">
+                                            <h5 class="gray font-size-16"> Comissão </h5>
+                                            <h4 id="commission" class="number"></h4>
+                                        </div>
+                                        <div class="card-bottom green"></div>
+                                    </div>
+                                </div>
+
+                            <div class="col-md-3">
+                                <div class="card shadow" style='display:block;'>
+                                    <div class="card-body">
+                                        <h5 class="gray font-size-16"> Total</h5>
+                                        <h4 id="total" class="number"></h4>
+                                    </div>
+                                    <div class="card-bottom green"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div style='display:block;'>
+                                    <div class="mt-30">
+                                        <h5 class="gray font-size-16"> Acesso rápido </h5>
+                                        <ul class="quick-list">
+                                            <li>
+                                                 <a href="{{ route('recovery.index') }}">Recuperação</a>
+                                            </li>
+                                            <li>
+                                                 <a href="{{ route('antifraud.index') }}">Antifraude</a>
+                                            </li>
+                                            <li>
+                                                 <a href="{{ route('trackings.index') }}">Rastreamento</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                 @endif
                 <!-- Tabela -->

@@ -385,11 +385,12 @@ $(document).ready(function () {
                 loadOnAny('.number', true);
                 $('#total-sales').text('0');
                 $('#commission, #total').text('R$ 0,00');
+
                 if (response.total_sales) {
                     $('#total-sales, #commission, #total').text('');
-                    $('#total-sales').text(response.total_sales);
-                    $('#commission').text(`R$ ${response.commission}`);
-                    $('#total').text(`R$ ${response.total}`);
+                    $('#total-sales').html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+                    $('#commission').html(`R$ <span class="font-size-30 bold"> ${response.commission} </span>`);
+                    $('#total').html(`R$ <span class="font-size-30 bold"> ${response.total} </span>`);
                 }
 
             }
@@ -438,6 +439,17 @@ $(document).ready(function () {
             },
         }
     });
+
+    $('.btn-light-1').click(function () {
+        var collapse = $('.wb-chevron-down')
+
+        console.log(collapse.css('transform'))
+        if(collapse.css('transform') == 'matrix(-1, 0, 0, -1, 0, 0)')
+            collapse.css('transform', 'rotate(0deg)')
+        else
+            collapse.css('transform', 'rotate(180deg)')
+    })
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             atualizar();

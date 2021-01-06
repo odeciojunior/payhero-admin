@@ -57,7 +57,7 @@
                                                 <br>.
                                             </p>
                                             <button class="btn btn-primary btn-sm btn-view-product-url" link='' style="display:none;" title='Visualizar produto digital'>
-                                                <span class="orion-icon-eye"></span> Visualizar
+                                                <span class="o-eye-1"></span> Visualizar
                                             </button>
                                         </div>
                                     </div>
