@@ -233,10 +233,10 @@
                                                  <a href="{{ route('recovery.index') }}">Recuperação</a>
                                             </li>
                                             <li>
-                                                 <a href="{{ route('antifraud.index') }}">Antifraude</a>
+                                                 <a href="{{ route('trackings.index') }}">Rastreamento</a>
                                             </li>
                                             <li>
-                                                 <a href="{{ route('trackings.index') }}">Rastreamento</a>
+                                                 <a href="{{ route('reports.index') }}">Relatórios</a>
                                             </li>
                                         </ul>
                                     </div>
