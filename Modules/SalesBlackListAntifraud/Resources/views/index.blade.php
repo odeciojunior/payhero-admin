@@ -103,7 +103,7 @@
 
     @push('scripts')
         <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=s0') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=01') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

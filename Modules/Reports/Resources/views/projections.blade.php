@@ -115,5 +115,5 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/projections.js?v=s0')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/projections.js?v=01')}}'></script>
 @endpush
