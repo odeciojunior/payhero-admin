@@ -32,11 +32,11 @@
 }
 
 .card .card-bottom.green {
-    background-color: #5EE2A1;
+    background: #5EE2A1;
 }
 
 .card .card-bottom.red {
-    background-color: #F41C1C;
+    background: #F41C1C;
 }
 
 .quick-list {
