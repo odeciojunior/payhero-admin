@@ -20,7 +20,7 @@ Route::group(
     [
         'prefix'     => 'invitations',
         'as'         => 'invitations.',
-        'middleware' => ['web', 'setUserAsLogged'],
+        'middleware' => ['web'],
     ],
     function() {
         Route::post('/obterconvite', 'InvitesController@getInvitation')->name('get.invitation')->middleware('role:account_owner');

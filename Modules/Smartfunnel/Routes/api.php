@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
 
     Route::apiResource('apps/smartfunnel', 'SmartfunnelApiController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
