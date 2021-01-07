@@ -28,6 +28,9 @@
 .o-add-circle-1::before,
 .o-add-user-1::before,
 .o-agenda-1::before,
+.o-angle-down-1::before,
+.o-angle-up-1::before,
+.o-arrow-right-1::before,
 .o-bank-cards-1::before,
 .o-bin-1::before,
 .o-cash-dispenser-1::before,
@@ -55,6 +58,8 @@
 .o-info-1::before,
 .o-info-help-1::before,
 .o-iphone-1::before,
+.o-lock-server-1::before,
+.o-locked-1::before,
 .o-loop-1::before,
 .o-money-1::before,
 .o-money-bag-1::before,
@@ -65,6 +70,7 @@
 .o-question-help-1::before,
 .o-reload-1::before,
 .o-sales-up-1::before,
+.o-security-shield-1::before,
 .o-shipping-box-1::before,
 .o-social-1::before,
 .o-speed-1::before,
@@ -89,6 +95,9 @@
 .o-add-circle-1::before { content: "\f9f6"; }
 .o-add-user-1::before { content: "\f9dc"; }
 .o-agenda-1::before { content: "\f9cd"; }
+.o-angle-down-1::before { content: "\f9fd"; }
+.o-angle-up-1::before { content: "\f9fe"; }
+.o-arrow-right-1::before { content: "\f9ff"; }
 .o-bank-cards-1::before { content: "\f9dd"; }
 .o-bin-1::before { content: "\f9ce"; }
 .o-cash-dispenser-1::before { content: "\f9de"; }
@@ -116,6 +125,8 @@
 .o-info-1::before { content: "\f9e9"; }
 .o-info-help-1::before { content: "\f9d5"; }
 .o-iphone-1::before { content: "\f9d6"; }
+.o-lock-server-1::before { content: "\fa00"; }
+.o-locked-1::before { content: "\fa01"; }
 .o-loop-1::before { content: "\f9d7"; }
 .o-money-1::before { content: "\f9ea"; }
 .o-money-bag-1::before { content: "\f9eb"; }
@@ -126,6 +137,7 @@
 .o-question-help-1::before { content: "\f9d9"; }
 .o-reload-1::before { content: "\f9ee"; }
 .o-sales-up-1::before { content: "\f9ef"; }
+.o-security-shield-1::before { content: "\fa02"; }
 .o-shipping-box-1::before { content: "\f9f0"; }
 .o-social-1::before { content: "\f9f1"; }
 .o-speed-1::before { content: "\f9f2"; }

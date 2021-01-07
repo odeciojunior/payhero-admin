@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css') }}">
-    {{-- <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}"> --}}
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
 @endpush
 @section('content')
     <div id='project-content'>

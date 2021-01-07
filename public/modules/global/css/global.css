@@ -381,7 +381,7 @@ a.label {
 }
 
 .site-menubar:not(.mm-menu) .site-menu-item .site-menu-sub {
-    display: block;
+    display: none;
     max-height: 0;
     opacity: 0;
     transition: all ease .75s;

@@ -243,7 +243,7 @@
                                             <br>
                                             <span id='client-telephone' class='table-title gray clear-fields'></span>
                                             <a id='client-whatsapp' target='_blank' title='Enviar mensagem pelo whatsapp'>
-                                                <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
+                                                <span style="font-size: 21px" class="o-whatsapp-1"></span>
                                             </a>
                                             <br>
                                             <span id='client-email' class="table-title gray clear-fields"> </span>
