@@ -319,7 +319,7 @@ class ReportsApiController extends Controller
                     if (!empty($affiliate)) {
                         $itens->where('affiliate_id', $affiliate->id);
                     }
-                    $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(3)->get()
+                    $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(5)->get()
                         ->toArray();
 
                     $plans = [];
