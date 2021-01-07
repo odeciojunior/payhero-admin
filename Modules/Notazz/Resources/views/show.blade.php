@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <style>
             .fas {
                 color: #9c47fc;

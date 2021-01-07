@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/3.7.95/css/materialdesignicons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/reports.css') }}">
