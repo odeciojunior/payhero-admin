@@ -383,8 +383,8 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.number', true);
-                $('#total-sales').text('0');
-                $('#commission, #total').text('R$ 0,00');
+                $('#total-sales').html('<span class="font-size-30 bold">0</span>');
+                $('#commission, #total').html('<span class="font-size-30 bold">R$ 0,00</span>');
 
                 if (response.total_sales) {
                     $('#total-sales, #commission, #total').text('');
@@ -445,12 +445,12 @@ $(document).ready(function () {
         var text = $('#text-filtro')
 
         text.fadeOut(10);
-        if(collapse.css('transform') == 'matrix(-1, 0, 0, -1, 0, 0)') {
-            collapse.css('transform', 'rotate(0deg)')
-            text.text('Filtros avançado').fadeIn()
-        } else {
+        if(collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
             collapse.css('transform', 'rotate(180deg)')
             text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
         }
     })
 

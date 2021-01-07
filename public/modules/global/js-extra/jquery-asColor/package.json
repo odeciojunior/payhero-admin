@@ -1,0 +1,114 @@
+{
+  "name": "jquery-asColor",
+  "title": "jQuery asColor",
+  "description": "A jquery plugin used to parse css color string and convent it to other color formats. It support rgb, rgba, hex, hsl, hsla.",
+  "version": "0.3.6",
+  "homepage": "https://github.com/amazingSurge/asColor",
+  "author": {
+    "name": "amazingSurge",
+    "email": "amazingSurge@gmail.com",
+    "url": "amazingSurge.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:amazingSurge/jquery-asColor.git"
+  },
+  "keywords": [
+    "jquery",
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "ui",
+    "es6"
+  ],
+  "bugs": "https://github.com/amazingSurge/jquery-asColorasColor/issues",
+  "licenses": [
+    {
+      "type": "LGPL-3.0",
+      "url": "https://github.com/amazingSurge/jquery-asColor/blob/master/LICENSE"
+    }
+  ],
+  "license": "LGPL-3.0",
+  "main": "dist/jquery-asColor.js",
+  "module": "dist/jquery-asColor.es.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "prestart": "npm install",
+    "start": "gulp serve",
+    "build": "npm run prestart && gulp build",
+    "deploy": "gulp deploy",
+    "deploy:prepare": "gulp deploy:prepare",
+    "release": "gulp release",
+    "test": "gulp test"
+  },
+  "dependencies": {
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {
+    "yargs": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-istanbul": "*",
+    "babel-plugin-transform-es2015-modules-umd": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-es2015-rollup": "*",
+    "babelify": "*",
+    "browserify": "*",
+    "browserify-babel-istanbul": "*",
+    "chai": "*",
+    "del": "*",
+    "prettier": "*",
+    "gulp-nf-prettier": "*",
+    "graceful-fs": "*",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-autoprefixer": "*",
+    "gulp-babel": "*",
+    "gulp-changed": "*",
+    "gulp-eslint": "*",
+    "gulp-extname": "*",
+    "gulp-filter": "*",
+    "gulp-header": "*",
+    "gulp-iconfont-css": "*",
+    "gulp-if": "*",
+    "gulp-notify": "*",
+    "gulp-plumber": "*",
+    "gulp-rename": "*",
+    "gulp-replace": "*",
+    "gulp-rollup": "*",
+    "gulp-size": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*",
+    "gulp-zip": "*",
+    "inquirer": "*",
+    "semver": "*",
+    "isparta": "*",
+    "karma": "*",
+    "karma-babel-preprocessor": "*",
+    "karma-browserify": "*",
+    "karma-chrome-launcher": "*",
+    "karma-coverage": "*",
+    "karma-firefox-launcher": "*",
+    "karma-mocha": "*",
+    "karma-mocha-reporter": "*",
+    "karma-phantomjs-launcher": "*",
+    "karma-sinon-chai": "*",
+    "merge-stream": "*",
+    "mkdirp": "*",
+    "mocha": "*",
+    "node-notifier": "*",
+    "path-exists": "*",
+    "phantomjs-prebuilt": "*",
+    "release-it": "*",
+    "rollup-plugin-babel": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "through2": "*"
+  },
+  "engines": {
+    "node": ">= 6.2.2",
+    "npm": ">= 3"
+  }
+}

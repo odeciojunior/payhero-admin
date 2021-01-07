@@ -158,8 +158,8 @@ class WithdrawalsApiController
 
             $currentValue = 0;
 
-            $transactionsSum->chunk(
-                500,
+            $transactionsSum->chunkById(
+                2000,
                 $test = function ($transactions) use (
                     $currentValue,
                     $withdrawalValue,
@@ -214,7 +214,7 @@ class WithdrawalsApiController
                 ->orderBy('id');
 
             $transactionsSum->chunk(
-                500,
+                2000,
                 function ($transactions) use (
                     $currentValue,
                     $withdrawalValueRequested
