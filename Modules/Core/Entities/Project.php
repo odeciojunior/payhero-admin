@@ -150,6 +150,7 @@ class Project extends Model
         'reviews_config_icon_type',
         'reviews_config_icon_color',
         'finalizing_purchase_configs',
+        'checkout_notification_configs',
         'created_at',
         'updated_at',
         'deleted_at',
