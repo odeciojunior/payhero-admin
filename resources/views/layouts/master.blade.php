@@ -97,7 +97,7 @@
     <div class="top-alert warning" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
             <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" class="top-alert-action">Corrigir documento</a>
+            <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
         </div>
         <a class="top-alert-close">
             <i class="material-icons">close</i>
