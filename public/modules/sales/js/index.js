@@ -292,8 +292,7 @@ $(document).ready(function () {
                                         ${value.sale_code}
                                         ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
                                     </td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
+                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>

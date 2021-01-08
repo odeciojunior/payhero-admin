@@ -5,7 +5,7 @@
                 <div class='col-md-2'></div>
                 <div id="add-event" class="d-flex col-md-5 align-items-center float-right justify-content-end pointer">
                     <span class="link-button-dependent red"> Adicionar Evento </span>
-                    <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                    <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>

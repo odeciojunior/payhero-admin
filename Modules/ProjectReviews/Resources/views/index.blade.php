@@ -5,14 +5,14 @@
                 <div id="config-review" class="btn-holder d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Review </span>
                     <a class="ml-10 btn-config rounded-add pointer bg-secondary text-white">
-                        <span class="o-cogwheel-1" style="font-size: 18px;"></span> 
+                        <span class="o-cogwheel-1" style="font-size: 18px;"></span>
                     </a>
                 </div>
             </div>
             <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
                 <span class="link-button-dependent red"> Adicionar Review </span>
                 <a class="ml-10 rounded-add pointer">
-                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                    <i class="o-add-1" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="modal-footer" style="margin-top: 15px">
                 <button type="button" class="btn btn-success bt-review-save" style='display:none;'>Salvar</button>
-                <button type="button" class="btn btn-success bt-review-update" style='display:none;'>Atualizar</button>                
+                <button type="button" class="btn btn-success bt-review-update" style='display:none;'>Atualizar</button>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
             <div class="pt-10 pr-20 pl-20 modal_review_body">
                 @include('projectreviews::config')
             </div>
-            <div class="modal-footer pt-0">                
+            <div class="modal-footer pt-0">
                 <button type="button" class="btn btn-success bt-review-config-update">Atualizar</button>
             </div>
         </div>

@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -44,7 +44,7 @@
                     </div>
                     @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
                         <div class="col-6 text-right">
-                            <div class="justify-content-end align-items-center" id="export-excel" style="display:none">                                
+                            <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                                 <div class="p-2 d-flex justify-content-end align-items-center">
                                     <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
@@ -253,12 +253,11 @@
                                 <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
                                     <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
                                     <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
                                     <td class="table-title" width="80px;"> &nbsp;</td>

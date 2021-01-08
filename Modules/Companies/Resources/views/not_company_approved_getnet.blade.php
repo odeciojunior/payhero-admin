@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
 @endpush
 <div class="content-error text-center" id="companies-not-approved-getnet" style="display:none;">
     <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">

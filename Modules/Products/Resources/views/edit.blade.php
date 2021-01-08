@@ -111,7 +111,7 @@
                                             {{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
                                             {{--                                            </div>--}}
                                             <div id="div_next_step" class="form-group col-lg-12 justify-content-between mt-10">
-                                                <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
+                                                <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i style="-webkit-text-stroke: 1.45px #FFF;" class="o-arrow-right-1 font-size-16 ml-2" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
@@ -120,8 +120,8 @@
                                         </div>
                                     </div>
                                     <div class='col-lg-12'>
-                                        <a style='display:none;' class="btn btn-primary delete-product white float-right" productname='' product="" data-toggle="modal" data-target="#modal-delete">
-                                            <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
+                                        <a style='display:none;' class="btn btn-primary delete-product white float-right d-flex align-items-center" productname='' product="" data-toggle="modal" data-target="#modal-delete">
+                                            <i class="o-bin-1 align-middle mr-5 white" aria-hidden="true"></i> Excluir produto
                                         </a>
                                     </div>
                                 </div>
