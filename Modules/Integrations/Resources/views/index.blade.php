@@ -3,12 +3,12 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=01') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
             <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="icon wb-plus" aria-hidden="true"></i></button>
+                <i class="o-add-1" aria-hidden="true"></i></button>
             <h2 class="page-title">Integrações</h2>
             <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
             <br>

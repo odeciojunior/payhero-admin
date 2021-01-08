@@ -85,3 +85,12 @@
 .card-img-top.img-fluid.w-full {
     border-radius: 21px 21px 0 0;
 }
+
+.o-add-1 {
+    font-size: 32px;
+    color: #FFF
+}
+
+.o-add-1:hover {
+    color: #FFF
+}

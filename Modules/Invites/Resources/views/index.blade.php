@@ -3,13 +3,13 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=01') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
             <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-primary"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="icon wb-plus" aria-hidden="true"></i></button>
+                <i class="o-add-1" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>

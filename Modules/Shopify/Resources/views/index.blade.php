@@ -12,7 +12,7 @@
                 <div class="col text-right" id="integration-actions" style="display:none">
                     <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-primary ml-10"
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
-                        <i class="icon wb-plus" aria-hidden="true"></i>
+                        <i class="o-add-1" aria-hidden="true"></i>
                     </a>
                     <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
                        style="background-color:blue;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
@@ -241,7 +241,7 @@
                                             <span>Agora você tem um novo app criado, para vincular com a nossa plataforma, clique no botão</span>
                                             <a class="btn btn-floating btn-primary"
                                                style="margin:15px;color: white;display: flex;align-items: center;justify-content: center;">
-                                                <i class="icon wb-plus" aria-hidden="true"></i></a>
+                                                <i class="o-add-1" aria-hidden="true"></i></a>
                                         </div>
                                     </div>
                                 </div>
