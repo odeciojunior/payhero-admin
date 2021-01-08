@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-end">
             <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-shipping">
                 <span class="link-button-dependent red"> Adicionar Frete </span>
-                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>

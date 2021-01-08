@@ -3,9 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
-        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=01') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <style>
@@ -25,7 +25,7 @@
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-sm-8 col-12">
                     <h1 class="page-title">
-                        <a href='/apps/notazz' class='fa fa-arrow-circle-left' style='color:#e7714f'></a>
+                        <a href='/apps/notazz' class='o-arrow-right-1'></a>
                         Notas fiscais do projeto <span id="title_integration"></span>
                     </h1>
                 </div>
@@ -78,7 +78,7 @@
                     <div class="row mt-15">
                         <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                             </button>
                         </div>
                         <div class="col-2">

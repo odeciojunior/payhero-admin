@@ -115,8 +115,7 @@
                         <br>
                         <span id="client-telephone" class='table-title gray'></span>
                         <a id="client-whatsapp" href="#" target='_blank'>
-                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px"
-                                 title='Enviar mensagem pelo whatsapp'>
+                            <span class="o-whatsapp-1"></span>
                         </a>
                         <br>
                         <span id="client-email" class="table-title gray"></span>

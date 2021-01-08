@@ -3,7 +3,7 @@
         {{-- <div id="add-sms" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content"> --}}
         <div id="add-sms" class="d-flex align-items-center justify-content-end pointer">
             <button type="button" class="ml-10 rounded-add pointer btn" disabled='true'>
-                <i class="icon wb-plus" aria-hidden="true"></i></button>
+                <i class="o-add-1" aria-hidden="true"></i></button>
         </div>
     </div>
 </div>

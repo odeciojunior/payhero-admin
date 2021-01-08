@@ -607,7 +607,9 @@ $(document).ready(function () {
 
     var links = $('.site-menubar .site-menu-item a');
     $.each(links, function (key, va) {
-        if (va.href == document.URL) {
+        var current = document.URL
+
+        if (va.href == document.URL || (current.match(va.href) || []).length >= 1) {
             $(this).addClass('menu-active')
             $(this).parents('.site-menu-item.has-sub').find('> a').addClass('menu-active')
         }

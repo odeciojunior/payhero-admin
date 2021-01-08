@@ -1,3 +1,7 @@
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css') }}">
+@endpush
+
 <div class='card shadow p-30'>
     <form id='update-project'>
         @method('PUT')

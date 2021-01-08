@@ -124,7 +124,7 @@ $(document).ready(function () {
                 break;
                 case 'DomainApprovedNotification' :
                 message   = data.message;
-                iconClass = 'o-config-1'; // 'cloud-success';
+                iconClass = 'o-clouds-1'; // 'cloud-success';
                 iconColor = 'color:#5EE2A1;';
                 iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/projects';

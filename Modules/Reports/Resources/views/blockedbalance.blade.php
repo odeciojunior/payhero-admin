@@ -3,8 +3,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -105,7 +105,7 @@
                             </div>
                             <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
                                 <button id="bt_filtro" class="btn btn-primary col">
-                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                 </button>
                             </div>
                         </div>

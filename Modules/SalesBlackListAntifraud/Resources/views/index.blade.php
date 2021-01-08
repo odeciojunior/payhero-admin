@@ -3,7 +3,7 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales-blacklist-antifraud/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
     @endpush
@@ -60,7 +60,7 @@
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label></label>
                                 <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                 </button>
                             </div>
                         </div>

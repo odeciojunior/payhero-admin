@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['web', 'auth']], function() {
 
     Route::Resource('apps/reportana', 'ReportanaController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

@@ -11,7 +11,7 @@
             <div id="add-pixel" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal"
                  data-target="#modal-create-pixel">
                 <span class="link-button-dependent red"> Adicionar Pixel </span>
-                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>

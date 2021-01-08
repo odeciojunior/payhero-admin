@@ -11,8 +11,6 @@ Route::group(
 
         Route::post('/ebanx', 'PostBackEbanxController@postBackListener');
 
-        Route::post('/mercadopago', 'PostBackMercadoPagoController@postBackListener');
-
         Route::post('/notazz', 'PostBackNotazzController@postBackListener');
 
         Route::post('/trackingmore', 'PostBackTrackingmoreController@postBackListener');

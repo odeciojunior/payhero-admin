@@ -90,15 +90,15 @@
                                         <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
                                             <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
                                             <div class="d-flex input-group">
-                                                <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#" >
+                                                <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='5' data-mask="0#" >
                                             </div>
                                         </div>
 {{--                                        <div class="form-group col-lg-4">--}}
 {{--                                            <label for="price">Preço</label>--}}
 {{--                                            <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">--}}
 {{--                                        </div>--}}
-                                        <div id="div_next_step" class="form-group col-lg-12 text-right">
-                                            <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
+                                        <div id="div_next_step" class="form-group col-lg-12 text-right d-flex justify-content-end">
+                                            <button id="next_step" type="button" class="btn btn-success d-flex align-items-center">Prosseguir<i style="-webkit-text-stroke: 1.45px #FFF;" class="o-arrow-right-1 font-size-16 ml-2" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                         <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">

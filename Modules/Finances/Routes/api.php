@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged'],
+        'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function () {
         /**

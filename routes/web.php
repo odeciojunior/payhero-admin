@@ -88,3 +88,5 @@ Route::group(
 );
 
 Route::view('/carriers', 'carriers');
+
+Route::get('/generate-zend-jwt', 'HomeController@generateZendesktoken');

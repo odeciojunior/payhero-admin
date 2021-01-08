@@ -27,10 +27,10 @@ class ProductService
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
         if (!empty($projectId) && !empty($project->shopify_id)) {
-            return $productModel->where('user_id', auth()->user()->account_owner_id)
+            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)->get();
         } else {
-            return $productModel->where('user_id', auth()->user()->account_owner_id)
+            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)
                 ->where('shopify', 0)->get();
         }
     }

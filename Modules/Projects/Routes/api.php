@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged'],
+        'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
         Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
