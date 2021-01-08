@@ -14,6 +14,11 @@ $(document).ready(function () {
     });
     // COMPORTAMENTOS DA JANELA
 
+    $("#bt_get_csv_default").on("click", function () {
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'csv';
+    });
+
     $("#bt_get_csv").on("click", function () {
         $('#modal-export-sale').modal('show');
         exportFormat = 'csv';
@@ -274,6 +279,14 @@ $(document).ready(function () {
                                             </a>`
                         }
 
+                        let cupomCode = '';
+                        if (!isEmpty(value.cupom_code) || (value.cupom_code === null && false) || (value.cupom_code === '' && false)) {
+                            cupomCode = `<a data-toggle="tooltip" title="${value.cupom_code}"
+                                                role="button" style='margin-left: 5px;' >
+                                                    <span style="color: #707070; font-size: 18px;" class="o-discount-1"></span>
+                                            </a>`
+                        }
+
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
@@ -295,7 +308,7 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
+                                    <td style='white-space: nowrap;'><b>${value.total_paid}</b> ${cupomCode}</td>
                                     <td style="text-align: center">
                                         ${observation}
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'>

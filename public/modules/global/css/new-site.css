@@ -45,7 +45,16 @@
 .o-speed-1,
 .o-store-1,
 .o-upload-to-cloud-1,
-.o-whatsapp-1 {
+.o-whatsapp-1,
+.o-angle-down-1,
+.o-angle-up-1,
+.o-arrow-right-1,
+.o-lock-server-1,
+.o-locked-1,
+.o-on-sale-sticker-1,
+.o-security-shield-1,
+.o-special-price-1,
+.o-discount-1 {
     font-size: 24px;
     color: #0d2c54;
     -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
@@ -102,7 +111,16 @@
 .o-speed-1:hover,
 .o-store-1:hover,
 .o-upload-to-cloud-1:hover,
-.o-whatsapp-1:hover {
+.o-whatsapp-1:hover,
+.o-angle-down-1:hover,
+.o-angle-up-1:hover,
+.o-arrow-right-1:hover,
+.o-lock-server-1:hover,
+.o-locked-1:hover,
+.o-on-sale-sticker-1:hover,
+.o-security-shield-1:hover,
+.o-special-price-1:hover,
+.o-discount-1 {
     color: #2E85EC;
     transition: 0.3s;
 }
@@ -1082,4 +1100,9 @@ input[type=radio] {
 
 .s-card-header > h4{
     color: #002654;
+}
+
+.icon-export {
+    color: #76838f;
+    border-color: none;
 }
