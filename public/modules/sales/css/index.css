@@ -59,7 +59,8 @@
 }
 
 .quick-list > li a::after {
-    content: '➝';
+    content: '\f9ff';
+    font-family: "sirius-font";
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -119,7 +120,7 @@
 
 #icon-filtro {
     height: 10px;
-    margin-right: 4px;
+    margin-right: 6px;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;

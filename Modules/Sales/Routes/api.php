@@ -34,7 +34,7 @@ Route::group(
 
 Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
-     ->middleware(['auth:api', 'scopes:admin', 'setUserAsLogged']);
+     ->middleware(['auth:api', 'scopes:admin']);
 
 
 Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'prefix' => 'profitfy',], function () {

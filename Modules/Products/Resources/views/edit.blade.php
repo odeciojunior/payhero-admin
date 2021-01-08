@@ -101,7 +101,7 @@
                                             <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
                                                 <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
                                                 <div class="d-flex input-group">
-                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#">
+                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='5' data-mask="0#">
                                                 </div>
                                             </div>
                                             {{--                                            <div class="form-group col-lg-4">--}}

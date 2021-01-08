@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=01') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s0') }}">
     <style>
         .popover {

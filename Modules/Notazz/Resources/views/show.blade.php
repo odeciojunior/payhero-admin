@@ -3,9 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
-        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=01') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <style>
@@ -25,7 +25,7 @@
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-sm-8 col-12">
                     <h1 class="page-title">
-                        <a href='/apps/notazz' class='fa fa-arrow-circle-left' style='color:#e7714f'></a>
+                        <a href='/apps/notazz' class='o-arrow-right-1'></a>
                         Notas fiscais do projeto <span id="title_integration"></span>
                     </h1>
                 </div>

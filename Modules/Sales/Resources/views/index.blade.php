@@ -3,8 +3,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=2') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -44,8 +44,8 @@
                     </div>
                     @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
                         <div class="col-6 text-right">
-                            <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
-                                <div class="p-2 align-items-center">
+                            <div class="justify-content-end align-items-center" id="export-excel" style="display:none">                                
+                                <div class="p-2 d-flex justify-content-end align-items-center">
                                     <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>

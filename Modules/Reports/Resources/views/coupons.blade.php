@@ -5,7 +5,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
     @endpush
 
         <div class="page">

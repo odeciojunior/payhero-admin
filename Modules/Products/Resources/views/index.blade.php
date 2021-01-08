@@ -1,5 +1,9 @@
 @extends("layouts.master")
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=01') }}">
+@endpush
+
 @section('content')
 
     <!-- Page -->
@@ -59,7 +63,7 @@
                 <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px"></div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
-                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
                         <img src="{!! asset('modules/global/img/empty.svg') !!}" width="150px">

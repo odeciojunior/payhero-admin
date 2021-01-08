@@ -40,10 +40,6 @@ use Modules\Core\Services\ProjectNotificationService;
  */
 class ProjectsApiController extends Controller
 {
-    /**
-     * @param  Request  $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -83,10 +79,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function create()
+    public function create(): JsonResponse
     {
         try {
             activity()->tap(function (Activity $activity) {
@@ -103,7 +96,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function store(ProjectStoreRequest $request)
+    public function store(ProjectStoreRequest $request): JsonResponse
     {
         try {
             $requestValidated = $request->validated();
@@ -215,11 +208,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -270,11 +259,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -312,7 +297,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function update(ProjectUpdateRequest $request, $id)
+    public function update(ProjectUpdateRequest $request, $id): JsonResponse
     {
         try {
             $requestValidated = $request->validated();
@@ -502,9 +487,6 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function getProjects()
     {
         try {
@@ -523,12 +505,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function verifySupportphone($projectId, Request $request)
+    public function verifySupportphone($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -582,12 +559,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function matchSupportphoneVerifyCode($projectId, Request $request)
+    public function matchSupportphoneVerifyCode($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -639,12 +611,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function verifyContact($projectId, Request $request)
+    public function verifyContact($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -708,12 +675,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function matchContactVerifyCode($projectId, Request $request)
+    public function matchContactVerifyCode($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -765,7 +727,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder(Request $request): JsonResponse
     {
         try {
             $orders = $request->input('order');
@@ -808,7 +770,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function updateConfig(Request $request)
+    public function updateConfig(Request $request): JsonResponse
     {
         try {
             $data = $request->all();

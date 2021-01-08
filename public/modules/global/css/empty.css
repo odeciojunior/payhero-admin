@@ -81,3 +81,7 @@
     border-color: orangered;
     color: white !important;
 }
+
+.card-img-top.img-fluid.w-full {
+    border-radius: 21px 21px 0 0;
+}
