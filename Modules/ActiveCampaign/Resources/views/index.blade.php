@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
     {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}"> --}}
-     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
+     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
 @endpush
 @section('content')
     <div id='project-content'>
@@ -14,7 +14,7 @@
                     <div class="col text-right" id="integration-actions" style="display:none">
                         <a id='btn-add-integration' class="btn btn-floating btn-primary"
                            style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
-                            <i class="icon wb-plus" aria-hidden="true"></i>
+                            <i class="o-add-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
     <style>
         .popover {
@@ -129,12 +129,7 @@
                                         <div class="col-sm-3 pt-1">
                                             <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
                                                     data-toggle="modal" disabled>
-                                                <svg class="mr-2" style="fill: white; vertical-align: middle;"
-                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                     viewBox="0 0 24 24">
-                                                    <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
-                                                </svg>
+                                                <span style="-webkit-text-stroke: 1.45px #FFF;" class="o-checkmark-1 white font-size-16"></span>
                                                 Sacar dinheiro
                                             </button>
                                         </div>
@@ -310,7 +305,7 @@
                                         <div class="mt-30 col-md-4" style="text-align:right">
                                             <button id="bt_filtro_statement"
                                                     class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                             </button>
                                         </div>
                                     </div>

@@ -328,7 +328,7 @@ $(() => {
                                          <td>
                                             <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
-                                         <td class="text-md-right">
+                                         <td class="text-center">
                                             <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
                                              style="display:none"><i class='material-icons gradient'>save</i></a>
                                              ${
