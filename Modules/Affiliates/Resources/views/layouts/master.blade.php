@@ -45,9 +45,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=01') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=01') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
@@ -97,7 +97,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=s0') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=01') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

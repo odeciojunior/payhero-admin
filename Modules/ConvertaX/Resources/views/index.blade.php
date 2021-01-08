@@ -3,7 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=01') !!}">
 @endpush
 
 @section('content')
