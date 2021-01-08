@@ -253,12 +253,11 @@
                                 <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
                                     <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
                                     <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
                                     <td class="table-title" width="80px;"> &nbsp;</td>
