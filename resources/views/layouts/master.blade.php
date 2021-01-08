@@ -145,21 +145,31 @@
 
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
-    <script type="text/javascript">
+    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3ff6c393-3915-4554-a046-cc8eae241938"> </script>
 
-        window.$crisp=[];
-        window.CRISP_WEBSITE_ID="96ad410d-c6cf-4ffa-9763-be123b05acbd";
+    <script>
 
-        (function(){
-            d=document;
-            s=d.createElement("script");
-            s.src="https://client.crisp.chat/l.js";
-            s.async=1;
-            $crisp.push(["set", "user:email", '{{ auth()->user()->email }}']);
-            $crisp.push(["set", "user:nickname", '{{ auth()->user()->name }}'])
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
+        @if(\Auth::user())
 
+            window.zESettings = {
+            webWidget: {
+                authenticate: {
+                    chat: {
+                        jwtFn: function(callback) {
+                            fetch('/generate-zend-jwt').then(function(res) {
+                                res.text().then(function(jwt) {
+                                    console.log("check for execution")
+                                    let jwtreplace = jwt.replace('"','', jwt)
+                                    jwtreplace = jwtreplace.replace('"','', jwtreplace)
+                                    callback(jwtreplace);
+                                });
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        @endif
     </script>
 
 @endif
