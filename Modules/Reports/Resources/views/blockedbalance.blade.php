@@ -105,7 +105,7 @@
                             </div>
                             <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
                                 <button id="bt_filtro" class="btn btn-primary col">
-                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                 </button>
                             </div>
                         </div>

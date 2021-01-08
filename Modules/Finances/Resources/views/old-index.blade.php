@@ -285,7 +285,7 @@
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
                                             <button id="bt_filtro" class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                             </button>
                                         </div>
                                     </div>

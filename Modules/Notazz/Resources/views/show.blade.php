@@ -78,7 +78,7 @@
                     <div class="row mt-15">
                         <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                             </button>
                         </div>
                         <div class="col-2">

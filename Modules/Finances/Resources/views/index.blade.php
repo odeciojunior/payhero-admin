@@ -305,7 +305,7 @@
                                         <div class="mt-30 col-md-4" style="text-align:right">
                                             <button id="bt_filtro_statement"
                                                     class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
                                             </button>
                                         </div>
                                     </div>
