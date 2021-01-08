@@ -3,7 +3,7 @@ $(document).ready(function () {
     let typeEnum;
     getDataProducts();
     function getDataProducts() {
-        loadingOnScreen();
+        loadOnAny('.page', false);
 
         $.ajax({
             method: 'GET',
@@ -14,7 +14,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+                loadOnAny('.page', true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -185,7 +185,7 @@ $(document).ready(function () {
                         }
 
                         if (verify()) {
-                            loadingOnScreen();
+                            loadOnAny('.page', false);
                             $.ajax({
                                 method: 'POST',
                                 url: "/api/products/" + response.data.product.id,
@@ -199,12 +199,12 @@ $(document).ready(function () {
                                 },
                                 data: formData,
                                 error: function (response) {
-                                    loadingOnScreenRemove();
+                                    loadOnAny('.page', true);
 
                                     errorAjaxResponse(response);
 
                                 }, success: function (response) {
-                                    loadingOnScreenRemove();
+                                    loadOnAny('.page', true);
                                     alertCustom('success', response.message);
                                     window.location = "/products";
                                 }
@@ -217,7 +217,7 @@ $(document).ready(function () {
                     window.location = "/products";
                 }
 
-                loadingOnScreenRemove();
+                loadOnAny('.page', true);
             }
         });
     }
@@ -280,7 +280,7 @@ $(document).ready(function () {
         $("#bt_excluir").unbind('click');
         $("#bt_excluir").on('click', function () {
             $("#close-modal-delete").click();
-            loadingOnScreen();
+            loadOnAny('.page', false);
 
             $.ajax({
                 method: 'DELETE',
@@ -301,11 +301,11 @@ $(document).ready(function () {
 
                     return error;
                 }(function (response) {
-                    loadingOnScreenRemove();
+                    loadOnAny('.page', true);
                     errorAjaxResponse(response);
                 }),
                 success: function success(response) {
-                    loadingOnScreenRemove();
+                    loadOnAny('.page', true);
 
                     alertCustom('success', response.message);
                     window.location = "/products";
@@ -318,7 +318,7 @@ $(document).ready(function () {
         event.preventDefault();
         var url = $(this).attr('link');
         var expirationTime = $('#url_expiration_time').val();
-        loadingOnScreen();
+        loadOnAny('.page', false);
         $.ajax({
             method: 'POST',
             url: '/api/products/getsignedurl',
@@ -329,11 +329,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadingOnScreenRemove();
+                loadOnAny('.page', true);
                 errorAjaxResponse(response)
             },
             success: function (response) {
-                loadingOnScreenRemove();
+                loadOnAny('.page', true);
                 window.open(response.signed_url, '_blank');
             },
         });
