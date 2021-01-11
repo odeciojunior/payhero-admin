@@ -7,7 +7,6 @@ use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\InternalApiAuth;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\SetUserAsLogged;
 use App\Http\Middleware\ThrottleRequests;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -62,7 +61,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:200,1',
+            'throttle:500,1',
             'bindings',
         ],
 
@@ -94,6 +93,5 @@ class Kernel extends HttpKernel
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
         'InternalApiAuth' => InternalApiAuth::class,
-        'setUserAsLogged' => SetUserAsLogged::class,
     ];
 }

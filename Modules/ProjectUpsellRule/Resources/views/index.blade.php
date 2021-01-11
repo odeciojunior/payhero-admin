@@ -5,14 +5,14 @@
                 <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Upsell </span>
                     <a class="ml-10 btn-config rounded-add pointer bg-secondary text-white">
-                        <span class="o-cogwheel-1" style="font-size: 18px;"></span> 
+                        <span class="o-cogwheel-1" style="font-size: 18px;"></span>
                     </a>
                 </div>
             </div>
             <div id="add-upsell" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
                 <span class="link-button-dependent red"> Adicionar Upsell </span>
                 <a class="ml-10 rounded-add pointer">
-                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                    <i class="o-add-1" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>

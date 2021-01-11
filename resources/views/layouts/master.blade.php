@@ -56,11 +56,11 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=1234') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=564879') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=61') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=24') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -74,15 +74,6 @@
     <script>
         Breakpoints();
     </script>
-    <style type='text/css'>
-        .top-bar-danger{
-            background-color: rgb(255 18 7 / 80%);
-        }
-        .top-alert-danger{
-            color: #fff;
-            font-size: 20px;
-        }
-    </style>
     <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
@@ -94,14 +85,19 @@
 @include("layouts.menu-principal")
 
 <div class="top-alert-container">
-    <div class="top-alert warning" id="document-pending" style="display:none;">
+    <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
-            <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" class="top-alert-action">Corrigir documento</a>
+            <div class="col-4 text-center">
+                <img class="top-alert-img" src=" " alt="">
+            </div>
+            <div class="col-8 pr-20 d-flex flex-wrap">
+                <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
+                <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            </div>
+            <a class="top-alert-close">
+                <i class="material-icons">close</i>
+            </a>
         </div>
-        <a class="top-alert-close">
-            <i class="material-icons">close</i>
-        </a>
     </div>
 </div>
 
@@ -131,7 +127,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=36') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=38') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -145,21 +141,31 @@
 
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
-    <script type="text/javascript">
+    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3ff6c393-3915-4554-a046-cc8eae241938"> </script>
 
-        window.$crisp=[];
-        window.CRISP_WEBSITE_ID="96ad410d-c6cf-4ffa-9763-be123b05acbd";
+    <script>
 
-        (function(){
-            d=document;
-            s=d.createElement("script");
-            s.src="https://client.crisp.chat/l.js";
-            s.async=1;
-            $crisp.push(["set", "user:email", '{{ auth()->user()->email }}']);
-            $crisp.push(["set", "user:nickname", '{{ auth()->user()->name }}'])
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
+        @if(\Auth::user())
 
+            window.zESettings = {
+            webWidget: {
+                authenticate: {
+                    chat: {
+                        jwtFn: function(callback) {
+                            fetch('/generate-zend-jwt').then(function(res) {
+                                res.text().then(function(jwt) {
+                                    console.log("check for execution")
+                                    let jwtreplace = jwt.replace('"','', jwt)
+                                    jwtreplace = jwtreplace.replace('"','', jwtreplace)
+                                    callback(jwtreplace);
+                                });
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        @endif
     </script>
 
 @endif

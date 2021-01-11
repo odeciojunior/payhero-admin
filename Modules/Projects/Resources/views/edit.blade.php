@@ -1,3 +1,7 @@
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css') }}">
+@endpush
+
 <div class='card shadow p-30'>
     <form id='update-project'>
         @method('PUT')
@@ -312,7 +316,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class='form-group col-md-6 col-sm-12'>
+{{--                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="cost_currency_type">Moeda padrão de custo</label>
                                 <select name='cost_currency_type' class='form-control select-pad'
                                         id="cost_currency_type">
@@ -323,6 +327,19 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para
                                     a configuração dos seus planos. Configuração utilizada para emissão de notas
                                     fiscais.
+                                </p>
+                            </div> --}}
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="document_type_checkout">Aceitar compras de</label>
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
+                                    <option value='1'>CPF</option>
+                                    <option value='2'>CNPJ</option>
+                                    <option value='3'>CPF/CNPJ</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito no checkout.
                                 </p>
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
@@ -403,41 +420,59 @@
                                 </div>
                             </div>
                         </div>
-                        {{--                        <div class="row my-15">--}}
-                        {{--                            <div class='col-6'>--}}
-                        {{--                                <div class="switch-holder">--}}
-                        {{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
-                        {{--                                        com--}}
-                        {{--                                        desconto</label>--}}
-                        {{--                                    <label class="switch" style='top:3px'>--}}
-                        {{--                                        <input type="checkbox" id="discount_recovery_status"--}}
-                        {{--                                               name="discount_recovery_status" class='check discount-recovery'--}}
-                        {{--                                               value='0'>--}}
-                        {{--                                        <span class="slider round"></span>--}}
-                        {{--                                    </label>--}}
-                        {{--                                    <select id='discount_recovery_value' name='discount_recovery_value'--}}
-                        {{--                                            class='form-control select-pad' id="checkout_type">--}}
-                        {{--                                        <option value='10'>10%</option>--}}
-                        {{--                                        <option value='20'>20%</option>--}}
-                        {{--                                        <option value='30'>30%</option>--}}
-                        {{--                                        <option value='40'>40%</option>--}}
-                        {{--                                        <option value='50'>50%</option>--}}
-                        {{--                                    </select>--}}
-                        {{--                                    <span id='discount-recovery-error' class='text-danger'></span>--}}
-                        {{--                                </div>--}}
-                        {{--                                <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
-                        {{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
-                        {{--                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
-                        {{--                                    pertencentes a este projeto.--}}
-                        {{--                                </p>--}}
-                        {{--                                <p class="info mt-5" style="font-size: 10px;">--}}
-                        {{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
-                        {{--                                    tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
-                        {{--                                    cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
-                        {{--                                    máximo que poderá ser aplicado.--}}
-                        {{--                                </p>--}}
-                        {{--                            </div>--}}
-                        {{--                        </div>--}}
+                        <div class="row mt-5 mb-10">
+{{--                            <div class='col-6'>--}}
+{{--                                <div class="switch-holder">--}}
+{{--                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
+{{--                                        com--}}
+{{--                                        desconto</label>--}}
+{{--                                    <label class="switch" style='top:3px'>--}}
+{{--                                        <input type="checkbox" id="discount_recovery_status"--}}
+{{--                                               name="discount_recovery_status" class='check discount-recovery'--}}
+{{--                                               value='0'>--}}
+{{--                                        <span class="slider round"></span>--}}
+{{--                                    </label>--}}
+{{--                                    <select id='discount_recovery_value' name='discount_recovery_value'--}}
+{{--                                            class='form-control select-pad' id="checkout_type">--}}
+{{--                                        <option value='10'>10%</option>--}}
+{{--                                        <option value='20'>20%</option>--}}
+{{--                                        <option value='30'>30%</option>--}}
+{{--                                        <option value='40'>40%</option>--}}
+{{--                                        <option value='50'>50%</option>--}}
+{{--                                    </select>--}}
+{{--                                    <span id='discount-recovery-error' class='text-danger'></span>--}}
+{{--                                </div>--}}
+{{--                                <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
+{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
+{{--                                    de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
+{{--                                    pertencentes a este projeto.--}}
+{{--                                </p>--}}
+{{--                                <p class="info mt-5" style="font-size: 10px;">--}}
+{{--                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
+{{--                                    tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
+{{--                                    cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
+{{--                                    máximo que poderá ser aplicado.--}}
+{{--                                </p>--}}
+{{--                            </div>--}}
+                            <div class='col'>
+                                <div class="switch-holder">
+                                    <label for='product_amount_selector' style='margin-right:15px;margin-bottom: 3px'>
+                                        Seletor de quantidade de produtos no carrinho</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="product_amount_selector"
+                                               name="product_amount_selector" class='check'
+                                               value='1'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <p class="info mt-5" style="font-size: 10px;">
+                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Se esta opção estiver habilitada,
+                                    a página de checkout permitirá que o usuário selecione a quantidade de produtos no
+                                    carrinho.
+                                    <b>Nota:</b> Esta opção não se aplica à planos que possuem mais de um produto.
+                                </p>
+                            </div>
+                        </div>
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="required_email_checkout">Email obrigatório no checkout</label>
@@ -449,19 +484,6 @@
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Cliente vai ser obrigado ou
                                     não a informar email para finalizar a compra no checkout.
-                                </p>
-                            </div>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad'
-                                        id="document_type_checkout">
-                                    <option value='1'>CPF</option>
-                                    <option value='2'>CNPJ</option>
-                                    <option value='3'>CPF/CNPJ</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
-                                    aceito no checkout.
                                 </p>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function () {
+Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/companies/uploaddocuments', 'CompaniesApiController@uploadDocuments')
         ->name('api.companies.uploaddocuments')->middleware('role:account_owner|admin');
 
@@ -18,6 +18,8 @@ Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function () {
     Route::post('/companies/consultcnpj', 'CompaniesApiController@consultCnpj');
 
     Route::get('/companies/checkbraspagcompany', 'CompaniesApiController@checkBraspagCompany');
+
+    Route::get('/companies/{company}/checkdebitvaluecompany', 'CompaniesApiController@checkDebitValue');
 
     Route::get('/companies/check-statement-available', 'CompaniesApiController@checkStatementAvailable');
 

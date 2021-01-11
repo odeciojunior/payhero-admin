@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['web', 'auth']], function() {
 
     Route::Resource('apps/unicodrop', 'UnicodropController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

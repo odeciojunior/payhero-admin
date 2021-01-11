@@ -40,10 +40,6 @@ use Modules\Core\Services\ProjectNotificationService;
  */
 class ProjectsApiController extends Controller
 {
-    /**
-     * @param  Request  $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -83,10 +79,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function create()
+    public function create(): JsonResponse
     {
         try {
             activity()->tap(function (Activity $activity) {
@@ -103,7 +96,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function store(ProjectStoreRequest $request)
+    public function store(ProjectStoreRequest $request): JsonResponse
     {
         try {
             $requestValidated = $request->validated();
@@ -128,7 +121,11 @@ class ProjectsApiController extends Controller
                 'automatic_affiliation' => 0,
                 'boleto' => 1,
                 'status' => $projectModel->present()->getStatus('active'),
-                'checkout_type' => 2 // checkout de 1 passo
+                'checkout_type' => 2, // checkout de 1 passo
+                'notazz_configs' => json_encode([
+                    'cost_currency_type' => 1,
+                    'update_cost_shopify' => 1,
+                ])
             ]);
 
             if (empty($project)) {
@@ -215,11 +212,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -270,11 +263,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -312,7 +301,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function update(ProjectUpdateRequest $request, $id)
+    public function update(ProjectUpdateRequest $request, $id): JsonResponse
     {
         try {
             $requestValidated = $request->validated();
@@ -338,7 +327,7 @@ class ProjectsApiController extends Controller
 
             $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
-            $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+            // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
 
             if(isset($requestValidated['finalizing_purchase_config_toogle'])) {
@@ -523,9 +512,6 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function getProjects()
     {
         try {
@@ -544,12 +530,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function verifySupportphone($projectId, Request $request)
+    public function verifySupportphone($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -603,12 +584,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function matchSupportphoneVerifyCode($projectId, Request $request)
+    public function matchSupportphoneVerifyCode($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -660,12 +636,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function verifyContact($projectId, Request $request)
+    public function verifyContact($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -729,12 +700,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function matchContactVerifyCode($projectId, Request $request)
+    public function matchContactVerifyCode($projectId, Request $request): JsonResponse
     {
         try {
             $projectModel = new Project();
@@ -786,7 +752,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder(Request $request): JsonResponse
     {
         try {
             $orders = $request->input('order');
@@ -829,7 +795,7 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function updateConfig(Request $request)
+    public function updateConfig(Request $request): JsonResponse
     {
         try {
             $data = $request->all();

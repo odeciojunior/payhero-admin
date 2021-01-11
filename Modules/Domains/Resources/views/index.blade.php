@@ -10,7 +10,7 @@
         <div id="add-domain" class="d-flex align-items-center justify-content-end pointer">
             <span class="link-button-dependent red"> Adicionar domínio </span>
             <a class="ml-10 rounded-add" id='btn-add-domain'>
-                <i class="icon wb-plus" aria-hidden="true"></i></a>
+                <i class="o-add-1" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>
@@ -201,7 +201,7 @@
                             <div class="d-flex align-items-center">
                                 <span> Clique em <strong>Adicionar domínio</strong></span>
                                 <a class="ml-10 rounded-add pointer">
-                                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                                    <i class="o-add-1" aria-hidden="true"></i></a>
                             </div>
                         </div>
                     </div>

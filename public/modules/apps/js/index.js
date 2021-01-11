@@ -19,47 +19,47 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.hotzappIntegrations > 0) {
                     $('#hotzapp-bt').addClass('added');
-                    $('#hotzapp-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#hotzapp-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.shopifyIntegrations > 0) {
                     $('#shopify-bt').addClass('added');
-                    $('#shopify-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#shopify-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.notazzIntegrations > 0) {
                     $('#notazz-bt').addClass('added');
-                    $('#notazz-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#notazz-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.convertaxIntegrations > 0) {
                     $('#convertax-bt').addClass('added');
-                    $('#convertax-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#convertax-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.activecampaignIntegrations > 0) {
                     $('#activecampaign-bt').addClass('added');
-                    $('#activecampaign-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#activecampaign-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.digitalmanagerIntegrations > 0) {
                     $('#digitalmanager-bt').addClass('added');
-                    $('#digitalmanager-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#digitalmanager-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.whatsapp2Integrations > 0) {
                     $('#whatsapp2-bt').addClass('added');
-                    $('#whatsapp2-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#whatsapp2-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.hotsacIntegrations > 0) {
                     $('#hotsac-bt').addClass('added');
-                    $('#hotsac-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#hotsac-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.reportanaIntegrations > 0) {
                     $('#reportana-bt').addClass('added');
-                    $('#reportana-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#reportana-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.unicodropIntegrations > 0) {
                     $('#unicodrop-bt').addClass('added');
-                    $('#unicodrop-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#unicodrop-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
                 if (response.smartfunnelIntegrations > 0) {
                     $('#smartfunnel-bt').addClass('added');
-                    $('#smartfunnel-icon').removeClass('wb-plus').addClass('wb-check');
+                    $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
                 // if (response.notazzIntegrations == 0) {

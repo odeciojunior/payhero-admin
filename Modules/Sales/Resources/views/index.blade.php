@@ -3,8 +3,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=2') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -45,8 +45,8 @@
                     @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
                         <div class="col-6 text-right">
                             <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
-                                <div class="p-2 align-items-center">
-                                    <span class="o-download-cloud-1 mr-2"></span>
+                                <div class="p-2 d-flex justify-content-end align-items-center">
+                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
                                         <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
@@ -253,12 +253,11 @@
                                 <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
                                     <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
                                     <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
                                     <td class="table-title" width="80px;"> &nbsp;</td>
@@ -270,7 +269,7 @@
                             </table>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px; margin-right:100px">
                         {{-- js carrega... --}}
                     </ul>
                 <!-- Modal detalhes da venda-->

@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
     <style>
         .popover {
@@ -68,8 +68,12 @@
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-12 mb-3">
                                     <div class="alert alert-info alert-dismissible fade show text-center" id=''
-                                         role="alert">
-                                        <strong>ATENÇÃO!</strong><br> Após a liberação do saque, o prazo para a iniciar a
+                                         role="alert" style="background: #DCECFF 0% 0% no-repeat padding-box;
+                                            border: 2px solid #4A89F5;
+                                            border-radius: 15px;
+                                            opacity: 1;">
+                                        <strong>ATENÇÃO!</strong><br> Após a liberação do saque, o prazo para a iniciar
+                                        a
                                         liquidação é de 2 dias úteis.
                                         <br>
                                         As informações necessárias podem ser acompanhadas na tela Finanças > Extrato >
@@ -114,11 +118,11 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
-<!--                                                <div class='input-group-prepend'>
-                                                        <span class="input-group-text custom-addon" id="basic-addon1"
-                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                    class="currency">$</span></span>
-                                                </div>-->
+                                                <!--                                                <div class='input-group-prepend'>
+                                                                                                        <span class="input-group-text custom-addon" id="basic-addon1"
+                                                                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
+                                                                                                                    class="currency">$</span></span>
+                                                                                                </div>-->
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"
@@ -129,12 +133,8 @@
                                         <div class="col-sm-3 pt-1">
                                             <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
                                                     data-toggle="modal" disabled>
-                                                <svg class="mr-2" style="fill: white; vertical-align: middle;"
-                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                     viewBox="0 0 24 24">
-                                                    <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
-                                                </svg>
+                                                <span style="-webkit-text-stroke: 1.45px #FFF;"
+                                                      class="o-checkmark-1 white font-size-16"></span>
                                                 Sacar dinheiro
                                             </button>
                                         </div>
@@ -165,6 +165,36 @@
                                                 </h4>
                                                 <div class="grad-border blue"></div>
                                             </div>
+                                        </div>
+                                        <div id="alert-debit-value" class="col-sm-3 alert alert-info"
+                                             style="display:none;background: #DCECFF 0% 0% no-repeat padding-box;
+                                                border: 2px solid #4A89F5;
+                                                border-radius: 11px;
+                                                opacity: 1;">
+
+                                            Você possui um ajuste a débito pendente no valor de  <strong id="debit-value"></strong>
+                                            que será descontado do valor dos próximos saques solicitados. Você pode consultar
+                                            esse valor na agenda financeira filtrando por "Ajuste de débito".
+
+                                           <div class="row " style="position: absolute">
+                                               <button type="button" class="btn" id="ir-agenda" style="margin-right:20px;background: #E6E6E6 0% 0% no-repeat padding-box;
+                                                border-radius: 5px;
+                                                opacity: 1;text-align: left;
+                                                font: normal normal bold 12px/24px Muli;
+                                                letter-spacing: 0px;
+                                                color: #787878;">
+                                                   Ir para Agenda!
+                                               </button>
+                                               <button type="button" class="btn" data-dismiss="alert" aria-label="Close" style=" background: #4A89F5 0% 0% no-repeat padding-box;
+                                                border-radius: 5px;
+                                                opacity: 1;text-align: left;
+                                                font: normal normal bold 12px/24px Muli;
+                                                letter-spacing: 0px;
+                                                color: #FFFFFF;">
+                                                   Ok, Entendi!
+                                               </button>
+                                           </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -198,10 +228,10 @@
                         </div>
                         {{--EXTRATO--}}
                         <div
-                             class="tab-pane"
-                             id="nav-statement"
-                             role="tabpanel"
-                             aria-labelledby="nav-statement-tab">
+                                class="tab-pane"
+                                id="nav-statement"
+                                role="tabpanel"
+                                aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-12 fix-5">
                                     <div class="d-flex align-items-center">
@@ -310,7 +340,8 @@
                                         <div class="mt-30 col-md-4" style="text-align:right">
                                             <button id="bt_filtro_statement"
                                                     class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px"
+                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                             </button>
                                         </div>
                                     </div>

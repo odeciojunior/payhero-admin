@@ -10,7 +10,7 @@
                 <a href="{{route('companies.create')}}"
                    class="stretched-link d-flex align-items-center justify-content-end pointer">
                     <span class="link-button-dependent red"> Cadastrar empresa </span>
-                    <a role="button" class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i>
+                    <a role="button" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i>
                     </a>
                 </a>
             </div>

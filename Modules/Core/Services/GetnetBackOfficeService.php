@@ -8,6 +8,8 @@ use LogicException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
+use Modules\Transfers\Getnet\Details;
+use Modules\Transfers\Getnet\StatementItem;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -177,6 +179,115 @@ class GetnetBackOfficeService extends GetnetService
         }
     }
 
+    public function getAdjustments(Company $company)
+    {
+
+        $totalAdjustment = 0;
+        $statementItems = [];
+
+        if (FoxUtils::isProduction()) {
+
+            $subSellerId = $company->subseller_getnet_id;
+        } else {
+
+            $subSellerId = $company->subseller_getnet_homolog_id;
+        }
+
+        /*$withdrawals = Withdrawal::whereCompanyId($company->id)
+            ->get();*/
+
+        $dateInit = '2020-12-01 00:00:00';
+        $dateEnd = today()->addDays(7)->format('Y-m-d') . ' 23:59:59';
+
+        $queryParameters = [
+            'seller_id' => $this->sellerId,
+            'subseller_id' => $subSellerId,
+            'schedule_date_init' => $dateInit,
+            'schedule_date_end' => $dateEnd,
+        ];
+
+        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        $originalResult = $this->sendCurl($url, 'GET', null, null, false);
+        $result = json_decode($originalResult);
+
+        if (isset($result->adjustments)) {
+
+            foreach ($result->adjustments as $adjustment) {
+
+                if (
+                    $adjustment->cnpj_marketplace != $adjustment->cpfcnpj_subseller
+                    && $adjustment->transaction_sign == '-'
+                    && empty($adjustment->subseller_rate_confirm_date)
+                ) {
+
+                    $amount = $adjustment->adjustment_amount / 100;
+                    $amount = $adjustment->transaction_sign == '-' ? ($amount * -1) : $amount;
+
+                    $paymentDate = $adjustment->payment_date ?? '';
+                    $adjustmentDate = $adjustment->adjustment_date ?? '';
+                    $subSellerRateClosingDate = $adjustment->subseller_rate_closing_date ?? '';
+                    $subSellerRateConfirmDate = $adjustment->subseller_rate_confirm_date ?? '';
+
+                    foreach ([
+                                 'paymentDate',
+                                 'adjustmentDate',
+                                 'subSellerRateClosingDate',
+                                 'subSellerRateConfirmDate'
+                             ] as $date) {
+
+                        if ($date) {
+
+                            ${$date} = $this->formatDate(${$date});
+                        }
+                    }
+
+                    $details = new Details();
+                    $details->setStatus('Ajuste de ' . ($adjustment->transaction_sign == '+' ? 'crédito' : 'débito'))
+                        ->setDescription($adjustment->adjustment_reason)
+                        ->setType($adjustment->transaction_sign == '+' ? Details::STATUS_ADJUSTMENT_CREDIT : Details::STATUS_ADJUSTMENT_DEBIT);
+
+                    $date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
+
+                    $statementItem = new StatementItem();
+
+                    $statementItem->amount = $amount;
+                    $statementItem->details = $details;
+                    $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
+                    $statementItem->transactionDate = $adjustmentDate;
+                    $statementItem->date = $date;
+                    $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
+                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
+                        $statementItem->date)->format('Ymd')) : 0;
+
+                    $totalAdjustment += $amount;
+                    $statementItems[] = $statementItem;
+
+                }
+            }
+        }
+
+        return [
+            'amount' => $totalAdjustment,
+            'items' => $statementItems,
+        ];
+    }
+
+    private function formatDate(string $date): string
+    {
+
+        if (!empty($date)) {
+
+            try {
+
+                $date = Carbon::parse($date)->format('d/m/Y');
+            } catch (Exception $exception) {
+
+            }
+        }
+
+        return $date;
+    }
+
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
@@ -224,6 +335,11 @@ class GetnetBackOfficeService extends GetnetService
 
                 $queryParameters['order_id'] = $orderId;
             }
+
+            /*if ($sale) {
+
+                $queryParameters['order_id'] = $sale->gateway_transaction_order_id;
+            }*/
         }
 
 

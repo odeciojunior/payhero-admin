@@ -3,39 +3,37 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Sale;
-use PHPHtmlParser\Dom;
-use PHPHtmlParser\Exceptions\LogicalException;
-use Slince\Shopify\Client;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\User;
-use PHPHtmlParser\Dom\HtmlNode;
-use PHPHtmlParser\Dom\TextNode;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Project;
-use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
-use PHPHtmlParser\Selector\Selector;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
-use Slince\Shopify\Manager\Asset\Asset;
-use Slince\Shopify\Manager\Theme\Theme;
-use Slince\Shopify\PublicAppCredential;
-use PHPHtmlParser\Exceptions\CurlException;
-use Slince\Shopify\Manager\Webhook\Webhook;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleShopifyRequest;
 use Modules\Core\Entities\ShopifyIntegration;
-use PHPHtmlParser\Exceptions\StrictException;
-use Slince\Shopify\Manager\ProductImage\Image;
-use PHPHtmlParser\Exceptions\CircularException;
-use PHPHtmlParser\Exceptions\NotLoadedException;
-use Slince\Shopify\Manager\ProductVariant\Variant;
-use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
-use Laracasts\Presenter\Exceptions\PresenterException;
+use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\TextNode;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\CurlException;
+use PHPHtmlParser\Exceptions\LogicalException;
+use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
-use Slince\Shopify\Manager\InventoryItem\InventoryItem;
+use PHPHtmlParser\Selector\Parser;
+use PHPHtmlParser\Selector\Selector;
+use Slince\Shopify\Client;
+use Slince\Shopify\Manager\Asset\Asset;
+use Slince\Shopify\Manager\ProductImage\Image;
+use Slince\Shopify\Manager\ProductVariant\Variant;
+use Slince\Shopify\Manager\Theme\Theme;
+use Slince\Shopify\Manager\Webhook\Webhook;
+use Slince\Shopify\PublicAppCredential;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyService
 {
@@ -845,6 +843,9 @@ class ShopifyService
             return false;
         }
 
+        $notazzConfig = Project::select('notazz_configs')->find($projectId)->notazz_configs ?? null;
+        $updateCostShopify = (!is_null($notazzConfig)) ? json_decode($notazzConfig) : null;
+
         $productsArray = [];
         foreach ($storeProduct->getVariants() as $variant) {
             $title = '';
@@ -895,9 +896,14 @@ class ShopifyService
                     ->first();
                 if (!empty($productPlan)) {
                     $plan = $planModel->find($productPlan->plan_id);
-                    $productPlan->update([
-                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
-                    ]);
+                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        $productPlan->update(
+                            [
+                                'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
+                            ]
+                        );
+                    }
+
                     $plan->update(
                         [
                             'name' => $title,
@@ -949,13 +955,17 @@ class ShopifyService
                         ]
                     );
 
+                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                    }
+
                     $productPlanModel->create(
-                        [
+                        array_filter([
                             'product_id' => $product->id,
                             'plan_id' => $plan->id,
                             'amount' => 1,
-                            'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
-                        ]
+                            'cost' => $costShopify ?? ''
+                        ])
                     );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
@@ -976,7 +986,7 @@ class ShopifyService
                         'guarantee' => '0',
                         'format' => 1,
                         'category_id' => '11',
-                        'cost' => $cost,
+                        // 'cost' => $cost,
                         'shopify' => true,
                         'price' => '',
                         'shopify_id' => $storeProduct->getId(),
@@ -1000,12 +1010,15 @@ class ShopifyService
                     ]
                 );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
+                if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                }
                 $productPlanModel->create(
                     [
                         'product_id' => $product->id,
                         'plan_id' => $plan->id,
                         'amount' => '1',
-                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
+                        'cost' => $costShopify ?? ''
                     ]
                 );
                 $photo = '';
@@ -1271,16 +1284,24 @@ class ShopifyService
         }
     }
 
-    /**
-     * @param $shopifyItemId
-     * @return array|InventoryItem
-     */
     public function getShopInventoryItem($shopifyItemId)
     {
-        if (!empty($this->client)) {
-            return $this->client->getInventoryItemManager()
-                ->find($shopifyItemId);
-        } else {
+        if (empty($this->client) || empty($shopifyItemId)) {
+            return [];
+        }
+
+        try {
+            return $this->client->getInventoryItemManager()->find($shopifyItemId);
+        } catch (Exception $e) {
+            if (method_exists($e, 'getCode') && $e->getCode() == 429) {
+                sleep(1);
+                try {
+                    return $this->client->getInventoryItemManager()->find($shopifyItemId);
+                } catch (Exception $e) {
+                    return [];
+                }
+            }
+
             return [];
         }
     }
@@ -1405,13 +1426,13 @@ class ShopifyService
     public function prepareOrder(Sale $sale)
     {
         $this->saleId = $sale->id;
-        $delivery     = $sale->delivery;
-        $client       = $sale->customer;
+        $delivery = $sale->delivery;
+        $client = $sale->customer;
 
         $totalValue = $sale->present()->getSubTotal();
 
         $firstProduct = true;
-        $items        = [];
+        $items = [];
         foreach ($sale->productsPlansSale as $productsPlanSale) {
             $productPrice = 0;
             if ($firstProduct) {
@@ -1435,24 +1456,24 @@ class ShopifyService
             $product = $productsPlanSale->product;
 
             $items[] = [
-                "grams"             => 500,
-                "id"                => $productsPlanSale->plan->id,
-                "price"             => $productPrice,
-                "product_id"        => $product->shopify_id,
-                "quantity"          => $productsPlanSale->amount,
+                "grams" => 500,
+                "id" => $productsPlanSale->plan->id,
+                "price" => $productPrice,
+                "product_id" => $product->shopify_id,
+                "quantity" => $productsPlanSale->amount,
                 "requires_shipping" => true,
-                "sku"               => $product->sku,
-                "title"             => $product->name,
-                "variant_id"        => $product->shopify_variant_id,
-                "variant_title"     => $product->description,
-                "name"              => $product->name,
-                "gift_card"         => false,
+                "sku" => $product->sku,
+                "title" => $product->name,
+                "variant_id" => $product->shopify_variant_id,
+                "variant_title" => $product->description,
+                "name" => $product->name,
+                "gift_card" => false,
             ];
         }
 
         $address = "-";
         $shippingAddress = [];
-        if( !empty($delivery)) {
+        if (!empty($delivery)) {
             $address = $delivery->street . ' - ' . $delivery->number;
 
             if (!empty($delivery->complement)) {
@@ -1461,32 +1482,36 @@ class ShopifyService
             $address .= ' - ' . $delivery->neighborhood;
 
             $shippingAddress = [
-                "address1"      => $address,
-                "address2"      => "",
-                "city"          => $delivery->city ?? "-",
-                "company"       => $client->document,
-                "country"       => "Brasil",
-                "first_name"    => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
-                "last_name"     => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
-                "phone"         => $client->present()->getTelephoneShopify(),
-                "province"      => $delivery->state ?? "-",
-                "zip"           => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
-                "name"          => $client->name,
-                "country_code"  => "BR",
+                "address1" => $address,
+                "address2" => "",
+                "city" => $delivery->city ?? "-",
+                "company" => $client->document,
+                "country" => "Brasil",
+                "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
+                )->getReceiverFirstName(),
+                "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
+                )->getReceiverLastName(),
+                "phone" => $client->present()->getTelephoneShopify(),
+                "province" => $delivery->state ?? "-",
+                "zip" => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
+                "name" => $client->name,
+                "country_code" => "BR",
                 "province_code" => $delivery->state ?? "-",
             ];
         }
 
         // Endereço de Faturamento
         $billingAddress = [
-            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
-            "last_name"  => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
-            "address1"   => $address,
-            "phone"      => $client->present()->getTelephoneShopify(),
-            "city"       => $delivery->city ?? "-",
-            "province"   => $delivery->state ?? "-",
-            "country"    => "Brasil",
-            "zip"        => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
+            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
+            )->getReceiverFirstName(),
+            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
+            )->getReceiverLastName(),
+            "address1" => $address,
+            "phone" => $client->present()->getTelephoneShopify(),
+            "city" => $delivery->city ?? "-",
+            "province" => $delivery->state ?? "-",
+            "country" => "Brasil",
+            "zip" => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
         ];
 
         $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
@@ -1494,30 +1519,32 @@ class ShopifyService
             $shippingTitle = 'Free Shipping';
         } else {
             $shippingTitle = 'Standard Shipping';
-            $totalValue    += $shippingValue;
+            $totalValue += $shippingValue;
         }
         $shipping[] = [
             "custom" => true,
-            "price"  => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
-            "title"  => $shippingTitle,
+            "price" => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
+            "title" => $shippingTitle,
         ];
 
         $orderData = [
-            "accepts_marketing"       => false,
-            "currency"                => "BRL",
-            "email"                   => $client->email,
-            "phone"                   => $client->present()->getTelephoneShopify(),
-            "first_name"              => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
-            "last_name"               => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
+            "accepts_marketing" => false,
+            "currency" => "BRL",
+            "email" => $client->email,
+            "phone" => $client->present()->getTelephoneShopify(),
+            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
+            )->getReceiverFirstName(),
+            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
+            )->getReceiverLastName(),
             "buyer_accepts_marketing" => false,
-            "line_items"              => $items,
-            "shipping_address"        => $shippingAddress,
-            "billing_address"         => $billingAddress,
-            "shipping_lines"          => $shipping,
-            "note_attributes"         => [
+            "line_items" => $items,
+            "shipping_address" => $shippingAddress,
+            "billing_address" => $billingAddress,
+            "shipping_lines" => $shipping,
+            "note_attributes" => [
                 "token_cloudfox" => Hashids::encode($sale->checkout_id),
             ],
-            "total_price"             => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+            "total_price" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
         ];
 
         if ($sale->payment_method == 1 || $sale->payment_method == 3) {
@@ -1526,38 +1553,40 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
-                        "gateway"       => "cloudfox",
+                        "gateway" => "cloudfox",
                         "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                        "kind"          => "sale",
-                        "status"        => "success",
-                        "amount"        => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
-                    ],
-                ],
-            ];
-        } else if ($sale->payment_method == 2) {
-            //boleto
-
-            $orderData += [
-                "financial_status" => $sale->status == 1 ? "paid" : "pending",
-                "transactions"     => [
-                    [
-                        "gateway"       => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                        "kind"          => "sale",
-                        "status"        => $sale->status == 1 ? "success" : "pending",
-                        "amount"        => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        "kind" => "sale",
+                        "status" => "success",
+                        "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
                     ],
                 ],
             ];
         } else {
-            return null;
+            if ($sale->payment_method == 2) {
+                //boleto
+
+                $orderData += [
+                    "financial_status" => $sale->status == 1 ? "paid" : "pending",
+                    "transactions" => [
+                        [
+                            "gateway" => "cloudfox",
+                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                            "kind" => "sale",
+                            "status" => $sale->status == 1 ? "success" : "pending",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
+                ];
+            } else {
+                return null;
+            }
         }
 
         return $orderData;
     }
 
     /**
-     * @param  Sale  $sale
+     * @param Sale $sale
      * @return array
      */
     public function newOrder(Sale $sale)
@@ -1593,7 +1622,7 @@ class ShopifyService
 
             $orderData = $this->prepareOrder($sale);
 
-            if(empty($orderData)) {
+            if (empty($orderData)) {
                 return [
                     'status' => 'error',
                     'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
@@ -1668,21 +1697,21 @@ class ShopifyService
 
     /**
      * Usado para gerar order de vendas com upsell
-     * @param  int  $saleId
+     * @param int $saleId
      * @return array
      */
     public function addItemsToOrder(int $saleId)
     {
         try {
             $this->method = __METHOD__;
-            $saleModel    = new Sale();
+            $saleModel = new Sale();
 
             $firstSale = $saleModel->with(['upsells.productsPlansSale'])
                 ->find($saleId);
 
             $orderData = $this->prepareOrder($firstSale);
 
-            if(empty($orderData)) {
+            if (empty($orderData)) {
                 return [
                     'status' => 'error',
                     'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
@@ -1690,7 +1719,7 @@ class ShopifyService
             }
 
             foreach ($firstSale->upsells as $sale) {
-                $totalValue   = $sale->present()->getSubTotal();
+                $totalValue = $sale->present()->getSubTotal();
                 $firstProduct = true;
                 foreach ($sale->productsPlansSale as $productsPlanSale) {
                     $productPrice = 0;
@@ -1713,37 +1742,37 @@ class ShopifyService
                     $product = $productsPlanSale->product;
 
                     $orderData['line_items'][] = [
-                        "grams"             => 500,
-                        "id"                => $productsPlanSale->plan_id,
-                        "price"             => $productPrice,
-                        "product_id"        => $product->shopify_id,
-                        "quantity"          => $productsPlanSale->amount,
+                        "grams" => 500,
+                        "id" => $productsPlanSale->plan_id,
+                        "price" => $productPrice,
+                        "product_id" => $product->shopify_id,
+                        "quantity" => $productsPlanSale->amount,
                         "requires_shipping" => true,
-                        "sku"               => $productsPlanSale->product->sku,
-                        "title"             => $product->name,
-                        "variant_id"        => $product->shopify_variant_id,
-                        "variant_title"     => $product->description,
-                        "name"              => $product->name,
-                        "gift_card"         => false,
+                        "sku" => $productsPlanSale->product->sku,
+                        "title" => $product->name,
+                        "variant_id" => $product->shopify_variant_id,
+                        "variant_title" => $product->description,
+                        "name" => $product->name,
+                        "gift_card" => false,
                     ];
                 }
 
-                $totalValue               /= 100;
-                $orderPrice               = preg_replace("/[^0-9]/", "", $orderData['total_price']) / 100;
+                $totalValue /= 100;
+                $orderPrice = preg_replace("/[^0-9]/", "", $orderData['total_price']) / 100;
                 $orderData['total_price'] = $orderPrice + $totalValue;
                 if ($sale->payment_method == 1) {
                     $orderData['transactions'][] = [
-                        "gateway"       => "cloudfox",
+                        "gateway" => "cloudfox",
                         "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                        "kind"          => "sale",
-                        "status"        => "success",
-                        "amount"        => $totalValue,
+                        "kind" => "sale",
+                        "status" => "success",
+                        "amount" => $totalValue,
                     ];
                 }
             }
 
-            $this->sendData     = $orderData;
-            $order              = $this->getClient()->getOrderManager()->create($orderData);
+            $this->sendData = $orderData;
+            $order = $this->getClient()->getOrderManager()->create($orderData);
             $this->receivedData = $this->convertToArray($order);
 
             $oldOrderId = $firstSale->shopify_order;
@@ -1751,31 +1780,37 @@ class ShopifyService
 
             try {
                 $fulfillments = $this->getClient()->getFulfillmentManager()->findAll($oldOrderId);
-                foreach ($fulfillments as $fulfillment){
+                foreach ($fulfillments as $fulfillment) {
                     $this->getClient()->getFulfillmentManager()->cancel($oldOrderId, $fulfillment->getId());
                 }
                 $this->getClient()->getOrderManager()->cancel($oldOrderId);
                 $this->getClient()->getOrderManager()->remove($oldOrderId);
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
 
 
             $orderId = $order->getId();
 
-            $firstSale->update([
-                'shopify_order' => $orderId,
-            ]);
+            $firstSale->update(
+                [
+                    'shopify_order' => $orderId,
+                ]
+            );
 
             foreach ($firstSale->upsells as $upsell) {
                 if ($upsell->shopify_order != $oldOrderId) {
                     try {
                         $fulfillments = $this->getClient()->getFulfillmentManager()->findAll($upsell->shopify_order);
                         foreach ($fulfillments as $fulfillment) {
-                            $this->getClient()->getFulfillmentManager()->cancel($upsell->shopify_order,
-                                $fulfillment->getId());
+                            $this->getClient()->getFulfillmentManager()->cancel(
+                                $upsell->shopify_order,
+                                $fulfillment->getId()
+                            );
                         }
                         $this->getClient()->getOrderManager()->cancel($upsell->shopify_order);
                         $this->getClient()->getOrderManager()->remove($upsell->shopify_order);
-                    } catch (Exception $e) {}
+                    } catch (Exception $e) {
+                    }
                 }
 
                 $upsell->shopify_order = $orderId;

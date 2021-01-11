@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
@@ -43,7 +43,7 @@
                 @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
-                            <div class="p-2 align-items-center">
+                            <div class="p-2 d-flex justify-content-end align-items-center">
                                 <span class="o-download-cloud-1 mr-2"></span>
                                 <div class="btn-group" role="group">
                                     <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
@@ -94,7 +94,7 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right">
                             <label></label>
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top:7px">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                             </button>
                         </div>
                     </div>
@@ -243,7 +243,7 @@
                                             <br>
                                             <span id='client-telephone' class='table-title gray clear-fields'></span>
                                             <a id='client-whatsapp' target='_blank' title='Enviar mensagem pelo whatsapp'>
-                                                <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
+                                                <span style="font-size: 21px" class="o-whatsapp-1"></span>
                                             </a>
                                             <br>
                                             <span id='client-email' class="table-title gray clear-fields"> </span>

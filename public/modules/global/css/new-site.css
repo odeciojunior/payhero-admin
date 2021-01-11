@@ -3,6 +3,9 @@
 .o-add-circle-1,
 .o-add-user-1,
 .o-agenda-1,
+.o-angle-down-1,
+.o-angle-up-1,
+.o-arrow-right-1,
 .o-bank-cards-1,
 .o-bin-1,
 .o-cash-dispenser-1,
@@ -30,6 +33,8 @@
 .o-info-1,
 .o-info-help-1,
 .o-iphone-1,
+.o-lock-server-1,
+.o-locked-1,
 .o-loop-1,
 .o-money-1,
 .o-money-bag-1,
@@ -40,12 +45,22 @@
 .o-question-help-1,
 .o-reload-1,
 .o-sales-up-1,
+.o-security-shield-1,
 .o-shipping-box-1,
 .o-social-1,
 .o-speed-1,
 .o-store-1,
 .o-upload-to-cloud-1,
-.o-whatsapp-1 {
+.o-whatsapp-1,
+.o-angle-down-1,
+.o-angle-up-1,
+.o-arrow-right-1,
+.o-lock-server-1,
+.o-locked-1,
+.o-on-sale-sticker-1,
+.o-security-shield-1,
+.o-special-price-1,
+.o-discount-1 {
     font-size: 24px;
     color: #0d2c54;
     -webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);
@@ -60,6 +75,9 @@
 .o-add-circle-1:hover,
 .o-add-user-1:hover,
 .o-agenda-1:hover,
+.o-angle-down-1:hover,
+.o-angle-up-1:hover,
+.o-arrow-right-1:hover,
 .o-bank-cards-1:hover,
 .o-bin-1:hover,
 .o-cash-dispenser-1:hover,
@@ -87,6 +105,8 @@
 .o-info-1:hover,
 .o-info-help-1:hover,
 .o-iphone-1:hover,
+.o-lock-server-1:hover,
+.o-locked-1:hover,
 .o-loop-1:hover,
 .o-money-1:hover,
 .o-money-bag-1:hover,
@@ -97,12 +117,22 @@
 .o-question-help-1:hover,
 .o-reload-1:hover,
 .o-sales-up-1:hover,
+.o-security-shield-1:hover,
 .o-shipping-box-1:hover,
 .o-social-1:hover,
 .o-speed-1:hover,
 .o-store-1:hover,
 .o-upload-to-cloud-1:hover,
-.o-whatsapp-1:hover {
+.o-whatsapp-1:hover,
+.o-angle-down-1:hover,
+.o-angle-up-1:hover,
+.o-arrow-right-1:hover,
+.o-lock-server-1:hover,
+.o-locked-1:hover,
+.o-on-sale-sticker-1:hover,
+.o-security-shield-1:hover,
+.o-special-price-1:hover,
+.o-discount-1 {
     color: #2E85EC;
     transition: 0.3s;
 }
@@ -603,10 +633,6 @@ input[type=radio] {
     width: 8px !important;
 }
 
-.badge-notification-false {
-
-}
-
 .badge-pendente, .badge-pending {
     background: rgb(255, 157, 0);
 }
@@ -1031,7 +1057,7 @@ input[type=radio] {
 }
 
 #notifications_card > #notificationTemplate > a.list-group-item {
-    margin: 0;    
+    margin: 0;
     border-radius: 16px !important;
     padding: 10px;
 }
@@ -1075,6 +1101,10 @@ input[type=radio] {
     background: #79A70A;
 }
 
+.ribbon-left span {
+    background: #2466D8;;
+}
+
 .s-card-header {
     border-radius: 21px 21px 0 0 !important;
     background-color: #EFF7FF;
@@ -1082,4 +1112,9 @@ input[type=radio] {
 
 .s-card-header > h4{
     color: #002654;
+}
+
+.icon-export {
+    color: #76838f;
+    border-color: none;
 }

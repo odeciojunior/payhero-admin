@@ -2,7 +2,7 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div id="add-coupon" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-create-coupon">
             <span class="link-button-dependent red"> Adicionar Cupom </span>
-            <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+            <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>

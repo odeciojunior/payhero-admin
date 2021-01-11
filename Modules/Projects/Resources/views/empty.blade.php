@@ -5,5 +5,5 @@
     <a href="/projects/create" class="btn btn-primary">Cadastrar primeiro projeto</a>
 </div>
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
 @endpush

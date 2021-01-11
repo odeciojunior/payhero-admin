@@ -1043,7 +1043,7 @@ class ReportService
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::parse(Carbon::now()->subMonth())->addDay();
+            $dataFormated = Carbon::parse(Carbon::now()->subMonth());
             $endDate      = Carbon::parse(Carbon::now());
 
             while ($dataFormated->lessThanOrEqualTo($endDate)) {
@@ -1057,7 +1057,7 @@ class ReportService
                 }
             }
 
-            $startDate = Carbon::now()->addDay()->subMonth()->format('Y-m-d');
+            $startDate = Carbon::now()->subMonth()->format('Y-m-d');
             $endDate   = Carbon::now()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))

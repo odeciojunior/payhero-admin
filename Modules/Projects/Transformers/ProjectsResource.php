@@ -56,7 +56,7 @@ class ProjectsResource extends JsonResource
         }
         $affiliated = !empty($affiliate) ? true : false;
 
-
+        $notazzConfig = json_decode($this->notazz_configs);
 
         return [
             'id' => Hashids::encode($this->id),
@@ -82,7 +82,9 @@ class ProjectsResource extends JsonResource
             'boleto_redirect' => $this->boleto_redirect,
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
-            'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
+            // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
+            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->currency_type_enum ?? 1),
+            'update_cost_shopify' => $notazzConfig->update_cost_shopify ?? 1,
             'status' => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type' => $this->checkout_type,
             "terms_affiliates" => $this->terms_affiliates,
@@ -109,8 +111,9 @@ class ProjectsResource extends JsonResource
             'countdown_timer_time' => $this->countdown_timer_time,
             'countdown_timer_description' => $this->countdown_timer_description,
             'countdown_timer_finished_message' => $this->countdown_timer_finished_message,
-            'reviews_config_icon_type' => $this->reviews_config_icon_type,
-            'reviews_config_icon_color' => $this->reviews_config_icon_color,
+            'reviews_config_icon_type'         => $this->reviews_config_icon_type,
+            'reviews_config_icon_color'        => $this->reviews_config_icon_color,
+            'product_amount_selector'          => $this->product_amount_selector,
             'finalizing_purchase_config_toogle' => $this->finalizing_purchase_config_toogle,
             'finalizing_purchase_config_text' => $this->finalizing_purchase_config_text,
             'finalizing_purchase_config_min_value' => $this->finalizing_purchase_config_min_value,

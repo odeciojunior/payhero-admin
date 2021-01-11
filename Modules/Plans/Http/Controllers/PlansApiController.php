@@ -466,4 +466,71 @@ class PlansApiController extends Controller
 
         return $str;
     }
+
+    public function updateBulkCost(Request $request)
+    {
+        try {
+            $cost   = $request->input('cost');
+            $planId = current(Hashids::decode($request->input('plan')));
+
+            $productPlans = ProductPlan::where('plan_id', $planId)->get();
+
+            foreach ($productPlans as $productPlan) {
+                $productPlan->update(['cost' => $cost]);
+            }
+
+            return response()->json([
+                'message' => 'Custo atualizado com sucesso',
+            ], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                'message' => 'Erro ao atualizar custo do plano',
+            ], 400);
+        }
+    }
+
+    public function updateConfigCost(Request $request)
+    {
+        try {
+            $costCurrency      = $request->input('costCurrency');
+            $updateCostShopify = $request->input('updateCostShopify');
+            $updateAllCurrency = $request->input('updateAllCurrency');
+            $projectId         = current(Hashids::decode($request->input('project')));
+
+            $projectModel = new Project;
+            $project = $projectModel->find($projectId);
+            if(empty($project->notazz_configs)) {
+                $configs = [
+                    'cost_currency_type' => $projectModel->present()->getCurrencyCost($costCurrency),
+                    'update_cost_shopify' => $updateCostShopify
+                ];
+            } else {
+                $configs = json_decode($project->notazz_configs);
+                $configs->cost_currency_type = $projectModel->present()->getCurrencyCost($costCurrency);
+                $configs->update_cost_shopify = $updateCostShopify;
+            }
+
+            $project->update(['notazz_configs' => json_encode($configs)]);
+
+            if($updateAllCurrency) {
+                $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
+                $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
+                foreach ($productPlans as $productPlan) {
+                    $productPlan->update(['currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency)]);
+                }
+            }
+
+            return response()->json([
+                'message' => 'Configurações atualizadas com sucesso',
+            ], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                'message' => 'Erro ao atualizar Configurações',
+            ], 400);
+        }
+    }
 }

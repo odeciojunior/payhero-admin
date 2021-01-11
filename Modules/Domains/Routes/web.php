@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'setUserAsLogged'],
+        'middleware' => ['web', 'auth'],
 
     ],
     function() {

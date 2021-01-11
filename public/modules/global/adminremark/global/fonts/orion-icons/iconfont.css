@@ -4,12 +4,12 @@
 
   @font-face {
   font-family: "sirius-font";
-  src: url("./sirius-font.eot");
-  src: url("./sirius-font.eot?#iefix") format("embedded-opentype"),
-       url("./sirius-font.woff2") format("woff2"),
-       url("./sirius-font.woff") format("woff"),
-       url("./sirius-font.ttf") format("truetype"),
-       url("./sirius-font.svg#sirius-font") format("svg");
+  src: url("./sirius-font.eot?v=01");
+  src: url("./sirius-font.eot?v=01#iefix") format("embedded-opentype"),
+       url("./sirius-font.woff2?v=01") format("woff2"),
+       url("./sirius-font.woff?v=01") format("woff"),
+       url("./sirius-font.ttf?v=01") format("truetype"),
+       url("./sirius-font.svg?v=01#sirius-font") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -28,6 +28,9 @@
 .o-add-circle-1::before,
 .o-add-user-1::before,
 .o-agenda-1::before,
+.o-angle-down-1::before,
+.o-angle-up-1::before,
+.o-arrow-right-1::before,
 .o-bank-cards-1::before,
 .o-bin-1::before,
 .o-cash-dispenser-1::before,
@@ -43,6 +46,7 @@
 .o-copy-1::before,
 .o-credit-card-1::before,
 .o-currency-1::before,
+.o-discount-1::before,
 .o-display-1::before,
 .o-dollar-sign-1::before,
 .o-download-cloud-1::before,
@@ -55,18 +59,23 @@
 .o-info-1::before,
 .o-info-help-1::before,
 .o-iphone-1::before,
+.o-lock-server-1::before,
+.o-locked-1::before,
 .o-loop-1::before,
 .o-money-1::before,
 .o-money-bag-1::before,
 .o-new-message-1::before,
+.o-on-sale-sticker-1::before,
 .o-paper-1::before,
 .o-portfolio-grid-1::before,
 .o-question-1::before,
 .o-question-help-1::before,
 .o-reload-1::before,
 .o-sales-up-1::before,
+.o-security-shield-1::before,
 .o-shipping-box-1::before,
 .o-social-1::before,
+.o-special-price-1::before,
 .o-speed-1::before,
 .o-store-1::before,
 .o-upload-to-cloud-1::before,
@@ -89,6 +98,9 @@
 .o-add-circle-1::before { content: "\f9f6"; }
 .o-add-user-1::before { content: "\f9dc"; }
 .o-agenda-1::before { content: "\f9cd"; }
+.o-angle-down-1::before { content: "\f9fd"; }
+.o-angle-up-1::before { content: "\f9fe"; }
+.o-arrow-right-1::before { content: "\f9ff"; }
 .o-bank-cards-1::before { content: "\f9dd"; }
 .o-bin-1::before { content: "\f9ce"; }
 .o-cash-dispenser-1::before { content: "\f9de"; }
@@ -104,6 +116,7 @@
 .o-copy-1::before { content: "\f9cf"; }
 .o-credit-card-1::before { content: "\f9d0"; }
 .o-currency-1::before { content: "\f9e4"; }
+.o-discount-1::before { content: "\fa05"; }
 .o-display-1::before { content: "\f9e5"; }
 .o-dollar-sign-1::before { content: "\f9e6"; }
 .o-download-cloud-1::before { content: "\f9fb"; }
@@ -116,19 +129,25 @@
 .o-info-1::before { content: "\f9e9"; }
 .o-info-help-1::before { content: "\f9d5"; }
 .o-iphone-1::before { content: "\f9d6"; }
+.o-lock-server-1::before { content: "\fa00"; }
+.o-locked-1::before { content: "\fa01"; }
 .o-loop-1::before { content: "\f9d7"; }
 .o-money-1::before { content: "\f9ea"; }
 .o-money-bag-1::before { content: "\f9eb"; }
 .o-new-message-1::before { content: "\f9f4"; }
+.o-on-sale-sticker-1::before { content: "\fa03"; }
 .o-paper-1::before { content: "\f9d8"; }
 .o-portfolio-grid-1::before { content: "\f9ec"; }
 .o-question-1::before { content: "\f9ed"; }
 .o-question-help-1::before { content: "\f9d9"; }
 .o-reload-1::before { content: "\f9ee"; }
 .o-sales-up-1::before { content: "\f9ef"; }
+.o-security-shield-1::before { content: "\fa02"; }
 .o-shipping-box-1::before { content: "\f9f0"; }
 .o-social-1::before { content: "\f9f1"; }
+.o-special-price-1::before { content: "\fa04"; }
 .o-speed-1::before { content: "\f9f2"; }
 .o-store-1::before { content: "\f9f3"; }
 .o-upload-to-cloud-1::before { content: "\f9fc"; }
 .o-whatsapp-1::before { content: "\f9db"; }
+

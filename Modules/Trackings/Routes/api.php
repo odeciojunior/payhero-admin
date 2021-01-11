@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
     Route::get('/tracking/resume', 'TrackingsApiController@resume');
     Route::get('/tracking/blockedbalance', 'TrackingsApiController@getBlockedBalance');
     Route::post('/tracking/notify/{trackingId}', 'TrackingsApiController@notifyClient');
