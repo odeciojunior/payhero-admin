@@ -268,19 +268,8 @@ body {
     margin: 0;
     border: none;
     border-radius: 0 0 30px 30px;
-    box-shadow: 0px 3px 60px #00000036;
-}
-
-.top-alert.success {
-    /*background: rgba(7, 255, 85, 0.9);*/
-}
-
-.top-alert.warning {
-    /*background: rgba(255, 193, 7, 0.9);*/
-}
-
-.top-alert.danger {
-    /*background: rgba(255, 7, 75, 0.9);*/
+    box-shadow: 0 3px 60px #00000036;
+    max-width: 500px;
 }
 
 .top-alert-action {
@@ -307,6 +296,27 @@ body {
     padding-left: 5px;
     transition: 0.5s;
     -webkit-text-stroke: 1.45px #F41C1C;
+}
+
+.top-alert-action:hover {
+    color: #C30909 !important;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3ms;
+}
+
+.top-alert-action:hover:after {
+    color: #C30909 !important;
+    -webkit-text-stroke: 1.45px #C30909;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3ms;
 }
 
 .top-alert-message {

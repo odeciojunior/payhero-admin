@@ -56,11 +56,11 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=05') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=60') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=23') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=24') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
