@@ -25,6 +25,8 @@ class PlansResource extends JsonResource
             $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/' . $this->code;
         }
 
+        $costCurrency = (!is_null($this->project->notazz_configs)) ? json_decode($this->project->notazz_configs) : null;
+
         return [
             'id'                => Hashids::encode($this->id),
             'name'              => $this->name,
@@ -35,7 +37,7 @@ class PlansResource extends JsonResource
             'status_code'       => $this->status,
             'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
             'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
-            'currency_project'  => $this->project->cost_currency_type,
+            'currency_project'  => $costCurrency->cost_currency_type ?? 1,
         ];
     }
 }
