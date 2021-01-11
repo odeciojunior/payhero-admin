@@ -3,9 +3,9 @@ $(document).ready(function () {
      * Helper Functions
      */
 
-    loadOnAny('.page', false);
+    loadingOnScreen();
     $('.page').show();
-    loadOnAny('.page', true);
+    loadingOnScreenRemove();
 
     function verify() {
         let ver = true;

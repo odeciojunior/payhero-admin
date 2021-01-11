@@ -3,7 +3,7 @@ $(document).ready(function () {
     let typeEnum;
     getDataProducts();
     function getDataProducts() {
-        loadOnAny('.page', false);
+        loadingOnScreen();
 
         $.ajax({
             method: 'GET',
@@ -14,7 +14,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -217,7 +217,7 @@ $(document).ready(function () {
                     window.location = "/products";
                 }
 
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
             }
         });
     }
@@ -280,7 +280,7 @@ $(document).ready(function () {
         $("#bt_excluir").unbind('click');
         $("#bt_excluir").on('click', function () {
             $("#close-modal-delete").click();
-            loadOnAny('.page', false);
+            loadingOnScreen();
 
             $.ajax({
                 method: 'DELETE',
@@ -301,11 +301,11 @@ $(document).ready(function () {
 
                     return error;
                 }(function (response) {
-                    loadOnAny('.page', true);
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 }),
                 success: function success(response) {
-                    loadOnAny('.page', true);
+                    loadingOnScreenRemove();
 
                     alertCustom('success', response.message);
                     window.location = "/products";
@@ -318,7 +318,7 @@ $(document).ready(function () {
         event.preventDefault();
         var url = $(this).attr('link');
         var expirationTime = $('#url_expiration_time').val();
-        loadOnAny('.page', false);
+        loadingOnScreen();
         $.ajax({
             method: 'POST',
             url: '/api/products/getsignedurl',
@@ -329,11 +329,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response)
             },
             success: function (response) {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 window.open(response.signed_url, '_blank');
             },
         });

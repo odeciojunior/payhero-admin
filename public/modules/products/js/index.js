@@ -70,7 +70,7 @@ $(document).ready(function () {
     getProjects();
 
     function getProjects() {
-        loadOnAny('.page', false);
+        loadingOnScreen();
         $.ajax({
             method: 'GET',
             url: 'api/projects?select=true',
@@ -80,7 +80,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 if (!isEmpty(response.data)) {
@@ -95,7 +95,7 @@ $(document).ready(function () {
                     $("#div-create").hide()
                 }
 
-                loadOnAny('.page', true);
+                loadingOnScreenRemove();
             }
         });
     }
