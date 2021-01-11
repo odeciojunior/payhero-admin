@@ -281,7 +281,7 @@ $(document).ready(function () {
 
                         let cupomCode = '';
                         if (!isEmpty(value.cupom_code) || (value.cupom_code === null && false) || (value.cupom_code === '' && false)) {
-                            cupomCode = `<a data-toggle="tooltip" title="${value.cupom_code}"
+                            cupomCode = `<a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
                                                 role="button" style='margin-left: 5px;' >
                                                     <span style="color: #707070; font-size: 18px;" class="o-discount-1"></span>
                                             </a>`

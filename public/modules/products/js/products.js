@@ -185,7 +185,7 @@ $(document).ready(function () {
                         }
 
                         if (verify()) {
-                            loadingOnScreen();
+                            loadOnAny('.page', false);
                             $.ajax({
                                 method: 'POST',
                                 url: "/api/products/" + response.data.product.id,
@@ -199,12 +199,12 @@ $(document).ready(function () {
                                 },
                                 data: formData,
                                 error: function (response) {
-                                    loadingOnScreenRemove();
+                                    loadOnAny('.page', true);
 
                                     errorAjaxResponse(response);
 
                                 }, success: function (response) {
-                                    loadingOnScreenRemove();
+                                    loadOnAny('.page', true);
                                     alertCustom('success', response.message);
                                     window.location = "/products";
                                 }
