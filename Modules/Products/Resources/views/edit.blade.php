@@ -56,8 +56,8 @@
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                                 <br>.
                                             </p>
-                                            <button class="btn btn-primary btn-sm btn-view-product-url" link='' style="display:none;" title='Visualizar produto digital'>
-                                                <span class="o-eye-1"></span> Visualizar
+                                            <button class="btn btn-primary btn-sm btn-view-product-url d-flex align-items-center" link='' style="display:none;" title='Visualizar produto digital'>
+                                                <span style="-webkit-text-stroke: 0.8px #FFF" class="o-eye-1 white font-size-20 mr-2"></span> Visualizar
                                             </button>
                                         </div>
                                     </div>
