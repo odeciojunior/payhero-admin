@@ -14,7 +14,7 @@
                     <span class="link-button-dependent red"> Adicionar Plano </span>
                     <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
                 </div>
-                <div class='div-config2' style='display: none;'>
+                <div class='div-config2' style='display: ;'>
                     <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer mr-20 float-right">
                         <span class="link-button-dependent red"> Configurações Custo Plano </span>
                         <a class="ml-10 rounded-add pointer bg-secondary">

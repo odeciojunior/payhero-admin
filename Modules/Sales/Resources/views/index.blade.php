@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
@@ -269,7 +269,7 @@
                             </table>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px; margin-right:100px">
                         {{-- js carrega... --}}
                     </ul>
                 <!-- Modal detalhes da venda-->

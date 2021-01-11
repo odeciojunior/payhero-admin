@@ -503,12 +503,12 @@ class PlansApiController extends Controller
             $project = $projectModel->find($projectId);
             if(empty($project->notazz_configs)) {
                 $configs = [
-                    'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                    'cost_currency_type' => $projectModel->present()->getCurrencyCost($costCurrency),
                     'update_cost_shopify' => $updateCostShopify
                 ];
             } else {
                 $configs = json_decode($project->notazz_configs);
-                $configs->currency_type_enum = $projectModel->present()->getCurrencyCost($costCurrency);
+                $configs->cost_currency_type = $projectModel->present()->getCurrencyCost($costCurrency);
                 $configs->update_cost_shopify = $updateCostShopify;
             }
 
