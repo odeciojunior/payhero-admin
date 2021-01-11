@@ -1,9 +1,8 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
-            <!-- <i class="icon wb-info"></i> -->
-            <img  src="{{ asset('modules/global/img/svg/info-help.svg') }}" style="width: 32px">
+        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;" >
+            <span class="o-info-1" style="font-size: 24px;"></span>
         </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
@@ -11,7 +10,7 @@
         <div id="add-domain" class="d-flex align-items-center justify-content-end pointer">
             <span class="link-button-dependent red"> Adicionar domínio </span>
             <a class="ml-10 rounded-add" id='btn-add-domain'>
-                <i class="icon wb-plus" aria-hidden="true"></i></a>
+                <i class="o-add-1" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>
@@ -173,8 +172,14 @@
                 <p class="gray not-domain-none" id='description-delete-domain'> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-delete-footer modal-footer d-flex align-items-center justify-content-center">
-                <button id='btn-cancel-delete-domain' type="button" class="col-4 btn btn-gray btn-delete-modal-domain" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button id="btn-delete-domain" type="button" class="col-4 btn btn-primary btn-delete-modal-domain" style="width: 20%;">Excluir</button>
+                <button id='btn-cancel-delete-domain' type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
+                    <!-- <b><span class="o-bin-1"></span></b> -->
+                </button>
+                <button id="btn-delete-domain" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -196,7 +201,7 @@
                             <div class="d-flex align-items-center">
                                 <span> Clique em <strong>Adicionar domínio</strong></span>
                                 <a class="ml-10 rounded-add pointer">
-                                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                                    <i class="o-add-1" aria-hidden="true"></i></a>
                             </div>
                         </div>
                     </div>
@@ -258,7 +263,7 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
                         <div class="panel-body">
                             Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
-                            <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> para verificar novamente.
+                            <span class="o-eye-1"></span> para verificar novamente.
                         </div>
                     </div>
                 </div>
@@ -301,12 +306,12 @@
                             <strong>Domínio cadastrado</strong>
                         </h3>
                         <h4 align='center'>Agora falta pouco</h4>
-                        <h4 align='center'>
+                        <p align='center' style="font-size: 16px">
                             Entre onde você registrou seu dominio
                             <span id='nameHost'></span>
                             e remova os nameservers atuais, logo após você só precisa adicionar esses novos nameservers. Depois clique em
                             <strong style='color: green;'>Verificar</strong>
-                        </h4>
+                        </p>
                         <div id="table-info-dns-check" style="width:100%">
                             <table class="table table-striped">
                                 <thead></thead>
@@ -316,7 +321,7 @@
                         </div>
                         <span id='domain-hash'></span>
                         <div style='width: 100%; text-align: center; padding-top: 3%;' id='div-recheck-dns'>
-{{--                            <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>--}}
+{{--                            <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 16px;'>Verificar</button>--}}
                         </div>
                     </div>
                 </div>
@@ -338,11 +343,12 @@
                         </div>
                         <h3 align="center"><strong>Domínio ainda não registrado</strong></h3>
                         <h4 align="center">Parece que o seu dominio ainda não foi liberado</h4>
-                        <h4 align="center">Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração
+                        <p align="center" style="font-size: 16px">
+                            Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração
                             <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span>
-                        </h4>
+                        </p>
                         <div style="width:100%;text-align:center;padding-top:3%">
-                            <span class="btn btn-primary" data-dismiss="modal" style="font-size: 25px">Retornar</span>
+                            <span class="btn btn-primary" data-dismiss="modal" style="font-size: 16px">Retornar</span>
                         </div>
                     </div>
                 </div>
@@ -368,9 +374,11 @@
                         <h3 align='center'>
                             <h4 align="center">Tudo pronto já podemos começar</h4>
                         </h3>
-                        <h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>
+                        <p align="center" style='font-size: 16px;'>
+                            O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.
+                        </p>
                         <div style="width:100%;text-align:center;padding-top:3%">
-                            <span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Começar</span>
+                            <span class="btn btn-success" data-dismiss="modal" style="font-size: 16px">Começar</span>
                         </div>
                     </div>
                 </div>

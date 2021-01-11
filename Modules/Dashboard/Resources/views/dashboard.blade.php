@@ -4,10 +4,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=s0') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545?v=01') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=s0') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
     @endpush
 
     <div class="page dashboard">
@@ -38,7 +38,7 @@
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
-                                        <span class="card-desc">Recebimentos Hoje</span>
+                                        <span class="card-desc">Vendas aprovadas hoje</span>
                                     </div>
                                 </div>
                                 <div class="card-body font-size-24 d-flex align-items-topline">
@@ -91,7 +91,7 @@
                                     <div class="font-size-14 gray-600 mr-auto">
                                         <span class="card-desc">Total</span>
                                     </div>
-                                    <i class="material-icons gray" id="info-total-balance">help</i>
+                                    <i class="o-question-help-1" id="info-total-balance"></i>
                                 </div>
                                 <div class="card-body font-size-24 d-flex align-items-topline">
                                     <div class="card-text d-flex align-items-center">
@@ -129,8 +129,8 @@
                                     <div class="font-size-14 gray-600 mr-auto">
                                         <span class="card-desc">Saúde da Conta</span>
                                     </div>
-                                    <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom"
-                                       title="Taxa geral de chargeback de sua empresa">help</i>
+                                    <i class="o-question-help-1" data-toggle="tooltip" data-placement="bottom"
+                                       title="Taxa geral de chargeback de sua empresa"></i>
                                 </div>
                                 <div class="card-body pb-5">
                                     <div class="row d-flex align-items-topline align-items-center">
@@ -246,9 +246,9 @@
                                                 <div class="col-12 py-10 d-flex justify-content-between">
                                                     <b class="text-dark">Códigos de Rastreio</b>
 
-                                                    <i class="material-icons gray" data-toggle="tooltip"
+                                                    <i class="o-question-help-1" data-toggle="tooltip"
                                                        data-placement="bottom"
-                                                       title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
+                                                       title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias"></i>
                                                 </div>
                                             </div>
                                         </div>

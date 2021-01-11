@@ -3,7 +3,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'setUserAsLogged'],
+        'middleware' => ['web', 'auth'],
         'as' => 'hotzapp.'
     ],
     function() {

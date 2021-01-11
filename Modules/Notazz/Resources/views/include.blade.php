@@ -1,11 +1,11 @@
 <div class='col-md-12'>
     @if(count($projectsIntegrated) == 0)
         @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         @endpush
         <div class='row justify-content-center'>
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+                <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre seus projetos com Notazz de forma totalmente automatizada!</p>
             </div>
@@ -27,7 +27,7 @@
                                 </div>
                                 <div class='col-md-2'>
                                     <a role='button' class='delete-integration pointer float-right mt-35' project='{{\Hashids::encode($project->id)}}' data-toggle='modal' data-target='#modal-delete' type='a'>
-                                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
+                                        <span class='orion-icon-lixo'></span></a>
                                 </div>
                             </div>
                         </div>

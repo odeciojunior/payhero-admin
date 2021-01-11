@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
     <style>
         .popover {
@@ -88,8 +88,6 @@
                                             <span aria-hidden="true">×</span>
                                         </button>
                                     </div>
-
-
                                     <h5 class="title-pad"> Nova transferência </h5>
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
@@ -116,11 +114,11 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
-                                                <!--                                                <div class='input-group-prepend'>
-                                                                                                        <span class="input-group-text custom-addon" id="basic-addon1"
-                                                                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                                                                    class="currency">$</span></span>
-                                                                                                </div>-->
+<!--                                                <div class='input-group-prepend'>
+                                                        <span class="input-group-text custom-addon" id="basic-addon1"
+                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
+                                                                    class="currency">$</span></span>
+                                                </div>-->
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"
@@ -131,12 +129,7 @@
                                         <div class="col-sm-3 pt-1">
                                             <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
                                                     data-toggle="modal" disabled>
-                                                <svg class="mr-2" style="fill: white; vertical-align: middle;"
-                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                     viewBox="0 0 24 24">
-                                                    <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
-                                                </svg>
+                                                <span style="-webkit-text-stroke: 1.45px #FFF;" class="o-checkmark-1 white font-size-16"></span>
                                                 Sacar dinheiro
                                             </button>
                                         </div>
@@ -200,10 +193,10 @@
                         </div>
                         {{--EXTRATO--}}
                         <div
-                                class="tab-pane"
-                                id="nav-statement"
-                                role="tabpanel"
-                                aria-labelledby="nav-statement-tab">
+                             class="tab-pane"
+                             id="nav-statement"
+                             role="tabpanel"
+                             aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-start align-items-center">
                                 <div class="col-12 fix-5">
                                     <div class="d-flex align-items-center">
@@ -299,10 +292,11 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="statement_sale">
-                                                    Transação <i class="material-icons gray ml-5 font-size-18"
+                                                    Transação <i style="font-weight: normal"
+                                                                 class="o-question-help-1 ml-5 font-size-14"
                                                                  data-toggle="tooltip"
                                                                  title=""
-                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">help</i>
+                                                                 data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data"></i>
                                                 </label>
                                                 <input name="statement_sale" id="statement_sale"
                                                        class="select-pad" placeholder="Transação">
@@ -311,7 +305,7 @@
                                         <div class="mt-30 col-md-4" style="text-align:right">
                                             <button id="bt_filtro_statement"
                                                     class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                             </button>
                                         </div>
                                     </div>
@@ -324,10 +318,11 @@
                                             <th scope="col" class="headCenter" style="width:30%">Razão</th>
                                             <th scope="col" class="headCenter" style="width:30%">Status</th>
                                             <th scope="col" class="headCenter" style="width:30%">Data prevista
-                                                <i class="material-icons gray ml-5 font-size-18"
+                                                <i style="font-weight: normal"
+                                                   class="o-question-help-1 ml-5 font-size-14"
                                                    data-toggle="tooltip"
                                                    title=""
-                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">help</i>
+                                                   data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
                                             </th>
                                             <th scope="col" class="headCenter" style="width:10%">Valor</th>
                                         </tr>
@@ -414,7 +409,7 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=213')}}">
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=2123')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>

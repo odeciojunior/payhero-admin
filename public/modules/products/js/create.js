@@ -83,7 +83,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         if (verify()) {
-            loadingOnScreen();
+            loadOnAny('.page', false);
             let myForm = document.getElementById('my-form-add-product');
             let formData = new FormData(myForm);
             if ($('#physical').is(':checked')) {
@@ -104,12 +104,12 @@ $(document).ready(function () {
                 },
                 data: formData,
                 error: function (response) {
-                    loadingOnScreenRemove();
+                    loadOnAny('.page', true);
 
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    loadingOnScreenRemove();
+                    loadOnAny('.page', true);
 
                     alertCustom('success', response.message);
                     window.location = "/products";

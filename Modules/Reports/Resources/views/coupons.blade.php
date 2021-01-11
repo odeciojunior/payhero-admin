@@ -5,7 +5,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
     @endpush
 
         <div class="page">
@@ -50,7 +50,7 @@
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label> </label>
                                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                             </button>
                                         </div>
                                         <div class="col-2">
@@ -63,7 +63,7 @@
                         <div class="col-lg-12">
                             <div class="card shadow" style="min-height: 300px;">
                                 <div class="data-holder">
-                                    <table class="table-coupons table table-striped" style="width:100%;margin: auto; margin-top:15px;">
+                                    <table class="table-coupons table table-striped" style="width:100%;margin: auto;">
                                         <thead>
                                         <tr>
                                             <th>Código cupom</th>

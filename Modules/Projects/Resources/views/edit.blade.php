@@ -1,3 +1,7 @@
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css') }}">
+@endpush
+
 <div class='card shadow p-30'>
     <form id='update-project'>
         @method('PUT')
@@ -312,7 +316,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class='form-group col-md-6 col-sm-12'>
+{{--                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="cost_currency_type">Moeda padrão de custo</label>
                                 <select name='cost_currency_type' class='form-control select-pad'
                                         id="cost_currency_type">
@@ -323,6 +327,19 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para
                                     a configuração dos seus planos. Configuração utilizada para emissão de notas
                                     fiscais.
+                                </p>
+                            </div> --}}
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="document_type_checkout">Aceitar compras de</label>
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
+                                    <option value='1'>CPF</option>
+                                    <option value='2'>CNPJ</option>
+                                    <option value='3'>CPF/CNPJ</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito no checkout.
                                 </p>
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
@@ -469,20 +486,6 @@
                                     não a informar email para finalizar a compra no checkout.
                                 </p>
                             </div>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad'
-                                        id="document_type_checkout">
-                                    <option value='1'>CPF</option>
-                                    <option value='2'>CNPJ</option>
-                                    <option value='3'>CPF/CNPJ</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
-                                    aceito
-                                    no checkout.
-                                </p>
-                            </div>
                         </div>
                         <div class='row'>
                             <div class='col-12 col-6'>
@@ -593,8 +596,65 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class='col-12 '>
+                                <div class="switch-holder">
+                                    <label for='finalizing_purchase_config'
+                                           style='margin-right:15px;margin-bottom: 3px'>Mostrar pessoas finalizando
+                                        compra no checkout</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="finalizing_purchase_config"
+                                               name="finalizing_purchase_config_toogle" class='check'
+                                               value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p class='info pt-5' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        Ao habilitar esta função, será exibido um texto com a quantidade de pessoas que
+                                        estão finalizando uma compra na última hora.
+                                    </p>
+
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <label for='finalizing_purchase_config_text'
+                                       class="finalizing_purchase_config d-none"
+                                       style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
+
+                                <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text"
+                                       class='form-control select-pad finalizing_purchase_config d-none '>
+
+                                <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                    Mensagem que será exibida no checkout. Número de visitantes = {visitantes}.
+                                </p>
+
+                                <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
+                            </div>
+                            <div class='col-6 finalizing_purchase_config d-none'>
+                                <div class="switch-holder">
+                                    <label for='finalizing_purchase_config_min_value'
+                                           style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para
+                                        mensagem ser exibida</label>
+
+                                    <input class="form-control"
+                                           id="finalizing_purchase_config_min_value"
+                                           name="finalizing_purchase_config_min_value" data-mask="000"
+                                           min='1'
+                                           type='text' placeholder='1' maxlength='4' class="form-control">
+
+
+                                    <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        A mensagem só será exibida se o número de visitantes for maior que o informado.
+                                    </p>
+
+                                    <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <hr>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
                     <div class='row justify-content-center mx-20 mt-30'>
@@ -602,7 +662,7 @@
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <i class="o-reload-1 font-size-16"></i>
                                 <span class="gray"></span>
                             </a>
                             <div id="shopify-integration-pending" style="display:none">
@@ -614,7 +674,7 @@
                             <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1 font-size-16"></span>
                                 <span class="gray"> Sincronizar produtos com shopify </span>
                             </a>
                         </div>
@@ -623,7 +683,7 @@
                                integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
                                data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1 font-size-16"></span>
                                 <span class="gray"> Sincronizar template com shopify </span>
                             </a>
                         </div>
@@ -644,7 +704,7 @@
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-verify-permissions" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1 font-size-16"></span>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
                         </div>
@@ -653,7 +713,7 @@
                                 <div class="gray mb-5">Skip to cart</div>
                                 <label class="switch">
                                     <input id="skiptocart-input" type="checkbox" value="0" class="check">
-                                    <span class="slider gray round"></span>
+                                    <span class="slider round"></span>
                                 </label>
                             </div>
                         </div>
@@ -662,7 +722,7 @@
                         <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
                             <a id="bt-shopify-sync-trackings" role="button" integration-status=""
                                class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
+                                <span class="o-reload-1 font-size-16"></span>
                                 <span class="gray"> Sincronizar códigos de rastreio</span>
                             </a>
                         </div>
@@ -765,7 +825,7 @@
                 <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal"
                        data-target="#modal-delete-project" style="float: left;">
-                        <img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'>
+                        <span class='orion-icon-lixo'></span>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
@@ -795,10 +855,12 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar
+                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b>Cancelar</b>
                     </button>
-                    <button type="button" class="col-4 btn btn-primary btn-delete" data-dismiss="modal"
-                            style="width: 20%;">Excluir
+                    <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b class="mr-2">Excluir </b>
+                        <span class="o-bin-1"></span>
                     </button>
                 </div>
             </div>

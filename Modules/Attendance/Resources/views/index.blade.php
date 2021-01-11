@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=s0') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545?v=01') }}">
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-12 col-md-3 col-lg-3 mt-25">
                                     <button id="btn-filter" class="btn btn-primary w-full">
-                                        <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                     </button>
                                 </div>
                             </div>

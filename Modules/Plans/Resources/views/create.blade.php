@@ -66,8 +66,9 @@
                         {{--                        </div>--}}
                         <div class='col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                             {{--                            <label class="display-xsm-none">Remover:</label>--}}
-                            <button class='btn btn-outline btn-primary btnDelete form-control'>
-                                <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i>
+                            <button class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                <b>Remover </b>
+                                <span class="o-bin-1"></span>
                             </button>
                         </div>
                         <hr class='mb-30 display-lg-none display-xlg-none'>

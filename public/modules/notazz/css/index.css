@@ -63,3 +63,11 @@ input:checked + .slider:before {
 .badge-approved {
     background: #44A44B;
 }
+
+.o-arrow-right-1 {
+    font-size: 30px
+}
+
+.o-arrow-right-1::before {
+    transform: rotate(180deg);
+}

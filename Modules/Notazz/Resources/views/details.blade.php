@@ -115,8 +115,7 @@
                         <br>
                         <span id="client-telephone" class='table-title gray'></span>
                         <a id="client-whatsapp" href="#" target='_blank'>
-                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px"
-                                 title='Enviar mensagem pelo whatsapp'>
+                            <span class="o-whatsapp-1"></span>
                         </a>
                         <br>
                         <span id="client-email" class="table-title gray"></span>
@@ -158,14 +157,14 @@
                             <span id="boleto-link" class="table-title gray">
                                 Link para o boleto:
                                 <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                    <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
                                 </a>
                             </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                                 <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                    title='Copiar link'>
-                                    <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
                                 </a>
                             </span>
                             <br>

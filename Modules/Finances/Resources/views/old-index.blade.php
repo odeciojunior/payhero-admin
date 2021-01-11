@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s0') }}">
     <style>
         .popover {
@@ -27,11 +27,7 @@
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
                         <div class="p-2 align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
-                                 viewBox="0 0 24 24">
-                                <path
-                                        d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
-                            </svg>
+                            <span class="o-download-cloud-1 mr-2"></span>
                             <div class="btn-group" role="group">
                                 <button id="bt_get_xls" type="button"
                                         class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
@@ -50,7 +46,7 @@
             <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
                  style="display:none;">
                 <div class="d-flex">
-                    <i class="material-icons mr-10">info</i>
+                    <span class="o-info-help-1"></span>
                     <div class="w-full">
                         <strong class="font-size-16">Exportando seu relatório</strong>
                         <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
@@ -150,12 +146,7 @@
                                         <div class="col-sm-3 pt-1">
                                             <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
                                                     data-toggle="modal" disabled>
-                                                <svg class="mr-2" style="fill: white; vertical-align: middle;"
-                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                     viewBox="0 0 24 24">
-                                                    <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
-                                                </svg>
+                                                <span style="-webkit-text-stroke: 1.45px #FFF;" class="o-checkmark-1 white font-size-16"></span>
                                                 Sacar dinheiro
                                             </button>
                                         </div>
@@ -294,7 +285,7 @@
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
                                             <button id="bt_filtro" class="btn btn-primary w-full">
-                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                             </button>
                                         </div>
                                     </div>

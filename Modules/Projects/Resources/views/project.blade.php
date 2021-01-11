@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=01') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <style>
@@ -174,8 +174,7 @@
                                 </div>
                                 <div class="modal-body text-center p-20">
                                     <div class="d-flex justify-content-center">
-                                        <i class="material-icons gradient"
-                                           style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
+                                        <span class="o-reload-1"></span>
                                     </div>
                                     <h3 class="black" id="modal-change-shopify-integration-title"> Você tem
                                         certeza? </h3>

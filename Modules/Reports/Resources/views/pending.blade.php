@@ -5,8 +5,8 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
     @endpush
 
     <div class="page">
@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex align-items-center pt-md-20 pt-10">
                                         <button id="bt_filtro" class="btn btn-primary col">
-                                            <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                         </button>
                                     </div>
                                 </div>
@@ -147,6 +147,7 @@
                                         <th class="table-title display-sm-none display-m-none display-lg-none">Data</th>
                                         <th class="table-title">Pagamento</th>
                                         <th class="table-title">Comissão</th>
+                                        <th class="table-title"></th>
                                     </tr>
                                     </thead>
                                     <tbody id="body-table-pending">

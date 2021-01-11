@@ -243,7 +243,7 @@ $(function () {
                             // }
                             data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
 
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
 
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
@@ -253,14 +253,14 @@ $(function () {
                                 data += '<td class="text-center" ></td>';
                             }
                             data += '<td style="text-align:center">';
-                            data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>';
+                            data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
 
                             if (value.plan_name == '' && value.link != null) {
-                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>';
-                                data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><img src="/modules/global/img/svg/sirius-lixo.svg" style="width: 24px"></a>';
+                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-edit-1"></span></a>';
+                                data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-bin-1"></span></a>';
                             } else {
-                                data += '<a title="Editar" class="mg-responsive pointer disabled"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>';
-                                data += '<a title="Excluir" class="mg-responsive pointer disabled"><img src="/modules/global/img/svg/sirius-lixo.svg" style="width: 24px"></a>';
+                                data += '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
+                                data += '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
                             }
                             data += '</td>';
                             data += '</tr>';

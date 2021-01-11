@@ -45,7 +45,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        if(env('APP_ENV') == 'production') {
+        if((env('APP_ENV') == 'production') || (env('APP_ENV') == 'homolog'))  {
 
             if(auth()->user()){
                 $this->redirectTo();

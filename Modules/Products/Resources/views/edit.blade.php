@@ -56,8 +56,8 @@
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                                 <br>.
                                             </p>
-                                            <button class="btn btn-primary btn-sm btn-view-product-url" link='' style="display:none;" title='Visualizar produto digital'>
-                                                <img src="/modules/global/img/svg/eye.svg" style="width: 24px"> Visualizar
+                                            <button class="btn btn-primary btn-sm btn-view-product-url d-flex align-items-center" link='' style="display:none;" title='Visualizar produto digital'>
+                                                <span style="-webkit-text-stroke: 0.8px #FFF" class="o-eye-1 white font-size-20 mr-2"></span> Visualizar
                                             </button>
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
                                             <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
                                                 <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
                                                 <div class="d-flex input-group">
-                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#">
+                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='5' data-mask="0#">
                                                 </div>
                                             </div>
                                             {{--                                            <div class="form-group col-lg-4">--}}
@@ -111,7 +111,7 @@
                                             {{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
                                             {{--                                            </div>--}}
                                             <div id="div_next_step" class="form-group col-lg-12 justify-content-between mt-10">
-                                                <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
+                                                <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i style="-webkit-text-stroke: 1.45px #FFF;" class="o-arrow-right-1 font-size-16 ml-2" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
@@ -120,8 +120,8 @@
                                         </div>
                                     </div>
                                     <div class='col-lg-12'>
-                                        <a style='display:none;' class="btn btn-primary delete-product white float-right" productname='' product="" data-toggle="modal" data-target="#modal-delete">
-                                            <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
+                                        <a style='display:none;' class="btn btn-primary delete-product white float-right d-flex align-items-center" productname='' product="" data-toggle="modal" data-target="#modal-delete">
+                                            <i class="o-bin-1 align-middle mr-5 white" aria-hidden="true"></i> Excluir produto
                                         </a>
                                     </div>
                                 </div>
@@ -187,9 +187,14 @@
                             <h3 class="black"> Você tem certeza? </h3>
                             <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                         </div>
-                        <div class="modal-footer  align-items-center justify-content-center">
-                            <button id='bt_cancelar' type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                            <button id="bt_excluir" type="button" class="btn btn-primary" style="width: 20%;">Excluir</button>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <button id="bt_cancelar" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                                <b>Cancelar</b>
+                            </button>
+                            <button id="bt_excluir" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                                <b class="mr-2">Excluir </b>
+                                <span class="o-bin-1"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -215,7 +220,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=s02') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=04') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

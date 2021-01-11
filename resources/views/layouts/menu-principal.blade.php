@@ -40,24 +40,18 @@
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 @if(!auth()->user()->hasRole('attendance'))
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
-                          aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                        <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
-                        <span class="badge badge-primary badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
-                    </span>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
-                            <div class="dropdown-menu-header" style='padding:0px 20px;'>
-                                <h6><strong>NOTIFICAÇÕES</strong></h6>
-                            </div>
-                            <div class="list-group scrollable scrollable-vertical" style="position: relative;">
-                                <div class="scrollable-container" style="min-height: 250px; width: 358px;">
-                                    <div id='notificationTemplate' class="scrollable-content"
-                                         style="width: 358px; height:100%">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown-menu-footer"
-                                 style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
+                        <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
+                            aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
+                            <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
+
+                            @if( count(auth()->user()->unreadNotifications) > 0)
+                                <span class="badge badge-notification" id="notification-amount"></span>
+                            @else
+                                <span class="badge badge-notification-false" id="notification-amount"></span>
+                            @endif
+                        </span>
+                        <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
+                            <div id='notificationTemplate' class="scrollable-content">
                             </div>
                         </div>
                     </li>
@@ -114,7 +108,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
-                    <img class="svg-menu" src="{{ asset('modules/global/img/svg/dashboard.svg') }}" alt="Dashboard">
+                    <span class="bg-menu">
+                        <img class="svg-menu" src="{{ asset('modules/global/img/svg/dashboard.svg') }}" alt="Dashboard">
+                    </span>
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
             </li>
@@ -122,7 +118,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub disabled">
                 <a class="disabled" href="{{ route('showcase') }}">
-                    <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">
+                    </span>
                     <span class="site-menu-title">Vitrine (em breve)</span>
                 </a>
             </li>
@@ -130,28 +128,34 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
-                    <img src="{{ asset('modules/global/img/svg/vendas.svg') }}" alt="Vendas">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/vendas.svg') }}" alt="Vendas">
+                    </span>
                     <span class="site-menu-title">Vendas</span>
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
                     <li class="site-menu-item">
                         <a href="{!! route('sales.index') !!}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Visão geral</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('recovery.index') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Recuperação</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('antifraud.index') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Antifraude</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Rastreamentos</span>
                         </a>
                     </li>
@@ -161,7 +165,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
-                    <img src="{{ asset('modules/global/img/svg/projetos.svg') }}" alt="Projetos">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/projetos.svg') }}" alt="Projetos">
+                    </span>
                     <span class="site-menu-title">Projetos</span>
                 </a>
             </li>
@@ -169,7 +175,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('products.index') }}" id="products-link">
-                    <img src="{{ asset('modules/global/img/svg/produtos.svg') }}" alt="Produtos">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/produtos.svg') }}" alt="Produtos">
+                    </span>
                     <span class="site-menu-title">Produtos</span>
                 </a>
             </li>
@@ -177,7 +185,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
-                    <img src="{{ asset('modules/global/img/svg/atendimento.svg') }}" alt="Atendimento">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/atendimento.svg') }}" alt="Atendimento">
+                    </span>
                     <span class="site-menu-title">Atendimento</span>
                 </a>
             </li>
@@ -186,25 +196,31 @@
             @if(!auth()->user()->has_sale_before_getnet)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
-                        <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        <span class="bg-menu">
+                            <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        </span>
                         <span class="site-menu-title">Finanças</span>
                     </a>
                 </li>
             @else
                 <li class="site-menu-item has-sub">
                     <a href="javascript:void(0)" id="finances-link">
-                        <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        <span class="bg-menu">
+                            <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        </span>
                         <span class="site-menu-title">Finanças</span>
                         <span class="site-menu-arrow"></span>
                     </a>
                     <ul class="site-menu-sub">
                         <li class="site-menu-item has-sub">
                             <a href="{!! route('finances') !!}">
+                                <span class="bg-menu"></span>
                                 <span class="site-menu-title">Extrato</span>
                             </a>
                         </li>
                         <li class="site-menu-item">
                             <a href="{{ route('old-finances') }}">
+                                <span class="bg-menu"></span>
                                 <span class="site-menu-title">Extrato (antigo)</span>
                             </a>
                         </li>
@@ -215,34 +231,41 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
-                    <img src="{{ asset('modules/global/img/svg/relatorios.svg') }}" alt="Relatórios">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/relatorios.svg') }}" alt="Relatórios">
+                    </span>
                     <span class="site-menu-title">Relatórios</span>
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
                     <li class="site-menu-item has-sub">
                         <a href="{!! route('reports.index') !!}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Vendas</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('reports.checkouts') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Acessos</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('reports.coupons') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Cupons de desconto</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('reports.pending') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Saldo pendente</span>
                         </a>
                     </li>
 
                     <li class="site-menu-item">
                         <a href="{{ route('reports.blockedbalance') }}">
+                            <span class="bg-menu"></span>
                             <span class="site-menu-title">Saldo bloqueado</span>
                         </a>
                     </li>
@@ -252,7 +275,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
-                    <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+                    </span>
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
             </li>
@@ -260,7 +285,9 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('apps') }}" id='apps-link'>
-                    <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+                    </span>
                     <span class="site-menu-title">Aplicativos</span>
                 </a>
             </li>
@@ -268,7 +295,9 @@
         @if(auth()->user()->hasRole('account_owner'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
-                    <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
+                    </span>
                     <span class="site-menu-title">Convites</span>
                 </a>
             </li>

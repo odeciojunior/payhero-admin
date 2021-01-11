@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
@@ -36,7 +36,7 @@
                         <input id="refund-observation" type="email" name="refund_observation"
                                class="detail-input mr-2 table-title gray fake-label"
                                readonly>
-                        <a class="pointer btn-edit-observation"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                        <a class="pointer btn-edit-observation"><span class="o-edit-1"></span></a>
                         <a class="pointer btn-save-observation" style="display:none;">
                             <i class="material-icons font-size-18">save</i></a>
                         <a class="pointer btn-close-observation ml-2" style="display:none;">
@@ -225,7 +225,7 @@
                             <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
                             <input id="client-telephone" name="client-telephone"
                                    class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">
@@ -235,7 +235,7 @@
                             <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
                             <input id="client-email" type="email" name="client-email"
                                    class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
+                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i></a>
                             <a class="pointer btn-close-client ml-2" style="display:none;">
@@ -245,10 +245,7 @@
                         <div class="mt-15 mb-5">
                             <a class="pointer label d-inline-flex align-items-center pl-3" id="client-whatsapp"
                                target='_blank'>
-                                <svg fill="#76838f" width="20px" height="20px" viewBox="0 0 24 24"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="m2.574933,21.77839c0.301362,-1.165794 0.56307,-2.157115 0.578931,-2.212629c0.023792,-0.055514 -0.150681,-0.333084 -0.372737,-0.610654c-1.157863,-1.451294 -2.006434,-3.402214 -2.315726,-5.329342c-0.13482,-0.84064 -0.158611,-2.743977 -0.031722,-3.552895c0.753404,-5.004188 4.647313,-8.993264 9.619779,-9.849766c0.927876,-0.158611 2.973963,-0.158611 3.90184,0c5.012119,0.864432 8.906028,4.88523 9.63564,9.937002c0.118959,0.872362 0.047583,3.188088 -0.126889,3.981145c-0.491695,2.204698 -1.475086,4.068381 -2.973963,5.654495c-1.990573,2.101601 -4.568007,3.35463 -7.478526,3.6322c-2.054017,0.190334 -4.353882,-0.245848 -6.162051,-1.157863l-0.364806,-0.182403l-2.133323,0.904085c-1.181655,0.491695 -2.180906,0.904085 -2.23642,0.904085c-0.055514,0 0.118959,-0.793057 0.459973,-2.117462zm14.354328,-3.481519c1.015113,-0.301362 1.824031,-0.919946 2.133323,-1.641628c0.150681,-0.348945 0.174472,-0.499626 0.13482,-0.999252c-0.039653,-0.499626 -0.079306,-0.618584 -0.229986,-0.737543c-0.253778,-0.198264 -2.149184,-1.126141 -2.664671,-1.300613c-0.523417,-0.182403 -0.682029,-0.111028 -1.189585,0.523417c-0.816849,1.030974 -0.97546,1.189585 -1.173724,1.189585c-0.610654,0 -2.490198,-1.189585 -3.544964,-2.252281c-0.753404,-0.745473 -1.720933,-2.022295 -1.720933,-2.268142c0,-0.071375 0.095167,-0.261709 0.222056,-0.41239c0.808918,-1.054766 0.967529,-1.292683 0.967529,-1.467155c0,-0.396528 -1.094418,-3.029477 -1.403711,-3.370491c-0.182403,-0.198264 -1.205446,-0.198264 -1.649558,0.007931c-0.364806,0.166542 -0.912015,0.729612 -1.134071,1.173724c-0.682029,1.348197 -0.602723,2.743977 0.237917,4.417326c2.141253,4.250785 7.978152,8.033665 11.015559,7.137511z"/>
-                                </svg>
+                                <span class="o-whatsapp-1"></span>
                                 <b class="ml-2">Mensagem no Whatsapp</b>
                             </a>
                         </div>
@@ -296,14 +293,14 @@
                         <div id="details-boleto" style="display:none">
                         <span id="boleto-link" class="table-title gray">Link para o boleto:
                             <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
                         </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
                             <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
                                title='Copiar link'>
-                                <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
                         </span>
                             <br>
@@ -321,7 +318,7 @@
                         <span id="thank-page-url" class="table-title gray" style="display:none"></span>
                         <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;"
                            link="" title="Copiar link">
-                            <img src="/modules/global/img/svg/copy.svg" style="width: 24px">
+                            <span class="material-icons icon-copy-1"> content_copy </span>
                         </a>
                         <br>
                         <h4> Conversão </h4>

@@ -243,13 +243,13 @@ $(function () {
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
                             data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="vertical-align: middle;cursor:pointer;" link="' + value.code + '">' + value.code + '</td>';
-                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"> <img src="/modules/global/img/svg/copy.svg" style="width: 24px"> </a></td>';
+                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
                             data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
                             data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                             data += "<td style='text-align:center' class='mg-responsive'>"
-                            data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'></a>"
-                            data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>"
-                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>";
+                            data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'><span class='o-eye-1'></span></a>"
+                            data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><span class='o-edit-1'></span></a>"
+                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><span class='o-bin-1'></span></a>";
                             data += "</td>";
                             data += '</tr>';
                             $("#data-table-plan").append(data);
@@ -388,8 +388,10 @@ $(function () {
 
                                                 <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                                                    <!--<label class="display-xsm-none">Remover:</label>-->
-                                                   <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                        <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i></button>
+
+                                                   <button class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                                        <b>Remover </b>
+                                                        <span class="o-bin-1"></span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -810,6 +812,165 @@ $(function () {
         if (e.keyCode == 13) {
             index();
         }
+    });
+
+    $(document).on('click', '#config-cost-plan', function (event) {
+        event.preventDefault();
+        loadingOnScreen();
+
+        $('#add_cost_on_plans').select2({
+            placeholder: 'Nome do plano',
+            multiple: false,
+            dropdownParent: $('#modal_config_cost_plan'),
+            language: {
+                noResults: function () {
+                    return 'Nenhum plano encontrado';
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return 'Carregando mais planos...';
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'plan',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1
+                    };
+                },
+                method: "GET",
+                url: "/api/plans/user-plans",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    let elemId = this.$element.attr('id');
+
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
+            }
+        });
+
+        $('#modal_config_cost_plan').modal('show');
+
+        $.ajax({
+            method: "GET",
+            url: '/api/projects/' + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error() {
+                errorAjaxResponse(response);
+
+                loadingOnScreenRemove()
+            }, success: function success(response) {
+                if(response.data.shopify_id == null) {
+                    $('#tab_update_cost_block').prop('disabled', true);
+                } else {
+                    $('#tab_update_cost_block').prop('disabled', false);
+                }
+                var indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
+                $('#cost_currency_type').prop('selectedIndex', indexCurrency);
+                $('#update_cost_shopify').prop('selectedIndex',response.data.update_cost_shopify);
+            },
+        });
+    });
+
+    $(document).on('click', '.bt-update-cost-block', function (event) {
+
+        loadingOnScreen();
+        console.log($('#add_cost_on_plans').val());
+        $.ajax({
+            method: "POST",
+            url: '/api/plans/update-bulk-cost',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                plan: $('#add_cost_on_plans').val(),
+                cost: $('#cost_plan').val(),
+            },
+            error: function (_error4) {
+                function error(_x4) {
+                    return _error4.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error4.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            }),
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Configuração atualizada com sucesso");
+            }
+        });
+
+    });
+
+    $(document).on('click', '.bt-update-cost-configs', function (event) {
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/plans/update-config-cost',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project: projectId,
+                costCurrency: $('#cost_currency_type').val(),
+                updateCostShopify: $('#update_cost_shopify').val(),
+                updateAllCurrency: $('#update_all_currency_cost').val(),
+            },
+            error: function (_error4) {
+                function error(_x4) {
+                    return _error4.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error4.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            }),
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Configuração atualizada com sucesso");
+                // index(pageCurrent);
+            }
+        });
+
+    });
+
+    $(document).on('change', '#cost_currency_type', function (event) {
+        $('#div_update_cost_shopify').show();
     });
 })
 ;

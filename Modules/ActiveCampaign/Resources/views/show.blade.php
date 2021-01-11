@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="modal-body text-center p-20">
                                     <div class="d-flex justify-content-center">
-                                        <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
+                                        <span class="o-reload-1"></span>
                                     </div>
                                     <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
                                     <p class="gray" id="modal-change-shopify-integration-text"></p>

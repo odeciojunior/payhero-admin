@@ -50,6 +50,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $reviews_config_icon_type
  * @property string $reviews_config_icon_color
  * @property bool $product_amount_selector
+ * @property json $notazz_configs
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $checkouts
@@ -70,6 +71,24 @@ class Project extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
 
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
     /**
      * @var string
      */
@@ -133,28 +152,12 @@ class Project extends Model
         'reviews_config_icon_type',
         'reviews_config_icon_color',
         'product_amount_selector',
+        'finalizing_purchase_configs',
+        'notazz_configs',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
     /**
      * @param Activity $activity
@@ -323,5 +326,46 @@ class Project extends Model
     public function reviews()
     {
         return $this->hasMany(ProjectReviews::class);
+    }
+
+    public function getFinalizingPurchaseConfigToogleAttribute()
+    {
+
+        if (empty($this->finalizing_purchase_configs))
+            return 0;
+
+        $json_decode = json_decode($this->finalizing_purchase_configs, true);
+
+        if (isset($json_decode['toogle']))
+            return $json_decode['toogle'];
+
+        return 0;
+    }
+
+    public function getFinalizingPurchaseConfigTextAttribute()
+    {
+
+        if (empty($this->finalizing_purchase_configs))
+            return null;
+
+        $json_decode = json_decode($this->finalizing_purchase_configs, true);
+
+        if (isset($json_decode['text']))
+            return $json_decode['text'];
+
+        return null;
+    }
+
+    public function getFinalizingPurchaseConfigMinValueAttribute()
+    {
+        if (empty($this->finalizing_purchase_configs))
+            return null;
+
+        $json_decode = json_decode($this->finalizing_purchase_configs, true);
+
+        if (isset($json_decode['min_value']))
+            return $json_decode['min_value'];
+
+        return null;
     }
 }

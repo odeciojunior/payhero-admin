@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
 @endpush
 @section('content')
     <div id='project-content'>
@@ -14,7 +14,7 @@
                     <div class="col text-right" id="integration-actions" style="display:none">
                         <a id='btn-add-integration' class="btn btn-floating btn-primary"
                            style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
-                            <i class="icon wb-plus" aria-hidden="true"></i>
+                            <i class="o-add-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
             @include('projects::empty')
             <div id="no-integration-found" class='row justify-content-center' style="display:none">
                 <div class="content-error text-center">
-                    <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
                     <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                     <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
                 </div>

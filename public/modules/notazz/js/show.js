@@ -208,7 +208,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none display-m-none'>${value.updated_date}</td>
                                     <td class='display-sm-none'>${value.value}</td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' sale="${value.sale_code}"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
+                                        <a role='button' class='detalhes_venda pointer' sale="${value.sale_code}"><span class="o-eye-1"></span></button></a>
                                     </td>
                                 </tr>`;
 

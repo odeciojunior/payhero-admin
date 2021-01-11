@@ -114,9 +114,9 @@ $(function () {
                         data += '</td>';
 
                         data += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><img src='/modules/global/img/svg/eye.svg' style='width: 24px'> </a>" +
-                            "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><img src='/modules/global/img/svg/edit.svg' style='width: 24px'></a>" +
-                            "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'> </a>"
+                            "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><span class='o-eye-1'></span> </a>" +
+                            "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><span class='o-edit-1'></span></a>" +
+                            "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><span class='orion-icon-lixo'></span> </a>"
                         "</td>";
 
                         data += '</tr>';

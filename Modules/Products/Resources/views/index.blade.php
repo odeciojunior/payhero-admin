@@ -1,5 +1,9 @@
 @extends("layouts.master")
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=01') }}">
+@endpush
+
 @section('content')
 
     <!-- Page -->
@@ -12,7 +16,7 @@
                 <div id='div-create' class="col-lg-6" style="display:none">
                     <a href="/products/create" class="btn btn-floating btn-primary"
                        style="position: relative; float: right">
-                        <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
+                        <span style="color: white; font-size: 35px" class='o-add-1'></span>
                     </a>
                 </div>
             </div>
@@ -47,7 +51,7 @@
 
                         <div class="col-lg-3 col-md-6" style="margin-top: 30px">
                             <button id="btn-filtro" class="btn btn-primary w-full">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
                             </button>
                         </div>
                     </div>
@@ -56,13 +60,13 @@
             <div class="page-content container">
                 <div id='data-table-products' class='row'>
                 </div>
-                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px"></div>
+                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px; margin-right: 100px;"></div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
-                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
-                        <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="150px">
+                        <img src="{!! asset('modules/global/img/empty.svg') !!}" width="150px">
                         <h1 class="big gray">Zero produtos por aqui!</h1>
                         {{--                    <div class='product-is-empty-cla'>--}}
                         {{--                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}

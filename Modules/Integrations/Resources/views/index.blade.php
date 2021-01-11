@@ -2,13 +2,13 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
             <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="icon wb-plus" aria-hidden="true"></i></button>
+                <i class="o-add-1" aria-hidden="true"></i></button>
             <h2 class="page-title">Integrações</h2>
             <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
             <br>
@@ -47,7 +47,7 @@
         <div class="page-content container" id='page-integrates'>
             <div id="content-error" class='' style='display:none;'>
                 <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/emptyconvites.svg" width="250px"/>
+                    <img src="modules/global/img/empty.svg" width="250px"/>
                     <h4 class="big gray" style='width:100%'>Você ainda não cadastrou integrações!</h4>
                 </div>
             </div>
@@ -127,8 +127,13 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button id='btn-cancel-integration' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button id="btn-delete-integration" type="button" class="col-4 btn btn-primary" style="width: 20%;" data-dismiss="modal">Excluir</button>
+                    <button id='btn-cancel-integration' type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b>Cancelar</b>
+                    </button>
+                    <button id="btn-delete-integration" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <b class="mr-2">Excluir </b>
+                        <span class="o-bin-1"></span>
+                    </button>
                 </div>
             </div>
         </div>

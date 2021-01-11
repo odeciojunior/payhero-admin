@@ -113,8 +113,8 @@ $(document).ready(function () {
             startPage: 1,
             startRange: 1,
             first: false,
-            previous: '',
-            next: '',
+            previous: false,
+            next: false,
             last: false,
             delay: 1,
         });

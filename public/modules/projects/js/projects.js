@@ -238,7 +238,7 @@ $(() => {
 
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
         $('#update-project #name').val(project.name);
-        $('#cost_currency_type').val(project.cost_currency_type);
+        // $('#cost_currency_type').val(project.cost_currency_type);
         $('#update-project #description').text(project.description);
         if (project.visibility === 'public') {
             $('#update-project #visibility').prop('selectedIndex', 0).change();
@@ -398,6 +398,14 @@ $(() => {
         $('[name=countdown_timer_description]').val(project.countdown_timer_description)
         $('[name=countdown_timer_finished_message]').val(project.countdown_timer_finished_message || 'Seu tempo acabou! Você precisa finalizar sua compra imediatamente.')
         $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
+
+        let is_checked_finalizing_purchase_config = !!(project.finalizing_purchase_config_toogle)
+        $('[name=finalizing_purchase_config_toogle]').prop('checked', is_checked_finalizing_purchase_config)
+        if(is_checked_finalizing_purchase_config){
+            $('.finalizing_purchase_config').removeClass('d-none')
+        }
+        $('[name=finalizing_purchase_config_text]').val((project.finalizing_purchase_config_text || 'Outras {visitantes} pessoas estão finalizando a compra neste momento.'))
+        $('[name=finalizing_purchase_config_min_value]').val((project.finalizing_purchase_config_min_value|| 10))
 
         if (project.countdown_timer_flag) {
             $('.countdown-config').show('fast', 'linear')
@@ -1015,5 +1023,17 @@ $(() => {
         colorOptions.removeClass('active');
         $(this).addClass('active');
     });
+
+    $('#finalizing_purchase_config').on("click", function () {
+        let is_checked = $('#finalizing_purchase_config').prop('checked');
+
+        if (is_checked) {
+            $('.finalizing_purchase_config').removeClass('d-none')
+            $('#finalizing_purchase_config_error').show('fast', 'linear')
+        } else {
+            $('.finalizing_purchase_config').addClass('d-none')
+            $('#finalizing_purchase_config_error').hide('fast', 'linear')
+        }
+    })
 
 });

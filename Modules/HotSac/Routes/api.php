@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/hotsac', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
 
     Route::apiResource('apps/hotsac', 'HotSacApiController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

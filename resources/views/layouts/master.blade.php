@@ -30,15 +30,15 @@
           content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png?v=1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png?v=1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png?v=1') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2545') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=4') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=5') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -51,15 +51,16 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=2') }}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=4565') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=61') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=15') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=24') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -73,15 +74,6 @@
     <script>
         Breakpoints();
     </script>
-    <style type='text/css'>
-        .top-bar-danger{
-            background-color: rgb(255 18 7 / 80%);
-        }
-        .top-alert-danger{
-            color: #fff;
-            font-size: 20px;
-        }
-    </style>
     <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
@@ -93,14 +85,19 @@
 @include("layouts.menu-principal")
 
 <div class="top-alert-container">
-    <div class="top-alert warning" id="document-pending" style="display:none;">
+    <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
-            <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            <div class="col-4 text-center">
+                <img class="top-alert-img" src=" " alt="">
+            </div>
+            <div class="col-8 pr-20 d-flex flex-wrap">
+                <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
+                <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            </div>
+            <a class="top-alert-close">
+                <i class="material-icons">close</i>
+            </a>
         </div>
-        <a class="top-alert-close">
-            <i class="material-icons">close</i>
-        </a>
     </div>
 </div>
 
@@ -130,7 +127,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=36') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=38') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -142,23 +139,33 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
-    <script type="text/javascript">
+    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3ff6c393-3915-4554-a046-cc8eae241938"> </script>
 
-        window.$crisp=[];
-        window.CRISP_WEBSITE_ID="96ad410d-c6cf-4ffa-9763-be123b05acbd";
+    <script>
 
-        (function(){
-            d=document;
-            s=d.createElement("script");
-            s.src="https://client.crisp.chat/l.js";
-            s.async=1;
-            $crisp.push(["set", "user:email", '{{ auth()->user()->email }}']);
-            $crisp.push(["set", "user:nickname", '{{ auth()->user()->name }}'])
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
+        @if(\Auth::user())
 
+            window.zESettings = {
+            webWidget: {
+                authenticate: {
+                    chat: {
+                        jwtFn: function(callback) {
+                            fetch('/generate-zend-jwt').then(function(res) {
+                                res.text().then(function(jwt) {
+                                    console.log("check for execution")
+                                    let jwtreplace = jwt.replace('"','', jwt)
+                                    jwtreplace = jwtreplace.replace('"','', jwtreplace)
+                                    callback(jwtreplace);
+                                });
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        @endif
     </script>
 
 @endif

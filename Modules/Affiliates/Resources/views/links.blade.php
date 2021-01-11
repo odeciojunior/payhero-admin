@@ -10,7 +10,7 @@
             <div class='col-md-6'>
                 <div id="add-link" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-create-link">
                     <span class="link-button-dependent red"> Adicionar Link </span>
-                    <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                    <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
@@ -122,8 +122,13 @@
                 <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
-                <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                <button link="" type="button" data-dismiss="modal" class="col-4 btn btn-primary btn-delete" style="width: 20%;">Excluir</button>
+                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar </b>
+                </button>
+                <button link="" type="button" data-dismiss="modal" class="col-4 btn border-0 btn-delete btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>

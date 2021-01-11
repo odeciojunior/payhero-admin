@@ -119,13 +119,20 @@ class WithdrawalsApiController
                 );
             }
 
+            $withdrawalStatus = [
+                $withdrawalModel->present()->getStatus('liquidating'),
+                $withdrawalModel->present()->getStatus('partially_liquidated'),
+                $withdrawalModel->present()->getStatus('transfered')
+            ];
+
             $isFirstUserWithdrawal = false;
             $userWithdrawal = $withdrawalModel->whereHas(
                 'company',
                 function ($query) {
                     $query->where('user_id', auth()->user()->account_owner_id);
                 }
-            )->where('status', '!=', $withdrawalModel->present()->getStatus('refused'))
+            )->where('automatic_liquidation',  true)
+                ->whereIn('status', $withdrawalStatus)
                 ->exists();
 
             if (!$userWithdrawal) {
@@ -158,8 +165,8 @@ class WithdrawalsApiController
 
             $currentValue = 0;
 
-            $transactionsSum->chunk(
-                500,
+            $transactionsSum->chunkById(
+                2000,
                 $test = function ($transactions) use (
                     $currentValue,
                     $withdrawalValue,
@@ -214,7 +221,7 @@ class WithdrawalsApiController
                 ->orderBy('id');
 
             $transactionsSum->chunk(
-                500,
+                2000,
                 function ($transactions) use (
                     $currentValue,
                     $withdrawalValueRequested

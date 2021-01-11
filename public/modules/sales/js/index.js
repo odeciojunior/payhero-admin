@@ -14,6 +14,11 @@ $(document).ready(function () {
     });
     // COMPORTAMENTOS DA JANELA
 
+    $("#bt_get_csv_default").on("click", function () {
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'csv';
+    });
+
     $("#bt_get_csv").on("click", function () {
         $('#modal-export-sale').modal('show');
         exportFormat = 'csv';
@@ -269,8 +274,16 @@ $(document).ready(function () {
                         let observation = ''
                         if (!isEmpty(value.observation) || (value.observation === null && false) || (value.observation === '' && false)) {
                              observation = `<a data-toggle="tooltip" title="${value.observation}"
-                                                role="button" class="sale_observation" venda="${value.id}" style='margin-right:10px;'>
-                                                    <i style="color: #44a44b" class='icon-observation-value  material-icons'>info</i>
+                                                role="button" class="sale_observation" venda="${value.id}">
+                                                    <span style="color: #44a44b" class="o-info-help-1"></span>
+                                            </a>`
+                        }
+
+                        let cupomCode = '';
+                        if (!isEmpty(value.cupom_code) || (value.cupom_code === null && false) || (value.cupom_code === '' && false)) {
+                            cupomCode = `<a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
+                                                role="button" style='margin-left: 5px;' >
+                                                    <span style="color: #707070; font-size: 18px;" class="o-discount-1"></span>
                                             </a>`
                         }
 
@@ -279,8 +292,7 @@ $(document).ready(function () {
                                         ${value.sale_code}
                                         ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
                                     </td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
+                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
@@ -295,10 +307,13 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></button></a>
+                                    <td style='white-space: nowrap;'><b>${value.total_paid}</b> ${cupomCode}</td>
+                                    <td style="text-align: center">
                                         ${observation}
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                            <span class="o-eye-1"></span>
+                                        </a>
+                                    </td>
                                 </tr>`;
 
                         $(function () {
@@ -380,13 +395,14 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.number', true);
-                $('#total-sales').text('0');
-                $('#commission, #total').text('R$ 0,00');
+                $('#total-sales').html('<span class="font-size-30 bold">0</span>');
+                $('#commission, #total').html('<span class="font-size-30 bold">R$ 0,00</span>');
+
                 if (response.total_sales) {
                     $('#total-sales, #commission, #total').text('');
-                    $('#total-sales').text(response.total_sales);
-                    $('#commission').text(`R$ ${response.commission}`);
-                    $('#total').text(`R$ ${response.total}`);
+                    $('#total-sales').html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+                    $('#commission').html(`R$ <span class="font-size-30 bold"> ${response.commission} </span>`);
+                    $('#total').html(`R$ <span class="font-size-30 bold"> ${response.total} </span>`);
                 }
 
             }
@@ -435,6 +451,21 @@ $(document).ready(function () {
             },
         }
     });
+
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if(collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
+        }
+    })
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             atualizar();

@@ -229,9 +229,9 @@ $(function () {
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>
-                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><img src='/modules/global/img/svg/sirius-lixo.svg' style='width: 24px'></a>
+                                <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><span class='o-bin-1'></span></a>
                             </td>
                         </tr>`;
 

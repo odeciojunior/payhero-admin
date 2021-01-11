@@ -328,14 +328,14 @@ $(() => {
                                          <td>
                                             <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
-                                         <td class="text-md-right">
+                                         <td class="text-center">
                                             <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
                                              style="display:none"><i class='material-icons gradient'>save</i></a>
                                              ${
                                                  tracking.tracking_status_enum
-                                                     ? `<a class='tracking-edit pointer mr-10' title="Editar"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
-                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>`
-                                                     : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
+                                                     ? `<a class='tracking-edit pointer mr-10' title="Editar"><span class="o-edit-1"></span></a>
+                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`
+                                                     : `<a class='tracking-add pointer' title="Adicionar"><span class='o-add-1'></span></a>`
                                              }
                                             <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
@@ -465,8 +465,8 @@ $(() => {
                     td.find('.tracking-close')
                         .click();
 
-                    let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><img src="/modules/global/img/svg/edit.svg" style="width: 24px"></a>
-                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><img src="/modules/global/img/svg/eye.svg" style="width: 24px"></a>`;
+                    let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><span class="o-edit-1"></span></a>
+                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`;
 
                     td.append(buttons);
 
