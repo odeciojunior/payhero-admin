@@ -365,4 +365,58 @@ class Project extends Model
 
         return null;
     }
+
+    public function getCheckoutNotificationConfigsToogleAttribute()
+    {
+
+        if (empty($this->checkout_notification_configs))
+            return 0;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['toogle']))
+            return $json_decode['toogle'];
+
+        return 0;
+    }
+
+    public function getCheckoutNotificationConfigsTimeAttribute()
+    {
+
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['time']))
+            return $json_decode['time'];
+
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsMobileAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['mobile']))
+            return $json_decode['mobile'];
+
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsMessageAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['messages']))
+            return $json_decode['messages'];
+
+        return null;
+    }
 }

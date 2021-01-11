@@ -63,6 +63,13 @@ class ProjectUpdateRequest extends FormRequest
             'finalizing_purchase_config_toogle' => 'nullable|boolean',
             'finalizing_purchase_config_text' => 'required_if:finalizing_purchase_config_toogle,1|string|templateStringMinVisitorInFinalizingPurchaseConfig',
             'finalizing_purchase_config_min_value' =>  'required_if:finalizing_purchase_config_toogle,1|digits_between:1,9999999',
+
+
+            'checkout_notification_config_toogle' => 'nullable|boolean',
+            'checkout_notification_config_time' => 'required_if:checkout_notification_config_toogle,1|digits_between:1,9999999',
+            'checkout_notification_mobile' =>  'required_if:checkout_notification_config_toogle,1|boolean',
+            'checkout_notification_config_messages' =>  'required_if:checkout_notification_config_toogle,1|array',
+
         ];
     }
 
@@ -77,6 +84,9 @@ class ProjectUpdateRequest extends FormRequest
             'countdown_timer_finished_message.string' => 'O campo da mensagem ao finalizar o contador não pode estar vazio',
             'finalizing_purchase_config_text.required_if' => 'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
             'finalizing_purchase_config_min_value.required_if' =>  'Campo obrigatório enquanto a opção pessoas finalizando compra estiver ativo.',
+            'checkout_notification_config_time.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
+            'checkout_notification_mobile.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
+            'checkout_notification_config_messages.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
         ];
     }
 

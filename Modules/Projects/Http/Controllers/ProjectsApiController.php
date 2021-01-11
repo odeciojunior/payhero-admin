@@ -355,6 +355,27 @@ class ProjectsApiController extends Controller
                 $requestValidated['finalizing_purchase_configs'] = null;
             }
 
+
+
+            if(isset($requestValidated['checkout_notification_config_toogle'])) {
+
+                $messages = null;
+                if($requestValidated['checkout_notification_config_messages']) {
+                    $messages = array_keys($requestValidated['checkout_notification_config_messages']);
+                }
+                $array = [
+                    'toogle' => $requestValidated['checkout_notification_config_toogle'],
+                    'time' => $requestValidated['checkout_notification_config_time'],
+                    'mobile' => $requestValidated['checkout_notification_mobile'],
+                    'messages' => $messages,
+                ];
+
+                $requestValidated['checkout_notification_configs'] = json_encode($array);
+
+            }else{
+                $requestValidated['checkout_notification_configs'] = null;
+            }
+
             $projectUpdate = $project->fill($requestValidated)->save();
             $projectChanges = $project->getChanges();
             if (isset($projectChanges["support_phone"])) {
