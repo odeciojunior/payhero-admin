@@ -154,7 +154,9 @@ $(document).ready(function () {
     $("#ir-agenda").on('click', function (e){
         e.preventDefault();
 
+        let company = $("#transfers_company_select").val();
         $("#statement_status_select").val('ADJUSTMENT_DEBIT');
+        $("#statement_company_select").val(company);
         $("#bt_filtro_statement, #nav-statement-tab").click();
     });
 
