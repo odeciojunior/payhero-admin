@@ -335,12 +335,12 @@
                     </div>
                 </div>
                 <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
-                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;margin-right:100px;">
                     {{-- js carrega... --}}
                 </ul>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
-            <!-- End Modal -->
+                @include('sales::details')
+                <!-- End Modal -->
                 <!-- Modal detalhes tracking -->
                 <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog"
                      tabindex="-1">
