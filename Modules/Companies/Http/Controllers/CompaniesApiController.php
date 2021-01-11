@@ -3,6 +3,7 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -23,6 +24,7 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -60,7 +62,7 @@ class CompaniesApiController extends Controller
         return view('companies::create');
     }
 
-    public function store(CompanyCreateRequest $request)
+    public function store(CompanyCreateRequest $request): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -84,10 +86,13 @@ class CompaniesApiController extends Controller
                 ]
             );
 
-            return response()->json([
-                'message' => 'Empresa cadastrada com sucesso',
-                'idEncoded' => Hashids::encode($company->id)
-            ], 200);
+            return response()->json(
+                [
+                    'message' => 'Empresa cadastrada com sucesso',
+                    'idEncoded' => Hashids::encode($company->id)
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -95,7 +100,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function show($encodedId)
+    public function show($encodedId): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -106,9 +111,12 @@ class CompaniesApiController extends Controller
                 ->find(current(Hashids::decode($encodedId)));
 
             if (!Gate::allows('edit', [$company])) {
-                return response()->json([
-                    'message' => 'Sem permissão para editar a empresa',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para editar a empresa',
+                    ],
+                    400
+                );
             }
             $banks = $bankService->getBanks($company->country ?? 'brazil');
 
@@ -120,10 +128,13 @@ class CompaniesApiController extends Controller
                 $companyResource = new CompanyCpfResource($company);
             }
 
-            return response()->json([
-                'company' => $companyResource,
-                'banks' => $banks,
-            ], 200);
+            return response()->json(
+                [
+                    'company' => $companyResource,
+                    'banks' => $banks,
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -131,7 +142,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function update(CompanyUpdateRequest $request, $encodedId)
+    public function update(CompanyUpdateRequest $request, $encodedId): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -170,7 +181,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function destroy($encodedId)
+    public function destroy($encodedId): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -237,7 +248,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function uploadDocuments(CompanyUploadDocumentRequest $request)
+    public function uploadDocuments(CompanyUploadDocumentRequest $request): JsonResponse
     {
         try {
             $companyModel = new Company();
@@ -349,7 +360,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function openDocument(Request $request)
+    public function openDocument(Request $request): JsonResponse
     {
         try {
             $digitalOceanFileService = app(DigitalOceanFileService::class);
@@ -384,7 +395,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function verify()
+    public function verify(): JsonResponse
     {
         $companyModel = new Company();
         $company = $companyModel->where(
@@ -403,7 +414,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function verifyCnpj(Request $request)
+    public function verifyCnpj(Request $request): JsonResponse
     {
         $data = $request->all();
         $companyService = new CompanyService();
@@ -460,7 +471,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function consultCnpj(Request $request)
+    public function consultCnpj(Request $request): JsonResponse
     {
         try {
             if (!empty($request->input('cnpj'))) {
@@ -477,7 +488,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder(Request $request): JsonResponse
     {
         try {
             $orders = $request->input('order');
@@ -509,7 +520,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function checkBraspagCompany()
+    public function checkBraspagCompany(): JsonResponse
     {
         try {
             $user = auth()->user();
@@ -522,7 +533,9 @@ class CompaniesApiController extends Controller
                 [
 //                    'has_merchant_id' => $hasMerchantId,
 //                    'env' => env("APP_ENV", "local"),
-                ], Response::HTTP_UNAUTHORIZED);
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -530,7 +543,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function checkStatementAvailable()
+    public function checkStatementAvailable(): JsonResponse
     {
         try {
             $user = auth()->user();
@@ -540,17 +553,63 @@ class CompaniesApiController extends Controller
                 ->where('user_id', $user->account_owner_id)
                 ->exists();
 
-            return response()->json([
-                'has_subseller_id' => $hasSubsellerId,
-                'env' => env("APP_ENV", "local"),
-            ], 200);
+            return response()->json(
+                [
+                    'has_subseller_id' => $hasSubsellerId,
+                    'env' => env("APP_ENV", "local"),
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
         }
     }
 
-    public function updateTax(Request $request, $companyId)
+    public function checkDebitValue(Request $request): JsonResponse
+    {
+        try {
+            $company = (new Company())->find(current(Hashids::decode(request('company'))));
+
+            if (empty($company)) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                        'data' => []
+                    ],
+                    400
+                );
+            }
+
+            $getnetBackOffice = new GetnetBackOfficeService();
+
+            $data = $getnetBackOffice->getAdjustments($company);
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'data' => [
+                        'amount' => 'R$ ' . number_format($data['amount'], 2, ',', '.'),
+                    ]
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                    'data' => []
+                ],
+                400
+            );
+        }
+    }
+
+    public function updateTax(Request $request, $companyId): JsonResponse
     {
         try {
             if (FoxUtils::isEmpty($request->get('gateway_release_payment')) || FoxUtils::isEmpty($companyId)) {
@@ -582,7 +641,9 @@ class CompaniesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
             }
             $companyServiceGetnet = new CompanyServiceGetnet($company);
-            $updateGetnet = $companyServiceGetnet->updateTaxCompanyGetnet($gatewayTax[$request->get('gateway_release_payment')]);
+            $updateGetnet = $companyServiceGetnet->updateTaxCompanyGetnet(
+                $gatewayTax[$request->get('gateway_release_payment')]
+            );
 
             if (!$updateGetnet) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
@@ -591,12 +652,15 @@ class CompaniesApiController extends Controller
             $companyUpdated = $company->update($gatewayTax[$request->get('gateway_release_payment')]);
 
             if ($companyUpdated) {
-                return response()->json([
-                    'message' => 'Taxa atualizado com sucesso!',
-                    'data' => [
-                        'new_gateway_tax' => $gatewayTax[$request->get('gateway_release_payment')]['gateway_tax']
-                    ]
-                ], 200);
+                return response()->json(
+                    [
+                        'message' => 'Taxa atualizado com sucesso!',
+                        'data' => [
+                            'new_gateway_tax' => $gatewayTax[$request->get('gateway_release_payment')]['gateway_tax']
+                        ]
+                    ],
+                    200
+                );
             }
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
