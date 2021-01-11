@@ -446,7 +446,7 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
 /* TOP ALERT */
 
 $('.top-alert-close').on('click', function () {
-    $(this).parent().fadeOut();
+    $('#document-pending').fadeOut();
 });
 
 /* END - TOP ALERT */
@@ -474,12 +474,14 @@ function ajaxVerifyDocumentPending() {
             //     $('#document-pending .top-alert-action').attr('href', response.link);
             // }
             if (response.analyzing) {
-                $('.top-alert-message').text('Seu acesso ainda é restrito pois seu cadastro está em análise');
+                $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
+                $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
                 $('#document-pending .top-alert-action').hide();
                 $('#document-pending').show();
             } else if (response.refused) {
                 $('.top-alert').removeClass('warning');
                 $('.top-alert').addClass('top-bar-danger');
+                $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-verm.svg');
                 $('.top-alert-message').addClass('top-alert-danger');
                 $('.top-alert-message').html('Um de seus documentos foi recusado');
                 $('#document-pending').show();

@@ -51,7 +51,7 @@
 
                         <div class="col-lg-3 col-md-6" style="margin-top: 30px">
                             <button id="btn-filtro" class="btn btn-primary w-full">
-                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
+                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
                             </button>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
             <div class="page-content container">
                 <div id='data-table-products' class='row'>
                 </div>
-                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px"></div>
+                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px; margin-right: 100px;"></div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
                         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">

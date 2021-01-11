@@ -220,7 +220,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
-                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                             </button>
                         </div>
                     </div>
@@ -335,12 +335,12 @@
                     </div>
                 </div>
                 <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
-                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;margin-right:100px;">
                     {{-- js carrega... --}}
                 </ul>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
-            <!-- End Modal -->
+                @include('sales::details')
+                <!-- End Modal -->
                 <!-- Modal detalhes tracking -->
                 <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog"
                      tabindex="-1">

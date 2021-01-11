@@ -74,6 +74,8 @@
     position: relative;
     opacity: 0;
     transition: 0.5s;
+
+    -webkit-text-stroke: 1.45px #2E85EC;
 }
 
 .quick-list > li a:hover::after {

@@ -121,7 +121,11 @@ class ProjectsApiController extends Controller
                 'automatic_affiliation' => 0,
                 'boleto' => 1,
                 'status' => $projectModel->present()->getStatus('active'),
-                'checkout_type' => 2 // checkout de 1 passo
+                'checkout_type' => 2, // checkout de 1 passo
+                'notazz_configs' => json_encode([
+                    'cost_currency_type' => 1,
+                    'update_cost_shopify' => 1,
+                ])
             ]);
 
             if (empty($project)) {
@@ -323,7 +327,7 @@ class ProjectsApiController extends Controller
 
             $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
-            $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+            // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
 
             if(isset($requestValidated['finalizing_purchase_config_toogle'])) {

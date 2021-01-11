@@ -56,6 +56,8 @@ class ProjectsResource extends JsonResource
         }
         $affiliated = !empty($affiliate) ? true : false;
 
+        $notazzConfig = json_decode($this->notazz_configs);
+
 
 
         return [
@@ -82,7 +84,9 @@ class ProjectsResource extends JsonResource
             'boleto_redirect' => $this->boleto_redirect,
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
-            'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
+            // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
+            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->currency_type_enum ?? 1),
+            'update_cost_shopify' => $notazzConfig->update_cost_shopify ?? 1,
             'status' => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type' => $this->checkout_type,
             "terms_affiliates" => $this->terms_affiliates,

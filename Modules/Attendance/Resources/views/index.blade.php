@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-12 col-md-3 col-lg-3 mt-25">
                                     <button id="btn-filter" class="btn btn-primary w-full">
-                                        <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">Aplicar
+                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                     </button>
                                 </div>
                             </div>

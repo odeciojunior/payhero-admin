@@ -56,11 +56,11 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=05') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=60') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=22') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=24') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -74,15 +74,6 @@
     <script>
         Breakpoints();
     </script>
-    <style type='text/css'>
-        .top-bar-danger{
-            background-color: rgb(255 18 7 / 80%);
-        }
-        .top-alert-danger{
-            color: #fff;
-            font-size: 20px;
-        }
-    </style>
     <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
@@ -94,14 +85,19 @@
 @include("layouts.menu-principal")
 
 <div class="top-alert-container">
-    <div class="top-alert warning" id="document-pending" style="display:none;">
+    <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
         <div class="top-alert-message-container">
-            <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-            <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            <div class="col-4 text-center">
+                <img class="top-alert-img" src=" " alt="">
+            </div>
+            <div class="col-8 pr-20 d-flex flex-wrap">
+                <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
+                <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+            </div>
+            <a class="top-alert-close">
+                <i class="material-icons">close</i>
+            </a>
         </div>
-        <a class="top-alert-close">
-            <i class="material-icons">close</i>
-        </a>
     </div>
 </div>
 
@@ -131,7 +127,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=37') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=38') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

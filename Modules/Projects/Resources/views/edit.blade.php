@@ -316,7 +316,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class='form-group col-md-6 col-sm-12'>
+{{--                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="cost_currency_type">Moeda padrão de custo</label>
                                 <select name='cost_currency_type' class='form-control select-pad'
                                         id="cost_currency_type">
@@ -327,6 +327,19 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para
                                     a configuração dos seus planos. Configuração utilizada para emissão de notas
                                     fiscais.
+                                </p>
+                            </div> --}}
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="document_type_checkout">Aceitar compras de</label>
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
+                                    <option value='1'>CPF</option>
+                                    <option value='2'>CNPJ</option>
+                                    <option value='3'>CPF/CNPJ</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito no checkout.
                                 </p>
                             </div>
                             <div class='form-group col-md-6 col-sm-12'>
@@ -453,19 +466,6 @@
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Cliente vai ser obrigado ou
                                     não a informar email para finalizar a compra no checkout.
-                                </p>
-                            </div>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad'
-                                        id="document_type_checkout">
-                                    <option value='1'>CPF</option>
-                                    <option value='2'>CNPJ</option>
-                                    <option value='3'>CPF/CNPJ</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
-                                    aceito no checkout.
                                 </p>
                             </div>
                         </div>

@@ -843,6 +843,9 @@ class ShopifyService
             return false;
         }
 
+        $notazzConfig = Project::select('notazz_configs')->find($projectId)->notazz_configs ?? null;
+        $updateCostShopify = (!is_null($notazzConfig)) ? json_decode($notazzConfig) : null;
+
         $productsArray = [];
         foreach ($storeProduct->getVariants() as $variant) {
             $title = '';
@@ -893,11 +896,14 @@ class ShopifyService
                     ->first();
                 if (!empty($productPlan)) {
                     $plan = $planModel->find($productPlan->plan_id);
-                    $productPlan->update(
-                        [
-                            'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
-                        ]
-                    );
+                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        $productPlan->update(
+                            [
+                                'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
+                            ]
+                        );
+                    }
+
                     $plan->update(
                         [
                             'name' => $title,
@@ -949,13 +955,17 @@ class ShopifyService
                         ]
                     );
 
+                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                    }
+
                     $productPlanModel->create(
-                        [
+                        array_filter([
                             'product_id' => $product->id,
                             'plan_id' => $plan->id,
                             'amount' => 1,
-                            'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
-                        ]
+                            'cost' => $costShopify ?? ''
+                        ])
                     );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
@@ -976,7 +986,7 @@ class ShopifyService
                         'guarantee' => '0',
                         'format' => 1,
                         'category_id' => '11',
-                        'cost' => $cost,
+                        // 'cost' => $cost,
                         'shopify' => true,
                         'price' => '',
                         'shopify_id' => $storeProduct->getId(),
@@ -1000,12 +1010,15 @@ class ShopifyService
                     ]
                 );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
+                if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                }
                 $productPlanModel->create(
                     [
                         'product_id' => $product->id,
                         'plan_id' => $plan->id,
                         'amount' => '1',
-                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
+                        'cost' => $costShopify ?? ''
                     ]
                 );
                 $photo = '';
