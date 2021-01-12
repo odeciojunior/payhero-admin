@@ -229,6 +229,7 @@ class GetNetStatementService
                 $amount = $details->subseller_rate_amount / 100;
                 $amount = $details->transaction_sign == '-' ? ($amount * -1) : $amount;
 
+                $paymentDateNumeric = $details->payment_date ? Carbon::parse($details->payment_date)->format('Ymd') : null;
                 $paymentDate = $details->payment_date ?? '';
                 $transactionDate = $details->transaction_date ?? '';
                 $subSellerRateClosingDate = $details->subseller_rate_closing_date ?? '';
@@ -289,6 +290,12 @@ class GetNetStatementService
                     $details->setStatus('Aguardando postagem válida')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
+
+                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && !$isReleaseStatus && $paymentDateNumeric && ($paymentDateNumeric > date('Ymd'))) {
+
+                    $details->setStatus('Aguardando Liberação')
+                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setType(Details::STATUS_WAITING_RELEASE);
 
                 } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && !$isReleaseStatus) {
 
