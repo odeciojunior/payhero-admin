@@ -89,7 +89,7 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
 
                 $send_data = json_decode($sale->send_data);
                 if (isset($send_data->order) && isset($send_data->order->order_id)) {
-        
+
                     $secondWay++;
                     $order_id = $send_data->order->order_id;
                     $sale->gateway_order_id = $order_id;
