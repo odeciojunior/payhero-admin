@@ -348,10 +348,14 @@ class ProjectsApiController extends Controller
 
             if(isset($requestValidated['checkout_notification_config_toogle'])) {
 
-                $messages = null;
-                if($requestValidated['checkout_notification_config_messages']) {
-                    $messages = array_keys($requestValidated['checkout_notification_config_messages']);
+                $messages = [];
+
+                if($requestValidated['checkout_notification_config_messages']){
+                    foreach($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
+                        $messages[$config_message_key] = config('arrays.checkout_notification_config_messages')[$config_message_key];
+                    }
                 }
+
                 $array = [
                     'toogle' => $requestValidated['checkout_notification_config_toogle'],
                     'time' => $requestValidated['checkout_notification_config_time'],

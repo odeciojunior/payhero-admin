@@ -412,8 +412,11 @@ $(() => {
        // $('[name=checkout_notification_config_messages]').val((project.checkout_notification_config_message || [] ))
 
         if(project.checkout_notification_config_messages){
-            project.checkout_notification_config_messages.map((id) => {
-               $('input[name="checkout_notification_config_messages['+id+']"]').prop("checked", true)
+
+            let config_nessages_keys = Object.keys(project.checkout_notification_config_messages);
+
+            config_nessages_keys.map((id) => {
+                $('input[name="checkout_notification_config_messages['+id+']"]').prop("checked", true)
             });
         }
 
