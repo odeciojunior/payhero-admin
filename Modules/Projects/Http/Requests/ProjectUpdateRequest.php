@@ -56,6 +56,7 @@ class ProjectUpdateRequest extends FormRequest
             'countdown_timer_color' => 'string|max:7',
             'countdown_timer_time' => 'int|min:1',
             'countdown_timer_description' => 'nullable|string|max:255',
+            'product_amount_selector' => 'boolean',
             'finalizing_purchase_config_toogle' => 'nullable|boolean',
             'finalizing_purchase_config_text' => 'required_if:finalizing_purchase_config_toogle,1|string|templateStringMinVisitorInFinalizingPurchaseConfig',
             'finalizing_purchase_config_min_value' => 'required_if:finalizing_purchase_config_toogle,1|digits_between:1,9999999',

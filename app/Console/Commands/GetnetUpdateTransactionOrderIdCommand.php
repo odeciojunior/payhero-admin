@@ -41,7 +41,7 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
 
         $sales = Sale::select('sales.id', 'sale_gateway_requests.gateway_result')
             ->where('sale_gateway_requests.gateway_id', 15)
-            ->whereNull('sales.transaction_order_id')
+            ->whereNull('sales.gateway_order_id')
             ->join('sale_gateway_requests', 'sale_gateway_requests.sale_id', '=', 'sales.id')
             //->take(20)
             //->offset(10)
@@ -80,7 +80,7 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
 
                     $success++;
                     $order_id = $gateway_result->order_id;
-                    $sale->transaction_order_id = $order_id;
+                    $sale->gateway_order_id = $order_id;
                     $sale->save();
                 }
             } else {

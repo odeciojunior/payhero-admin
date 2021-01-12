@@ -31,7 +31,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property DateTime $date_refunded
  * @property string $end_date
  * @property string $gateway_transaction_id
- * @property string transaction_order_id
+ * @property string gateway_order_id
  * @property string $gateway_id
  * @property int $status
  * @property string $gateway_status
@@ -104,7 +104,7 @@ class Sale extends Model
         'date_refunded',
         'end_date',
         'gateway_transaction_id',
-        'transaction_order_id',
+        'gateway_order_id',
         'gateway_billet_identificator',
         'gateway_id',
         'status',

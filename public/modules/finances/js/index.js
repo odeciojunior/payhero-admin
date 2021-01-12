@@ -101,6 +101,7 @@ $(document).ready(function () {
                 updateAccountStatementData();
                 updateBalances();
                 checkAllowed();
+                checkValueDebitValue();
                 loadingOnScreenRemove();
             }
         });
@@ -121,6 +122,43 @@ $(document).ready(function () {
     }
 
     getCompanies();
+
+    // verifica se tem debito pendente
+    function checkValueDebitValue() {
+        $("#alert-debit-value").hide();
+        $("#debit-value").html();
+
+        let company = $("#transfers_company_select option:selected").val();
+        $.ajax({
+            url: `/api/companies/${company}/checkdebitvaluecompany`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                let value = response.data.amount;
+                if (response.success && value != 'R$ 0,00') {
+                    $("#alert-debit-value").show();
+                    $("#debit-value").html(value);
+                }
+            }
+        });
+    }
+
+
+
+    $("#ir-agenda").on('click', function (e){
+        e.preventDefault();
+
+        let company = $("#transfers_company_select").val();
+        $("#statement_status_select").val('ADJUSTMENT_DEBIT');
+        $("#statement_company_select").val(company);
+        $("#bt_filtro_statement, #nav-statement-tab").click();
+    });
 
     //Verifica se o saque está liberado
     function checkAllowed() {
@@ -152,6 +190,7 @@ $(document).ready(function () {
         $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
         $('#custom-input-addon').val('');
         updateBalances();
+        checkValueDebitValue();
         if ($(this).children("option:selected").attr('country') != 'brazil') {
             $("#col_transferred_value").show();
         } else {
@@ -316,6 +355,7 @@ $(document).ready(function () {
                                     });
 
                                     updateBalances();
+                                    checkValueDebitValue();
                                 },
                                 complete: (response) => {
                                     $("#bt-confirm-withdrawal").removeAttr('disabled');
@@ -389,11 +429,11 @@ $(document).ready(function () {
                                         <input type="radio" id="inputRadioFirstValue" name="valueWithdrawal" checked>
                                         <label for="inputRadioFirstValue">
                                             ${
-                                                ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
-                                                    style: 'currency',
-                                                    currency: 'BRL',
-                                                }))
-                                            }
+                    ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                    }))
+                }
                                         </label>
                                     </div>
                                      <div class="mt-15">
@@ -401,25 +441,25 @@ $(document).ready(function () {
                                         <input type="radio" id="inputRadioSecondValue" name="valueWithdrawal" >
                                         <label for="inputRadioSecondValue">
                                             ${
-                                                ((dataWithdrawal.lower_value / 100).toLocaleString('pt-BR', {
-                                                    style: 'currency',
-                                                    currency: 'BRL'
-                                                }))
-                                            }
+                    ((dataWithdrawal.lower_value / 100).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }))
+                }
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary " style=" ${singleValue ? 'display:block' : 'display:none;'}">
                                 <input hidden id="modal-withdrawal-value" value="${dataWithdrawal.bigger_value}">
-                                <input type="radio" id="inputRadioSingleValue" ${singleValue ? 'checked': ''} name="valueWithdrawal" >
+                                <input type="radio" id="inputRadioSingleValue" ${singleValue ? 'checked' : ''} name="valueWithdrawal" >
                                 <label for="inputRadioSingleValue">
                                     ${
-                                        ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
-                                            style: 'currency',
-                                            currency: 'BRL'
-                                        }))
-                                    }
+                    ((dataWithdrawal.bigger_value / 100).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }))
+                }
                                 </label>
                             </div>
                         </h3>
