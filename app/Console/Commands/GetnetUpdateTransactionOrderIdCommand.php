@@ -39,10 +39,11 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
     public function handle()
     {
 
-        $sales = Sale::select('sales.id', 'sale_gateway_requests.gateway_result')
+        $sales = Sale::select('sales.id', 'sale_gateway_requests.gateway_result', 'sale_gateway_requests.send_data')
             ->where('sale_gateway_requests.gateway_id', 15)
             ->whereNull('sales.gateway_order_id')
             ->join('sale_gateway_requests', 'sale_gateway_requests.sale_id', '=', 'sales.id')
+            //->where('sales.id', 832300)
             //->take(20)
             //->offset(10)
             ->get();
@@ -50,6 +51,7 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
         $success = 0;
         $fail = 0;
         $empty = 0;
+        $secondWay = 0;
 
         $limit = $sales->count() / 50;
         $count = 0;
@@ -84,13 +86,28 @@ class GetnetUpdateTransactionOrderIdCommand extends Command
                     $sale->save();
                 }
             } else {
-                $fail++;
-                //$this->info('Nada para ' . $sale_id);
+
+                $send_data = json_decode($sale->send_data);
+                if (isset($send_data->order) && isset($send_data->order->order_id)) {
+        
+                    $secondWay++;
+                    $order_id = $send_data->order->order_id;
+                    $sale->gateway_order_id = $order_id;
+                    $sale->save();
+
+                    $this->info('    Atualizando ' . $sale_id . ' para: ' . $order_id);
+                } else {
+                    $fail++;
+                    //$this->info('Nada para ' . $sale_id);
+                }
+
             }
             //print_r($sale->toArray());
         }
 
+        $this->info(' - - - - - - - - - - - - - - - -');
         $this->info('$success ' . $success);
+        $this->info('$secondWay ' . $secondWay);
         $this->info('$fail ' . $fail);
         $this->info('$empty ' . $empty);
         return 0;
