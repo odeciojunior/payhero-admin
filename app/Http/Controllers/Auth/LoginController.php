@@ -46,13 +46,13 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        if((env('APP_ENV') == 'production') || (env('APP_ENV') == 'homolog'))  {
+        if ((env('APP_DEBUG') == false)) {
 
-            if(auth()->user()){
+            if (auth()->user()) {
                 $this->redirectTo();
             }
 
-            if(env('ACCOUNT_FRONT_URL')){
+            if (env('ACCOUNT_FRONT_URL')) {
                 $url = env('ACCOUNT_FRONT_URL') . '/?from=sirius';
                 return Redirect::to($url);
             }
