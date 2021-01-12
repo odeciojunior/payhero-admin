@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\ValidationException;
-use Modules\Core\Services\IpService;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\User;
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Redis;
+use Modules\Core\Services\IpService;
+use Redirect;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -53,7 +54,7 @@ class LoginController extends Controller
 
             if(env('ACCOUNT_FRONT_URL')){
                 $url = env('ACCOUNT_FRONT_URL') . '/?from=sirius';
-                return \Redirect::to($url);
+                return Redirect::to($url);
             }
 
         }
@@ -81,13 +82,13 @@ class LoginController extends Controller
             activity()->tap(function(Activity $activity) {
                 $activity->log_name = 'account_blocked';
             })->withProperties([
-                                   'url'      => $request->input('uri'),
-                                   'email'    => $request->input('email'),
-                                   'token'    => $request->input('token'),
-                                   'password' => $request->input('password'),
-                                   'ip'       => IpService::getRealIpAddr(),
-                               ])
-                      ->log('Tentativa de Login: conta bloqueada');
+                'url'      => $request->input('uri'),
+                'email'    => $request->input('email'),
+                'token'    => $request->input('token'),
+                'password' => $request->input('password'),
+                'ip'       => IpService::getRealIpAddr(),
+            ])
+                ->log('Tentativa de Login: conta bloqueada');
 
             return response()->redirectTo('/')->withErrors(['accountErrors' => 'Blocked account']);
         }
@@ -107,13 +108,13 @@ class LoginController extends Controller
                 $activity->log_name   = 'login';
                 $activity->subject_id = $user->id;
             })->withProperties([
-                                   'url'      => $request->input('uri'),
-                                   'email'    => $request->input('email'),
-                                   'token'    => $request->input('token'),
-                                   'password' => Hash::make($request->input('password')),
-                                   'ip'       => IpService::getRealIpAddr(),
-                               ])
-                      ->log('Login');
+                'url'      => $request->input('uri'),
+                'email'    => $request->input('email'),
+                'token'    => $request->input('token'),
+                'password' => Hash::make($request->input('password')),
+                'ip'       => IpService::getRealIpAddr(),
+            ])
+                ->log('Login');
             auth()->user()->update(['last_login' => now()->toDateTimeString()]);
 
             return $this->sendLoginResponse($request);
@@ -130,12 +131,12 @@ class LoginController extends Controller
                 $activity->causer_id = $user->id;
             }
         })->withProperties([
-                               'url'      => $request->input('uri'),
-                               'email'    => $request->input('email'),
-                               'token'    => $request->input('token'),
-                               'password' => $request->input('password'),
-                               'ip'       => IpService::getRealIpAddr(),
-                           ])->log('Falha no Login');
+            'url'      => $request->input('uri'),
+            'email'    => $request->input('email'),
+            'token'    => $request->input('token'),
+            'password' => $request->input('password'),
+            'ip'       => IpService::getRealIpAddr(),
+        ])->log('Falha no Login');
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -185,12 +186,12 @@ class LoginController extends Controller
             $dateUnix = current(Hashids::decode($expiration));
 
             if ($dateUnix <= Carbon::now()->unix())
-                throw new \Exception('Autenticação Expirada');
+                throw new Exception('Autenticação Expirada');
 
             $user = User::find(current(Hashids::connection('login')->decode($user)));
 
             if (!$user)
-                throw new \Exception('Usuário não existe');
+                throw new Exception('Usuário não existe');
 
             auth()->loginUsingId($user->id);
 
@@ -202,7 +203,7 @@ class LoginController extends Controller
             }
 
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possivel autenticar o usuário.',
                 'error' => $e->getMessage()
