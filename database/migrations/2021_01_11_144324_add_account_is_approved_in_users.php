@@ -14,7 +14,7 @@ class AddAccountIsApprovedInUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('account_is_approved')->after('observation');
+            $table->boolean('account_is_approved')->default(0)->after('observation');
         });
     }
 
