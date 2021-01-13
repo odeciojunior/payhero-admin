@@ -57,7 +57,7 @@ $(function () {
                 } else {
                     $("#product_1").html('');
                     $(response.data).each(function (index, data) {
-                        $("#product_1").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
+                        $("#product_1").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''} data-cost="${data.cost}">${data.name}</option>`);
                     });
                     $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
                     $("#btn-modal").addClass('btn-save-plan');
@@ -465,7 +465,7 @@ $(function () {
                                     success: function success(response) {
                                         $("#products_edit").html('');
                                         $(response.data).each(function (index, data) {
-                                            $("#products_edit").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
+                                            $("#products_edit").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''} data-cost="${data.cost}">${data.name}</option>`);
                                         });
                                     }
                                 });
@@ -491,7 +491,7 @@ $(function () {
                                         var selectProduct = $(this);
                                         $(response.data).each(function (index, data) {
                                             if (data.id != selectProduct.val()) {
-                                                selectProduct.append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
+                                                selectProduct.append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''} data-cost="${data.cost}">${data.name}</option>`);
                                             }
                                         });
 
@@ -508,6 +508,10 @@ $(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $('.products_amount').mask('0#');
+
+                            $('#products .card.container .row').each(function( index ) {
+                                findElementsEdit(this);
+                            });
 
                             loadingOnScreenRemove()
 
@@ -771,6 +775,15 @@ $(function () {
 
     }
 
+    function findElementsEdit(element) {
+        let custoUnitario = $(element).find('.products_cost_edit')
+        let custoTotal = $(element).find('.products_total_edit')
+        let moeda = $(element).find('.select_currency_edit')
+        let quantidade = $(element).find('.products_amount_edit')
+
+        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
+    }
+
     function bindModalKeys() {
 
         $(document).on('change', '.select_currency_create', function () {
@@ -802,6 +815,18 @@ $(function () {
             bindModalKeys();
         })
 
+        $(document).on('change', '.plan_product_create', function () {
+            inputCost = $(this).parent().parent().parent().find('.products_cost');
+            inputCost.val($(this).find(':selected').data('cost'));
+            getElementsCreate($(this).parent())
+        })
+
+        $(document).on('change', '.products_edit', function () {
+            inputCost = $(this).parent().parent().parent().find('.products_cost');
+            inputCost.val($(this).find(':selected').data('cost'));
+            getElementsEdit($(this).parent())
+        })
+
         $('.products_cost_create, .products_cost_edit').maskMoney({thousands: ',', decimal: '.', allowZero: true});
         $('#plan-price_edit, #price').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: 'R$'});
         if ($('.products_cost_create, .products_cost_edit').val() == undefined || $('.products_cost_create, .products_cost_edit').val() == null) {
@@ -813,6 +838,8 @@ $(function () {
             index();
         }
     });
+
+    $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
     $(document).on('click', '#config-cost-plan', function (event) {
         event.preventDefault();
