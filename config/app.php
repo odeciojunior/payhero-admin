@@ -173,6 +173,7 @@ return [
         \Torann\GeoIP\GeoIPServiceProvider::class,
         App\Rules\ValidatorProvider::class,
 
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -227,6 +228,7 @@ return [
         'Hashids'      => Vinkla\Hashids\Facades\Hashids::class,
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'GeoIP'        => \Torann\GeoIP\Facades\GeoIP::class,
+        'PDF'          => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

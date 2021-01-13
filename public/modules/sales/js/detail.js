@@ -488,9 +488,13 @@ $(() => {
         }
 
         if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8 || sale.status == 24) && sale.userPermissionRefunded) {
-            $('#div_refund_transaction').html('<button class="btn btn-secondary btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
+            $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
         } else {
             $('#div_refund_transaction').html('');
+        }
+
+        if(sale.status == 7){
+            $('#div_refund_receipt').html(`<a class="btn btn-sm btn-primary" target="_blank" href="/sales/${sale.id}/refundreceipt">Comprovante de estorno</a>`);
         }
 
         if (sale.status == 2 || sale.status == 1) {
