@@ -897,11 +897,10 @@ class ShopifyService
                 if (!empty($productPlan)) {
                     $plan = $planModel->find($productPlan->plan_id);
                     if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                        $productPlan->update(
-                            [
-                                'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100
-                            ]
-                        );
+                        $costProduct = $this->getCostShopify($variant);
+                        if($costProduct !== '') {
+                            $productPlan->update(['cost' =>  $costProduct * 100]);
+                        }
                     }
 
                     $plan->update(
@@ -955,29 +954,31 @@ class ShopifyService
                         ]
                     );
 
+                    $dataProductPlan = [
+                        'product_id' => $product->id,
+                        'plan_id' => $plan->id,
+                        'amount' => 1,
+                    ];
                     if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                        $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                        $costShopify = $this->getCostShopify($variant);
+                        if($costShopify !== '') {
+                            $dataProductPlan['cost'] =  $costShopify * 100;
+                        }
                     }
+ 
+                    $productPlanModel->create($dataProductPlan);
 
-                    $productPlanModel->create(
-                        array_filter([
-                            'product_id' => $product->id,
-                            'plan_id' => $plan->id,
-                            'amount' => 1,
-                            'cost' => $costShopify ?? ''
-                        ])
-                    );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
-                try {
-                    $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                } catch (Exception $e) {
-                    if (method_exists($e, 'getCode') && $e->getCode() == 429) {
-                        sleep(1);
-                        $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                    }
-                }
+                // try {
+                //     $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                // } catch (Exception $e) {
+                //     if (method_exists($e, 'getCode') && $e->getCode() == 429) {
+                //         sleep(1);
+                //         $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                //     }
+                // }
                 $product = $productModel->create(
                     [
                         'user_id' => $userId,
@@ -1010,17 +1011,21 @@ class ShopifyService
                     ]
                 );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
+
+                $dataProductPlan = [
+                    'product_id' => $product->id,
+                    'plan_id' => $plan->id,
+                    'amount' => '1',
+                ];
                 if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                    $costShopify = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost() * 100;
+                    $costShopify = $this->getCostShopify($variant);
+                    if($costShopify !== '') {
+                        $dataProductPlan['cost'] =  $costShopify * 100;
+                    }
                 }
-                $productPlanModel->create(
-                    [
-                        'product_id' => $product->id,
-                        'plan_id' => $plan->id,
-                        'amount' => '1',
-                        'cost' => $costShopify ?? ''
-                    ]
-                );
+
+                $productPlanModel->create($dataProductPlan);
+
                 $photo = '';
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -2269,6 +2274,24 @@ class ShopifyService
             $this->receivedData = json_encode($result);
         } catch (Exception $ex) {
             $this->exceptions[] = $ex->getMessage();
+        }
+    }
+
+    public function getCostShopify($variant)
+    {
+        try {
+
+            $cost = $this->getShopInventoryItem($variant->getInventoryItemId());
+            if(method_exists($cost, 'getCost')) {
+                $cost = $cost->getCost();
+                $cost = (empty($cost)) ? 0 : $cost;
+            } else {
+                $cost = '';
+            }
+            return $cost;
+
+        } catch (Exception $e) {
+            return '';
         }
     }
 
