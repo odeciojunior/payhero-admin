@@ -183,7 +183,7 @@ class GetNetStatementService
         ];
     }
 
-    private function setOrderFromGetNetOrderId($getOrderId): ?Order
+    public function setOrderFromGetNetOrderId($getOrderId): ?Order
     {
 
         if (!empty($getOrderId)) {
