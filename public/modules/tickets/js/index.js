@@ -337,7 +337,6 @@ $(document).ready(function () {
                 $("#div-ticket-comments").html('');
                 if (!isEmpty(response.data.messages)) {
                     let customerNameSplit = response.data.customer_name.split(' ');
-                    // let adminSrcImage = $('.img-user-menu-principal').attr('src');
                     let foxSrcImage = $('.navbar-brand-logo').attr('src');
 
                     for (let ticketMessage of response.data.messages) {
@@ -345,7 +344,7 @@ $(document).ready(function () {
                         data = `
                         <div class="d-flex flex-row mb-10">
                                 <img ${ticketMessage.type === 'from_admin' ? `src="${response.data.project_logo}"` : ticketMessage.type === 'from_system' ? `src="${foxSrcImage}"` : `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
-                                style='height:50px;width:50px;object-fit:contain;' class="rounded-circle ${ticketMessage.type === 'from_system' ? 'bg-dark' : ''}">
+                                style='height:50px;width:50px;object-fit:contain;' class="rounded-circle bg-light">
                             <div class="ml-15">
                                 <span class='font-weight-bold'>${ticketMessage.type === 'from_admin' ? response.data.project_name : ticketMessage.type === 'from_system' ? 'CloudFox' : response.data.customer_name}</span>
                                 <br>
