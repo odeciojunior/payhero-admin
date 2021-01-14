@@ -40,9 +40,11 @@ class GetnetAdjustmentsSearchCommand extends Command
     public function handle()
     {
 
-        $company = Company::find(3035);
+        //$company = Company::find(3035); // Rupert
+        $company = Company::find(2265); // ATAUA SIMOES DOS SANTOS 01210892073
+        $company = Company::find(2629); // JUSTGO GLOBAL INTERMEDIAÇÃO DE NEGÓCIOS DE VENDAS LTDA
         $g = new GetnetBackOfficeService();
-        $result = $g->getAdjustments($company);
+        $result = $g->getDiscounts($company);
 
         dd($result);
         return 0;
