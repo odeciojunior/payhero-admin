@@ -14,7 +14,7 @@ class AddTypeEnumToTicketMessages extends Migration
     public function up()
     {
         Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->integer('type_enum')->after('message');
+            $table->integer('type_enum')->default(1)->after('message');
         });
     }
 
