@@ -470,7 +470,7 @@ class PlansApiController extends Controller
     public function updateBulkCost(Request $request)
     {
         try {
-            $cost = $request->input('cost') * 100;
+            $cost = FoxUtils::onlyNumbers($request->input('cost'));
             $planId = current(Hashids::decode($request->input('plan')));
             $plan = Plan::find($planId);
             $planIds = Plan::where('name', $plan->name)

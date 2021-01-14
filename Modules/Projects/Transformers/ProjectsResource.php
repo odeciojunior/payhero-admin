@@ -83,7 +83,7 @@ class ProjectsResource extends JsonResource
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
             // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
-            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->currency_type_enum ?? 1),
+            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->cost_currency_type ?? 1),
             'update_cost_shopify' => $notazzConfig->update_cost_shopify ?? 1,
             'status' => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type' => $this->checkout_type,
