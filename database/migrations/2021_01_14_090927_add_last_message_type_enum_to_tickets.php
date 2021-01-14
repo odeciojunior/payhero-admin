@@ -14,7 +14,7 @@ class AddLastMessageTypeEnumToTickets extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->integer('last_message_type_enum')->after('ticket_status_enum');
+            $table->integer('last_message_type_enum')->default(1)->after('ticket_status_enum');
         });
     }
 
