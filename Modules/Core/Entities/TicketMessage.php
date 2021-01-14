@@ -5,22 +5,27 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\TicketMessagePresenter;
 use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
  * @property integer $ticket_id
  * @property string $message
- * @property boolean $from_admin
- * @property boolean $from_system
+ * @property integer $type_enum
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
  * @property Ticket $ticket
+ * @method TicketMessagePresenter present()
  */
 class TicketMessage extends Model
 {
-    use LogsActivity;
+    use PresentableTrait, LogsActivity;
+
+    protected $presenter = TicketMessagePresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -32,8 +37,7 @@ class TicketMessage extends Model
     protected $fillable = [
         'ticket_id',
         'message',
-        'from_admin',
-        'from_system',
+        'type_enum',
         'created_at',
         'updated_at',
         'deleted_at',

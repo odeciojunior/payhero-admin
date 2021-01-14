@@ -19,6 +19,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $description
  * @property integer $ticket_category_enum
  * @property integer $ticket_status_enum
+ * @property integer $last_message_type_enum
+ * @property string  $last_message_date
  * @property boolean $mediation_notified
  * @property boolean $ignore_balance_block
  * @property string $created_at
@@ -53,6 +55,8 @@ class Ticket extends Model
         'description',
         'ticket_category_enum',
         'ticket_status_enum',
+        'last_message_type_enum',
+        'last_message_date',
         'mediation_notified',
         'ignore_balance_block',
         'created_at',
@@ -125,23 +129,5 @@ class Ticket extends Model
     public function messages()
     {
         return $this->hasMany(TicketMessage::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function lastMessage()
-    {
-        return $this->hasMany(TicketMessage::class)
-                    ->latest();
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function lastOneMessage()
-    {
-        return $this->hasOne(TicketMessage::class)
-                    ->latest();
     }
 }

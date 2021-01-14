@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    let locationUrl = window.location.href;
     let cardColorByStatus = {
         1: 'orange',
         2: 'green',
@@ -95,7 +94,21 @@ $(document).ready(function () {
     }
 
     function getTickets(link = null) {
-        loadOnAny('#div-tickets, #div-ticket-empty');
+        loadOnAny('#div-tickets', false, {
+            styles: {
+                container: {
+                    minHeight: '140px',
+                },
+                loader: {
+                    width: '40px',
+                    height: '40px',
+                    borderWidth: '5px'
+                }
+            },
+            insertBefore: '#div-tickets'
+        });
+        $('#div-tickets').html('').show();
+        $("#div-ticket-empty").hide();
 
         if (link !== null) {
             pageCurrent = link;
@@ -129,20 +142,15 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('#div-tickets, #div-ticket-empty', true);
+                loadOnAny('#div-tickets', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
-
-                $("#div-tickets").html('');
-                $("#div-ticket-empty").hide();
-                $("#div-tickets").show();
-                let data = '';
                 if (!isEmpty(response.data)) {
                     for (let ticket of response.data) {
-                        data = `
+                        let data = `
                            <div class='col-12 col-lg-12'>
-                                <div class="card card-shadow bg-white card-left ${ticket.last_message_from == 'admin' ? 'blue' : !ticket.admin_answered ? 'red' : 'orange'}">
+                                <div class="card card-shadow bg-white card-left ${ticket.last_message_type_enum == 'from_admin' ? 'blue' : !ticket.admin_answered ? 'red' : 'orange'}">
                                     <div class="card-header bg-white p-20 pb-0">
                                         <i class="material-icons mr-1">chat_bubble_outline</i>
                                         <a class="not-hover ticket-details" data-id='${ticket.id}' href="#"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
@@ -197,10 +205,10 @@ $(document).ready(function () {
                                                 <div>
                                                     <span>Última resposta</span>
                                                 </div>
-                                                <span class='font-weight-bold'>${ticket.last_message}</span>
+                                                <span class='font-weight-bold'>${ticket.last_message_date}</span>
                                             </div>
                                             <div class='col-6 col-lg-2 mt-10'>
-                                                <span class='font-size-12 ${ticket.last_message_from == 'admin' ? 'blue-gradient' : !ticket.admin_answered ? 'red-gradient' : 'orange-gradient'} mt-20'>
+                                                <span class='font-size-12 ${ticket.last_message_type_enum == 'from_admin' ? 'blue-gradient' : !ticket.admin_answered ? 'red-gradient' : 'orange-gradient'} mt-20'>
                                                     ${ticket.ticket_status}
                                                 </span>
                                             </div>
@@ -208,16 +216,14 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                             </div>`;
-                        $("#div-tickets, #div-ticket-empty").append(data);
+                        $("#div-tickets").append(data);
                     }
                 } else {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
-
-
-                let filter = {...getFilters(), page: pageCurrent || null};
                 loadOnAny('#div-tickets', true);
+                let filter = {...getFilters(), page: pageCurrent || null};
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);
             }
@@ -228,7 +234,6 @@ $(document).ready(function () {
         let id = $(this).data('id');
         ticketId = id;
         $('#modal-title-ticket').html(`Detalhes do Chamado #${ticketId}`);
-        $('#modal-ticket').modal('show');
         ticketShow(id);
     });
     $(document).on('click', '#btn-answer', function (event) {
@@ -297,7 +302,7 @@ $(document).ready(function () {
                 $('.ticket-subject').html(`${response.data.subject}`);
                 $('.ticket-description').html(`<b>Descrição:</b> ${response.data.description}`);
                 $('.customer-name').html(`<b>Cliente:</b> ${response.data.customer_name}`);
-                $('.ticket-informations').html(`<b>Empresa</b>: ${response.data.company_name} | <b>Motivo:</b> ${response.data.ticket_category} | <b>Aberto em:</b> ${response.data.created_at} | <b>Última resposta em:</b> ${response.data.last_message}`);
+                $('.ticket-informations').html(`<b>Empresa</b>: ${response.data.company_name} | <b>Motivo:</b> ${response.data.ticket_category} | <b>Aberto em:</b> ${response.data.created_at} | <b>Última resposta em:</b> ${response.data.last_message_date}`);
                 $('#ticket-id').html(response.data.id);
                 $('.company-name').html(`${response.data.company_name}`);
                 $('.total-value').html(`${response.data.total_paid_value}`);
@@ -339,10 +344,10 @@ $(document).ready(function () {
                         let data = '';
                         data = `
                         <div class="d-flex flex-row mb-10">
-                                <img ${ticketMessage.from_admin == 1 ? `src="${response.data.project_logo}"` : ticketMessage.from_system ? `src="${foxSrcImage}"` : `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
-                                style='height:50px;width:50px;' class="img-fluid rounded-circle ${ticketMessage.from_system ? 'bg-dark' : ''}">
+                                <img ${ticketMessage.type === 'from_admin' ? `src="${response.data.project_logo}"` : ticketMessage.type === 'from_system' ? `src="${foxSrcImage}"` : `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
+                                style='height:50px;width:50px;object-fit:contain;' class="rounded-circle ${ticketMessage.type === 'from_system' ? 'bg-dark' : ''}">
                             <div class="ml-15">
-                                <span class='font-weight-bold'>${ticketMessage.from_admin == 1 ? response.data.project_name : ticketMessage.from_system ? 'CloudFox' : response.data.customer_name}</span>
+                                <span class='font-weight-bold'>${ticketMessage.type === 'from_admin' ? response.data.project_name : ticketMessage.type === 'from_system' ? 'CloudFox' : response.data.customer_name}</span>
                                 <br>
                                 <small>${ticketMessage.created_at}</small>
                                 <p>${ticketMessage.message}</p>
@@ -360,6 +365,8 @@ $(document).ready(function () {
                 } else {
                     $('#btn-answer').show();
                 }
+
+                $('#modal-ticket').modal('show');
             }
 
         });
