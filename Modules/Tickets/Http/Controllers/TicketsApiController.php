@@ -134,10 +134,6 @@ class TicketsApiController extends Controller
                         'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
                     ]);
 
-                    $ticket->last_message_type_enum = $message->type_enum;
-                    $ticket->last_message_date = $message->created_at;
-                    $ticket->save();
-
                     event(new TicketMessageEvent($message, $lastAdminMessage));
 
                     return new TicketMessageResource($message);
