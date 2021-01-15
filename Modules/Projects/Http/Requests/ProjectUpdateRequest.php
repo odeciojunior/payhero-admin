@@ -65,7 +65,7 @@ class ProjectUpdateRequest extends FormRequest
             'checkout_notification_config_time' => 'required_if:checkout_notification_config_toogle,1|digits_between:1,9999999',
             'checkout_notification_mobile' =>  'required_if:checkout_notification_config_toogle,1|boolean',
             'checkout_notification_config_messages' =>  'required_if:checkout_notification_config_toogle,1|array',
-
+            'checkout_notification_config_messages_min_value' => 'required_if:checkout_notification_config_toogle,1|array',
         ];
     }
 
@@ -84,6 +84,7 @@ class ProjectUpdateRequest extends FormRequest
             'checkout_notification_config_time.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
             'checkout_notification_mobile.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
             'checkout_notification_config_messages.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
+            'checkout_notification_config_messages_min_value.required_if' =>  'Campo obrigatório enquanto a opção mostrar notificação de vendas estiver ativo.',
         ];
     }
 

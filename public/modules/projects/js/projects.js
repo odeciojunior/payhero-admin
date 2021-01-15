@@ -407,7 +407,7 @@ $(() => {
             $('.checkout_notification_config').removeClass('d-none')
         }
 
-        $('[name=checkout_notification_config_time]').val((project.checkout_notification_config_time || 10 ))
+        $('[name=checkout_notification_config_time]').val((project.checkout_notification_config_time || 30 ))
         $('[name=checkout_notification_mobile]').val((project.checkout_notification_config_mobile || 1))
        // $('[name=checkout_notification_config_messages]').val((project.checkout_notification_config_message || [] ))
 
@@ -418,6 +418,16 @@ $(() => {
             config_nessages_keys.map((id) => {
                 $('input[name="checkout_notification_config_messages['+id+']"]').prop("checked", true)
             });
+
+        }
+
+        if(project.checkout_notification_config_messages_min_value){
+
+            let obj = project.checkout_notification_config_messages_min_value
+            Object.keys(obj).forEach(key => {
+                $('input[name="checkout_notification_config_messages_min_value['+key+']"]').val(obj[key])
+            });
+
         }
 
         $('[name=finalizing_purchase_config_toogle]').prop('checked', is_checked_finalizing_purchase_config)
@@ -714,10 +724,16 @@ $(() => {
                 }, success: function (response) {
                     alertCustom('success', response.message);
 
+                    $('html, body').animate({
+                        scrollTop: $('#bt-update-project').offset().top
+                    }, 'slow');
+
                     $("#image-logo-email").imgAreaSelect({remove: true});
                     $("#previewimage").imgAreaSelect({remove: true});
                     updateConfiguracoes();
                     loadingOnScreenRemove();
+
+
                 }
             });
         } else {

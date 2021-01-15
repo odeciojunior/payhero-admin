@@ -418,9 +418,38 @@ class Project extends Model
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
-        if (isset($json_decode['messages']))
-            return $json_decode['messages'];
+        if (isset($json_decode['messages'])) {
+            $message_arr = $json_decode['messages'];
+            $messages = array_map(
+                function($message) {
+                    $res = explode('//',$message);
+                    return $res[0];
+            },
+                $message_arr
+        );
+            return $messages;
+        }
+        return null;
+    }
 
+    public function getCheckoutNotificationConfigsMessageMinValueAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['messages'])) {
+            $message_arr = $json_decode['messages'];
+            $messages = array_map(
+                function($message) {
+                    $res = explode('//',$message);
+                    return $res[1];
+                },
+                $message_arr
+            );
+            return $messages;
+        }
         return null;
     }
 }

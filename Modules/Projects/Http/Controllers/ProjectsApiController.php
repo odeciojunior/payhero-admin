@@ -352,7 +352,7 @@ class ProjectsApiController extends Controller
 
                 if($requestValidated['checkout_notification_config_messages']){
                     foreach($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
-                        $messages[$config_message_key] = config('arrays.checkout_notification_config_messages')[$config_message_key];
+                        $messages[$config_message_key] = config('arrays.checkout_notification_config_messages')[$config_message_key]  . '//' . $requestValidated['checkout_notification_config_messages_min_value'][$config_message_key];
                     }
                 }
 
