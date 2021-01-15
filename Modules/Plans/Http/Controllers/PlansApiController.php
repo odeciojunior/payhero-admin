@@ -470,10 +470,13 @@ class PlansApiController extends Controller
     public function updateBulkCost(Request $request)
     {
         try {
-            $cost   = $request->input('cost');
+            $cost = FoxUtils::onlyNumbers($request->input('cost'));
             $planId = current(Hashids::decode($request->input('plan')));
-
-            $productPlans = ProductPlan::where('plan_id', $planId)->get();
+            $plan = Plan::find($planId);
+            $planIds = Plan::where('name', $plan->name)
+                           ->where('shopify_id', $plan->shopify_id)
+                           ->get()->pluck('id');
+            $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
 
             foreach ($productPlans as $productPlan) {
                 $productPlan->update(['cost' => $cost]);

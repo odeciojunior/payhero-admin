@@ -39,25 +39,29 @@
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>Cliente</label>
-                                        <input id='customer-filter' class='form-control' type='text' placeholder='Nome do cliente'>
+                                        <input id='customer-filter' class='form-control' type='text'
+                                               placeholder='Nome do cliente'>
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>CPF do Cliente</label>
-                                        <input id='cpf-filter' class='form-control' type='text' placeholder='CPF do cliente'>
+                                        <input id='cpf-filter' class='form-control' type='text'
+                                               placeholder='CPF do cliente'>
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>Data</label>
-                                        <input name='date_range' id="date_range" class="form-control bg-white" placeholder="Clique para editar..." readonly>
+                                        <input name='date_range' id="date_range" class="form-control bg-white"
+                                               placeholder="Clique para editar..." readonly>
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>Código do chamado</label>
-                                        <input id='ticker-code-filter' class='form-control' type='text' placeholder='Código do chamado'>
+                                        <input id='ticker-code-filter' class='form-control' type='text'
+                                               placeholder='Código do chamado'>
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
@@ -73,7 +77,8 @@
                                 </div>
                                 <div class="col-12 col-md-3 col-lg-3 mt-25">
                                     <button id="btn-filter" class="btn btn-primary w-full">
-                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                        <img style="height: 12px; margin-right: 4px"
+                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
                                     </button>
                                 </div>
                             </div>
@@ -136,21 +141,26 @@
                 <div id='div-ticket-empty' class='row' style='display:none;'>
                     <div class='col-12 col-lg-12'>
                         <div class="card card-shadow bg-white card-left orange">
-                            <div class='card-header bg-white font-size-16 text-center py-20 d-flex justify-content-center align-items-center' style="height: 135.35px">Nenhum chamado encontrado</div>
+                            <div
+                                class='card-header bg-white font-size-16 text-center py-20 d-flex justify-content-center align-items-center'
+                                style="height: 135.35px">Nenhum chamado encontrado
+                            </div>
                         </div>
                     </div>
                 </div>
-                <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination"
+                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                     {{-- js carrega... --}}
                 </ul>
             </div>
         </div>
         {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
+        @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
     </div>
     <!-- Modal detalhes do ticket -->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-ticket" role="dialog" tabindex="-1" style='padding-right: 15px;'>
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-ticket" role="dialog" tabindex="-1"
+         style='padding-right: 15px;'>
         <div class="modal-dialog modal-dialog-centered modal-simple modal-lg">
             <div class="modal-content p-10">
                 <div class="modal-header simple-border-bottom mb-10">
@@ -217,7 +227,8 @@
                                 <div class='col-lg-12'>
                                     <div class='form-group'>
                                         <label>Mensagem</label>
-                                        <textarea class='form-control user-message' placeholder='Digite sua resposta' rows='6'></textarea>
+                                        <textarea class='form-control user-message' placeholder='Digite sua resposta'
+                                                  rows='6'></textarea>
                                     </div>
                                 </div>
                                 <div class='col-lg-12 text-right'>

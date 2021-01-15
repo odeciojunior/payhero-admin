@@ -131,7 +131,7 @@ class WithdrawalsApiController
                 function ($query) {
                     $query->where('user_id', auth()->user()->account_owner_id);
                 }
-            )->where('automatic_liquidation',  true)
+            )
                 ->whereIn('status', $withdrawalStatus)
                 ->exists();
 

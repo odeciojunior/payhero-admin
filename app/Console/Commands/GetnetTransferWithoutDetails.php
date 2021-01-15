@@ -106,7 +106,6 @@ class GetnetTransferWithoutDetails extends Command
 
             try {
 
-
                 $saleId = $transaction->sale_id;
                 $hashId = $transaction->sale->hash_id;
 
@@ -124,15 +123,7 @@ class GetnetTransferWithoutDetails extends Command
                 $originalResult = $getNetBackOfficeService->getStatement();
                 $result = json_decode($originalResult);
 
-                if ($transaction->sale->created_at > '2020-10-30 13:28:51.0') {
-
-                    $orderId = $hashId . '-' . $saleId . '-' . $transaction->sale->attempts;
-                } else {
-
-                    $orderId = $hashId . '-' . $transaction->sale->attempts;
-                }
-
-                //print_r($orderId . ', ');
+                $orderId = $transaction->sale->gateway_order_id;
 
                 if (isset($result->list_transactions)) {
 

@@ -18,10 +18,6 @@ Route::group(
     function() {
 
         Route::Resource('/attendance', 'AttendanceController')
-             ->only('index', 'create', 'show')->middleware('role:account_owner|admin|attendance')->names('attendance');
+             ->only('index')->middleware('role:account_owner|admin|attendance')->names('attendance');
     }
 );
-
-//Route::prefix('attendance')->group(function() {
-//    Route::get('/', 'AttendanceController@index');
-//});

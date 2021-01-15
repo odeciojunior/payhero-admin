@@ -3,6 +3,7 @@
 namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\TicketMessage;
 
 class TicketPresenter extends Presenter
 {
@@ -62,5 +63,11 @@ class TicketPresenter extends Presenter
                     return 0;
             }
         }
+    }
+
+    public function getLastMessageType($type = 0)
+    {
+        if (!$type) $type = $this->last_message_type_enum;
+        return (new TicketMessage())->present()->getType($type);
     }
 }

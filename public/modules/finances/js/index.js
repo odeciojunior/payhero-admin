@@ -723,6 +723,7 @@ $(document).ready(function () {
         'WAITING_FOR_VALID_POST': 'pendente',
         'WAITING_LIQUIDATION': 'info',
         'WAITING_WITHDRAWAL': 'withdrawal',
+        'WAITING_RELEASE': 'withdrawal',
         'PAID': 'success',
         'REVERSED': 'warning',
         'ADJUSTMENT_CREDIT': 'dark',
@@ -870,6 +871,7 @@ $(document).ready(function () {
         'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+        'Próximos 30 dias': [moment(), moment().add(29, 'days')],
         'Este mês': [moment().startOf('month'), moment().endOf('month')],
         'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     };

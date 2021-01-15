@@ -20,7 +20,7 @@ class ProductsSelectResource extends JsonResource
             'name'        => !empty($this->description) ? $this->name . ' - ' . Str::limit($this->description, 20) : $this->name,
             'type_enum'   => $this->type_enum,
             'status_enum' => $this->status_enum,
-            'cost'        => $this->productsPlans->first()->cost ?? 0,
+            'cost'        => 'R$ '.number_format(($this->productsPlans->first()->cost ?? 0) / 100, 2, '.', ',')
         ];
     }
 }

@@ -26,7 +26,7 @@
                         <div class='col-sm-9 col-md-9 col-lg-9'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
-                                <select id="product_1" name="products[]" class="form-control plan_product">
+                                <select id="product_1" name="products[]" class="form-control plan_product plan_product_create">
                                     {{--select no js--}}
                                 </select>
                             </div>

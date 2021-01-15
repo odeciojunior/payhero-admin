@@ -23,7 +23,7 @@ class UpdateRedisSaleTracking extends Command
         try{
 
             $sales = Sale::where('gateway_id', 15)->chunk(
-                500,
+                1000,
                 function ($sales) {
                     foreach ($sales as $sale) {
                         $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
@@ -34,7 +34,7 @@ class UpdateRedisSaleTracking extends Command
                     }
                 }
             );
-    
+
             return 0;
         }
         catch(Exception $e){

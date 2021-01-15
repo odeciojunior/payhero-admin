@@ -356,6 +356,7 @@
                         </div>
                         <div id='div_refund_transaction' class='mt-20'></div>
                         <div id='div_refund_billet' class='mt-20'></div>
+                        <div id='div_refund_receipt' class='mt-20'></div>
                     </div>
                 </div>
             </div>
