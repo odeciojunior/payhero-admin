@@ -566,10 +566,10 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function checkDebitValue(Request $request): JsonResponse
+    public function checkDebitValue(Request $request, $idCompany): JsonResponse
     {
         try {
-            $company = (new Company())->find(current(Hashids::decode(request('company'))));
+            $company = (new Company())->find(current(Hashids::decode($idCompany)));
 
             if (empty($company)) {
                 return response()->json(
@@ -590,7 +590,8 @@ class CompaniesApiController extends Controller
                 [
                     'success' => true,
                     'data' => [
-                        'amount' => 'R$ ' . number_format($data['amount'], 2, ',', '.'),
+                        'itens' => $data['items'],
+                        'amount' => number_format($data['amount'], 2, ',', '.'),
                     ]
                 ],
                 200

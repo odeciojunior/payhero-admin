@@ -245,8 +245,10 @@ class WithdrawalsApiController
             );
             return response()->json(
                 [
-                    'lower_value' => 0,
-                    'bigger_value' => 0
+                    'data' => [
+                        'lower_value' => 0,
+                        'bigger_value' => 0
+                    ]
                 ]
             );
         } catch (Exception $e) {

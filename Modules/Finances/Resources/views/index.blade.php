@@ -12,6 +12,17 @@
             background-color: #f3f7f9;
             opacity: 1;
         }
+
+        .modal-content-style {
+            border-radius: 20px 20px 0px 0px;
+        }
+
+        .modal-title-withdrawal {
+            background: #2E85EC 0% 0% no-repeat padding-box;
+            box-shadow: 0px 1px 15px #00000017;
+            border-radius: 20px 20px 0px 0px;
+            opacity: 1;
+        }
     </style>
 @endpush
 
@@ -118,11 +129,6 @@
                                             <label for="custom-input-addon"> Valor a transferir</label>
                                             <div class="input-group mb-3"
                                                  style='padding:0'>
-                                                <!--                                                <div class='input-group-prepend'>
-                                                                                                        <span class="input-group-text custom-addon" id="basic-addon1"
-                                                                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                                                                    class="currency">$</span></span>
-                                                                                                </div>-->
                                                 <input id="custom-input-addon" type="text"
                                                        class="form-control input-pad withdrawal-value"
                                                        placeholder="Digite o valor" aria-label="Digite o valor"
@@ -131,7 +137,9 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-3 pt-1">
-                                            <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
+                                            <button id="bt-withdrawal"
+                                                    class="btn btn-success disabled btn-sacar mt-20"
+                                                    style="background: #41DC8F 0% 0% no-repeat padding-box;border-radius: 12px;"
                                                     data-toggle="modal" disabled>
                                                 <span style="-webkit-text-stroke: 1.45px #FFF;"
                                                       class="o-checkmark-1 white font-size-16"></span>
@@ -142,6 +150,14 @@
                                 </div>
                                 <div class='container col-sm-12 mb-40'>
                                     <div class='row'>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
+                                                <h4 class="price saldoDebito" id="debit-value">
+                                                </h4>
+                                                <div class="grad-border red"></div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-3 ">
                                             <div class="price-holder">
                                                 <h6 class="label-price mb-15"> Saldo Pendente </h6>
@@ -165,36 +181,6 @@
                                                 </h4>
                                                 <div class="grad-border blue"></div>
                                             </div>
-                                        </div>
-                                        <div id="alert-debit-value" class="col-sm-3 alert alert-info"
-                                             style="display:none;background: #DCECFF 0% 0% no-repeat padding-box;
-                                                border: 2px solid #4A89F5;
-                                                border-radius: 11px;
-                                                opacity: 1;">
-
-                                            Você possui um ajuste a débito pendente no valor de  <strong id="debit-value"></strong>
-                                            que será descontado do valor dos próximos saques solicitados. Você pode consultar
-                                            esse valor na agenda financeira filtrando por "Ajuste de débito".
-
-                                           <div class="row " style="position: absolute">
-                                               <button type="button" class="btn" id="ir-agenda" style="margin-right:20px;background: #E6E6E6 0% 0% no-repeat padding-box;
-                                                border-radius: 5px;
-                                                opacity: 1;text-align: left;
-                                                font: normal normal bold 12px/24px Muli;
-                                                letter-spacing: 0px;
-                                                color: #787878;">
-                                                   Ir para Agenda!
-                                               </button>
-                                               <button type="button" class="btn" data-dismiss="alert" aria-label="Close" style=" background: #4A89F5 0% 0% no-repeat padding-box;
-                                                border-radius: 5px;
-                                                opacity: 1;text-align: left;
-                                                font: normal normal bold 12px/24px Muli;
-                                                letter-spacing: 0px;
-                                                color: #FFFFFF;">
-                                                   Ok, Entendi!
-                                               </button>
-                                           </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -398,34 +384,69 @@
 
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
+            <div id="" class="modal-dialog modal-dialog-centered modal-simple">
+                <div id="" class="modal-content modal-content-style">
+                    <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal"
+                         style="height: 60px;">
+                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;">Confirmar Saque</h3>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                           <div class="col-12">
+                               <div id="modal-body-withdrawal" class="col-12 mt-30">
+
+                               </div>
+                           </div>
+                            <div id="debit-pending-informations" class="col-12 mt-20" style="display:none;background: #FFF8F9FA 0% 0% no-repeat padding-box;display:none; ">
+                                <div class="col-12">
+                                    <h3 class="text-left mt-15" id="text-title-debit-pending"> Débitos pendentes</h3>
+                                    <p style="color: #959595;">Você tem alguns valores em aberto, confira:</p>
+                                    <div id="debit-itens">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id='modal-withdraw-footer' class="modal-footer">
+
+                        <div class="col-md-8">
+                            <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal"
+                                    aria-label="Close"
+                                    style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
+                                <strong>Cancelar</strong>
+                            </button>
+
+                            <button id="bt-confirm-withdrawal" class="btn btn-success"
+                                    style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
+                                <strong>Confirmar</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- End Modal --}}
+
+        {{-- Modal itens extrato --}}
+        <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
             <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
                 <div id="conteudo_modal_add" class="modal-content p-10">
                     <div class="header-modal simple-border-bottom">
                         <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
                     </div>
-                    <div id="modal_body" class="modal-body simple-border-bottom"
+                    <div class="modal-body simple-border-bottom"
                          style='padding-bottom:1%;padding-top:1%;'>
-                        <div>
-                            <h5>Verifique os dados da conta:</h5>
-                            <h4>Banco:
-                                <span id="modal-withdrawal-bank"></span>
-                            </h4>
-                            <h4>Agência:
-                                <span id="modal-withdrawal-agency"></span>
-                                <span id="modal-withdrawal-agency-digit"></span>
-                            </h4>
-                            <h4>Conta:
-                                <span id="modal-withdrawal-account"></span>
-                                <span id="modal-withdrawal-account-digit"></span>
-                            </h4>
-                            <h4>Documento:
-                                <span id="modal-withdrawal-document"></span>
-                            </h4>
-                            <hr>
-                            <h4>Valor do saque:
-                                <span id="modal-withdrawal-value" class='greenGradientText'></span>
-                                <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
-                            </h4>
+
+                        <div id="modal_body">
+
+                        </div>
+                        <div id="debit-pending-informations" style="background: #FFF8F9FA 0% 0% no-repeat padding-box;display:none; ">
+                            <h3 class="text-left mt-15" id="text-title-debit-pending"> Débitos pendentes</h3>
+                            <div id="debit-itens">
+
+                            </div>
                         </div>
                     </div>
                     <div id='modal-withdraw-footer' class="modal-footer">
