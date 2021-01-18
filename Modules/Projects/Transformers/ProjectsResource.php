@@ -117,6 +117,12 @@ class ProjectsResource extends JsonResource
             'finalizing_purchase_config_toogle' => $this->finalizing_purchase_config_toogle,
             'finalizing_purchase_config_text' => $this->finalizing_purchase_config_text,
             'finalizing_purchase_config_min_value' => $this->finalizing_purchase_config_min_value,
+            'checkout_notification_config_toogle' => $this->checkout_notification_configs_toogle,
+            'checkout_notification_config_time' => $this->checkout_notification_configs_time,
+            'checkout_notification_config_mobile' => $this->checkout_notification_configs_mobile,
+            'checkout_notification_config_messages' => $this->checkout_notification_configs_message,
+            'checkout_notification_config_messages_min_value' => $this->checkout_notification_configs_message_min_value,
+
         ];
     }
 }

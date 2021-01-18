@@ -400,6 +400,36 @@ $(() => {
         $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
 
         let is_checked_finalizing_purchase_config = !!(project.finalizing_purchase_config_toogle)
+        let is_checked_checkout_notification_config = !!(project.checkout_notification_config_toogle)
+
+        $('[name=checkout_notification_config_toogle]').prop('checked', is_checked_checkout_notification_config)
+        if(is_checked_checkout_notification_config){
+            $('.checkout_notification_config').removeClass('d-none')
+        }
+
+        $('[name=checkout_notification_config_time]').val((project.checkout_notification_config_time || 30 ))
+        $('[name=checkout_notification_mobile]').val((project.checkout_notification_config_mobile || 1))
+       // $('[name=checkout_notification_config_messages]').val((project.checkout_notification_config_message || [] ))
+
+        if(project.checkout_notification_config_messages){
+
+            let config_nessages_keys = Object.keys(project.checkout_notification_config_messages);
+
+            config_nessages_keys.map((id) => {
+                $('input[name="checkout_notification_config_messages['+id+']"]').prop("checked", true)
+            });
+
+        }
+
+        if(project.checkout_notification_config_messages_min_value){
+
+            let obj = project.checkout_notification_config_messages_min_value
+            Object.keys(obj).forEach(key => {
+                $('input[name="checkout_notification_config_messages_min_value['+key+']"]').val(obj[key])
+            });
+
+        }
+
         $('[name=finalizing_purchase_config_toogle]').prop('checked', is_checked_finalizing_purchase_config)
         if(is_checked_finalizing_purchase_config){
             $('.finalizing_purchase_config').removeClass('d-none')
@@ -427,7 +457,7 @@ $(() => {
         $("#message_not_verified_support_phone").css("display", "");
         $("#input_group_support_phone").css("border-color", "red");
         $("#support_phone").css("border-color", "red");
-        $("#input_group_support_phone").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Telefone de suporte não verificado!' style='color:red;'></i>");
+        $("#input_group_support_phone").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Telefone de suporte não verificado!' style='color:#ff0000;'></i>");
     }
 
     function contactVerified() {
@@ -694,10 +724,16 @@ $(() => {
                 }, success: function (response) {
                     alertCustom('success', response.message);
 
+                    $('html, body').animate({
+                        scrollTop: $('#bt-update-project').offset().top
+                    }, 'slow');
+
                     $("#image-logo-email").imgAreaSelect({remove: true});
                     $("#previewimage").imgAreaSelect({remove: true});
                     updateConfiguracoes();
                     loadingOnScreenRemove();
+
+
                 }
             });
         } else {
@@ -1033,6 +1069,19 @@ $(() => {
         } else {
             $('.finalizing_purchase_config').addClass('d-none')
             $('#finalizing_purchase_config_error').hide('fast', 'linear')
+        }
+    })
+
+
+    $('#checkout_notification_config').on("click", function () {
+        let is_checked = $('#checkout_notification_config').prop('checked');
+
+        if (is_checked) {
+            $('.checkout_notification_config').removeClass('d-none')
+            $('#checkout_notification_config_error').show('fast', 'linear')
+        } else {
+            $('.checkout_notification_config').addClass('d-none')
+            $('#checkout_notification_config_error').hide('fast', 'linear')
         }
     })
 

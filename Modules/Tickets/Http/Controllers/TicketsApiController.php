@@ -124,6 +124,11 @@ class TicketsApiController extends Controller
             if (!empty($ticket)) {
 
                 if (!empty($data['message'])) {
+
+                    if(strlen($data['message']) < 10) {
+                        return response()->json(['message' => 'A mensagem informada é muito curta!'], 400);
+                    }
+
                     $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
                         ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
                         ->latest('id')
@@ -133,10 +138,6 @@ class TicketsApiController extends Controller
                         'message' => $data['message'],
                         'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
                     ]);
-
-                    $ticket->last_message_type_enum = $message->type_enum;
-                    $ticket->last_message_date = $message->created_at;
-                    $ticket->save();
 
                     event(new TicketMessageEvent($message, $lastAdminMessage));
 

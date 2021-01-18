@@ -6,7 +6,9 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Observers\SaleObserver;
+use Modules\Core\Observers\TicketMessageObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Sale::observe(SaleObserver::class);
+        TicketMessage::observe(TicketMessageObserver::class);
     }
 
     /**
