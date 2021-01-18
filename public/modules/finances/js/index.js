@@ -177,7 +177,26 @@ $(document).ready(function () {
             },
             success: (response) => {
                 loadOnAny('.price', true);
-                $('.saldoDebito').html(`<span class="currency">R$</span><span class="debit-balance">${response.data.amount}</span>`);
+                let amount = response.data.amount;
+                $('.saldoDebito').html(`
+                    <span 
+                        class="currency" 
+                        style=" 
+                                font: normal normal 300 19px/13px Roboto;
+                                color: #E61A1A;"
+                        >
+                            - R$
+                        </span>
+                        <span 
+                            class="debit-balance"
+                            style="
+                                font: normal normal bold 34px/18px Roboto;
+                                letter-spacing: 0.07px;
+                                color: #E61A1A;"
+                        > 
+                            ${amount}
+                        </span>
+                `);
 
                 let dataItensExtract = '';
                 $("#debit-pending-informations").hide();
@@ -412,10 +431,10 @@ $(document).ready(function () {
             $('.modal-body #modal-body-withdrawal').html(`
                 <div>
                     <div class="mt-10 mb-10">
-                        <h3 class="text-left">
-                            ${singleValue ? 'Saque disponível:' : 'Saques disponíveis:'}
+                        <h3 class="text-center mb-1">
+                            ${singleValue ? 'Saque disponível:' : 'Selecione um valor:'}
                         </h3>
-                        <p>
+                        <p class="text-center">
                             ${singleValue ? '' : 'Selecione o valor que mais se encaixa a sua solicitação'}
                         </p>
                         <h3 class="text-left">

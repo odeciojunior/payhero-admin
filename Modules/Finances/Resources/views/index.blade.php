@@ -152,14 +152,6 @@
                                     <div class='row'>
                                         <div class="col-sm-3 ">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                <h4 class="price saldoDebito" id="debit-value">
-                                                </h4>
-                                                <div class="grad-border red"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 ">
-                                            <div class="price-holder">
                                                 <h6 class="label-price mb-15"> Saldo Pendente </h6>
                                                 <h4 class="price saldoPendente">
                                                 </h4>
@@ -180,6 +172,14 @@
                                                 <h4 class="price saltoTotal">
                                                 </h4>
                                                 <div class="grad-border blue"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
+                                                <h4 class="price saldoDebito" id="debit-value">
+                                                </h4>
+                                                <div class="grad-border red"></div>
                                             </div>
                                         </div>
                                     </div>

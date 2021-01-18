@@ -591,7 +591,7 @@ class CompaniesApiController extends Controller
                     'success' => true,
                     'data' => [
                         'itens' => $data['items'],
-                        'amount' => number_format($data['amount'], 2, ',', '.'),
+                        'amount' => number_format(abs($data['amount']), 2, ',', '.'),
                     ]
                 ],
                 200
