@@ -102,6 +102,7 @@ class VerifyTransfersGetnet extends Command
                                         [
                                             'status' => 'transfered',
                                             'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                            'gateway_transferred' => true
                                         ]
                                     );
                                 } else {
