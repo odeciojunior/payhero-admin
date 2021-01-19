@@ -596,6 +596,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class='col-12 '>
                                 <div class="switch-holder">
@@ -654,6 +655,126 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class='col-12 '>
+                                <div class="switch-holder">
+                                    <label for='checkout_notification_config'
+                                           style='margin-right:15px;margin-bottom: 3px'>Mostrar notificação de
+                                        vendas</label>
+
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="checkout_notification_config"
+                                               name="checkout_notification_config_toogle" class='check'
+                                               value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+
+                                    <p class='info pt-5' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                        Ao habilitar esta função, serão exibidas notificações no checkout para os clientes.
+                                    </p>
+
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="col-6">
+                                <label for='checkout_notification_config_time'
+                                       class="checkout_notification_config d-none"
+                                       style='margin-right:15px;margin-bottom: 3px'>Período de tempo</label>
+
+                                <select name='checkout_notification_config_time'
+                                        class='form-control select-pad checkout_notification_config d-none'
+                                        id="checkout_notification_config_time">
+                                    <option value='30'>30 segundos</option>
+                                    <option value='60'>60 segundos</option>
+                                </select>
+
+                                <p class='info pt-5 checkout_notification_config d-none' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                    Intervalo de tempo em que as notificações serão exibidas.
+                                </p>
+
+                                <span id='checkout_notification_config_text_error' class='text-danger'></span>
+                            </div>
+
+
+                            <div class="col-6">
+                                <label for='checkout_notification_mobile'
+                                       class="checkout_notification_config d-none"
+                                       style='margin-right:15px;margin-bottom: 3px'>Habilitar no mobile (não
+                                    recomendado)</label>
+
+                                <select name='checkout_notification_mobile'
+                                        class='form-control select-pad checkout_notification_config d-none'
+                                        id="checkout_notification_mobile">
+                                    <option value='1'>Sim</option>
+                                    <option value='0'>Não</option>
+                                </select>
+
+                                <p class='info pt-5 checkout_notification_config d-none' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                                    Habilitar as notificações na versão mobile.
+                                </p>
+
+                                <span id='checkout_notification_config_text_error' class='text-danger'></span>
+                            </div>
+
+                            <div class='col-12 checkout_notification_config d-none'>
+                                <div class="switch-holder">
+                                    <label for='checkout_notification_config_messages'
+                                           style='margin-right:15px;margin-bottom: 3px'>Notificações</label>
+
+
+                                    <table class="table ">
+                                        <thead>
+                                        <tr>
+                                            <th style="width:25px">
+                                                Ativo?
+                                            </th>
+                                            <th>
+                                                Mensagem
+                                            </th>
+                                            <th>
+                                                Quantidade mínima para mostrar
+                                            </th>
+                                        </tr>
+
+                                        </thead>
+                                        <tbody  id="table_checkout_notifications_table">
+
+
+
+
+
+                                        @foreach(config('arrays.checkout_notification_config_messages') as $key => $value)
+
+                                            <tr>
+                                                <td>
+                                                    <input id="" type="checkbox" name="checkout_notification_config_messages[{{$key}}]" class="check">
+                                                </td>
+
+                                                <td>
+                                                    {!! $value !!}
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" name="checkout_notification_config_messages_min_value[{{$key}}]" data-mask="000"
+                                                           type='text' placeholder='0' value="1" maxlength='4' class="form-control">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+
+                                    <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
@@ -855,10 +976,14 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <button type="button"
+                            class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                            data-dismiss="modal" style="width: 20%;">
                         <b>Cancelar</b>
                     </button>
-                    <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <button type="button"
+                            class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                            data-dismiss="modal" style="width: 20%;">
                         <b class="mr-2">Excluir </b>
                         <span class="o-bin-1"></span>
                     </button>

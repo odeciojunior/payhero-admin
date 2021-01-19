@@ -83,7 +83,7 @@ class ProjectsResource extends JsonResource
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
             // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
-            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->currency_type_enum ?? 1),
+            'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->cost_currency_type ?? 1),
             'update_cost_shopify' => $notazzConfig->update_cost_shopify ?? 1,
             'status' => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type' => $this->checkout_type,
@@ -117,6 +117,12 @@ class ProjectsResource extends JsonResource
             'finalizing_purchase_config_toogle' => $this->finalizing_purchase_config_toogle,
             'finalizing_purchase_config_text' => $this->finalizing_purchase_config_text,
             'finalizing_purchase_config_min_value' => $this->finalizing_purchase_config_min_value,
+            'checkout_notification_config_toogle' => $this->checkout_notification_configs_toogle,
+            'checkout_notification_config_time' => $this->checkout_notification_configs_time,
+            'checkout_notification_config_mobile' => $this->checkout_notification_configs_mobile,
+            'checkout_notification_config_messages' => $this->checkout_notification_configs_message,
+            'checkout_notification_config_messages_min_value' => $this->checkout_notification_configs_message_min_value,
+
         ];
     }
 }

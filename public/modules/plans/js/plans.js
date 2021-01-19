@@ -839,7 +839,6 @@ $(function () {
         }
     });
 
-    $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
     $(document).on('click', '#config-cost-plan', function (event) {
         event.preventDefault();
@@ -915,6 +914,8 @@ $(function () {
                 var indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
                 $('#cost_currency_type').prop('selectedIndex', indexCurrency);
                 $('#update_cost_shopify').prop('selectedIndex',response.data.update_cost_shopify);
+                var prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
+                $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
             },
         });
     });
@@ -989,6 +990,9 @@ $(function () {
             }),
             success: function success(data) {
                 loadingOnScreenRemove();
+                var prefixCurrency = ($('#cost_currency_type').val() == 'USD') ? 'US$' : 'R$';
+                $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
+                $('#currency_type_project').val(($('#cost_currency_type').val() == 'USD') ? 2 : 1);
                 alertCustom("success", "Configuração atualizada com sucesso");
                 // index(pageCurrent);
             }

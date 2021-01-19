@@ -153,6 +153,7 @@ class Project extends Model
         'reviews_config_icon_color',
         'product_amount_selector',
         'finalizing_purchase_configs',
+        'checkout_notification_configs',
         'notazz_configs',
         'created_at',
         'updated_at',
@@ -366,6 +367,89 @@ class Project extends Model
         if (isset($json_decode['min_value']))
             return $json_decode['min_value'];
 
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsToogleAttribute()
+    {
+
+        if (empty($this->checkout_notification_configs))
+            return 0;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['toogle']))
+            return $json_decode['toogle'];
+
+        return 0;
+    }
+
+    public function getCheckoutNotificationConfigsTimeAttribute()
+    {
+
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['time']))
+            return $json_decode['time'];
+
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsMobileAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['mobile']))
+            return $json_decode['mobile'];
+
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsMessageAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['messages'])) {
+            $message_arr = $json_decode['messages'];
+            $messages = array_map(
+                function($message) {
+                    $res = explode('//',$message);
+                    return $res[0];
+            },
+                $message_arr
+        );
+            return $messages;
+        }
+        return null;
+    }
+
+    public function getCheckoutNotificationConfigsMessageMinValueAttribute()
+    {
+        if (empty($this->checkout_notification_configs))
+            return null;
+
+        $json_decode = json_decode($this->checkout_notification_configs, true);
+
+        if (isset($json_decode['messages'])) {
+            $message_arr = $json_decode['messages'];
+            $messages = array_map(
+                function($message) {
+                    $res = explode('//',$message);
+                    return $res[1];
+                },
+                $message_arr
+            );
+            return $messages;
+        }
         return null;
     }
 }

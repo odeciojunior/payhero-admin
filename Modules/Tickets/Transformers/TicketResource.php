@@ -12,40 +12,27 @@ class TicketResource extends JsonResource
     public function toArray($request)
     {
         $createdAt   = Carbon::parse($this->created_at)->format('d/m/Y H:i:s');
-        $lastMessage = $this->messages->count()
-            ? $this->messages->last()->created_at->format('d/m/Y H:i:s')
-            : $createdAt;
-        $this->sale;
+        $lastMessageDate    = Carbon::parse($this->last_message_date)->format('d/m/Y H:i:s');
         $userProject     = UserProject::with('company')->where('project_id', $this->sale->project_id)->first();
-        $adminAnswered   = $this->messages->where('from_admin', true);
-        $lastMessageFrom = '';
-        if (count($this->messages) > 0) {
-            $message = $this->messages->sortByDesc('id')->first();
-            if ($message->from_admin) {
-                $lastMessageFrom = 'admin';
-            } else if ($message->from_system) {
-                $lastMessageFrom = 'system';
-            } else {
-                $lastMessageFrom = 'customer';
-            }
-        }
+        $adminAnswered   = $this->messages->where('type_enum', $this->present()->getLastMessageType('from_admin'));
 
         return [
-            'id'                   => Hashids::encode($this->id),
-            'subject'              => $this->subject,
-            'description'          => $this->description,
-            'ticket_category_enum' => $this->ticket_category_enum,
-            'ticket_category'      => __('definitions.enum.ticket.category.' . $this->present()
+            'id'                     => Hashids::encode($this->id),
+            'subject'                => $this->subject,
+            'description'            => $this->description,
+            'ticket_category_enum'   => $this->ticket_category_enum,
+            'ticket_category'        => __('definitions.enum.ticket.category.' . $this->present()
                                                                                     ->getTicketCategoryEnum()),
-            'ticket_status_enum'   => $this->ticket_status_enum,
-            'ticket_status'        => __('definitions.enum.ticket.status.' . $this->present()
+            'ticket_status_enum'     => $this->ticket_status_enum,
+            'ticket_status'          => __('definitions.enum.ticket.status.' . $this->present()
                                                                                   ->getTicketStatusEnum()),
-            'created_at'           => $createdAt,
-            'last_message'         => $lastMessage,
-            'customer_name'        => $this->customer->name,
-            'company_name'         => $userProject->company->fantasy_name,
-            'last_message_from'    => $lastMessageFrom,
-            'admin_answered'       => count($adminAnswered) > 0,
+            'last_message_type_enum' => $this->last_message_type_enum,
+            'last_message_type'      => $this->present()->getLastMessageType(),
+            'last_message_date'      => $lastMessageDate,
+            'created_at'             => $createdAt,
+            'customer_name'          => $this->customer->name,
+            'company_name'           => $userProject->company->fantasy_name,
+            'admin_answered'         => count($adminAnswered) > 0,
         ];
     }
 }

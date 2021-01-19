@@ -20,16 +20,15 @@ class TicketsApiController extends Controller
     {
         try {
             $ticketsModel = new Ticket();
-            $data         = $request->all();
-            $userId       = auth()->user()->account_owner_id;
-            $tickets      = $ticketsModel->with([
-                                                    'messages',
-                                                    'customer',
-                                                    'sale',
-                                                ])
-                                         ->whereHas('sale', function($query) use ($userId) {
-                                             $query->where('owner_id', $userId);
-                                         });
+            $data = $request->all();
+            $userId = auth()->user()->account_owner_id;
+            $tickets = $ticketsModel->with([
+                'messages',
+                'customer',
+                'sale',
+            ])->whereHas('sale', function ($query) use ($userId) {
+                $query->where('owner_id', $userId);
+            });
 
             if (!empty($data['date'])) {
                 $date = FoxUtils::validateDateRange($data["date"]);
@@ -47,13 +46,13 @@ class TicketsApiController extends Controller
             }
             if (!empty($data['customer'])) {
                 $customerName = $data['customer'];
-                $tickets->whereHas('customer', function($query) use ($customerName) {
+                $tickets->whereHas('customer', function ($query) use ($customerName) {
                     $query->where('name', 'LIKE', '%' . $customerName . '%');
                 });
             }
             if (!empty($data['cpf'])) {
                 $document = preg_replace("/[^0-9]/", "", $data['cpf']);
-                $tickets->whereHas('customer', function($query) use ($document) {
+                $tickets->whereHas('customer', function ($query) use ($document) {
                     $query->where('document', $document);
                 });
             }
@@ -63,36 +62,16 @@ class TicketsApiController extends Controller
             }
             if (!empty($data['answered'])) {
                 if ($data['answered'] == 'last-answer-admin') {
-                    $tickets->whereHas('messages', function($query) {
-                        $query->where('from_admin', 1)
-                              ->where('from_system', 0)
-                              ->where('id', function($query) {
-                                  $query
-                                      ->selectRaw('max(id)')
-                                      ->from('ticket_messages')
-                                      ->whereColumn('ticket_id', 'tickets.id');
-                              });
-                    });
+                    $tickets->where('last_message_type_enum', $ticketsModel->present()->getLastMessageType('from_admin'));
                 } else if ($data['answered'] == 'last-answer-customer') {
-                    $tickets->whereHas('messages', function($query) {
-                        $query->where('from_admin', 0)
-                              ->where('from_system', 0)
-                              ->where('id', function($query) {
-                                  $query
-                                      ->selectRaw('max(id)')
-                                      ->from('ticket_messages')
-                                      ->whereColumn('ticket_id', 'tickets.id');
-                              });
-                    });
+                    $tickets->whereHas('messages')
+                        ->where('last_message_type_enum', $ticketsModel->present()->getLastMessageType('from_customer'));
                 } else {
-                    $tickets->whereDoesntHave('lastMessage', function($query) {
-                        $query->where('from_admin', 1)
-                              ->where('from_system', 0);
-                    });
+                    $tickets->doesntHave('messages');
                 }
             }
             $tickets = $tickets->orderByDesc('id')
-                               ->paginate(5);
+                ->paginate(5);
 
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
@@ -113,12 +92,12 @@ class TicketsApiController extends Controller
             if (!empty($ticketId)) {
 
                 $ticket = $ticketsModel->with([
-                                                  'sale',
-                                                  'customer',
-                                                  'messages',
-                                                  'attachments',
-                                                  'sale.project',
-                                              ])->find($ticketId);
+                    'sale',
+                    'customer',
+                    'messages',
+                    'attachments',
+                    'sale.project',
+                ])->find($ticketId);
 
                 return new TicketShowResource($ticket);
             } else {
@@ -134,24 +113,32 @@ class TicketsApiController extends Controller
     public function sendMessage(Request $request)
     {
         try {
-
+            $ticketModel = new Ticket();
             $ticketMessageModel = new TicketMessage();
 
             $data = $request->all();
 
             $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
+            $ticket = $ticketModel->find($ticketId);
 
-            if (!empty($ticketId)) {
+            if (!empty($ticket)) {
 
                 if (!empty($data['message'])) {
-                    $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticketId)
-                                                           ->where('from_admin', true)->latest('id')
-                                                           ->first();
-                    $message          = $ticketMessageModel->create([
-                                                                        'ticket_id'  => $ticketId,
-                                                                        'message'    => $data['message'],
-                                                                        'from_admin' => true,
-                                                                    ]);
+
+                    if(strlen($data['message']) < 10) {
+                        return response()->json(['message' => 'A mensagem informada é muito curta!'], 400);
+                    }
+
+                    $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
+                        ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
+                        ->latest('id')
+                        ->first();
+                    $message = $ticketMessageModel->create([
+                        'ticket_id' => $ticket->id,
+                        'message' => $data['message'],
+                        'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
+                    ]);
+
                     event(new TicketMessageEvent($message, $lastAdminMessage));
 
                     return new TicketMessageResource($message);
@@ -171,31 +158,31 @@ class TicketsApiController extends Controller
     public function getTotalValues(Request $request)
     {
         try {
-            $ticketsModel    = new Ticket();
-            $data            = $request->all();
-            $userId          = auth()->user()->account_owner_id;
+            $ticketsModel = new Ticket();
+            $data = $request->all();
+            $userId = auth()->user()->account_owner_id;
             $ticketPresenter = $ticketsModel->present();
-            $ticket          = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,
+            $ticket = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('mediation') . ' then 1 end) as mediationCount,
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('closed') . ' then 1 end) as closedCount
                                             ')
-                                            ->whereHas('sale', function($query) use ($userId) {
-                                                $query->where('owner_id', $userId);
-                                            });
+                ->whereHas('sale', function ($query) use ($userId) {
+                    $query->where('owner_id', $userId);
+                });
             if (!empty($data['date'])) {
                 $date = FoxUtils::validateDateRange($data["date"]);
                 $ticket->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
             }
-            $ticket     = $ticket->first();
+            $ticket = $ticket->first();
             $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 
             return response()->json([
-                                        'total_ticket_open'      => $ticket->openCount,
-                                        'total_ticket_mediation' => $ticket->mediationCount,
-                                        'total_ticket_closed'    => $ticket->closedCount,
-                                        'total_ticket'           => $totalCount,
+                'total_ticket_open' => $ticket->openCount,
+                'total_ticket_mediation' => $ticket->mediationCount,
+                'total_ticket_closed' => $ticket->closedCount,
+                'total_ticket' => $totalCount,
 
-                                    ]);
+            ]);
         } catch (Exception $e) {
             report($e);
 
