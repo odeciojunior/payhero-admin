@@ -67,7 +67,8 @@ class Transaction extends Model
         'updated_at',
         'gateway_released_at',
         'is_waiting_withdrawal',
-        'withdrawal_id'
+        'withdrawal_id',
+        'gateway_transferred'
     ];
 
     protected static $logFillable = true;
