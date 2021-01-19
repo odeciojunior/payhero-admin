@@ -201,20 +201,8 @@ $(document).ready(function () {
 
                 let dataItensExtract = '';
                 $("#debit-pending-informations").hide();
-                let lengthItens = response.data.itens.length;
 
-
-                let withdrawalValue = 0;
-                console.log(withdrawalSingleValue);
-                if (withdrawalSingleValue) {
-                    withdrawalValue = $("#modal-withdrawal-value").val();
-                } else {
-                    if ($("#inputRadioFirstValue:checked").val() != undefined) {
-                        withdrawalValue = $("#first-value").val();
-                    } else {
-                        withdrawalValue = $("#second-value").val();
-                    }
-                }
+                let withdrawalValue = $(".s-btn.green").text();
 
                 dataItensExtract += ` 
                     <div class="row" style="">
@@ -227,7 +215,6 @@ $(document).ready(function () {
                             style="font: normal normal 300 19px/13px Roboto;
                                     color: #41DC8F;"
                         >
-                            R$      
                             <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${withdrawalValue}</span>
                             </span>
                         </div>
@@ -236,32 +223,6 @@ $(document).ready(function () {
 
 
                 if (response.data.itens.length > 0) {
-                    let amount = 0;
-
-                    response.data.itens.forEach(function (element, index, array) {
-                        amount += Math.abs(element.amount);
-                        // console.log(element)
-                        /* let amountValue = (Math.abs(element.amount).toLocaleString('pt-BR', {
-                             style: 'currency',
-                             currency: 'BRL',
-                         }));
-                         dataItensExtract += `
-                             <div class="row">
-                                 <div class='col-md-8'>
-                                     <p style="color: #5A5A5A;">${element.details.description}</p>
-                                 </div>
-                                 <div class="col-md-4">
-                                 <p class="text-right" style="color: #F41C1C;">${amountValue}</p>
-                                 </div>
-                             </div>
-                         `;
-
-                         if ((index + 1) != lengthItens) {
-                             dataItensExtract += `<hr style="border:1px solid #E8E8E8; margin-top:0.1rem;margin-bottom:0.1rem;">`;
-                         }*/
-                    });
-
-
                     dataItensExtract += ` 
                         <div class="row" style="background: #F41C1C1A 0% 0% no-repeat padding-box;">
                             <div class='col-md-8 mt-10'>
@@ -273,10 +234,25 @@ $(document).ready(function () {
                                         color: #E61A1A;"
                             >
                                 - R$      
-                                <span id="requested-amount-withdrawal" class="text-right" style="color: #F41C1C;">${amount}</span>
+                                <span id="debit-value-modal" class="text-right" data-value="${amount}" style="color: #F41C1C;">${amount}</span>
                                 </span>
                             </div>
-                        </div>`;
+                        </div>
+                         <div class="row">
+                            <div class='col-md-8 mt-10'>
+                                <p style="color: #5A5A5A;">VALOR A RECEBER</p>
+                            </div>
+                            <div class="col-md-4 mt-10"><span
+                                class="currency"
+                                style="font: normal normal 300 19px/13px Roboto;
+                                        color: #E61A1A;"
+                            >
+                                - R$      
+                                <span id="value-withdrawal-received" class="text-right" style="color: #F41C1C;"></span>
+                                </span>
+                            </div>
+                        </div>
+                    `;
 
                     $("#debit-itens").html(dataItensExtract);
                     $("#debit-pending-informations").show();
@@ -297,6 +273,7 @@ $(document).ready(function () {
             $("#col_transferred_value").hide();
         }
     });
+
 
     function updateBalances() {
         loadOnAny('.price', false, balanceLoader);
@@ -401,24 +378,15 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
-                        withdrawalSingleValue = manipulateModalWithdrawal(response.data);
+                        manipulateModalWithdrawal(response.data);
 
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
-                            let withdrawalValue = 0;
-                            if (withdrawalSingleValue) {
-                                withdrawalValue = $("#modal-withdrawal-value").val();
-                            } else {
-                                if ($("#inputRadioFirstValue:checked").val() != undefined) {
-                                    withdrawalValue = $("#first-value").val();
-                                } else {
-                                    withdrawalValue = $("#second-value").val();
-                                }
-                            }
+                            let withdrawalValue = $(".s-btn.green").text();
 
-                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
-                            $.ajax({
+                            // $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
+                            /*$.ajax({
                                 url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
@@ -453,7 +421,7 @@ $(document).ready(function () {
                                 complete: (response) => {
                                     $("#bt-confirm-withdrawal").removeAttr('disabled');
                                 }
-                            });
+                            });*/
                         });
                     }
                 }
@@ -481,6 +449,33 @@ $(document).ready(function () {
             let biggerValue = formatMoney(dataWithdrawal.bigger_value);
 
             let lowerValue = formatMoney(dataWithdrawal.lower_value);
+            let htmlModal = '';
+
+            console.log(singleValue);
+            if (singleValue) {
+                htmlModal += `
+                    <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary">
+                        <div class="btn btn-primary mr-4 s-btn s-btn-border green" id="single-value" data-value="${dataWithdrawal.bigger_value}">
+                           ${biggerValue}
+                        </div>
+                    </div>
+                `;
+            } else {
+                htmlModal += ` 
+                    <div class="">
+                        <div class="row justify-content-center">
+                           
+                            <div class="btn btn-primary mr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
+                                ${lowerValue}
+                            </div>
+                            
+                             <div class="btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
+                               ${biggerValue}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
 
             $('.modal-body #modal-body-withdrawal').html(`
                 <div>
@@ -492,33 +487,10 @@ $(document).ready(function () {
                             ${singleValue ? '' : 'Selecione o valor que mais se encaixa a sua solicitação'}
                         </p>
                         <h3 class="text-center">
-                            <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show" style="${singleValue ? 'display:none;' : 'display:block'}">
-                                <div class="">
-                                    <div class="row text-center">
-                                        <div class="col-md-6">
-                                            <input hidden id="first-value" value="${dataWithdrawal.bigger_value}">
-                                            <input type="radio" id="inputRadioFirstValue" name="valueWithdrawal" checked>
-                                            <label for="inputRadioFirstValue">
-                                                ${biggerValue}
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input hidden id="second-value" value="${dataWithdrawal.lower_value}">
-                                            <input type="radio" id="inputRadioSecondValue" name="valueWithdrawal" >
-                                            <label for="inputRadioSecondValue">
-                                                ${lowerValue}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show">
+                                ${htmlModal}
                             </div>
-                            <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary " style=" ${singleValue ? 'display:block' : 'display:none;'}">
-                                <input hidden id="modal-withdrawal-value" value="${dataWithdrawal.bigger_value}">
-                                <input type="radio" id="inputRadioSingleValue" ${singleValue ? 'checked' : ''} name="valueWithdrawal" >
-                                <label for="inputRadioSingleValue">
-                                    ${biggerValue}
-                                </label>
-                            </div>
+                            
                         </h3>
                     </div>
                 </div>
@@ -530,7 +502,7 @@ $(document).ready(function () {
                 <div class="col-md-12 text-center">
                     <button 
                         id="bt-cancel-withdrawal" 
-                        class="btn col-5" 
+                        class="btn col-5 s-btn-border" 
                         data-dismiss="modal" 
                         aria-label="Close" 
                         style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
@@ -539,15 +511,25 @@ $(document).ready(function () {
                     
                     <button 
                         id="bt-confirm-withdrawal" 
-                        class="btn btn-success col-5" 
-                        style="background: #41DC8F 0% 0% no-repeat padding-box;font-size:20px; width:200px; border-radius: 12px;">
+                        class="btn btn-success col-5 btn-confirmation s-btn-border" 
+                        style="background-color: #41DC8F;font-size:20px; width:200px;">
                         <strong>Confirmar</strong>
                     </button>
                 </div>
             `);
 
             $('#modal-withdrawal').modal('show');
-            return singleValue;
+
+            $("#bigger-value, #lower-value, #single-value").click(function () {
+                $("#bigger-value, #lower-value, #single-value").removeClass('green');
+                let optionSelected = $(this).attr('id');
+                let newValueSelected = $(`#${optionSelected}`).addClass('green');
+
+                $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
+
+                let result = $(`#${optionSelected}`).data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]","g"), "");
+                $("#value-withdrawal-received").text(result);
+            });
         }
 
         function manipulateModalSuccessWithdrawal() {

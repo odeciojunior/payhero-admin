@@ -567,3 +567,27 @@ a.label {
 .nowarp {
     white-space: nowrap;
 }
+
+.s-btn {
+    background-color: #FFFFFF ;
+    border: 2px solid #2626264D;
+    font: normal normal bold 24px/30px Muli;
+    padding: 15px 40px;
+    color: #8A8A8A;
+}
+
+.s-btn:hover, .btn-confirmation:hover {
+    background-color: #21B56B !important;
+    border-color: #21B56B;
+}
+
+.s-btn-border {
+    border-radius: 12px;
+}
+
+.green.s-btn {
+    background-color: #5FE2A1 ;
+    border: 2px solid #26262633;
+    color: #FFF;
+}
+
