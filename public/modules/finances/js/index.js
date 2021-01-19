@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    let withdrawalSingleValue = true;
 
     //Comportamentos da tela
     $('#date_range').daterangepicker({
@@ -201,28 +202,81 @@ $(document).ready(function () {
                 let dataItensExtract = '';
                 $("#debit-pending-informations").hide();
                 let lengthItens = response.data.itens.length;
-                if (response.data.itens.length > 0) {
-                    response.data.itens.forEach(function (element, index, array) {
-                        // console.log(element)
-                        let amountValue = (Math.abs(element.amount).toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                        }));
-                        dataItensExtract += `
-                            <div class="row">
-                                <div class='col-md-8'>
-                                    <p style="color: #5A5A5A;">${element.details.description}</p>
-                                </div>
-                                <div class="col-md-4">
-                                <p class="text-right" style="color: #F41C1C;">${amountValue}</p>
-                                </div>
-                            </div>
-                        `;
 
-                        if((index + 1) != lengthItens){
-                            dataItensExtract += `<hr style="border:1px solid #E8E8E8; margin-top:0.1rem;margin-bottom:0.1rem;">`;
-                        }
+
+                let withdrawalValue = 0;
+                console.log(withdrawalSingleValue);
+                if (withdrawalSingleValue) {
+                    withdrawalValue = $("#modal-withdrawal-value").val();
+                } else {
+                    if ($("#inputRadioFirstValue:checked").val() != undefined) {
+                        withdrawalValue = $("#first-value").val();
+                    } else {
+                        withdrawalValue = $("#second-value").val();
+                    }
+                }
+
+                dataItensExtract += ` 
+                    <div class="row" style="">
+                        <div class='col-md-8 mt-10'>
+                            <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
+                        </div>
+                        <div class="col-md-4 mt-10">
+                        <span
+                            class="currency"
+                            style="font: normal normal 300 19px/13px Roboto;
+                                    color: #41DC8F;"
+                        >
+                            R$      
+                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${withdrawalValue}</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+
+                if (response.data.itens.length > 0) {
+                    let amount = 0;
+
+                    response.data.itens.forEach(function (element, index, array) {
+                        amount += Math.abs(element.amount);
+                        // console.log(element)
+                        /* let amountValue = (Math.abs(element.amount).toLocaleString('pt-BR', {
+                             style: 'currency',
+                             currency: 'BRL',
+                         }));
+                         dataItensExtract += `
+                             <div class="row">
+                                 <div class='col-md-8'>
+                                     <p style="color: #5A5A5A;">${element.details.description}</p>
+                                 </div>
+                                 <div class="col-md-4">
+                                 <p class="text-right" style="color: #F41C1C;">${amountValue}</p>
+                                 </div>
+                             </div>
+                         `;
+
+                         if ((index + 1) != lengthItens) {
+                             dataItensExtract += `<hr style="border:1px solid #E8E8E8; margin-top:0.1rem;margin-bottom:0.1rem;">`;
+                         }*/
                     });
+
+
+                    dataItensExtract += ` 
+                        <div class="row" style="background: #F41C1C1A 0% 0% no-repeat padding-box;">
+                            <div class='col-md-8 mt-10'>
+                                <p style="color: #5A5A5A;">DÉBITOS PENDENTES</p>
+                            </div>
+                            <div class="col-md-4 mt-10"><span
+                                class="currency"
+                                style="font: normal normal 300 19px/13px Roboto;
+                                        color: #E61A1A;"
+                            >
+                                - R$      
+                                <span id="requested-amount-withdrawal" class="text-right" style="color: #F41C1C;">${amount}</span>
+                                </span>
+                            </div>
+                        </div>`;
 
                     $("#debit-itens").html(dataItensExtract);
                     $("#debit-pending-informations").show();
@@ -347,7 +401,7 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
-                        let withdrawalSingleValue = manipulateModalWithdrawal(response.data);
+                        withdrawalSingleValue = manipulateModalWithdrawal(response.data);
 
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
@@ -432,12 +486,12 @@ $(document).ready(function () {
                 <div>
                     <div class="mt-10 mb-10">
                         <h3 class="text-center mb-1">
-                            ${singleValue ? 'Saque disponível:' : 'Selecione um valor:'}
+                            ${singleValue ? 'Saque disponível:' : "Saques disponíveis:"}
                         </h3>
                         <p class="text-center">
                             ${singleValue ? '' : 'Selecione o valor que mais se encaixa a sua solicitação'}
                         </p>
-                        <h3 class="text-left">
+                        <h3 class="text-center">
                             <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show" style="${singleValue ? 'display:none;' : 'display:block'}">
                                 <div class="">
                                     <div class="row text-center">
@@ -701,7 +755,6 @@ $(document).ready(function () {
         'ADJUSTMENT_DEBIT': 'warning',
         'ERROR': 'error',
     }
-
 
     function updateAccountStatementData() {
         loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);

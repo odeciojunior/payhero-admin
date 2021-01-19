@@ -398,10 +398,10 @@
 
                                </div>
                            </div>
-                            <div id="debit-pending-informations" class="col-12 mt-20" style="display:none;background: #FFF8F9FA 0% 0% no-repeat padding-box;display:none; ">
+                            <div id="debit-pending-informations" class="col-12 mt-20" style="display:none;background:  0 0 no-repeat padding-box;">
                                 <div class="col-12">
-                                    <h3 class="text-left mt-15" id="text-title-debit-pending"> Débitos pendentes</h3>
-                                    <p style="color: #959595;">Você tem alguns valores em aberto, confira:</p>
+                                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
+                                    <p style="color: #959595;" class="text-center">Você tem alguns valores em aberto, confira:</p>
                                     <div id="debit-itens">
 
                                     </div>
