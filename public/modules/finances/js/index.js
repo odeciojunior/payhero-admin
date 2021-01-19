@@ -89,6 +89,7 @@ $(document).ready(function () {
                         let dataHtml = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                         $("#statement_company_select").append(dataHtml);
                         $("#transfers_company_select").append(dataHtml);
+                        $("#settings_company_select").append(dataHtml);
                     }
                 });
 
@@ -180,21 +181,21 @@ $(document).ready(function () {
                 loadOnAny('.price', true);
                 let amount = response.data.amount;
                 $('.saldoDebito').html(`
-                    <span 
-                        class="currency" 
-                        style=" 
+                    <span
+                        class="currency"
+                        style="
                                 font: normal normal 300 19px/13px Roboto;
                                 color: #E61A1A;"
                         >
                             - R$
                         </span>
-                        <span 
+                        <span
                             class="debit-balance"
                             style="
                                 font: normal normal bold 34px/18px Roboto;
                                 letter-spacing: 0.07px;
                                 color: #E61A1A;"
-                        > 
+                        >
                             ${amount}
                         </span>
                 `);
@@ -204,7 +205,7 @@ $(document).ready(function () {
 
                 let withdrawalValue = $(".s-btn.green").text();
 
-                dataItensExtract += ` 
+                dataItensExtract += `
                     <div class="row" style="">
                         <div class='col-md-8 mt-10'>
                             <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
@@ -223,7 +224,7 @@ $(document).ready(function () {
 
 
                 if (response.data.itens.length > 0) {
-                    dataItensExtract += ` 
+                    dataItensExtract += `
                         <div class="row" style="background: #F41C1C1A 0% 0% no-repeat padding-box;">
                             <div class='col-md-8 mt-10'>
                                 <p style="color: #5A5A5A;">DÉBITOS PENDENTES</p>
@@ -233,7 +234,7 @@ $(document).ready(function () {
                                 style="font: normal normal 300 19px/13px Roboto;
                                         color: #E61A1A;"
                             >
-                                - R$      
+                                - R$
                                 <span id="debit-value-modal" class="text-right" data-value="${amount}" style="color: #F41C1C;">${amount}</span>
                                 </span>
                             </div>
@@ -247,7 +248,7 @@ $(document).ready(function () {
                                 style="font: normal normal 300 19px/13px Roboto;
                                         color: #E61A1A;"
                             >
-                                - R$      
+                                - R$
                                 <span id="value-withdrawal-received" class="text-right" style="color: #F41C1C;"></span>
                                 </span>
                             </div>
@@ -461,14 +462,14 @@ $(document).ready(function () {
                     </div>
                 `;
             } else {
-                htmlModal += ` 
+                htmlModal += `
                     <div class="">
                         <div class="row justify-content-center">
-                           
+
                             <div class="btn btn-primary mr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
                                 ${lowerValue}
                             </div>
-                            
+
                              <div class="btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                                ${biggerValue}
                             </div>
@@ -490,28 +491,28 @@ $(document).ready(function () {
                             <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show">
                                 ${htmlModal}
                             </div>
-                            
+
                         </h3>
                     </div>
                 </div>
-                
+
                 `
             );
 
             $('#modal-withdraw-footer').html(`
                 <div class="col-md-12 text-center">
-                    <button 
-                        id="bt-cancel-withdrawal" 
-                        class="btn col-5 s-btn-border" 
-                        data-dismiss="modal" 
-                        aria-label="Close" 
+                    <button
+                        id="bt-cancel-withdrawal"
+                        class="btn col-5 s-btn-border"
+                        data-dismiss="modal"
+                        aria-label="Close"
                         style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
                         Cancelar
                     </button>
-                    
-                    <button 
-                        id="bt-confirm-withdrawal" 
-                        class="btn btn-success col-5 btn-confirmation s-btn-border" 
+
+                    <button
+                        id="bt-confirm-withdrawal"
+                        class="btn btn-success col-5 btn-confirmation s-btn-border"
                         style="background-color: #41DC8F;font-size:20px; width:200px;">
                         <strong>Confirmar</strong>
                     </button>
@@ -527,7 +528,7 @@ $(document).ready(function () {
 
                 $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
 
-                let result = $(`#${optionSelected}`).data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]","g"), "");
+                let result = $(`#${optionSelected}`).data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]", "g"), "");
                 $("#value-withdrawal-received").text(result);
             });
         }
@@ -928,4 +929,49 @@ $(document).ready(function () {
             $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
         }
     });
+
+    //Settings
+
+    var settingsData = {
+        company: null,
+        rule: 'period', //period, value
+        frequency: 'daily', //daily, weekly, monthly
+        weekday: 0, //from 0 (monday) to 6 (sunday) as mysql weekday() function
+        day: 1,
+        value: 0,
+    }
+
+    var dayContainer = $('.day-container')
+
+    var weekdaysContainer = $('.weekdays-container')
+    var weekdaysButtons = weekdaysContainer.find('.btn')
+    weekdaysButtons.on('click', function () {
+        if (settingsData.frequency === 'weekly') {
+            weekdaysButtons.removeClass('active')
+            $(this).addClass('active')
+            settingsData.weekday = [$(this).data('weekday')]
+        }
+    })
+
+    var frequencyContainer = $('.frequency-container')
+    var frequencyButtons = frequencyContainer.find('.btn')
+    frequencyButtons.removeClass('active').on('click', function () {
+        frequencyButtons.removeClass('active')
+        settingsData.frequency = $(this).addClass('active').data('frequency')
+        settingsData.weekday = null;
+        weekdaysButtons.removeClass('active')
+
+        if (settingsData.frequency === 'daily') {
+            weekdaysButtons.addClass('active')
+        }
+
+        if (settingsData.frequency !== 'monthly') {
+            weekdaysContainer.addClass('d-flex').removeClass('d-none')
+            dayContainer.addClass('d-none').removeClass('d-flex')
+        } else {
+            weekdaysContainer.addClass('d-none').removeClass('d-flex')
+            dayContainer.addClass('d-flex').removeClass('d-none')
+        }
+    });
+
 });
