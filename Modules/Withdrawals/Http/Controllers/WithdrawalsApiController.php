@@ -13,6 +13,7 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -272,5 +273,135 @@ class WithdrawalsApiController
 
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
         }
+    }
+
+    public function getTransactionsByBrand($id)
+    {
+        //dd('dsjkhj');
+        try {
+            $withdrawalId = current(Hashids::decode($id));
+            $withdrawalModel = new Withdrawal();
+
+            if (empty($withdrawalId)) {
+                return response()->json(['message' => 'Erro ao exibir detalhes do saque'], 400);
+            }
+
+            $withdrawal = $withdrawalModel->with('company')->find($withdrawalId);
+
+            if (!Gate::allows('edit', [$withdrawal->company])) {
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para visualizar saques',
+                    ],
+                    403
+                );
+            }
+
+            $transactions = Transaction::with('sale')->with('company')->where('withdrawal_id', $withdrawalId)->get();
+
+//            $arrayBrand = [
+//                            'master' => [
+//                                'value' => 0,
+//                                'date' => null
+//                            ],
+//                            'boleto' => [
+//                                'value' => 0,
+//                                'date' => null
+//                            ],
+//                        ];
+            $arrayBrand = [];
+
+            foreach ($transactions as $transaction) {
+
+                if ( !$transaction->gateway_transferred ) {
+                    $isLiquidated = false;
+                    $date = '';
+
+                    //logica da getnet
+                    $getnetService = new GetnetBackOfficeService();
+
+                    $orderId = $transaction->sale->gateway_order_id;
+                    if (FoxUtils::isProduction()) {
+                        $subsellerId = $transaction->company->subseller_getnet_id;
+                    } else {
+                        $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                    }
+
+                    $response = $getnetService->getStatement(
+                        [
+                            'order_id' => $orderId,
+                            'subseller_id' => $subsellerId
+                        ]
+                    );
+
+                    $gatewaySale = json_decode($response);
+                    if (!empty($gatewaySale->list_transactions[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                    ) {
+                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = date("d/m/Y", strtotime($date));
+
+                        $transaction->update(
+                            [
+                                'gateway_transferred' => true,
+                            ]
+                        );
+
+                        if ($transaction->sale->flag) {
+                            $transaction->sale->flag = $this->sale->flag;
+                        } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
+                            $transaction->sale->flag = 'generico';
+                        } else if ((!$this->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 3) {
+                            $transaction->sale->flag = 'debito';
+                        } else {
+                            $transaction->sale->flag = 'boleto';
+                        }
+
+                        if (!in_array( $transaction->sale->flag, $arrayBrand)) {
+                            $arrayBrand[$transaction->sale->flag] = [
+                                'value' => $transaction->value,
+                                'date' => $date,
+                            ];
+                        }
+                        else {
+                            $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
+                            $arrayBrand[$transaction->sale->flag]['date'] = $date;
+
+                        }
+//                        if (!in_array(auth()->user()->account_owner_id, $users)) {
+//                            return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
+//                        }
+
+//                        $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
+//                        $arrayBrand[$transaction->sale->flag]['date'] += $date;
+
+
+                    }
+
+
+                }
+
+
+            }
+
+
+            //return WithdrawalTransactionsResource::collection($transactions->orderBy('id', 'ASC')->paginate(10));
+
+            $return = [
+                'id' => Hashids::encode($id),
+                'date_request' => $withdrawal->created_at->format('d/m/Y'),
+                'transactions' => $arrayBrand
+            ];
+
+            return response()->json($return, 200);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+
+
     }
 }

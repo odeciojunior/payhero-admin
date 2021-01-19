@@ -540,13 +540,18 @@ $(document).ready(function () {
 
                         let tableData = '';
                         tableData += '<tr>';
-                        tableData += "<td>" + data.account_information + "</td>";
+                        tableData += "<td>" + data.bank + "<br> <small>" + data.account_information + "</small> </td>";
                         tableData += "<td>" + data.date_request + "</td>";
                         tableData += "<td>" + data.date_release + "</td>";
                         tableData += "<td>" + data.value + "</td>";
                         tableData += '<td class="shipping-status">';
                         tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
                         tableData += '</td>';
+                        tableData += "<td style='text-align: center'>";
+                        tableData += "<a role='button' class='details_transaction pointer' withdrawal='" + data.id + "'>";
+                        tableData += "<span class='o-eye-1'></span>";
+                        tableData += "</a>";
+                        tableData += "</td>";
                         tableData += '</tr>';
                         $("#withdrawals-table-data").append(tableData);
                         $('#withdrawalsTable').addClass('table-striped')

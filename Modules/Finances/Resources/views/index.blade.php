@@ -214,6 +214,7 @@
                                                 transferido
                                             </th>
                                             <th scope="col">Status</th>
+                                            <td cscope="col"> &nbsp;</td>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
@@ -441,6 +442,10 @@
             </div>
         </div>
         {{-- End Modal --}}
+
+    <!-- Modal detalhes da transação-->
+        @include('finances::details')
+    <!-- End Modal -->
 
         {{-- Modal Detalhes --}}
         @include('sales::details')

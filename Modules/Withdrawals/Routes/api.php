@@ -30,6 +30,8 @@ Route::group(
         Route::post('/withdrawals/getWithdrawalValues', 'WithdrawalsApiController@getWithdrawalValues');
 
         Route::get('/withdrawals/checkallowed', 'WithdrawalsApiController@checkAllowed');
+
+        Route::get('/withdrawals/get-transactions-by-brand/{withdrawal_id}', 'WithdrawalsApiController@getTransactionsByBrand');
     }
 );
 
