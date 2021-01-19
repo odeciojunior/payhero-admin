@@ -1,6 +1,13 @@
 $(document).ready(function () {
     let withdrawalSingleValue = true;
 
+    function formatMoney(value) {
+        return ((value / 100).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }));
+    }
+
     //Comportamentos da tela
     $('#date_range').daterangepicker({
         startDate: moment().startOf('week'),
@@ -209,14 +216,14 @@ $(document).ready(function () {
                         <div class='col-md-8 mt-10'>
                             <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
                         </div>
-                        <div class="col-md-4 mt-10">
-                        <span
-                            class="currency"
-                            style="font: normal normal 300 19px/13px Roboto;
-                                    color: #41DC8F;"
-                        >
-                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${withdrawalValue}</span>
-                            </span>
+                        <div class="col-md-4 mt-10 text-center">
+                            <span
+                                class="currency"
+                                style="font: normal normal 300 19px/13px Roboto;
+                                        color: #41DC8F;"
+                            >
+                                <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${withdrawalValue}</span>
+                                </span>
                         </div>
                     </div>
                 `;
@@ -228,7 +235,7 @@ $(document).ready(function () {
                             <div class='col-md-8 mt-10'>
                                 <p style="color: #5A5A5A;">DÉBITOS PENDENTES</p>
                             </div>
-                            <div class="col-md-4 mt-10"><span
+                            <div class="col-md-4 mt-10 text-center"><span
                                 class="currency"
                                 style="font: normal normal 300 19px/13px Roboto;
                                         color: #E61A1A;"
@@ -242,20 +249,26 @@ $(document).ready(function () {
                             <div class='col-md-8 mt-10'>
                                 <p style="color: #5A5A5A;">VALOR A RECEBER</p>
                             </div>
-                            <div class="col-md-4 mt-10"><span
+                            <div class="col-md-4 mt-10 text-center"><span
                                 class="currency"
                                 style="font: normal normal 300 19px/13px Roboto;
                                         color: #E61A1A;"
                             >
-                                - R$      
-                                <span id="value-withdrawal-received" class="text-right" style="color: #F41C1C;"></span>
+                                <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
                                 </span>
                             </div>
                         </div>
                     `;
-
                     $("#debit-itens").html(dataItensExtract);
                     $("#debit-pending-informations").show();
+
+                    // console.log($(".s-btn.green").text().trim());
+                    // let newValueSelected = $('#bigger-value');
+                    //
+                    // $("#requested-amount-withdrawal").text($(".s-btn.green").text().trim());
+                    //
+                    // let result = newValueSelected.data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]", "g"), "");
+                    // $("#value-withdrawal-received").text(formatMoney(result));
                 }
             }
         });
@@ -273,7 +286,6 @@ $(document).ready(function () {
             $("#col_transferred_value").hide();
         }
     });
-
 
     function updateBalances() {
         loadOnAny('.price', false, balanceLoader);
@@ -380,10 +392,24 @@ $(document).ready(function () {
                     success: (response) => {
                         manipulateModalWithdrawal(response.data);
 
+                        let debitValue = $("#debit-value-modal").data('value');
+
+                        if (debitValue != undefined){
+                            let optionSelected = $("#modal-body-withdrawal .s-btn.green").attr('id');
+                            let newValueSelected = $(`#${optionSelected}`);
+
+                            $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
+
+                            let result = $(`#${optionSelected}`).data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
+                            $("#value-withdrawal-received").text(formatMoney(result));
+                        }
+
+
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
                             let withdrawalValue = $(".s-btn.green").text();
+                            console.log(withdrawalValue);
 
                             // $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                             /*$.ajax({
@@ -428,12 +454,7 @@ $(document).ready(function () {
             );
         });
 
-        function formatMoney(value) {
-            return ((value / 100).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-            }));
-        }
+
 
         function manipulateModalWithdrawal(dataWithdrawal) {
             let currentBalance = $('.available-balance').html().replace(',', '').replace('.', '');
@@ -451,7 +472,6 @@ $(document).ready(function () {
             let lowerValue = formatMoney(dataWithdrawal.lower_value);
             let htmlModal = '';
 
-            console.log(singleValue);
             if (singleValue) {
                 htmlModal += `
                     <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary">
@@ -464,11 +484,9 @@ $(document).ready(function () {
                 htmlModal += ` 
                     <div class="">
                         <div class="row justify-content-center">
-                           
                             <div class="btn btn-primary mr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
                                 ${lowerValue}
                             </div>
-                            
                              <div class="btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                                ${biggerValue}
                             </div>
@@ -490,7 +508,6 @@ $(document).ready(function () {
                             <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show">
                                 ${htmlModal}
                             </div>
-                            
                         </h3>
                     </div>
                 </div>
@@ -524,11 +541,14 @@ $(document).ready(function () {
                 $("#bigger-value, #lower-value, #single-value").removeClass('green');
                 let optionSelected = $(this).attr('id');
                 let newValueSelected = $(`#${optionSelected}`).addClass('green');
+                let debitValue = $("#debit-value-modal").data('value');
 
-                $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
+                if (debitValue != undefined){
+                    $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
 
-                let result = $(`#${optionSelected}`).data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]","g"), "");
-                $("#value-withdrawal-received").text(result);
+                    let result = $(`#${optionSelected}`).data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
+                    $("#value-withdrawal-received").text(formatMoney(result));
+                }
             });
         }
 
