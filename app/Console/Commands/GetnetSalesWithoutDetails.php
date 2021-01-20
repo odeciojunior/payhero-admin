@@ -53,6 +53,7 @@ class GetnetSalesWithoutDetails extends Command
         $sales = Sale::select('sales.id')
             ->join('transactions', 'sales.id', '=', 'transactions.sale_id')
             ->whereIn('sales.gateway_id', [15])
+            ->whereNotNull('sales.gateway_order_id')
             ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
             ->distinct();
 

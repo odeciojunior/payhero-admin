@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Finances\Exports\Reports\FinanceReportExport;
 use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
@@ -116,72 +118,62 @@ class TransfersApiController
         }
     }
 
+
+
     public function accountStatementData(): JsonResponse
     {
         try {
-            $companyGetNet = Company::whereNotNull('subseller_getnet_id')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->whereGetNetStatus(1)
-                ->whereId(current(Hashids::decode(request()->get('company'))))
-                ->first();
-
-            if (empty($companyGetNet)) {
-                return response()->json([]);
-            }
-
-            $subseller = $companyGetNet->subseller_getnet_homolog_id;
-            if (FoxUtils::isProduction()) {
-                $subseller = $companyGetNet->subseller_getnet_id;
-            }
-
-            try {
-                $dates = explode(' - ', request('dateRange') ?? '');
-
-                $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
-                $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-            } catch (Exception $exception) {
-            }
-
-            if (!isset($startDate) || !isset($endDate)) {
-                $today = today();
-                $startDate = $today;
-                $endDate = $today;
-            }
-
-            if (request('statement_data_type') == 'schedule_date') {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
-            } elseif (request('statement_data_type') == 'liquidation_date') {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
-            } else {
-                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
-            }
-
-            $getNetBackOfficeService = new GetnetBackOfficeService();
-            $getNetBackOfficeService->setStatementSubSellerId($subseller)
-                ->setStatementStartDate($startDate)
-                ->setStatementEndDate($endDate)
-                ->setStatementDateField($statementDateField);
-
-            if (!empty(request('sale'))) {
-                $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
-                $filters['sale'] = $endDate;
-            }
-
-            $result = $getNetBackOfficeService->getStatement();
-            $result = json_decode($result);
+            $dataRequest = \request()->all();
+            $filters = (new GetNetStatementService())->accountStatementDataFilters($dataRequest);
+            $result = json_decode($filters['result']);
 
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
             }
 
-            $filters['status'] = request()->get('status');
-            $filters['payment_method'] = request()->get('payment_method');
-            $filters['start_date'] = $startDate;
-            $filters['end_date'] = $endDate;
-
             $data = (new GetNetStatementService())->performWebStatement($result, $filters);
 
             return response()->json($data);
+
+        } catch (Exception $exception) {
+            report($exception);
+
+            $error = [
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ];
+
+            $error += [
+                'dev_message' => $exception->getMessage(),
+                'dev_file' => $exception->getFile(),
+                'dev_line' => $exception->getLine(),
+                'dev_code' => $exception->getCode(),
+                'dev_trace' => $exception->getTrace(),
+            ];
+            return response()->json($error, 400);
+        }
+    }
+
+
+    public function accountStatementDataExport(): JsonResponse
+    {
+
+        try {
+
+            $dataRequest = \request()->all();
+
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+
+            $user = auth()->user();
+            $filename = 'finances_report_' . Hashids::encode($user->id) . '.xls';
+
+            (new FinanceReportExport($dataRequest, $user, $filename))
+              ->queue($filename)->allOnQueue('high');
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
+
+
         } catch (Exception $exception) {
             report($exception);
 

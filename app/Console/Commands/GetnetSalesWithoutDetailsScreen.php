@@ -4,18 +4,18 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\GetnetBackOfficeService;
 
-class GetnetTransferWithoutDetails extends Command
+class GetnetSalesWithoutDetailsScreen extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'getnet:transfer-without-details';
+    protected $signature = 'getnet:sales-without-details-screen';
 
     /**
      * The console command description.
@@ -36,37 +36,24 @@ class GetnetTransferWithoutDetails extends Command
 
     public function handle()
     {
-        $companyModel = new Company();
+
         $transactionModel = new Transaction();
-
-        $withoutCompany = $this->ask('Sem verificar a company?', true);
-
-        $transactions = $transactionModel->select('sale_id')
-            ->with('sale')
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-            ->whereNotNull('company_id')
-            ->where('company_id', '<>', '')
-            //->whereIn('sale_id', [805336, 892541, 916439])
-            ->whereIn('gateway_id', [15]);
-
-        if ($withoutCompany == true) {
-
-            $transactions = $transactions->distinct();
-            $this->info('..USANDO DISTINCT..');
-        }
 
         $start = now();
         $this->comment(now()->format('H:i:s'));
         $this->comment('............');
 
-        // sale_id = 805336 -> { "list_transactions": [], "commission": [], "adjustments": [], "chargeback": [] }
-        // sale_id = 892541, 916439 -> "details": []"
-        $transactionsCount = (clone $transactions)->get()->count();
-        $this->info("Vamos percorrer " . $transactionsCount . " transactions");
+        $sales = Sale::select('sales.id')
+            ->join('transactions', 'sales.id', '=', 'transactions.sale_id')
+            ->whereIn('sales.gateway_id', [15])
+            ->whereNotNull('sales.gateway_order_id')
+            ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
+            ->distinct();
 
-        $limit = $transactionsCount / 20;
+        $limit = $sales->count() / 20;
         $count = 0;
         $percentage = 0;
+        $this->comment('......' . $sales->count() . '......');
 
         $withoutListTransactions['id'] = [];
         $withoutListTransactions['hashId'] = [];
@@ -92,7 +79,7 @@ class GetnetTransferWithoutDetails extends Command
         $zeroDetails['hashId'] = [];
         $zeroDetails['orderId'] = [];
 
-        foreach ($transactions->cursor() as $transaction) {
+        foreach ($sales->cursor() as $sale) {
 
             $count++;
 
@@ -106,24 +93,15 @@ class GetnetTransferWithoutDetails extends Command
 
             try {
 
-                $saleId = $transaction->sale_id;
-                $hashId = $transaction->sale->hash_id;
+                $saleId = $sale->id;
+                $hashId = $sale->hash_id;
+                $orderId = $sale->gateway_order_id;
 
                 $getNetBackOfficeService = new GetnetBackOfficeService();
                 $getNetBackOfficeService->setStatementSaleHashId($hashId);
 
-                if ($withoutCompany == false) {
-
-                    $company = $companyModel->find($transaction->company_id);
-
-                    $subSeller = $company->subseller_getnet_id;
-                    $getNetBackOfficeService->setStatementSubSellerId($subSeller);
-                }
-
                 $originalResult = $getNetBackOfficeService->getStatement();
                 $result = json_decode($originalResult);
-
-                $orderId = $transaction->sale->gateway_order_id;
 
                 if (isset($result->list_transactions)) {
 

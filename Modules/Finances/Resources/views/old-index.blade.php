@@ -24,8 +24,8 @@
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-                <div class="col-6 text-right">
-                    <div class="justify-content-end align-items-center" id="export-excel" style="display:none;">
+                <div class="col-6 text-right" >
+                    <div class="justify-content-end align-items-center d-none" id="export-excel">
                         <div class="p-2 align-items-center">
                             <span class="o-download-cloud-1 mr-2"></span>
                             <div class="btn-group" role="group">
@@ -62,7 +62,7 @@
                 <nav class="pt-20" id="menu-tabs-view" style="display:none;">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active"
+                            <a class="nav-item nav-link active nav-link-finances-hide-export"
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
@@ -73,7 +73,7 @@
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link"
+                            <a class="nav-item nav-link nav-link-finances-show-export"
                                id="nav-profile-tab"
                                data-toggle="tab"
                                href="#nav-extract"
@@ -315,6 +315,27 @@
             </div>
             @include('companies::empty')
         </div>
+
+        <!-- Modal exportar relatorio -->
+        <div id="modal-export-old-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-simple">
+                <div class="modal-content p-10">
+                    <div class='my-20 mx-20 text-center'>
+                        <h3 class="black"> Informe o email para receber o relatório </h3>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="email" id="email_finance_export">
+                        <button type="button" class="btn btn-success btn-confirm-export-old-finance-getnet">
+                            Enviar
+                        </button>
+                        <a id="btn-mobile-modal-close" class="btn btn-primary" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                            Fechar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
 
 
         {{-- Modal confirmar saque --}}
