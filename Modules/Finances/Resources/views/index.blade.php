@@ -25,6 +25,24 @@
                     <h1 class="page-title">Finanças</h1>
                 </div>
 
+                <div class="col-lg-6 text-right d-none" id="finances_export_btns">
+                    <div class="justify-content-end align-items-center" id="export-excel" style="">
+                        <div class="p-2 d-flex justify-content-end align-items-center">
+                                            <span id="bt_get_csv_default"
+                                                  class="o-download-cloud-1 icon-export btn mr-2"></span>
+                            <div class="btn-group" role="group">
+                                <button id="bt_get_sale_xls" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                </button>
+                                <button id="bt_get_sale_csv" type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-right">
+                                    .CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="page-content container" style="display:none">
@@ -33,7 +51,7 @@
                 <nav class="pt-20" id="menu-tabs-view" style="">
                     <div class="nav-tabs-horizontal">
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active"
+                            <a class="nav-item nav-link active nav-link-finances-hide-export"
                                id="nav-home-tab"
                                data-toggle="tab"
                                href="#nav-transfers"
@@ -43,7 +61,7 @@
                             >
                                 Transferências
                             </a>
-                            <a class="nav-item nav-link"
+                            <a class="nav-item nav-link nav-link-finances-show-export"
                                id="nav-statement-tab"
                                data-toggle="tab"
                                href="#nav-statement"
@@ -236,6 +254,7 @@
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
                             <div class="row justify-content-start align-items-center">
+
                                 <div class="col-12 fix-5">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2" style="flex:1">
@@ -254,6 +273,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-12 mb-15">
                                     <div class="row">
                                         <div class="col-sm-6 col-md">
@@ -350,6 +370,22 @@
                                     </div>
 
                                 </div>
+
+                                <!-- Aviso de Exportação -->
+                                <div id="alert-finance-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                                    <div class="d-flex">
+                                        <span class="o-info-help-1"></span>
+                                        <div class="w-full">
+                                            <strong class="font-size-16">Exportando seu relatório</strong>
+                                            <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                                                <strong id="export-finance-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                                            </p>
+                                        </div>
+                                        <i class="material-icons pointer" data-dismiss="alert">close</i>
+                                    </div>
+                                </div>
+                                <!-- Resumo -->
+
                                 <div class="col-12 mt-3">
                                     <table id="statementTable" class="table table-condensed unify table-striped">
                                         <thead>
@@ -398,6 +434,27 @@
             @include('companies::empty')
             @include('companies::not_company_approved_getnet')
         </div>
+
+        <!-- Modal exportar relatorio -->
+        <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-simple">
+                <div class="modal-content p-10">
+                    <div class='my-20 mx-20 text-center'>
+                        <h3 class="black"> Informe o email para receber o relatório </h3>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="email" id="email_finance_export">
+                        <button type="button" class="btn btn-success btn-confirm-export-finance-getnet">
+                            Enviar
+                        </button>
+                        <a id="btn-mobile-modal-close" class="btn btn-primary" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                            Fechar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
 
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
@@ -454,7 +511,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=222333'. uniqid()) }}"></script>
         @endpush
     </div>
 

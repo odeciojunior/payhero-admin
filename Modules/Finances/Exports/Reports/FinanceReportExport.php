@@ -10,10 +10,11 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\FinancesExportedEvent;
 use Modules\Transfers\Services\GetNetStatementService;
 
-class FinanceReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
+class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithEvents
 {
     use Exportable;
 
@@ -49,12 +50,29 @@ class FinanceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
         $items = collect($data['items']);
         unset($data['items']);
         $this->arrayTotal = $data;
+
+        $items->push([
+            $this->arrayTotal
+        ]);
+
         return $items;
+
+
 
     }
 
     public function map($row): array
     {
+        if(!isset($row->amount)){
+            $totalInPeriod = isset($row[0]['totalInPeriod']) ? $row[0]['totalInPeriod'] : 0;
+
+           return [
+               '',
+               '',
+               'Saldo no período:',
+               'R$ ' . number_format($totalInPeriod, 2, ',', '.')
+           ];
+        }
 
         $order = collect($row->order);
         $details = collect($row->details);
@@ -71,7 +89,7 @@ class FinanceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
         return $data;
 
     }
-
+//
     public function headings(): array
     {
 
@@ -83,7 +101,7 @@ class FinanceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
             'Valor',
         ];
     }
-
+//
     public function registerEvents(): array
     {
         return [
@@ -121,4 +139,5 @@ class FinanceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
             },
         ];
     }
+
 }
