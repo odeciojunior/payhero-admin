@@ -86,7 +86,9 @@ class OldFinancesApiController extends Controller
 
             (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
 

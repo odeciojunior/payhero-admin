@@ -708,10 +708,11 @@ $(document).ready(function () {
         }
     }
 
-    function extractExport(fileFormat) {
+    function extractExport(fileFormat, email) {
 
         let data = getFilters();
         data['format'] = fileFormat;
+        data['email'] = email;
         $.ajax({
             method: "POST",
             url: '/api/old_finances/export',
@@ -736,16 +737,39 @@ $(document).ready(function () {
         });
     }
 
+    let exportFinanceFormat = 'xls'
     $("#bt_get_csv").on("click", function () {
-        $(this).prop("disabled", true);
-        $("#bt_get_xls").prop("disabled", true);
-        extractExport('csv');
+      //  $(this).prop("disabled", true);
+       // $("#bt_get_xls").prop("disabled", true);
+        $('#modal-export-old-finance-getnet').modal('show');
+        exportFinanceFormat = 'csv'
     });
 
     $("#bt_get_xls").on("click", function () {
-        $(this).prop("disabled", true);
-        $("#bt_get_csv").prop("disabled", true);
-        extractExport('xls');
+     //   $(this).prop("disabled", true);
+       // $("#bt_get_csv").prop("disabled", true);
+        $('#modal-export-old-finance-getnet').modal('show');
+    });
+
+    $(".btn-confirm-export-old-finance-getnet").on("click", function () {
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+        var email = $('#email_finance_export').val();
+
+        if( email == '' || !regexEmail.test(email) ) {
+            alertCustom('error', 'Preencha o email corretamente');
+            return false;
+        } else {
+            extractExport('xls', email);
+            $('#modal-export-old-finance-getnet').modal('hide');
+        }
+    });
+
+    $(".nav-link-finances-show-export").on("click", function () {
+        $("#export-excel").removeClass('d-none');
+    });
+
+    $(".nav-link-finances-hide-export").on("click", function () {
+        $("#export-excel").addClass('d-none');
     });
 
     $("#nav-home-tab").on("click", function () {
