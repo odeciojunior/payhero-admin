@@ -57,8 +57,6 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
 
         return $items;
 
-
-
     }
 
     public function map($row): array

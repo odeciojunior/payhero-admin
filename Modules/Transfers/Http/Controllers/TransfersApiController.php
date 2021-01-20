@@ -168,15 +168,8 @@ class TransfersApiController
             $user = auth()->user();
             $filename = 'finances_report_' . Hashids::encode($user->id) . '.xls';
 
-            //$dataRequest, $user, $filename
             (new FinanceReportExport($dataRequest, $user, $filename))
-              ->queue($filename)->allOnQueue('high')
-            ;
-          // $export = Excel::download(new FinanceReportExport($dataRequest, $user, $filename), 'marion.xlsx');
-
-//
-//            dd(11111, $export);
-//            Excel::download($export, 'invoices.xlsx');
+              ->queue($filename)->allOnQueue('high');
 
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
 
