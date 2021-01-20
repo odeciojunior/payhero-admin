@@ -17,7 +17,8 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                $('#modal_detalhes_transacao').modal('hide');
+                //$('#modal_detalhes_transacao').modal('hide');
+                loadOnAny('#modal-transactionsDetails', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {

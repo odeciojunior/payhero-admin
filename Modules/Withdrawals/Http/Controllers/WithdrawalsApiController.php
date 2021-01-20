@@ -277,8 +277,21 @@ class WithdrawalsApiController
 
     public function getTransactionsByBrand($id)
     {
-        //dd('dsjkhj');
-        try {
+
+        $return = [
+            'id' => Hashids::encode($id),
+            'date_request' =>'21/01/2021',
+            'transactions' => [
+                'brand' => 'band',
+                'liquidated' => true,
+                'date' =>  '21/01/2021',
+                'value' => 'R$12,00'
+            ],
+        ];
+
+        return response()->json($return, 200);
+
+        //try {
             $withdrawalId = current(Hashids::decode($id));
             $withdrawalModel = new Withdrawal();
 
@@ -317,24 +330,15 @@ class WithdrawalsApiController
                     $isLiquidated = false;
                     $date = '';
 
-                    //logica da getnet
-                    $getnetService = new GetnetBackOfficeService();
 
-                    $orderId = $transaction->sale->gateway_order_id;
-                    if (FoxUtils::isProduction()) {
-                        $subsellerId = $transaction->company->subseller_getnet_id;
-                    } else {
-                        $subsellerId = $transaction->company->subseller_getnet_homolog_id;
-                    }
+                    $subSeller = $transaction->company->subseller_getnet_id;
 
-                    $response = $getnetService->getStatement(
-                        [
-                            'order_id' => $orderId,
-                            'subseller_id' => $subsellerId
-                        ]
-                    );
+                    $getNetBackOfficeService = new GetnetBackOfficeService();
+                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+                        ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
+                    $originalResult = $getNetBackOfficeService->getStatement();
 
-                    $gatewaySale = json_decode($response);
+                    $gatewaySale = json_decode($originalResult);
                     if (!empty($gatewaySale->list_transactions[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
@@ -348,45 +352,35 @@ class WithdrawalsApiController
                             ]
                         );
 
-                        if ($transaction->sale->flag) {
-                            $transaction->sale->flag = $this->sale->flag;
-                        } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
-                            $transaction->sale->flag = 'generico';
-                        } else if ((!$this->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 3) {
-                            $transaction->sale->flag = 'debito';
-                        } else {
-                            $transaction->sale->flag = 'boleto';
-                        }
-
-                        if (!in_array( $transaction->sale->flag, $arrayBrand)) {
-                            $arrayBrand[$transaction->sale->flag] = [
-                                'value' => $transaction->value,
-                                'date' => $date,
-                            ];
-                        }
-                        else {
-                            $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
-                            $arrayBrand[$transaction->sale->flag]['date'] = $date;
-
-                        }
-//                        if (!in_array(auth()->user()->account_owner_id, $users)) {
-//                            return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
-//                        }
-
-//                        $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
-//                        $arrayBrand[$transaction->sale->flag]['date'] += $date;
-
-
                     }
-
-
                 }
 
+                if ($transaction->sale->flag) {
+                    $transaction->sale->flag = $transaction->sale->flag;
+                } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
+                    $transaction->sale->flag = 'generico';
+                } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 3) {
+                    $transaction->sale->flag = 'debito';
+                } else {
+                    $transaction->sale->flag = 'boleto';
+                }
+
+                if (!in_array($transaction->sale->flag, $arrayBrand)) {
+
+                    $arrayBrand[$transaction->sale->flag] = [
+                        'value' => $transaction->value,
+//                        'date' => $date,
+                    ];
+                }
+                else {
+
+                    $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
+//                            $arrayBrand[$transaction->sale->flag]['date'] = $date;
+                }
 
             }
+            dd($arrayBrand);
 
-
-            //return WithdrawalTransactionsResource::collection($transactions->orderBy('id', 'ASC')->paginate(10));
 
             $return = [
                 'id' => Hashids::encode($id),
@@ -396,11 +390,11 @@ class WithdrawalsApiController
 
             return response()->json($return, 200);
 
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
-        }
+//        } catch (Exception $e) {
+//            report($e);
+//
+//            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+//        }
 
 
     }

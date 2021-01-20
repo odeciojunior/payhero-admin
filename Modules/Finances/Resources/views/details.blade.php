@@ -3,7 +3,7 @@
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes_transacao" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+    <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
@@ -40,7 +40,26 @@
                     </div>
                 </div>
 
+
             </div>
+            <div class="align-self-end mr-auto mb-5">
+{{--                <div class="row justify-content-between align-items-center" style="width: 100%;">--}}
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                        <div class="col-6 text-left">
+                            <div class="justify-content-start align-items-center" id="export-excel">
+                                <div class="p-2 d-flex justify-content-start align-items-center">
+                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                    <div class="btn-group" role="group">
+                                        <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                        <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+{{--                </div>--}}
+            </div>
+
         </div>
     </div>
 </div>
