@@ -934,4 +934,191 @@ $(document).ready(function () {
             $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
         }
     });
+
+    let exportFinanceFormat = 'xls'
+    $("#bt_get_sale_xls").on("click", function () {
+        $('#modal-export-finance-getnet').modal('show');
+        exportFinanceFormat = 'csv';
+    });
+
+    $("#bt_get_sale_csv").on("click", function () {
+        $('#modal-export-finance-getnet').modal('show');
+        exportFinanceFormat = 'xls';
+    });
+
+    $(".btn-confirm-export-finance-getnet").on("click", function () {
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+        var email = $('#email_finance_export').val();
+
+        if( email == '' || !regexEmail.test(email) ) {
+            alertCustom('error', 'Preencha o email corretamente');
+            return false;
+        } else {
+            financesGetnetExport(exportFinanceFormat);
+            $('#modal-export-finance-getnet').modal('hide');
+        }
+    });
+
+    // Download do relatorio
+    function financesGetnetExport(fileFormat) {
+
+        let data = {
+            "dateRange": $("#date_range_statement").val(),
+            "company" : $("#statement_company_select").val(),
+            "sale": $("#statement_sale").val(),
+            "status": $("#statement_status_select").val(),
+            "statement_data_type" : $("#statement_data_type_select").val(),
+            "payment_method" : $("#payment_method").val(),
+            "format" : fileFormat,
+            "email" :  $('#email_finance_export').val(),
+        };
+
+        $.ajax({
+            method: "POST",
+            url: '/api/transfers/account-statement-data/export',
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#export-finance-email').text(response.email);
+                $('#alert-finance-export').show()
+                    .shake();
+            }
+        });
+    }
+
+
+    function updateAccountStatementData() {
+        loadOnAny('#nav-statement #available-in-period-statement', false, balanceLoader);
+
+        $('#table-statement-body').html('');
+        $('#pagination-statement').html('');
+        loadOnTable('#table-statement-body', '#statementTable');
+
+        let link = '/api/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val() + '&payment_method=' + $("#payment_method").val();
+
+        $(".numbers").hide();
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                loadOnAny('#nav-statement #available-in-period-statement', true);
+
+                let error = 'Erro ao gerar o extrato';
+                errorAjaxResponse(error);
+                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
+            },
+            success: response => {
+                updateClassHTML();
+
+                let items = response.items;
+                $('#statement-money #available-in-period-statement').html('R$ 0,00');
+
+                if (isEmpty(items)) {
+                    loadOnAny('#nav-statement #available-in-period-statement', true);
+                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    return false;
+                }
+
+
+                items.forEach(function (item) {
+                    let dataTable = `<tr><td style="vertical-align: middle;">`;
+
+                    if (item.order && item.order.hashId) {
+
+                        dataTable += `Transação`;
+
+                        if (item.isInvite) {
+                            dataTable += `
+                                <a class="">
+                                    <span>#${item.order.hashId}</span>
+                                </a>
+                            `;
+                        } else {
+                            dataTable += `
+                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                    <span style="color:black;">#${item.order.hashId}</span>
+                                </a>
+                            `;
+                        }
+                        dataTable += `<br>
+                                        <small>(${item.details.description})</small>`;
+                    } else {
+                        dataTable += `${item.details.description}`;
+                    }
+
+                    dataTable += `
+                         </td>
+                         <td>
+                            <span class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
+                         </td>
+                        <td style="vertical-align: middle;">
+                            ${item.date}
+                        </td>
+                        <td style="vertical-align: middle; color:${item.amount >= 0 ? 'green' : 'red'};">
+                        ${(item.amount.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })
+                    )}
+                        </td>
+                        </tr>`;
+                    updateClassHTML(dataTable);
+                });
+
+                let totalInPeriod = response.totalInPeriod;
+
+                let isNegativeStatement = false;
+                if (totalInPeriod < 1) {
+                    isNegativeStatement = true;
+                }
+
+                $('#statement-money #available-in-period-statement').html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
+                        ${(totalInPeriod.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })
+                    )}
+                    </span>`
+                );
+                paginationStatement();
+
+                $("#pagination-statement span").addClass('jp-hidden');
+                $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
+                $("#pagination-statement a.jp-current").addClass('active');
+                $("#pagination-statement a").on('click', function () {
+                    $("#pagination-statement a").removeClass('active');
+                    $(this).addClass('active');
+                });
+
+                $("#pagination-statement").on('click', function () {
+                    $("#pagination-statement span").remove();
+                });
+                loadOnAny('#nav-statement #statement-money  #available-in-period-statement', true);
+            }
+        });
+
+    }
+
+    $(".nav-link-finances-show-export").on("click", function () {
+        $("#finances_export_btns").removeClass('d-none');
+    });
+
+    $(".nav-link-finances-hide-export").on("click", function () {
+        $("#finances_export_btns").addClass('d-none');
+    });
+
+
 });
