@@ -1156,6 +1156,7 @@ input[type=radio] {
 .weekdays-container .btn {
     border: 1px solid #bdbdbd;
     color: #aaa;
+    background-color: #fff;
     font-weight: 700;
     box-sizing: border-box;
 }

@@ -956,27 +956,23 @@ $(document).ready(function () {
 
     var settingsData = {
         company: null,
-        rule: 'period', //period, value
-        frequency: 'daily', //daily, weekly, monthly
+        rule: '', //period, value
+        frequency: '', //daily, weekly, monthly
         weekday: 0, //from 0 (monday) to 6 (sunday) as mysql weekday() function
-        day: 1,
+        day: 0,
         value: 0,
     }
 
-    var dayContainer = $('.day-container')
-
-    var weekdaysContainer = $('.weekdays-container')
-    var weekdaysButtons = weekdaysContainer.find('.btn')
-    weekdaysButtons.on('click', function () {
-        if (settingsData.frequency === 'weekly') {
-            weekdaysButtons.removeClass('active')
-            $(this).addClass('active')
-            settingsData.weekday = [$(this).data('weekday')]
-        }
-    })
-
+    var financesSettingsForm = $('#finances-settings-form')
+    var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
+    var weekdaysContainer = $('.weekdays-container')
+    var weekdaysButtons = weekdaysContainer.find('.btn')
+    var dayContainer = $('.day-container')
+    var withdrawalByValue = $('#withdrawal_by_value')
+    var withdrawalAmount = $('#withdrawal_amount')
+
     frequencyButtons.removeClass('active').on('click', function () {
         frequencyButtons.removeClass('active')
         settingsData.frequency = $(this).addClass('active').data('frequency')
@@ -996,4 +992,50 @@ $(document).ready(function () {
         }
     });
 
+    weekdaysButtons.on('click', function () {
+        if (settingsData.frequency === 'weekly') {
+            weekdaysButtons.removeClass('active')
+            $(this).addClass('active')
+            settingsData.weekday = $(this).data('weekday')
+        }
+    })
+
+    withdrawalByPeriod.on('change', function () {
+        var card = withdrawalByPeriod.closest('.card')
+        if (withdrawalByPeriod.is(':checked')) {
+            withdrawalByValue.prop('checked', false).trigger('change')
+            frequencyButtons.removeClass('disabled').prop('disabled', false)
+            weekdaysButtons.removeClass('disabled').prop('disabled', false)
+            card.find('[type=submit]').removeClass('disabled').addClass('btn-success').prop('disabled', false)
+            card.addClass('bg-light').removeClass('bg-lighter')
+            dayContainer.find('select').removeClass('disabled').prop('disabled', false)
+        } else {
+            frequencyButtons.addClass('disabled').removeClass('active').prop('disabled', true)
+            weekdaysButtons.addClass('disabled').removeClass('active').prop('disabled', true)
+            card.find('[type=submit]').addClass('disabled').removeClass('btn-success').prop('disabled', true)
+            card.addClass('bg-lighter').removeClass('bg-light')
+            dayContainer.find('select').addClass('disabled').prop('disabled', true)
+        }
+    })
+
+    withdrawalByPeriod.trigger('change')
+
+    withdrawalByValue.on('change', function () {
+        if (withdrawalByValue.is(':checked')) {
+            withdrawalByPeriod.prop('checked', false).trigger('change')
+            withdrawalByValue.closest('[type=submit]').addClass('btn-success').removeClass('disabled btn-default').prop('disabled', false)
+            withdrawalByValue.closest('.card').addClass('bg-light').removeClass('bg-lighter')
+            withdrawalAmount.removeClass('disabled').prop('disabled', false)
+        } else {
+            withdrawalByValue.closest('[type=submit]').removeClass('btn-default').addClass('disabled btn-default').prop('disabled', true)
+            withdrawalByValue.closest('.card').addClass('bg-lighter').removeClass('bg-light')
+            withdrawalAmount.addClass('disabled').prop('disabled', true)
+        }
+    })
+
+    financesSettingsForm.on('submit', function (e) {
+        e.preventDefault()
+        alert(settingsData)
+        return false;
+    })
 });

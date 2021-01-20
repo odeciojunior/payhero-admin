@@ -426,9 +426,9 @@
                                                 <h5 class="title-pad">
                                                     Saque automático por período
                                                     <label class="switch" style='float: right; top:3px'>
-                                                        <input type="checkbox" id="withdrawal"
-                                                               name="countdown_timer_flag"
-                                                               class='check countdown-timer-flag'>
+                                                        <input type="checkbox" id="withdrawal_by_period"
+                                                               name="withdrawal_by_period"
+                                                               class='check'>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </h5>
@@ -491,7 +491,7 @@
                                                 <br/>
                                                 <div class="row">
                                                     <div class="col-5">
-                                                        <button type="button"
+                                                        <button type="submit"
                                                                 class="btn btn-block btn-success py-10 px-15">
                                                             <img style="height: 12px; margin-right: 4px"
                                                                  src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">
@@ -509,9 +509,9 @@
                                                 <h5 class="title-pad">
                                                     Saque automático por valor
                                                     <label class="switch" style='float: right; top:3px'>
-                                                        <input type="checkbox" id="withdrawal"
-                                                               name="countdown_timer_flag"
-                                                               class='check countdown-timer-flag'>
+                                                        <input type="checkbox" id="withdrawal_by_value"
+                                                               name="withdrawal_by_value"
+                                                               class='check'>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </h5>
