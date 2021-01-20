@@ -78,7 +78,7 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
 
         $data =
             [
-                isset($order['hashId']) ? $order['hashId'] : $description,
+                isset($order['hashId']) ? '#'.$order['hashId'] . ' (' . $details['description'] .')'  : $description,
                 ($details['status']),
                 $row->date,
                 'R$ ' . number_format($row->amount, 2, ',', '.')
