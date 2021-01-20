@@ -584,7 +584,7 @@ class CompaniesApiController extends Controller
 
             $getnetBackOffice = new GetnetBackOfficeService();
 
-            $data = $getnetBackOffice->getAdjustments($company);
+            $data = $getnetBackOffice->getDiscounts($company);
 
             return response()->json(
                 [
