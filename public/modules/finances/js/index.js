@@ -188,7 +188,6 @@ $(document).ready(function () {
             success: (response) => {
                 loadOnAny('.price', true);
                 amount = response.data.amount;
-                console.log(amount);
 
                 $('.saldoDebito').html(`
                     <span
