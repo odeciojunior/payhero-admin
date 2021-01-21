@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let withdrawalSingleValue = true;
+    let amount = 0;
 
     function formatMoney(value) {
         return ((value / 100).toLocaleString('pt-BR', {
@@ -186,7 +187,9 @@ $(document).ready(function () {
             },
             success: (response) => {
                 loadOnAny('.price', true);
-                let amount = response.data.amount;
+                amount = response.data.amount;
+                console.log(amount);
+
                 $('.saldoDebito').html(`
                     <span
                         class="currency"
@@ -262,14 +265,6 @@ $(document).ready(function () {
                     `;
                     $("#debit-itens").html(dataItensExtract);
                     $("#debit-pending-informations").show();
-
-                    // console.log($(".s-btn.green").text().trim());
-                    // let newValueSelected = $('#bigger-value');
-                    //
-                    // $("#requested-amount-withdrawal").text($(".s-btn.green").text().trim());
-                    //
-                    // let result = newValueSelected.data('value') - $("#debit-value-modal").data('value').replace(new RegExp("[,]", "g"), "");
-                    // $("#value-withdrawal-received").text(formatMoney(result));
                 }
             }
         });
@@ -391,6 +386,7 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
+
                         manipulateModalWithdrawal(response.data);
 
                         let debitValue = $("#debit-value-modal").data('value');
@@ -401,7 +397,7 @@ $(document).ready(function () {
 
                             $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
 
-                            let result = $(`#${optionSelected}`).data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
+                            let result = newValueSelected.data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
                             $("#value-withdrawal-received").text(formatMoney(result));
                         }
 

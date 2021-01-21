@@ -195,46 +195,13 @@
                                                 <div class="grad-border blue"></div>
                                             </div>
                                         </div>
-                                        <div id="alert-debit-value" class="col-sm-3 alert alert-info"
-                                             style="display:none;background: #DCECFF 0% 0% no-repeat padding-box;
-                                                border: 2px solid #4A89F5;
-                                                border-radius: 11px;
-                                                opacity: 1;">
-
-<<<<<<< HEAD
-                                            Você possui um ajuste a débito pendente no valor de
-                                            <strong id="debit-value"></strong>
-                                            que será descontado do valor dos próximos saques solicitados.
-                                            Você pode consultar esse valor na agenda financeira filtrando por
-                                            "Ajuste de débito".
-=======
-                                            Você possui um ajuste a débito pendente no valor de <strong
-                                                id="debit-value"></strong>
-                                            que será descontado do valor dos próximos saques solicitados. Você pode
-                                            consultar
-                                            esse valor na agenda financeira filtrando por "Ajuste de débito".
->>>>>>> master
-
-                                            <div class="row " style="position: absolute">
-                                                <button type="button" class="btn" id="ir-agenda" style="margin-right:20px;background: #E6E6E6 0% 0% no-repeat padding-box;
-                                                border-radius: 5px;
-                                                opacity: 1;text-align: left;
-                                                font: normal normal bold 12px/24px Muli;
-                                                letter-spacing: 0px;
-                                                color: #787878;">
-                                                    Ir para Agenda!
-                                                </button>
-                                                <button type="button" class="btn" data-dismiss="alert"
-                                                        aria-label="Close" style=" background: #4A89F5 0% 0% no-repeat padding-box;
-                                                border-radius: 5px;
-                                                opacity: 1;text-align: left;
-                                                font: normal normal bold 12px/24px Muli;
-                                                letter-spacing: 0px;
-                                                color: #FFFFFF;">
-                                                    Ok, Entendi!
-                                                </button>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
+                                                <h4 class="price saldoDebito" id="debit-value">
+                                                </h4>
+                                                <div class="grad-border red"></div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
