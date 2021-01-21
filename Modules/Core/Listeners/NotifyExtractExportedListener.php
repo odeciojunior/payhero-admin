@@ -21,13 +21,12 @@ class NotifyExtractExportedListener
         try {
             $user = $event->user ?? null;
             $filename = $event->filename;
-
+            $userEmail = !empty($event->email) ? $event->email : $user->email;
 
             Notification::send($user, new SalesExportedNotification($user, $filename));
 
             //Envio de e-mail
             $sendGridService = new SendgridService();
-            $userEmail = $user->email;
             $userName = $user->name;
             $downloadLink = getenv('APP_URL') . "/sales/download/" . $filename;
 

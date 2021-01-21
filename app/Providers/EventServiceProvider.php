@@ -15,16 +15,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        \Modules\Core\Events\BilletPaidEvent::class => [
-            \Modules\Core\Listeners\BilletPaidActiveCampaignListener::class,
-            \Modules\Core\Listeners\BilletPaidHotZappListener::class,
-            \Modules\Core\Listeners\BilletPaidSendEmailListener::class,
-            \Modules\Core\Listeners\BilletPaidWhatsapp2Listener::class,
-            \Modules\Core\Listeners\BilletPaidHotsacListener::class,
-            \Modules\Core\Listeners\BilletPaidReportanaListener::class,
-            \Modules\Core\Listeners\BilletPaidSmartfunnelListener::class,
-//            \Modules\Core\Listeners\BilletPaidUnicodropListener::class,
-        ],
         \Modules\Core\Events\BilletExpiredEvent::class => [
             \Modules\Core\Listeners\BilletExpiredWhatsapp2Listener::class,
         ],
@@ -112,6 +102,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         \Modules\Core\Events\UpdateCompanyGetnetEvent::class => [
             \Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener::class,
+        ],
+        \Modules\Core\Events\FinancesExportedEvent::class => [
+            \Modules\Core\Listeners\NotifyFinancesExportedListener::class,
         ],
     ];
 

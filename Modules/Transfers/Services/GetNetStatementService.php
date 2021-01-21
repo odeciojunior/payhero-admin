@@ -5,6 +5,9 @@ namespace Modules\Transfers\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Modules\Core\Entities\Company;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Getnet\Details;
 use Modules\Transfers\Getnet\Order;
 use Modules\Transfers\Getnet\StatementItem;
@@ -444,5 +447,65 @@ class GetNetStatementService
         }
 
         return $date;
+    }
+
+    public function accountStatementDataFilters()
+    {
+
+        $companyGetNet = Company::whereNotNull('subseller_getnet_id')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->whereGetNetStatus(1)
+            ->whereId(current(Hashids::decode(request()->get('company'))))
+            ->first();
+
+        if (empty($companyGetNet)) {
+            return response()->json([]);
+        }
+
+        $subseller = $companyGetNet->subseller_getnet_homolog_id;
+        if (FoxUtils::isProduction()) {
+            $subseller = $companyGetNet->subseller_getnet_id;
+        }
+
+        try {
+            $dates = explode(' - ', request('dateRange') ?? '');
+
+            $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
+            $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
+        } catch (Exception $exception) {
+        }
+
+        if (!isset($startDate) || !isset($endDate)) {
+            $today = today();
+            $startDate = $today;
+            $endDate = $today;
+        }
+
+        if (request('statement_data_type') == 'schedule_date') {
+            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
+        } elseif (request('statement_data_type') == 'liquidation_date') {
+            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
+        } else {
+            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+        }
+
+        $getNetBackOfficeService = new GetnetBackOfficeService();
+        $getNetBackOfficeService->setStatementSubSellerId($subseller)
+            ->setStatementStartDate($startDate)
+            ->setStatementEndDate($endDate)
+            ->setStatementDateField($statementDateField);
+
+        if (!empty(request('sale'))) {
+            $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
+            $filters['sale'] = $endDate;
+        }
+
+        $filters['result'] = $getNetBackOfficeService->getStatement();
+        $filters['start_date'] = $startDate;
+        $filters['end_date'] = $endDate;
+        $filters['status'] = request()->get('status');
+        $filters['payment_method'] = request()->get('payment_method');
+
+        return $filters;
     }
 }
