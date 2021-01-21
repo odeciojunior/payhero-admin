@@ -584,6 +584,20 @@ class CompaniesApiController extends Controller
 
             $getnetBackOffice = new GetnetBackOfficeService();
 
+            if ((FoxUtils::isProduction() && empty($company->subseller_getnet_id))
+                || empty($company->subseller_getnet_homolog_id)
+            ) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => FoxUtils::isProduction(
+                        ) ? 'Ocorreu um erro, tente novamente mais tarde!' : 'Subseller ID inválido',
+                        'data' => []
+                    ],
+                    400
+                );
+            }
+
             $data = $getnetBackOffice->getDiscounts($company);
 
             return response()->json(

@@ -201,19 +201,11 @@
                                                 border-radius: 11px;
                                                 opacity: 1;">
 
-                                            <<<<<<< HEAD
                                             Você possui um ajuste a débito pendente no valor de
                                             <strong id="debit-value"></strong>
                                             que será descontado do valor dos próximos saques solicitados.
                                             Você pode consultar esse valor na agenda financeira filtrando por
                                             "Ajuste de débito".
-                                            =======
-                                            Você possui um ajuste a débito pendente no valor de <strong
-                                                id="debit-value"></strong>
-                                            que será descontado do valor dos próximos saques solicitados. Você pode
-                                            consultar
-                                            esse valor na agenda financeira filtrando por "Ajuste de débito".
-                                            >>>>>>> master
 
                                             <div class="row " style="position: absolute">
                                                 <button type="button" class="btn" id="ir-agenda" style="margin-right:20px;background: #E6E6E6 0% 0% no-repeat padding-box;
@@ -234,7 +226,14 @@
                                                     Ok, Entendi!
                                                 </button>
                                             </div>
-
+                                        </div>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
+                                                <h4 class="price saldoDebito" id="debit-value">
+                                                </h4>
+                                                <div class="grad-border red"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -532,7 +531,8 @@
                                                     <p class="mb-0">Dia do <b>mês</b></p>
                                                     <select style='border-radius:10px' class="form-control select-pad"
                                                             name="day" id="settings_day">
-                                                        <option value="" selected>Selecione o melhor dia para o saque</option>
+                                                        <option value="" selected>Selecione o melhor dia para o saque
+                                                        </option>
                                                         @foreach ([1, 5, 10, 15, 20, 25] as $day)
                                                             <option value="{{$day}}">{{$day}}</option>
                                                         @endforeach
@@ -629,44 +629,47 @@
 
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
-            <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
-                <div id="conteudo_modal_add" class="modal-content p-10">
-                    <div class="header-modal simple-border-bottom">
-                        <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
+            <div id="" class="modal-dialog modal-dialog-centered modal-simple">
+                <div id="" class="modal-content modal-content-style">
+                    <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal"
+                         style="height: 60px;">
+                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;">Confirmar Saque</h3>
                     </div>
-                    <div id="modal_body" class="modal-body simple-border-bottom"
-                         style='padding-bottom:1%;padding-top:1%;'>
-                        <div>
-                            <h5>Verifique os dados da conta:</h5>
-                            <h4>Banco:
-                                <span id="modal-withdrawal-bank"></span>
-                            </h4>
-                            <h4>Agência:
-                                <span id="modal-withdrawal-agency"></span>
-                                <span id="modal-withdrawal-agency-digit"></span>
-                            </h4>
-                            <h4>Conta:
-                                <span id="modal-withdrawal-account"></span>
-                                <span id="modal-withdrawal-account-digit"></span>
-                            </h4>
-                            <h4>Documento:
-                                <span id="modal-withdrawal-document"></span>
-                            </h4>
-                            <hr>
-                            <h4>Valor do saque:
-                                <span id="modal-withdrawal-value" class='greenGradientText'></span>
-                                <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
-                            </h4>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="modal-body-withdrawal" class="col-12 mt-30">
+
+                                </div>
+                            </div>
+                            <div id="debit-pending-informations" class="col-12 mt-20"
+                                 style="display:none;background:  0 0 no-repeat padding-box;">
+                                <div class="col-12">
+                                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
+                                    <p style="color: #959595;" class="text-center">Você tem alguns valores em aberto,
+                                        confira:</p>
+                                    <div id="debit-itens">
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id='modal-withdraw-footer' class="modal-footer">
-                        <button id="bt-confirm-withdrawal" class="btn btn-success"
-                                style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
-                            <strong>Confirmar</strong></button>
-                        <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal"
-                                aria-label="Close"
-                                style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
-                            <strong>Cancelar</strong></button>
+
+                        <div class="col-md-8">
+                            <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal"
+                                    aria-label="Close"
+                                    style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
+                                <strong>Cancelar</strong>
+                            </button>
+
+                            <button id="bt-confirm-withdrawal" class="btn btn-success"
+                                    style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
+                                <strong>Confirmar</strong>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
