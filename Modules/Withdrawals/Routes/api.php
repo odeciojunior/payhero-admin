@@ -30,6 +30,13 @@ Route::group(
         Route::post('/withdrawals/getWithdrawalValues', 'WithdrawalsApiController@getWithdrawalValues');
 
         Route::get('/withdrawals/checkallowed', 'WithdrawalsApiController@checkAllowed');
+
+        Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
+            ->only('index', 'show', 'store', 'update', 'destroy')
+            ->names('api.withdrawals_settings')
+            ->middleware('role:account_owner|admin');
+
+        Route::get('/withdrawals/settings/{companyId}/{settingsId}', 'WithdrawalsSettingsApiController@show');
     }
 );
 

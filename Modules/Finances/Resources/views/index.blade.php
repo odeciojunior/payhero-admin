@@ -201,19 +201,19 @@
                                                 border-radius: 11px;
                                                 opacity: 1;">
 
-<<<<<<< HEAD
+                                            <<<<<<< HEAD
                                             Você possui um ajuste a débito pendente no valor de
                                             <strong id="debit-value"></strong>
                                             que será descontado do valor dos próximos saques solicitados.
                                             Você pode consultar esse valor na agenda financeira filtrando por
                                             "Ajuste de débito".
-=======
+                                            =======
                                             Você possui um ajuste a débito pendente no valor de <strong
                                                 id="debit-value"></strong>
                                             que será descontado do valor dos próximos saques solicitados. Você pode
                                             consultar
                                             esse valor na agenda financeira filtrando por "Ajuste de débito".
->>>>>>> master
+                                            >>>>>>> master
 
                                             <div class="row " style="position: absolute">
                                                 <button type="button" class="btn" id="ir-agenda" style="margin-right:20px;background: #E6E6E6 0% 0% no-repeat padding-box;
@@ -391,13 +391,18 @@
                                 </div>
 
                                 <!-- Aviso de Exportação -->
-                                <div id="alert-finance-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                                <div id="alert-finance-export"
+                                     class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                                     style="display:none;">
                                     <div class="d-flex">
                                         <span class="o-info-help-1"></span>
                                         <div class="w-full">
                                             <strong class="font-size-16">Exportando seu relatório</strong>
-                                            <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
-                                                <strong id="export-finance-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                                            <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
+                                                e-mail para:
+                                                <strong id="export-finance-email"></strong> e aparecerá nas suas
+                                                notificações. Pode levar algum tempo, dependendo de quantos registros
+                                                você estiver exportando.
                                             </p>
                                         </div>
                                         <i class="material-icons pointer" data-dismiss="alert">close</i>
@@ -453,7 +458,7 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <form id="finances-settings-form">
-                                <div class="row justify-content-start align-items-center">
+                                <div class="row justify-content-start align-items-start">
                                     <div class="col-12 col-sm-8 text-left">
                                         <h5 class="title-pad">Configurações</h5>
                                         <p class="p-0 m-0">Configure as finanças do seu negócio</p>
@@ -526,10 +531,11 @@
                                                 <div class="day-container d-none flex-column mt-20">
                                                     <p class="mb-0">Dia do <b>mês</b></p>
                                                     <select style='border-radius:10px' class="form-control select-pad"
-                                                            name="company" id="settings_company_select">
-                                                        @for ($i = 1; $i <= 31; $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                        @endfor
+                                                            name="day" id="settings_day">
+                                                        <option value="" selected>Selecione o melhor dia para o saque</option>
+                                                        @foreach ([1, 5, 10, 15, 20, 25] as $day)
+                                                            <option value="{{$day}}">{{$day}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <br/>
@@ -564,14 +570,20 @@
                                                     valor informado abaixo
                                                 </p>
                                                 <br/>
-                                                <div class="input-group">
-                                                    <div class="input-group-append">R$</div>
-                                                    <input type="text" class="form-control"/>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">R$</span>
+                                                    </div>
+                                                    <input id="withdrawal_amount" name="withdrawal_amount" type="text"
+                                                           class="form-control" aria-label="Valor mínimo para saque">
+                                                    {{--<div class="input-group-append">--}}
+                                                    {{--    <span class="input-group-text">.00</span>--}}
+                                                    {{--</div>--}}
                                                 </div>
                                                 <br/>
                                                 <div class="row">
                                                     <div class="col-5">
-                                                        <button type="button"
+                                                        <button type="submit"
                                                                 class="btn btn-block btn-default py-10 px-15">
                                                             <img style="height: 12px; margin-right: 4px"
                                                                  src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">
@@ -593,7 +605,8 @@
         </div>
 
         <!-- Modal exportar relatorio -->
-        <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+        <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog"
+             tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-simple">
                 <div class="modal-content p-10">
                     <div class='my-20 mx-20 text-center'>
@@ -604,7 +617,8 @@
                         <button type="button" class="btn btn-success btn-confirm-export-finance-getnet">
                             Enviar
                         </button>
-                        <a id="btn-mobile-modal-close" class="btn btn-primary" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                        <a id="btn-mobile-modal-close" class="btn btn-primary" style='color:white' role="button"
+                           data-dismiss="modal" aria-label="Close">
                             Fechar
                         </a>
                     </div>

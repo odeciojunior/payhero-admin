@@ -100,6 +100,9 @@ $(document).ready(function () {
                     }
                 });
 
+                //Company withdrawal settings
+                getSettings($("#settings_company_select").val())
+
                 if (!itsApprovedTransactGetnet) {
                     $("#companies-not-approved-getnet").show();
                     loadingOnScreenRemove();
@@ -954,26 +957,102 @@ $(document).ready(function () {
 
     //Settings
 
+    const SETTINGS_FREQUENCY_DAILY = 'daily'
+    const SETTINGS_FREQUENCY_WEEKLY = 'weekly'
+    const SETTINGS_FREQUENCY_MONTHLY = 'monthly'
+    const SETTINGS_RULE_PERIOD = 'period'
+    const SETTINGS_RULE_AMOUNT = 'amount'
+
     var settingsData = {
         company: null,
-        rule: '', //period, value
-        frequency: '', //daily, weekly, monthly
-        weekday: 0, //from 0 (monday) to 6 (sunday) as mysql weekday() function
-        day: 0,
-        value: 0,
+        rule: null,      //rules: period, amount
+        frequency: null, //frequency: daily, weekly, monthly
+        weekday: null,   //from 0 (monday) to 6 (sunday) as mysql weekday() function
+        day: null,       //day of month
+        amount: 0,       //minimal amount to make withdrawal
     }
 
     var financesSettingsForm = $('#finances-settings-form')
+    var withdrawalCompanySelect = financesSettingsForm.find('settings_company_select')
     var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
     var weekdaysContainer = $('.weekdays-container')
     var weekdaysButtons = weekdaysContainer.find('.btn')
     var dayContainer = $('.day-container')
-    var withdrawalByValue = $('#withdrawal_by_value')
+    var withdrawalByAmount = $('#withdrawal_by_value')
     var withdrawalAmount = $('#withdrawal_amount')
 
-    frequencyButtons.removeClass('active').on('click', function () {
+    var getSettings = function (companyId, settingsId = null) {
+        $.ajax({
+            method: "GET",
+            url: '/api/withdrawals/settings/' + companyId + (settingsId ? '/' + settingsId : ''),
+            //data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                console.log(response)
+                //errorAjaxResponse(response);
+            },
+            success: response => {
+                settingsData = response.data
+                if (settingsData.rule === SETTINGS_RULE_PERIOD) {
+                    withdrawalByPeriod.prop('checked', true)
+                }
+                if (settingsData.rule === SETTINGS_RULE_AMOUNT) {
+                    withdrawalByAmount.prop('checked', true)
+                }
+                console.log(response.data)
+                //alertCustom(response.type, response.message)
+            }
+        });
+    }
+
+    var saveSettings = function (data) {
+
+        settingsData = Object.assign(settingsData, {
+            company: financesSettingsForm.find('#settings_company_select').val(),
+            amount: withdrawalAmount.val(),
+            day: dayContainer.find('select').val()
+        })
+
+        if (!validateSettingsData(data)) {
+            alertCustom('error', 'Dados inválidos, verifique novamente as Configurações de Saque Automático')
+            return false;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: '/api/withdrawals/settings',
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                alertCustom(response.type, response.message)
+            }
+        });
+    }
+
+    var validateSettingsData = function (settingsData) {
+        if (settingsData.rule === SETTINGS_RULE_PERIOD) {
+            if (!settingsData.frequency) return false
+            if (settingsData.frequency === SETTINGS_FREQUENCY_WEEKLY && settingsData.weekday === null) return false
+            if (settingsData.frequency === SETTINGS_FREQUENCY_MONTHLY && !settingsData.day) return false
+        }
+
+        if (settingsData.rule === SETTINGS_RULE_AMOUNT && !Number.parseInt(settingsData.amount)) return false
+
+        return true
+    }
+
+    frequencyButtons.on('click', function () {
         frequencyButtons.removeClass('active')
         settingsData.frequency = $(this).addClass('active').data('frequency')
         settingsData.weekday = null;
@@ -1002,44 +1081,58 @@ $(document).ready(function () {
 
     withdrawalByPeriod.on('change', function () {
         var card = withdrawalByPeriod.closest('.card')
+
         if (withdrawalByPeriod.is(':checked')) {
-            withdrawalByValue.prop('checked', false).trigger('change')
+            settingsData.rule = SETTINGS_RULE_PERIOD
+            withdrawalByAmount.prop('checked', false).trigger('change')
             frequencyButtons.removeClass('disabled').prop('disabled', false)
             weekdaysButtons.removeClass('disabled').prop('disabled', false)
             card.find('[type=submit]').removeClass('disabled').addClass('btn-success').prop('disabled', false)
             card.addClass('bg-light').removeClass('bg-lighter')
             dayContainer.find('select').removeClass('disabled').prop('disabled', false)
         } else {
+            settingsData.rule === SETTINGS_RULE_PERIOD ? settingsData.rule = null : ''
             frequencyButtons.addClass('disabled').removeClass('active').prop('disabled', true)
             weekdaysButtons.addClass('disabled').removeClass('active').prop('disabled', true)
             card.find('[type=submit]').addClass('disabled').removeClass('btn-success').prop('disabled', true)
             card.addClass('bg-lighter').removeClass('bg-light')
-            dayContainer.find('select').addClass('disabled').prop('disabled', true)
+            dayContainer.find('select').addClass('disabled').prop('disabled', true).val(null)
         }
     })
 
-    withdrawalByPeriod.trigger('change')
+    withdrawalByAmount.on('change', function () {
+        var card = withdrawalByAmount.closest('.card')
 
-    withdrawalByValue.on('change', function () {
-        if (withdrawalByValue.is(':checked')) {
+        if (withdrawalByAmount.is(':checked')) {
+            settingsData.rule = SETTINGS_RULE_AMOUNT
             withdrawalByPeriod.prop('checked', false).trigger('change')
-            withdrawalByValue.closest('[type=submit]').addClass('btn-success').removeClass('disabled btn-default').prop('disabled', false)
-            withdrawalByValue.closest('.card').addClass('bg-light').removeClass('bg-lighter')
+            card.find('[type=submit]').addClass('btn-success').removeClass('disabled btn-default').prop('disabled', false)
+            card.addClass('bg-light').removeClass('bg-lighter')
             withdrawalAmount.removeClass('disabled').prop('disabled', false)
         } else {
-            withdrawalByValue.closest('[type=submit]').removeClass('btn-default').addClass('disabled btn-default').prop('disabled', true)
-            withdrawalByValue.closest('.card').addClass('bg-lighter').removeClass('bg-light')
-            withdrawalAmount.addClass('disabled').prop('disabled', true)
+            settingsData.rule === SETTINGS_RULE_AMOUNT ? settingsData.rule = null : ''
+            card.find('[type=submit]').removeClass('btn-default').addClass('disabled btn-default').prop('disabled', true)
+            card.addClass('bg-lighter').removeClass('bg-light')
+            withdrawalAmount.addClass('disabled').prop('disabled', true).val('')
         }
     })
 
     financesSettingsForm.on('submit', function (e) {
         e.preventDefault()
-        alert(settingsData)
+        saveSettings(settingsData)
         return false;
     })
 
-    // Finances report
+    withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
+    frequencyButtons.removeClass('active')
+    if (withdrawalCompanySelect.val()) {
+        getSettings(withdrawalCompanySelect.val())
+    } else {
+        withdrawalByPeriod.trigger('change')
+        withdrawalByAmount.trigger('change')
+    }
+
+// Finances report
 
     let exportFinanceFormat = 'xls'
     $("#bt_get_sale_xls").on("click", function () {
@@ -1065,7 +1158,7 @@ $(document).ready(function () {
         }
     });
 
-    // Download do relatorio
+// Download do relatorio
     function financesGetnetExport(fileFormat) {
 
         let data = {
