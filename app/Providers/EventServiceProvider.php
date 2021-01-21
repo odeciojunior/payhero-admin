@@ -113,6 +113,9 @@ class EventServiceProvider extends ServiceProvider
         \Modules\Core\Events\UpdateCompanyGetnetEvent::class => [
             \Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener::class,
         ],
+        \Modules\Core\Events\FinancesExportedEvent::class => [
+            \Modules\Core\Listeners\NotifyFinancesExportedListener::class,
+        ],
     ];
 
     /**

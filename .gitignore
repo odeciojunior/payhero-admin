@@ -80,3 +80,7 @@ deploy
 result
 .command
 .dados
+
+### Deploy script ###
+aws-cloudfox.sh
+

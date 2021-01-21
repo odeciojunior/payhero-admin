@@ -26,11 +26,14 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
 
     private $filename;
 
+    protected $email;
+
     public function __construct($filters, $user, $filename)
     {
         $this->filters = $filters;
         $this->user = $user;
         $this->filename = $filename;
+        $this->email = !empty($filters['email']) ? $filters['email'] : $user->email;
     }
 
     public function query()
@@ -142,7 +145,7 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AS1'; // All headers
+                $cellRange = 'A1:D1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)
                     ->getFill()
                     ->setFillType('solid')
@@ -172,7 +175,7 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
                     $lastSale = $currentSale;
                 }
 
-                event(new ExtractExportedEvent($this->user, $this->filename));
+                event(new ExtractExportedEvent($this->user, $this->filename, $this->email));
             },
         ];
     }

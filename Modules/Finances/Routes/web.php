@@ -10,6 +10,7 @@ Route::group(
     function() {
         // rotas autenticadas
         Route::get('/', 'FinancesController@index')->name('finances')->middleware('role:account_owner|admin');
+        Route::get('/download/{filename}', 'FinancesController@download')->middleware('role:account_owner|admin');
     }
 );
 

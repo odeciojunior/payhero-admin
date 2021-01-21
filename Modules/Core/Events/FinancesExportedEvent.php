@@ -4,7 +4,7 @@ namespace Modules\Core\Events;
 
 use Modules\Core\Entities\User;
 
-class ExtractExportedEvent
+class FinancesExportedEvent
 {
     public $user;
 
@@ -13,7 +13,7 @@ class ExtractExportedEvent
     public $email;
 
     /**
-     * ExtractExportedEvent constructor.
+     * SalesExportedEvent constructor.
      * @param User $user
      * @param string $filename
      */
