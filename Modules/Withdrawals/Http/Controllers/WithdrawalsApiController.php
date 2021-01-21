@@ -302,8 +302,11 @@ class WithdrawalsApiController
             $transactions = Transaction::with('sale')->with('company')->where('withdrawal_id', $withdrawalId)->get();
 
             $arrayBrands = [];
+            $total_withdrawal = 0;
 
             foreach ($transactions as $transaction) {
+
+                $total_withdrawal += $transaction->value;
 
                 if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
                     $transaction->sale->flag = 'generico';
@@ -349,7 +352,7 @@ class WithdrawalsApiController
             }
 
             $arrayTransactions = [];
-//dd($arrayBrands );
+
             foreach ($arrayBrands as $arrayBrand) {
 
                 if ($arrayBrand['liquidated'] == true and  empty($arrayBrand['date'])) {
@@ -380,7 +383,7 @@ class WithdrawalsApiController
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
                     'liquidated' => $arrayBrand['liquidated'],
-                    'date' =>  $arrayBrand['date'],
+                    'date' =>  $arrayBrand['date'] ?? ' - ',
                 ];
             }
 
@@ -388,7 +391,8 @@ class WithdrawalsApiController
             $return = [
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
-                'transactions' => $arrayTransactions
+                'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
+                'transactions' =>  $arrayTransactions,
             ];
 
             return response()->json($return, 200);

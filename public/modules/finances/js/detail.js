@@ -17,8 +17,7 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                //$('#modal_detalhes_transacao').modal('hide');
-                loadOnAny('#modal-transactionsDetails', true);
+                $('#modal_detalhes_transacao').modal('hide');
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -35,7 +34,6 @@ $(() => {
                     else {
                         is_liquidated = 'is-released-off';
                     }
-
 
                     dataHtml += `<tr>
                                 <td>
@@ -57,6 +55,17 @@ $(() => {
                             </tr>`;
 
                 });
+
+                dataHtml += `<tr>
+                                <td> </td>
+                                <td> </td>
+                                <td>
+                                    <span class='small font-weight-bold'>Total </span>
+                                </td>
+                                <td>
+                                    <span class='small font-weight-bold'>${response.total_withdrawal}</span>
+                                </td>
+                            </tr>`;
 
                 $("#transactions-table-data").append(dataHtml);
 
