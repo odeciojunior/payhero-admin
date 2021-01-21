@@ -355,7 +355,7 @@
                     <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                     <small>OBS: Taxa de R$ 1,00 por estorno</small>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                     <div class="col-3"></div>
                     <div class="col-3">
                         <div class="custom-control custom-radio">
@@ -371,7 +371,7 @@
                     </div>
                     <div class="col-3"></div>
                 </div>
-                <div class="text-center pt-20" style="min-height:62px;">
+                <div class="text-center pt-20 d-none" style="min-height:62px;">
                     <div class="value-partial-refund" style="display: none;">
                         <strong class="font-size-14">Valor a ser estornado: </strong> R$
                         <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
