@@ -5,7 +5,6 @@ namespace Modules\Core\Listeners;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Services\DigitalManagerService;
 use Modules\Core\Entities\DigitalmanagerIntegration;
 use Modules\Core\Entities\ProductPlanSale;
@@ -30,10 +29,10 @@ class BilletPaidDigitalManagerListener implements ShouldQueue
 
     /**
      * Handle the event.
-     * @param BilletPaidEvent $event
+     * @param $event
      * @return void
      */
-    public function handle(BilletPaidEvent $event)
+    public function handle($event)
     {
         try {
             $digitalManagerIntegration = DigitalmanagerIntegration::where('project_id', $event->sale->project_id)

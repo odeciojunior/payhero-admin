@@ -41,16 +41,3 @@ Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'pr
     Route::get('/orders', 'SalesApiController@indexExternal');
     Route::get('/orders/{saleId}', 'SalesApiController@showExternal');
 });
-
-Route::group(
-    [
-        'middleware' => ['InternalApiAuth'],
-        'prefix'     => 'sales',
-    ],
-    function() {
-
-        Route::post('/saleprocess', [
-            'uses' => 'SalesApiController@saleProcess',
-        ]);
-    }
-);
