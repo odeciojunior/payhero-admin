@@ -278,20 +278,8 @@ class WithdrawalsApiController
     public function getTransactionsByBrand($id)
     {
 
-        $return = [
-            'id' => Hashids::encode($id),
-            'date_request' =>'21/01/2021',
-            'transactions' => [
-                'brand' => 'band',
-                'liquidated' => true,
-                'date' =>  '21/01/2021',
-                'value' => 'R$12,00'
-            ],
-        ];
+        try {
 
-        return response()->json($return, 200);
-
-        //try {
             $withdrawalId = current(Hashids::decode($id));
             $withdrawalModel = new Withdrawal();
 
@@ -300,6 +288,7 @@ class WithdrawalsApiController
             }
 
             $withdrawal = $withdrawalModel->with('company')->find($withdrawalId);
+            $subsellerGetnetId = $withdrawal->company->subseller_getnet_id;
 
             if (!Gate::allows('edit', [$withdrawal->company])) {
                 return response()->json(
@@ -312,24 +301,18 @@ class WithdrawalsApiController
 
             $transactions = Transaction::with('sale')->with('company')->where('withdrawal_id', $withdrawalId)->get();
 
-//            $arrayBrand = [
-//                            'master' => [
-//                                'value' => 0,
-//                                'date' => null
-//                            ],
-//                            'boleto' => [
-//                                'value' => 0,
-//                                'date' => null
-//                            ],
-//                        ];
-            $arrayBrand = [];
+            $arrayBrands = [];
 
             foreach ($transactions as $transaction) {
 
-                if ( !$transaction->gateway_transferred ) {
-                    $isLiquidated = false;
-                    $date = '';
+                if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
+                    $transaction->sale->flag = 'generico';
+               }
+                elseif ($transaction->sale->payment_method == 2) {
+                    $transaction->sale->flag = 'boleto';
+               }
 
+                if ( !$transaction->gateway_transferred ) {
 
                     $subSeller = $transaction->company->subseller_getnet_id;
 
@@ -352,50 +335,94 @@ class WithdrawalsApiController
                             ]
                         );
 
+                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date );
+
+                    } else {
+
+                        $this->updateArrayBrands($arrayBrands, $transaction, false );
                     }
                 }
-
-                if ($transaction->sale->flag) {
-                    $transaction->sale->flag = $transaction->sale->flag;
-                } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
-                    $transaction->sale->flag = 'generico';
-                } else if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 3) {
-                    $transaction->sale->flag = 'debito';
-                } else {
-                    $transaction->sale->flag = 'boleto';
-                }
-
-                if (!in_array($transaction->sale->flag, $arrayBrand)) {
-
-                    $arrayBrand[$transaction->sale->flag] = [
-                        'value' => $transaction->value,
-//                        'date' => $date,
-                    ];
-                }
                 else {
-
-                    $arrayBrand[$transaction->sale->flag]['value'] += $transaction->value;
-//                            $arrayBrand[$transaction->sale->flag]['date'] = $date;
+                    $this->updateArrayBrands($arrayBrands, $transaction, true );
                 }
 
             }
-            dd($arrayBrand);
+
+            $arrayTransactions = [];
+//dd($arrayBrands );
+            foreach ($arrayBrands as $arrayBrand) {
+
+                if ($arrayBrand['liquidated'] == true and  empty($arrayBrand['date'])) {
+
+                    $subSeller = $subsellerGetnetId;
+
+                    $getNetBackOfficeService = new GetnetBackOfficeService();
+
+                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+                        ->setStatementSaleHashId($arrayBrand['hash_id']);
+
+
+                    $originalResult = $getNetBackOfficeService->getStatement();
+
+                    $gatewaySale = json_decode($originalResult);
+                    if (!empty($gatewaySale->list_transactions[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                    ) {
+                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = date("d/m/Y", strtotime($date));
+
+                        $arrayBrand['date'] = $date;
+                    }
+                }
+                //dd($arrayBrand);
+                $arrayTransactions[] = [
+                    'brand' => $arrayBrand['brand'],
+                    'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
+                    'liquidated' => $arrayBrand['liquidated'],
+                    'date' =>  $arrayBrand['date'],
+                ];
+            }
 
 
             $return = [
-                'id' => Hashids::encode($id),
+                'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
-                'transactions' => $arrayBrand
+                'transactions' => $arrayTransactions
             ];
 
             return response()->json($return, 200);
 
-//        } catch (Exception $e) {
-//            report($e);
-//
-//            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
-//        }
+        } catch (Exception $e) {
+            report($e);
 
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+
+
+    }
+
+    public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {
+
+        if (array_key_exists($transaction->sale->flag,$arrayBrands))
+        {
+            if (!$isLiquidated) {
+                $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
+            }
+
+            $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
+        }
+        else
+        {
+            $arrayBrands[$transaction->sale->flag] = [
+                'brand' => $transaction->sale->flag,
+                'value' => $transaction->value,
+                'liquidated' => $isLiquidated,
+                'date' =>  $date,
+                'hash_id' => $transaction->sale->hash_id,
+
+            ];
+        }
 
     }
 }
