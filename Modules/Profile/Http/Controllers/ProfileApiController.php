@@ -664,4 +664,10 @@ class ProfileApiController
             return response()->json(['error' => 'Erro ao verificar documentos'], 400);
         }
     }
+
+    public function verifyIsApproved(): ?bool
+    {
+
+        return auth()->user()->account_is_approved;
+    }
 }
