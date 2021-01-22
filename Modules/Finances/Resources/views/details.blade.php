@@ -18,6 +18,7 @@
             </div>
 
             <div class="modal-body">
+
                 <div class="transition-details">
                     <h5>Informações da solicitação</h5>
                     <div id="withdrawal-code"></div>
@@ -54,62 +55,64 @@
                         </div>
                 </div>
 
-            </div>
-
-            <div class="align-self-end mr-auto mb-5" id="btn_exports">
-                @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-                    <div class="col-6 text-left">
-                        <div class="justify-content-start align-items-center">
-                            <div class="p-2 d-flex justify-content-start align-items-center" id="">
-                                <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
-                                <div class="btn-group" role="group">
-                                    <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                    <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                <div class="align-self-end mr-auto mb-5" id="btn_exports">
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                        <div class="col-6 text-left">
+                            <div class="justify-content-start align-items-center">
+                                <div class="p-2 d-flex justify-content-start align-items-center" id="">
+                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                    <div class="btn-group" role="group">
+                                        <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                        <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    @endif
+                </div>
+
+                <div id="loading-ajax-transfer">
+                </div>
+
+                <!-- Aviso de Exportação -->
+                <div id="alert-finance-export-transfer" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                    <div class="d-flex">
+                        <span class="o-info-help-1"></span>
+                        <div class="w-full">
+                            <strong class="font-size-16">Exportando seu relatório</strong>
+                            <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                                <strong id="export-finance-email-transfer"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                            </p>
+                        </div>
+                        <i class="material-icons pointer" data-dismiss="alert">close</i>
                     </div>
-                @endif
-            </div>
+                </div>
+                <!-- Resumo -->
 
-            <div id="loading-ajax-transfer">
-            </div>
-
-             <!-- Aviso de Exportação -->
-            <div id="alert-finance-export-transfer" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
-                <div class="d-flex">
-                    <span class="o-info-help-1"></span>
-                    <div class="w-full">
-                        <strong class="font-size-16">Exportando seu relatório</strong>
-                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
-                            <strong id="export-finance-email-transfer"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
-                        </p>
+                <div class="modal-content p-10 d-none" id="export-finance-getnet-transfer">
+                    <div class='my-20 mx-20 text-center'>
+                        <hr>
+                        <h3 class="black"> Informe o email para receber o relatório </h3>
                     </div>
-                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                    <div class="modal-footer">
+
+                        <input type="email" id="email_finance_export_transfer" class="mb-5">
+
+                        <button type="button" class="btn btn-success btn-confirm-export-finance-getnet-transfer mt-5">
+                            Enviar
+                        </button>
+                        <a id="btn-mobile-modal-close" class="btn btn-primary mt-5" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                            Fechar
+                        </a>
+                    </div>
                 </div>
+
             </div>
-            <!-- Resumo -->
-
-            <div class="modal-content p-10 d-none" id="export-finance-getnet-transfer">
-                <div class='my-20 mx-20 text-center'>
-                    <hr>
-                    <h3 class="black"> Informe o email para receber o relatório </h3>
-                </div>
-                <div class="modal-footer">
-
-                    <input type="email" id="email_finance_export_transfer" class="mb-5">
-
-                    <button type="button" class="btn btn-success btn-confirm-export-finance-getnet-transfer mt-5">
-                        Enviar
-                    </button>
-                    <a id="btn-mobile-modal-close" class="btn btn-primary mt-5" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
-                        Fechar
-                    </a>
-                </div>
-            </div>
-
         </div>
-    </div>
+
+            </div>
+
+
 </div>
 @push('scripts')
     <script src="{{ asset('/modules/finances/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
