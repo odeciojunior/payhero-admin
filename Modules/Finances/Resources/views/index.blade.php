@@ -2,8 +2,8 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s4') }}">
     <style>
         .popover {
             left: -50px !important;
@@ -253,6 +253,7 @@
                                                 transferido
                                             </th>
                                             <th scope="col">Status</th>
+                                            <td cscope="col"> &nbsp;</td>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
@@ -676,6 +677,10 @@
         </div>
         {{-- End Modal --}}
 
+    <!-- Modal detalhes da transação-->
+        @include('finances::details')
+    <!-- End Modal -->
+
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
@@ -685,7 +690,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=222333'. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=2223334'. uniqid()) }}"></script>
         @endpush
     </div>
 

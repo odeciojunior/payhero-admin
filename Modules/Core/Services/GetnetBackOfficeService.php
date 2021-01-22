@@ -633,4 +633,19 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'POST');
     }
 
+    public function getStatementFromManager(array $filters = [], int $page = null)
+    {
+        $queryParameters = $filters;
+        $queryParameters['seller_id'] = $this->sellerId;
+
+        if (is_null($page)) {
+            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        } else {
+            $queryParameters['page'] = $page;
+            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
+        }
+
+        return $this->sendCurl($url, 'GET');
+    }
+
 }

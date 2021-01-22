@@ -31,6 +31,9 @@ Route::group(
 
         Route::get('/withdrawals/checkallowed', 'WithdrawalsApiController@checkAllowed');
 
+        Route::get('/withdrawals/get-transactions-by-brand/{withdrawal_id}', 'WithdrawalsApiController@getTransactionsByBrand');
+        Route::post('/withdrawals/get-transactions/{withdrawal_id}', 'WithdrawalsApiController@getTransactions');
+
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
             ->only('index', 'show', 'store', 'update', 'destroy')
             ->names('api.withdrawals_settings')
