@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s4') }}">
     <style>
         .popover {
             left: -50px !important;
@@ -511,7 +511,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=222333'. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=2223334'. uniqid()) }}"></script>
         @endpush
     </div>
 
