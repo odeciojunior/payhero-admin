@@ -568,7 +568,7 @@
                                                 </h5>
                                                 <p class="p-0 m-0">
                                                     Crie um saque automático quando o saldo disponível for superior ao
-                                                    valor informado abaixo
+                                                    valor informado abaixo. O valor deve ser superior a R$ 100,00.
                                                 </p>
                                                 <br/>
                                                 <div class="input-group mb-3">

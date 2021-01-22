@@ -991,7 +991,8 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                //errorAjaxResponse(response);
+                alertCustom('error', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
+                clearSettingsForm()
             },
             success: response => {
                 settingsData = response.data
@@ -1070,7 +1071,7 @@ $(document).ready(function () {
             if (settingsData.frequency === SETTINGS_FREQUENCY_MONTHLY && !settingsData.day) return false
         }
 
-        if (settingsData.rule === SETTINGS_RULE_AMOUNT && !Number.parseInt(settingsData.amount)) return false
+        if (settingsData.rule === SETTINGS_RULE_AMOUNT && Number.parseInt(settingsData.amount) < 100) return false
 
         return true
     }
@@ -1108,6 +1109,25 @@ $(document).ready(function () {
             withdrawalAmount.val(data.amount).focus()
         }
     }
+
+    var clearSettingsForm = function () {
+        settingsData = {
+            company_id: financesSettingsForm.find('#settings_company_select').val(),
+            rule: null,
+            frequency: null,
+            weekday: null,
+            day: null,
+            amount: 0
+        }
+        withdrawalByPeriod.prop('checked', false)
+        withdrawalByAmount.prop('checked', false)
+        onWithdrawalByPeriodChange()
+        onWithdrawalByAmountChange()
+    }
+
+    financesSettingsForm.find('#settings_company_select').on('change', function () {
+        getSettings($(this).val())
+    })
 
     frequencyButtons.on('click', function () {
         frequencyButtons.removeClass('active')
