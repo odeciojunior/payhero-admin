@@ -5,13 +5,14 @@ $(() => {
 
     $(document).on('click', '.details_transaction', function () {
 
-            // $('.details_transaction').disabled = true;
-            // setTimeout(function () {
-            //     $('.details_transaction').disabled = false;
-            // }.bind('.details_transaction'), 10000);
+        $( ".details_transaction" ).addClass( "disabled" );
+        setTimeout(function () {
+            $(".details_transaction").removeClass("disabled");
+        }.bind('.details_transaction'), 10000);
 
         let withdrawal = $(this).attr('withdrawal');
-        loadOnAny('#modal-transactionsDetails');
+        //loadOnAny('#modal-transactionsDetails');
+        loadOnAny('#modal-transactionsDetails > .modal-body');
         $('#withdrawal-code').html('');
         $('#transactions-table-data').html('');
         $('#modal_detalhes_transacao').modal('show');
@@ -81,7 +82,8 @@ $(() => {
                     $("#transactions-table-data").html("<tr><td colspan='10' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                 }
 
-                loadOnAny('#modal-transactionsDetails', true);
+                //loadOnAny('#modal-transactionsDetails', true);
+                loadOnAny('#modal-transactionsDetails > .modal-body', true);
             }
         });
 
