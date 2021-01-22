@@ -57,9 +57,9 @@
 
                 <div class="align-self-end mr-auto mb-5" id="btn_exports">
                     @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-                        <div class="col-6 text-left">
-                            <div class="justify-content-start align-items-center">
-                                <div class="p-2 d-flex justify-content-start align-items-center" id="">
+                        <div class="col-12 text-right">
+                            <div class="justify-content-end align-items-center">
+                                <div class="p-2 d-flex justify-content-end align-items-center" id="">
                                     <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
