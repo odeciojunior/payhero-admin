@@ -4,7 +4,6 @@
 <div class="modal hide fade in example-modal-lg" id="modal_detalhes_transacao" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1" data-keyboard="false" data-backdrop = "static">
 
-{{--    <div id = "modal" class = "modal hide fade in" data-keyboard = "false" data-backdrop = "static">--}}
     <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
@@ -56,24 +55,25 @@
                 </div>
 
             </div>
-            <div class="align-self-end mr-auto mb-5">
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-                        <div class="col-6 text-left">
-                            <div class="justify-content-start align-items-center">
-                                <div class="p-2 d-flex justify-content-start align-items-center">
-                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
-                                    <div class="btn-group" role="group">
-                                        <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                        <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
-                                    </div>
+
+            <div class="align-self-end mr-auto mb-5" id="btn_exports">
+                @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                    <div class="col-6 text-left">
+                        <div class="justify-content-start align-items-center">
+                            <div class="p-2 d-flex justify-content-start align-items-center" id="">
+                                <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                <div class="btn-group" role="group">
+                                    <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                    <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
+                @endif
             </div>
 
-        {{--            <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">--}}
-        {{--                <div class="modal-dialog modal-dialog-centered modal-simple">--}}
+            <div id="loading-ajax-transfer">
+            </div>
 
              <!-- Aviso de Exportação -->
             <div id="alert-finance-export-transfer" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
@@ -107,9 +107,6 @@
                     </a>
                 </div>
             </div>
-            {{--                </div>--}}
-            {{--            </div>--}}
-
 
         </div>
     </div>
