@@ -18,6 +18,7 @@
             </div>
 
             <div class="modal-body">
+
                 <div class="transition-details">
                     <h5>Informações da solicitação</h5>
                     <div id="withdrawal-code"></div>
@@ -35,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody id='transactions-table-data'>
-                            {{-- js carregado--}}
+                                {{-- js carregado--}}
                             </tbody>
                         </table>
                     </div>
@@ -73,7 +74,7 @@
                 <div id="loading-ajax-transfer">
                 </div>
 
-                 <!-- Aviso de Exportação -->
+                <!-- Aviso de Exportação -->
                 <div id="alert-finance-export-transfer" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
                     <div class="d-flex">
                         <span class="o-info-help-1"></span>
@@ -105,10 +106,13 @@
                         </a>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
+
     </div>
+
+
 </div>
 @push('scripts')
     <script src="{{ asset('/modules/finances/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
