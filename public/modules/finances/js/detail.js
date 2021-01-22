@@ -78,9 +78,9 @@ $(() => {
             }
         });
 
-
+        $("#btn_exports").show();
         let exportFinanceFormat = 'xls'
-        $("#bt_get_csv_transfer").on("click", function () {
+        $("#bt_get_xls_transfer").on("click", function () {
             $('#export-finance-getnet-transfer').removeClass('d-none');
             exportFinanceFormat = 'xls';
         });
@@ -105,6 +105,8 @@ $(() => {
         // // Download do relatorio
         function financesGetnetExport(fileFormat) {
             var email = $('#email_finance_export_transfer').val();
+            loadOnAny('#loading-ajax-transfer');
+            $("#btn_exports").hide();
             $.ajax({
                 method: "POST",
                 url: '/api/withdrawals/get-transactions/' + withdrawal,
@@ -124,8 +126,15 @@ $(() => {
                     $('#export-finance-email-transfer').text(email);
                     $('#alert-finance-export-transfer').show()
                         .shake();
+                    $("#btn_exports").show();
 
+
+                },
+                complete: function (data) {
+                    loadOnAny('#loading-ajax-transfer', true);
                 }
+
+
             });
 
         }
