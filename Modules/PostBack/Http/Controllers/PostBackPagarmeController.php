@@ -17,7 +17,6 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
-use Modules\Core\Events\BilletPaidEvent;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;

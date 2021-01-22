@@ -18,32 +18,34 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                //$('#modal_detalhes_transacao').modal('hide');
-                loadOnAny('#modal-transactionsDetails', true);
+                $('#modal_detalhes_transacao').modal('hide');
                 errorAjaxResponse(response);
             },
             success: (response) => {
 
-                $("#withdrawal-code").html(`<span class="mr-30">ID #${response.id}</span><span>Feita em ${response.date_request}</span>`);
+                $("#withdrawal-code").html(`<span class="mr-30">ID #${response.id}</span><span>Solicitado em ${response.date_request}</span>`);
                 let dataHtml = '';
 
                 $.each(response.transactions, function (index, value) {
                     let is_liquidated = '';
 
                     if ( value.liquidated == true) {
-                        is_liquidated = '<span class="material-icons is-released-on"> check </span>';
+                        is_liquidated = 'is-released-on';
                     }
                     else {
-                        is_liquidated = '<span class="material-icons is-released-off"> close </span>';
+                        is_liquidated = 'is-released-off';
                     }
-
 
                     dataHtml += `<tr>
                                 <td>
-                                    <img src='/modules/global/assets/img/cartoes/${value.brand}.png'   width='35px;' style='border-radius:6px;'><br>
+                                    <img src='/modules/global/img/${value.brand}.svg'   width='50px;' style='border-radius:6px;'><br>
                                 </td>
                                 <td>
-                                    <span class="small">${is_liquidated}</span>
+                                    <div class="d-flex justify-content-center align-items-center align-self-center ">
+                                        <span class="transaction-status d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
+                                            <span class="rounded-circle ${is_liquidated} " ></span>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class='small'>${value.date}</span>
@@ -54,6 +56,17 @@ $(() => {
                             </tr>`;
 
                 });
+
+                dataHtml += `<tr>
+                                <td> </td>
+                                <td> </td>
+                                <td>
+                                    <span class='small font-weight-bold'>Total </span>
+                                </td>
+                                <td>
+                                    <span class='small font-weight-bold'>${response.total_withdrawal}</span>
+                                </td>
+                            </tr>`;
 
                 $("#transactions-table-data").append(dataHtml);
 
