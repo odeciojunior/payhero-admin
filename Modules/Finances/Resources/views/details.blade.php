@@ -7,10 +7,10 @@
     <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
-                <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-2"> <span class="badge badge-danger" style="font-size: 15px;">Beta</span> &nbsp;</div>
+                <div class="d-flex flex-row justify-content-between align-items-start align-self-stretch" style="width: 100%;">
+                    <div class="col-lg text-left"> <span class="badge badge-danger" style="font-size: 15px;">Beta</span> &nbsp;</div>
                     <div class="col-lg-8 text-center"><h4> Liquidação do saque por bandeira </h4></div>
-                    <div class="col-lg-2 text-right">
+                    <div class="col-lg text-right">
                         <a role="button" data-dismiss="modal">
                             <i class="material-icons pointer">close</i></a>
                     </div>
@@ -36,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody id='transactions-table-data'>
-                            {{-- js carregado--}}
+                                {{-- js carregado--}}
                             </tbody>
                         </table>
                     </div>
@@ -110,7 +110,7 @@
             </div>
         </div>
 
-            </div>
+    </div>
 
 
 </div>
