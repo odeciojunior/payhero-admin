@@ -2,9 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -23,15 +25,14 @@ use Spatie\Activitylog\Models\Activity;
  */
 class WithdrawalSettings extends Model
 {
+    use LogsActivity, PresentableTrait, FoxModelTrait, SoftDeletes;
+
     const RULE_PERIOD = 'period';
     const RULE_AMOUNT = 'amount';
 
     const FREQUENCY_DAILY = 'daily';
     const FREQUENCY_WEEKLY = 'weekly';
     const FREQUENCY_MONTHLY = 'monthly';
-
-    use LogsActivity;
-    use PresentableTrait;
 
     protected $presenter = WithdrawalPresenter::class;
 
@@ -89,6 +90,9 @@ class WithdrawalSettings extends Model
         }
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

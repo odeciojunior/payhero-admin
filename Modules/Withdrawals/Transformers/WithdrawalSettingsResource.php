@@ -2,10 +2,10 @@
 
 namespace Modules\Withdrawals\Transformers;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class WithdrawalSettingsResource extends ResourceCollection
+class WithdrawalSettingsResource extends JsonResource
 {
     public function toArray($request): array
     {
@@ -16,7 +16,7 @@ class WithdrawalSettingsResource extends ResourceCollection
             'frequency'  => $this->frequency,
             'weekday'    => $this->weekday,
             'day'        => $this->day,
-            'amount'     => $this->amount,
+            'amount'     => ((int)$this->amount) / 100,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

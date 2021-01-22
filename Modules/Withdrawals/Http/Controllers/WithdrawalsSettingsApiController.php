@@ -76,7 +76,10 @@ class WithdrawalsSettingsApiController
                 if ($settingsId) {
                     $settings = $withdrawalSettingsModel->findOrFail($settingsId);
                 } else {
-                    $settings = $withdrawalSettingsModel->where('company_id', $companyId)->first() ?? null;
+                    $settings = $withdrawalSettingsModel->where('company_id', $companyId)
+                            ->whereNull('deleted_at')
+                            ->orderBy('id', 'desc')
+                            ->first() ?? null;
                 }
 
                 if ($settings) {
@@ -103,24 +106,20 @@ class WithdrawalsSettingsApiController
             $withdrawalSettingsModel = new WithdrawalSettings();
             $companyModel = new Company();
 
-            $data = $request->all();
-
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = $companyModel->find(current(Hashids::decode($requestData['company_id'])));
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para salvar configurações de saques'], 403);
             }
 
-            $companyService = new CompanyService();
-
             $withdrawalSettings = $withdrawalSettingsModel->create(
                 [
                     'company_id' => $company->id,
                     'rule'       => $requestData['rule'],
-                    'frequency'  => $requestData['frequency'],
-                    'weekday'    => $requestData['weekday'],
-                    'day'        => $requestData['day'],
-                    'amount'     => $requestData['amount'],
+                    'frequency'  => $requestData['frequency'] ?? null,
+                    'weekday'    => $requestData['weekday'] ?? null,
+                    'day'        => $requestData['day'] ?? null,
+                    'amount'     => !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null
                 ]
             );
 
@@ -130,88 +129,47 @@ class WithdrawalsSettingsApiController
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 500);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde! ' . $e->getMessage()], 500);
         }
     }
 
     /**
-     * @param ProjectReviewsUpdateRequest $request
+     * @param WithdrawalSettingsRequest $request
      * @param $id
      * @return JsonResponse
      */
-    public function update(ProjectReviewsUpdateRequest $request, $id)
+    public function update(WithdrawalSettingsRequest $request, $id): JsonResponse
     {
-        $projectReviewModel = new ProjectReviews();
-        $data = $request->validated();
-        $reviewId = current(Hashids::decode($id));
-        $review = $projectReviewModel->find($reviewId);
-        $amazonFileService = app(AmazonFileService::class);
+        try {
+            $requestData = $request->validated();
 
-        if ($reviewId && !empty($review)) {
-            $applyPlanArray = [];
-            if (in_array('all', $data['apply_on_plans'])) {
-                $applyPlanArray[] = 'all';
-            } else {
-                foreach ($data['apply_on_plans'] as $key => $value) {
-                    $applyPlanArray[] = current(Hashids::decode($value));
-                }
-            }
-            $applyPlanEncoded = json_encode($applyPlanArray);
+            $companyModel = new Company();
+            $company = $companyModel->find(current(Hashids::decode($requestData['company_id'])));
 
-            $reviewUpdated = $review->update([
-                'name'           => $data['name'],
-                'description'    => $data['description'],
-                'stars'          => $data['stars'] ?? 0,
-                'active_flag'    => $data['active_flag'] ?? 0,
-                'apply_on_plans' => $applyPlanEncoded,
-            ]);
+            $withdrawalSettingsModel = new WithdrawalSettings();
+            $withdrawalSettings = $withdrawalSettingsModel->find(current(Hashids::decode($id)));
 
-            $amazonPath = null;
-            $photo = $request->file('photo');
-            if ($photo != null) {
-                try {
-
-                    if (!$data['photo_w'] || !$data['photo_h']) {
-                        $data['photo_h'] = $data['photo_w'] = 200;
-                    }
-
-                    $img = Image::make($photo->getPathname());
-                    $img->crop(
-                        $data['photo_w'],
-                        $data['photo_h'],
-                        $data['photo_x1'],
-                        $data['photo_y1']
-                    );
-                    $img->resize(200, 200);
-                    $img->save($photo->getPathname());
-
-                    $amazonFileService->setDisk('s3_plans_reviews');
-                    $amazonPath = $amazonFileService->uploadFile(
-                        'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/plans-reviews/public/',
-                        $photo,
-                        $photo->getFilename(),
-                        Hashids::encode($review->id) . '.' . $photo->extension(),
-                        'public'
-                    );
-
-                    $review->photo = $amazonPath;
-                    $review->save();
-                } catch (Exception $e) {
-                    report($e);
-                }
+            if (!Gate::allows('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão para salvar configurações de saques'], 403);
             }
 
-            if ($reviewUpdated) {
-                return response()->json(['message' => 'Review atualizado com sucesso!'], 200);
-            } else {
-                return response()->json([
-                    'message' => 'Erro ao atualizar review',
-                ], 400);
-            }
-        } else {
+            $withdrawalSettings->update(
+                [
+                    'rule'      => $requestData['rule'],
+                    'frequency' => $requestData['frequency'] ?? null,
+                    'weekday'   => $requestData['weekday'] ?? null,
+                    'day'       => $requestData['day'] ?? null,
+                    'amount'    => !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null,
+                ]
+            );
+
             return response()->json([
-                'message' => 'Review não encontrado',
-            ], 404);
+                'message' => 'Configurações de saques automáticos salvos com sucesso',
+                'data'    => WithdrawalSettingsResource::make($withdrawalSettings)
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde! ' . $e->getMessage()], 500);
         }
     }
 
@@ -224,30 +182,23 @@ class WithdrawalsSettingsApiController
     {
         try {
             if (empty($id)) {
-                return response()->json([
-                    'message' => 'Erro ao deletar review',
-                ], 404);
+                return response()->json(['message' => 'Configuração de saque automático não encontrado'], 404);
             }
 
-            $projectReviewModel = new ProjectReviews();
-            $review = $projectReviewModel->find(current(Hashids::decode($id)));
+            $withdrawalSettingsModel = new WithdrawalSettings();
+            $settings = $withdrawalSettingsModel->find(current(Hashids::decode($id)));
 
-            if (!empty($review)) {
-                $reviewDeleted = $review->delete();
-                if ($reviewDeleted) {
-                    return response()->json(['message' => 'Review deletada com sucesso!']);
+            if (!empty($settings)) {
+                $settingsDeleted = $settings->delete();
+                if ($settingsDeleted) {
+                    return response()->json(['message' => 'Configuração de saque automático deletada com sucesso!']);
                 }
             }
 
-            return response()->json([
-                'message' => 'Erro ao deletar review',
-            ], 400);
+            return response()->json(['message' => 'Erro ao deletar Configuração de saque automático'], 400);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json([
-                'message' => 'Erro ao deletar review',
-            ], 400);
+            return response()->json(['message' => 'Erro ao deletar Configuração de saque automático'], 400);
         }
     }
 }

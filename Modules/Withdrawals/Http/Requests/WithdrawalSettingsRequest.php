@@ -25,10 +25,10 @@ class WithdrawalSettingsRequest extends FormRequest
         return [
             'company_id' => 'required|string',
             'rule'       => 'required|string',
-            'frequency'  => 'required_if:rule,==,' . WithdrawalSettings::RULE_PERIOD . '|string',
-            'weekday'    => 'required_if:frequency,==,' . WithdrawalSettings::FREQUENCY_WEEKLY . '|string',
-            'day'        => 'required_if:frequency,==,' . WithdrawalSettings::FREQUENCY_MONTHLY . '|string',
-            'amount'     => 'required_if:rule,==,' . WithdrawalSettings::RULE_AMOUNT . '|string',
+            'frequency'  => 'required_if:rule,==,"' . WithdrawalSettings::RULE_PERIOD . '"|nullable',
+            'weekday'    => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_WEEKLY . '"|nullable',
+            'day'        => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_MONTHLY . '"|nullable',
+            'amount'     => 'required_if:rule,==,"' . WithdrawalSettings::RULE_AMOUNT . '"|nullable',
         ];
     }
 
