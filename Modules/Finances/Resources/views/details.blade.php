@@ -50,8 +50,8 @@
                                 <div class="p-2 d-flex justify-content-start align-items-center">
                                     <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
-                                        <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                        <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                        <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                        <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                                     </div>
                                 </div>
                             </div>
@@ -59,6 +59,45 @@
                     @endif
 {{--                </div>--}}
             </div>
+
+        {{--            <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">--}}
+        {{--                <div class="modal-dialog modal-dialog-centered modal-simple">--}}
+
+             <!-- Aviso de Exportação -->
+            <div id="alert-finance-export-transfer" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                <div class="d-flex">
+                    <span class="o-info-help-1"></span>
+                    <div class="w-full">
+                        <strong class="font-size-16">Exportando seu relatório</strong>
+                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                            <strong id="export-finance-email-transfer"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                        </p>
+                    </div>
+                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                </div>
+            </div>
+            <!-- Resumo -->
+
+            <div class="modal-content p-10 d-none" id="export-finance-getnet-transfer">
+                <div class='my-20 mx-20 text-center'>
+                    <hr>
+                    <h3 class="black"> Informe o email para receber o relatório </h3>
+                </div>
+                <div class="modal-footer">
+
+                    <input type="email" id="email_finance_export_transfer" class="mb-5">
+
+                    <button type="button" class="btn btn-success btn-confirm-export-finance-getnet-transfer mt-5">
+                        Enviar
+                    </button>
+                    <a id="btn-mobile-modal-close" class="btn btn-primary mt-5" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                        Fechar
+                    </a>
+                </div>
+            </div>
+            {{--                </div>--}}
+            {{--            </div>--}}
+
 
         </div>
     </div>

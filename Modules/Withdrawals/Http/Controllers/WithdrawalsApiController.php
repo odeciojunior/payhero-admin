@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
@@ -15,8 +16,10 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Withdrawals\Transformers\WithdrawalTransactionsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
 
 class WithdrawalsApiController
 {
@@ -397,5 +400,34 @@ class WithdrawalsApiController
 //        }
 
 
+    }
+
+    public function getTransactions(Request $request, $id)
+    {
+        try {
+            $dataRequest = \request()->all();
+            $withdrawalId = current(Hashids::decode($id));
+
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+//
+            $user = auth()->user();
+            $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
+            //Excel::store(new WithdrawalsReportExport($withdrawalId, $user, $email, $filename), $filename);
+
+            (new WithdrawalsReportExport($withdrawalId, $user, $email, $filename))
+                ->queue($filename)->allOnQueue('high');
+
+           return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
+
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => $e->getMessage()]);
+        }
     }
 }

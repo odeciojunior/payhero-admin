@@ -116,6 +116,9 @@ class EventServiceProvider extends ServiceProvider
         \Modules\Core\Events\FinancesExportedEvent::class => [
             \Modules\Core\Listeners\NotifyFinancesExportedListener::class,
         ],
+        \Modules\Core\Events\WithdrawalsExportedEvent::class => [
+            \Modules\Core\Listeners\NotifyWithdrawalsExportedListener::class,
+        ],
     ];
 
     /**

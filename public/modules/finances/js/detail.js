@@ -1,5 +1,6 @@
 $(() => {
     // MODAL DETALHES DA TRANSAÇÃO
+
     $(document).on('click', '.details_transaction', function () {
 
         let withdrawal = $(this).attr('withdrawal');
@@ -63,6 +64,74 @@ $(() => {
                 loadOnAny('#modal-transactionsDetails', true);
             }
         });
+
+
+        let exportFinanceFormat = 'xls'
+        $("#bt_get_csv_transfer").on("click", function () {
+            $('#export-finance-getnet-transfer').removeClass('d-none');
+            exportFinanceFormat = 'xls';
+        });
+        $("#bt_get_csv_transfer").on("click", function () {
+            $('#export-finance-getnet-transfer').removeClass('d-none');
+            exportFinanceFormat = 'csv';
+        });
+
+        $(".btn-confirm-export-finance-getnet-transfer").on("click", function () {
+            var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+            var email = $('#email_finance_export_transfer').val();
+
+            if( email == '' || !regexEmail.test(email) ) {
+                alertCustom('error', 'Preencha o email corretamente');
+                return false;
+            } else {
+                financesGetnetExport(exportFinanceFormat);
+                $('#export-finance-getnet-transfer').addClass('d-none');
+            }
+        });
+
+        // // Download do relatorio
+        function financesGetnetExport(fileFormat) {
+            var email = $('#email_finance_export_transfer').val();
+            $.ajax({
+                method: "POST",
+                url: '/api/withdrawals/get-transactions/' + withdrawal,
+                data: {
+                    email,
+                    "format" : fileFormat,
+                } ,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: response => {
+                    errorAjaxResponse(response);
+                },
+                success: response => {
+                    $('#export-finance-email-transfer').text(email);
+                    $('#alert-finance-export-transfer').show()
+                        .shake();
+
+                }
+            });
+
+        }
+
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 });
