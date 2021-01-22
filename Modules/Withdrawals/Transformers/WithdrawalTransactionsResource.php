@@ -30,10 +30,9 @@ class WithdrawalTransactionsResource extends JsonResource
         $date = '';
         $saleIdEncoded =Hashids::connection('sale_id')->encode($this->sale->id);
 
+
         //logica da getnet
         $getnetService = new GetnetBackOfficeService();
-
-        $orderId = $this->sale->gateway_order_id;
 
         if (FoxUtils::isProduction()) {
             $subsellerId = $this->company->subseller_getnet_id;
@@ -41,14 +40,12 @@ class WithdrawalTransactionsResource extends JsonResource
             $subsellerId = $this->company->subseller_getnet_homolog_id;
         }
 
-        $response = $getnetService->getStatementFromManager(
-            [
-                'order_id' => $orderId,
-                'subseller_id' => $subsellerId
-            ]
-        );
+        $getnetService->setStatementSubSellerId($subsellerId)
+            ->setStatementSaleHashId($this->sale->hash_id);
 
-        $gatewaySale = json_decode($response);
+        $originalResult = $getnetService->getStatement();
+
+        $gatewaySale = json_decode($originalResult);
         if (!empty($gatewaySale->list_transactions[0]) &&
             !empty($gatewaySale->list_transactions[0]->details[0]) &&
             !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
@@ -63,13 +60,10 @@ class WithdrawalTransactionsResource extends JsonResource
             }
         }
 
-        if ($this->sale->flag) {
-            $this->sale->flag = $this->sale->flag;
-        } else if ((!$this->sale->flag || empty($this->sale->flag)) && $this->sale->payment_method == 1) {
+        if ((!$this->sale->flag || empty($this->sale->flag)) && $this->sale->payment_method == 1) {
             $this->sale->flag = 'generico';
-        } else if ((!$this->sale->flag || empty($this->sale->flag)) && $this->sale->payment_method == 3) {
-            $this->sale->flag = 'debito';
-        } else {
+        }
+        elseif ($this->sale->payment_method == 2) {
             $this->sale->flag = 'boleto';
         }
 
