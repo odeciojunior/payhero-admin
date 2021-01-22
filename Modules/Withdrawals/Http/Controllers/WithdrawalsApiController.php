@@ -291,7 +291,11 @@ class WithdrawalsApiController
             }
 
             $withdrawal = $withdrawalModel->with('company')->find($withdrawalId);
-            $subsellerGetnetId = $withdrawal->company->subseller_getnet_id;
+            if (FoxUtils::isProduction()) {
+                $subsellerGetnetId = $withdrawal->company->subseller_getnet_id;
+            } else {
+                $subsellerGetnetId = $withdrawal->company->subseller_getnet_homolog_id;
+            }
 
             if (!Gate::allows('edit', [$withdrawal->company])) {
                 return response()->json(
@@ -318,13 +322,13 @@ class WithdrawalsApiController
                     $transaction->sale->flag = 'boleto';
                }
 
-                if ( !$transaction->gateway_transferred ) {
-
-                    $subSeller = $transaction->company->subseller_getnet_id;
+                if ( !$transaction->gateway_transferred  and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8 )) {
 
                     $getNetBackOfficeService = new GetnetBackOfficeService();
-                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-                        ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($transaction->sale_id));
+
+                    $getNetBackOfficeService->setStatementSubSellerId($subsellerGetnetId)
+                        ->setStatementSaleHashId($transaction->sale->hash_id);
+
                     $originalResult = $getNetBackOfficeService->getStatement();
 
                     $gatewaySale = json_decode($originalResult);

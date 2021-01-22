@@ -1,13 +1,15 @@
 @push('css')
 
 @endpush
-<div class="modal fade example-modal-lg" id="modal_detalhes_transacao" aria-hidden="true" aria-labelledby="exampleModalTitle"
-     role="dialog" tabindex="-1">
+<div class="modal hide fade in example-modal-lg" id="modal_detalhes_transacao" aria-hidden="true" aria-labelledby="exampleModalTitle"
+     role="dialog" tabindex="-1" data-keyboard="false" data-backdrop = "static">
+
+{{--    <div id = "modal" class = "modal hide fade in" data-keyboard = "false" data-backdrop = "static">--}}
     <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-2"> &nbsp;</div>
+                    <div class="col-lg-2"> <span class="badge badge-danger" style="font-size: 15px;">Beta</span> &nbsp;</div>
                     <div class="col-lg-8 text-center"><h4> Liquidação do saque por bandeira </h4></div>
                     <div class="col-lg-2 text-right">
                         <a role="button" data-dismiss="modal">
@@ -23,9 +25,8 @@
                 </div>
 
                 <div class="tab-content mt-20" id="nav-tabContent">
-
-                    <div id='div_transactions' >
-                        <table id='transactions_table' class='table table-striped mb-10'>
+                    <div id="div_transactions" class="card" >
+                        <table id="transactions_table" class="table table-striped mb-10">
                             <thead>
                             <tr>
                                 <th>Forma</th>
@@ -41,25 +42,21 @@
                     </div>
                 </div>
 
-
-                    <div class="col-10 text-left p-2 d-flex">
-                            <div class=" d-flex justify-content-start align-items-center mr-4">
-                                <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
-                                    <span class="rounded-circle is-released-on " ></span>
-                                </span>Liberado
-                            </div>
-                            <div class="p-2 d-flex justify-content-start align-items-center">
-                                <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
-                                    <span class="rounded-circle is-released-off" ></span>
-                                </span>Em processamento
-                            </div>
-                    </div>
-
-
+                <div class="col-10 text-left p-2 d-flex">
+                        <div class=" d-flex justify-content-start align-items-center mr-4">
+                            <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
+                                <span class="rounded-circle is-released-on " ></span>
+                            </span>Liberado
+                        </div>
+                        <div class="p-2 d-flex justify-content-start align-items-center">
+                            <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
+                                <span class="rounded-circle is-released-off" ></span>
+                            </span>Em processamento
+                        </div>
+                </div>
 
             </div>
             <div class="align-self-end mr-auto mb-5">
-{{--                <div class="row justify-content-between align-items-center" style="width: 100%;">--}}
                     @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
                         <div class="col-6 text-left">
                             <div class="justify-content-start align-items-center">
@@ -73,7 +70,6 @@
                             </div>
                         </div>
                     @endif
-{{--                </div>--}}
             </div>
 
         {{--            <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">--}}

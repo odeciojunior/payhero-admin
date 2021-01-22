@@ -1,7 +1,14 @@
 $(() => {
     // MODAL DETALHES DA TRANSAÇÃO
 
+    $('.details_transaction').modal({backdrop: 'static', keyboard: false})
+
     $(document).on('click', '.details_transaction', function () {
+
+            // $('.details_transaction').disabled = true;
+            // setTimeout(function () {
+            //     $('.details_transaction').disabled = false;
+            // }.bind('.details_transaction'), 10000);
 
         let withdrawal = $(this).attr('withdrawal');
         loadOnAny('#modal-transactionsDetails');
