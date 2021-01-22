@@ -46,7 +46,7 @@
                         <div class=" d-flex justify-content-start align-items-center mr-4">
                             <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
                                 <span class="rounded-circle is-released-on " ></span>
-                            </span>Liberado
+                            </span>Transferido
                         </div>
                         <div class="p-2 d-flex justify-content-start align-items-center">
                             <span class="transaction-status mr-2 d-flex justify-content-center align-items-center align-self-center rounded-circle rounded-circle" >
