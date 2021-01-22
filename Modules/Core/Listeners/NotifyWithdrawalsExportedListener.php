@@ -1,0 +1,49 @@
+<?php
+
+namespace Modules\Core\Listeners;
+
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Modules\Core\Events\WithdrawalsExportedEvent;
+use Modules\Core\Services\SendgridService;
+use Modules\Notifications\Notifications\WithdrawalsExportedNotification;
+
+class NotifyWithdrawalsExportedListener
+{
+    /**
+     * Handle the event.
+     * @param SalesExportedEvent $event
+     * @return void
+     */
+    public function handle(WithdrawalsExportedEvent $event)
+    {
+        try {
+            $user      = $event->user ?? null;
+            $filename  = $event->filename;
+            $userEmail = !empty($event->email) ? $event->email : $user->email;
+
+            Notification::send($user, new WithdrawalsExportedNotification($user, $filename));
+
+            //Envio de e-mail
+            $sendGridService = new SendgridService();
+            $userName = $user->name;
+            $downloadLink = getenv('APP_URL') . "/withdrawals/download/" . $filename;
+
+            $data = [
+                'name' => $userName,
+                'report_name' => 'Relatório de Transferências',
+                'download_link' => $downloadLink,
+            ];
+
+            Log::info($userEmail);
+            Log::info($userName);
+
+            $sendGridService->sendEmail('noreply@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+
+        } catch (Exception $e) {
+            Log::warning('Erro listener NotifyWithdrawalsExportedListener');
+            report($e);
+        }
+    }
+}

@@ -16,7 +16,6 @@ use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
@@ -318,33 +317,6 @@ class SalesApiController extends Controller
             }
 
             return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function saleProcess(Request $request)
-    {
-        try {
-            $requestData = $request->all();
-
-            $saleModel = new Sale();
-            $planModel = new Plan();
-
-            $plan = $planModel->find($requestData['plan_id']);
-            $sale = $saleModel->with(['customer'])->find($requestData['sale_id']);
-
-            activity()->on($saleModel)->tap(function (Activity $activity) use ($requestData) {
-                $activity->log_name = 'visualization';
-                $activity->subject_id = current(Hashids::connection('sale_id')->decode($requestData['sale_id']));
-            })->log('Processou boletos venda para transação: #' . $requestData['sale_id']);
-
-            event(new BilletPaidEvent($plan, $sale, $sale->customer));
-
-            return response()->json(['message' => 'success'], Response::HTTP_OK);
-        } catch (Exception $e) {
-            Log::warning('Erro ao processar boletos venda  SalesApiController - saleProcess');
-            report($e);
-
-            return response()->json(['message' => 'Erro ao processar boleto.'], Response::HTTP_BAD_REQUEST);
         }
     }
 
