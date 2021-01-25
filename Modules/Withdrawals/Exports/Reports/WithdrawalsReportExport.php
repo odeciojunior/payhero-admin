@@ -54,6 +54,7 @@ class WithdrawalsReportExport implements FromCollection, WithMapping, WithHeadin
     {
 
         return [
+            $row['transaction_code'],
             $row['brand'],
             $row['liquidated'] ? "Sim" : "Não",
             $row['date'],
@@ -66,7 +67,7 @@ class WithdrawalsReportExport implements FromCollection, WithMapping, WithHeadin
     {
 
         return [
-            //finance
+            'Código Transação',
             'Forma',
             'Transferido',
             'Data de transferência',
