@@ -1197,7 +1197,7 @@ $(document).ready(function () {
             withdrawalByPeriod.prop('checked', false).trigger('change')
             card.find('[type=submit]').addClass('btn-success').removeClass('disabled btn-default').prop('disabled', false)
             card.addClass('bg-light').removeClass('bg-lighter')
-            withdrawalAmount.removeClass('disabled').prop('disabled', false)
+            withdrawalAmount.removeClass('disabled').prop('disabled', false).focus()
         } else {
             settingsData.rule === SETTINGS_RULE_AMOUNT ? settingsData.rule = null : ''
             card.find('[type=submit]').removeClass('btn-default').addClass('disabled btn-default').prop('disabled', true)
@@ -1227,6 +1227,12 @@ $(document).ready(function () {
         onWithdrawalByAmountChange()
         onWithdrawalByPeriodChange()
     }
+
+    $('#nav-settings-tab').on('click', function () {
+        setTimeout(function () {
+            if (settingsData.rule == SETTINGS_RULE_AMOUNT) withdrawalAmount.focus()
+        }, 1500)
+    })
 
 // Finances report
 

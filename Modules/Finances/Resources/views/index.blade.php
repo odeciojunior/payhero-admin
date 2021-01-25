@@ -73,7 +73,7 @@
                                 Agenda financeira
                             </a>
                             <a class="nav-item nav-link"
-                               id="nav-statement-tab"
+                               id="nav-settings-tab"
                                data-toggle="tab"
                                href="#nav-settings"
                                role="tab"
