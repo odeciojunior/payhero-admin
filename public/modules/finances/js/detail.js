@@ -12,7 +12,6 @@ $(() => {
 
         let withdrawal = $(this).attr('withdrawal');
 
-        loadOnAny('#modal-transactionsDetails > .modal-body');
         loadOnAny('#modal-transactionsDetails > .modal-body', false, {
             message : 'Aguarde enquanto os dados do <br> saque estão sendo carregados.',
         });
