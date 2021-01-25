@@ -86,7 +86,7 @@ $(() => {
                 }
 
                 //loadOnAny('#modal-transactionsDetails', true);
-                //loadOnAny('#modal-transactionsDetails > .modal-body', true);
+                loadOnAny('#modal-transactionsDetails > .modal-body', true);
             }
         });
 
