@@ -216,9 +216,16 @@ function loadOnAny(target, remove = false, options = {}) {
         if (options.styles.loader) {
             loader.css(options.styles.loader);
         }
+        //add message load
+        if ( options.message) {
+            container.append(`<p>${options.message}</p>`);
+            container.addClass('d-flex').addClass('flex-column');
+        }
 
         //add loader to container
         container.append(loader);
+
+
 
         //add loader to screen
         target.hide();
