@@ -46,6 +46,8 @@ class TransactionBlockedResource extends JsonResource
             $data['reason_blocked'] = 'Sem rastreio';
         } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('duplicated'))->count()) {
             $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
+        } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('no_tracking_info'))->count()) {
+            $data['reason_blocked'] = 'Rastreio sem movimentação';
         } else {
             $data['reason_blocked'] = 'Motivo não listado';
         }
