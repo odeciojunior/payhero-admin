@@ -20,6 +20,8 @@ use Modules\Withdrawals\Transformers\WithdrawalTransactionsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
+use PDOException;
+use DB;
 
 class WithdrawalsApiController
 {
@@ -143,55 +145,62 @@ class WithdrawalsApiController
                 $isFirstUserWithdrawal = true;
             }
 
-            $withdrawal = $withdrawalModel->create(
-                [
-                    'value' => $withdrawalValue,
-                    'company_id' => $company->id,
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'agency_digit' => $company->agency_digit,
-                    'account' => $company->account,
-                    'account_digit' => $company->account_digit,
-                    'status' => $withdrawalModel->present()->getStatus(
-                        $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                    ),
-                    'tax' => 0,
-                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    'automatic_liquidation' => true,
-                ]
-            );
+            try {
+                DB::beginTransaction();
+                $withdrawal = $withdrawalModel->create(
+                    [
+                        'value' => $withdrawalValue,
+                        'company_id' => $company->id,
+                        'bank' => $company->bank,
+                        'agency' => $company->agency,
+                        'agency_digit' => $company->agency_digit,
+                        'account' => $company->account,
+                        'account_digit' => $company->account_digit,
+                        'status' => $withdrawalModel->present()->getStatus(
+                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
+                        ),
+                        'tax' => 0,
+                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                        'automatic_liquidation' => true,
+                    ]
+                );
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
+                $transactionsSum = $company->transactions()
+                    ->whereIn('gateway_id', [14, 15])
+                    ->where('is_waiting_withdrawal', 1)
+                    ->whereNull('withdrawal_id')
+                    ->orderBy('id');
 
-            $currentValue = 0;
+                $currentValue = 0;
 
-            $transactionsSum->chunkById(
-                2000,
-                $test = function ($transactions) use (
-                    $currentValue,
-                    $withdrawalValue,
-                    $withdrawal
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
+                $transactionsSum->chunkById(
+                    2000,
+                    $test = function ($transactions) use (
+                        $currentValue,
+                        $withdrawalValue,
+                        $withdrawal
+                    ) {
+                        foreach ($transactions as $transaction) {
+                            $currentValue += $transaction->value;
 
-                        if ($currentValue <= $withdrawalValue) {
-                            $transaction->update(
-                                [
-                                    'withdrawal_id' => $withdrawal->id,
-                                    'is_waiting_withdrawal' => false
-                                ]
-                            );
+                            if ($currentValue <= $withdrawalValue) {
+                                $transaction->update(
+                                    [
+                                        'withdrawal_id' => $withdrawal->id,
+                                        'is_waiting_withdrawal' => false
+                                    ]
+                                );
+                            }
                         }
                     }
-                }
-            );
+                );
 
-            $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+                $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+            } catch (PDOException $e) {
+                DB::rollBack();
+                report($e);
+                return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
+            }
 
             event(new WithdrawalRequestEvent($withdrawal));
 
