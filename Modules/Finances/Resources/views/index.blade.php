@@ -95,23 +95,6 @@
                              aria-labelledby="nav-home-tab"
                         >
                             <div class="row justify-content-start align-items-center">
-                                <div class="col-12 mb-3">
-                                    <div class="alert alert-info alert-dismissible fade show text-center" id=''
-                                         role="alert" style="background: #DCECFF 0% 0% no-repeat padding-box;
-                                            border: 2px solid #4A89F5;
-                                            border-radius: 15px;
-                                            opacity: 1;">
-                                        <strong>ATENÇÃO!</strong><br> Após a liberação do saque, o prazo para a iniciar
-                                        a
-                                        liquidação é de 2 dias úteis.
-                                        <br>
-                                        As informações necessárias podem ser acompanhadas na tela Finanças > Extrato >
-                                        Agenda Financeira.
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                </div>
                                 <div class="col-8 mb-3">
                                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
                                          role="alert" style='display:none;'>

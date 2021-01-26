@@ -11,8 +11,11 @@ $(() => {
         }.bind('.details_transaction'), 10000);
 
         let withdrawal = $(this).attr('withdrawal');
-        //loadOnAny('#modal-transactionsDetails');
-        loadOnAny('#modal-transactionsDetails > .modal-body');
+
+        loadOnAny('#modal-transactionsDetails > .modal-body', false, {
+            message : 'Aguarde enquanto os dados do <br> saque estão sendo carregados.',
+        });
+
         $('#withdrawal-code').html('');
         $('#transactions-table-data').html('');
         $('#modal_detalhes_transacao').modal('show');
