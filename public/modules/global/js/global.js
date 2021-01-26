@@ -219,7 +219,7 @@ function loadOnAny(target, remove = false, options = {}) {
 
         //add message load
         if ( options.message) {
-            container.append(`<p>${options.message}</p>`);
+            container.append(`<p class='mb-30'>${options.message}</p>`);
             container.addClass('d-flex').addClass('flex-column');
         }
 
