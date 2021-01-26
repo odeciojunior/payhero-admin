@@ -236,8 +236,8 @@ class WithdrawalsApiController
             $transactionsSum->chunk(
                 2000,
                 function ($transactions) use (
-                    $currentValue,
-                    $withdrawalValueRequested
+                    &$currentValue,
+                    &$withdrawalValueRequested
                 ) {
                     foreach ($transactions as $transaction) {
                         $currentValue += $transaction->value;
@@ -251,11 +251,13 @@ class WithdrawalsApiController
                                     ]
                                 ]
                             )->send();
-                            exit();
                         }
                     }
                 }
             );
+
+            dd('aqui');
+
             return response()->json(
                 [
                     'data' => [
@@ -420,8 +422,6 @@ class WithdrawalsApiController
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
-
-
     }
 
     public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {

@@ -617,7 +617,7 @@
                                  style="display:none;background:  0 0 no-repeat padding-box;">
                                 <div class="col-12">
                                     <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                                    <p style="color: #959595;" class="text-center">Você tem alguns valores em aberto,
+                                    <p style="color: #959595;" class="text-center" id="text-description-debit-pending">Você tem alguns valores em aberto,
                                         confira:</p>
                                     <div id="debit-itens">
 
@@ -626,20 +626,8 @@
                             </div>
                         </div>
                     </div>
-                    <div id='modal-withdraw-footer' class="modal-footer">
+                    <div id='modal-withdraw-footer' class="modal-footer mt-20">
 
-                        <div class="col-md-8">
-                            <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal"
-                                    aria-label="Close"
-                                    style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
-                                <strong>Cancelar</strong>
-                            </button>
-
-                            <button id="bt-confirm-withdrawal" class="btn btn-success"
-                                    style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
-                                <strong>Confirmar</strong>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
