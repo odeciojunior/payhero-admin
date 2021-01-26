@@ -53,7 +53,7 @@ class CheckAutomaticWithdrawals extends Command
 
         $service = new WithdrawalService();
         $withdrawalSettingsModel = new WithdrawalSettings();
-        $withdrawalsSettings = $withdrawalSettingsModel->where('company_id', 471)->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
+        $withdrawalsSettings = $withdrawalSettingsModel->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
 
         foreach ($withdrawalsSettings as $settings) {
 
@@ -85,7 +85,6 @@ class CheckAutomaticWithdrawals extends Command
 
                 if ($withdrawalValue > 0) {
                     $withdrawal = $service->requestWithdrawal($company, $withdrawalValue);
-                    dd($withdrawal);
                     event(new WithdrawalRequestEvent($withdrawal));
                 }
 
@@ -93,11 +92,8 @@ class CheckAutomaticWithdrawals extends Command
             } catch (\Exception $e) {
                 DB::rollBack();
             }
-
-
         }
 
-        dd('check:automatic-withdrawals', count($withdrawalsSettings));
-        // +3 horas
+        return 0;
     }
 }

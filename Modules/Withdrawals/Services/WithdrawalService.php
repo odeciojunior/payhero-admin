@@ -29,7 +29,10 @@ class WithdrawalService
             ]
         );
 
-        $transactionSum = $this->getTransactionsWaitingWithdrawalAmount($withdrawalValue, $withdrawal);
+        $transactionsAmount = $this->setWaitingTransactionsWaitingToWithdrawal($withdrawalValue, $withdrawal);
+        if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')) {
+            throw new \Exception('O valor total da operação difere do valor solicitado');
+        }
         $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
 
         return $withdrawal;
@@ -63,34 +66,26 @@ class WithdrawalService
 
     public function setWaitingTransactionsWaitingToWithdrawal($withdrawalValue, $withdrawal)
     {
-        $transactionsSum = $withdrawal->company->transactions()
+        $currentValue = 0;
+        $withdrawal->company->transactions()
             ->whereIn('gateway_id', [14, 15])
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
-            ->orderBy('id');
-
-        $currentValue = 0;
-
-        $test = function ($transactions) use (
-            $currentValue,
-            $withdrawalValue,
-            $withdrawal
-        ) {
-            foreach ($transactions as $transaction) {
-                $currentValue += $transaction->value;
-
-                if ($currentValue <= $withdrawalValue) {
-                    $transaction->update(
-                        [
-                            'withdrawal_id'         => $withdrawal->id,
-                            'is_waiting_withdrawal' => false
-                        ]
-                    );
+            ->orderBy('id')
+            ->chunkById(2000, function ($transactions) use (&$currentValue, $withdrawalValue, $withdrawal) {
+                foreach ($transactions as $transaction) {
+                    $currentValue += $transaction->value;
+                    if ($currentValue <= $withdrawalValue) {
+                        $transaction->update(
+                            [
+                                'withdrawal_id'         => $withdrawal->id,
+                                'is_waiting_withdrawal' => false
+                            ]
+                        );
+                    }
                 }
-            }
-        };
+            });
 
-        $transactionsSum->chunkById(2000, $test);
         return $currentValue;
     }
 }
