@@ -5,6 +5,7 @@ namespace Modules\Withdrawals\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
@@ -21,7 +22,6 @@ use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
 use PDOException;
-use DB;
 
 class WithdrawalsApiController
 {
@@ -196,6 +196,8 @@ class WithdrawalsApiController
                 );
 
                 $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+
+                DB::commit();
             } catch (PDOException $e) {
                 DB::rollBack();
                 report($e);
