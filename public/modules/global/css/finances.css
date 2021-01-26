@@ -213,6 +213,17 @@
     fill: #cb4a2d;
 }
 
+.modal-content-style {
+    border-radius: 20px 20px 0px 0px;
+}
+
+.modal-title-withdrawal {
+    background-color: #2E85EC;
+    box-shadow: 0px 1px 15px #00000017;
+    border-radius: 20px 20px 0px 0px;
+    opacity: 1;
+}
+
 .transaction-status {
     width: 20px;
     height: 20px;
