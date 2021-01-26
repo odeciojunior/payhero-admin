@@ -991,7 +991,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: response => {
-                alertCustom('error', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
+                //alertCustom('error', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
                 clearSettingsForm()
             },
             success: response => {

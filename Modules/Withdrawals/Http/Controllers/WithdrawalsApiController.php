@@ -199,7 +199,7 @@ class WithdrawalsApiController
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
 

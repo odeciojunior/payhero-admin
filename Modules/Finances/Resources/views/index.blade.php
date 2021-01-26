@@ -506,27 +506,13 @@
 
                                                 <div
                                                     class="weekdays-container d-flex align-items-center justify-content-between mt-20">
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="0">SEG
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="1">TER
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="2">QUA
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="3">QUI
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="4">SEX
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="5">SAB
-                                                    </button>
-                                                    <button type="button" class="btn p-15"
-                                                            data-weekday="6">DOM
-                                                    </button>
+                                                    <button type="button" class="btn p-15" data-weekday="1">SEG</button>
+                                                    <button type="button" class="btn p-15" data-weekday="2">TER</button>
+                                                    <button type="button" class="btn p-15" data-weekday="3">QUA</button>
+                                                    <button type="button" class="btn p-15" data-weekday="4">QUI</button>
+                                                    <button type="button" class="btn p-15" data-weekday="5">SEX</button>
+                                                    <button type="button" class="btn p-15" data-weekday="6">SAB</button>
+                                                    <button type="button" class="btn p-15" data-weekday="0">DOM</button>
                                                 </div>
                                                 <div class="day-container d-none flex-column mt-20">
                                                     <p class="mb-0">Dia do <b>mês</b></p>
