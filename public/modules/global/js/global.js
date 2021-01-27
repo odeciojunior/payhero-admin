@@ -97,6 +97,8 @@ function loadingOnScreen() {
                  class="img-responsive"/>
         </div>`
     )
+
+    $('body').css('overflow-y', 'hidden')
 }
 
 function loadingOnChart(target) {
@@ -160,6 +162,7 @@ function loadingOnScreenRemove() {
     window.setTimeout(function () {
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
+            $('body').css('overflow-y', 'unset')
         });
     },2000)
     $('.page-header').fadeIn();

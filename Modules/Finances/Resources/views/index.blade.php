@@ -354,10 +354,11 @@
                                                 </div>
 
                                                 <div class="col-md-3">
-                                                    <div class="form-group">
+                                                    <div class="form-group form-icons">
                                                         <label for="date_range_statement">Período</label>
+                                                        <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
                                                         <input name="date_range_statement" id="date_range_statement"
-                                                               class="select-pad" placeholder="Clique para editar..." readonly>
+                                                               class="select-pad pr-30" placeholder="Clique para editar..." readonly>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 collapse bt-collapse d-md-block" id="bt_collapse_1">
