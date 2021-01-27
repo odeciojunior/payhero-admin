@@ -74,11 +74,11 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
 
         $order = collect($row->order);
         $details = collect($row->details);
-        $description =  str_replace("Data da venda: ", "",$details['description']) ;
+        $description =  str_replace("Venda em: ", "",$details['description']) ;
 
         $data =
             [
-                isset($order['hashId']) ? $order['hashId'] : $description,
+                isset($order['hashId']) ? 'Transação #'.$order['hashId'] . ' (' . $details['description'] .')'  : $description,
                 ($details['status']),
                 $row->date,
                 'R$ ' . number_format($row->amount, 2, ',', '.')

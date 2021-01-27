@@ -3,7 +3,6 @@
 namespace Modules\Core\Listeners;
 
 use Modules\Core\Entities\UnicodropIntegration;
-use Modules\Core\Events\BilletPaidEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Exception;
@@ -26,10 +25,10 @@ class BilletPaidUnicodropListener
 
     /**
      * Handle the event.
-     * @param BilletPaidEvent $event
+     * @param $event
      * @return void
      */
-    public function handle(BilletPaidEvent $event)
+    public function handle($event)
     {
         try {
             $unicodropIntegration = UnicodropIntegration::where('project_id', $event->sale->project_id)

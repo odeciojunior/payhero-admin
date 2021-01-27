@@ -97,6 +97,8 @@ function loadingOnScreen() {
                  class="img-responsive"/>
         </div>`
     )
+
+    $('body').css('overflow-y', 'hidden')
 }
 
 function loadingOnChart(target) {
@@ -160,6 +162,7 @@ function loadingOnScreenRemove() {
     window.setTimeout(function () {
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
+            $('body').css('overflow-y', 'unset')
         });
     },2000)
     $('.page-header').fadeIn();
@@ -215,6 +218,12 @@ function loadOnAny(target, remove = false, options = {}) {
         container.css(options.styles.container);
         if (options.styles.loader) {
             loader.css(options.styles.loader);
+        }
+
+        //add message load
+        if ( options.message) {
+            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.addClass('d-flex').addClass('flex-column');
         }
 
         //add loader to container

@@ -9,6 +9,7 @@ Route::group(
     function() {
 
         Route::get('/profile/verifydocuments', 'ProfileApiController@verifyDocuments');
+        Route::get('/profile/verify-is-approved', 'ProfileApiController@verifyIsApproved');
 
         Route::apiResource('profile', 'ProfileApiController')
              ->only('index', 'show', 'edit', 'store', 'update', 'destroy', 'create')

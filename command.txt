@@ -1,7 +1,0 @@
-public function handle()
-    {
-        foreach(User::all() as $user)
-        $user->update(['password' => bcrypt('meudell')]);
-
-        dd('feitoo');
-    }

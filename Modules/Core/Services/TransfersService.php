@@ -4,11 +4,13 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use PDOException;
 
 /**
  * Class TransfersService
@@ -82,46 +84,53 @@ class TransfersService
                 );
         }
 
-        foreach ($transactions->cursor() as $transaction) {
-            try {
-                if (!empty($transaction->company_id)) {
-                    $company = $companyModel->find($transaction->company_id);
+        try {
+            DB::beginTransaction();
+            foreach ($transactions->cursor() as $transaction) {
+                try {
+                    if (!empty($transaction->company_id)) {
+                        $company = $companyModel->find($transaction->company_id);
 
-                    if (!in_array($transaction->sale->gateway_id, $gatewayIds)) {
-                        $transferModel->create(
-                            [
-                                'transaction_id' => $transaction->id,
-                                'user_id' => $company->user_id,
-                                'company_id' => $company->id,
-                                'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                                'value' => $transaction->value,
-                                'type' => 'in',
-                            ]
-                        );
+                        if (!in_array($transaction->sale->gateway_id, $gatewayIds)) {
+                            $transferModel->create(
+                                [
+                                    'transaction_id' => $transaction->id,
+                                    'user_id' => $company->user_id,
+                                    'company_id' => $company->id,
+                                    'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                                    'value' => $transaction->value,
+                                    'type' => 'in',
+                                ]
+                            );
 
-                        $company->update(
-                            [
-                                'balance' => intval($company->balance) + intval(
-                                        preg_replace(
-                                            "/[^0-9]/",
-                                            "",
-                                            $transaction->value
-                                        )
-                                    ),
-                            ]
-                        );
+                            $company->update(
+                                [
+                                    'balance' => intval($company->balance) + intval(
+                                            preg_replace(
+                                                "/[^0-9]/",
+                                                "",
+                                                $transaction->value
+                                            )
+                                        ),
+                                ]
+                            );
 
-                        $transaction->update(
-                            [
-                                'status' => 'transfered',
-                                'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                            ]
-                        );
+                            $transaction->update(
+                                [
+                                    'status' => 'transfered',
+                                    'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                ]
+                            );
+                        }
                     }
+                } catch (Exception $e) {
+                    report($e);
                 }
-            } catch (Exception $e) {
-                report($e);
             }
+            DB::commit();
+        } catch (PDOException $e) {
+            DB::rollBack();
+            report($e);
         }
 
         try {

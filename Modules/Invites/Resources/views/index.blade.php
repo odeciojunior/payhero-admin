@@ -4,6 +4,18 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
+        <style>
+            .badge {
+                color: white;
+                padding: 5px 15px;
+                border-radius: 16px;
+                font-weight: 700;
+            }
+
+            .badge.badge-success {
+                background-color: #5EE2A1;
+            }
+        </style>
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">

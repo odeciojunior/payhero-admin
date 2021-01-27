@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
@@ -19,6 +20,7 @@ use Modules\Core\Services\UserService;
 use Modules\Withdrawals\Transformers\OldWithdrawalResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use PDOException;
 
 class OldWithdrawalsApiController extends Controller
 {
@@ -213,63 +215,72 @@ class OldWithdrawalsApiController extends Controller
             )->where('automatic_liquidation', false)
                 ->first();
 
-            if (empty($withdrawal)) {
-                $tax = 0;
+            try {
+                DB::beginTransaction();
 
-                if ($withdrawalValue < 50000) {
-                    $withdrawalValue -= 1000;
-                    $tax = 1000;
-                }
+                if (empty($withdrawal)) {
+                    $tax = 0;
 
-                /** Verifica se é o primeiro saque do usuário */
-                $isFirstUserWithdrawal = false;
-                $userWithdrawal = $withdrawalModel->whereHas(
-                    'company',
-                    function ($query) {
-                        $query->where('user_id', auth()->user()->account_owner_id);
+                    if ($withdrawalValue < 50000) {
+                        $withdrawalValue -= 1000;
+                        $tax = 1000;
                     }
-                )->where('automatic_liquidation', false)
-                    ->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
 
-                if (empty($userWithdrawal)) {
-                    $isFirstUserWithdrawal = true;
+                    /** Verifica se é o primeiro saque do usuário */
+                    $isFirstUserWithdrawal = false;
+                    $userWithdrawal = $withdrawalModel->whereHas(
+                        'company',
+                        function ($query) {
+                            $query->where('user_id', auth()->user()->account_owner_id);
+                        }
+                    )->where('automatic_liquidation', false)
+                        ->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
+
+                    if (empty($userWithdrawal)) {
+                        $isFirstUserWithdrawal = true;
+                    }
+
+                    $withdrawal = $withdrawalModel->create(
+                        [
+                            'value' => $withdrawalValue,
+                            'company_id' => $company->id,
+                            'bank' => $company->bank,
+                            'agency' => $company->agency,
+                            'agency_digit' => $company->agency_digit,
+                            'account' => $company->account,
+                            'account_digit' => $company->account_digit,
+                            'status' => $withdrawalModel->present()->getStatus(
+                                $isFirstUserWithdrawal ? 'in_review' : 'pending'
+                            ),
+                            'tax' => $tax,
+                            'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                        ]
+                    );
+                } else {
+                    $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
+                    $withdrawalTax = $withdrawal->tax;
+
+                    /**
+                     *  Se a soma dos saques pendentes for maior de R$500,00
+                     *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
+                     */
+                    if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
+                        $withdrawalValueSum += 1000;
+                        $withdrawalTax = 0;
+                    }
+
+                    $withdrawal->update(
+                        [
+                            'value' => $withdrawalValueSum,
+                            'tax' => $withdrawalTax,
+                        ]
+                    );
                 }
-
-                $withdrawal = $withdrawalModel->create(
-                    [
-                        'value' => $withdrawalValue,
-                        'company_id' => $company->id,
-                        'bank' => $company->bank,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'status' => $withdrawalModel->present()->getStatus(
-                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                        ),
-                        'tax' => $tax,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    ]
-                );
-            } else {
-                $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
-                $withdrawalTax = $withdrawal->tax;
-
-                /**
-                 *  Se a soma dos saques pendentes for maior de R$500,00
-                 *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
-                 */
-                if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
-                    $withdrawalValueSum += 1000;
-                    $withdrawalTax = 0;
-                }
-
-                $withdrawal->update(
-                    [
-                        'value' => $withdrawalValueSum,
-                        'tax' => $withdrawalTax,
-                    ]
-                );
+                DB::commit();
+            } catch (PDOException $e) {
+                DB::rollBack();
+                report($e);
+                return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);                
             }
 
             event(new WithdrawalRequestEvent($withdrawal));
