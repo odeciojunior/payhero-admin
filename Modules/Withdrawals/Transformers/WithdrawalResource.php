@@ -17,10 +17,12 @@ class WithdrawalResource extends JsonResource
 
         return [
             'id' => Hashids::encode($this->id),
-            'bank' => $bankName,
+            'account_information_bank' => $bankName,
             'account_information' => $agency . $account,
-            'date_request' => $this->created_at->format('d/m/Y H:i:s'),
-            'date_release' => $this->resource->present()->getDateReleaseFormatted($this->release_date),
+            'date_request' => $this->created_at->format('d/m/Y'),
+            'date_request_time' => $this->created_at->format('H:i:s'),
+            'date_release' => $this->release_date->format('d/m/Y'),
+            'date_release_time' => $this->release_date->format('H:i:s'),
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status' => $this->status,
             'status_translated' => Lang::get(

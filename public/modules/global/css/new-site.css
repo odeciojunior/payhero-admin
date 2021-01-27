@@ -272,7 +272,7 @@ select, .select-pad {
     height: auto;
     background: #fff;
     border: 1px solid #dddddd;
-    border-radius: 6px;
+    border-radius: 10px;
     padding: 8px 15px;
     color: #707070;
 
@@ -398,15 +398,25 @@ input[type=radio] {
 
 
 .nav-tabs .nav-link {
-    text-transform: uppercase;
     opacity: 0.5;
     font-size: 11px;
-    font-weight: bold;
     font-style: normal;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: 1px;
+    background-color: #D9D9D9;
     transition: opacity 500ms ease;
+    padding: 15px;
+    color: #767676
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #E9E9E9;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
 }
 
 .nav-tabs-line .nav-link {
@@ -415,7 +425,8 @@ input[type=radio] {
 
 .nav-tabs .nav-link.active {
     font-size: 11px;
-    color: black !important;
+    color: #599EF0 !important;
+    border-bottom-color: #599EF0;
     opacity: 1;
     font-weight: bold;
     font-style: normal;
@@ -1126,7 +1137,9 @@ input[type=radio] {
 }
 
 .s-card-header {
-    border-radius: 21px 21px 0 0 !important;
+    border-radius: 16px 16px 0 0 !important;
+    -webkit-border-radius: 16px 16px 0 0 !important;
+    -moz-border-radius: 16px 16px 0 0 !important;
     background-color: #EFF7FF;
 }
 
