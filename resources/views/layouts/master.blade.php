@@ -58,9 +58,8 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=61') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=62') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=' . random_int(1, 100)) }}">
-{{--    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">--}}
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')

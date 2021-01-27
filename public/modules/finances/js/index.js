@@ -764,10 +764,10 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                                            <td class="text-sm-left text-md-center font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
-                                            <td class="text-sm-left text-md-center" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
-                                            <td class="text-sm-left text-md-center" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
-                                            <td class="text-sm-right text-md-center" style="grid-area: status" class="shipping-status">
+                                            <td class="text-sm-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
+                                            <td class="text-sm-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
+                                            <td class="text-sm-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
+                                            <td class="text-sm-right text-md-left" style="grid-area: status" class="shipping-status">
                                                 <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
                                             </td>
                                             <td class="text-sm-right text-md-center" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong></td>
@@ -968,10 +968,10 @@ $(document).ready(function () {
                         <td style="vertical-align: middle; grid-area: date">
                             ${item.date}
                         </td>
-                         <td class="text-sm-right text-md-center" style="grid-area: status">
+                         <td class="text-sm-right text-md-left" style="grid-area: status">
                             <span data-toggle="tooltip" data-placement="left" title="${item.details.status}" class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
                          </td>
-                        <td class="text-sm-right text-md-center bold" style="vertical-align: middle;grid-area: value;};">
+                        <td class="text-sm-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
                         ${(item.amount.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
