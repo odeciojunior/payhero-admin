@@ -489,21 +489,21 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <form id="finances-settings-form">
-                                <div class="card shadow pt-15 px-sm-0 px-md-15">
+                                <div class="card shadow p-20">
                                     <div class="row justify-content-start align-items-center">
                                         <div class="col-12 col-sm-8 text-left">
                                             <h5 class="title-pad">Configurações</h5>
                                             <p class="p-0 m-0">Configure as finanças do seu negócio</p>
                                         </div>
-                                        <div class="col-12 col-sm-4">
+                                        <div class="col-md-4">
                                             <div class="input-holder form-group">
                                                 <select style='border-radius:10px' class="form-control select-pad"
                                                         name="company" id="settings_company_select"></select>
                                             </div>
                                         </div>
 
-                                        <div class="row d-flex align-items-start pt-15 px-sm-0 px-md-15">
-                                            <div class="col-12 col-sm-6">
+                                        <div class="row d-flex align-items-start p-20">
+                                            <div class="col-md-6">
                                                 <div class="card bg-light no-shadow mt-30">
                                                     <div class="card-body">
                                                         <h5 class="title-pad">
@@ -538,8 +538,7 @@
                                                             </button>
                                                         </div>
 
-                                                        <div
-                                                            class="weekdays-container d-flex align-items-center justify-content-between mt-20">
+                                                        <div class="weekdays-container d-flex align-items-center justify-content-between flex-wrap mt-20">
                                                             <button type="button" class="btn p-15" data-weekday="1">SEG</button>
                                                             <button type="button" class="btn p-15" data-weekday="2">TER</button>
                                                             <button type="button" class="btn p-15" data-weekday="3">QUA</button>
@@ -573,7 +572,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-6">
+                                            <div class="col-md-6">
                                                 <div class="card bg-lighter no-shadow mt-30">
                                                     <div class="card-body">
                                                         <h5 class="title-pad">
