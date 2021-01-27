@@ -74,7 +74,7 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
 
         $order = collect($row->order);
         $details = collect($row->details);
-        $description =  str_replace("Data da venda: ", "",$details['description']) ;
+        $description =  str_replace("Venda em: ", "",$details['description']) ;
 
         $data =
             [

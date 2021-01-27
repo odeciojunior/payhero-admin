@@ -1048,8 +1048,8 @@ class ReportService
 
             while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->addDays(7);
-                if ($dataFormated->diffInDays($endDate) < 7 && $dataFormated->diffInDays($endDate) > 0) {
+                $dataFormated = $dataFormated->addDays(6);
+                if ($dataFormated->diffInDays($endDate) < 6 && $dataFormated->diffInDays($endDate) > 0) {
                     array_push($labelList, $dataFormated->format('d/m'));
                     $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
                     array_push($labelList, $dataFormated->format('d/m'));
