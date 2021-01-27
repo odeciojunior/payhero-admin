@@ -61,7 +61,7 @@
                         >
                             Agenda Financeira
                         </a>
-                        <a class="nav-item nav-link s-config"
+<!--                        <a class="nav-item nav-link s-config"
                            id="nav-settings-tab"
                            data-toggle="tab"
                            href="#nav-settings"
@@ -70,7 +70,7 @@
                            aria-selected="true"
                         >
                             <img height="20" width="20" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                        </a>
+                        </a>-->
                     </div>
                 </div>
             </nav>

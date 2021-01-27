@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
-        $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
+//        $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
     }
 
     /**

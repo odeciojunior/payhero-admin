@@ -120,12 +120,12 @@ $(document).ready(function () {
                         $("#statement_company_select").append(dataHtml);
                         $("#transfers_company_select").append(dataHtml);
                         $("#transfers_company_select_mobile").append(dataHtml);
-                        $("#settings_company_select").append(dataHtml);
+                        // $("#settings_company_select").append(dataHtml);
                     }
                 });
 
                 //Company withdrawal settings
-                getSettings($("#settings_company_select").val())
+                // getSettings($("#settings_company_select").val())
 
                 if (!itsApprovedTransactGetnet) {
                     $("#companies-not-approved-getnet").show();
@@ -212,7 +212,6 @@ $(document).ready(function () {
             },
             success: (response) => {
                 loadOnAnyEllipsis('#debit-value', true);
-
                 $('.saldoDebito').html(`
                     <span
                         class="currency"
@@ -239,53 +238,55 @@ $(document).ready(function () {
                 let withdrawalValue = $(".s-btn.green").text();
 
                 dataItensExtract += `
-                    <div class="row" style="">
-                        <div class='col-md-8 mt-10'>
-                            <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
-                        </div>
-                        <div class="col-md-4 mt-10 text-center">
+                    
+                `;
+               /* <div className="row" style="">
+                    <div className='col-md-8 mt-10'>
+                        <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
+                    </div>
+                    <div className="col-md-4 mt-10 text-center">
                             <span
-                                class="currency"
+                                className="currency"
                                 style="font: normal normal 300 19px/13px Roboto;
                                         color: #41DC8F;"
                             >
-                                <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${withdrawalValue}</span>
+                                <span id="requested-amount-withdrawal" className="text-right"
+                                      style="color: #41DC8F;">${withdrawalValue}</span>
                                 </span>
-                        </div>
                     </div>
-                `;
+                </div>*/
 
+                // <div class="row" style="background: #F41C1C1A 0% 0% no-repeat padding-box;">
+                //     <div class='col-md-8 mt-10'>
+                //         <p style="color: #5A5A5A;">DÉBITOS PENDENTES</p>
+                //     </div>
+                //     <div class="col-md-4 mt-10"><span
+                //         class="currency"
+                //         style="font: normal normal 300 19px/13px Roboto;
+                //                 color: #E61A1A;"
+                //     >
+                //        <span id="debit-value-modal" class="text-right" data-value="${response.data.amount}" style="color: #F41C1C;">${response.data.amount}</span>
+                //         </span>
+                //     </div>
+                // </div>
+                /*<div className="row">
+                    <div className='col-md-8 mt-10'>
+                        <p style="color: #5A5A5A;" id="modal-text-amount-receivable">VALOR A RECEBER</p>
+                    </div>
+                    <div className="col-md-4 mt-10"><span
+                        className="currency"
+                        style="font: normal normal 300 19px/13px Roboto;
+                                        color: #E61A1A;"
+                    >
+                                <span id="value-withdrawal-received" className="text-right"
+                                      style="color: #F41C1C;"></span>
+                                </span>
+                    </div>
+                </div>*/
                 if (response.data.itens.length > 0) {
                     dataItensExtract += `
-                        <div class="row" style="background: #F41C1C1A 0% 0% no-repeat padding-box;">
-                            <div class='col-md-8 mt-10'>
-                                <p style="color: #5A5A5A;">DÉBITOS PENDENTES</p>
-                            </div>
-                            <div class="col-md-4 mt-10"><span
-                                class="currency"
-                                style="font: normal normal 300 19px/13px Roboto;
-                                        color: #E61A1A;"
-                            >
-                                - R$
-                               <span id="debit-value-modal" class="text-right" data-value="500,00" style="color: #F41C1C;">${response.data.amount}</span>
-<!--                                <span id="debit-value-modal" class="text-right" data-value="${response.data.amount}" style="color: #F41C1C;">${response.data.amount}</span>-->
-                                </span>
-                            </div>
-                        </div>
-                         <div class="row">
-                            <div class='col-md-8 mt-10'>
-                                <p style="color: #5A5A5A;" id="modal-text-amount-receivable">VALOR A RECEBER</p>
-                            </div>
-                            <div class="col-md-4 mt-10"><span
-                                class="currency"
-                                style="font: normal normal 300 19px/13px Roboto;
-                                        color: #E61A1A;"
-                            >
-                                - R$
-                                <span id="value-withdrawal-received" class="text-right" style="color: #F41C1C;"></span>
-                                </span>
-                            </div>
-                        </div>
+                        
+                         
                     `;
 
                     $("#debit-itens").html(dataItensExtract);
@@ -433,27 +434,13 @@ $(document).ready(function () {
                     success: (response) => {
                         manipulateModalWithdrawal(response.data);
 
-                        let debitValue = $("#debit-value-modal").data('value');
-
-                        /*if (debitValue != undefined) {
-                            let optionSelected = $("#modal-body-withdrawal .s-btn.green").attr('id');
-                            let newValueSelected = $(`#${optionSelected}`);
-
-                            $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
-
-                            let result = newValueSelected.data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
-                            $("#value-withdrawal-received").text(formatMoney(result));
-                        }*/
-
-
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
                             let withdrawalValue = $(".s-btn.green").data('value');
-                            console.log(withdrawalValue);
 
-                            // $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
-                            /*$.ajax({
+                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
+                            $.ajax({
                                 url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
@@ -488,7 +475,7 @@ $(document).ready(function () {
                                 complete: (response) => {
                                     $("#bt-confirm-withdrawal").removeAttr('disabled');
                                 }
-                            });*/
+                            });
                         });
                     }
                 }
@@ -672,7 +659,7 @@ $(document).ready(function () {
                     </div>
                 `);
 
-                if (debitValue != undefined) {
+                /*if (debitValue != undefined) {
                     let optionSelected = $("#modal-body-withdrawal .s-btn.green").attr('id');
                     let newValueSelected = $(`#${optionSelected}`);
 
@@ -681,7 +668,12 @@ $(document).ready(function () {
                     // let result = newValueSelected.data('value') - debitValue.replace(new RegExp("[,]", "g"), "");
                     let result = newValueSelected.data('value') - removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
-                }
+                }*/
+
+                let optionSelected = $("#modal-body-withdrawal .s-btn.green").attr('id');
+                let newValueSelected = $(`#${optionSelected}`);
+
+                $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
             }
 
 
@@ -699,13 +691,13 @@ $(document).ready(function () {
                 let optionSelected = $(this).attr('id');
                 let newValueSelected = $(`#${optionSelected}`).addClass('green');
                 let debitValue = $("#debit-value-modal").data('value');
+                $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
 
-                if (debitValue != undefined) {
-                    $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
+                /*if (debitValue != undefined) {
 
                     let result = $(`#${optionSelected}`).data('value') - removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
-                }
+                }*/
             });
         }
 
@@ -1105,7 +1097,7 @@ $(document).ready(function () {
 
     //Settings
 
-    const SETTINGS_FREQUENCY_DAILY = 'daily'
+    /*const SETTINGS_FREQUENCY_DAILY = 'daily'
     const SETTINGS_FREQUENCY_WEEKLY = 'weekly'
     const SETTINGS_FREQUENCY_MONTHLY = 'monthly'
     const SETTINGS_RULE_PERIOD = 'period'
@@ -1382,7 +1374,7 @@ $(document).ready(function () {
         setTimeout(function () {
             if (settingsData.rule == SETTINGS_RULE_AMOUNT) withdrawalAmount.focus()
         }, 1500)
-    })
+    })*/
 
 // Finances report
 

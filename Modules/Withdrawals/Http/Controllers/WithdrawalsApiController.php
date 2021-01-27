@@ -258,8 +258,6 @@ class WithdrawalsApiController
                 }
             );
 
-            dd('aqui');
-
             return response()->json(
                 [
                     'data' => [

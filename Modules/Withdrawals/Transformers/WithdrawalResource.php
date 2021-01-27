@@ -15,14 +15,19 @@ class WithdrawalResource extends JsonResource
         $agency = 'Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit;
         $account = ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit;
 
+        $realeaseDate = '';
+        if (!empty($this->release_date)){
+            $realeaseDate = $this->release_date->format('d/m/Y');
+        }
+
         return [
             'id' => Hashids::encode($this->id),
             'account_information_bank' => $bankName,
             'account_information' => $agency . $account,
-            'date_request' => $this->created_at->format('d/m/Y'),
-            'date_request_time' => $this->created_at->format('H:i:s'),
-            'date_release' => $this->release_date->format('d/m/Y'),
-            'date_release_time' => $this->release_date->format('H:i:s'),
+            'date_request' =>$this->created_at->format('d/m/Y'),
+            'date_request_time' =>$this->created_at->format('d/m/Y'),
+            'date_release' => $realeaseDate,
+            'date_release_time' => $realeaseDate,
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status' => $this->status,
             'status_translated' => Lang::get(
