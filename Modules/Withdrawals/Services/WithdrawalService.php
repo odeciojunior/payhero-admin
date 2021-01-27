@@ -29,7 +29,7 @@ class WithdrawalService
             ]
         );
 
-        $transactionsAmount = $this->setWaitingTransactionsWaitingToWithdrawal($withdrawalValue, $withdrawal);
+        $transactionsAmount = $this->setWaitingTransactionsToWithdrawal($withdrawalValue, $withdrawal);
         if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')) {
             throw new \Exception('O valor total da operação difere do valor solicitado');
         }
@@ -64,7 +64,7 @@ class WithdrawalService
         return $isFirstUserWithdrawal;
     }
 
-    public function setWaitingTransactionsWaitingToWithdrawal($withdrawalValue, $withdrawal)
+    public function setWaitingTransactionsToWithdrawal($withdrawalValue, $withdrawal)
     {
         $currentValue = 0;
         $withdrawal->company->transactions()
