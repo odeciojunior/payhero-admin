@@ -16,8 +16,10 @@ class WithdrawalResource extends JsonResource
         $account = ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit;
 
         $realeaseDate = '';
+        $realeaseTime = '';
         if (!empty($this->release_date)){
             $realeaseDate = $this->release_date->format('d/m/Y');
+            $realeaseTime = $this->release_date->format('H:i:s');
         }
 
         return [
@@ -25,9 +27,9 @@ class WithdrawalResource extends JsonResource
             'account_information_bank' => $bankName,
             'account_information' => $agency . $account,
             'date_request' =>$this->created_at->format('d/m/Y'),
-            'date_request_time' =>$this->created_at->format('d/m/Y'),
+            'date_request_time' =>$this->created_at->format('H:i:s'),
             'date_release' => $realeaseDate,
-            'date_release_time' => $realeaseDate,
+            'date_release_time' => $realeaseTime,
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status' => $this->status,
             'status_translated' => Lang::get(
