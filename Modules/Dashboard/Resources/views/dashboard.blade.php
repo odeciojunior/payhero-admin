@@ -47,7 +47,7 @@
                                         <span id="today_money" class="text-money"></span>
                                     </div>
                                 </div>
-                                <div class="card-bottom orangered"></div>
+                                <div class="s-border-right yellow"></div>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
@@ -64,7 +64,7 @@
                                         <span id="pending_money" class="text-money"></span>
                                     </div>
                                 </div>
-                                <div class="card-bottom orange"></div>
+                                <div class="s-border-right yellow"></div>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
@@ -81,7 +81,7 @@
                                         <span id="available_money" class="text-money"></span>
                                     </div>
                                 </div>
-                                <div class="card-bottom green"></div>
+                                <div class="s-border-right green"></div>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
@@ -99,7 +99,7 @@
                                         <span id="total_money" class="text-money"></span>
                                     </div>
                                 </div>
-                                <div class="card-bottom blue"></div>
+                                <div class="s-border-right blue"></div>
                             </div>
                         </div>
 
@@ -278,7 +278,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="card-bottom red"></div>--}}
                             </div>
                         </div>
 

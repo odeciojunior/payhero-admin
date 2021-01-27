@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ImportShopifyTrackingCodesJob;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Transaction;
 
 class GenericCommand extends Command
 {
@@ -15,15 +14,18 @@ class GenericCommand extends Command
     public function handle()
     {
         try {
-            $projects = Project::with('shopifyIntegrations')
-                ->whereHas('shopifyIntegrations')
-                ->where('status', 1)
-                ->get();
+            $projects = Transaction::whereIn('gateway_id', [14, 15])
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')->get();
 
-            foreach ($projects as $project){
-                ImportShopifyTrackingCodesJob::dispatch($project);
+            $bar = $this->output->createProgressBar(count($projects));
+            $bar->start();
+            foreach ($projects as $project) {
+                $project->update(['company_id' => 2964]);
+                $bar->advance();
             }
 
+            $bar->finish();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

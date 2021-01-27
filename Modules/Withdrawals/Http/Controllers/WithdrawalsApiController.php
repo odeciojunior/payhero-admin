@@ -210,7 +210,7 @@ class WithdrawalsApiController
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
 
@@ -238,8 +238,8 @@ class WithdrawalsApiController
             $transactionsSum->chunk(
                 2000,
                 function ($transactions) use (
-                    $currentValue,
-                    $withdrawalValueRequested
+                    &$currentValue,
+                    &$withdrawalValueRequested
                 ) {
                     foreach ($transactions as $transaction) {
                         $currentValue += $transaction->value;
@@ -253,15 +253,17 @@ class WithdrawalsApiController
                                     ]
                                 ]
                             )->send();
-                            exit();
                         }
                     }
                 }
             );
+
             return response()->json(
                 [
-                    'lower_value' => 0,
-                    'bigger_value' => 0
+                    'data' => [
+                        'lower_value' => 0,
+                        'bigger_value' => 0
+                    ]
                 ]
             );
         } catch (Exception $e) {
@@ -420,8 +422,6 @@ class WithdrawalsApiController
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
-
-
     }
 
     public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {

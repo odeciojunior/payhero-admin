@@ -269,7 +269,7 @@
                             </table>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px; margin-right:100px">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                         {{-- js carrega... --}}
                     </ul>
                 <!-- Modal detalhes da venda-->

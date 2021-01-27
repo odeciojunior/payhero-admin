@@ -71,16 +71,13 @@
 }
 
 .label-price {
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 14px;
     margin: 0;
 }
 
 .price {
-    font-weight: 700;
     font-size: 25px;
     display: inline;
-
 }
 
 .link-antecipar {
@@ -144,15 +141,29 @@
 
 .badge {
     color: white;
-    padding: 7px 12px;
-    border-radius: 6px;
+    padding: 5px 15px;
+    border-radius: 16px;
     font-weight: 700;
 }
 
+.badge.badge-success {
+    background-color: #5EE2A1;
+}
+
+.badge.badge-warning {
+    background-color: #FFB400;
+}
+
+.badge.badge-danger {
+    background-color: #F41C1C;
+}
+
 .btn-sacar {
-    background: #44a44b;
-    border-color: #44a44b;
-    font-weight: 700;
+    background-color: #41DC8F;
+    border-radius: 6px;
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
 }
 
 .badge-pendente {
@@ -186,9 +197,9 @@
 }
 
 .nav-link {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 12px;
+    font-size: 14px !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 15px;
 }
 
 .nav-btn {
@@ -213,21 +224,167 @@
     fill: #cb4a2d;
 }
 
-.transaction-status {
-    width: 20px;
-    height: 20px;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #00000029;
+.modal-content-style {
+    border-radius: 20px 20px 0px 0px;
 }
 
-.transaction-status > span.is-released-on {
-    width: 14px;
-    height: 14px;
-    background: #5EE2A1 0% 0% no-repeat padding-box;
+.modal-title-withdrawal {
+    background-color: #2E85EC;
+    box-shadow: 0px 1px 15px #00000017;
+    border-radius: 20px 20px 0px 0px;
+    opacity: 1;
 }
 
-.transaction-status > span.is-released-off {
-    width: 14px;
-    height: 14px;
-    background: #F79E1B 0% 0% no-repeat padding-box;
+.disableFields {
+    background-color: #f3f7f9;
+    opacity: 1;
+}
+
+.modal-content-style {
+    border-radius: 16px 16px 0px 0px;
+}
+
+.modal-title-withdrawal {
+    background: #2E85EC;
+    box-shadow: 0px 1px 15px #00000017;
+    border-radius: 16px 16px 0px 0px;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #FFF !important;
+    color: #2E85EC;
+}
+
+strong span {
+    color: #57617c;
+}
+
+.nav-link.active:hover {
+    background-color: #FFF !important;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.col-sm-3.card {
+    margin-right: 10px;
+    max-width: calc(25% - 10px);
+}
+
+.input-custom-transfer {
+    background-color: #FFF;
+    border-radius: 12px;
+    border: 1px solid #DDD !important;;
+}
+
+.input-moeda {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+}
+
+.nav-tabs {
+    border-bottom-color: transparent !important;
+}
+
+.card.shadow {
+    border-radius: 0 16px 16px 16px;
+}
+
+@media (max-width: 767px) {
+    .s-table {
+        padding: 20px !important;
+
+        display: grid !important;
+
+        border: none;
+        margin: unset;
+    }
+
+    .s-table.table-finance-schedule {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "sale status"
+                             "date value";
+    }
+
+    .s-table.table-finance-transfers {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas: "sale sale status"
+                             "date-start date-end value";
+    }
+
+    table.unify tr {
+        border: none;
+        margin: unset;
+    }
+
+    .badge {
+        width: 10px;
+        height: 10px;
+
+        padding: .5rem;
+
+        border: 2px solid white;
+        box-shadow: 0 3px 6px #00000029;
+        text-indent: -9999px;
+        white-space: nowrap;
+    }
+
+    .table td {
+        margin: 0;
+    }
+
+    table.unify tr {
+        padding: 0;
+        background-color: #f8fbff;
+    }
+
+    .table-striped tbody tr:first-child {
+        border-radius: 16px 16px 0 0
+    }
+
+.popover {
+    left: -50px !important;
+}
+
+    .table-striped tbody tr:last-child {
+        border-radius: 0 0 16px 16px
+    }
+
+    .font-md-size-20 {
+        font-size: 20px !important
+    }
+
+    .font-md-size-18 {
+        font-size: 18px !important
+    }
+
+    .bold-mobile {
+        font-weight: normal;
+    }
+
+    .btn-sacar {
+        box-shadow: 0 1px 15px #00000017;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 14px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        height: auto;
+    }
+}
+
+.col-sm-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.s-config {
+    position: absolute;
+    right: 10px;
 }
