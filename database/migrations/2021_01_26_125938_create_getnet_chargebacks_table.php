@@ -23,7 +23,6 @@ class CreateGetnetChargebacksTable extends Migration
             $table->date('transaction_date')->nullable();
             $table->date('installment_date')->nullable();
             $table->date('adjustment_date')->nullable();
-            $table->decimal('adjustment_amount', 8, 2)->nullable();
             $table->decimal('chargeback_amount', 8, 2)->nullable();
             $table->json('body')->nullable();
             $table->timestamps();

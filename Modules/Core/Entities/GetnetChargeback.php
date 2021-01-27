@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
@@ -32,6 +33,45 @@ class GetnetChargeback extends Model
     /**
      * @var array
      */
-    protected $fillable = ['getnet_chargeback_detail_id', 'sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'adjustment_amount', 'chargeback_amount', 'body', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['getnet_chargeback_detail_id', 'sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'chargeback_amount', 'body', 'created_at', 'updated_at', 'deleted_at'];
 
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function getnetChargebackDetail()
+    {
+        return $this->belongsTo(GetnetChargebackDetail::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
