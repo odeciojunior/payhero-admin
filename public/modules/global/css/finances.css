@@ -383,3 +383,8 @@ strong span {
     flex: 0 0 50%;
     max-width: 50%;
 }
+
+.s-config {
+    position: absolute;
+    right: 10px;
+}
