@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s4') }}">
     <style>
         .popover {
             left: -50px !important;
@@ -84,23 +84,6 @@
                              aria-labelledby="nav-home-tab"
                         >
                             <div class="row justify-content-start align-items-center">
-                                <div class="col-12 mb-3">
-                                    <div class="alert alert-info alert-dismissible fade show text-center" id=''
-                                         role="alert" style="background: #DCECFF 0% 0% no-repeat padding-box;
-                                            border: 2px solid #4A89F5;
-                                            border-radius: 15px;
-                                            opacity: 1;">
-                                        <strong>ATENÇÃO!</strong><br> Após a liberação do saque, o prazo para a iniciar
-                                        a
-                                        liquidação é de 2 dias úteis.
-                                        <br>
-                                        As informações necessárias podem ser acompanhadas na tela Finanças > Extrato >
-                                        Agenda Financeira.
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                </div>
                                 <div class="col-8 mb-3">
                                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
                                          role="alert" style='display:none;'>
@@ -235,6 +218,7 @@
                                                 transferido
                                             </th>
                                             <th scope="col">Status</th>
+                                            <td cscope="col"> &nbsp;</td>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
@@ -502,6 +486,10 @@
         </div>
         {{-- End Modal --}}
 
+    <!-- Modal detalhes da transação-->
+        @include('finances::details')
+    <!-- End Modal -->
+
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
@@ -511,7 +499,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=222333'. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=2223334'. uniqid()) }}"></script>
         @endpush
     </div>
 

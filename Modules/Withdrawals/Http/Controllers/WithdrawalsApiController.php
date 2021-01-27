@@ -5,7 +5,9 @@ namespace Modules\Withdrawals\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
@@ -13,9 +15,13 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Withdrawals\Transformers\WithdrawalTransactionsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
+use PDOException;
 
 class WithdrawalsApiController
 {
@@ -139,55 +145,64 @@ class WithdrawalsApiController
                 $isFirstUserWithdrawal = true;
             }
 
-            $withdrawal = $withdrawalModel->create(
-                [
-                    'value' => $withdrawalValue,
-                    'company_id' => $company->id,
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'agency_digit' => $company->agency_digit,
-                    'account' => $company->account,
-                    'account_digit' => $company->account_digit,
-                    'status' => $withdrawalModel->present()->getStatus(
-                        $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                    ),
-                    'tax' => 0,
-                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    'automatic_liquidation' => true,
-                ]
-            );
+            try {
+                DB::beginTransaction();
+                $withdrawal = $withdrawalModel->create(
+                    [
+                        'value' => $withdrawalValue,
+                        'company_id' => $company->id,
+                        'bank' => $company->bank,
+                        'agency' => $company->agency,
+                        'agency_digit' => $company->agency_digit,
+                        'account' => $company->account,
+                        'account_digit' => $company->account_digit,
+                        'status' => $withdrawalModel->present()->getStatus(
+                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
+                        ),
+                        'tax' => 0,
+                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                        'automatic_liquidation' => true,
+                    ]
+                );
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
+                $transactionsSum = $company->transactions()
+                    ->whereIn('gateway_id', [14, 15])
+                    ->where('is_waiting_withdrawal', 1)
+                    ->whereNull('withdrawal_id')
+                    ->orderBy('id');
 
-            $currentValue = 0;
+                $currentValue = 0;
 
-            $transactionsSum->chunkById(
-                2000,
-                $test = function ($transactions) use (
-                    $currentValue,
-                    $withdrawalValue,
-                    $withdrawal
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
+                $transactionsSum->chunkById(
+                    2000,
+                    $test = function ($transactions) use (
+                        $currentValue,
+                        $withdrawalValue,
+                        $withdrawal
+                    ) {
+                        foreach ($transactions as $transaction) {
+                            $currentValue += $transaction->value;
 
-                        if ($currentValue <= $withdrawalValue) {
-                            $transaction->update(
-                                [
-                                    'withdrawal_id' => $withdrawal->id,
-                                    'is_waiting_withdrawal' => false
-                                ]
-                            );
+                            if ($currentValue <= $withdrawalValue) {
+                                $transaction->update(
+                                    [
+                                        'withdrawal_id' => $withdrawal->id,
+                                        'is_waiting_withdrawal' => false
+                                    ]
+                                );
+                            }
                         }
                     }
-                }
-            );
+                );
 
-            $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+                $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+
+                DB::commit();
+            } catch (PDOException $e) {
+                DB::rollBack();
+                report($e);
+                return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
+            }
 
             event(new WithdrawalRequestEvent($withdrawal));
 
@@ -271,6 +286,194 @@ class WithdrawalsApiController
             report($e);
 
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+        }
+    }
+
+    public function getTransactionsByBrand($id)
+    {
+
+        try {
+
+            $withdrawalId = current(Hashids::decode($id));
+            $withdrawalModel = new Withdrawal();
+
+            if (empty($withdrawalId)) {
+                return response()->json(['message' => 'Erro ao exibir detalhes do saque'], 400);
+            }
+
+            $withdrawal = $withdrawalModel->with('company')->find($withdrawalId);
+            if (FoxUtils::isProduction()) {
+                $subsellerGetnetId = $withdrawal->company->subseller_getnet_id;
+            } else {
+                $subsellerGetnetId = $withdrawal->company->subseller_getnet_homolog_id;
+            }
+
+            if (!Gate::allows('edit', [$withdrawal->company])) {
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para visualizar saques',
+                    ],
+                    403
+                );
+            }
+
+            $transactions = Transaction::with('sale')->with('company')->where('withdrawal_id', $withdrawalId)->get();
+
+            $arrayBrands = [];
+            $total_withdrawal = 0;
+
+            foreach ($transactions as $transaction) {
+
+                $total_withdrawal += $transaction->value;
+
+                if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
+                    $transaction->sale->flag = 'generico';
+               }
+                elseif ($transaction->sale->payment_method == 2) {
+                    $transaction->sale->flag = 'boleto';
+               }
+
+                if ( !$transaction->gateway_transferred  and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8 )) {
+
+                    $getNetBackOfficeService = new GetnetBackOfficeService();
+
+                    $getNetBackOfficeService->setStatementSubSellerId($subsellerGetnetId)
+                        ->setStatementSaleHashId($transaction->sale->hash_id);
+
+                    $originalResult = $getNetBackOfficeService->getStatement();
+
+                    $gatewaySale = json_decode($originalResult);
+                    if (!empty($gatewaySale->list_transactions[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                    ) {
+                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = date("d/m/Y", strtotime($date));
+
+                        $transaction->update(
+                            [
+                                'gateway_transferred' => true,
+                            ]
+                        );
+
+                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date );
+
+                    } else {
+
+                        $this->updateArrayBrands($arrayBrands, $transaction, false );
+                    }
+                }
+                else {
+                    $this->updateArrayBrands($arrayBrands, $transaction, true );
+                }
+
+            }
+
+            $arrayTransactions = [];
+
+            foreach ($arrayBrands as $arrayBrand) {
+
+                if ($arrayBrand['liquidated'] == true and  empty($arrayBrand['date'])) {
+
+                    $subSeller = $subsellerGetnetId;
+
+                    $getNetBackOfficeService = new GetnetBackOfficeService();
+
+                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+                        ->setStatementSaleHashId($arrayBrand['hash_id']);
+
+
+                    $originalResult = $getNetBackOfficeService->getStatement();
+
+                    $gatewaySale = json_decode($originalResult);
+                    if (!empty($gatewaySale->list_transactions[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                    ) {
+                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = date("d/m/Y", strtotime($date));
+
+                        $arrayBrand['date'] = $date;
+                    }
+                }
+                //dd($arrayBrand);
+                $arrayTransactions[] = [
+                    'brand' => $arrayBrand['brand'],
+                    'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
+                    'liquidated' => $arrayBrand['liquidated'],
+                    'date' =>  $arrayBrand['date'] ?? ' - ',
+                ];
+            }
+
+
+            $return = [
+                'id' => $id,
+                'date_request' => $withdrawal->created_at->format('d/m/Y'),
+                'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
+                'transactions' =>  $arrayTransactions,
+            ];
+
+            return response()->json($return, 200);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+
+
+    }
+
+    public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {
+
+        if (array_key_exists($transaction->sale->flag,$arrayBrands))
+        {
+            if (!$isLiquidated) {
+                $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
+            }
+
+            $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
+        }
+        else
+        {
+            $arrayBrands[$transaction->sale->flag] = [
+                'brand' => $transaction->sale->flag,
+                'value' => $transaction->value,
+                'liquidated' => $isLiquidated,
+                'date' =>  $date,
+                'hash_id' => $transaction->sale->hash_id,
+
+            ];
+        }
+
+    }
+
+    public function getTransactions(Request $request, $id)
+    {
+        try {
+            $dataRequest = \request()->all();
+            $withdrawalId = current(Hashids::decode($id));
+
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+//
+            $user = auth()->user();
+            $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
+            //Excel::store(new WithdrawalsReportExport($withdrawalId, $user, $email, $filename), $filename);
+
+            (new WithdrawalsReportExport($withdrawalId, $user, $email, $filename))
+                ->queue($filename)->allOnQueue('high');
+
+           return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
+
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => $e->getMessage()]);
         }
     }
 }
