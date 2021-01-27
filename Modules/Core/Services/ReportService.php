@@ -1058,7 +1058,7 @@ class ReportService
             }
 
             $startDate = Carbon::now()->subMonth()->format('Y-m-d');
-            $endDate   = Carbon::now()->format('Y-m-d');
+            $endDate   = Carbon::now()->addDay()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
                 ->leftJoin('transactions as transaction', function($join) use ($companyId) {
