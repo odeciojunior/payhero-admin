@@ -322,26 +322,6 @@ $(document).ready(function () {
         }
     }
 
-    function getCloudFoxReleases() {
-
-        $.ajax({
-            method: "GET",
-            url: "/api/dashboard/get-releases",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                updateReleases(response.releases);
-                // updateNews(response.news);
-            }
-        });
-    }
-
     // function verifyPendingData() {
     //     $.ajax({
     //         method: "GET",
@@ -439,7 +419,6 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
 
                     getDataDashboard();
-                    getCloudFoxReleases()
 
                 } else {
                     $("#project-empty").show();
