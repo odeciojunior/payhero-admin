@@ -676,3 +676,11 @@ a.label {
     border: 2px solid #26262633;
     color: #FFF;
 }
+
+.btn-config, .btn.btn-floating.btn-primary {
+    border-radius: 30px !important;
+}
+
+.wrap {
+    padding: 30px;
+}

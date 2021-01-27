@@ -57,35 +57,35 @@
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
                 </div>
             </div>
-            <div class="card shadow">
-                {{-- TABS --}}
-                <nav class="pt-20" id="menu-tabs-view" style="display:none;">
-                    <div class="nav-tabs-horizontal">
-                        <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active nav-link-finances-hide-export"
-                               id="nav-home-tab"
-                               data-toggle="tab"
-                               href="#nav-transfers"
-                               role="tab"
-                               aria-controls="nav-home"
-                               aria-selected="true"
-                               style="display:none"
-                            >
-                                Transferências
-                            </a>
-                            <a class="nav-item nav-link nav-link-finances-show-export"
-                               id="nav-profile-tab"
-                               data-toggle="tab"
-                               href="#nav-extract"
-                               role="tab"
-                               aria-controls="nav-profile"
-                               aria-selected="true"
-                            >
-                                Extrato
-                            </a>
-                        </div>
+            {{-- TABS --}}
+            <nav class="pt-20" id="menu-tabs-view" style="display:none;">
+                <div class="nav-tabs-horizontal">
+                    <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active nav-link-finances-hide-export"
+                           id="nav-home-tab"
+                           data-toggle="tab"
+                           href="#nav-transfers"
+                           role="tab"
+                           aria-controls="nav-home"
+                           aria-selected="true"
+                           style="display:none"
+                        >
+                            Transferências
+                        </a>
+                        <a class="nav-item nav-link nav-link-finances-show-export"
+                           id="nav-profile-tab"
+                           data-toggle="tab"
+                           href="#nav-extract"
+                           role="tab"
+                           aria-controls="nav-profile"
+                           aria-selected="true"
+                        >
+                            Extrato
+                        </a>
                     </div>
-                </nav>
+                </div>
+            </nav>
+            <div class="card shadow">
                 {{-- TABS --}}
                 <div class="p-30 pt-20" id="tabs-view" style="display:none">
                     <div class="tab-content" id="nav-tabContent">

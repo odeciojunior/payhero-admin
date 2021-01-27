@@ -31,12 +31,9 @@ class OldWithdrawalResource extends JsonResource
 
         return [
             'id' => Hashids::encode($this->id),
-            'account_information_bank' => $accountName,
-            'account_information' => 'Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit . ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit,
-            'date_request' => $this->created_at->format('d/m/Y'),
-            'date_request_time' => $this->created_at->format('H:i:s'),
-            'date_release' => $this->release_date->format('d/m/Y'),
-            'date_release_time' => $this->release_date->format('H:i:s'),
+            'account_information' => $accountName . ' - Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit . ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit,
+            'date_request' => $this->created_at->format('d/m/Y H:i:s'),
+            'date_release' => $this->resource->present()->getDateReleaseFormatted($this->release_date),
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status' => $this->status,
             'status_translated' => Lang::get(

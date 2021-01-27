@@ -16,8 +16,8 @@
                     <h1 class="page-title">Finanças</h1>
                 </div>
 
-                <div class="col-lg-6 text-right d-none" id="finances_export_btns">
-                    <div class="justify-content-end align-items-center" id="export-excel" style="">
+                <div class="col-lg-6 text-right" id="finances_export_btns" style="opacity: 0">
+                    <div id="export-excel">
                         <div class="p-2 d-flex justify-content-end align-items-center">
                                             <span id="bt_get_csv_default"
                                                   class="o-download-cloud-1 icon-export btn mr-2"></span>
@@ -41,7 +41,7 @@
             <nav id="menu-tabs-view">
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line align-items-center" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active nav-link-finances-hide-export mr-10"
+                        <a class="nav-item nav-link active nav-link-finances-hide-export"
                            id="nav-home-tab"
                            data-toggle="tab"
                            href="#nav-transfers"

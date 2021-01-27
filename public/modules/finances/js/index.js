@@ -216,7 +216,7 @@ $(document).ready(function () {
                     <span
                         class="currency"
                         style="
-                                font: normal normal 300 19px/13px Roboto;
+                                font-size: 13px;
                                 color: #E61A1A;"
                         >
                             - R$
@@ -224,7 +224,7 @@ $(document).ready(function () {
                         <span
                             class="debit-balance"
                             style="
-                                font: normal normal bold 34px/18px Roboto;
+                                font-weight: bold;
                                 letter-spacing: 0.07px;
                                 color: #E61A1A;"
                         >
@@ -238,7 +238,7 @@ $(document).ready(function () {
                 let withdrawalValue = $(".s-btn.green").text();
 
                 dataItensExtract += `
-                    
+
                 `;
                /* <div className="row" style="">
                     <div className='col-md-8 mt-10'>
@@ -285,8 +285,8 @@ $(document).ready(function () {
                 </div>*/
                 if (response.data.itens.length > 0) {
                     dataItensExtract += `
-                        
-                         
+
+
                     `;
 
                     $("#debit-itens").html(dataItensExtract);
@@ -754,7 +754,8 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html("<tr><td colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").append("<tr><td colspan='6' class='text-center' style='height: 200px'></td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -1437,11 +1438,11 @@ $(document).ready(function () {
 
 
     $(".nav-link-finances-show-export").on("click", function () {
-        $("#finances_export_btns").removeClass('d-none');
+        $("#finances_export_btns").css('opacity' , 100);
     });
 
     $(".nav-link-finances-hide-export").on("click", function () {
-        $("#finances_export_btns").addClass('d-none');
+        $("#finances_export_btns").css('opacity' , 0);
     });
 
     $('.btn-light-1').click(function () {

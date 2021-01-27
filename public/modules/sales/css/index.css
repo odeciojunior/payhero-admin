@@ -132,3 +132,14 @@
 .page-content {
     padding: 0 30px;
 }
+
+.badge {
+    color: white;
+    padding: 5px 15px !important;
+    border-radius: 16px;
+    font-weight: 700;
+}
+
+.badge.badge-success {
+    background-color: #5EE2A1;
+}
