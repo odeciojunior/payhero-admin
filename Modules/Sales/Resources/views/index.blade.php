@@ -32,6 +32,17 @@
             .select2-container--open .select2-selection__arrow b {
                 border-color: transparent transparent #8f9ca2 transparent !important;
             }
+
+            .badge {
+                color: white;
+                padding: 5px 15px !important;
+                border-radius: 16px;
+                font-weight: 700;
+            }
+
+            .badge.badge-success  {
+                background-color: #5EE2A1;
+            }
         </style>
     @endpush
 

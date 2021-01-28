@@ -103,7 +103,7 @@ $(document).ready(function () {
             success: (response) => {
                 if (isEmpty(response.data)) {
                     $('.page-content').hide();
-                    $('.content-error').show();
+                    $('#empty-companies-error').show();
                     loadingOnScreenRemove();
                     return;
                 }
@@ -111,6 +111,7 @@ $(document).ready(function () {
                 let itsApprovedTransactGetnet = false;
 
                 $('.page-content').show();
+                $('#menu-tabs-view').show();
                 $('.content-error').hide();
 
                 $(response.data).each(function (index, value) {
@@ -538,7 +539,7 @@ $(document).ready(function () {
                                 class="btn col-5 s-btn-border"
                                 data-dismiss="modal"
                                 aria-label="Close"
-                                style="font-size:20px; width:200px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                                style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
                                 Ok, entendi!
                             </button>
                         </div>
@@ -755,7 +756,7 @@ $(document).ready(function () {
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
                         $("#withdrawals-table-data").html("<tr><td colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
-                        $("#withdrawals-table-data").append("<tr><td colspan='6' class='text-center' style='height: 200px'></td></tr>");
+                        $("#withdrawals-table-data").append("<tr><td colspan='6' class='text-center' style='height: 150px'></td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -770,7 +771,7 @@ $(document).ready(function () {
                                             <td class="text-sm-right text-md-left" style="grid-area: status" class="shipping-status">
                                                 <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
                                             </td>
-                                            <td class="text-sm-right text-md-center" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong></td>
+                                            <td class="text-sm-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong></td>
                                             <td class="d-sm-none d-md-block">
                                                 <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
                                                     <span class='o-eye-1'></span>
@@ -987,7 +988,7 @@ $(document).ready(function () {
                     updateClassHTML(dataTable);
                 });
 
-                let totalInPeriod = response.totalInPeriod;
+                let totalInPeriod = response.totalInPeriod ?? '0,00';
 
                 let isNegativeStatement = false;
                 if (totalInPeriod < 1) {
