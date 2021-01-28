@@ -2,20 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Services\WithdrawalsService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -70,7 +65,7 @@ class CheckAutomaticWithdrawals extends Command
 
                 $withdrawalValue = null;
                 if ($settings->rule == WithdrawalSettings::RULE_AMOUNT) {
-                    if ($availableBalance > $withdrawalValue) {
+                    if ($availableBalance >= $settings->amount) {
                         $withdrawalValue = $availableBalance;
                     }
                 } else if ($settings->rule == WithdrawalSettings::RULE_PERIOD) {
