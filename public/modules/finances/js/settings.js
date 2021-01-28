@@ -66,6 +66,7 @@ $(document).ready(function () {
     var withdrawalAmount = $('#withdrawal_amount')
 
     var getSettings = function (companyId, settingsId = null, notify = false) {
+        clearSettingsForm()
         $.ajax({
             method: "GET",
             url: '/api/withdrawals/settings/' + companyId + (settingsId ? '/' + settingsId : ''),
