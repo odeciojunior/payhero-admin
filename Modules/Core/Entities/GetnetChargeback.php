@@ -33,7 +33,7 @@ class GetnetChargeback extends Model
     /**
      * @var array
      */
-    protected $fillable = ['getnet_chargeback_detail_id', 'sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'chargeback_amount', 'body', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'chargeback_amount', 'body', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return BelongsTo
@@ -41,14 +41,6 @@ class GetnetChargeback extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function getnetChargebackDetail()
-    {
-        return $this->belongsTo(GetnetChargebackDetail::class);
     }
 
     /**
