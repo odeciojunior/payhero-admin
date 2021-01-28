@@ -61,7 +61,7 @@
                         >
                             Agenda Financeira
                         </a>
-<!--                        <a class="nav-item nav-link s-config"
+                        <a class="nav-item nav-link s-config"
                            id="nav-settings-tab"
                            data-toggle="tab"
                            href="#nav-settings"
@@ -70,7 +70,7 @@
                            aria-selected="true"
                         >
                             <img height="20" width="20" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                        </a>-->
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -702,6 +702,7 @@
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 
