@@ -21,7 +21,7 @@ class GetnetChargebackDetail extends Model
     /**
      * @var array
      */
-    protected $fillable = ['filters', 'body', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['filters', 'getnet_chargeback_id', 'body', 'created_at', 'updated_at', 'deleted_at'];
 
 
 }
