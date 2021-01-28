@@ -10,20 +10,22 @@ class PendingDebt extends Model
 {
     use LogsActivity;
 
+    const REVERSED = 'REVERSED';
+    const ADJUSTMENT = 'ADJUSTMENT';
+
     protected $keyType = 'integer';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
-        'value',
-        'reason',
+        'company_id',
         'sale_id',
-        'withdrawal_id'
+        'type',
+        'request_date',
+        'closing_date',
+        'confirm_date',
+        'payment_date',
+        'reason',
+        'amount',
     ];
-
 
     protected static bool $logFillable = true;
 
