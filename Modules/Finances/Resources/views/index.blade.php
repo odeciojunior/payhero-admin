@@ -20,7 +20,8 @@
                     <div id="export-excel">
                         <div class="p-2 d-flex justify-content-end align-items-center">
                                             <span id="bt_get_csv_default"
-                                                  class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                                  class="o-download-cloud-1 icon-export btn mr-2"
+                                                  style="cursor: default"></span>
                             <div class="btn-group" role="group">
                                 <button style="border-radius: 16px 0 0 16px" id="bt_get_sale_xls" type="button"
                                         class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
@@ -102,7 +103,7 @@
                                         <div class='row align-items-center my-20 py-20 d-none d-md-flex' style="position: relative">
                                             <div class="col-sm-3">
                                                 <div id="div-available-money" class="price-holder pointer pl-10">
-                                                    <h6 class="label-price mb-10"> <b> Saldo Disponível. </b> </h6>
+                                                    <h6 class="label-price mb-10"> <b> Saldo Disponível </b> </h6>
                                                     <h4 class="price saldoDisponivel"></h4>
                                                 </div>
                                                 <div class="s-border-left green"></div>
@@ -463,16 +464,16 @@
                             <table id="statementTable" class="table table-condensed unify table-striped">
                                 <thead>
                                 <tr>
-                                    <th scope="col" class="headCenter" style="width:30%">Razão</th>
-                                    <th scope="col" class="headCenter" style="width:30%">Data prevista
+                                    <th scope="col" class="headCenter">Razão</th>
+                                    <th scope="col" class="headCenter">Data prevista
                                         <i style="font-weight: normal"
                                            class="o-question-help-1 ml-5 font-size-14"
                                            data-toggle="tooltip"
                                            title=""
                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
                                     </th>
-                                    <th scope="col" class="headCenter" style="width:30%">Status</th>
-                                    <th scope="col" class="headCenter" style="width:10%">Valor</th>
+                                    <th scope="col" class="headCenter">Status</th>
+                                    <th scope="col" class="headCenter">Valor</th>
                                 </tr>
                                 </thead>
                                 <tbody id="table-statement-body"
@@ -623,10 +624,9 @@
                     </div>
                 </div>
             </div>
-
+        </div>
             @include('companies::empty')
             @include('companies::not_company_approved_getnet')
-        </div>
 
         <!-- Modal exportar relatorio -->
         <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog"
