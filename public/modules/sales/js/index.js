@@ -298,7 +298,7 @@ $(document).ready(function () {
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
                                     <td>
-                                       <div class="d-flex align-items-center">
+                                       <div class="text-sm-center text-md-left">
                                             <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
                                                ${value.is_chargeback_recovered && value.status_translate === 'Aprovado' ? `
                                                 <img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
