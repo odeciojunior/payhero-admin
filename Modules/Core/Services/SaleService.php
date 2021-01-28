@@ -40,6 +40,7 @@ class SaleService
             }
 
             $userCompanies = $companyModel->where('user_id', $userId)
+                ->get()
                 ->pluck('id')
                 ->toArray();
 
