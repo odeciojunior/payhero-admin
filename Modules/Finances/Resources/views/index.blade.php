@@ -517,7 +517,8 @@
                                                             </label>
                                                         </h5>
                                                         <p class="p-0 m-0">
-                                                            Crie um saque automático de frequência diária, semanal ou mensal
+                                                            Crie um saque automático de frequência diária, semanal ou mensal.
+                                                            O valor será automaticamente solicitado quando superior a R$ 100,00.
                                                         </p>
                                                         <br/>
                                                         <p class="mb-0">Frequência</p>
