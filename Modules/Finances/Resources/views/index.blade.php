@@ -12,7 +12,7 @@
         <div style="display: none" class="page-header container">
             <div class="row align-items-center">
                 <div class="col-6 col-10">
-                    <h1 class="page-title truncate">Finanças</h1>
+                    <h1 class="page-title truncate" style="height: 32px;">Finanças</h1>
                 </div>
 
                 <div class="col-1 text-right" id="finances_export_btns" style="opacity: 0">
