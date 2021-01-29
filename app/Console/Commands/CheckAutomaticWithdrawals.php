@@ -2,20 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Services\WithdrawalsService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -55,6 +50,8 @@ class CheckAutomaticWithdrawals extends Command
         $withdrawalSettingsModel = new WithdrawalSettings();
         $withdrawalsSettings = $withdrawalSettingsModel->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
 
+        settings()->group('withdrawal_request')->set('withdrawal_request', false);
+
         foreach ($withdrawalsSettings as $settings) {
 
             try {
@@ -68,9 +65,9 @@ class CheckAutomaticWithdrawals extends Command
                     CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
                 );
 
-                $withdrawalValue = null;
+                $withdrawalValue = 0;
                 if ($settings->rule == WithdrawalSettings::RULE_AMOUNT) {
-                    if ($availableBalance > $withdrawalValue) {
+                    if ($availableBalance >= $settings->amount) {
                         $withdrawalValue = $availableBalance;
                     }
                 } else if ($settings->rule == WithdrawalSettings::RULE_PERIOD) {
@@ -83,16 +80,19 @@ class CheckAutomaticWithdrawals extends Command
                     }
                 }
 
-                if ($withdrawalValue > 0) {
+                if ($withdrawalValue >= 10000) {
                     $withdrawal = $service->requestWithdrawal($company, $withdrawalValue);
                     event(new WithdrawalRequestEvent($withdrawal));
                 }
 
                 DB::commit();
             } catch (\Exception $e) {
+                report($e);
                 DB::rollBack();
             }
         }
+
+        settings()->group('withdrawal_request')->set('withdrawal_request', true);
 
         return 0;
     }
