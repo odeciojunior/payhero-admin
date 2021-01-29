@@ -50,6 +50,8 @@ class CheckAutomaticWithdrawals extends Command
         $withdrawalSettingsModel = new WithdrawalSettings();
         $withdrawalsSettings = $withdrawalSettingsModel->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
 
+        settings()->group('withdrawal_request')->set('withdrawal_request', false);
+
         foreach ($withdrawalsSettings as $settings) {
 
             try {
@@ -63,7 +65,7 @@ class CheckAutomaticWithdrawals extends Command
                     CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
                 );
 
-                $withdrawalValue = null;
+                $withdrawalValue = 0;
                 if ($settings->rule == WithdrawalSettings::RULE_AMOUNT) {
                     if ($availableBalance >= $settings->amount) {
                         $withdrawalValue = $availableBalance;
@@ -78,16 +80,19 @@ class CheckAutomaticWithdrawals extends Command
                     }
                 }
 
-                if ($withdrawalValue > 0) {
+                if ($withdrawalValue >= 10000) {
                     $withdrawal = $service->requestWithdrawal($company, $withdrawalValue);
                     event(new WithdrawalRequestEvent($withdrawal));
                 }
 
                 DB::commit();
             } catch (\Exception $e) {
+                report($e);
                 DB::rollBack();
             }
         }
+
+        settings()->group('withdrawal_request')->set('withdrawal_request', true);
 
         return 0;
     }

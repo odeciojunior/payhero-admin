@@ -204,8 +204,6 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
             }
 
-            event(new WithdrawalRequestEvent($withdrawal));
-
             return response()->json(['message' => 'Saque pendente'], 200);
         } catch (Exception $e) {
             report($e);

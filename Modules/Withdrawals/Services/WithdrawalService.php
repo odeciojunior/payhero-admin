@@ -33,7 +33,7 @@ class WithdrawalService
         if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')) {
             throw new \Exception('O valor total da operação difere do valor solicitado');
         }
-        $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+        //$withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
 
         return $withdrawal;
     }
