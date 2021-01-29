@@ -1174,4 +1174,10 @@ $(document).ready(function () {
             text.text('Filtros avançados').fadeIn()
         }
     })
+
+    $('#pagination-statement').click(function () {
+        setTimeout(function() {
+            $('.s-table').attr('style', 'display: !')
+        }, 100);
+    })
 });

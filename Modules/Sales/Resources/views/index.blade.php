@@ -211,7 +211,7 @@
                                         <h5 class="gray font-size-16"> Quantidade de vendas </h5>
                                         <h4 id="total-sales" class="number"></h4>
                                     </div>
-                                    <div class="card-bottom green"></div>
+                                    <div class="s-border-right green"></div>
                                 </div>
                             </div>
 
@@ -221,7 +221,7 @@
                                             <h5 class="gray font-size-16"> Comissão </h5>
                                             <h4 id="commission" class="number"></h4>
                                         </div>
-                                        <div class="card-bottom green"></div>
+                                        <div class="s-border-right green"></div>
                                     </div>
                                 </div>
 
@@ -231,7 +231,7 @@
                                         <h5 class="gray font-size-16"> Total</h5>
                                         <h4 id="total" class="number"></h4>
                                     </div>
-                                    <div class="card-bottom green"></div>
+                                    <div class="s-border-right green"></div>
                                 </div>
                             </div>
 
