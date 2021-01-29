@@ -179,14 +179,14 @@ $(document).ready(function () {
             },
             error: response => {
                 errorAjaxResponse(response);
-                $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+                $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
             },
             success: response => {
                 if (response.allowed) {
-                    $('#bt-withdrawal').prop('disabled', false).removeClass('disabled');
+                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
                     $('#blocked-withdrawal').hide();
                 } else {
-                    $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
                     $('#blocked-withdrawal').show();
                 }
             }
@@ -405,8 +405,8 @@ $(document).ready(function () {
         }
 
         // Fazer saque
-        $('#bt-withdrawal').unbind("click");
-        $('#bt-withdrawal').on('click', function () {
+        $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
+        $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
             let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
             let availableBalance = parseInt(availableBalanceText);

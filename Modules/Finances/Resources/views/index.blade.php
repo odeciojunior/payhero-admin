@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05') }}">
 @endpush
 
 @section('content')
@@ -51,7 +51,7 @@
                         >
                             Transferências
                         </a>
-                        <a class="truncate nav-item nav-link nav-link-finances-show-export mr-10"
+                        <a class="truncate nav-item nav-link nav-link-finances-show-export"
                            id="nav-statement-tab"
                            data-toggle="tab"
                            href="#nav-statement"
@@ -69,7 +69,7 @@
                            aria-controls="nav-settings"
                            aria-selected="true"
                         >
-                            <img height="20" width="20" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                            <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                         </a>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <button id="bt-withdrawal"
+                                                <button id="bt-withdrawal_m"
                                                         class="btn btn-success btn-sacar"
                                                         data-toggle="modal">
                                                     Sacar dinheiro
@@ -700,7 +700,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=01'. uniqid()) }}"></script>
             <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
