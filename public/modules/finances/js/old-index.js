@@ -756,7 +756,7 @@ $(document).ready(function () {
         var email = $('#email_finance_export').val();
 
         if( email == '' || !regexEmail.test(email) ) {
-            alertCustom('error', 'Preencha o email corretamente');
+            alertCustom('error', 'Preencha o e-mail corretamente');
             return false;
         } else {
             extractExport('xls', email);

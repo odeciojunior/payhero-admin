@@ -200,3 +200,15 @@
 .fill-red {
     fill: #cb4a2d;
 }
+
+.transaction-status > span.is-released-on {
+    width: 14px;
+    height: 14px;
+    background: #5EE2A1;
+}
+
+.transaction-status > span.is-released-off {
+    width: 14px;
+    height: 14px;
+    background: #F79E1B;
+}

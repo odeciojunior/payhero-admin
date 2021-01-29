@@ -197,7 +197,7 @@
 }
 
 .nav-link {
-    font-size: 14px !important;
+    font-size: 12px !important;
     border-radius: 8px 8px 0 0 !important;
     padding: 15px;
 }
@@ -294,12 +294,6 @@ strong span {
     border-radius: 0 16px 16px 16px;
 }
 
-.col-sm-6 {
-    -ms-flex: 0 0 50%;
-    flex: 0 0 50%;
-    max-width: 50%;
-}
-
 .s-config {
     position: absolute;
     right: 10px;
@@ -330,10 +324,7 @@ strong span {
 .nav-tabs .nav-link.active {
     color: #599EF0 !important;
     border-bottom-color: #599EF0;
-}
-
-.nav-tabs .nav-link.active {
-    margin: 0 10px;
+    margin: 0 5px;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -346,7 +337,12 @@ select, .select-pad {
     border-radius: 10px;
 }
 
-/*MOBILE*/
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*MOBILE SM*/
 @media (max-width: 767px) {
     .s-table {
         padding: 20px !important;
@@ -417,6 +413,7 @@ select, .select-pad {
 
     .bold-mobile {
         font-weight: normal;
+        font-size: 14px;
     }
 
     .btn-sacar {
@@ -432,6 +429,46 @@ select, .select-pad {
 
     table.unify tr {
         display: grid;
+    }
+
+    .text-xs-right {
+        text-align: right !important;
+    }
+
+    .text-xs-left {
+        text-align: left !important;
+    }
+
+    .text-xs-center {
+        text-align: center !important;
+    }
+
+    .pl-0 {
+        padding-right: 5px
+    }
+
+    .pr-0 {
+        padding-left: 5px
+    }
+}
+
+/*MOBILE SM*/
+@media (max-width: 575.98px) {
+    .price {
+        font-size: 16px;
+    }
+
+    .font-md-size-18 {
+        font-size: 14px !important
+    }
+
+    .font-md-size-20 {
+        font-size: 10px !important
+    }
+
+    .btn-light-1, .btn-primary-1, .btn-success-1 {
+        font-size: 12px !important;
+        flex-wrap: wrap;
     }
 }
 

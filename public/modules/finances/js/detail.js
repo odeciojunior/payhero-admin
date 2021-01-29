@@ -106,7 +106,7 @@ $(() => {
             var email = $('#email_finance_export_transfer').val();
 
             if( email == '' || !regexEmail.test(email) ) {
-                alertCustom('error', 'Preencha o email corretamente');
+                alertCustom('error', 'Preencha o e-mail corretamente');
                 return false;
             } else {
                 financesGetnetExport(exportFinanceFormat);
