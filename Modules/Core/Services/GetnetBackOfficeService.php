@@ -313,8 +313,6 @@ class GetnetBackOfficeService extends GetnetService
                     $summary = $item->summary;
                     $details = $item->details[0];
 
-                    //if (empty($details->subseller_rate_confirm_date)) {
-
                     $amount = $details->subseller_rate_amount / 100;
                     $amount = $details->transaction_sign == '-' ? ($amount * -1) : $amount;
 
@@ -375,10 +373,7 @@ class GetnetBackOfficeService extends GetnetService
                             $statementItems[] = $statementItem;
 
                         }
-
                     }
-                    //}
-
                 }
             }
         }
@@ -446,17 +441,17 @@ class GetnetBackOfficeService extends GetnetService
 
             PendingDebt::updateOrCreate([
                 'company_id' => $company->id,
-                'sale_id' => null,
+                'sale_id' => $item->order->getSaleId(),
                 'type' => $item->type,
                 'reason' => $item->details->getDescription(),
                 'amount' => abs($item->amount * 100),
             ],
                 [
-                    'request_date' => $item->date ? Carbon::createFromFormat('d/m/Y', $item->date) : null,
+                    'request_date' => $item->transactionDate ? Carbon::createFromFormat('d/m/Y', $item->transactionDate) : null,
                     'closing_date' => null,
                     'confirm_date' => $item->subSellerRateConfirmDate ? Carbon::createFromFormat('d/m/Y',
                         $item->subSellerRateConfirmDate) : null,
-                    'payment_date' => null,
+                    'payment_date' => $item->date ? Carbon::createFromFormat('d/m/Y', $item->date) : null,
                 ]);
         }
 
