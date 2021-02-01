@@ -636,4 +636,13 @@ class CompanyService
             report($e);
         }
     }
+
+    public static function getSubsellerId(Company $company): string
+    {
+        if (FoxUtils::isProduction()) {
+            return $company->subseller_getnet_id;
+        }
+
+        return $company->subseller_getnet_homolog_id;
+    }
 }
