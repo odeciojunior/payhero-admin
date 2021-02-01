@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05') }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -86,7 +86,8 @@
                             <div class="card shadow py-15 px-0 px-md-15 mb-50">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
-                                        <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
+                                        <div class="alert alert-danger alert-dismissible fade show"
+                                             id='blocked-withdrawal'
                                              role="alert" style='display:none;'>
                                             <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
                                             informações.
@@ -99,10 +100,11 @@
                                         </p>
                                     </div>
                                     <div class='container bg-gray sirius-radius'>
-                                        <div class='row align-items-center my-20 py-20 d-none d-md-flex' style="position: relative">
+                                        <div class='row align-items-center my-20 py-20 d-none d-md-flex'
+                                             style="position: relative">
                                             <div class="col-sm-3">
                                                 <div id="div-available-money" class="price-holder pointer pl-10">
-                                                    <h6 class="label-price mb-10"> <b> Saldo Disponível </b> </h6>
+                                                    <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
                                                     <h4 class="price saldoDisponivel"></h4>
                                                 </div>
                                                 <div class="s-border-left green"></div>
@@ -118,7 +120,7 @@
                                             <div class="col-sm-3">
                                                 <label for="custom-input-addon"> Valor a transferir</label>
                                                 <div class="input-group mb-3 align-items-center input-custom-transfer">
-                                                    <div class="input-moeda">R$ </div>
+                                                    <div class="input-moeda">R$</div>
                                                     <input id="custom-input-addon" type="text"
                                                            class="form-control input-pad withdrawal-value"
                                                            placeholder="Digite o valor" aria-label="Digite o valor"
@@ -138,7 +140,7 @@
                                         <div class='row align-items-center justify-content-center my-20 py-20 bg-white d-md-none' style="position: relative; height: 255px">
                                             <div class="col-md-12">
                                                 <div id="div-available-money_m" class="price-holder pointer pl-10">
-                                                    <h6 class="label-price mb-10"> <b> Saldo Disponível </b> </h6>
+                                                    <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
                                                     <h4 class="price saldoDisponivel"></h4>
                                                 </div>
                                                 <div class="s-border-left green"></div>
@@ -147,7 +149,8 @@
                                                 <div class="col-md-12">
                                                     <div class="input-holder">
                                                         <label for="transfers_company_select_mobile"> Empresa</label>
-                                                        <select style='border-radius:10px' class="form-control select-pad"
+                                                        <select style='border-radius:10px'
+                                                                class="form-control select-pad"
                                                                 name="company"
                                                                 id="transfers_company_select_mobile"> </select>
                                                     </div>
@@ -155,7 +158,7 @@
                                                 <div class="col-md-12 mt-10">
                                                     <label for="custom-input-addon"> Valor a transferir</label>
                                                     <div class="input-group mb-3 align-items-center input-custom-transfer">
-                                                        <div class="input-moeda">R$ </div>
+                                                        <div class="input-moeda">R$</div>
                                                         <input id="custom-input-addon" type="text"
                                                                class="form-control input-pad withdrawal-value"
                                                                placeholder="Digite o valor" aria-label="Digite o valor"
@@ -259,7 +262,9 @@
                                     </div>
                                 </div>
 
-                                <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Histórico de transferências </h4>
+                                <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
+                                    Histórico de transferências
+                                </h4>
 
                                 <!-- Transferências -->
                                 <div class="tab-pane active"
@@ -277,7 +282,7 @@
                                             <th style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
                                             </th>
-                                            <th scope="col" class="d-none d-md-block"> &nbsp; </th>
+                                            <th scope="col" class="d-none d-md-block"> &nbsp;</th>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
@@ -309,13 +314,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 d-flex justify-content-start justify-content-lg-end" id="statement-money">
+                                    <div class="col-md-4 d-flex justify-content-start justify-content-lg-end"
+                                         id="statement-money">
                                         <div class="price-holder px-20 p-md-0" style="position: relative">
                                             <h6 class="label-price bold"> Saldo no período</h6>
                                             <h4 id="available-in-period-statement"
                                                 style="font-weight: 700;font-size: 25px;display: inline;">
                                             </h4>
-                                            <div style="height: 16px;" class="d-none d-md-block s-border-top green mb-15"></div>
+                                            <div style="height: 16px;"
+                                                 class="d-none d-md-block s-border-top green mb-15"></div>
                                             <div class="d-md-none s-border-left green mb-15"></div>
                                         </div>
                                     </div>
@@ -356,12 +363,15 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group form-icons">
                                                         <label for="date_range_statement">Período</label>
-                                                        <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                                        <i style="right: 20px;"
+                                                           class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
                                                         <input name="date_range_statement" id="date_range_statement"
-                                                               class="select-pad pr-30" placeholder="Clique para editar..." readonly>
+                                                               class="select-pad pr-30"
+                                                               placeholder="Clique para editar..." readonly>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 collapse bt-collapse d-md-block" id="bt_collapse_1">
+                                                <div class="col-md-3 collapse bt-collapse d-md-block"
+                                                     id="bt_collapse_1">
                                                     <div class="form-group">
                                                         <label for="payment_method">Forma de pagamento</label>
                                                         <select name='payment_method' id="payment_method"
@@ -373,7 +383,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 collapse bt-collapse d-md-block" id="bt_collapse_2">
+                                                <div class="col-md-3 collapse bt-collapse d-md-block"
+                                                     id="bt_collapse_2">
                                                     <div class="form-group">
                                                         <label for="statement_sale">
                                                             Transação <i style="font-weight: normal"
@@ -387,7 +398,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 collapse bt-collapse d-md-block" id="bt_collapse_3">
+                                                <div class="col-md-3 collapse bt-collapse d-md-block"
+                                                     id="bt_collapse_3">
                                                     <div class="input-holder form-group">
                                                         <label for="statement_status_select">Status</label>
                                                         <select class="form-control select-pad" name="status"
@@ -409,9 +421,11 @@
 
                                                 <div class="mt-30 col-md-4 d-none d-md-block">
                                                     <button id="bt_filtro_statement"
-                                                            class="btn btn-primary w-p90" style="height: 40px;width: 75%;">
+                                                            class="btn btn-primary w-p90"
+                                                            style="height: 40px;width: 75%;">
                                                         <img style="height: 12px; margin-right: 4px"
-                                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar Filtros
+                                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                                        Filtros
                                                     </button>
                                                 </div>
                                             </div>
@@ -419,12 +433,14 @@
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
                                                         <div class="col-6">
-                                                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
-                                                                 data-toggle="collapse"
-                                                                 data-target=".bt-collapse"
-                                                                 aria-expanded="false"
-                                                                 aria-controls="bt_collapse_1 bt_collapse_2 bt_collapse_3">
-                                                                <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                            <div
+                                                                class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                                                data-toggle="collapse"
+                                                                data-target=".bt-collapse"
+                                                                aria-expanded="false"
+                                                                aria-controls="bt_collapse_1 bt_collapse_2 bt_collapse_3">
+                                                                <img id="icon-filtro"
+                                                                     src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                                                 <span id="text-filtro">Filtros avançados</span>
                                                             </div>
                                                         </div>
@@ -433,7 +449,8 @@
                                                             <button id="bt_filtro_statement"
                                                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                                 <img style="height: 12px; margin-right: 4px"
-                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar Filtros
+                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                                                Filtros
                                                             </button>
                                                         </div>
                                                     </div>
@@ -443,13 +460,18 @@
                                     </div>
 
                                     <!-- Aviso de Exportação -->
-                                    <div id="alert-finance-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                                    <div id="alert-finance-export"
+                                         class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                                         style="display:none;">
                                         <div class="d-flex">
                                             <span class="o-info-help-1"></span>
                                             <div class="w-full">
                                                 <strong class="font-size-16">Exportando seu relatório</strong>
-                                                <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
-                                                    <strong id="export-finance-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                                                <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
+                                                    e-mail para:
+                                                    <strong id="export-finance-email"></strong> e aparecerá nas suas
+                                                    notificações. Pode levar algum tempo, dependendo de quantos
+                                                    registros você estiver exportando.
                                                 </p>
                                             </div>
                                             <i class="material-icons pointer" data-dismiss="alert">close</i>
@@ -504,7 +526,7 @@
                                         </div>
 
                                         <div class="row d-flex align-items-start p-20">
-                                            <div class="col-md-6">
+                                            <div class="col-12 col-md-6 mb-50">
                                                 <div class="card bg-light no-shadow mt-30">
                                                     <div class="card-body">
                                                         <h5 class="title-pad">
@@ -517,8 +539,10 @@
                                                             </label>
                                                         </h5>
                                                         <p class="p-0 m-0">
-                                                            Crie um saque automático de frequência diária, semanal ou mensal.
-                                                            O valor será automaticamente solicitado quando superior a R$ 100,00.
+                                                            Crie um saque automático de frequência diária, semanal ou
+                                                            mensal.
+                                                            O valor será automaticamente solicitado quando superior a R$
+                                                            100,00.
                                                         </p>
                                                         <br/>
                                                         <p class="mb-0">Frequência</p>
@@ -540,25 +564,38 @@
                                                             </button>
                                                         </div>
 
-                                                        <div class="weekdays-container d-flex align-items-center justify-content-between flex-wrap mt-20">
-                                                            <button type="button" class="btn p-15" data-weekday="1">SEG</button>
-                                                            <button type="button" class="btn p-15" data-weekday="2">TER</button>
-                                                            <button type="button" class="btn p-15" data-weekday="3">QUA</button>
-                                                            <button type="button" class="btn p-15" data-weekday="4">QUI</button>
-                                                            <button type="button" class="btn p-15" data-weekday="5">SEX</button>
-                                                            <button type="button" class="btn p-15" data-weekday="6">SAB</button>
-                                                            <button type="button" class="btn p-15" data-weekday="0">DOM</button>
+                                                        <div
+                                                            class="weekdays-container d-flex align-items-center justify-content-between mt-20">
+                                                            <button type="button" class="btn py-15" data-weekday="1">
+                                                                SEG
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="2">
+                                                                TER
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="3">
+                                                                QUA
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="4">
+                                                                QUI
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="5">
+                                                                SEX
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="6">
+                                                                SAB
+                                                            </button>
+                                                            <button type="button" class="btn py-15" data-weekday="0">
+                                                                DOM
+                                                            </button>
                                                         </div>
-                                                        <div class="day-container d-none flex-column mt-20">
-                                                            <p class="mb-0">Dia do <b>mês</b></p>
-                                                            <select style='border-radius:10px' class="form-control select-pad"
-                                                                    name="day" id="settings_day">
-                                                                <option value="" selected>Selecione o melhor dia para o saque
-                                                                </option>
-                                                                @foreach ([1, 5, 10, 15, 20, 25] as $day)
-                                                                    <option value="{{$day}}">{{$day}}</option>
-                                                                @endforeach
-                                                            </select>
+                                                        <div
+                                                            class="day-container d-none align-items-center justify-content-between mt-20">
+                                                            @foreach (['01', '05', '10', '15', '20', '25', '30'] as $day)
+                                                                <button type="button" class="btn py-15"
+                                                                        data-day="{{$day}}">
+                                                                    {{$day}}
+                                                                </button>
+                                                            @endforeach
                                                         </div>
                                                         <br/>
                                                         <div class="row">
@@ -587,16 +624,19 @@
                                                             </label>
                                                         </h5>
                                                         <p class="p-0 m-0">
-                                                            Crie um saque automático quando o saldo disponível for superior ao
-                                                            valor informado abaixo. O valor deve ser superior a R$ 100,00.
+                                                            Crie um saque automático quando o saldo disponível for
+                                                            superior ao valor informado abaixo.
+                                                            <br/>O valor deve ser superior a R$ 100,00.
                                                         </p>
                                                         <br/>
                                                         <div class="input-group mb-3">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text">R$</span>
                                                             </div>
-                                                            <input id="withdrawal_amount" name="withdrawal_amount" type="text"
-                                                                   class="form-control" aria-label="Valor mínimo para saque">
+                                                            <input id="withdrawal_amount" name="withdrawal_amount"
+                                                                   type="text"
+                                                                   class="form-control"
+                                                                   aria-label="Valor mínimo para saque">
                                                             {{--<div class="input-group-append">--}}
                                                             {{--    <span class="input-group-text">.00</span>--}}
                                                             {{--</div>--}}
@@ -625,10 +665,10 @@
                 </div>
             </div>
         </div>
-            @include('companies::empty')
-            @include('companies::not_company_approved_getnet')
+        @include('companies::empty')
+        @include('companies::not_company_approved_getnet')
 
-        <!-- Modal exportar relatorio -->
+    <!-- Modal exportar relatorio -->
         <div id="modal-export-finance-getnet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog"
              tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-simple">
@@ -665,14 +705,15 @@
                             <div class="col-12">
                                 <div id="modal-body-withdrawal" class="col-12 mt-30">
 
-                               </div>
-                           </div>
+                                </div>
+                            </div>
                             <div id="debit-pending-informations" class="col-12 mt-20"
                                  style="display:none;background:  0 0 no-repeat padding-box;">
                                 <div class="col-12">
                                     <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                                    <p style="color: #959595;" class="text-center" id="text-description-debit-pending">Você tem alguns valores em aberto,
-                                        confira:</p>
+                                    <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
+                                        Você tem alguns valores em aberto, confira:
+                                    </p>
                                     <div id="debit-itens">
 
                                     </div>
@@ -701,7 +742,7 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=01'. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
             <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>

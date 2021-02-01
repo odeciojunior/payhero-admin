@@ -1,5 +1,34 @@
 $(document).ready(function () {
 
+    //Settings
+
+    const SETTINGS_FREQUENCY_DAILY = 'daily'
+    const SETTINGS_FREQUENCY_WEEKLY = 'weekly'
+    const SETTINGS_FREQUENCY_MONTHLY = 'monthly'
+    const SETTINGS_RULE_PERIOD = 'period'
+    const SETTINGS_RULE_AMOUNT = 'amount'
+
+    var settingsData = {
+        company_id: null,
+        rule: null,      //rules: period, amount
+        frequency: null, //frequency: daily, weekly, monthly
+        weekday: null,   //from 0 (monday) to 6 (sunday) as mysql weekday() function
+        day: null,       //day of month
+        amount: 0,       //minimal amount to make withdrawal
+    }
+
+    var financesSettingsForm = $('#finances-settings-form')
+    var withdrawalCompanySelect = financesSettingsForm.find('settings_company_select')
+    var withdrawalByPeriod = $('#withdrawal_by_period')
+    var frequencyContainer = $('.frequency-container')
+    var frequencyButtons = frequencyContainer.find('.btn')
+    var weekdaysContainer = $('.weekdays-container')
+    var weekdaysButtons = weekdaysContainer.find('.btn')
+    var dayContainer = $('.day-container')
+    var dayButtons = dayContainer.find('.btn')
+    var withdrawalByAmount = $('#withdrawal_by_value')
+    var withdrawalAmount = $('#withdrawal_amount')
+
     //Get companies list
     function getCompanies() {
         loadingOnScreen();
@@ -35,36 +64,6 @@ $(document).ready(function () {
         });
     }
 
-    getCompanies();
-
-    //Settings
-
-    const SETTINGS_FREQUENCY_DAILY = 'daily'
-    const SETTINGS_FREQUENCY_WEEKLY = 'weekly'
-    const SETTINGS_FREQUENCY_MONTHLY = 'monthly'
-    const SETTINGS_RULE_PERIOD = 'period'
-    const SETTINGS_RULE_AMOUNT = 'amount'
-
-    var settingsData = {
-        company_id: null,
-        rule: null,      //rules: period, amount
-        frequency: null, //frequency: daily, weekly, monthly
-        weekday: null,   //from 0 (monday) to 6 (sunday) as mysql weekday() function
-        day: null,       //day of month
-        amount: 0,       //minimal amount to make withdrawal
-    }
-
-    var financesSettingsForm = $('#finances-settings-form')
-    var withdrawalCompanySelect = financesSettingsForm.find('settings_company_select')
-    var withdrawalByPeriod = $('#withdrawal_by_period')
-    var frequencyContainer = $('.frequency-container')
-    var frequencyButtons = frequencyContainer.find('.btn')
-    var weekdaysContainer = $('.weekdays-container')
-    var weekdaysButtons = weekdaysContainer.find('.btn')
-    var dayContainer = $('.day-container')
-    var withdrawalByAmount = $('#withdrawal_by_value')
-    var withdrawalAmount = $('#withdrawal_amount')
-
     var getSettings = function (companyId, settingsId = null, notify = false) {
         clearSettingsForm()
         $.ajax({
@@ -93,7 +92,7 @@ $(document).ready(function () {
         settingsData = Object.assign(settingsData, {
             company_id: financesSettingsForm.find('#settings_company_select').val(),
             amount: withdrawalAmount.val(),
-            day: dayContainer.find('select').val()
+            //day: dayContainer.find('select').val()
         })
 
         if (!validateSettingsData(data)) {
@@ -185,7 +184,11 @@ $(document).ready(function () {
                 dayContainer.addClass('d-none').removeClass('d-flex')
             } else if (data.frequency === SETTINGS_FREQUENCY_MONTHLY) {
                 weekdaysButtons.removeClass('active')
-                dayContainer.find('select').val(data.day)
+                dayButtons.removeClass('active')
+                dayButtons.each((i, el) => {
+                    el = $(el)
+                    if (el.data('day') == data.day) el.addClass('active')
+                })
                 weekdaysContainer.addClass('d-none').removeClass('d-flex')
                 dayContainer.addClass('d-flex').removeClass('d-none')
             }
@@ -218,20 +221,25 @@ $(document).ready(function () {
 
     frequencyButtons.on('click', function () {
         frequencyButtons.removeClass('active')
+        weekdaysButtons.removeClass('active')
         settingsData.frequency = $(this).addClass('active').data('frequency')
         settingsData.weekday = null;
-        weekdaysButtons.removeClass('active')
+        settingsData.day = null;
 
         if (settingsData.frequency === SETTINGS_FREQUENCY_DAILY) {
             weekdaysButtons.addClass('active')
-        }
-
-        if (settingsData.frequency !== SETTINGS_FREQUENCY_MONTHLY) {
             weekdaysContainer.addClass('d-flex').removeClass('d-none')
             dayContainer.addClass('d-none').removeClass('d-flex')
-        } else {
+            dayButtons.removeClass('active')
+        } else if (settingsData.frequency === SETTINGS_FREQUENCY_WEEKLY) {
+            weekdaysContainer.addClass('d-flex').removeClass('d-none')
+            weekdaysContainer.find('[data-weekday="1"]').trigger('click')
+            dayContainer.addClass('d-none').removeClass('d-flex')
+            dayButtons.removeClass('active')
+        } else if (settingsData.frequency === SETTINGS_FREQUENCY_MONTHLY) {
             weekdaysContainer.addClass('d-none').removeClass('d-flex')
             dayContainer.addClass('d-flex').removeClass('d-none')
+            dayContainer.find('[data-day="01"]').trigger('click')
         }
     });
 
@@ -243,6 +251,14 @@ $(document).ready(function () {
         }
     })
 
+    dayButtons.on('click', function () {
+        if (settingsData.frequency === 'monthly') {
+            dayButtons.removeClass('active')
+            $(this).addClass('active')
+            settingsData.day = $(this).data('day')
+        }
+    })
+
     var onWithdrawalByPeriodChange = function () {
         var card = withdrawalByPeriod.closest('.card')
 
@@ -251,16 +267,18 @@ $(document).ready(function () {
             withdrawalByAmount.prop('checked', false).trigger('change')
             frequencyButtons.removeClass('disabled').prop('disabled', false)
             weekdaysButtons.removeClass('disabled').prop('disabled', false)
+            dayButtons.removeClass('disabled').prop('disabled', false)
             card.find('[type=submit]').removeClass('disabled').addClass('btn-success').prop('disabled', false)
             card.addClass('bg-light').removeClass('bg-lighter')
-            dayContainer.find('select').removeClass('disabled').prop('disabled', false)
+            if (!settingsData.frequency)
+                frequencyContainer.find('[data-frequency="daily"]').trigger('click')
         } else {
             settingsData.rule === SETTINGS_RULE_PERIOD ? settingsData.rule = null : ''
             frequencyButtons.addClass('disabled').removeClass('active').prop('disabled', true)
             weekdaysButtons.addClass('disabled').removeClass('active').prop('disabled', true)
+            dayButtons.addClass('disabled').removeClass('active').prop('disabled', true)
             card.find('[type=submit]').addClass('disabled').removeClass('btn-success').prop('disabled', true)
             card.addClass('bg-lighter').removeClass('bg-light')
-            dayContainer.find('select').addClass('disabled').prop('disabled', true).val(null)
             settingsData = Object.assign(settingsData, {
                 frequency: null,
                 weekday: null,
@@ -293,6 +311,7 @@ $(document).ready(function () {
             settingsData = Object.assign(settingsData, {amount: 0})
         }
     }
+
     withdrawalByAmount.on('change', function () {
         onWithdrawalByAmountChange()
         if (!settingsData.rule && settingsData.id) {
@@ -306,6 +325,7 @@ $(document).ready(function () {
         return false;
     })
 
+    getCompanies();
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
     if (withdrawalCompanySelect.val()) {
