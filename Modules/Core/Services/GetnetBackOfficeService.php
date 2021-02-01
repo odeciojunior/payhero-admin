@@ -443,7 +443,6 @@ class GetnetBackOfficeService extends GetnetService
                 'company_id' => $company->id,
                 'sale_id' => $item->order->getSaleId(),
                 'type' => $item->type,
-                'reason' => $item->details->getDescription(),
                 'value' => abs($item->amount * 100),
             ],
                 [
@@ -451,6 +450,7 @@ class GetnetBackOfficeService extends GetnetService
                     'confirm_date' => $item->subSellerRateConfirmDate ? Carbon::createFromFormat('d/m/Y',
                         $item->subSellerRateConfirmDate) : null,
                     'payment_date' => $item->date ? Carbon::createFromFormat('d/m/Y', $item->date) : null,
+                    'reason' => $item->details->getDescription(),
                 ]);
         }
 
