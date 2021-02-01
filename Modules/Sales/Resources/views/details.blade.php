@@ -207,11 +207,11 @@
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                            role="tab"
-                           style="width:calc(50% - 10px);">Cliente
+                           style="width:50%;">Cliente
                         </a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                            role="tab"
-                           style="width:calc(50% - 10px);">Detalhes
+                           style="width:50%;">Detalhes
                         </a>
                     </div>
                 </div>

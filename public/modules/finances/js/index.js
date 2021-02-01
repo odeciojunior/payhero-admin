@@ -13,13 +13,13 @@ $(document).ready(function () {
     };
 
     let statusExtract = {
-        'WAITING_FOR_VALID_POST': 'pendente',
-        'WAITING_LIQUIDATION': 'info',
-        'WAITING_WITHDRAWAL': 'withdrawal',
-        'WAITING_RELEASE': 'withdrawal',
+        'WAITING_FOR_VALID_POST': 'warning',
+        'WAITING_LIQUIDATION': 'warning',
+        'WAITING_WITHDRAWAL': 'warning',
+        'WAITING_RELEASE': 'warning',
         'PAID': 'success',
         'REVERSED': 'warning',
-        'ADJUSTMENT_CREDIT': 'dark',
+        'ADJUSTMENT_CREDIT': 'warning',
         'ADJUSTMENT_DEBIT': 'warning',
         'ERROR': 'error',
     }
@@ -179,14 +179,14 @@ $(document).ready(function () {
             },
             error: response => {
                 errorAjaxResponse(response);
-                $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+                $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
             },
             success: response => {
                 if (response.allowed) {
-                    $('#bt-withdrawal').prop('disabled', false).removeClass('disabled');
+                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
                     $('#blocked-withdrawal').hide();
                 } else {
-                    $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
                     $('#blocked-withdrawal').show();
                 }
             }
@@ -361,8 +361,8 @@ $(document).ready(function () {
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".total-balance").html(isEmpty(response.total_balance));
 
-                $("#div-available-money").unbind('click');
-                $("#div-available-money").on("click", function () {
+                $("#div-available-money, #div-available-money_m").unbind('click');
+                $("#div-available-money, #div-available-money_m").on("click", function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
 
@@ -405,8 +405,8 @@ $(document).ready(function () {
         }
 
         // Fazer saque
-        $('#bt-withdrawal').unbind("click");
-        $('#bt-withdrawal').on('click', function () {
+        $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
+        $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
             let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
             let availableBalance = parseInt(availableBalanceText);
@@ -765,14 +765,14 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                                            <td class="text-sm-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
-                                            <td class="text-sm-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
-                                            <td class="text-sm-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
-                                            <td class="text-sm-right text-md-left" style="grid-area: status" class="shipping-status">
+                                            <td class="text-xs-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
+                                            <td class="text-xs-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
+                                            <td class="text-xs-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
+                                            <td class="text-xs-right text-md-left" style="grid-area: status" class="shipping-status">
                                                 <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
                                             </td>
-                                            <td class="text-sm-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong></td>
-                                            <td class="d-sm-none d-md-block">
+                                            <td class="text-xs-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong></td>
+                                            <td class="d-none d-md-block">
                                                 <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
                                                     <span class='o-eye-1'></span>
                                                 </a>
@@ -969,10 +969,10 @@ $(document).ready(function () {
                         <td style="vertical-align: middle; grid-area: date">
                             ${item.date}
                         </td>
-                         <td class="text-sm-right text-md-left" style="grid-area: status">
+                         <td class="text-xs-right text-md-left" style="grid-area: status">
                             <span data-toggle="tooltip" data-placement="left" title="${item.details.status}" class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
                          </td>
-                        <td class="text-sm-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
+                        <td class="text-xs-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
                         ${(item.amount.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
@@ -1396,7 +1396,7 @@ $(document).ready(function () {
         var email = $('#email_finance_export').val();
 
         if (email == '' || !regexEmail.test(email)) {
-            alertCustom('error', 'Preencha o email corretamente');
+            alertCustom('error', 'Preencha o e-mail corretamente');
             return false;
         } else {
             financesGetnetExport(exportFinanceFormat);
@@ -1439,11 +1439,18 @@ $(document).ready(function () {
 
 
     $(".nav-link-finances-show-export").on("click", function () {
-        $("#finances_export_btns").css('opacity' , 100);
+        $("#finances_export_btns").css('opacity' , 1).removeClass('col-1').addClass('col-6');;
+        $("#bt_get_sale_xls").removeClass('disabled');
+        $("#bt_get_sale_csv").removeClass('disabled');
+        $(".page-title").parent().removeClass('col-10');
     });
 
     $(".nav-link-finances-hide-export").on("click", function () {
-        $("#finances_export_btns").css('opacity' , 0);
+        $("#finances_export_btns").css('opacity' , 0).removeClass('col-6').addClass('col-1')
+        $("#bt_get_sale_xls").addClass('disabled');
+        $("#bt_get_sale_csv").addClass('disabled');
+        $(".page-title").parent().addClass('col-10');
+
     });
 
     $('.btn-light-1').click(function () {
@@ -1451,12 +1458,18 @@ $(document).ready(function () {
         var text = $('#text-filtro')
 
         text.fadeOut(10);
-        if(collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
             collapse.css('transform', 'rotate(180deg)')
             text.text('Minimizar filtros').fadeIn();
         } else {
             collapse.css('transform', 'rotate(0deg)')
             text.text('Filtros avançados').fadeIn()
         }
+    })
+
+    $('#pagination-statement').click(function () {
+        setTimeout(function() {
+            $('.s-table').attr('style', 'display: !')
+        }, 100);
     })
 });

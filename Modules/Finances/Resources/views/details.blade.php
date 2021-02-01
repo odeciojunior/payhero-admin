@@ -60,7 +60,7 @@
                         <div class="col-12 text-right">
                             <div class="justify-content-end align-items-center">
                                 <div class="p-2 d-flex justify-content-end align-items-center" id="">
-                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                    <span style="cursor: default" id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
                                         <button id="bt_get_csv_transfer" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
@@ -92,7 +92,7 @@
                 <div class="modal-content p-10 d-none" id="export-finance-getnet-transfer">
                     <div class='my-20 mx-20 text-center'>
                         <hr>
-                        <h3 class="black"> Informe o email para receber o relatório </h3>
+                        <h3 class="black"> Informe o e-mail para receber o relatório </h3>
                     </div>
                     <div class="modal-footer">
 

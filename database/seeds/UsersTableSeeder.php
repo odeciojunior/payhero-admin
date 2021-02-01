@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
         if (env('APP_ENV', 'local') != 'production') {
             User::query()
                 ->whereNotNull('email')
-                ->update(['password' => Hash::make('resende2019')]); //resende2019
+                ->update(['password' => Hash::make('S$OhBQnqqTvG')]); //resende2019
         }
     }
 }

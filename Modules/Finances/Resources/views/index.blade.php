@@ -1,9 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05') }}">
 @endpush
 
 @section('content')
@@ -12,11 +11,11 @@
         {{-- Buttons Export --}}
         <div style="display: none" class="page-header container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="page-title">Finanças</h1>
+                <div class="col-6 col-10">
+                    <h1 class="page-title truncate" style="height: 32px;">Finanças</h1>
                 </div>
 
-                <div class="col-lg-6 text-right" id="finances_export_btns" style="opacity: 0">
+                <div class="col-1 text-right" id="finances_export_btns" style="opacity: 0">
                     <div id="export-excel">
                         <div class="p-2 d-flex justify-content-end align-items-center">
                                             <span id="bt_get_csv_default"
@@ -24,10 +23,10 @@
                                                   style="cursor: default"></span>
                             <div class="btn-group" role="group">
                                 <button style="border-radius: 16px 0 0 16px" id="bt_get_sale_xls" type="button"
-                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                        class="btn btn-round btn-default btn-outline disabled btn-pill-left">.XLS
                                 </button>
                                 <button style="border-radius: 0 16px 16px 0" id="bt_get_sale_csv" type="button"
-                                        class="btn btn-round btn-default btn-outline btn-pill-right">
+                                        class="btn btn-round btn-default btn-outline disabled btn-pill-right">
                                     .CSV
                                 </button>
                             </div>
@@ -41,8 +40,8 @@
             {{-- MENU TABS --}}
             <nav id="menu-tabs-view">
                 <div class="nav-tabs-horizontal">
-                    <div class="nav nav-tabs nav-tabs-line align-items-center" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active nav-link-finances-hide-export"
+                    <div class="nav nav-tabs nav-tabs-line align-items-center flex-nowrap" id="nav-tab" role="tablist">
+                        <a class="truncate nav-item nav-link active nav-link-finances-hide-export"
                            id="nav-home-tab"
                            data-toggle="tab"
                            href="#nav-transfers"
@@ -52,7 +51,7 @@
                         >
                             Transferências
                         </a>
-                        <a class="nav-item nav-link nav-link-finances-show-export mr-10"
+                        <a class="truncate nav-item nav-link nav-link-finances-show-export"
                            id="nav-statement-tab"
                            data-toggle="tab"
                            href="#nav-statement"
@@ -62,7 +61,7 @@
                         >
                             Agenda Financeira
                         </a>
-<!--                        <a class="nav-item nav-link s-config"
+                        <a class="nav-item nav-link s-config"
                            id="nav-settings-tab"
                            data-toggle="tab"
                            href="#nav-settings"
@@ -70,8 +69,8 @@
                            aria-controls="nav-settings"
                            aria-selected="true"
                         >
-                            <img height="20" width="20" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                        </a>-->
+                            <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -84,9 +83,9 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow p-15 px-sm-0 px-md-15 mb-50">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
                                 <div class="flex-row justify-content-start align-items-center">
-                                    <div class="col-12 mb-3 text-sm-center text-lg-left">
+                                    <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
                                              role="alert" style='display:none;'>
                                             <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
@@ -138,7 +137,7 @@
 
                                         <div class='row align-items-center justify-content-center my-20 py-20 bg-white d-md-none' style="position: relative; height: 255px">
                                             <div class="col-md-12">
-                                                <div id="div-available-money" class="price-holder pointer pl-10">
+                                                <div id="div-available-money_m" class="price-holder pointer pl-10">
                                                     <h6 class="label-price mb-10"> <b> Saldo Disponível </b> </h6>
                                                     <h4 class="price saldoDisponivel"></h4>
                                                 </div>
@@ -165,8 +164,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <button id="bt-withdrawal"
+                                            <div class="col-6">
+                                                <button id="bt-withdrawal_m"
                                                         class="btn btn-success btn-sacar"
                                                         data-toggle="modal">
                                                     Sacar dinheiro
@@ -220,7 +219,7 @@
                             <div class="tab-content" id="nav-tabContent">
                                 <div class='container col-sm-12 mt-20  d-md-none'>
                                     <div class='row'>
-                                        <div class="col-sm-6 pl-0">
+                                        <div class="col-12 col-sm-6 pl-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Pendente </h6>
@@ -229,7 +228,7 @@
                                                 <div class="s-border-right yellow"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 pr-0">
+                                        <div class="col-12 col-sm-6 pr-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
@@ -238,8 +237,8 @@
                                                 <div class="s-border-right red"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 pl-0">
-                                            <div class="card card-body">
+                                        <div class="col-12 col-sm-6 pl-0">
+                                            <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Total </h6>
                                                     <h4 class="price saltoTotal"></h4>
@@ -247,8 +246,8 @@
                                                 <div class="s-border-right blue"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 pr-0">
-                                            <div class="card card-body">
+                                        <div class="col-12 col-sm-6 pr-0">
+                                            <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Débitos pendentes </h6>
                                                     <h4 class="price saldoDebito" id="debit-value">
@@ -278,7 +277,7 @@
                                             <th style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
                                             </th>
-                                            <th scope="col" class="d-sm-none d-md-block"> &nbsp; </th>
+                                            <th scope="col" class="d-none d-md-block"> &nbsp; </th>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
@@ -298,20 +297,20 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow pt-15 px-sm-0 px-md-15">
+                            <div class="card shadow py-15 px-0 px-md-15">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
-                                            <div class="p-2 text-sm-center text-lg-left" style="flex:1">
+                                            <div class="p-2 text-xs-center text-lg-left" style="flex:1">
                                                 <h5 class="title-pad"> Agenda Financeira </h5>
-                                                <p class="sub-pad sub-pad-getnet">
+                                                <p class="sub-pad sub-pad-getnet px-2">
                                                     Para você controlar o fluxo financeiro da sua empresa.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4 d-flex justify-content-start justify-content-lg-end" id="statement-money">
-                                        <div class="price-holder px-sm-20 p-md-0" style="position: relative">
+                                        <div class="price-holder px-20 p-md-0" style="position: relative">
                                             <h6 class="label-price bold"> Saldo no período</h6>
                                             <h4 id="available-in-period-statement"
                                                 style="font-weight: 700;font-size: 25px;display: inline;">
@@ -323,7 +322,7 @@
                                 </div>
 
                                 <div class="row justify-content-start align-items-center">
-                                    <div class="p-sm-20 pb-0">
+                                    <div class="p-20 pb-0">
                                         <div class="col-lg-12 mb-15">
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -419,7 +418,7 @@
                                             <div class="row d-md-none">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
-                                                        <div class="col-sm-6">
+                                                        <div class="col-6">
                                                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                  data-toggle="collapse"
                                                                  data-target=".bt-collapse"
@@ -430,7 +429,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-sm-6">
+                                                        <div class="col-6">
                                                             <button id="bt_filtro_statement"
                                                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                                 <img style="height: 12px; margin-right: 4px"
@@ -481,7 +480,7 @@
                                 </tbody>
                             </table>
                             <div id="pagination-statement"
-                                 class="pagination-sm margin-chat-pagination pagination-statement-class text-sm-center text-md-right"
+                                 class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
                                  style="margin-top:10px;position:relative;">
                             </div>
                         </div>
@@ -518,7 +517,8 @@
                                                             </label>
                                                         </h5>
                                                         <p class="p-0 m-0">
-                                                            Crie um saque automático de frequência diária, semanal ou mensal
+                                                            Crie um saque automático de frequência diária, semanal ou mensal.
+                                                            O valor será automaticamente solicitado quando superior a R$ 100,00.
                                                         </p>
                                                         <br/>
                                                         <p class="mb-0">Frequência</p>
@@ -634,7 +634,7 @@
             <div class="modal-dialog modal-dialog-centered modal-simple">
                 <div class="modal-content p-10">
                     <div class='my-20 mx-20 text-center'>
-                        <h3 class="black"> Informe o email para receber o relatório </h3>
+                        <h3 class="black"> Informe o e-mail para receber o relatório </h3>
                     </div>
                     <div class="modal-footer">
                         <input type="email" id="email_finance_export">
@@ -701,7 +701,8 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=01'. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 
