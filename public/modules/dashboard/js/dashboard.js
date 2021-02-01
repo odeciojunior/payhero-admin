@@ -220,6 +220,10 @@ $(document).ready(function () {
                 if(data.blocked_balance_invite !== "0,00"){
                     title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
                 }
+                if(data.blocked_balance_pending !== "0,00"){
+                    title += "\ne saldo bloqueado pendente de R$ " + data.blocked_balance_pending;
+                }
+
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 
                 updateTrackings(data.trackings);

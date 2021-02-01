@@ -104,6 +104,8 @@ class DashboardApiController extends Controller
             if (empty($company)) {
                 return [];
             }
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
+
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance(
                     $company,
@@ -217,6 +219,7 @@ class DashboardApiController extends Controller
                 'tickets' => $tickets,
                 'blocked_balance' => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
                 'blocked_balance_invite' => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
+                'blocked_balance_pending' => number_format(intval($blockedBalancePending) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
