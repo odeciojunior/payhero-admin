@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePendingDebitWithdrawalsTable extends Migration
+class CreatePendingDebtWithdrawalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreatePendingDebitWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_debit_withdrawals', function (Blueprint $table) {
-            $table->unsignedBigInteger("pending_debit_id")->nullable();
-            $table->foreign('pending_debit_id')->references('id')->on('pending_debts');
+        Schema::create('pending_debt_withdrawals', function (Blueprint $table) {
+            $table->unsignedBigInteger("pending_debt_id")->nullable();
+            $table->foreign('pending_debt_id')->references('id')->on('pending_debts');
 
             $table->unsignedBigInteger("withdrawal_id")->nullable();
             $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
 
-            $table->primary(['pending_debit_id', 'withdrawal_id']);
+            $table->primary(['pending_debt_id', 'withdrawal_id']);
         });
     }
 
@@ -31,6 +31,6 @@ class CreatePendingDebitWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pending_debit_withdrawals');
+        Schema::dropIfExists('pending_debt_withdrawals');
     }
 }

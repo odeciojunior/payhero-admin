@@ -23,11 +23,10 @@ class CreatePendingDebtsTable extends Migration
             $table->enum('type', ['REVERSED', 'ADJUSTMENT']);
 
             $table->dateTime("request_date")->nullable();
-            $table->date("closing_date")->nullable();
             $table->date("confirm_date")->nullable();
             $table->date("payment_date")->nullable();
             $table->string("reason")->nullable();
-            $table->unsignedInteger('amount');
+            $table->unsignedInteger('value');
             $table->timestamps();
         });
     }

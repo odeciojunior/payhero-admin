@@ -20,11 +20,10 @@ class PendingDebt extends Model
         'sale_id',
         'type',
         'request_date',
-        'closing_date',
         'confirm_date',
         'payment_date',
         'reason',
-        'amount',
+        'value',
     ];
 
     protected static bool $logFillable = true;
