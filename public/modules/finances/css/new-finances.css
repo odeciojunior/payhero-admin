@@ -546,3 +546,8 @@ select, .select-pad {
 .card.no-shadow {
     box-shadow: none;
 }
+
+.card.bg-light .input-group > .input-group-prepend span,
+.card.bg-light .input-group > input {
+    border-color: #8693b8
+}

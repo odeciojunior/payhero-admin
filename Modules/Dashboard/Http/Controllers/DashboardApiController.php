@@ -104,6 +104,8 @@ class DashboardApiController extends Controller
             if (empty($company)) {
                 return [];
             }
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
+
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance(
                     $company,
@@ -114,6 +116,7 @@ class DashboardApiController extends Controller
                     $company
                 ) - $blockedBalance->from_sales - $blockedBalance->from_invites;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance->from_sales + $blockedBalance->from_invites;
+            $blockedBalanceTotal = $blockedBalance->from_sales + $blockedBalance->from_invites + $blockedBalancePending;
 
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
@@ -217,6 +220,8 @@ class DashboardApiController extends Controller
                 'tickets' => $tickets,
                 'blocked_balance' => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
                 'blocked_balance_invite' => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
+                'blocked_balance_pending' => number_format(intval($blockedBalancePending) / 100, 2, ',', '.'),
+                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
