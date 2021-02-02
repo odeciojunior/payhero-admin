@@ -1187,7 +1187,7 @@ $(document).ready(function () {
 
     $('#pagination-statement').click(function () {
         setTimeout(function() {
-            $('.s-table').attr('style', 'display: !')
+            $('.s-table:visible').attr('style', 'display: !')
         }, 100);
     })
 });
