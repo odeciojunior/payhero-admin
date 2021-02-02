@@ -126,16 +126,14 @@ class TransfersApiController
         try {
             $dataRequest = \request()->all();
             $filters = (new GetNetStatementService())->accountStatementDataFilters($dataRequest);
-            $result = !FoxUtils::isEmpty(json_decode($filters)) ? json_decode($filters['result']) : '';
+            $result = json_decode($filters['result']);
             $data = [];
 
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
             }
 
-            if (!FoxUtils::isEmpty($result)) {
-                $data = (new GetNetStatementService())->performWebStatement($result, $filters);
-            }
+            $data = (new GetNetStatementService())->performWebStatement($result, $filters);
 
             return response()->json($data);
 

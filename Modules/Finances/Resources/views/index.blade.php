@@ -309,7 +309,7 @@
                                         <div class="d-flex align-items-center">
                                             <div class="p-2 text-xs-center text-lg-left" style="flex:1">
                                                 <h5 class="title-pad"> Agenda Financeira </h5>
-                                                <p class="sub-pad sub-pad-getnet px-2">
+                                                <p class="sub-pad sub-pad-getnet px-2 pl-md-0">
                                                     Para você controlar o fluxo financeiro da sua empresa.
                                                 </p>
                                             </div>
