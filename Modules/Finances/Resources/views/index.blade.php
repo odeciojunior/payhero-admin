@@ -83,7 +83,7 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow py-15 px-0 px-md-15">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -459,25 +459,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <!-- Aviso de Exportação -->
-                                    <div id="alert-finance-export"
-                                         class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
-                                         style="display:none;">
-                                        <div class="d-flex">
-                                            <span class="o-info-help-1"></span>
-                                            <div class="w-full">
-                                                <strong class="font-size-16">Exportando seu relatório</strong>
-                                                <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
-                                                    e-mail para:
-                                                    <strong id="export-finance-email"></strong> e aparecerá nas suas
-                                                    notificações. Pode levar algum tempo, dependendo de quantos
-                                                    registros você estiver exportando.
-                                                </p>
-                                            </div>
-                                            <i class="material-icons pointer" data-dismiss="alert">close</i>
-                                        </div>
+                            <!-- Aviso de Exportação -->
+                            <div id="alert-finance-export"
+                                 class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                                 style="display:none;">
+                                <div class="d-flex">
+                                    <span class="o-info-help-1"></span>
+                                    <div class="w-full ml-10">
+                                        <strong class="font-size-16">Exportando seu relatório</strong>
+                                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
+                                            e-mail para:
+                                            <strong id="export-finance-email"></strong> e aparecerá nas suas
+                                            notificações. Pode levar algum tempo, dependendo de quantos
+                                            registros você estiver exportando.
+                                        </p>
                                     </div>
+                                    <i class="material-icons pointer" data-dismiss="alert">close</i>
                                 </div>
                             </div>
 

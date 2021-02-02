@@ -918,8 +918,9 @@ $(document).ready(function () {
                 loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
 
                 let error = 'Erro ao gerar o extrato';
-                errorAjaxResponse(error);
+                $('#export-excel').css('opacity', 0)
                 $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
+                errorAjaxResponse(error);
             },
             success: response => {
                 updateClassHTML();
