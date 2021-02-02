@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div class="page">
+    <div class="page mb-0">
         {{-- Buttons Export --}}
         <div style="display: none" class="page-header container">
             <div class="row align-items-center">
@@ -293,6 +293,7 @@
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
+                                <hr style="border-top-color: transparent">
                             </div>
 
                         </div>
