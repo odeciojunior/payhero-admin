@@ -752,7 +752,7 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -919,7 +919,7 @@ $(document).ready(function () {
 
                 let error = 'Erro ao gerar o extrato';
                 $('#export-excel').css('opacity', 0)
-                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
+                $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" + error + "</td></tr>");
                 errorAjaxResponse(error);
             },
             success: response => {
@@ -931,7 +931,7 @@ $(document).ready(function () {
                 if (isEmpty(items)) {
                     loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
                     $('#export-excel').css('opacity', 0)
-                    $("#table-statement-body").html("<tr style='border-radius: 16px;'><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                     return false;
                 }
 

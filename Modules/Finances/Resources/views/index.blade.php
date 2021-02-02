@@ -83,7 +83,7 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -293,9 +293,7 @@
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
-                                <hr style="border-top-color: transparent">
                             </div>
-
                         </div>
                         {{--EXTRATO--}}
                         <div
@@ -303,7 +301,7 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow py-15 px-0 px-md-15">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
@@ -667,6 +665,8 @@
                 </div>
             </div>
         </div>
+
+        <hr style="border-top-color: transparent">
         @include('companies::empty')
         @include('companies::not_company_approved_getnet')
 

@@ -454,6 +454,7 @@ select, .select-pad {
 
     table.unify tr {
         display: grid;
+        border-radius: 16px;
     }
 
     .text-xs-right {
