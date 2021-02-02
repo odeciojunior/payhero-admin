@@ -125,6 +125,7 @@ $(document).ready(function () {
                 });
 
                 if (!itsApprovedTransactGetnet) {
+                    $('.page-content').hide();
                     $("#companies-not-approved-getnet").show();
                     loadingOnScreenRemove();
                     return;
@@ -929,7 +930,9 @@ $(document).ready(function () {
 
                 if (isEmpty(items)) {
                     loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
+                    $('#export-excel').css('opacity', 0)
                     $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    $("#table-statement-body").append("<tr><td colspan='6' class='text-center' style='height: 150px'></td></tr>");
                     return false;
                 }
 
@@ -1004,6 +1007,7 @@ $(document).ready(function () {
                 );
                 paginationStatement();
 
+                $('#export-excel').css('opacity', 1)
                 $("#pagination-statement span").addClass('jp-hidden');
                 $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
                 $("#pagination-statement a.jp-current").addClass('active');
