@@ -367,6 +367,14 @@ select, .select-pad {
     padding: 15px 30px
 }
 
+.table td, .table {
+    margin-bottom: 0 !important
+}
+
+#modal_detalhes #nav-home-tab {
+    width: calc(50% - 20px) !important;
+}
+
 /*MOBILE SM*/
 @media (max-width: 767px) {
     .s-table {
