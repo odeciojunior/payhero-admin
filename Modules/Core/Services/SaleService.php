@@ -1191,7 +1191,15 @@ class SaleService
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
-                ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'))
+                ->where(function($queryStatus) use($transactionModel, $salesModel) {
+                    $queryStatus->where(function($transfered) use($transactionModel) {
+                            $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
+                        })
+                        ->orWhere(function($pending) use($transactionModel, $salesModel) {
+                            $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                                ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
+                        });
+                })
                 ->whereDate('transactions.created_at', '>=', '2020-01-01')
                 ->whereHas(
                     'sale',
@@ -1275,6 +1283,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
+                $transactionModel->present()->getStatusEnum('paid'),
             ]
         );
 

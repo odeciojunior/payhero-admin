@@ -4,13 +4,11 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Withdrawals\Services\WithdrawalService;
-use Modules\Withdrawals\Services\WithdrawalsService;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -75,8 +73,12 @@ class CheckAutomaticWithdrawals extends Command
                         $withdrawalValue = $availableBalance;
                     } else if ($settings->frequency == WithdrawalSettings::FREQUENCY_WEEKLY && $settings->weekday == date('w')) {
                         $withdrawalValue = $availableBalance;
-                    } else if ($settings->frequency == WithdrawalSettings::FREQUENCY_MONTHLY && $settings->day == date('d')) {
-                        $withdrawalValue = $availableBalance;
+                    } else if ($settings->frequency == WithdrawalSettings::FREQUENCY_MONTHLY) {
+                        $isFebruary = (date('m') == 2);
+                        $isFebruaryLastDay = ($isFebruary && in_array(date('d'), [28, 29]));
+                        if ($settings->day == date('d') || ($settings->day == 30 && $isFebruaryLastDay)) {
+                            $withdrawalValue = $availableBalance;
+                        }
                     }
                 }
 

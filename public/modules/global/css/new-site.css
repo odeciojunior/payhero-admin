@@ -1160,30 +1160,3 @@ input[type=radio] {
     border-radius: .5em;
     border-width: 2px;
 }
-
-.bg-light {
-    background-color: #f6f6f6 !important;
-}
-
-.bg-lighter {
-    background-color: #fbfbfb !important;
-}
-
-.frequency-container .btn,
-.weekdays-container .btn {
-    border: 1px solid #bdbdbd;
-    color: #aaa;
-    background-color: #fff;
-    font-weight: 700;
-    box-sizing: border-box;
-}
-
-.frequency-container .btn.active,
-.weekdays-container .btn.active,
-.frequency-container .btn:hover,
-.weekdays-container .btn:hover {
-    border: 2px solid #2e85ec;
-    background: #fff;
-    color: #2e85ec;
-    font-weight: 700;
-}
