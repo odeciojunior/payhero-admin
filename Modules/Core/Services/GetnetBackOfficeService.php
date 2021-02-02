@@ -2,8 +2,12 @@
 
 namespace Modules\Core\Services;
 
+use App\Jobs\GetnetGetDiscountsJob;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use LogicException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PendingDebt;
@@ -441,12 +445,13 @@ class GetnetBackOfficeService extends GetnetService
 
             PendingDebt::updateOrCreate([
                 'company_id' => $company->id,
-                'sale_id' => $item->order->getSaleId(),
+                'sale_id' => $item->order ? $item->order->getSaleId() : null,
                 'type' => $item->type,
                 'value' => abs($item->amount * 100),
             ],
                 [
-                    'request_date' => $item->transactionDate ? Carbon::createFromFormat('d/m/Y', $item->transactionDate) : null,
+                    'request_date' => $item->transactionDate ? Carbon::createFromFormat('d/m/Y',
+                        $item->transactionDate) : null,
                     'confirm_date' => $item->subSellerRateConfirmDate ? Carbon::createFromFormat('d/m/Y',
                         $item->subSellerRateConfirmDate) : null,
                     'payment_date' => $item->date ? Carbon::createFromFormat('d/m/Y', $item->date) : null,
@@ -454,12 +459,23 @@ class GetnetBackOfficeService extends GetnetService
                 ]);
         }
 
-        return [
+        $return = [
             'amount' => $total,
             'amount_adjustments' => $totalAdjustment,
             'amount_reversed' => $totalReversed,
             'items' => $items,
         ];
+
+        Log::debug(json_encode([
+            'method' => __METHOD__,
+            'user_id' => auth()->id() ?? null,
+            'company_id' => $company->id,
+            'return' => $return,
+        ]));
+
+        Redis::connection('redis-statement')->set("getDiscounts:lastVerification:" . $company->id, date('YmdHi'));
+
+        return $return;
     }
 
     public function getDiscounts(Company $company)
@@ -835,6 +851,48 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         return $this->sendCurl($url, 'GET');
+    }
+
+    public static function dispatchGetnetGetDiscountsJob()
+    {
+
+        $companies = Auth::user()->companies;
+
+        foreach ($companies as $company) {
+
+            if ($company->get_net_status == 1) {
+
+                $lastVerification = Redis::connection('redis-statement')->get("getDiscounts:lastVerification:" . $company->id);
+
+                $timeLimit = 120;
+                $now = date('YmdHi');
+
+                if (!$lastVerification || ($now - $lastVerification > $timeLimit)) {
+
+                    Log::info(json_encode([
+                        'method' => __METHOD__,
+                        'user_id' => auth()->id() ?? null,
+                        'company_id' => $company->id,
+                        'action' => 'GetnetGetDiscountsJob::dispatch()',
+                        'lastVerification' => $lastVerification,
+                        'date' => $now,
+                    ]));
+
+                    GetnetGetDiscountsJob::dispatch($company);
+                } else {
+
+                    Log::notice(json_encode([
+                        'method' => __METHOD__,
+                        'user_id' => auth()->id() ?? null,
+                        'company_id' => $company->id,
+                        'action' => 'NONE',
+                        'lastVerification' => $lastVerification,
+                        'date' => $now,
+                    ]));
+                }
+            }
+        }
+
     }
 
 }
