@@ -127,6 +127,7 @@ class TransfersApiController
             $dataRequest = \request()->all();
             $filters = (new GetNetStatementService())->accountStatementDataFilters($dataRequest);
             $result = json_decode($filters['result']);
+            $data = [];
 
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
