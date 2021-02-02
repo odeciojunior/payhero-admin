@@ -626,6 +626,19 @@ class SaleService
                     );
                 }
 
+                if ($this->saleIsGetnet($sale)) {
+                    $orderId = $sale->gateway_order_id;
+                    $subsellerId = CompanyService::getSubsellerId($company);
+
+                    $getnetBackOffice = new GetnetBackOfficeService();
+                    $getnetBackOffice->setStatementSubSellerId($subsellerId)
+                        ->setStatementSaleHashId($orderId);
+
+                    $gatewaySale = $getnetBackOffice->getStatement();
+
+//                    $gatewaySale =
+                }
+
                 if ($transactionRefundAmount == $transactionValue) {
                     $refundTransaction->status = 'refunded';
                     $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
