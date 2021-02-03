@@ -16,6 +16,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
@@ -36,6 +37,8 @@ class DashboardApiController extends Controller
             $companies = (new Company())->where('user_id', auth()->user()->account_owner_id)
                     ->orderBy('order_priority')
                     ->get() ?? collect();
+
+            GetnetBackOfficeService::dispatchGetnetGetDiscountsJob();
 
             return response()->json(['companies' => $companies]);
         } catch (Exception $e) {

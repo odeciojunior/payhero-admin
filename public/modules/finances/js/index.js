@@ -125,6 +125,7 @@ $(document).ready(function () {
                 });
 
                 if (!itsApprovedTransactGetnet) {
+                    $('.page-content').hide();
                     $("#companies-not-approved-getnet").show();
                     loadingOnScreenRemove();
                     return;
@@ -751,8 +752,7 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr><td colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
-                        $("#withdrawals-table-data").append("<tr><td colspan='6' class='text-center' style='height: 150px'></td></tr>");
+                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -918,8 +918,9 @@ $(document).ready(function () {
                 loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
 
                 let error = 'Erro ao gerar o extrato';
+                $('#export-excel').css('opacity', 0)
+                $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" + error + "</td></tr>");
                 errorAjaxResponse(error);
-                $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>" + error + "</td></tr>");
             },
             success: response => {
                 updateClassHTML();
@@ -929,7 +930,8 @@ $(document).ready(function () {
 
                 if (isEmpty(items)) {
                     loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
-                    $("#table-statement-body").html("<tr><td colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    $('#export-excel').css('opacity', 0)
+                    $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
                     return false;
                 }
 
@@ -1004,6 +1006,7 @@ $(document).ready(function () {
                 );
                 paginationStatement();
 
+                $('#export-excel').css('opacity', 1)
                 $("#pagination-statement span").addClass('jp-hidden');
                 $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
                 $("#pagination-statement a.jp-current").addClass('active');
@@ -1184,7 +1187,7 @@ $(document).ready(function () {
 
     $('#pagination-statement').click(function () {
         setTimeout(function() {
-            $('.s-table').attr('style', 'display: !')
+            $('.s-table:visible').attr('style', 'display: !')
         }, 100);
     })
 });

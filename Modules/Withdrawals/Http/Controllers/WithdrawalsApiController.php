@@ -455,7 +455,7 @@ class WithdrawalsApiController
             activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
-//
+
             $user = auth()->user();
             $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
             $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
