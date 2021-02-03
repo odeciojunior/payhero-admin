@@ -134,7 +134,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount, $partialValues = [], $refundObservation)
+    public function cancelPayment($sale, $refundAmount, $partialValues = [], $refundObservation): array
     {
         try {
             $saleService = new SaleService();

@@ -526,11 +526,6 @@ class SalesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function setValueObservation(Request $request, $id)
     {
         try {

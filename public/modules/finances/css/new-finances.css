@@ -2,7 +2,6 @@
     cursor: pointer;
 }
 
-
 .custom-popover {
     position: absolute;
     z-index: 999;
@@ -297,8 +296,8 @@ strong span {
 }
 
 .s-config {
-    position: absolute;
-    right: 10px;
+    margin-left: auto !important;
+    margin-right: 15px !important;
 }
 
 .nav-link {
@@ -363,6 +362,17 @@ select, .select-pad {
     transition: all 0.3s;
 }
 
+.page-header {
+    padding: 15px 30px
+}
+
+.table td, .table {
+    margin-bottom: 0 !important
+}
+
+#modal_detalhes .nav-tabs .nav-link:not(.active) {
+    width: calc(50% - 20px) !important;
+}
 
 /*MOBILE SM*/
 @media (max-width: 767px) {
@@ -451,6 +461,7 @@ select, .select-pad {
 
     table.unify tr {
         display: grid;
+        border-radius: 16px;
     }
 
     .text-xs-right {

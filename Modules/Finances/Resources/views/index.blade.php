@@ -2,12 +2,12 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=02'.uniqid()) }}">
 @endpush
 
 @section('content')
 
-    <div class="page">
+    <div class="page mb-0">
         {{-- Buttons Export --}}
         <div style="display: none" class="page-header container">
             <div class="row align-items-center">
@@ -83,7 +83,7 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -294,7 +294,6 @@
                                     </ul>
                                 </div>
                             </div>
-
                         </div>
                         {{--EXTRATO--}}
                         <div
@@ -302,13 +301,13 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow py-15 px-0 px-md-15">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
                                             <div class="p-2 text-xs-center text-lg-left" style="flex:1">
                                                 <h5 class="title-pad"> Agenda Financeira </h5>
-                                                <p class="sub-pad sub-pad-getnet px-2">
+                                                <p class="sub-pad sub-pad-getnet px-2 pl-md-0">
                                                     Para você controlar o fluxo financeiro da sua empresa.
                                                 </p>
                                             </div>
@@ -458,25 +457,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <!-- Aviso de Exportação -->
-                                    <div id="alert-finance-export"
-                                         class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
-                                         style="display:none;">
-                                        <div class="d-flex">
-                                            <span class="o-info-help-1"></span>
-                                            <div class="w-full">
-                                                <strong class="font-size-16">Exportando seu relatório</strong>
-                                                <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
-                                                    e-mail para:
-                                                    <strong id="export-finance-email"></strong> e aparecerá nas suas
-                                                    notificações. Pode levar algum tempo, dependendo de quantos
-                                                    registros você estiver exportando.
-                                                </p>
-                                            </div>
-                                            <i class="material-icons pointer" data-dismiss="alert">close</i>
-                                        </div>
+                            <!-- Aviso de Exportação -->
+                            <div id="alert-finance-export"
+                                 class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                                 style="display:none;">
+                                <div class="d-flex">
+                                    <span class="o-info-help-1"></span>
+                                    <div class="w-full ml-10">
+                                        <strong class="font-size-16">Exportando seu relatório</strong>
+                                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por
+                                            e-mail para:
+                                            <strong id="export-finance-email"></strong> e aparecerá nas suas
+                                            notificações. Pode levar algum tempo, dependendo de quantos
+                                            registros você estiver exportando.
+                                        </p>
                                     </div>
+                                    <i class="material-icons pointer" data-dismiss="alert">close</i>
                                 </div>
                             </div>
 
@@ -666,6 +665,8 @@
                 </div>
             </div>
         </div>
+
+        <hr style="border-top-color: transparent">
         @include('companies::empty')
         @include('companies::not_company_approved_getnet')
 
@@ -743,8 +744,8 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
-            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=') . random_int(100, 10000)}}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v=') . random_int(100, 10000)}}"></script>
         @endpush
     </div>
 
