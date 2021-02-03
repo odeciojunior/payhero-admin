@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
@@ -18,7 +19,9 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
+use Modules\Getnet\Models\StatementAdjustment;
 use Modules\Products\Transformers\ProductsSaleResource;
+use Modules\Transfers\Services\GetNetStatementService;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -496,7 +499,7 @@ class SaleService
         return $productsSale;
     }
 
-    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [], $refundObservation)
+    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [], $refundObservation): bool
     {
         try {
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -536,16 +539,19 @@ class SaleService
                     'user_id' => auth()->user()->account_owner_id,
                 ]
             );
+
             if ($status == 'refunded') {
-                $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
+                $checkRecalc = $this->recalcSaleRefund($sale, $refundAmount);
             } else {
                 if ($status == 'partial_refunded') {
-                    $checktRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
+                    $checkRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
                 }
             }
-            if ($checktRecalc) {
-                $checktUpdate = $sale->update($updateData);
-                if ($checktUpdate) {
+
+
+            if ($checkRecalc) {
+                $checkUpdate = $sale->update($updateData);
+                if ($checkUpdate) {
                     DB::commit();
                     SaleLog::create(
                         [
@@ -589,11 +595,13 @@ class SaleService
             $transactionModel = new Transaction();
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+
             if ($totalPaidValue > 0) {
                 $percentRefund = (int)round((($refundAmount / $totalPaidValue) * 100));
             } else {
                 $percentRefund = 100;
             }
+
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
                 //calcula valor que deve ser estornado da transação
@@ -626,17 +634,53 @@ class SaleService
                     );
                 }
 
-                if ($this->saleIsGetnet($sale)) {
-                    $orderId = $sale->gateway_order_id;
+                if ($this->saleIsGetnet($sale) && !is_null($company)) {
                     $subsellerId = CompanyService::getSubsellerId($company);
 
                     $getnetBackOffice = new GetnetBackOfficeService();
                     $getnetBackOffice->setStatementSubSellerId($subsellerId)
-                        ->setStatementSaleHashId($orderId);
+                        ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($sale->id));
 
                     $gatewaySale = $getnetBackOffice->getStatement();
 
-//                    $gatewaySale =
+                    $gatewaySale = json_decode($gatewaySale);
+
+                    if (isset($gatewaySale->list_transactions)) {
+                        foreach ($gatewaySale->list_transactions as $item) {
+                            if (isset($item->summary)
+                                && isset($item->details)
+                                && is_array($item->details)
+                                && count($item->details) == 1
+                            ) {
+                                $summary = $item->summary;
+                                $details = $item->details[0];
+
+                                $transactionStatusCode = $summary->transaction_status_code;
+                                $hasOrderId = empty($summary->order_id) ? false: true;
+                                $isTransactionCredit = $details->transaction_sign == '+';
+
+                                $refundObservation = 'Estorno da venda: ' . Hashids::connection('sale_id')->encode($sale->id);
+
+                                if (!is_null($details->subseller_rate_confirm_date)
+                                    && $hasOrderId
+                                    && $isTransactionCredit
+                                    && $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO
+                                ){
+                                    PendingDebt::create(
+                                        [
+                                            'company_id' => $company->id,
+                                            'sale_id' => $sale->id,
+                                            'type' => PendingDebt::REVERSED,
+                                            'request_date' => Carbon::now(),
+                                            'reason' => $refundObservation,
+                                            'value' => $transactionRefundAmount,
+                                        ]
+                                    );
+                                }
+
+                            }
+                        }
+                    }
                 }
 
                 if ($transactionRefundAmount == $transactionValue) {
