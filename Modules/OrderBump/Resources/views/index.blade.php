@@ -28,7 +28,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-order-bump" class="pagination-sm margin-chat-pagination float-right">
+<ul id="pagination-order-bump" class="pagination-sm margin-chat-pagination float-right" style="min-height: 62px">
     {{-- js carrega... --}}
 </ul>
 
