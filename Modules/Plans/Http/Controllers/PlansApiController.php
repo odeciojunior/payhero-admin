@@ -408,19 +408,24 @@ class PlansApiController extends Controller
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
 
-                $plans = $planModel->select('name',
-                                            DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.name = plans.name and p.deleted_at is null limit 1), group_concat(id)) as id"),
-                                            DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
-                                   ->where('project_id', $projectId);
+                $plans = $planModel->where('project_id', $projectId);
 
                 if (!empty($data['search'])) {
                     $plans->where('name', 'like', '%' . $data['search'] . '%');
                 }
 
-                $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+                $groupByVariants = boolval($data['variants'] ?? 1);
 
-                $plans = $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'))
-                               ->paginate(10);
+                if($groupByVariants){
+                    $plans->select('name',
+                        DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.name = plans.name and p.deleted_at is null limit 1), group_concat(id)) as id"),
+                        DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                        ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+                } else {
+                    $plans->select('id', 'name', 'description');
+                }
+
+                $plans = $plans->orderBy('name')->paginate(10);
 
                 return PlansSelectResource::collection($plans);
             } else {

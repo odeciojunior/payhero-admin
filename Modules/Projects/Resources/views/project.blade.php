@@ -31,7 +31,7 @@
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                         <li class="nav-item" role="presentation">
                             <a id="tab-info" class="nav-link active" data-toggle="tab" href="#tab_info_geral"
-                               aria-controls="tab_info_geral" role="tab">Informações gerais
+                               aria-controls="tab_info_geral" role="tab">Infos gerais
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -67,8 +67,14 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <a id="tab_upsell" class="nav-link" data-toggle="tab" href="#tab_upsell-panel"
-                               aria-controls="tab_plans" role="tab">
+                               aria-controls="tab_upsell" role="tab">
                                 Upsell
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a id="tab_order_bump" class="nav-link" data-toggle="tab" href="#tab-order-bump-panel"
+                               aria-controls="tab_order_bump" role="tab">
+                                Order Bump
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -105,11 +111,6 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="d-flex">
-                                                        <!-- <div class="p-2 d-flex flex-column">
-                                                            <span class="details-text">Visibilidade--------------</span>
-                                                            <p id="show-visibility"
-                                                               class="card-text text-center sm badge-pill"></p>
-                                                        </div> -->
                                                         <div class="p-2 d-flex justify-content-center flex-column">
                                                             <span class="details-text text-center">Status</span>
                                                             <p id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></p>
@@ -148,8 +149,13 @@
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
                             @include('plans::index')
                         </div>
+                        <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             @include('projectupsellrule::index')
+                        </div>
+                        <!--- Order Bump -->
+                        <div class="tab-pane" id="tab-order-bump-panel" role="tabpanel">
+                            @include('orderbump::index')
                         </div>
                         <!-- Reviews -->
                         <div class="tab-pane" id="tab_project_reviews" role="tabpanel">
@@ -206,6 +212,7 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/orderbump/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>

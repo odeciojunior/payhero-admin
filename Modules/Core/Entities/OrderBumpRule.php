@@ -29,6 +29,19 @@ class OrderBumpRule extends Model
         'updated_at'
     ];
 
+    /**
+     * Mutators
+     */
+    public function getApplyOnPlansAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function getOfferPlansAttribute($value)
+    {
+        return json_decode($value);
+    }
+
     public function project()
     {
         return $this->belongsTo(Project::class);
