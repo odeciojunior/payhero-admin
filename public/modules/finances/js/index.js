@@ -19,8 +19,8 @@ $(document).ready(function () {
         'WAITING_RELEASE': 'warning',
         'PAID': 'success',
         'REVERSED': 'warning',
-        'ADJUSTMENT_CREDIT': 'warning',
-        'ADJUSTMENT_DEBIT': 'warning',
+        'ADJUSTMENT_CREDIT': 'success',
+        'ADJUSTMENT_DEBIT': 'danger',
         'ERROR': 'error',
     }
 
