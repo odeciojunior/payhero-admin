@@ -290,7 +290,8 @@ $(document).ready(function () {
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
-                                        ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
+                                        ${value.upsell ? '<span class="text-muted font-size-10"> (Upsell) </span>' : ''}
+                                        ${value.has_order_bump ? '<span class="text-muted font-size-10"> (Order Bump) </span>' : ''}
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
