@@ -613,6 +613,8 @@ class ProfileApiController
             $link = null;
             $refused = false;
             $analyzing = false;
+            $user = auth()->user();
+            $accountType = ($user->id == $user->account_owner_id) ? 'owner' : 'collaborator';
 
             if ($userDocumentRefused) {
                 $refused = true;
@@ -655,7 +657,8 @@ class ProfileApiController
                     'message' => 'Documentos verificados!',
                     'analyzing' => $analyzing,
                     'refused' => $refused,
-                    'link' => $link
+                    'link' => $link,
+                    'accountType' => $accountType
                 ]
             );
         } catch (Exception $e) {

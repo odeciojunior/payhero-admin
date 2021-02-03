@@ -482,19 +482,21 @@ function ajaxVerifyDocumentPending() {
             //     $('#document-pending').show();
             //     $('#document-pending .top-alert-action').attr('href', response.link);
             // }
-            if (response.analyzing) {
-                $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
-                $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
-                $('#document-pending .top-alert-action').hide();
-                $('#document-pending').show();
-            } else if (response.refused) {
-                $('.top-alert').removeClass('warning');
-                $('.top-alert').addClass('top-bar-danger');
-                $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-verm.svg');
-                $('.top-alert-message').addClass('top-alert-danger');
-                $('.top-alert-message').html('Um de seus documentos foi recusado');
-                $('#document-pending').show();
-                $('#document-pending .top-alert-action').attr('data-value-url', response.link);
+            if(response.accountType == 'owner') {
+                if (response.analyzing) {
+                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
+                    $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
+                    $('#document-pending .top-alert-action').hide();
+                    $('#document-pending').show();
+                } else if (response.refused) {
+                    $('.top-alert').removeClass('warning');
+                    $('.top-alert').addClass('top-bar-danger');
+                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-verm.svg');
+                    $('.top-alert-message').addClass('top-alert-danger');
+                    $('.top-alert-message').html('Um de seus documentos foi recusado');
+                    $('#document-pending').show();
+                    $('#document-pending .top-alert-action').attr('data-value-url', response.link);
+                }
             }
         },
     });
