@@ -6,6 +6,7 @@ use App\Http\Middleware\Broadcast;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\InternalApiAuth;
+use App\Http\Middleware\IsCloudFoxAccount;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\ThrottleRequests;
 use App\Http\Middleware\TrimStrings;
@@ -93,5 +94,6 @@ class Kernel extends HttpKernel
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
         'InternalApiAuth' => InternalApiAuth::class,
+        'IsCloudFoxAccount' => IsCloudFoxAccount::class,
     ];
 }

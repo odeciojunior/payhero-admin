@@ -129,6 +129,29 @@ class TicketsApiController extends Controller
                         return response()->json(['message' => 'A mensagem informada é muito curta!'], 400);
                     }
 
+                    $messageEmail = explode(' ', $data['message']);
+                    foreach ($messageEmail as $key => $value) {
+                        $position = stripos($value, '@');
+                        if($position !== false) {
+                            if(FoxUtils::validateEmail($value)) {
+                                return response()->json(['message' => 'Não é permitido enviar email na mensagem'], 400);
+                            }
+                        }
+                    }
+
+                    $messagePhone = $data['message'];
+                    $string = '';
+                    for($i=0; $i<strlen($messagePhone); $i++){
+                        $string = $messagePhone[$i];
+                        if(is_numeric($string)) {
+                            $phone = substr($messagePhone, $i, 18);
+                            $phone = preg_replace("/[^0-9]/", "", $phone);
+                            if(in_array(strlen($phone), [10,11,13])) {
+                                return response()->json(['message' => 'Não é permitido enviar telefone na mensagem'], 400);
+                            }
+                        }
+                    }
+
                     $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
                         ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
                         ->latest('id')
