@@ -2,7 +2,6 @@
     cursor: pointer;
 }
 
-
 .custom-popover {
     position: absolute;
     z-index: 999;
@@ -371,7 +370,7 @@ select, .select-pad {
     margin-bottom: 0 !important
 }
 
-#modal_detalhes #nav-home-tab {
+#modal_detalhes .nav-tabs .nav-link:not(.active) {
     width: calc(50% - 20px) !important;
 }
 
