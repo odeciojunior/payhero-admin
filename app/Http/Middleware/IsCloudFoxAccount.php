@@ -30,7 +30,6 @@ class IsCloudFoxAccount
 
         if (!$userExist) {
 
-            dd(auth()->user()->email);
             abort(403);
         }
         //dd(auth()->user());
