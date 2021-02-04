@@ -51,7 +51,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $gateway_release_money_days
  * @property string $document_issue_date
  * @property string $document_issuer
- * @property string document_issuer_state
+ * @property string $document_issuer_state
+ * @property float $installment_cashback
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -127,7 +128,8 @@ class Company extends Model
         'created_at',
         'updated_at',
         'id_wall_result',
-        'block_checkout'
+        'block_checkout',
+        'installment_cashback'
     ];
     /**
      * @var bool
