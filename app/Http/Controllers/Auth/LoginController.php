@@ -46,7 +46,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        if ((env('APP_DEBUG') == false)) {
+        if ((env('APP_REDIRECT') == true)) {
 
             if (auth()->user()) {
                 $this->redirectTo();
