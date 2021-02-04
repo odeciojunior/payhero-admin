@@ -573,13 +573,13 @@ a.label {
     -moz-border-radius: 16px !important;
 }
 
-.table-striped > tbody > tr:last-child > td:first-child {
+.table-striped > tbody > tr:nth-child(-n+10) > td:first-child, .teste-1 {
     border-radius: 0 0 0 16px !important;
     -webkit-border-radius: 0 0 0 16px !important;
     -moz-border-radius: 0 0 0 16px !important;
 }
 
-.table-striped > tbody > tr:last-child > td:last-child {
+.table-striped > tbody > tr:nth-child(-n+10) > td:last-child, .teste-2 {
     border-radius: 0 0 16px 0 !important;
     -webkit-border-radius: 0 0 16px 0 !important;
     -moz-border-radius: 0 0 16px 0 !important;
@@ -652,6 +652,10 @@ a.label {
 
 .green.s-border-right, .green.s-border-left, .green.s-border-top, .green.s-border-bottom {
     background: #41DC8F !important;
+}
+
+.purple.s-border-right, .purple.s-border-left, .purple.s-border-top, .purple.s-border-bottom {
+    background: #5D2FEA !important;
 }
 
 .s-btn {

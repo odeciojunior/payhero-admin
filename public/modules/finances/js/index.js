@@ -860,7 +860,7 @@ $(document).ready(function () {
                     if (value.is_owner && value.sale_id) {
                         data += `<td style="vertical-align: middle;">
                             ${value.reason}
-                            <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
+                            <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
                                 <span style="color:black;">#${value.sale_id}</span>
                             </a><br>
                             <small>Venda em: ${value.sale_date}</small>
@@ -951,7 +951,7 @@ $(document).ready(function () {
                             `;
                         } else {
                             dataTable += `
-                                 <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                 <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
                                     <span class="bold">#${item.order.hashId}</span>
                                 </a>
                             `;
@@ -1018,10 +1018,10 @@ $(document).ready(function () {
                 $("#pagination-statement").on('click', function () {
                     $("#pagination-statement span").remove();
                 });
+
                 loadOnAnyEllipsis('#nav-statement #statement-money  #available-in-period-statement', true);
             }
         });
-
     }
 
     function updateClassHTML(dataTable = 0) {
@@ -1188,6 +1188,8 @@ $(document).ready(function () {
     $('#pagination-statement').click(function () {
         setTimeout(function() {
             $('.s-table:visible').attr('style', 'display: !')
+            $('.table tr:visible:last > td:first').addClass('teste-1')
+            $('.table tr:visible:last > td:last').addClass('teste-2')
         }, 100);
     })
 });

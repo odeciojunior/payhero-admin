@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=02'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=03'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -19,7 +19,7 @@
                     <div id="export-excel">
                         <div class="p-2 d-flex justify-content-end align-items-center">
                                             <span id="bt_get_csv_default"
-                                                  class="o-download-cloud-1 icon-export btn mr-2"
+                                                  class="o-download-cloud-1 icon-export btn mr-2 d-none d-md-block"
                                                   style="cursor: default"></span>
                             <div class="btn-group" role="group">
                                 <button style="border-radius: 16px 0 0 16px" id="bt_get_sale_xls" type="button"
@@ -83,7 +83,7 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -222,7 +222,7 @@
                             <div class="tab-content" id="nav-tabContent">
                                 <div class='container col-sm-12 mt-20  d-md-none'>
                                     <div class='row'>
-                                        <div class="col-12 col-sm-6 pl-0">
+                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Pendente </h6>
@@ -231,7 +231,7 @@
                                                 <div class="s-border-right yellow"></div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 pr-0">
+                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
@@ -240,7 +240,7 @@
                                                 <div class="s-border-right red"></div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 pl-0">
+                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Saldo Total </h6>
@@ -249,7 +249,7 @@
                                                 <div class="s-border-right blue"></div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-6 pr-0">
+                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
                                             <div class="card card-body mb-10">
                                                 <div class="price-holder">
                                                     <h6 class="label-price mb-15"> Débitos pendentes </h6>
@@ -301,7 +301,7 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-25">
+                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
@@ -431,7 +431,7 @@
                                             <div class="row d-md-none">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
-                                                        <div class="col-6">
+                                                        <div class="col-6 pr-0">
                                                             <div
                                                                 class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                 data-toggle="collapse"
@@ -524,7 +524,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row d-flex align-items-start p-20">
+                                        <div class="row d-contents d-md-flex align-items-start p-20">
                                             <div class="col-12 col-md-6 mb-50">
                                                 <div class="card bg-light no-shadow mt-30">
                                                     <div class="card-body">
@@ -547,7 +547,7 @@
                                                         <br/>
                                                         <p class="mb-0">Frequência</p>
                                                         <div
-                                                            class="frequency-container py-10 d-flex justify-content-between align-items-center">
+                                                            class="frequency-container py-10 d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center">
                                                             <button type="button" data-frequency="daily"
                                                                     class="btn btn-block m-0 mr-5 py-10">
                                                                 Diário
@@ -565,7 +565,7 @@
                                                         </div>
 
                                                         <div
-                                                            class="weekdays-container d-flex align-items-center justify-content-between mt-20">
+                                                            class="weekdays-container d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
                                                             <button type="button" class="btn py-15" data-weekday="1">
                                                                 SEG
                                                             </button>
@@ -589,7 +589,7 @@
                                                             </button>
                                                         </div>
                                                         <div
-                                                            class="day-container d-none align-items-center justify-content-between mt-20">
+                                                            class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
                                                             @foreach (['01', '05', '10', '15', '20', '25', '30'] as $day)
                                                                 <button type="button" class="btn py-15"
                                                                         data-day="{{$day}}">
@@ -599,7 +599,7 @@
                                                         </div>
                                                         <br/>
                                                         <div class="row">
-                                                            <div class="col-5">
+                                                            <div class="col-md-5">
                                                                 <button type="submit"
                                                                         class="btn btn-block btn-success btn-success-1 py-10 px-15">
                                                                     <img style="height: 12px; margin-right: 4px"
@@ -643,7 +643,7 @@
                                                         </div>
                                                         <br/>
                                                         <div class="row">
-                                                            <div class="col-5">
+                                                            <div class="col-md-5">
                                                                 <button type="submit"
                                                                         class="btn btn-block btn-default py-10 px-15">
                                                                     <img style="height: 12px; margin-right: 4px"
