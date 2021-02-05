@@ -690,3 +690,7 @@ a.label {
     border-top-right-radius: 16px;
     border-bottom-right-radius: 16px;
 }
+
+.select2-search__field {
+    min-width: 104px;
+}
