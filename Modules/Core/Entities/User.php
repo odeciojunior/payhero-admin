@@ -44,6 +44,13 @@ use Laravel\Passport\HasApiTokens;
  * @property string $sex
  * @property string $mother_name
  * @property boolean $has_sale_before_getnet
+ * @property integer $chargeback_tax
+ * @property integer $account_score
+ * @property integer $chargeback_score
+ * @property integer $attendance_score
+ * @property integer $tracking_score
+ * @property integer $installment_cashback
+ * @property integer $attendance_average_response_time
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
@@ -115,6 +122,13 @@ class User extends Authenticable
         'mother_name',
         'has_sale_before_getnet',
         'account_is_approved',
+        'chargeback_tax',
+        'account_score',
+        'chargeback_score',
+        'attendance_score',
+        'tracking_score',
+        'attendance_average_response_time',
+        'installment_cashback',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -23,6 +23,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string  $last_message_date
  * @property boolean $mediation_notified
  * @property boolean $ignore_balance_block
+ * @property tinyInteger $classification_enum
+ * @property integer $average_response_time
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -59,6 +61,8 @@ class Ticket extends Model
         'last_message_date',
         'mediation_notified',
         'ignore_balance_block',
+        'classification_enum',
+        'average_response_time',
         'created_at',
         'updated_at',
         'deleted_at',
