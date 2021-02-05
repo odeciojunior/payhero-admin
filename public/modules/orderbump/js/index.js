@@ -208,10 +208,9 @@ $(() => {
     });
 
     //Search plan
-    $('#store-apply-on-plans-order-bump, #update-apply-on-plans-order-bump, #store-offer-plans-order-bump, #update-offer-plans-order-bump').select2({
+    let select2Configs = {
         placeholder: 'Nome do plano',
         multiple: true,
-        dropdownParent: $('#modal-store-order-bump'),
         language: {
             noResults: function () {
                 return 'Nenhum plano encontrado';
@@ -261,5 +260,7 @@ $(() => {
                 };
             },
         }
-    });
+    }
+    $('#store-apply-on-plans-order-bump, #store-offer-plans-order-bump').select2({dropdownParent: $('#modal-store-order-bump'), ...select2Configs});
+    $('#update-apply-on-plans-order-bump, #update-offer-plans-order-bump').select2({dropdownParent: $('#modal-update-order-bump'), ...select2Configs});
 });
