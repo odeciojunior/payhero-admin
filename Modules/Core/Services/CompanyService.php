@@ -3,20 +3,14 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
-use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Tracking;
 use Illuminate\Support\Facades\DB;
 use LogicException;
-use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
 /**
@@ -331,7 +325,6 @@ class CompanyService
                            ->whereNull('withdrawal_id')
                            ->sum('value');
         } elseif(empty($liquidationType)) {
-
             $transactionsValue = $company->transactions()
                                         ->whereIn('gateway_id', [14, 15])
                                         ->where('is_waiting_withdrawal', 1)
@@ -620,6 +613,7 @@ class CompanyService
 
     public function getPendingDebtBalance(Company $company){
         return (new PendingDebt())->where('company_id', $company->id)
+            ->doesntHave('withdrawals')
             ->whereNull('confirm_date')
             ->sum("value");
     }

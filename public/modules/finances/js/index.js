@@ -331,16 +331,14 @@ $(document).ready(function () {
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
-                            const withdrawalValue = $(".s-btn.green").data('value');
-                            console.log(withdrawalValue);
 
-                            /*$("#bt-confirm-withdrawal").attr('disabled', 'disabled');
+                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                             $.ajax({
                                 url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
                                     company_id: $('#transfers_company_select').val(),
-                                    withdrawal_value: withdrawalValue
+                                    withdrawal_value: $(".s-btn.green").data('value')
                                 },
                                 dataType: "json",
                                 headers: {
@@ -365,12 +363,11 @@ $(document).ready(function () {
                                     });
 
                                     updateBalances();
-                                    // checkDebitFutureValue();
                                 },
                                 complete: (response) => {
                                     $("#bt-confirm-withdrawal").removeAttr('disabled');
                                 }
-                            });*/
+                            });
                         });
                     }
                 }
@@ -430,7 +427,6 @@ $(document).ready(function () {
                 'bigger_value': dataWithdrawal.bigger_value
             }
 
-            console.log(dataWithdrawal);
             const currentBalance = $('.available-balance').data('value').replace(',', '').replace('.', '');
             const withdrawal = $('#custom-input-addon').val().replace(',', '').replace('.', '');
 
@@ -453,15 +449,57 @@ $(document).ready(function () {
 
                     $('#modal-withdrawal-title').text("Não é possivel realizar este saque");
 
-                    $("#text-title-debit-pending").html("Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.");
-                    $("#text-description-debit-pending").html("Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.");
-
-
-                    $("#requested-amount-withdrawal").text('R$' + $(".available-balance").html().trim());
+                    $("#debit-pending-informations").html(`
+                        <div class="col-12">
+                            <h3 class="text-center mt-10" id="text-title-debit-pending">Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.</h3>
+                             <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
+                                Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.
+                            </p>
+                            <div id="debit-itens">
+                                <div class="row">
+                                    <div class='col-md-8 mt-10'>
+                                        <p style="color: #5A5A5A;">SALDO DISPONÍVEL</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span
+                                            class="currency"
+                                            style="font: normal normal 300 19px/13px Roboto;
+                                                    color: #41DC8F;"
+                                        >
+                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${formatMoney(removeFormatNumbers(currentBalance))}</span>
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="row" style="background-color:#F41C1C1A;">
+                                    <div class='col-md-8 mt-10'>
+                                        <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(removeFormatNumbers(debitValue))}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                 <div class="row">
+                                    <div class='col-md-8 mt-10'>
+                                        <p style="color: #5A5A5A;" id="modal-text-amount-receivable">SALDO FINAL</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span
+                                            class="currency"
+                                            style="font: normal normal 300 19px/13px Roboto;
+                                                    color: #E61A1A;"
+                                        >
+                                            <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).show();
 
                     let result = currentBalance - removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
-                    $("#debit-pending-informations").show();
 
                     $('#modal-withdraw-footer').html(`
                         <hr>
@@ -482,18 +520,52 @@ $(document).ready(function () {
 
                     $('#modal-withdrawal-title').text("Não é possivel realizar este saque");
 
-                    $("#text-title-debit-pending").html("Você tem débitos pendentes superiores ao <br> valor solicitado no saque.");
-
-                    $('#modal-text-amount-receivable').html('VALOR NEGATIVO');
-
-                    if (debitValue != undefined) {
-                        $("#requested-amount-withdrawal").text(formatMoney(withdrawal));
-
-                        let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
-                        $("#value-withdrawal-received").text(formatMoney(result));
-                        $("#debit-pending-informations").show();
-
-                    }
+                    $("#debit-pending-informations").html(`
+                        <div class="col-12">
+                            <h3 class="text-center mt-10" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.</h3>
+                            
+                            <div id="debit-itens">
+                                <div class="row">
+                                    <div class='col-md-8 mt-10'>
+                                        <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span
+                                            class="currency"
+                                            style="font: normal normal 300 19px/13px Roboto;
+                                                    color: #41DC8F;"
+                                        >
+                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${dataWithdrawal.bigger_value}</span>
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="row" style="background-color:#F41C1C1A;">
+                                    <div class='col-md-8 mt-10' >
+                                        <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(removeFormatNumbers(debitValue))}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                 <div class="row">
+                                    <div class='col-md-8 mt-10'>
+                                        <p style="color: #5A5A5A;" id="modal-text-amount-receivable">VALOR NEGATIVO</p>
+                                    </div>
+                                    <div class="col-md-4 mt-10 text-right">
+                                        <span
+                                            class="currency"
+                                            style="font: normal normal 300 19px/13px Roboto;
+                                                    color: #E61A1A;"
+                                        >
+                                            <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).show();
 
                     $('#modal-withdraw-footer').html(`
                         <hr>
@@ -507,6 +579,12 @@ $(document).ready(function () {
                             </button>
                         </div>
                     `);
+
+                    $("#requested-amount-withdrawal").text(formatMoney(withdrawal));
+
+                    let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
+                    $("#value-withdrawal-received").text(formatMoney(result));
+                    $("#debit-pending-informations").show();
                 }
             }
 
@@ -536,10 +614,7 @@ $(document).ready(function () {
                     </div>
                 `);
 
-                console.log(debitValue);
                 if (debitValue != undefined && debitValue != '0,00') {
-                    $("#text-title-debit-pending").html("Débitos pendentes");
-                    $("#text-description-debit-pending").html("Você tem alguns valores em aberto, confira:");
                     $("#debit-pending-informations").html(`
                         <div class="col-12">
                             <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
@@ -561,8 +636,8 @@ $(document).ready(function () {
                                             </span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class='col-md-8 mt-10'>
+                                <div class="row" style="background-color:#F41C1C1A;">
+                                    <div class='col-md-8 mt-10' >
                                         <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                                     </div>
                                     <div class="col-md-4 mt-10 text-right">
