@@ -13,7 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PendingDebtWithdrawal extends Model
 {
-    protected $fillable = [];
+    protected $fillable = [
+        'pending_debt_id',
+        'withdrawal_id'
+    ];
+
+    public $timestamps= false;
 
     public function pendingDebt(): BelongsTo
     {

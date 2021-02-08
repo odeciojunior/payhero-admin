@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -100,5 +101,10 @@ class Withdrawal extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    public function pendingDebts(): BelongsToMany
+    {
+        return $this->belongsToMany(PendingDebt::class, 'pending_debt_withdrawals');
     }
 }

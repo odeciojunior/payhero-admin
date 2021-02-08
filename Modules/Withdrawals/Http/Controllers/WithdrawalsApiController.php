@@ -7,21 +7,20 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-use Modules\Withdrawals\Transformers\WithdrawalTransactionsResource;
+use PDOException;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
-use PDOException;
 
 class WithdrawalsApiController
 {
@@ -107,6 +106,7 @@ class WithdrawalsApiController
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
+
 
             $companyService = new CompanyService();
 
@@ -195,7 +195,27 @@ class WithdrawalsApiController
                     }
                 );
 
-                $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
+                $pendingDebts = PendingDebt::where('company_id', $company->id)
+                    ->doesntHave('withdrawals')
+                    ->get(['id', 'value']);
+                $pendingDebtsSum = 0;
+                foreach ($pendingDebts as $pendingDebt) {
+                    $pendingDebtsSum += $pendingDebt->value;
+                    PendingDebtWithdrawal::create(
+                        [
+                            'pending_debt_id' => $pendingDebt->id,
+                            'withdrawal_id' => $withdrawal->id
+                        ]
+                    );
+                }
+
+                $withdrawal->update(
+                    [
+                        'value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value'),
+                        'debt_pending_value' => $pendingDebtsSum
+                    ]
+                );
+
 
                 DB::commit();
             } catch (PDOException $e) {
@@ -291,9 +311,7 @@ class WithdrawalsApiController
 
     public function getTransactionsByBrand($id)
     {
-
         try {
-
             $withdrawalId = current(Hashids::decode($id));
             $withdrawalModel = new Withdrawal();
 
@@ -323,18 +341,15 @@ class WithdrawalsApiController
             $total_withdrawal = 0;
 
             foreach ($transactions as $transaction) {
-
                 $total_withdrawal += $transaction->value;
 
                 if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
                     $transaction->sale->flag = 'generico';
-               }
-                elseif ($transaction->sale->payment_method == 2) {
+                } elseif ($transaction->sale->payment_method == 2) {
                     $transaction->sale->flag = 'boleto';
-               }
+                }
 
-                if ( !$transaction->gateway_transferred  and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8 )) {
-
+                if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
                     $getNetBackOfficeService = new GetnetBackOfficeService();
 
                     $getNetBackOfficeService->setStatementSubSellerId($subsellerGetnetId)
@@ -347,7 +362,11 @@ class WithdrawalsApiController
                         !empty($gatewaySale->list_transactions[0]->details[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
                     ) {
-                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = str_replace(
+                            'T',
+                            ' ',
+                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+                        );
                         $date = date("d/m/Y", strtotime($date));
 
                         $transaction->update(
@@ -356,25 +375,19 @@ class WithdrawalsApiController
                             ]
                         );
 
-                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date );
-
+                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date);
                     } else {
-
-                        $this->updateArrayBrands($arrayBrands, $transaction, false );
+                        $this->updateArrayBrands($arrayBrands, $transaction, false);
                     }
+                } else {
+                    $this->updateArrayBrands($arrayBrands, $transaction, true);
                 }
-                else {
-                    $this->updateArrayBrands($arrayBrands, $transaction, true );
-                }
-
             }
 
             $arrayTransactions = [];
 
             foreach ($arrayBrands as $arrayBrand) {
-
-                if ($arrayBrand['liquidated'] == true and  empty($arrayBrand['date'])) {
-
+                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
                     $subSeller = $subsellerGetnetId;
 
                     $getNetBackOfficeService = new GetnetBackOfficeService();
@@ -390,7 +403,11 @@ class WithdrawalsApiController
                         !empty($gatewaySale->list_transactions[0]->details[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
                     ) {
-                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = str_replace(
+                            'T',
+                            ' ',
+                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+                        );
                         $date = date("d/m/Y", strtotime($date));
 
                         $arrayBrand['date'] = $date;
@@ -401,7 +418,7 @@ class WithdrawalsApiController
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
                     'liquidated' => $arrayBrand['liquidated'],
-                    'date' =>  $arrayBrand['date'] ?? ' - ',
+                    'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
 
@@ -410,11 +427,10 @@ class WithdrawalsApiController
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
-                'transactions' =>  $arrayTransactions,
+                'transactions' => $arrayTransactions,
             ];
 
             return response()->json($return, 200);
-
         } catch (Exception $e) {
             report($e);
 
@@ -422,28 +438,24 @@ class WithdrawalsApiController
         }
     }
 
-    public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {
-
-        if (array_key_exists($transaction->sale->flag,$arrayBrands))
-        {
+    public function updateArrayBrands(array &$arrayBrands, $transaction, $isLiquidated, $date = null)
+    {
+        if (array_key_exists($transaction->sale->flag, $arrayBrands)) {
             if (!$isLiquidated) {
                 $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
             }
 
             $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
-        }
-        else
-        {
+        } else {
             $arrayBrands[$transaction->sale->flag] = [
                 'brand' => $transaction->sale->flag,
                 'value' => $transaction->value,
                 'liquidated' => $isLiquidated,
-                'date' =>  $date,
+                'date' => $date,
                 'hash_id' => $transaction->sale->hash_id,
 
             ];
         }
-
     }
 
     public function getTransactions(Request $request, $id)
@@ -452,9 +464,11 @@ class WithdrawalsApiController
             $dataRequest = \request()->all();
             $withdrawalId = current(Hashids::decode($id));
 
-            activity()->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
 
             $user = auth()->user();
             $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
@@ -465,9 +479,7 @@ class WithdrawalsApiController
             (new WithdrawalsReportExport($withdrawalId, $user, $email, $filename))
                 ->queue($filename)->allOnQueue('high');
 
-           return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
-
-
+            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
             report($e);
 
