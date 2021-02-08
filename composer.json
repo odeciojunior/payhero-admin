@@ -34,7 +34,7 @@
         "laravelcollective/html": "6.*",
         "lcobucci/jwt": "3.3.3",
         "league/flysystem": "^1.0",
-        "league/flysystem-aws-s3-v3": "^1.0",
+        "league/flysystem-aws-s3-v3": "~1.0",
         "nwidart/laravel-modules": "^5",
         "pagarme/pagarme-php": "4.0.0-alpha",
         "paquettg/php-html-parser": "^2.0",
