@@ -699,7 +699,7 @@
                 <div id="" class="modal-content modal-content-style">
                     <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal"
                          style="height: 60px;">
-                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;">Confirmar Saque</h3>
+                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;"></h3>
                     </div>
                     <div class="modal-body">
 
@@ -711,15 +711,7 @@
                             </div>
                             <div id="debit-pending-informations" class="col-12 mt-20"
                                  style="display:none;background:  0 0 no-repeat padding-box;">
-                                <div class="col-12">
-                                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                                    <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
-                                        Você tem alguns valores em aberto, confira:
-                                    </p>
-                                    <div id="debit-itens">
 
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

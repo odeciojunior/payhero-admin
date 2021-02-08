@@ -41,7 +41,8 @@ class GetnetGetDiscountsCommand extends Command
     {
 
         //$companyId = 2964; // JOÃO 28 ou 2964
-        $companyId = 3035; // RUPERT BRASIL LUSTOSA 00110115309
+//        $companyId = 3035; // RUPERT BRASIL LUSTOSA 00110115309
+        $companyId = 2964;
 
         $company = Company::select('id', 'user_id', 'fantasy_name', 'subseller_getnet_id', 'subseller_getnet_homolog_id')
             ->find($companyId);

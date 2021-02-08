@@ -9,6 +9,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
@@ -615,6 +616,12 @@ class CompanyService
             ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
             })->sum('value');
+    }
+
+    public function getPendingDebtBalance(Company $company){
+        return (new PendingDebt())->where('company_id', $company->id)
+            ->whereNull('confirm_date')
+            ->sum("value");
     }
 
     public function updateCaptureTransactionEnabled(Company $company): void
