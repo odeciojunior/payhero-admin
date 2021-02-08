@@ -20,7 +20,7 @@ class AlterUsersAddScoreFields extends Migration
             $table->integer('attendance_score')->after('account_is_approved')->nullable();
             $table->integer('tracking_score')->after('account_is_approved')->nullable();
             $table->integer('attendance_average_response_time')->after('account_is_approved')->nullable();
-            $table->integer('installment_cashback')->after('account_is_approved')->default(0);
+            $table->float('installment_cashback')->after('account_is_approved')->default(0.0);
         });
     }
 
