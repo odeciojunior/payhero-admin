@@ -5,20 +5,18 @@ namespace Modules\Withdrawals\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\PendingDebt;
-use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\UserService;
 use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
+use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-use PDOException;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -89,34 +87,31 @@ class WithdrawalsApiController
                     400
                 );
             }
+            $withdrawalService = new WithdrawalService();
 
-            $user = auth()->user();
-
-            if ($user->status == (new User())->present()->getStatus('withdrawal blocked')) {
+            if ((new UserService())->userWithdrawalBlocked(auth()->user())) {
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
             }
 
-            $withdrawalModel = new Withdrawal();
-            $companyModel = new Company();
+            $data = $request->only(['company_id', 'withdrawal_value']);
 
-            $data = $request->all();
-
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = (new Company())->find(current(Hashids::decode($data['company_id'])));
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
+            $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
             $companyService = new CompanyService();
-
-            $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
             $availableBalance = $companyService->getAvailableBalance(
                 $company,
                 CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
             );
 
-            if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
+            $pendingDebtsSum = $companyService->getPendingDebtBalance($company);
+
+            if(!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)){
                 return response()->json(
                     [
                         'message' => 'Valor informado inválido',
@@ -125,106 +120,13 @@ class WithdrawalsApiController
                 );
             }
 
-            $withdrawalStatus = [
-                $withdrawalModel->present()->getStatus('liquidating'),
-                $withdrawalModel->present()->getStatus('partially_liquidated'),
-                $withdrawalModel->present()->getStatus('transfered')
-            ];
+            $responseCreateWithdrawal = $withdrawalService->createWithdrawal($withdrawalValue, $company);
 
-            $isFirstUserWithdrawal = false;
-            $userWithdrawal = $withdrawalModel->whereHas(
-                'company',
-                function ($query) {
-                    $query->where('user_id', auth()->user()->account_owner_id);
-                }
-            )
-                ->whereIn('status', $withdrawalStatus)
-                ->exists();
-
-            if (!$userWithdrawal) {
-                $isFirstUserWithdrawal = true;
+            if ($responseCreateWithdrawal) {
+                return response()->json(['message' => 'Saque pendente'], 200);
             }
 
-            try {
-                DB::beginTransaction();
-                $withdrawal = $withdrawalModel->create(
-                    [
-                        'value' => $withdrawalValue,
-                        'company_id' => $company->id,
-                        'bank' => $company->bank,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'status' => $withdrawalModel->present()->getStatus(
-                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                        ),
-                        'tax' => 0,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'automatic_liquidation' => true,
-                    ]
-                );
-
-                $transactionsSum = $company->transactions()
-                    ->whereIn('gateway_id', [14, 15])
-                    ->where('is_waiting_withdrawal', 1)
-                    ->whereNull('withdrawal_id')
-                    ->orderBy('id');
-
-                $currentValue = 0;
-
-                $transactionsSum->chunkById(
-                    2000,
-                    $test = function ($transactions) use (
-                        $currentValue,
-                        $withdrawalValue,
-                        $withdrawal
-                    ) {
-                        foreach ($transactions as $transaction) {
-                            $currentValue += $transaction->value;
-
-                            if ($currentValue <= $withdrawalValue) {
-                                $transaction->update(
-                                    [
-                                        'withdrawal_id' => $withdrawal->id,
-                                        'is_waiting_withdrawal' => false
-                                    ]
-                                );
-                            }
-                        }
-                    }
-                );
-
-                $pendingDebts = PendingDebt::where('company_id', $company->id)
-                    ->doesntHave('withdrawals')
-                    ->get(['id', 'value']);
-                $pendingDebtsSum = 0;
-                foreach ($pendingDebts as $pendingDebt) {
-                    $pendingDebtsSum += $pendingDebt->value;
-                    PendingDebtWithdrawal::create(
-                        [
-                            'pending_debt_id' => $pendingDebt->id,
-                            'withdrawal_id' => $withdrawal->id
-                        ]
-                    );
-                }
-
-                $withdrawal->update(
-                    [
-                        'value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value'),
-                        'debt_pending_value' => $pendingDebtsSum
-                    ]
-                );
-
-
-                DB::commit();
-            } catch (PDOException $e) {
-                DB::rollBack();
-                report($e);
-                return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
-            }
-
-            return response()->json(['message' => 'Saque pendente'], 200);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         } catch (Exception $e) {
             report($e);
 
