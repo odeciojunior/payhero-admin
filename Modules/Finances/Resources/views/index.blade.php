@@ -407,13 +407,16 @@
                                                             <option value="WAITING_FOR_VALID_POST">
                                                                 Aguardando postagem válida
                                                             </option>
-                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
+                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                            </option>
                                                             <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
-                                                            <option value="WAITING_RELEASE">Aguardando liberação</option>
+                                                            <option value="WAITING_RELEASE">Aguardando liberação
+                                                            </option>
                                                             <option value="PAID">Liquidado</option>
                                                             <option value="REVERSED">Estornado</option>
                                                             <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
                                                             <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                            <!--<option value="PENDING_DEBIT">Débitos pendentes (Estorno e Ajuste de débito)</option>-->
                                                         </select>
                                                     </div>
                                                 </div>
