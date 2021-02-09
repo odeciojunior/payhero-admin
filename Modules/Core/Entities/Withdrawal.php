@@ -62,6 +62,7 @@ class Withdrawal extends Model
         'observation',
         'automatic_liquidation',
         'is_released',
+        'debt_pending_value',
         'created_at',
         'updated_at',
     ];
