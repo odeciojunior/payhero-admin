@@ -321,4 +321,11 @@ class Sale extends Model
 
         return Hashids::connection('sale_id')->encode($this->id);
     }
+    /**
+     * @return BelongsTo
+     */
+    public function cashback()
+    {
+        return $this->hasOne(Cashback::class);
+    }
 }
