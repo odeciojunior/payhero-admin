@@ -35,7 +35,7 @@ class GetnetBackOfficeService extends GetnetService
     protected ?string $sellerId, $statementSubSellerId = null;
     protected Carbon $statementStartDate, $statementEndDate;
     protected ?string $statementDateField, $statementSaleHashId = '';
-    protected int $statementPage = 1;
+    protected int $saleId = 0;
 
     /**
      * @return string|null
@@ -340,7 +340,7 @@ class GetnetBackOfficeService extends GetnetService
 
                     $transactionStatusCode = $summary->transaction_status_code;
                     // Aqui existe redundância para ficar mais legível quando comparado com o código do GetNetStatementService.php
-                    if ($transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_ESTORNADA) {
+                    if ($transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO) {
 
                         $paidWith = null;
                         $type = StatementItem::TYPE_REVERSED;
@@ -349,7 +349,7 @@ class GetnetBackOfficeService extends GetnetService
                         $hasOrderId = empty($summary->order_id) ? false : true;
                         $isTransactionCredit = $details->transaction_sign == '+';
 
-                        if ($hasOrderId && !$isTransactionCredit && $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO) {
+                        if ($hasOrderId && !$isTransactionCredit) {
 
                             $details = new Details();
                             $details->setStatus('Estornado')
@@ -389,7 +389,6 @@ class GetnetBackOfficeService extends GetnetService
                 if (
                     $adjustment->cnpj_marketplace != $adjustment->cpfcnpj_subseller
                     && $adjustment->transaction_sign == '-'
-                    //&& empty($adjustment->subseller_rate_confirm_date)
                 ) {
 
                     $amount = $adjustment->adjustment_amount / 100;
@@ -445,17 +444,13 @@ class GetnetBackOfficeService extends GetnetService
 
             PendingDebt::updateOrCreate([
                 'company_id' => $company->id,
-                'sale_id' => $item->order ? $item->order->getSaleId() : null,
                 'type' => $item->type,
                 'value' => abs($item->amount * 100),
             ],
                 [
-                    'request_date' => $item->transactionDate ? Carbon::createFromFormat('d/m/Y',
-                        $item->transactionDate) : null,
                     'confirm_date' => $item->subSellerRateConfirmDate ? Carbon::createFromFormat('d/m/Y',
                         $item->subSellerRateConfirmDate) : null,
                     'payment_date' => $item->date ? Carbon::createFromFormat('d/m/Y', $item->date) : null,
-                    'reason' => $item->details->getDescription(),
                 ]);
         }
 
@@ -476,180 +471,6 @@ class GetnetBackOfficeService extends GetnetService
         Redis::connection('redis-statement')->set("getDiscounts:lastVerification:" . $company->id, date('YmdHi'));
 
         return $return;
-    }
-
-    public function getDiscounts(Company $company)
-    {
-
-        $total = 0;
-        $totalReversed = 0;
-        $totalAdjustment = 0;
-        $statementItems = [];
-
-        if (FoxUtils::isProduction()) {
-
-            $subSellerId = $company->subseller_getnet_id;
-        } else {
-
-            $subSellerId = $company->subseller_getnet_homolog_id;
-        }
-
-        $dateInit = '2020-12-01 00:00:00';
-        $dateEnd = today()->addDays(7)->format('Y-m-d') . ' 23:59:59';
-
-        $queryParameters = [
-            'seller_id' => $this->sellerId,
-            'subseller_id' => $subSellerId,
-            'schedule_date_init' => $dateInit,
-            'schedule_date_end' => $dateEnd,
-        ];
-
-        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
-        $originalResult = $this->sendCurl($url, 'GET', null, null, false);
-        $result = json_decode($originalResult);
-
-        if (isset($result->list_transactions)) {
-
-            foreach ($result->list_transactions as $item) {
-
-                if (isset($item->summary) && isset($item->details) && is_array($item->details) && count($item->details) == 1) {
-
-                    $summary = $item->summary;
-                    $details = $item->details[0];
-
-                    if (empty($details->subseller_rate_confirm_date)) {
-
-                        $amount = $details->subseller_rate_amount / 100;
-                        $amount = $details->transaction_sign == '-' ? ($amount * -1) : $amount;
-
-                        $paymentDate = $details->payment_date ?? '';
-                        $transactionDate = $details->transaction_date ?? '';
-                        $subSellerRateClosingDate = $details->subseller_rate_closing_date ?? '';
-                        $subSellerRateConfirmDate = $details->subseller_rate_confirm_date ?? '';
-
-                        foreach ([
-                                     'paymentDate',
-                                     'transactionDate',
-                                     'subSellerRateClosingDate',
-                                     'subSellerRateConfirmDate'
-                                 ] as $date) {
-
-                            if ($date) {
-
-                                ${$date} = $this->formatDate(${$date});
-                            }
-                        }
-
-                        $transactionStatusCode = $summary->transaction_status_code;
-                        // Aqui existe redundância para ficar mais legível quando comparado com o código do GetNetStatementService.php
-                        if ($transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_ESTORNADA) {
-
-                            $paidWith = null;
-                            $type = StatementItem::TYPE_REVERSED;
-
-                            $orderFromGetNetOrderId = (new GetNetStatementService)->setOrderFromGetNetOrderId($summary->order_id);
-                            $hasOrderId = empty($summary->order_id) ? false : true;
-                            $isTransactionCredit = $details->transaction_sign == '+';
-
-                            if ($hasOrderId && !$isTransactionCredit && $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO) {
-
-                                $details = new Details();
-                                $details->setStatus('Estornado')
-                                    ->setDescription('Solicitação do estorno: ' . $this->formatDate($summary->transaction_date))
-                                    ->setType(Details::STATUS_REVERSED);
-
-                                $date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-
-                                $statementItem = new StatementItem();
-
-                                $statementItem->order = $orderFromGetNetOrderId;
-                                $statementItem->details = $details;
-                                $statementItem->amount = $amount;
-                                $statementItem->isInvite = $amount <= 5.00;
-                                $statementItem->paidWith = $paidWith;
-                                $statementItem->type = $type;
-                                $statementItem->transactionDate = $transactionDate;
-                                $statementItem->date = $date;
-                                $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
-                                $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
-                                    $statementItem->date)->format('Ymd')) : 0;
-
-                                $total += $amount;
-                                $totalReversed += $amount;
-                                $statementItems[] = $statementItem;
-
-                            }
-
-                        }
-                    }
-
-                }
-            }
-        }
-
-        if (isset($result->adjustments)) {
-
-            foreach ($result->adjustments as $adjustment) {
-
-                if (
-                    $adjustment->cnpj_marketplace != $adjustment->cpfcnpj_subseller
-                    && $adjustment->transaction_sign == '-'
-                    && empty($adjustment->subseller_rate_confirm_date)
-                ) {
-
-                    $amount = $adjustment->adjustment_amount / 100;
-                    $amount = $adjustment->transaction_sign == '-' ? ($amount * -1) : $amount;
-
-                    $paymentDate = $adjustment->payment_date ?? '';
-                    $adjustmentDate = $adjustment->adjustment_date ?? '';
-                    $subSellerRateClosingDate = $adjustment->subseller_rate_closing_date ?? '';
-                    $subSellerRateConfirmDate = $adjustment->subseller_rate_confirm_date ?? '';
-
-                    foreach ([
-                                 'paymentDate',
-                                 'adjustmentDate',
-                                 'subSellerRateClosingDate',
-                                 'subSellerRateConfirmDate'
-                             ] as $date) {
-
-                        if ($date) {
-
-                            ${$date} = $this->formatDate(${$date});
-                        }
-                    }
-
-                    $details = new Details();
-                    $details->setStatus('Ajuste de ' . ($adjustment->transaction_sign == '+' ? 'crédito' : 'débito'))
-                        ->setDescription($adjustment->adjustment_reason)
-                        ->setType($adjustment->transaction_sign == '+' ? Details::STATUS_ADJUSTMENT_CREDIT : Details::STATUS_ADJUSTMENT_DEBIT);
-
-                    $date = $subSellerRateConfirmDate ? $subSellerRateClosingDate : $paymentDate;
-
-                    $statementItem = new StatementItem();
-
-                    $statementItem->amount = $amount;
-                    $statementItem->details = $details;
-                    $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
-                    $statementItem->transactionDate = $adjustmentDate;
-                    $statementItem->date = $date;
-                    $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
-                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
-                        $statementItem->date)->format('Ymd')) : 0;
-
-                    $totalAdjustment += $amount;
-                    $total += $amount;
-                    $statementItems[] = $statementItem;
-
-                }
-            }
-        }
-
-        return [
-            'amount' => $total,
-            'amount_adjustments' => $totalAdjustment,
-            'amount_reversed' => $totalReversed,
-            'items' => collect($statementItems)->sortByDesc('sequence')->values()->all(),
-        ];
     }
 
     private function formatDate(string $date): string
@@ -704,24 +525,15 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         if (!empty($this->getStatementSaleHashId())) {
+
             $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
-
-            /*if ($sale) {
-                if ($sale->created_at > '2020-10-30 13:28:51.0') {
-                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->id . '-' . $sale->attempts;
-                } else {
-                    $orderId = $this->getStatementSaleHashId() . '-' . $sale->attempts;
-                }
-
-                $queryParameters['order_id'] = $orderId;
-            }*/
 
             if ($sale) {
 
+                $this->saleId = $sale->id;
                 $queryParameters['order_id'] = $sale->gateway_order_id;
             }
         }
-
 
         if (request('debug')) {
 
@@ -879,20 +691,18 @@ class GetnetBackOfficeService extends GetnetService
                     ]));
 
                     GetnetGetDiscountsJob::dispatch($company);
-                } else {
-
-                    Log::notice(json_encode([
-                        'method' => __METHOD__,
-                        'user_id' => auth()->id() ?? null,
-                        'company_id' => $company->id,
-                        'action' => 'NONE',
-                        'lastVerification' => $lastVerification,
-                        'date' => $now,
-                    ]));
                 }
             }
         }
 
+    }
+
+    /**
+     * @return int
+     */
+    public function getSaleId(): int
+    {
+        return $this->saleId;
     }
 
 }
