@@ -50,10 +50,11 @@ class moveFilesToS3 extends Command
     public function handle()
     {
         //verificar link ta privado
-        //$this->projects();
-        //$this->products();
-        //$this->ticketAttachments();
-        //$this->changeUserPhoto();
+        //$this->userDocuments();
+        $this->projects();
+        $this->products();
+        $this->ticketAttachments();
+        $this->changeUserPhoto();
     }
 
     //projects - photo, logo
@@ -62,7 +63,7 @@ class moveFilesToS3 extends Command
         //photos
         $projectsPhoto = Project::select('id', 'photo')->whereNotNull('photo')
             ->where('photo', '!=', '')
-            ->where('photo', 'like', '%digital%')
+            ->where('photo', 'like', '%digitaloceanspaces%')
             ->limit(5)->get();
 
         try {
@@ -78,13 +79,13 @@ class moveFilesToS3 extends Command
                 //https://cloudfox.nyc3.digitaloceanspaces.com/uploads/user/dX5pjw3RV32lQqy/public/projects/WXQemdmsy2h1oKg4LTvZC54moAHEa00Ix5pOX6Vi.png"
 
                 $this->s3Drive->putFileAs(
-                    'uploads/user/' . $hashid . '/public/projects',
+                    'uploads/projects/' . $hashid . '/public/photo',
                     $project->photo,
                     $photoName,
                     'public'
                 );
                 $urlPath = $this->s3Drive->url(
-                    'uploads/user/' . $hashid . '/public/projects/' . $photoName
+                    'uploads/projects/' . $hashid . '/public/photo/' . $photoName
                 );
                 $project->photo = $urlPath;
                 $project->save();
@@ -103,7 +104,7 @@ class moveFilesToS3 extends Command
 
         $projectsLogo = Project::select('id', 'logo')->whereNotNull('logo')
             ->where('logo', '!=', '')
-            ->where('logo', 'like', '%digital%')
+            ->where('logo', 'like', '%digitaloceanspaces%')
             ->limit(5)->get();
 
 
@@ -118,13 +119,13 @@ class moveFilesToS3 extends Command
                 $photoName = pathinfo($project->logo, PATHINFO_FILENAME);
 
                 $this->s3Drive->putFileAs(
-                    'uploads/projects/' . $hashid . '/public/projects',
+                    'uploads/projects/' . $hashid . '/public/logo',
                     $project->logo,
                     $photoName,
                     'public'
                 );
                 $urlPath = $this->s3Drive->url(
-                    'uploads/projects/' . $hashid . '/public/projects/' . $photoName
+                    'uploads/projects/' . $hashid . '/public/logo/' . $photoName
                 );
                 $project->photo = $urlPath;
                 $project->save();
@@ -142,12 +143,13 @@ class moveFilesToS3 extends Command
 
     }
 
+    //userdocuments
     private function userDocuments()
     {
         //photos
         $userDocuments = UserDocument::select('id', 'document_url')->whereNotNull('document_url')
             ->where('document_url', '!=', '')
-            ->where('document_url', 'like', '%digital%')
+            ->where('document_url', 'like', '%digitaloceanspaces%')
             ->limit(115)->get();
 
         try {
@@ -194,7 +196,7 @@ class moveFilesToS3 extends Command
         //photos
         $productsPhoto = Product::select('id', 'photo')->whereNotNull('photo')
             ->where('photo', '!=', '')
-            ->where('photo', 'like', '%digital%')
+            ->where('photo', 'like', '%digitaloceanspaces%')
             ->limit(1)->get();
 
         try {
@@ -205,13 +207,13 @@ class moveFilesToS3 extends Command
                 $photoName = pathinfo($product->photo, PATHINFO_FILENAME);
 
                 $this->s3Drive->putFileAs(
-                    'uploads/user/' . $hashid . '/public/products',
+                    'uploads/product/' . $hashid . '/public/photo',
                     $product->photo,
                     $photoName,
                     'public'
                 );
                 $urlPath = $this->s3Drive->url(
-                    'uploads/user/' . $hashid . '/public/products/' . $photoName
+                    'uploads/product/' . $hashid . '/public/photo/' . $photoName
                 );
                 $product->photo = $urlPath;
                 $product->save();
@@ -235,7 +237,7 @@ class moveFilesToS3 extends Command
 
         $files = TicketAttachment::whereNotNull('file')
             ->where('file', '!=', '')
-            ->where('file', 'like', '%digital%')
+            ->where('file', 'like', '%digitaloceanspaces%')
             ->limit(32)->get();
 
         try {
@@ -281,7 +283,7 @@ class moveFilesToS3 extends Command
 
         $users = User::select('id', 'photo')->whereNotNull('photo')
             ->where('photo', '!=', '')
-            ->where('photo', 'like', '%digital%')
+            ->where('photo', 'like', '%digitaloceanspaces%')
             ->limit(1)->get();
 
         try {
