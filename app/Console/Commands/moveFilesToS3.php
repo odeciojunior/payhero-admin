@@ -10,6 +10,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\DigitalOceanFileService;
 
@@ -55,12 +56,12 @@ class moveFilesToS3 extends Command
 
         // $this->changeUserPhoto();
         // $this->digitalProducts();
-        // $this->userDocuments();
-        $this->ticketAttachments();
+        $this->userDocuments();
+        //$this->ticketAttachments();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
 
-        //$this->withdrawals();
+        //   $this->withdrawals();
         //$this->products();
         //$this->projects(); logo e photo
 
@@ -154,7 +155,7 @@ class moveFilesToS3 extends Command
     private function withdrawals()
     {
         //photos
-        $userDocuments = UserDocument::select('id', 'document_url')->whereNotNull('document_url')
+        $userDocuments = Withdrawal::select('id', 'file')->whereNotNull('document_url')
             ->where('document_url', '!=', '')
             ->where('document_url', 'like', '%digitaloceanspaces%')
             ->get();
@@ -220,7 +221,6 @@ class moveFilesToS3 extends Command
 
         try {
 
-            //"https://cloudfox.nyc3.digitaloceanspaces.com/uploads/user/wqP5LNZ8VgaRye0/private/documents/FP7IEKG1xZNVUfJQoIS5b56beCFUGhvfLftLqEeq.jpeg"
             foreach ($userDocuments as $document) {
 
                 $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($document->document_url, 180);
@@ -242,7 +242,6 @@ class moveFilesToS3 extends Command
                 $urlPath = $this->s3Drive->url(
                     'uploads/private/users/documents/' . $fullname
                 );
-
 
                 $document->document_url = $urlPath;
                 $document->save();
@@ -369,6 +368,10 @@ class moveFilesToS3 extends Command
         $digitalOceanFileService = app(DigitalOceanFileService::class);
         $amazonFileService = app(AmazonFileService::class);
         $amazonFileService->setDisk('s3_documents');
+        $temporaryUrl = $amazonFileService->getTemporaryUrlFile('https://cloudfox-digital-products.s3.amazonaws.com/uploads/private/tickets/attachments/1N5YIF1ro8kvJ0703ZrJlytoCs3ydMHH4jBdGfMa.webp', 180);
+        dd($temporaryUrl);
+        exit;
+        https://cloudfox-digital-products.s3.amazonaws.com/uploads/private/tickets/attachments/1N5YIF1ro8kvJ0703ZrJlytoCs3ydMHH4jBdGfMa.webp
 
         try {
 
