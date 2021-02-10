@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\CustomerWithdrawal;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\TicketAttachment;
@@ -55,16 +56,16 @@ class moveFilesToS3 extends Command
 
         /******* NÃO PRECISA CORRIGIR NO CÓDIGO *******/
 
-        // $this->digitalProducts();
+        $this->customerWithdrawals();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
-        $this->companyDocuments();
         /******* JA RODOU *******/
+        // $this->companyDocuments();
         // $this->withdrawals();
         // $this->products();
         // $this->changeUserPhoto();
         // $this->projects(); //ja migrei
-        //  $this->userDocuments();
+        // $this->userDocuments();
         // $this->ticketAttachments();
 
 
@@ -266,52 +267,52 @@ class moveFilesToS3 extends Command
     private function digitalProducts()
     {
         //photos
-//        $productsDigital = Product::select('id', 'digital_product_url')->whereNotNull('digital_product_url')
-//            ->where('digital_product_url', '!=', '')
-//            ->where('digital_product_url', 'like', '%digitaloceanspaces%')
-//            ->limit(11)->get();
-//
-//        $digitalOceanFileService = app(DigitalOceanFileService::class);
-//        $amazonFileService = app(AmazonFileService::class);
-//        $amazonFileService->setDisk('s3_digital_product');
-//
-//        try {
-//
-//            foreach ($productsDigital as $product) {
-//
-//                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($product->digital_product_url, 180);
-//
-//                if (!@file_get_contents($temporaryUrl))
-//                    continue;
-//
-//                $photoName = pathinfo($temporaryUrl, PATHINFO_FILENAME);
-//                $photoExtension  = (explode("?", (pathinfo($temporaryUrl, PATHINFO_EXTENSION))))[0];
-//                $fullname = $photoName . '.'.$photoExtension;
-//
-//                $this->s3Drive->putFileAs(
-//                    'products',
-//                    $temporaryUrl,
-//                    $fullname,
-//                    'private'
-//                );
-//
-//                $urlPath = $this->s3Drive->url(
-//                    'products/' . $fullname
-//                );
-//
-//                $product->digital_product_url = $urlPath;
-//                $product->save();
-//
-//                $this->info('O documento ' . $product->id . ' foi atualizado.');
-//
-//            }
-//
-//            DB::commit();
-//
-//        } catch (\Exception $e) {
-//            DB::rollBack();
-//            dd($e->getMessage());
-//        }
+        $productsDigital = Product::select('id', 'digital_product_url')->whereNotNull('digital_product_url')
+            ->where('digital_product_url', '!=', '')
+            ->where('digital_product_url', 'like', '%digitaloceanspaces%')
+            ->limit(11)->get();
+
+        $digitalOceanFileService = app(DigitalOceanFileService::class);
+        $amazonFileService = app(AmazonFileService::class);
+        $amazonFileService->setDisk('s3_digital_product');
+
+        try {
+
+            foreach ($productsDigital as $product) {
+
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($product->digital_product_url, 180);
+
+                if (!@file_get_contents($temporaryUrl))
+                    continue;
+
+                $photoName = pathinfo($temporaryUrl, PATHINFO_FILENAME);
+                $photoExtension = (explode("?", (pathinfo($temporaryUrl, PATHINFO_EXTENSION))))[0];
+                $fullname = $photoName . '.' . $photoExtension;
+
+                $this->s3Drive->putFileAs(
+                    'products',
+                    $temporaryUrl,
+                    $fullname,
+                    'private'
+                );
+
+                $urlPath = $this->s3Drive->url(
+                    'products/' . $fullname
+                );
+
+                $product->digital_product_url = $urlPath;
+                $product->save();
+
+                $this->info('O documento ' . $product->id . ' foi atualizado.');
+
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
 
     }
 
@@ -521,5 +522,55 @@ class moveFilesToS3 extends Command
         }
 
     }
+
+    private function customerWithdrawals()
+    {
+        //photos
+        $withdrawals = CustomerWithdrawal::select('id', 'file')->whereNotNull('file')
+            ->where('file', '!=', '')
+            ->where('file', 'like', '%digitaloceanspaces%')
+            ->get();
+
+        $amazonFileService = app(AmazonFileService::class);
+        $amazonFileService->setDisk('s3_documents');
+
+        try {
+
+            foreach ($withdrawals as $document) {
+
+                if (!@file_get_contents($document->file))
+                    continue;
+
+                $photoName = pathinfo($document->file, PATHINFO_FILENAME);
+                $photoExtension = (explode("?", (pathinfo($document->file, PATHINFO_EXTENSION))))[0];
+                $fullname = $photoName . '.' . $photoExtension;
+
+                $this->s3Drive->putFileAs(
+                    'uploads/private/companies/refunds',
+                    $document->file,
+                    $fullname,
+                    'private'
+                );
+
+                $urlPath = $this->s3Drive->url(
+                    'uploads/private/companies/refunds/' . $fullname
+                );
+
+                $document->file = $urlPath;
+                $document->save();
+
+                $this->info('O refund ' . $document->id . ' foi atualizado.');
+
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+
+    }
+
 
 }
