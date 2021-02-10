@@ -13,6 +13,7 @@ use Modules\Tickets\Transformers\TicketMessageResource;
 use Modules\Tickets\Transformers\TicketResource;
 use Modules\Tickets\Transformers\TicketShowResource;
 use Vinkla\Hashids\Facades\Hashids;
+use Carbon\Carbon;
 
 class TicketsApiController extends Controller
 {
@@ -156,11 +157,24 @@ class TicketsApiController extends Controller
                         ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
                         ->latest('id')
                         ->first();
+
+                    $lastCustomerMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
+                        ->where('type_enum', $ticketMessageModel->present()->getType('from_customer'))
+                        ->latest('id')
+                        ->first();
+
                     $message = $ticketMessageModel->create([
                         'ticket_id' => $ticket->id,
                         'message' => $data['message'],
                         'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
                     ]);
+
+                    $averageResponseTime = is_null($ticket->average_response_time) ? 0 : $ticket->average_response_time;
+                    $diffHours = Carbon::now()->diffInHours($lastCustomerMessage->created_at);
+                    $divider = empty($lastAdminMessage) ? 1 : 2;
+                    $averageResponseTime = ($averageResponseTime + $diffHours) / $divider;
+
+                    $ticket->update(['average_response_time' => $averageResponseTime]);
 
                     event(new TicketMessageEvent($message, $lastAdminMessage));
 
