@@ -5,7 +5,9 @@ namespace Modules\Tickets\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Events\TicketMessageEvent;
 use Modules\Core\Services\FoxUtils;
@@ -210,6 +212,25 @@ class TicketsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao carregar valores totais!'], 400);
+        }
+    }
+
+    public function getFile($id)
+    {
+        try {
+            $attachmentId = current(Hashids::decode($id));
+            $attachment = TicketAttachment::find($attachmentId);
+
+            $filename = pathinfo($attachment->file, PATHINFO_BASENAME);
+            $expiration = now()->addMinutes(config('session.lifetime'));
+            $url = Storage::cloud()->temporaryUrl('uploads/private/tickets/attachments/'. $filename, $expiration);
+
+            return redirect($url);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro obter anexo'], 400);
         }
     }
 }
