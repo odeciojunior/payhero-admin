@@ -61,8 +61,8 @@ class moveFilesToS3 extends Command
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
 
         //   $this->withdrawals();
-        //$this->products();
-        $this->projects(); //ja migrei
+        $this->products();
+        // $this->projects(); //ja migrei
 
         /******* JA RODOU *******/
         //$this->ticketAttachments();

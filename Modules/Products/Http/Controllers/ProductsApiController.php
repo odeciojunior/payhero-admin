@@ -293,18 +293,18 @@ class ProductsApiController extends Controller
 
             if ($productPhoto != null) {
                 try {
-                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                    $this->getAmazonFileService()->deleteFile($product->photo);
 
                     $img = Image::make($productPhoto->getPathname());
                     $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                    $productPath = $this->getAmazonFileService()
                         ->uploadFile('uploads/public/products',
                             $productPhoto);
 
-                    $product->update(['photo' => $digitalOceanPath]);
+                    $product->update(['photo' => $productPath]);
                 } catch (Exception $e) {
                     report($e);
 
