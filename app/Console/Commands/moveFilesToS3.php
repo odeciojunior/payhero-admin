@@ -209,6 +209,9 @@ class moveFilesToS3 extends Command
     //userdocuments
     private function userDocuments()
     {
+
+        $this->info('Começando o user documents');
+
         //photos
         $userDocuments = UserDocument::select('id', 'document_url')->whereNotNull('document_url')
             ->where('document_url', '!=', '')
