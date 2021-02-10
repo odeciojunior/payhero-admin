@@ -7,12 +7,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\User;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -27,7 +27,7 @@ class RegisterController extends Controller
      * @param $userId
      * @return Application|Factory|RedirectResponse|View
      */
-    public function loginAsSomeUser($managerId,$userId)
+    public function loginAsSomeUser($managerId, $userId)
     {
         $userIdDecode = Hashids::decode($userId)[0];
         $managerIdDecode = Hashids::decode($managerId)[0];
@@ -40,8 +40,14 @@ class RegisterController extends Controller
                     $activity->subject_id = $managerIdDecode;
                     $activity->causer_id = $managerIdDecode;
                 }
-            )->log('Fez login na conta do usuário '.$user->name);
-            return response()->redirectTo('/dashboard');
+            )->log('Fez login na conta do usuário ' . $user->name);
+
+            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+                return response()->redirectTo('/dashboard');
+            } else {
+                return response()->redirectTo('/sales');
+            }
+
         }
 
         return view('errors.404');
@@ -55,7 +61,7 @@ class RegisterController extends Controller
      */
     public function createInvitation(Request $request)
     {
-        $companyIdRequest  = preg_replace( '/i=/','',$request->segment(2));
+        $companyIdRequest = preg_replace('/i=/', '', $request->segment(2));
         $companyId = current(Hashids::decode($companyIdRequest));
 
         if (!empty($companyId)) {

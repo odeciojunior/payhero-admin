@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545?v=01') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=02') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
@@ -47,7 +47,7 @@
                                         <span id="today_money" class="text-money"></span>
                                     </div>
                                 </div>
-                                <div class="s-border-right yellow"></div>
+                                <div class="s-border-right purple"></div>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">

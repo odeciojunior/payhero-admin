@@ -298,6 +298,8 @@ strong span {
 .s-config {
     margin-left: auto !important;
     margin-right: 15px !important;
+    display: flex;
+    justify-content: center;
 }
 
 .nav-link {
@@ -372,6 +374,18 @@ select, .select-pad {
 
 #modal_detalhes .nav-tabs .nav-link:not(.active) {
     width: calc(50% - 20px) !important;
+}
+
+.d-contents {
+    display: contents;
+}
+
+@media (min-width: 768px) {
+    .pointer-md {
+        cursor: pointer !important;
+        pointer-events: all !important;
+        opacity: 1;
+    }
 }
 
 /*MOBILE SM*/
@@ -504,9 +518,19 @@ select, .select-pad {
         flex-wrap: wrap;
     }
 
-    .pr-0, .pl-0 {
+    .pr-xs-0, .pl-xs-0 {
         padding-left: 0 !important;
         padding-right: 5px !important;
+    }
+
+    .frequency-container .btn {
+        width: 100% !important;
+        margin: 2px 0 !important;
+    }
+
+    .weekdays-container .btn, .day-container .btn {
+        width: 30% !important;
+        margin: 2px 5px !important;
     }
 }
 
@@ -523,20 +547,26 @@ select, .select-pad {
 .frequency-container .btn,
 .weekdays-container .btn,
 .day-container .btn {
-    border: 2px solid #bdbdbd;
-    color: #aaa;
-    background-color: #fff;
-    font-weight: 700;
-    flex-grow: 1;
-    margin-right: 5px;
     box-sizing: border-box;
-    width: calc((100% - 6 * 10px) / 7)
+
+    border: 2px solid #bdbdbd;
+    margin-right: 5px;
+    background-color: #fff;
+
+    color: #aaa;
+    font-weight: 700;
+
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+
+    width: calc((100% - 6 * 10px) / 7);
 }
 
 .frequency-container .btn:last-of-type,
 .weekdays-container .btn:last-of-type,
 .day-container .btn:last-of-type {
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .frequency-container .btn.active,
