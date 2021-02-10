@@ -54,14 +54,14 @@ class moveFilesToS3 extends Command
 
         /******* NÃO PRECISA CORRIGIR NO CÓDIGO *******/
 
-        // $this->changeUserPhoto();
+         $this->changeUserPhoto();
         // $this->digitalProducts();
         //$this->userDocuments();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
 
         //   $this->withdrawals();
-        $this->products();
+        // $this->products();
         // $this->projects(); //ja migrei
 
         /******* JA RODOU *******/
