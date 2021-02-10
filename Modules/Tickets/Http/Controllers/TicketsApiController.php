@@ -223,7 +223,7 @@ class TicketsApiController extends Controller
 
             $filename = pathinfo($attachment->file, PATHINFO_BASENAME);
             $expiration = now()->addMinutes(config('session.lifetime'));
-            $url = Storage::cloud()->temporaryUrl('uploads/private/tickets/attachments/'. $filename, $expiration);
+            $url = Storage::disk('s3_documents')->temporaryUrl('uploads/private/tickets/attachments/'. $filename, $expiration);
 
             return redirect($url);
 
