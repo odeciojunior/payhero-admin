@@ -73,6 +73,7 @@ class moveFilesToS3 extends Command
     //projects - photo, logo
     private function projects()
     {
+        $this->info('Começando o projects fotos');
         //photos
         $projectsPhoto = Project::select('id', 'photo')->whereNotNull('photo')
             ->where('photo', '!=', '')
@@ -113,6 +114,8 @@ class moveFilesToS3 extends Command
             DB::rollBack();
             dd($e->getMessage());
         }
+
+        $this->info('Começando o projects logos');
 
         $projectsLogo = Project::select('id', 'logo')->whereNotNull('logo')
             ->where('logo', '!=', '')

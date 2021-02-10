@@ -155,12 +155,12 @@ class ProductsApiController extends Controller
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                    $amazonPath = $this->getAmazonFileService()
                         ->uploadFile('uploads/public/products',
                             $productPhoto);
 
                     $product->update([
-                        'photo' => $digitalOceanPath,
+                        'photo' => $amazonPath,
                     ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
