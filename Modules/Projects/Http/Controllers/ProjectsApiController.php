@@ -399,13 +399,13 @@ class ProjectsApiController extends Controller
                     $img->resize(300, 300);
                     $img->save($projectPhoto->getPathname());
 
-                    $amazonFileService = $amazonFileService
+                    $amazonPath = $amazonFileService
                         ->uploadFile(
                             'uploads/public/projects/photos/' . Hashids::encode($project->id),
                             $projectPhoto
                         );
                     $project->update([
-                        'photo' => $amazonFileService,
+                        'photo' => $amazonPath,
                     ]);
                 }
 
@@ -420,14 +420,14 @@ class ProjectsApiController extends Controller
 
                     $img->save($projectLogo->getPathname());
 
-                    $digitalOceanPathLogo = $digitalOceanService
+                    $amazonPath = $amazonFileService
                         ->uploadFile(
-                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
+                            'uploads/public/projects/logos/' . Hashids::encode($project->id),
                             $projectLogo
                         );
 
                     $project->update([
-                        'logo' => $digitalOceanPathLogo,
+                        'logo' => $amazonPath,
                     ]);
                 }
             } catch (Exception $e) {
