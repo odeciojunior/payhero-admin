@@ -54,18 +54,17 @@ class moveFilesToS3 extends Command
 
         /******* NÃO PRECISA CORRIGIR NO CÓDIGO *******/
 
-         $this->changeUserPhoto();
         // $this->digitalProducts();
-        //$this->userDocuments();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
-
-        //   $this->withdrawals();
-        // $this->products();
-        // $this->projects(); //ja migrei
+        $this->withdrawals();
 
         /******* JA RODOU *******/
-        //$this->ticketAttachments();
+        // $this->products();
+        // $this->changeUserPhoto();
+        // $this->projects(); //ja migrei
+        //   $this->userDocuments();
+        // $this->ticketAttachments();
 
 
     }
@@ -160,45 +159,40 @@ class moveFilesToS3 extends Command
     private function withdrawals()
     {
         //photos
-        $userDocuments = Withdrawal::select('id', 'file')->whereNotNull('document_url')
-            ->where('document_url', '!=', '')
-            ->where('document_url', 'like', '%digitaloceanspaces%')
+        $withdrawals = Withdrawal::select('id', 'file')->whereNotNull('file')
+            ->where('file', '!=', '')
+            ->where('file', 'like', '%digitaloceanspaces%')
             ->get();
 
-        $digitalOceanFileService = app(DigitalOceanFileService::class);
         $amazonFileService = app(AmazonFileService::class);
         $amazonFileService->setDisk('s3_documents');
 
         try {
 
-            //"https://cloudfox.nyc3.digitaloceanspaces.com/uploads/user/wqP5LNZ8VgaRye0/private/documents/FP7IEKG1xZNVUfJQoIS5b56beCFUGhvfLftLqEeq.jpeg"
-            foreach ($userDocuments as $document) {
+            foreach ($withdrawals as $document) {
 
-                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($document->document_url, 180);
-
-                if (!@file_get_contents($temporaryUrl))
+                if (!@file_get_contents($document->file))
                     continue;
 
-                $photoName = pathinfo($temporaryUrl, PATHINFO_FILENAME);
-                $photoExtension = (explode("?", (pathinfo($temporaryUrl, PATHINFO_EXTENSION))))[0];
+                $photoName = pathinfo($document->file, PATHINFO_FILENAME);
+                $photoExtension = (explode("?", (pathinfo($document->file, PATHINFO_EXTENSION))))[0];
                 $fullname = $photoName . '.' . $photoExtension;
 
                 $this->s3Drive->putFileAs(
-                    'uploads/private/users/documents',
-                    $temporaryUrl,
+                    'uploads/private/companies/withdrawals',
+                    $document->file,
                     $fullname,
                     'private'
                 );
 
                 $urlPath = $this->s3Drive->url(
-                    'uploads/private/users/documents/' . $fullname
+                    'uploads/private/companies/withdrawals/' . $fullname
                 );
 
-
-                $document->document_url = $urlPath;
+                $document->file = $urlPath;
                 $document->save();
 
-                $this->info('O documento ' . $document->id . ' foi atualizado.');
+                $this->info('O withdrawl ' . $document->id . ' foi atualizado.');
 
             }
 
