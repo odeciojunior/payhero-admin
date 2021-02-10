@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\TicketAttachment;
@@ -57,13 +58,13 @@ class moveFilesToS3 extends Command
         // $this->digitalProducts();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
-        $this->withdrawals();
-
+        $this->companyDocuments();
         /******* JA RODOU *******/
+        // $this->withdrawals();
         // $this->products();
         // $this->changeUserPhoto();
         // $this->projects(); //ja migrei
-        //   $this->userDocuments();
+        //  $this->userDocuments();
         // $this->ticketAttachments();
 
 
@@ -453,6 +454,62 @@ class moveFilesToS3 extends Command
                 $user->save();
 
                 $this->info('A foto do usuário ' . $user->id . ' foi atualizada.');
+
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+
+    }
+
+    //companies - companies
+    private function companyDocuments()
+    {
+
+        $this->info('Começando o company documents');
+
+        //photos
+        $companyDocuments = CompanyDocument::select('id', 'document_url')->whereNotNull('document_url')
+            ->where('document_url', '!=', '')
+            ->where('document_url', 'like', '%digitaloceanspaces%')
+            ->get();
+
+        $digitalOceanFileService = app(DigitalOceanFileService::class);
+        $amazonFileService = app(AmazonFileService::class);
+        $amazonFileService->setDisk('s3_documents');
+
+        try {
+
+            foreach ($companyDocuments as $document) {
+
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($document->document_url, 180);
+
+                if (!@file_get_contents($temporaryUrl))
+                    continue;
+
+                $photoName = pathinfo($temporaryUrl, PATHINFO_FILENAME);
+                $photoExtension = (explode("?", (pathinfo($temporaryUrl, PATHINFO_EXTENSION))))[0];
+                $fullname = $photoName . '.' . $photoExtension;
+
+                $this->s3Drive->putFileAs(
+                    'uploads/private/companies/documents',
+                    $temporaryUrl,
+                    $fullname,
+                    'private'
+                );
+
+                $urlPath = $this->s3Drive->url(
+                    'uploads/private/companies/documents/' . $fullname
+                );
+
+                $document->document_url = $urlPath;
+                $document->save();
+
+                $this->info('O documento ' . $document->id . ' foi atualizado.');
 
             }
 
