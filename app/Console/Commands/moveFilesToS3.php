@@ -444,14 +444,17 @@ class moveFilesToS3 extends Command
                     continue;
 
                 $photoName = pathinfo($user->photo, PATHINFO_FILENAME);
+                $photoExtension = pathinfo($user->photo, PATHINFO_EXTENSION);
+                $fullname = $photoName .'.' .$photoExtension;
+
                 $this->s3Drive->putFileAs(
                     'uploads/public/users/profile',
                     $user->photo,
-                    $photoName,
+                    $fullname,
                     'public'
                 );
                 $urlPath = $this->s3Drive->url(
-                    'uploads/public/users/profile/' . $photoName
+                    'uploads/public/users/profile/' . $fullname
                 );
 
                 $user->photo = $urlPath;
