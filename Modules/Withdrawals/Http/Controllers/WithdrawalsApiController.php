@@ -102,7 +102,7 @@ class WithdrawalsApiController
             }
 
             if ($withdrawalService->isFirstWithdrawalToday($company)) {
-                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia!'], 403);
+                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia'], 403);
             }
 
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
