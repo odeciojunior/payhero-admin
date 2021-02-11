@@ -7,9 +7,7 @@
     <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
-                <div class="d-flex flex-row justify-content-between align-items-start align-self-stretch" style="width: 100%;">
-                    <div class="col-lg text-left"> <span class="badge badge-danger" style="font-size: 15px;">Beta</span> &nbsp;</div>
-                    <div class="col-lg-8 text-center"><h4> Liquidação do saque por bandeira </h4></div>
+                    <div class="col-lg-10 text-center"><h4> Liquidação do saque por bandeira </h4></div>
                     <div class="col-lg text-right">
                         <a role="button" data-dismiss="modal">
                             <i class="material-icons pointer">close</i></a>
@@ -22,6 +20,7 @@
                 <div class="transition-details">
                     <h5>Informações da solicitação</h5>
                     <div id="withdrawal-code"></div>
+                    <div id="pending_debt" style="display:none;"></div>
                 </div>
 
                 <div class="tab-content mt-20" id="nav-tabContent">

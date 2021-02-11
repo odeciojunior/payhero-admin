@@ -779,7 +779,7 @@ $(document).ready(function () {
                         `;
 
                         if (data.debt_pending_value != null && data.debt_pending_value != 'R$ 0,00') {
-                            tableData += `<br> <small class="gray" style="color: #E61A1A;">${data.debt_pending_value}  de débitos <br> pendentes descontados</small>`;
+                            tableData += `<br> <small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small>`;
                         }
                         tableData += `
                             </td>
