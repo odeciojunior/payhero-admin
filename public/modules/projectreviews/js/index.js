@@ -133,7 +133,7 @@ $(document).ready(function () {
                         data = `
                         <tr>
                             <td>
-                                <img src="${value.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'}"
+                                <img src="${value.photo || 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'}"
                                 class="img-fluid rounded-circle mr-2" width="35" height="35">
                                 ${value.name}
                             </td>
@@ -355,7 +355,7 @@ $(document).ready(function () {
             }, success: function success(response) {
                 let review = response.data;
 
-                $('.review-photo').attr('src', review.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png');
+                $('.review-photo').attr('src', review.photo || 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png');
                 $('.review-name').html(review.name);
                 $('.review-description').html(review.description);
                 $('.review-status').html(`${review.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);

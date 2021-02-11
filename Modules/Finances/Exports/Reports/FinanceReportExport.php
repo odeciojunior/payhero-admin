@@ -2,7 +2,6 @@
 
 namespace Modules\Finances\Exports\Reports;
 
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -10,7 +9,6 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
-use Modules\Core\Entities\User;
 use Modules\Core\Events\FinancesExportedEvent;
 use Modules\Transfers\Services\GetNetStatementService;
 
@@ -44,8 +42,10 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
     public function collection()
     {
 
-        $filters = (new GetNetStatementService())->accountStatementDataFilters($this->filters);
-        $result = json_decode($filters['result']);
+        $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->filters);
+        $filters = $filtersAndStatement['filters'];
+        $result = json_decode($filtersAndStatement['statement']);
+
         $data = (new GetNetStatementService())->performWebStatement($result, $filters);
         $items = collect($data['items']);
         unset($data['items']);

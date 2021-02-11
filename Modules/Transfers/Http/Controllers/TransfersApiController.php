@@ -2,18 +2,13 @@
 
 namespace Modules\Transfers\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Finances\Exports\Reports\FinanceReportExport;
 use Modules\Transfers\Services\GetNetStatementService;
-use Modules\Transfers\Transformers\AccountStatementResource;
 use Modules\Transfers\Transformers\TransfersResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -42,7 +37,6 @@ class TransfersApiController
             } else {
                 $dateType = 'sales.start_date';
             }
-
 
             $transfers = $transfersModel->leftJoin(
                 'transactions as transaction',
@@ -119,15 +113,14 @@ class TransfersApiController
         }
     }
 
-
-
     public function accountStatementData(): JsonResponse
     {
         try {
-            $dataRequest = \request()->all();
-            $filters = (new GetNetStatementService())->accountStatementDataFilters($dataRequest);
-            $result = json_decode($filters['result']);
-            $data = [];
+
+            $dataRequest = request()->all();
+            $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($dataRequest);
+            $filters = $filtersAndStatement['filters'];
+            $result = json_decode($filtersAndStatement['statement']);
 
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
@@ -154,7 +147,6 @@ class TransfersApiController
             return response()->json($error, 400);
         }
     }
-
 
     public function accountStatementDataExport(): JsonResponse
     {
@@ -193,5 +185,4 @@ class TransfersApiController
             return response()->json($error, 400);
         }
     }
-
 }

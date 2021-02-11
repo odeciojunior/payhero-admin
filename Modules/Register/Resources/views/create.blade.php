@@ -396,7 +396,7 @@
             <div id="success" class="div6" style="display: none">
                 <div class="content-success">
                     <img
-                        src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/cloudfox-loading-register.gif">
+                        src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/cloudfox-loading-register.gif">
                     <h1 class="bold orange mt10"> Tudo pronto! </h1>
                     <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estará na sua nova dashboard.
                 </div>

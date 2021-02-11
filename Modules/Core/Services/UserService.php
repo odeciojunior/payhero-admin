@@ -137,7 +137,6 @@ class UserService
         }
     }
 
-
     public function verifyFieldsEmpty(User $user): bool
     {
         if (empty($user->email)) {
@@ -265,5 +264,14 @@ class UserService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    public function userWithdrawalBlocked($user): bool
+    {
+        if ($user->status == (new User())->present()->getStatus('withdrawal blocked')) {
+            return true;
+        }
+
+        return false;
     }
 }

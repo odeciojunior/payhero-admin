@@ -5,7 +5,9 @@ namespace Modules\Tickets\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Events\TicketMessageEvent;
 use Modules\Core\Services\FoxUtils;
@@ -140,18 +142,18 @@ class TicketsApiController extends Controller
                         }
                     }
 
-                    $messagePhone = $data['message'];
-                    $string = '';
-                    for($i=0; $i<strlen($messagePhone); $i++){
-                        $string = $messagePhone[$i];
-                        if(is_numeric($string)) {
-                            $phone = substr($messagePhone, $i, 18);
-                            $phone = preg_replace("/[^0-9]/", "", $phone);
-                            if(in_array(strlen($phone), [10,11,13])) {
-                                return response()->json(['message' => 'Não é permitido enviar telefone na mensagem'], 400);
-                            }
-                        }
-                    }
+                    // $messagePhone = $data['message'];
+                    // $string = '';
+                    // for($i=0; $i<strlen($messagePhone); $i++){
+                    //     $string = $messagePhone[$i];
+                    //     if(is_numeric($string)) {
+                    //         $phone = substr($messagePhone, $i, 18);
+                    //         $phone = preg_replace("/[^0-9]/", "", $phone);
+                    //         if(in_array(strlen($phone), [10,11,13])) {
+                    //             return response()->json(['message' => 'Não é permitido enviar telefone na mensagem'], 400);
+                    //         }
+                    //     }
+                    // }
 
                     $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
                         ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
@@ -224,6 +226,25 @@ class TicketsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao carregar valores totais!'], 400);
+        }
+    }
+
+    public function getFile($id)
+    {
+        try {
+            $attachmentId = current(Hashids::decode($id));
+            $attachment = TicketAttachment::find($attachmentId);
+
+            $filename = pathinfo($attachment->file, PATHINFO_BASENAME);
+            $expiration = now()->addMinutes(config('session.lifetime'));
+            $url = Storage::disk('s3_documents')->temporaryUrl('uploads/private/tickets/attachments/'. $filename, $expiration);
+
+            return redirect($url);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro obter anexo'], 400);
         }
     }
 }
