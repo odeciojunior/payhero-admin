@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\GetnetBackOfficeService;
 
@@ -27,11 +26,6 @@ class GetnetGetDiscountsJob implements ShouldQueue
      */
     public function __construct(Company $company)
     {
-        /*Log::info(json_encode([
-            'method' => __METHOD__,
-            'user_id' => auth()->id() ?? null,
-            'company_id' => $company->id,
-        ]));*/
 
         $this->company = $company;
     }
@@ -45,12 +39,6 @@ class GetnetGetDiscountsJob implements ShouldQueue
     {
 
         if ($this->company->get_net_status == 1) {
-
-            Log::info(json_encode([
-                'method' => __METHOD__,
-                'user_id' => auth()->id() ?? null,
-                'company_id' => $this->company->id,
-            ]));
 
             $getNetBackOfficeService = new GetnetBackOfficeService();
             $getNetBackOfficeService->saveDiscountsInDatabase($this->company);

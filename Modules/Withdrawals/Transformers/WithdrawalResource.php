@@ -17,7 +17,7 @@ class WithdrawalResource extends JsonResource
 
         $realeaseDate = '';
         $realeaseTime = '';
-        if (!empty($this->release_date)){
+        if (!empty($this->release_date)) {
             $realeaseDate = $this->release_date->format('d/m/Y');
             $realeaseTime = $this->release_date->format('H:i:s');
         }
@@ -26,8 +26,8 @@ class WithdrawalResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'account_information_bank' => $bankName,
             'account_information' => $agency . $account,
-            'date_request' =>$this->created_at->format('d/m/Y'),
-            'date_request_time' =>$this->created_at->format('H:i:s'),
+            'date_request' => $this->created_at->format('d/m/Y'),
+            'date_request_time' => $this->created_at->format('H:i:s'),
             'date_release' => $realeaseDate,
             'date_release_time' => $realeaseTime,
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
@@ -37,6 +37,7 @@ class WithdrawalResource extends JsonResource
                     ->getStatus($this->status)
             ),
             'tax_value' => $this->value,
+            'debt_pending_value' => 'R$ ' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
         ];
     }
 }

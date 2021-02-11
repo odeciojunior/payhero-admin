@@ -52,12 +52,15 @@ class FinancesApiController
             $blockedBalancePending = $companyService->getBlockedBalancePending($company);
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance->from_sales + $blockedBalance->from_invites;
 
+            $pendingDebtBalance = $companyService->getPendingDebtBalance($company);
+
             return response()->json(
                 [
                     'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                     'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                     'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
                     'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                    'pending_debt_balance' => number_format(intval($pendingDebtBalance) / 100, 2, ',', '.'),
                 ]
             );
         } catch (Exception $e) {

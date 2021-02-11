@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
 |
 */
 
+
+Route::get('tickets/file/{id}', 'TicketsApiController@getFile')->name('api.tickets.getfile');
 Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
     Route::post('tickets/sendmessage', 'TicketsApiController@sendMessage')->name('api.tickets.sendmessage');
     Route::get('tickets/getvalues', 'TicketsApiController@getTotalValues')->name('api.tickets.getvalues');

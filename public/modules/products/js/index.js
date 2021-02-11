@@ -207,7 +207,7 @@ $(document).ready(function () {
                     });
 
                     $("img").on("error", function () {
-                        $(this).attr("src", "https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png");
+                        $(this).attr("src", "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png");
                     });
 
                     pagination(response, 'products', updateProducts);

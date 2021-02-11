@@ -2,10 +2,27 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Models\Activity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @property integer $id
+ * @property int $company_id
+ * @property integer $sale_id
+ * @property string $type
+ * @property string $request_date
+ * @property string $confirm_date
+ * @property string $payment_date
+ * @property string $reason
+ * @property int $value
+ * @property string $created_at
+ * @property string $updated_at
+ * @property Company $company
+ * @property Sale $sale
+ * @property Withdrawal[] $withdrawals
+ */
 class PendingDebt extends Model
 {
     use LogsActivity;
@@ -15,6 +32,9 @@ class PendingDebt extends Model
 
     protected $keyType = 'integer';
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'company_id',
         'sale_id',
@@ -24,26 +44,22 @@ class PendingDebt extends Model
         'payment_date',
         'reason',
         'value',
+        'created_at',
+        'updated_at'
     ];
 
-    protected static bool $logFillable = true;
-
-    protected static bool $logUnguarded = true;
-
-    protected static bool $logOnlyDirty = true;
-
-    protected static bool $submitEmptyLogs = false;
-
-    public function tapActivity(Activity $activity, string $eventName = '')
+    public function company(): BelongsTo
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Débito foi deletedo.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Débito foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Débito foi criado.';
-        } else {
-            $activity->description = $eventName;
-        }
+        return $this->belongsTo(Company::class);
+    }
+
+    public function sale(): BelongsTo
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
+    public function withdrawals(): BelongsToMany
+    {
+        return $this->belongsToMany(Withdrawal::class, 'pending_debt_withdrawals');
     }
 }

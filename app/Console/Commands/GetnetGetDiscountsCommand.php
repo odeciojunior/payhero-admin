@@ -20,7 +20,7 @@ class GetnetGetDiscountsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Realiza os descontos para uma company';
 
     /**
      * Create a new command instance.
@@ -41,9 +41,11 @@ class GetnetGetDiscountsCommand extends Command
     {
 
         //$companyId = 2964; // JOÃO 28 ou 2964
-        $companyId = 3035; // RUPERT BRASIL LUSTOSA 00110115309
+        //$companyId = 3035; // RUPERT BRASIL LUSTOSA 00110115309
+        $companyId = $this->ask('Qual a company_id?', 0);
 
-        $company = Company::select('id', 'user_id', 'fantasy_name', 'subseller_getnet_id', 'subseller_getnet_homolog_id')
+        $company = Company::select('id', 'user_id', 'fantasy_name', 'subseller_getnet_id',
+            'subseller_getnet_homolog_id')
             ->find($companyId);
 
         $getnetBackOfficeService = new GetnetBackOfficeService();

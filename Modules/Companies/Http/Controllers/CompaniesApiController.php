@@ -24,7 +24,6 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
-use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -563,49 +562,6 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
-        }
-    }
-
-    public function checkDebitValue(Request $request, $idCompany): JsonResponse
-    {
-        try {
-            $company = (new Company())->find(current(Hashids::decode($idCompany)));
-
-            if (empty($company)) {
-                return response()->json(
-                    [
-                        'success' => false,
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                        'data' => []
-                    ],
-                    400
-                );
-            }
-
-            $getnetBackOffice = new GetnetBackOfficeService();
-            $data = $getnetBackOffice->getDiscounts($company);
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'data' => [
-                        'itens' => $data['items'],
-                        'amount' => number_format(abs($data['amount']), 2, ',', '.'),
-                    ]
-                ],
-                200
-            );
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    'data' => []
-                ],
-                400
-            );
         }
     }
 

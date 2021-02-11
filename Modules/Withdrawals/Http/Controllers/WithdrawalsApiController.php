@@ -5,23 +5,20 @@ namespace Modules\Withdrawals\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\UserService;
+use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
+use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-use Modules\Withdrawals\Transformers\WithdrawalTransactionsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
-use PDOException;
 
 class WithdrawalsApiController
 {
@@ -90,33 +87,35 @@ class WithdrawalsApiController
                     400
                 );
             }
+            $withdrawalService = new WithdrawalService();
 
-            $user = auth()->user();
-
-            if ($user->status == (new User())->present()->getStatus('withdrawal blocked')) {
+            if ((new UserService())->userWithdrawalBlocked(auth()->user())) {
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
             }
 
-            $withdrawalModel = new Withdrawal();
-            $companyModel = new Company();
+            $data = $request->only(['company_id', 'withdrawal_value']);
 
-            $data = $request->all();
-
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = (new Company())->find(current(Hashids::decode($data['company_id'])));
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
-            $companyService = new CompanyService();
+            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia'], 403);
+            }
 
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
+
+            $companyService = new CompanyService();
             $availableBalance = $companyService->getAvailableBalance(
                 $company,
                 CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
             );
 
-            if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
+            $pendingDebtsSum = $companyService->getPendingDebtBalance($company);
+
+            if (!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)) {
                 return response()->json(
                     [
                         'message' => 'Valor informado inválido',
@@ -125,86 +124,13 @@ class WithdrawalsApiController
                 );
             }
 
-            $withdrawalStatus = [
-                $withdrawalModel->present()->getStatus('liquidating'),
-                $withdrawalModel->present()->getStatus('partially_liquidated'),
-                $withdrawalModel->present()->getStatus('transfered')
-            ];
+            $responseCreateWithdrawal = $withdrawalService->createWithdrawal($withdrawalValue, $company);
 
-            $isFirstUserWithdrawal = false;
-            $userWithdrawal = $withdrawalModel->whereHas(
-                'company',
-                function ($query) {
-                    $query->where('user_id', auth()->user()->account_owner_id);
-                }
-            )
-                ->whereIn('status', $withdrawalStatus)
-                ->exists();
-
-            if (!$userWithdrawal) {
-                $isFirstUserWithdrawal = true;
+            if ($responseCreateWithdrawal) {
+                return response()->json(['message' => 'Saque pendente'], 200);
             }
 
-            try {
-                DB::beginTransaction();
-                $withdrawal = $withdrawalModel->create(
-                    [
-                        'value' => $withdrawalValue,
-                        'company_id' => $company->id,
-                        'bank' => $company->bank,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'status' => $withdrawalModel->present()->getStatus(
-                            $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                        ),
-                        'tax' => 0,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'automatic_liquidation' => true,
-                    ]
-                );
-
-                $transactionsSum = $company->transactions()
-                    ->whereIn('gateway_id', [14, 15])
-                    ->where('is_waiting_withdrawal', 1)
-                    ->whereNull('withdrawal_id')
-                    ->orderBy('id');
-
-                $currentValue = 0;
-
-                $transactionsSum->chunkById(
-                    2000,
-                    $test = function ($transactions) use (
-                        $currentValue,
-                        $withdrawalValue,
-                        $withdrawal
-                    ) {
-                        foreach ($transactions as $transaction) {
-                            $currentValue += $transaction->value;
-
-                            if ($currentValue <= $withdrawalValue) {
-                                $transaction->update(
-                                    [
-                                        'withdrawal_id' => $withdrawal->id,
-                                        'is_waiting_withdrawal' => false
-                                    ]
-                                );
-                            }
-                        }
-                    }
-                );
-
-                $withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
-
-                DB::commit();
-            } catch (PDOException $e) {
-                DB::rollBack();
-                report($e);
-                return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
-            }
-
-            return response()->json(['message' => 'Saque pendente'], 200);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         } catch (Exception $e) {
             report($e);
 
@@ -291,9 +217,7 @@ class WithdrawalsApiController
 
     public function getTransactionsByBrand($id)
     {
-
         try {
-
             $withdrawalId = current(Hashids::decode($id));
             $withdrawalModel = new Withdrawal();
 
@@ -323,18 +247,15 @@ class WithdrawalsApiController
             $total_withdrawal = 0;
 
             foreach ($transactions as $transaction) {
-
                 $total_withdrawal += $transaction->value;
 
                 if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
                     $transaction->sale->flag = 'generico';
-               }
-                elseif ($transaction->sale->payment_method == 2) {
+                } elseif ($transaction->sale->payment_method == 2) {
                     $transaction->sale->flag = 'boleto';
-               }
+                }
 
-                if ( !$transaction->gateway_transferred  and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8 )) {
-
+                if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
                     $getNetBackOfficeService = new GetnetBackOfficeService();
 
                     $getNetBackOfficeService->setStatementSubSellerId($subsellerGetnetId)
@@ -347,7 +268,11 @@ class WithdrawalsApiController
                         !empty($gatewaySale->list_transactions[0]->details[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
                     ) {
-                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = str_replace(
+                            'T',
+                            ' ',
+                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+                        );
                         $date = date("d/m/Y", strtotime($date));
 
                         $transaction->update(
@@ -356,25 +281,19 @@ class WithdrawalsApiController
                             ]
                         );
 
-                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date );
-
+                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date);
                     } else {
-
-                        $this->updateArrayBrands($arrayBrands, $transaction, false );
+                        $this->updateArrayBrands($arrayBrands, $transaction, false);
                     }
+                } else {
+                    $this->updateArrayBrands($arrayBrands, $transaction, true);
                 }
-                else {
-                    $this->updateArrayBrands($arrayBrands, $transaction, true );
-                }
-
             }
 
             $arrayTransactions = [];
 
             foreach ($arrayBrands as $arrayBrand) {
-
-                if ($arrayBrand['liquidated'] == true and  empty($arrayBrand['date'])) {
-
+                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
                     $subSeller = $subsellerGetnetId;
 
                     $getNetBackOfficeService = new GetnetBackOfficeService();
@@ -390,7 +309,11 @@ class WithdrawalsApiController
                         !empty($gatewaySale->list_transactions[0]->details[0]) &&
                         !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
                     ) {
-                        $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = str_replace(
+                            'T',
+                            ' ',
+                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+                        );
                         $date = date("d/m/Y", strtotime($date));
 
                         $arrayBrand['date'] = $date;
@@ -401,7 +324,7 @@ class WithdrawalsApiController
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
                     'liquidated' => $arrayBrand['liquidated'],
-                    'date' =>  $arrayBrand['date'] ?? ' - ',
+                    'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
 
@@ -410,11 +333,10 @@ class WithdrawalsApiController
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
-                'transactions' =>  $arrayTransactions,
+                'transactions' => $arrayTransactions,
             ];
 
             return response()->json($return, 200);
-
         } catch (Exception $e) {
             report($e);
 
@@ -422,28 +344,24 @@ class WithdrawalsApiController
         }
     }
 
-    public function updateArrayBrands (Array &$arrayBrands, $transaction, $isLiquidated, $date = null) {
-
-        if (array_key_exists($transaction->sale->flag,$arrayBrands))
-        {
+    public function updateArrayBrands(array &$arrayBrands, $transaction, $isLiquidated, $date = null)
+    {
+        if (array_key_exists($transaction->sale->flag, $arrayBrands)) {
             if (!$isLiquidated) {
                 $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
             }
 
             $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
-        }
-        else
-        {
+        } else {
             $arrayBrands[$transaction->sale->flag] = [
                 'brand' => $transaction->sale->flag,
                 'value' => $transaction->value,
                 'liquidated' => $isLiquidated,
-                'date' =>  $date,
+                'date' => $date,
                 'hash_id' => $transaction->sale->hash_id,
 
             ];
         }
-
     }
 
     public function getTransactions(Request $request, $id)
@@ -452,9 +370,11 @@ class WithdrawalsApiController
             $dataRequest = \request()->all();
             $withdrawalId = current(Hashids::decode($id));
 
-            activity()->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
 
             $user = auth()->user();
             $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
@@ -465,9 +385,7 @@ class WithdrawalsApiController
             (new WithdrawalsReportExport($withdrawalId, $user, $email, $filename))
                 ->queue($filename)->allOnQueue('high');
 
-           return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
-
-
+            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
             report($e);
 

@@ -2,7 +2,15 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use Aws\S3\S3Client;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
@@ -10,25 +18,16 @@ use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
+use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Http\Requests\IndexProductRequest;
 use Modules\Products\Http\Requests\UpdateProductRequest;
-use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
 use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Transformers\ProductsResource;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Products\Transformers\ProductsSelectResource;
-use Intervention\Image\Facades\Image;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Gate;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
-use Exception;
 
 /**
  * Class ProductsApiController
@@ -156,12 +155,12 @@ class ProductsApiController extends Controller
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/products',
+                    $amazonPath = $this->getAmazonFileService()
+                        ->uploadFile('uploads/public/products',
                             $productPhoto);
 
                     $product->update([
-                        'photo' => $digitalOceanPath,
+                        'photo' => $amazonPath,
                     ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
@@ -294,18 +293,18 @@ class ProductsApiController extends Controller
 
             if ($productPhoto != null) {
                 try {
-                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                    $this->getAmazonFileService()->deleteFile($product->photo);
 
                     $img = Image::make($productPhoto->getPathname());
                     $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                        ->uploadFile('uploads/user/'.Hashids::encode(auth()->user()->account_owner_id).'/public/products',
+                    $productPath = $this->getAmazonFileService()
+                        ->uploadFile('uploads/public/products',
                             $productPhoto);
 
-                    $product->update(['photo' => $digitalOceanPath]);
+                    $product->update(['photo' => $productPath]);
                 } catch (Exception $e) {
                     report($e);
 
