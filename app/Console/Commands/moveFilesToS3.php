@@ -56,16 +56,16 @@ class moveFilesToS3 extends Command
 
         /******* NÃO PRECISA CORRIGIR NO CÓDIGO *******/
 
-        $this->customerWithdrawals();
+        //$this->customerWithdrawals();
 
         /******* PRECISA CORRIGIR NO CÓDIGO *******/
         /******* JA RODOU *******/
         // $this->companyDocuments();
         // $this->withdrawals();
         // $this->products();
-        // $this->changeUserPhoto();
+       $this->changeUserPhoto();
         // $this->projects(); //ja migrei
-        // $this->userDocuments();
+       //  $this->userDocuments();
         // $this->ticketAttachments();
 
 
@@ -235,6 +235,9 @@ class moveFilesToS3 extends Command
                 $photoName = pathinfo($temporaryUrl, PATHINFO_FILENAME);
                 $photoExtension = (explode("?", (pathinfo($temporaryUrl, PATHINFO_EXTENSION))))[0];
                 $fullname = $photoName . '.' . $photoExtension;
+
+
+
 
                 $this->s3Drive->putFileAs(
                     'uploads/private/users/documents',
@@ -441,14 +444,17 @@ class moveFilesToS3 extends Command
                     continue;
 
                 $photoName = pathinfo($user->photo, PATHINFO_FILENAME);
+                $photoExtension = pathinfo($user->photo, PATHINFO_EXTENSION);
+                $fullname = $photoName .'.' .$photoExtension;
+
                 $this->s3Drive->putFileAs(
                     'uploads/public/users/profile',
                     $user->photo,
-                    $photoName,
+                    $fullname,
                     'public'
                 );
                 $urlPath = $this->s3Drive->url(
-                    'uploads/public/users/profile/' . $photoName
+                    'uploads/public/users/profile/' . $fullname
                 );
 
                 $user->photo = $urlPath;
