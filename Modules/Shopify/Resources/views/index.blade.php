@@ -94,7 +94,7 @@
                                             <span>Após ter se autenticado no shopify, clique em "Apps" <strong
                                                         class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-1.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-1.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -117,7 +117,7 @@
                                             <span>Ao carregar a página, identifique e clique no link "Manage private apps" <strong
                                                         class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-2.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-2.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -140,7 +140,7 @@
                                             <span>Aguarde a nova página abrir, e clique no botão "Create a new private app" <strong
                                                         class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-3.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-3.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -164,7 +164,7 @@
                                                 <br> <strong>"Private app name"</strong> é o nome do novo aplicativo, para não confundir, sugerimos que ultilize "cloudfox".
                                                 <br> <strong>"Emergency developer email"</strong> é o email para emergências, preencha-o corretamente.
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-4-1.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-4-1.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -195,7 +195,7 @@
                                                     <li>Inventory -> Read access</li>
                                                 </ul>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-4-2.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-4-2.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -218,7 +218,7 @@
                                             <span>Confira os dados e clique em "save", o botão podera ser encontrado no final da página.
                                             <br> Uma janela de confirmação aparecerá para você<strong class='grad'>(selecione o botão como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-6.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-6.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
@@ -262,12 +262,12 @@
                                             <span>O campo "Token (password)" deve ser preenchido com o password do seu app<strong
                                                         class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-7-1.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shoify-integration-step-7-1.png'
                                                      style='width:100%'>
                                                 <br>O campo "URL da sua loja no Shopify" sera a URL da sua loja. (sem o "https://" nem mesmo o que vier após "myshopify.com")<strong
                                                         class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shopify-url.png'
+                                                     src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/shopify-url.png'
                                                      style='width:100%'>
                                         </span>
                                         </div>

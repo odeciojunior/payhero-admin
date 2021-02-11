@@ -61,8 +61,8 @@
                        data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
                   <img class='img-user-menu-principal'
-                       src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}"
-                       onerror="this.onerror=null; this.src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'"
+                       src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
+                       onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
                        alt="">
                   <i></i>
                 </span>
