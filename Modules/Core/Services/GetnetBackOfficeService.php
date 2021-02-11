@@ -15,7 +15,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 use Modules\Transfers\Getnet\Details;
 use Modules\Transfers\Getnet\StatementItem;
-use Modules\Transfers\Services\GetNetStatementService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -308,7 +307,7 @@ class GetnetBackOfficeService extends GetnetService
         $originalResult = $this->sendCurl($url, 'GET', null, null, false);
         $result = json_decode($originalResult);
 
-        if (isset($result->list_transactions)) {
+        /*if (isset($result->list_transactions)) {
 
             foreach ($result->list_transactions as $item) {
 
@@ -380,7 +379,7 @@ class GetnetBackOfficeService extends GetnetService
                     }
                 }
             }
-        }
+        }*/
 
         if (isset($result->adjustments)) {
 
