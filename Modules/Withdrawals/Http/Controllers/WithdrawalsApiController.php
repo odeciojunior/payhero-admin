@@ -101,6 +101,10 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
+            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia!'], 403);
+            }
+
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
             $companyService = new CompanyService();
@@ -118,14 +122,6 @@ class WithdrawalsApiController
                     ],
                     400
                 );
-            }
-
-            $firstWithdrawalToday = (new Withdrawal())->where('company_id', $company->id)
-                ->whereDate('created_at', now())
-                ->exists();
-
-            if ($firstWithdrawalToday) {
-                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia!'], 403);
             }
 
             $responseCreateWithdrawal = $withdrawalService->createWithdrawal($withdrawalValue, $company);
