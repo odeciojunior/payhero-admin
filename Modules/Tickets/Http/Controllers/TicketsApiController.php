@@ -171,8 +171,9 @@ class TicketsApiController extends Controller
                         'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
                     ]);
 
+                    $lastCustomerDate = (empty($lastCustomerMessage)) ? $ticket->created_at : $lastCustomerMessage->created_at;
                     $averageResponseTime = is_null($ticket->average_response_time) ? 0 : $ticket->average_response_time;
-                    $diffHours = Carbon::now()->diffInHours($lastCustomerMessage->created_at);
+                    $diffHours = Carbon::now()->diffInHours($lastCustomerDate);
                     $divider = empty($lastAdminMessage) ? 1 : 2;
                     $averageResponseTime = ($averageResponseTime + $diffHours) / $divider;
 
