@@ -6,9 +6,12 @@ $(() => {
 
         loadOnTable('#table-order-bump tbody', '#table-order-bump');
 
+        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        link = '/api/orderbump' + (link || '');
+
         $.ajax({
             method: 'GET',
-            url: '/api/orderbump',
+            url: link,
             data: {
                 project_id: projectId
             },
