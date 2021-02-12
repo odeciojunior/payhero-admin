@@ -51,6 +51,7 @@ class Pixel extends Model
         'purchase_card',
         'affiliate_id',
         'apply_on_plans',
+        'code_meta_tag_facebook',
         'created_at',
         'updated_at',
         'deleted_at',

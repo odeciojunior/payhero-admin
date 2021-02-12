@@ -37,6 +37,13 @@
                     <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
                 </div>
+                <div class="row" id="meta-tag-facebook" style="display:none;">
+                    <div class="form-group col-12 my-20">
+                        <label for="code_meta_tag_facebook">Meta-tag verificação do facebook</label>
+                        <input name="code_meta_tag_facebook" type="text" id='code_meta_tag_facebook' class="form-control pixel-code"
+                               placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255' aria-describedby="input-code-pixel">
+                    </div>
+                </div>
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
                         <label for="add_pixel_plans">Executar no(s) plano(s)</label>

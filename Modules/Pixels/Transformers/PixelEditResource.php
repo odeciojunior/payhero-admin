@@ -27,6 +27,7 @@ class PixelEditResource extends JsonResource
             'purchase_boleto' => $this->purchase_boleto,
             'purchase_card'   => $this->purchase_card,
             'apply_on_plans'  => $this->apply_on_plans,
+            'code_meta_tag_facebook'  => $this->code_meta_tag_facebook,
         ];
     }
 }
