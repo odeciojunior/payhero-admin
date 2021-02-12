@@ -26,7 +26,7 @@ class OrderBumpApiController extends Controller
 
             $rules = $orderBumpModel->where('project_id', $projectId)
                 ->orderByDesc('id')
-                ->paginate(10);
+                ->paginate(5);
 
             return OrderBumpResource::collection($rules);
 

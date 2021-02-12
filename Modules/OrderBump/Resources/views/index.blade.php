@@ -36,12 +36,11 @@
 <div id="modal-show-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content">
-            <div class="modal-header simple-border-bottom">
-                <h4 class="modal-title" id="modal-title">Detalhes do Order Bump</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal"
-                   aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title text-center">Detalhes do Order Bump</h4>
             </div>
             <div class="modal-body">
                 <table id="order-bump-show-table" class="table table-striped mb-0 w-full">
@@ -74,7 +73,7 @@
 
 <!-- Modal Store -->
 <div id="modal-store-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple w-450">
+    <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content w-450">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -131,7 +130,7 @@
 
 <!-- Modal Update -->
 <div id="modal-update-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple w-450">
+    <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content w-450">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

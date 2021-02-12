@@ -64,10 +64,10 @@ $(() => {
                 let rule = resp.data;
                 let applyOnPlans = rule.apply_on_plans
                     .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
-                    .join(', ');
+                    .join(' / ');
                 let offerPlans = rule.offer_plans
                     .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
-                    .join(', ');
+                    .join(' / ');
                 $('#order-bump-show-table .order-bump-description').html(rule.description);
                 $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
                 $('#order-bump-show-table .order-bump-apply-plans').html(applyOnPlans);
