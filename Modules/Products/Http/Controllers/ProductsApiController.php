@@ -15,7 +15,6 @@ use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Products\Http\Requests\CreateProductRequest;
@@ -35,24 +34,11 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class ProductsApiController extends Controller
 {
-    private $digitalOceanFileService;
 
     private $amazonFileService;
 
     /**
-     * @return Application|mixed|DigitalOceanFileService
-     */
-    private function getDigitalOceanFileService()
-    {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
-        }
-
-        return $this->digitalOceanFileService;
-    }
-
-    /**
-     * @return Application|mixed|DigitalOceanFileService
+     * @return Application|mixed
      */
     private function getAmazonFileService()
     {
@@ -65,7 +51,7 @@ class ProductsApiController extends Controller
 
     /**
      * Monta o select com opção Produtos Shopify e Meus Produtos
-     * @param  IndexProductRequest  $request
+     * @param IndexProductRequest $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(IndexProductRequest $request)
@@ -86,7 +72,7 @@ class ProductsApiController extends Controller
             }
 
             if (isset($filters['name'])) {
-                $productsSearch->where('name', 'LIKE', '%'.$filters['name'].'%');
+                $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
             }
 
             if (isset($filters['project']) && $filters['shopify'] == 1) {
@@ -141,7 +127,7 @@ class ProductsApiController extends Controller
 
             $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
-            $category = $categoryModel->where('name', 'like', '%'.'Outros'.'%')->first();
+            $category = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
             $data['category_id'] = $category->id;
 
             $product = $productModel->create($data);
@@ -171,7 +157,7 @@ class ProductsApiController extends Controller
                 try {
                     $this->getAmazonFileService()->changeDisk('s3_digital_product');
                     $amazonPath = $this->getAmazonFileService()
-                        ->uploadFile('products/'.Hashids::encode($product->id), $data['digital_product_url'], null,
+                        ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null,
                             false, 'private');
 
                     $product->update([
@@ -194,7 +180,7 @@ class ProductsApiController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
      * Traz a lista de produtos
      */
@@ -207,7 +193,7 @@ class ProductsApiController extends Controller
                 ->where('shopify', $request->input('shopify'));
 
             if ($request->has('name') && !empty($request->input('name'))) {
-                $productsSearch->where('name', 'LIKE', '%'.$request->nome.'%');
+                $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
             }
 
             if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
@@ -242,7 +228,7 @@ class ProductsApiController extends Controller
             activity()->on($productModel)->tap(function (Activity $activity) use ($id) {
                 $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($id));
-            })->log('Visualizou tela editar produto '.$product->name);
+            })->log('Visualizou tela editar produto ' . $product->name);
 
             $categories = $categoryModel->all();
 
@@ -264,7 +250,7 @@ class ProductsApiController extends Controller
             $productModel = new Product();
             $categoryModel = new Category();
 
-            $category = $categoryModel->where('name', 'like', '%'.'Outros'.'%')->first();
+            $category = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
             $data['category'] = $category->id;
 
             $productId = current(Hashids::decode($id));
@@ -316,7 +302,7 @@ class ProductsApiController extends Controller
                 try {
                     $this->getAmazonFileService()->changeDisk('s3_digital_product');
                     $amazonPath = $this->getAmazonFileService()
-                        ->uploadFile('products/'.Hashids::encode($product->id), $data['digital_product_url'],
+                        ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'],
                             null, false, 'private');
 
                     $product->update(['digital_product_url' => $amazonPath]);
@@ -358,7 +344,7 @@ class ProductsApiController extends Controller
             }
 
             if (!empty($product->photo)) {
-                $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                $this->getAmazonFileService()->deleteFile($product->photo);
             }
 
             $product->delete();
