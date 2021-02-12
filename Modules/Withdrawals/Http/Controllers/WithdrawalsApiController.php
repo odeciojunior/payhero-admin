@@ -102,7 +102,7 @@ class WithdrawalsApiController
             }
 
             if ($withdrawalService->isFirstWithdrawalToday($company)) {
-                return response()->json(['message' => 'Você só poderá fazer o pedido de saque uma vez por dia'], 403);
+                return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
@@ -333,6 +333,7 @@ class WithdrawalsApiController
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
+                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
                 'transactions' => $arrayTransactions,
             ];
 
