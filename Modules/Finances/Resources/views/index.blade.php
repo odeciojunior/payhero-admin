@@ -274,6 +274,7 @@
                                     <table id='withdrawalsTable' class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
+                                            <th scope="col">Código Saque</th>
                                             <th scope="col">Conta</th>
                                             <th scope="col">Solicitação</th>
                                             <th scope="col">Liberação</th>

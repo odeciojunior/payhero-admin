@@ -769,6 +769,7 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
+                            <td class="text-xs-left text-md-left">#${data.id}</td>
                             <td class="text-xs-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
                             <td class="text-xs-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
                             <td class="text-xs-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
