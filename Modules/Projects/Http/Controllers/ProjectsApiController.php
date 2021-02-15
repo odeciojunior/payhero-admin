@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectUpsellRule;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
@@ -101,7 +105,7 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $userProjectModel = new UserProject();
             $shippingModel = new Shipping();
-            $amazonFileService = app(AmazonFileService::class);
+            $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (empty($requestValidated)) {
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
@@ -160,12 +164,12 @@ class ProjectsApiController extends Controller
                     );
                     $img->save($photo->getPathname());
 
-                    $amazonFileService = $amazonFileService
+                    $digitalOceanPath = $digitalOceanService
                         ->uploadFile(
-                            'uploads/public/projects/photos/' . Hashids::encode($project->id),
+                            "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $photo
                         );
-                    $project->update(['photo' => $amazonFileService]);
+                    $project->update(['photo' => $digitalOceanPath]);
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -304,7 +308,7 @@ class ProjectsApiController extends Controller
             $requestValidated = $request->validated();
             $projectModel = new Project();
             $userProjectModel = new UserProject();
-            $amazonFileService = app(AmazonFileService::class);
+            $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (!$requestValidated) {
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
@@ -381,7 +385,7 @@ class ProjectsApiController extends Controller
             try {
                 $projectPhoto = $request->file('photo');
                 if ($projectPhoto != null) {
-                    $amazonFileService->deleteFile($project->photo);
+                    $digitalOceanService->deleteFile($project->photo);
                     $img = Image::make($projectPhoto->getPathname());
                     if (
                         !empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
@@ -397,19 +401,19 @@ class ProjectsApiController extends Controller
                     $img->resize(300, 300);
                     $img->save($projectPhoto->getPathname());
 
-                    $amazonPath = $amazonFileService
+                    $digitalOceanPath = $digitalOceanService
                         ->uploadFile(
-                            'uploads/public/projects/photos/' . Hashids::encode($project->id),
+                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $projectPhoto
                         );
                     $project->update([
-                        'photo' => $amazonPath,
+                        'photo' => $digitalOceanPath,
                     ]);
                 }
 
                 $projectLogo = $request->file('logo');
                 if ($projectLogo != null) {
-                    $amazonFileService->deleteFile($project->logo);
+                    $digitalOceanService->deleteFile($project->logo);
                     $img = Image::make($projectLogo->getPathname());
 
                     $img->resize(null, 300, function ($constraint) {
@@ -418,14 +422,14 @@ class ProjectsApiController extends Controller
 
                     $img->save($projectLogo->getPathname());
 
-                    $amazonPath = $amazonFileService
+                    $digitalOceanPathLogo = $digitalOceanService
                         ->uploadFile(
-                            'uploads/public/projects/logos/' . Hashids::encode($project->id),
+                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
                             $projectLogo
                         );
 
                     $project->update([
-                        'logo' => $amazonPath,
+                        'logo' => $digitalOceanPathLogo,
                     ]);
                 }
             } catch (Exception $e) {
@@ -474,6 +478,7 @@ class ProjectsApiController extends Controller
 
             $projectModel = new Project();
             $usersProjects = new UserProject();
+            $saleModel = new Sale();
             $usersProjectsPresent = $usersProjects->present();
             $userId = auth()->user()->account_owner_id;
             $id = current(Hashids::decode($id));
@@ -483,8 +488,37 @@ class ProjectsApiController extends Controller
                 ->with([
                     'affiliates' => function ($query) use ($userId) {
                         $query->where('user_id', $userId);
-                    }
+                    }, 'sales'
                 ])->first();
+
+            $companies = Company::where('user_id', auth()->user()->id)->pluck('id');
+
+            $project->chargeback_count = $saleModel->where('project_id', $project->id)
+                                             ->where('status', $saleModel->present()->getStatus('charge_back'))
+                                             ->count();
+
+            $project->without_tracking = $saleModel->where('project_id', $project->id)
+                                             ->where('has_valid_tracking', false)
+                                             ->whereNotNull('delivery_id')
+                                             ->where('status', $saleModel->present()->getStatus('approved'))
+                                             ->count();
+
+            $project->approved_sales = $saleModel->where('project_id', $project->id)
+                                           ->where('status', $saleModel->present()->getStatus('approved'))
+                                           ->count();
+
+            $project->approved_sales_value = Transaction::whereIn('company_id', $companies)
+                                                        ->whereHas('sale', function ($query) use ($saleModel, $project) {
+                                                            $query->where('status', $saleModel->present()->getStatus('approved'));
+                                                            $query->where('project_id', $project->id);
+                                                        })
+                                                        ->sum('value');
+
+            $project->open_tickets = $saleModel->where('project_id', $project->id)
+                                         ->whereHas('tickets', function ($query) {
+                                             $query->where('status', (new Ticket())->present()->getLastMessageType('open'));
+                                         })
+                                        ->count();
 
             if (empty($project)) {
                 return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 403);

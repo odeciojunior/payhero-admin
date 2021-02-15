@@ -7,7 +7,7 @@ $(() => {
         show();
     });
 
-    $("#tab_settings_affiliate").click(function () {
+    $(".tab_settings_affiliate-panel").click(function () {
         updateConfiguracoes();
     });
 
@@ -51,15 +51,15 @@ $(() => {
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Afiliado em ' + project.affiliate_date);
                 if (project.visibility === 'public') {
-                    $('#show-visibility').text('Público').addClass('badge-primary');
+                    $('#show-visibility').text('Público').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-primary');
                 } else {
-                    $('#show-visibility').text('Privado').addClass('badge-danger');
+                    $('#show-visibility').text('Privado').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-danger');
                 }
 
                 if (project.status_affiliate == '1') {
-                    $('#show-status').text('Ativo').addClass('badge-primary');
+                    $('#show-status').text('Ativo').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-success');
                 } else if (project.status_affiliate == '2'){
-                    $('#show-status').text('Desativado').addClass('badge-warning');
+                    $('#show-status').text('Desativado').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-danger');
                 }
 
                 $('#show-description').text(project.description);

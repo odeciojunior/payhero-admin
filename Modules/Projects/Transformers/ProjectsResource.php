@@ -122,7 +122,11 @@ class ProjectsResource extends JsonResource
             'checkout_notification_config_mobile' => $this->checkout_notification_configs_mobile,
             'checkout_notification_config_messages' => $this->checkout_notification_configs_message,
             'checkout_notification_config_messages_min_value' => $this->checkout_notification_configs_message_min_value,
-
+            'chargeback_count' => $this->chargeback_count ?? 0,
+            'open_tickets' => $this->open_tickets ?? 0,
+            'without_tracking' => $this->without_tracking ?? 0,
+            'approved_sales' => $this->approved_sales ?? 0,
+            'approved_sales_value' => $this->approved_sales_value ? substr_replace(@$this->approved_sales_value, '.', strlen(@$this->approved_sales_value) - 2, 0) : 0,
         ];
     }
 }
