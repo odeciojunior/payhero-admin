@@ -193,4 +193,11 @@ class WithdrawalService
             return false;
         }
     }
+
+    public function isFirstWithdrawalToday(Company $company)
+    {
+        return (new Withdrawal())->where('company_id', $company->id)
+            ->whereDate('created_at', now())
+            ->exists();
+    }
 }

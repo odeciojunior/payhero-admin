@@ -18,7 +18,6 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
@@ -305,7 +304,6 @@ class ProjectsApiController extends Controller
             $requestValidated = $request->validated();
             $projectModel = new Project();
             $userProjectModel = new UserProject();
-            $digitalOceanService = app(DigitalOceanFileService::class);
             $amazonFileService = app(AmazonFileService::class);
 
             if (!$requestValidated) {
@@ -411,7 +409,7 @@ class ProjectsApiController extends Controller
 
                 $projectLogo = $request->file('logo');
                 if ($projectLogo != null) {
-                    $digitalOceanService->deleteFile($project->logo);
+                    $amazonFileService->deleteFile($project->logo);
                     $img = Image::make($projectLogo->getPathname());
 
                     $img->resize(null, 300, function ($constraint) {
