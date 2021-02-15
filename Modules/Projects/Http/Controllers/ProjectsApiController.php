@@ -22,6 +22,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
