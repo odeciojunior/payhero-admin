@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-8">
                 <img class="review-photo img-fluid rounded-circle p-0 m-0" width="40" height="40"
-                     src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png">
+                     src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png">
                 <b class="pl-2 review-name"></b>
             </div>
 

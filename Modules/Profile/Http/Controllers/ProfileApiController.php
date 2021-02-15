@@ -14,7 +14,6 @@ use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CountryService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
@@ -142,8 +141,8 @@ class ProfileApiController
                         || empty($requestData['photo_x1']) || empty($requestData['photo_y1'])) {
                         return response()->json(['message' => 'Erro ao salvar foto'], 400);
                     }
-                    $digitalOceanService = app(DigitalOceanFileService::class);
-                    $digitalOceanService->deleteFile($user->photo);
+                    $amazonOceanService = app(AmazonFileService::class);
+                    $amazonOceanService->deleteFile($user->photo);
 
                     $img = Image::make($userPhoto->getPathname());
                     $img->crop(
@@ -155,7 +154,7 @@ class ProfileApiController
                     $img->resize(200, 200);
                     $img->save($userPhoto->getPathname());
 
-                    $digitalOceanPath = $digitalOceanService
+                    $amazonPath = $amazonOceanService
                         ->uploadFile(
                             'uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile',
                             $userPhoto
@@ -163,7 +162,7 @@ class ProfileApiController
 
                     $user->update(
                         [
-                            'photo' => $digitalOceanPath,
+                            'photo' => $amazonPath,
                         ]
                     );
                 } catch (Exception $e) {
@@ -537,16 +536,11 @@ class ProfileApiController
     public function openDocument(Request $request)
     {
         try {
-            $digitalOceanFileService = app(DigitalOceanFileService::class);
+
             $amazonFileService = app(AmazonFileService::class);
             $data = $request->all();
             if (!empty($data['document_url'])) {
                 $temporaryUrl = '';
-
-                // Gera o Link temporário de acordo com o driver
-                if (strstr($data['url'], 'digitaloceanspaces')) {
-                    $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['url'], 180);
-                }
 
                 if (strstr($data['url'], 'amazonaws')) {
                     $amazonFileService->setDisk('s3_documents');

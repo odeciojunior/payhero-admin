@@ -101,6 +101,10 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
+            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+                return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
+            }
+
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
             $companyService = new CompanyService();
@@ -111,7 +115,7 @@ class WithdrawalsApiController
 
             $pendingDebtsSum = $companyService->getPendingDebtBalance($company);
 
-            if(!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)){
+            if (!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)) {
                 return response()->json(
                     [
                         'message' => 'Valor informado inválido',
@@ -329,6 +333,7 @@ class WithdrawalsApiController
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
+                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
                 'transactions' => $arrayTransactions,
             ];
 

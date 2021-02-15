@@ -21,7 +21,6 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
 use Symfony\Component\HttpFoundation\Response;
@@ -362,16 +361,11 @@ class CompaniesApiController extends Controller
     public function openDocument(Request $request): JsonResponse
     {
         try {
-            $digitalOceanFileService = app(DigitalOceanFileService::class);
+
             $amazonFileService = app(AmazonFileService::class);
             $data = $request->all();
             if (!empty($data['document_url'])) {
                 $temporaryUrl = '';
-
-                // Gera o Link temporário de acordo com o driver
-                if (strstr($data['url'], 'digitaloceanspaces')) {
-                    $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['url'], 180);
-                }
 
                 if (strstr($data['url'], 'amazonaws')) {
                     $amazonFileService->setDisk('s3_documents');
