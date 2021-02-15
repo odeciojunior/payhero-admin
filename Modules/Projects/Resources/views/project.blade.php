@@ -207,9 +207,9 @@
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-        <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
+        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
+        <script src="{{asset('modules/global/ckeditor/ckeditor.js')}}"></script>
+        <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
     @endpush
 @endsection
 
