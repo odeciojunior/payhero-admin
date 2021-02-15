@@ -106,7 +106,7 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $userProjectModel = new UserProject();
             $shippingModel = new Shipping();
-            $digitalOceanService = app(DigitalOceanFileService::class);
+            $amazonFileService = app(AmazonFileService::class);
 
             if (empty($requestValidated)) {
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
@@ -165,12 +165,12 @@ class ProjectsApiController extends Controller
                     );
                     $img->save($photo->getPathname());
 
-                    $digitalOceanPath = $digitalOceanService
+                    $amazonPath = $amazonFileService
                         ->uploadFile(
                             "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $photo
                         );
-                    $project->update(['photo' => $digitalOceanPath]);
+                    $project->update(['photo' => $amazonPath]);
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -191,8 +191,8 @@ class ProjectsApiController extends Controller
             ]);
 
             if (empty($userProject)) {
-                if (!empty($digitalOceanPath)) {
-                    $digitalOceanPath->deleteFile($project->photo);
+                if (!empty($amazonPath)) {
+                    $amazonPath->deleteFile($project->photo);
                 }
                 $shipping->delete();
                 $project->delete();
@@ -309,7 +309,7 @@ class ProjectsApiController extends Controller
             $requestValidated = $request->validated();
             $projectModel = new Project();
             $userProjectModel = new UserProject();
-            $digitalOceanService = app(DigitalOceanFileService::class);
+            $amazonFileService = app(AmazonFileService::class);
 
             if (!$requestValidated) {
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
@@ -386,7 +386,7 @@ class ProjectsApiController extends Controller
             try {
                 $projectPhoto = $request->file('photo');
                 if ($projectPhoto != null) {
-                    $digitalOceanService->deleteFile($project->photo);
+                    $amazonFileService->deleteFile($project->photo);
                     $img = Image::make($projectPhoto->getPathname());
                     if (
                         !empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
@@ -402,19 +402,19 @@ class ProjectsApiController extends Controller
                     $img->resize(300, 300);
                     $img->save($projectPhoto->getPathname());
 
-                    $digitalOceanPath = $digitalOceanService
+                    $amazonPath = $amazonFileService
                         ->uploadFile(
                             'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $projectPhoto
                         );
                     $project->update([
-                        'photo' => $digitalOceanPath,
+                        'photo' => $amazonPath,
                     ]);
                 }
 
                 $projectLogo = $request->file('logo');
                 if ($projectLogo != null) {
-                    $digitalOceanService->deleteFile($project->logo);
+                    $amazonFileService->deleteFile($project->logo);
                     $img = Image::make($projectLogo->getPathname());
 
                     $img->resize(null, 300, function ($constraint) {
@@ -423,14 +423,14 @@ class ProjectsApiController extends Controller
 
                     $img->save($projectLogo->getPathname());
 
-                    $digitalOceanPathLogo = $digitalOceanService
+                    $amazonPathLogo = $amazonFileService
                         ->uploadFile(
                             'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
                             $projectLogo
                         );
 
                     $project->update([
-                        'logo' => $digitalOceanPathLogo,
+                        'logo' => $amazonPathLogo,
                     ]);
                 }
             } catch (Exception $e) {
