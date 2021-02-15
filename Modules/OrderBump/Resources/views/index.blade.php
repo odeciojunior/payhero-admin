@@ -73,8 +73,8 @@
 
 <!-- Modal Store -->
 <div id="modal-store-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content w-450">
+    <div class="modal-dialog modal-dialog-centered modal-simple w-md-450">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -130,8 +130,8 @@
 
 <!-- Modal Update -->
 <div id="modal-update-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content w-450">
+    <div class="modal-dialog modal-dialog-centered modal-simple w-md-450">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
