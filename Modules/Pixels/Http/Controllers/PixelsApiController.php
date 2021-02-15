@@ -148,12 +148,6 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param PixelUpdateRequest $request
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
     public function update(PixelUpdateRequest $request, $projectId, $id)
     {
         try {

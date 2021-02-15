@@ -26,19 +26,28 @@ class PixelService
             ->get();
     }
 
-    public function updateCodeMetaTagFacebook(int $projectId, string $metaTag): bool
+    public function updateCodeMetaTagFacebook(int $projectId, $metaTag): bool
     {
         try {
             $pixels = $this->getPixelFacebookByProject($projectId);
 
-            foreach ($pixels as $pixel) {
-                $pixel->update(
-                    [
-                        'code_meta_tag_facebook' => $metaTag
-                    ]
-                );
+            if (empty($metaTag)) {
+                $pixel = Pixel::where('project_id', $projectId)
+                    ->where('platform', 'facebook')
+                    ->whereNotNull('code_meta_tag_facebook')->first();
+
+                $metaTag = $pixel->code_meta_tag_facebook;
             }
 
+            if (!empty($metaTag)) {
+                foreach ($pixels as $pixel) {
+                    $pixel->update(
+                        [
+                            'code_meta_tag_facebook' => $metaTag
+                        ]
+                    );
+                }
+            }
             return true;
         } catch (Exception $e) {
             report($e);
