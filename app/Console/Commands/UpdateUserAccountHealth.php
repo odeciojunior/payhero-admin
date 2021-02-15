@@ -40,7 +40,9 @@ class UpdateUserAccountHealth extends Command
     public function handle()
     {
         $accountHealthService = new AccountHealthService();
-        dd($accountHealthService->getAccountScore(User::find(2964)));
+        $user = User::find(557); // Carolina
+        //$user = User::find(26); // Joao
+        $accountHealthService->updateAccountScore($user);
         return 0;
     }
 }
