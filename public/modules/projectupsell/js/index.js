@@ -1,9 +1,10 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     let countdownInterval = null;
-    loadUpsell();
-    $('#tab_upsell').on('click', function () {
+
+    $('.tab_upsell').on('click', function () {
         loadUpsell();
+        $(this).off();
     })
     function loadUpsell() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -36,6 +37,7 @@ $(document).ready(function () {
                     $('#table-upsell').addClass('table-striped');
                 } else {
                     $('#table-upsell').addClass('table-striped');
+                    $('#count-upsell').html(response.meta.total);
                     let data = '';
                     $.each(response.data, function (index, value) {
                         data += `
@@ -306,19 +308,6 @@ $(document).ready(function () {
         }
     });
 
-    CKEDITOR.replace('description_config', {
-        language: 'br',
-        uiColor: '#F1F4F5',
-        height: 70,
-        toolbarGroups: [
-            {name: 'basicstyles', groups: ['basicstyles']},
-            {name: 'paragraph', groups: ['list', 'blocks']},
-            {name: 'links', groups: ['links']},
-            {name: 'styles', groups: ['styles']},
-        ],
-        removeButtons: 'Anchor,Superscript,Subscript',
-    });
-
     $(document).on('click', '#config-upsell', function (event) {
         event.preventDefault();
         loadingOnScreen();
@@ -340,7 +329,7 @@ $(document).ready(function () {
                 let upsellConfig = response.data;
                 $('#header_config').val(`${upsellConfig.header}`);
                 $('#title_config').val(`${upsellConfig.title}`);
-                CKEDITOR.instances.description_config.setData(`${upsellConfig.description}`);
+                $('#description_config').val(`${upsellConfig.description}`);
                 $('#countdown_time').val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
@@ -364,7 +353,7 @@ $(document).ready(function () {
         }
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_config_upsell'));
-        let description = CKEDITOR.instances.description_config.getData();
+        let description = $('#description_config').val();
         form_data.set('description', description);
 
         $.ajax({

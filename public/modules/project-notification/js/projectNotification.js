@@ -28,12 +28,10 @@ $(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
-    $('#tab_sms').on('click', function () {
+    $('.tab_sms').on('click', function () {
         atualizarProjectNotification();
+        $(this).off();
     });
-
-    //carrega os itens na tabela
-    atualizarProjectNotification();
 
     // carregar modal de edicao
     $(document).on('click', '.edit-project-notification', function () {
@@ -277,6 +275,7 @@ $(function () {
                 if (response.data == '') {
                     $("#data-table-sms").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
+                    $('#count-notifications').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let check = (value.status == 1) ? 'checked' : '';
                         let data = `<tr>
