@@ -21,6 +21,10 @@
                 </textarea>
             </div>
         </div>
+        <div>
+            <label for="name">Parâmetros</label><br>
+            <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default param-first-name' data-clipboard-text="{primeiro_nome}" data-value='{primeiro_nome}'>{primeiro_nome}</a>
+        </div>
         <div class="row mb-10">
             <div class='form-group col-md-4 div-countdown-time'>
                 <label for="countdown_time">Contador (em minutos)</label>
@@ -39,7 +43,7 @@
             </div>
             <div class="col-md-4 text-right">
                 <button class='btn btn-primary btn-sm btn-view-config mt-md-20 text-white' style='display:none;'>
-                    <span class="o-eye-1"></span>
+                    <span class="o-eye-1 white font-size-16"></span>
                     Visualizar
                 </button>
             </div>

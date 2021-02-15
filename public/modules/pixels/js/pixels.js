@@ -16,9 +16,10 @@ $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
-    $('#tab_pixels').on('click', function () {
+    $('.tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
+        $(this).off();
     });
 
     $('.check').on('click', function () {
@@ -65,7 +66,6 @@ $(function () {
 
     });
 
-    atualizarPixel();
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
@@ -395,6 +395,7 @@ $(function () {
                     $('#table-pixel').addClass('table-striped');
 
                 } else {
+                    $('#count-pixels').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
                                     <td>${value.name}</td>
