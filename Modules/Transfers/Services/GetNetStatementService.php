@@ -128,10 +128,10 @@ class GetNetStatementService
     {
 
         $this->filters = $filters;
-
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+    
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        $chargeback = array_reverse($data->chargeback ?? []);
 
         if (request('debug')) {
 
@@ -313,7 +313,15 @@ class GetNetStatementService
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
 
-                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
+                } elseif (
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)
+                    )
+                    ||
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && empty($subSellerRateConfirmDate)
+                    )
+                ) {
 
                     $details->setStatus('Aguardando liquidação')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
@@ -322,10 +330,13 @@ class GetNetStatementService
                 } elseif (
                     (
                         $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
-                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                        && in_array($transactionStatusCode,
+                            [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
                     )
                     ||
-                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && !empty($subSellerRateConfirmDate)
+                    )
                 ) {
 
                     $details->setStatus('Liquidado')

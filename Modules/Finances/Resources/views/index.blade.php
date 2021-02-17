@@ -290,7 +290,7 @@
                                         </tbody>
                                     </table>
                                     <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
+                                        style="margin-top: 2.143rem;margin-bottom: 2.143rem;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
@@ -506,7 +506,7 @@
                             </table>
                             <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top:10px;position:relative;">
+                                 style="margin-top: 2.143rem; margin-bottom: 2.143rem; position:relative;">
                             </div>
                         </div>
 
