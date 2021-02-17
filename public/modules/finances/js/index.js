@@ -523,7 +523,7 @@ $(document).ready(function () {
                     $("#debit-pending-informations").html(`
                         <div class="col-12">
                             <h3 class="text-center mt-10" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.</h3>
-                            
+
                             <div id="debit-itens">
                                 <div class="row">
                                     <div class='col-md-8 mt-10'>
@@ -679,7 +679,7 @@ $(document).ready(function () {
                             style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
                             Cancelar
                         </button>
-        
+
                         <button
                             id="bt-confirm-withdrawal"
                             class="btn btn-success col-5 btn-confirmation s-btn-border"
@@ -1113,6 +1113,24 @@ $(document).ready(function () {
         }
     });
 
+    $('#statement_status_select').on('change paste keyup select', function () {
+
+        let val = $(this).val();
+
+        if (val === 'PENDING_DEBIT') {
+
+            $('#date_range_statement').attr('disabled', true).addClass('disableFields');
+            $('#payment_method').attr('disabled', true).addClass('disableFields');
+            $('#statement_sale').attr('disabled', true).addClass('disableFields');
+
+        } else {
+
+            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
+            $('#payment_method').attr('disabled', false).removeClass('disableFields');
+            $('#statement_sale').attr('disabled', false).removeClass('disableFields');
+        }
+    });
+
     // Finances report
 
     let exportFinanceFormat = 'xls'
@@ -1175,7 +1193,7 @@ $(document).ready(function () {
 
     $(".nav-link-finances-show-export").on("click", function () {
         $("#finances_export_btns").css('opacity', 1).removeClass('col-1').addClass('col-6');
-        ;
+
         $("#bt_get_sale_xls").removeClass('disabled');
         $("#bt_get_sale_csv").removeClass('disabled');
         $(".page-title").parent().removeClass('col-10');
