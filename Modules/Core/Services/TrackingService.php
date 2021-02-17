@@ -498,34 +498,16 @@ class TrackingService
             ->where('sales.owner_id', $user->id)
             ->get();
 
-        echo($user->name . "\n");
-        echo('averagePostingTime: ' . $approvedSalesWithTrackingCode->toArray()[0]['averagePostingTime'] . "\n");
-
         return $approvedSalesWithTrackingCode->toArray()[0]['averagePostingTime'] ?? null;
     }
 
     public function getUninformedTrackingCodeRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-
-        $untrackedSalesAmount = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-            ->whereIn('status', [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])
-            ->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )
-            ->where('owner_id', $user->id)
+        $untrackedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)
             ->doesntHave('tracking')
             ->count();
 
         $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
-        echo('uninformed ' . $untrackedSalesAmount . ',' . $approvedSalesAmount . '=' . ($untrackedSalesAmount * 100 / $approvedSalesAmount) . "\n");
 
         if ($approvedSalesAmount <= 0) return 100;
 
@@ -559,15 +541,13 @@ class TrackingService
 
         $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
-        echo('untracked ' . $salesWithTrackingCodeProblemsAmount . ',' . $approvedSalesAmount . '=' . ($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount) . "\n");
-
         return $salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount;
     }
 
     private function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
         $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::where('gateway_id', $gatewayIds)
+        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,
