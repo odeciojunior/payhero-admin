@@ -51,10 +51,11 @@ class AccountHealthService
     public function testTrackingScore(User $user): array
     {
         return [
-            $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
-            $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
-            $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
-            $score = (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4
+            'user: ' . $user->name,
+            '$averagePostingTimeScore: ' . $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
+            '$uninformedTrackingScore: ' . $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
+            '$trackingCodeProblemScore: ' . $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
+            '$score: ' . (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4
         ];
     }
 
@@ -105,6 +106,8 @@ class AccountHealthService
         $maxScore = 10;
         if ($uninformedRate <= 3) {
             $score = $maxScore;
+        } else if ($uninformedRate > 13) {
+            $score = 0;
         } else {
             //after 3% every 1% of uninformed rate means -1 point of score
             $score = ($maxScore + 3) - $uninformedRate;
