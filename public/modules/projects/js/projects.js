@@ -1,29 +1,17 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-
-    CKEDITOR.replace('termsaffiliates', {
-        language: 'br',
-        uiColor: '#F1F4F5',
-        height: 250,
-        toolbarGroups: [
-            {name: 'basicstyles', groups: ['basicstyles']},
-            {name: 'paragraph', groups: ['list', 'blocks']},
-            {name: 'links', groups: ['links']},
-            {name: 'styles', groups: ['styles']},
-        ],
-        removeButtons: 'Anchor,Superscript,Subscript',
-    });
-    // $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
+    $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
 
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
     });
 
-    $("#tab_configuration").click(function () {
+    $(".tab_configuration").click(function () {
         $("#image-logo-email").imgAreaSelect({remove: true});
         $("#previewimage").imgAreaSelect({remove: true});
         updateConfiguracoes();
+        $(this).off();
     });
 
     $('.toggler').on('click', function () {
@@ -193,13 +181,11 @@ $(() => {
                 window.location.replace(`${location.origin}/projects`);
                 $('.page-content').show()
                 loadingOnScreenRemove();
-                /* errorAjaxResponse(response);
-                 loadOnAny('#tab_info_geral .card', true);*/
             },
             success: (response) => {
 
                 let project = response.data;
-                $('.page-title, .title-pad').text(project.name);
+                $('.title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);
                 if (project.status == '1') {
@@ -208,6 +194,15 @@ $(() => {
                     $('#show-status').text('Inativo').addClass('badge-danger');
                 }
                 $('#show-description').text(project.description);
+
+                // $('#value-cancel').text('1.2K')
+                let approvedSalesValue = parseFloat(project.approved_sales_value).toLocaleString('pt-BR')
+
+                $('#value-chargeback').text(project.chargeback_count)
+                $('#value-open-tickets').text(project.open_tickets)
+                $('#value-without-tracking').text(project.without_tracking)
+                $('#total-approved').text(project.approved_sales)
+                $('#total-approved-value').text(approvedSalesValue)
 
                 $('.page-content').show()
                 loadOnAny('#tab_info_geral .card', true);
@@ -279,8 +274,7 @@ $(() => {
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
-
-        CKEDITOR.instances.termsaffiliates.setData(project.terms_affiliates);
+        $('#termsaffiliates').val(project.terms_affiliates);
 
         if (project.automatic_affiliation == 1) {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
@@ -688,7 +682,6 @@ $(() => {
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
         let verify = verificaParcelas(parcelas, parcelasJuros);
-        $('#terms_affiliates').val(CKEDITOR.instances.termsaffiliates.getData());
         let statusUrlAffiliates = 0;
         if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
@@ -1085,4 +1078,76 @@ $(() => {
         }
     })
 
+    // $('#slick-tabs').change(() => {
+        $('#slick-tabs').slick({
+            infinite: false,
+            speed: 300,
+            slidesToShow: 7,
+            slidesToScroll: 1,
+            variableWidth: true,
+            nextArrow: false,
+            prevArrow: false,
+
+            responsive: [
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+            ]
+        });
+    // })
+
+    let firstCategory = [
+        "tab-domains",
+        "tab_plans",
+        "tab-fretes",
+    ]
+
+    let secondCategory = [
+        "tab_pixels",
+        "tab_upsell",
+        "tab_coupons",
+        "tab_reviews",
+    ]
+
+    let thirdCategory = [
+        "tab_sms",
+    ]
+
+    $('.nav-tabs-horizontal .nav-link').click((e) => {
+        let currentActive = $('.nav-link.active')
+        let currentElement = e.target.id
+
+        if (currentActive.attr('id') !== currentElement) {
+            currentActive.removeClass('active')
+        }
+
+        if ($.inArray(currentElement, firstCategory) !== -1) {
+            $('#first-category').css('color', '#2E85EC')
+            $('#second-category').css('color', '#9C9C9C')
+            $('#third-category').css('color', '#9C9C9C')
+        }
+
+        if ($.inArray(currentElement, secondCategory) !== -1) {
+            $('#first-category').css('color', '#9C9C9C')
+            $('#second-category').css('color', '#2E85EC')
+            $('#third-category').css('color', '#9C9C9C')
+        }
+
+        if ($.inArray(currentElement, thirdCategory) !== -1) {
+            $('#first-category').css('color', '#9C9C9C')
+            $('#second-category').css('color', '#9C9C9C')
+            $('#third-category').css('color', '#2E85EC')
+        }
+    })
+
+    function formatMoney(value) {
+        return ((value / 100).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }));
+    }
 });

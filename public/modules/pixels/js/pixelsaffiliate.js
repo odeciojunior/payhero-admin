@@ -8,10 +8,8 @@ $(function () {
     let affiliateId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
-    $('#tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
-    });
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -45,9 +43,6 @@ $(function () {
         }
 
     });
-
-    //carrega os itens na tabela
-    atualizarPixel();
 
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {

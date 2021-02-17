@@ -5,8 +5,9 @@ $(function () {
 
     var pageCurrent;
 
-    $('#tab_links').on('click', function () {
+    $('.tab_links-panel').on('click', function () {
         index();
+        $(this).off();
     });
 
     $("#btn-search-link").on('click', function () {
