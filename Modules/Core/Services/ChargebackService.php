@@ -196,7 +196,7 @@ class ChargebackService
                 'start_date',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             );
-        });
+        })->where('user_id', $user->id);
 
         $chargebacksAmount = $getnetChargebacks->count();
 
@@ -214,6 +214,6 @@ class ChargebackService
 
         $approvedSalesAmount = $approvedSales->count();
 
-        return $chargebacksAmount > 0 ? ($chargebacksAmount * 100 / $approvedSalesAmount) : 0;
+        return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;
     }
 }

@@ -509,7 +509,9 @@ class TrackingService
 
         $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
-        if ($approvedSalesAmount <= 0) return 100;
+        if (!$approvedSalesAmount) {
+            return 0;
+        }
 
         return $untrackedSalesAmount * 100 / $approvedSalesAmount;
     }
@@ -540,6 +542,10 @@ class TrackingService
             })->count();
 
         $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if (!$approvedSalesAmount) {
+            return 0;
+        }
 
         return $salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount;
     }

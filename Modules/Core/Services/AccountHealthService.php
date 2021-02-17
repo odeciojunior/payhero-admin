@@ -47,7 +47,11 @@ class AccountHealthService
         $maxScore = 10;
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
-        $score = $maxScore - $chargebackRate / $chargebackScoreReference;
+
+        $score = 0;
+        if ($chargebackRate <= 3) {
+            $score = $maxScore - round($chargebackRate, 2) / $chargebackScoreReference;
+        }
 
         return $score;
     }
@@ -131,18 +135,18 @@ class AccountHealthService
             }
 
             $startDate = now()->startOfDay()->subDays(140);
-            $endDate   = now()->endOfDay()->subDays(20);
-            $chargebackTax   = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
+            $endDate = now()->endOfDay()->subDays(20);
+            $chargebackTax = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);
             $chargebackScore = $this->getChargebackScore($user);
-            $trackingScore   = $this->getTrackingScore($user);
-            $accountScore    = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
+            $trackingScore = $this->getTrackingScore($user);
+            $accountScore = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
 
-            $user->account_score    = $accountScore;
+            $user->account_score = $accountScore;
             $user->attendance_score = $attendanceScore;
             $user->chargeback_score = $chargebackScore;
-            $user->chargeback_tax   = $chargebackTax;
-            $user->tracking_score   = $trackingScore;
+            $user->chargeback_tax = $chargebackTax;
+            $user->tracking_score = $trackingScore;
             $user->save();
 
             DB::commit();
