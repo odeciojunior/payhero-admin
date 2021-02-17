@@ -1043,16 +1043,15 @@ class ReportService
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::parse(Carbon::now()->subMonth());
-            $endDate      = Carbon::parse(Carbon::now());
+            $dataFormated = Carbon::now()->subMonth();
+            $endDate      = Carbon::now();
 
-            while ($dataFormated->lessThanOrEqualTo($endDate)) {
-                array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->addDays(6);
-                if ($dataFormated->diffInDays($endDate) < 6 && $dataFormated->diffInDays($endDate) > 0) {
-                    array_push($labelList, $dataFormated->format('d/m'));
-                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
-                    array_push($labelList, $dataFormated->format('d/m'));
+            while ($endDate->greaterThanOrEqualTo($dataFormated)) {
+                array_push($labelList, $endDate->format('d/m'));
+                $endDate = $endDate->subDays(5);
+                if ($endDate->diffInDays($dataFormated) < 1) {
+                    $endDate = $endDate->subDays($endDate->diffInDays($dataFormated));
+                    array_push($labelList, $endDate->format('d/m'));
                     break;
                 }
             }
@@ -1086,12 +1085,9 @@ class ReportService
                 array_push($valueData, substr(intval($value), 0, -2));
             }
 
-            $valueDataReverse = array_reverse($valueData);
-            $labelListReverse = array_reverse($labelList);
-
             return [
-                'label_list' => $labelListReverse,
-                'value_data' => $valueDataReverse,
+                'label_list' => array_reverse($labelList),
+                'value_data' => $valueData,
                 'currency'   => 'R$',
             ];
         } catch (Exception $e) {
