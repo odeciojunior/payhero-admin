@@ -52,10 +52,11 @@ class AccountHealthService
     {
         return [
             'user: ' . $user->name,
-            '$averagePostingTimeScore: ' . $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
-            '$uninformedTrackingScore: ' . $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
-            '$trackingCodeProblemScore: ' . $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
-            '$score: ' . (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4
+            'averagePostingTimeScore: ' . $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
+            'uninformedTrackingScore: ' . $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
+            'trackingCodeProblemScore: ' . $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
+            'calculated score: ' . (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4,
+            'score by method: ' . $this->getTrackingScore($user)
         ];
     }
 
@@ -65,7 +66,7 @@ class AccountHealthService
         $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user);
         $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user);
         $score = (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4;
-        return $score;
+        return round($score, 2);
     }
 
     private function getAveragePostingTimeScore(User $user): float
@@ -89,9 +90,10 @@ class AccountHealthService
         $trackingCodeProblemRate = $this->trackingService->getTrackingCodeProblemRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
         $trackingCodeProblemScoreReference = 2;
+        $score = 0;
         if ($trackingCodeProblemRate < 1) {
             $score = 10;
-        } else {
+        } else if ($trackingCodeProblemRate <= 5) {
             //each 1% of problem rate means -2 points of score
             $score = $maxScore - $trackingCodeProblemRate * $trackingCodeProblemScoreReference;
         }
@@ -104,11 +106,10 @@ class AccountHealthService
         $endDate = now()->endOfDay();
         $uninformedRate = $this->trackingService->getUninformedTrackingCodeRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
+        $score = 0;
         if ($uninformedRate <= 3) {
             $score = $maxScore;
-        } else if ($uninformedRate > 13) {
-            $score = 0;
-        } else {
+        } else if ($uninformedRate <= 13) {
             //after 3% every 1% of uninformed rate means -1 point of score
             $score = ($maxScore + 3) - $uninformedRate;
         }
