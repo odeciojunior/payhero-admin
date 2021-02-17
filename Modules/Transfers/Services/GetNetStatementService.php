@@ -174,10 +174,10 @@ class GetNetStatementService
         }
 
         $this->filters = $filters;
-
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+    
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
 
         $this->totalInPeriod = 0;
 
