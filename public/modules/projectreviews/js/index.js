@@ -4,9 +4,24 @@ $(document).ready(function () {
     let previewImageReview = $("#previewimagereview");
     let photoReview = $("#photoReview");
 
-    $('#tab_reviews').on('click', function () {
+    $('.tab_reviews').on('click', function () {
+        $.ajax({
+            method: "GET",
+            url: "/api/projectreviewsconfig/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            }, success: function success(response) {
+                let project = response.data;
+                localStorage.setItem('reviews_config_icon_type', project.reviews_config_icon_type);
+                localStorage.setItem('reviews_config_icon_color', project.reviews_config_icon_color);
+            }
+        });
+
         previewImageReview.imgAreaSelect({remove: true});
         loadReviews();
+        $(this).off();
     })
 
     let p = previewImageReview;
@@ -64,20 +79,6 @@ $(document).ready(function () {
         photoReview.click();
     });
 
-    $.ajax({
-        method: "GET",
-        url: "/api/projectreviewsconfig/" + projectId,
-        dataType: "json",
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
-        }, success: function success(response) {
-            let project = response.data;
-            localStorage.setItem('reviews_config_icon_type', project.reviews_config_icon_type);
-            localStorage.setItem('reviews_config_icon_color', project.reviews_config_icon_color);
-        }
-    });
-
     var initStarsPlugin = function (el, score, readOnly = true) {
         var icon = localStorage.getItem('reviews_config_icon_type') || 'star';
         var starHalf = icon === 'star' ? `fa fa-${icon}-half-o` : `fa fa-${icon}`;
@@ -129,6 +130,7 @@ $(document).ready(function () {
                     dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
                 } else {
                     let data = '';
+                    $('#count-project-reviews').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>

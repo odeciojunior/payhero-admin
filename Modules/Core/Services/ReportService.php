@@ -1086,9 +1086,12 @@ class ReportService
                 array_push($valueData, substr(intval($value), 0, -2));
             }
 
+            $valueDataReverse = array_reverse($valueData);
+            $labelListReverse = array_reverse($labelList);
+
             return [
-                'label_list' => $labelList,
-                'value_data' => $valueData,
+                'label_list' => $labelListReverse,
+                'value_data' => $valueDataReverse,
                 'currency'   => 'R$',
             ];
         } catch (Exception $e) {

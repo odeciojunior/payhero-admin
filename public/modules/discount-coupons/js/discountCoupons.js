@@ -28,12 +28,10 @@ $(function () {
         }
     });
 
-    $('#tab_coupons').on('click', function () {
+    $('.tab_coupons').on('click', function () {
         atualizarCoupon();
+        $(this).off();
     });
-
-    //carrega os itens na tabela
-    atualizarCoupon();
 
     // carregar modal de detalhes
     $(document).on('click', '.details-coupon', function () {
@@ -219,6 +217,7 @@ $(function () {
                 if (response.data == '') {
                     $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
+                    $('#count-coupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
                             <td class="shipping-id">${value.name}</td>

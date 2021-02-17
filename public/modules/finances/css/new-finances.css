@@ -251,10 +251,6 @@
     border-radius: 16px 16px 0px 0px;
 }
 
-.nav-tabs .nav-link.active {
-    background-color: #FFF !important;
-    color: #2E85EC;
-}
 
 strong span {
     color: #57617c;
@@ -335,8 +331,9 @@ strong span {
 }
 
 .nav-tabs .nav-link.active {
-    color: #599EF0 !important;
+    color: #2E85EC !important;
     border-bottom-color: #599EF0;
+    background-color: #FFF !important;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;

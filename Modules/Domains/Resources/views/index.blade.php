@@ -32,7 +32,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-domain" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+<ul id="pagination-domain" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;">
     {{-- js carrega... --}}
 </ul>
 {{-- Modal Create Domain--}}

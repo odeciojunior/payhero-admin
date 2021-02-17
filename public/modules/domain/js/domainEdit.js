@@ -6,11 +6,7 @@ $(document).ready(function () {
 
     let infoDomain = $(".info-domain");
 
-    $("#tab-domains").on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
-        updateDomains();
-    });
-
+    $("#previewimage").imgAreaSelect({remove: true});
     updateDomains();
 
     /**
@@ -42,6 +38,7 @@ $(document).ready(function () {
                     $('#tabela-dominios').addClass('table-striped');
 
                 } else {
+                    $('#count-cupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
                     });
