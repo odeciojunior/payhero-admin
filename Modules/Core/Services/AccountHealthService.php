@@ -32,13 +32,17 @@ class AccountHealthService
         return $approvedSalesAmount >= $minimumSalesToEvaluate;
     }
 
-    public function getAttendanceScore(User $user, $startDate, $endDate): float
+    public function getAttendanceScore(User $user): float
     {
+        $startDate = now()->startOfDay()->subDays(140);
+        $endDate = now()->endOfDay()->subDays(20);
         return 0;
     }
 
-    public function getChargebackScore(User $user, $startDate, $endDate): float
+    public function getChargebackScore(User $user): float
     {
+        $startDate = now()->startOfDay()->subDays(140);
+        $endDate = now()->endOfDay()->subDays(20);
         $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
         //each 0.3% of chargebacks rate means -1 point of score
@@ -127,20 +131,18 @@ class AccountHealthService
             }
 
             $startDate = now()->startOfDay()->subDays(140);
-            $endDate = now()->endOfDay()->subDays(20);
+            $endDate   = now()->endOfDay()->subDays(20);
+            $chargebackTax   = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
+            $attendanceScore = $this->getAttendanceScore($user);
+            $chargebackScore = $this->getChargebackScore($user);
+            $trackingScore   = $this->getTrackingScore($user);
+            $accountScore    = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
 
-            $chargebackScore = $this->getChargebackScore($user, $startDate, $endDate);
-            $attendanceScore = $this->getAttendanceScore($user, $startDate, $endDate);
-            $trackingScore = $this->getTrackingScore($user);
-
-            $accountScore = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
-
-            $user->chargeback_tax = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
-            $user->account_score = $accountScore;
-            $user->chargeback_score = $accountScore;
-            $user->attendance_score = $accountScore;
-            $user->tracking_score = $accountScore;
-            $user->attendance_average_response_time = 0;
+            $user->account_score    = $accountScore;
+            $user->attendance_score = $attendanceScore;
+            $user->chargeback_score = $chargebackScore;
+            $user->chargeback_tax   = $chargebackTax;
+            $user->tracking_score   = $trackingScore;
             $user->save();
 
             DB::commit();

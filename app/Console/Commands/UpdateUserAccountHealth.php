@@ -43,7 +43,9 @@ class UpdateUserAccountHealth extends Command
         $accountHealthService = new AccountHealthService();
         $output = [];
         foreach ([26, 557, 577] as $id) {
-            $output[] = $accountHealthService->testTrackingScore(User::find($id));
+            $user = User::find($id);
+            $output[$id] = $accountHealthService->testTrackingScore($user);
+            $output[$id][] = 'chargeback score: ' . $accountHealthService->getChargebackScore($user);
         }
         dd($output);
 
