@@ -12,24 +12,8 @@ class AccountHealthService
     public function __construct()
     {
         $this->chargebackService = new ChargebackService();
-    }
-
-    public function getAccountScore(User $user): ?float
-    {
-        if (!$this->userHasMinimumSalesAmount($user)) {
-            return null;
-        }
-
-        $startDate = now()->startOfDay()->subDays(140);
-        $endDate = now()->endOfDay()->subDays(20);
-
-        $chargebackScore = $this->getChargebackScore($user, $startDate, $endDate);
-        $attendanceScore = $this->getAttendanceScore($user, $startDate, $endDate);
-        $trackingScore = $this->getTrackingScore($user, $startDate, $endDate);
-
-        $accountScore = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
-
-        return $accountScore;
+        $this->trackingService = new TrackingService();
+        //TODO: $this->attendanceService = new AttendanceService();
     }
 
     public function userHasMinimumSalesAmount(User $user)
@@ -55,18 +39,77 @@ class AccountHealthService
 
     public function getChargebackScore(User $user, $startDate, $endDate): float
     {
-        $chargebackService = new ChargebackService();
-        $chargebackRate = $chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
+        $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
-        $chargebackScoreReference = 0.3; // each 0.3% of chargebacks rate means -1 point of score
+        //each 0.3% of chargebacks rate means -1 point of score
+        $chargebackScoreReference = 0.3;
         $score = $maxScore - $chargebackRate / $chargebackScoreReference;
 
         return $score;
     }
 
-    public function getTrackingScore(User $user, $startDate, $endDate): float
+    public function testTrackingScore(User $user): array
     {
-        return 0;
+        return [
+            $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
+            $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
+            $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
+            $score = (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4
+        ];
+    }
+
+    public function getTrackingScore(User $user): float
+    {
+        $averagePostingTimeScore = $this->getAveragePostingTimeScore($user);
+        $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user);
+        $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user);
+        $score = (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4;
+        return $score;
+    }
+
+    private function getAveragePostingTimeScore(User $user): float
+    {
+        $startDate = now()->startOfDay()->subDays(30);
+        $endDate = now()->endOfDay();
+        $avgPostingTime = $this->trackingService->getAveragePostingTimeInPeriod($user, $startDate, $endDate);
+        $score = 0;
+        if ($avgPostingTime < 2) {
+            $score = 10;
+        } else if ($avgPostingTime < 10) {
+            $score = 12 - (int)$avgPostingTime;
+        }
+        return $score;
+    }
+
+    private function getTrackingCodeProblemScore(User $user): float
+    {
+        $startDate = now()->startOfDay()->subDays(90);
+        $endDate = now()->endOfDay();
+        $trackingCodeProblemRate = $this->trackingService->getTrackingCodeProblemRateInPeriod($user, $startDate, $endDate);
+        $maxScore = 10;
+        $trackingCodeProblemScoreReference = 2;
+        if ($trackingCodeProblemRate < 1) {
+            $score = 10;
+        } else {
+            //each 1% of problem rate means -2 points of score
+            $score = $maxScore - $trackingCodeProblemRate * $trackingCodeProblemScoreReference;
+        }
+        return $score;
+    }
+
+    private function getUninformedTrackingCodeScore(User $user): float
+    {
+        $startDate = now()->startOfDay()->subDays(20);
+        $endDate = now()->endOfDay();
+        $uninformedRate = $this->trackingService->getUninformedTrackingCodeRateInPeriod($user, $startDate, $endDate);
+        $maxScore = 10;
+        if ($uninformedRate <= 3) {
+            $score = $maxScore;
+        } else {
+            //after 3% every 1% of uninformed rate means -1 point of score
+            $score = ($maxScore + 3) - $uninformedRate;
+        }
+        return $score;
     }
 
     public function updateAccountScore(User $user): void
@@ -80,11 +123,11 @@ class AccountHealthService
             }
 
             $startDate = now()->startOfDay()->subDays(140);
-            $endDate = now()->endOfDay()->subDays(20); //TODO: change back to subdays 20 after tests
+            $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackScore = $this->getChargebackScore($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user, $startDate, $endDate);
-            $trackingScore = $this->getTrackingScore($user, $startDate, $endDate);
+            $trackingScore = $this->getTrackingScore($user);
 
             $accountScore = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
 
@@ -96,10 +139,9 @@ class AccountHealthService
             $user->attendance_average_response_time = 0;
             $user->save();
 
-            //DB::commit();
+            DB::commit();
         } catch (\Exception $e) {
-            echo $e->getTraceAsString();
-            dd($e->getMessage());
+            report($e);
             DB::rollBack();
         }
     }
