@@ -513,7 +513,7 @@ class TrackingService
             return 0;
         }
 
-        return $untrackedSalesAmount * 100 / $approvedSalesAmount;
+        return round(($untrackedSalesAmount * 100 / $approvedSalesAmount), 2);
     }
 
     public function getTrackingCodeProblemRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
@@ -547,7 +547,7 @@ class TrackingService
             return 0;
         }
 
-        return $salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount;
+        return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
     }
 
     private function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)

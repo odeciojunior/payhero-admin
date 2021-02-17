@@ -50,7 +50,7 @@ class AccountHealthService
 
         $score = 0;
         if ($chargebackRate <= 3) {
-            $score = $maxScore - round($chargebackRate, 2) / $chargebackScoreReference;
+            $score = round(($maxScore - $chargebackRate / $chargebackScoreReference), 2);
         }
 
         return $score;
