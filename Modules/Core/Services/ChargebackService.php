@@ -191,17 +191,7 @@ class ChargebackService
 
     public function getChargebackRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-//        $getnetChargebacks = GetnetChargeback::with([
-//            'sale',
-//            'user',
-//            'company'
-//        ]);
-//        $getnetChargebacks->whereBetween(
-//            'sale.start_date',
-//            [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-//        )->where('sale.owner_id', $user->id);
-
-        $getnetChargebacks  = GetnetChargeback::whereHas('sale', function($q) use($startDate, $endDate) {
+        $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
             $q->whereBetween(
                 'start_date',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
@@ -210,7 +200,7 @@ class ChargebackService
 
         $chargebacksAmount = $getnetChargebacks->count();
 
-        $approvedSales = Sale::where('gateway_id', 15)
+        $approvedSales = Sale::whereIn('gateway_id', [14, 15])
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,
@@ -226,5 +216,4 @@ class ChargebackService
 
         return $chargebacksAmount > 0 ? ($chargebacksAmount * 100 / $approvedSalesAmount) : 0;
     }
-
 }
