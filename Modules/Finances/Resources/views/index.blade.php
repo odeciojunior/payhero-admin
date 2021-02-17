@@ -417,7 +417,7 @@
                                                             <option value="REVERSED">Estornado</option>
                                                             <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
                                                             <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
-                                                            <!--<option value="PENDING_DEBIT">Débitos pendentes (Estorno e Ajuste de débito)</option>-->
+                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
                                                         </select>
                                                     </div>
                                                 </div>
