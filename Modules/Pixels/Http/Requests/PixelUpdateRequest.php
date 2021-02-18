@@ -27,7 +27,7 @@ class PixelUpdateRequest extends FormRequest
             'purchase_card' => 'nullable',
             'project_id' => 'nullable',
             'campaign' => 'nullable',
-            'code_meta_tag_facebook' => 'nullable|max:255|string',
+            'code_meta_tag_facebook' => 'nullable|string|max:255',
         ];
     }
 

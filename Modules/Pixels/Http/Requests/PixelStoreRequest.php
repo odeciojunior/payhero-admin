@@ -23,7 +23,7 @@ class PixelStoreRequest extends FormRequest
             'purchase_card' => 'nullable',
             'affiliate_id' => 'nullable',
             'add_pixel_plans' => 'required|array',
-            'code_meta_tag_facebook' => 'nullable|max:255',
+            'code_meta_tag_facebook' => 'nullable|string|max:255',
         ];
     }
 
