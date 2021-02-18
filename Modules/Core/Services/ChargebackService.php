@@ -2,10 +2,7 @@
 
 namespace Modules\Core\Services;
 
-
-use Exception;
 use Illuminate\Support\Carbon;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GetnetChargeback;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;

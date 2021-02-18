@@ -9,11 +9,15 @@ use Modules\Core\Entities\User;
 
 class AccountHealthService
 {
+    private ChargebackService $chargebackService;
+    private TrackingService $trackingService;
+    private AttendanceService $attendanceService;
+
     public function __construct()
     {
         $this->chargebackService = new ChargebackService();
         $this->trackingService = new TrackingService();
-        //TODO: $this->attendanceService = new AttendanceService();
+        $this->attendanceService = new AttendanceService();
     }
 
     public function userHasMinimumSalesAmount(User $user)
@@ -34,9 +38,16 @@ class AccountHealthService
 
     public function getAttendanceScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(140);
-        $endDate = now()->endOfDay()->subDays(20);
-        return 0;
+        $averageResponseTime = $this->attendanceService->getAverageResponseTimeInDays($user);
+        $score = 0;
+        $maxScore = 10;
+        $minimumDaysToMaxScore = 1;
+        if ($averageResponseTime <= $minimumDaysToMaxScore) {
+            $score = 10;
+        } else if ($averageResponseTime <= 5) {
+            $score = ($maxScore + $minimumDaysToMaxScore) - ($averageResponseTime * 2);
+        }
+        return $score;
     }
 
     public function getChargebackScore(User $user): float
@@ -56,18 +67,6 @@ class AccountHealthService
         return $score;
     }
 
-    public function testTrackingScore(User $user): array
-    {
-        return [
-            'user: ' . $user->name,
-            'averagePostingTimeScore: ' . $averagePostingTimeScore = $this->getAveragePostingTimeScore($user),
-            'uninformedTrackingScore: ' . $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user),
-            'trackingCodeProblemScore: ' . $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user),
-            'calculated score: ' . (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4,
-            'score by method: ' . $this->getTrackingScore($user)
-        ];
-    }
-
     public function getTrackingScore(User $user): float
     {
         $averagePostingTimeScore = $this->getAveragePostingTimeScore($user);
@@ -83,10 +82,12 @@ class AccountHealthService
         $endDate = now()->endOfDay();
         $avgPostingTime = $this->trackingService->getAveragePostingTimeInPeriod($user, $startDate, $endDate);
         $score = 0;
-        if ($avgPostingTime < 2) {
+        $maxScore = 10;
+        $minimumDaysToMaxScore = 2;
+        if ($avgPostingTime < $minimumDaysToMaxScore) {
             $score = 10;
         } else if ($avgPostingTime < 10) {
-            $score = 12 - (int)$avgPostingTime;
+            $score = $maxScore + $minimumDaysToMaxScore - $avgPostingTime;
         }
         return $score;
     }
@@ -130,7 +131,7 @@ class AccountHealthService
             DB::beginTransaction();
 
             if (!$this->userHasMinimumSalesAmount($user)) {
-                Log::warning('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
+                Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;
             }
 
