@@ -1069,24 +1069,28 @@ class ReportService
                 ->groupBy('date');
 
             $orders         = $orders->get()->toArray();
+            $labelList      = array_reverse($labelList);
             $valueData      = [];
-            foreach ($labelList as $label) {
-                $value = 0;
+            foreach ($labelList as $key => $label) {
+                $sumValue = 0;
+                $valueData[$key] = false;
 
-                foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])
-                                ->subDay()->format('d/m') == $label) || (Carbon::parse($order['date'])
-                                ->format('d/m') == $label)) {
+                foreach ($orders as $order)
+                {
+                    if ((Carbon::parse($order['date'])->format('d/m') == $label)) {
 
-                        $value = FoxUtils::onlyNumbers($order['value']);
+                        $totalValue =  !empty($sumValue) ? $sumValue : $order['value'];
+                        $value = FoxUtils::onlyNumbers($totalValue);
+
+                        $valueData[$key] = substr(intval($value), 0, -2);
+                    } else {
+                        $sumValue += $order['value'];
                     }
                 }
-
-                array_push($valueData, substr(intval($value), 0, -2));
             }
 
             return [
-                'label_list' => array_reverse($labelList),
+                'label_list' => $labelList,
                 'value_data' => $valueData,
                 'currency'   => 'R$',
             ];
