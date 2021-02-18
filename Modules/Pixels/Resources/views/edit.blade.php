@@ -42,6 +42,9 @@
                 </div>
                 <div class="row" id="meta-tag-facebook" style="display:none;">
                     <div class="form-group col-12 my-20">
+                        <a class="facebook-meta-tag-tooltip" data-html="true" data-toggle="tooltip" title="<img src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/meta-tag-facebook' />">
+                            <i class="ml-2 icon wb-info-circle"  aria-hidden="true"></i>
+                        </a>
                         <label for="code_meta_tag_facebook">Meta-tag verificação do facebook</label>
                         <input name="code_meta_tag_facebook" type="text" id='code_meta_tag_facebook' class="form-control pixel-code-meta-tag-facebook"
                                placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255' aria-describedby="input-code-pixel">

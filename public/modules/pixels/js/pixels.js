@@ -12,8 +12,11 @@ let formatPlatform = {
     6: 'Outbrain'
 }
 
+
+
 $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
+
 
     //comportamentos da tela
     $('.tab_pixels').on('click', function () {
@@ -36,10 +39,11 @@ $(function () {
         $(':checkbox').val(0);
     }
     $("#add-pixel").on('click', function () {
-        console.log('aqui')
         let value = $("#modal-create-pixel #select-platform option:selected").val();
 
         $("#meta-tag-facebook").hide();
+        // $("#modal-create-pixel .facebook-meta-tag-tooltip .tooltip-inner").css('background', '#fff');
+
 
         if (value == 'facebook') {
             $("#meta-tag-facebook").show();
@@ -143,7 +147,6 @@ $(function () {
                     $("#modal-edit-pixel #outbrain-info-edit").hide();
 
                     if (value === 'facebook') {
-                        console.log('edit');
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #meta-tag-facebook").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');

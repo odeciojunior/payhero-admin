@@ -1,3 +1,9 @@
+<style>
+    .tooltip-inner {
+        background: #f5f7f8;
+    }
+</style>
+
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;" >
