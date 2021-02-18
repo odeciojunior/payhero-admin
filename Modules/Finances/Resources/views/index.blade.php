@@ -271,7 +271,9 @@
                                      id="nav-transfers"
                                      role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-                                    <table id='withdrawalsTable' class="table table-striped table-condensed unify">
+                                    <table id='withdrawalsTable'
+                                           class="table table-striped table-condensed unify"
+                                           style="margin-bottom: 3.143rem !important">
                                         <thead>
                                         <tr>
                                             <th scope="col">Código Saque</th>
@@ -290,7 +292,7 @@
                                         </tbody>
                                     </table>
                                     <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top: 2.143rem;margin-bottom: 2.143rem;position:relative;float:right">
+                                        style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
@@ -417,7 +419,7 @@
                                                             <option value="REVERSED">Estornado</option>
                                                             <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
                                                             <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
-                                                            <!--<option value="PENDING_DEBIT">Débitos pendentes (Estorno e Ajuste de débito)</option>-->
+                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -485,7 +487,9 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <table id="statementTable" class="table table-condensed unify table-striped">
+                            <table id="statementTable"
+                                   class="table table-condensed unify table-striped"
+                                   style="margin-bottom: 3.143rem !important;">
                                 <thead>
                                 <tr>
                                     <th scope="col" class="headCenter">Razão</th>
@@ -506,7 +510,7 @@
                             </table>
                             <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top: 2.143rem; margin-bottom: 2.143rem; position:relative;">
+                                 style="margin-top: 10px;margin-bottom:100px; position:relative;">
                             </div>
                         </div>
 
