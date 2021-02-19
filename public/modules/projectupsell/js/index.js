@@ -281,7 +281,7 @@ $(document).ready(function () {
             },
             processResults: function (res) {
                 let elemId = this.$element.attr('id');
-                if ((elemId === 'add_apply_on_plans' || elemId === 'edit_apply_on_plans') && res.meta.current_page === 1) {
+                if (['add_apply_on_plans','edit_apply_on_plans'].includes(elemId) && res.meta.current_page === 1) {
                     let allObject = {
                         id: 'all',
                         name: 'Qualquer plano',
@@ -289,7 +289,6 @@ $(document).ready(function () {
                     };
                     res.data.unshift(allObject);
                 }
-
                 return {
                     results: $.map(res.data, function (obj) {
                         return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};

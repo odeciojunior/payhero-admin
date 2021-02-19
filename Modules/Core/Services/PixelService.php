@@ -35,8 +35,9 @@ class PixelService
                 $pixel = Pixel::where('project_id', $projectId)
                     ->where('platform', 'facebook')
                     ->whereNotNull('code_meta_tag_facebook')->first();
-
-                $metaTag = $pixel->code_meta_tag_facebook;
+                if (!empty($pixel) && !empty($pixel->code_meta_tag_facebook)){
+                    $metaTag = $pixel->code_meta_tag_facebook;
+                }
             }
 
             if (!empty($metaTag)) {
