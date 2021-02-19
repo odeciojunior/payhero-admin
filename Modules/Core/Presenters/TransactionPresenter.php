@@ -25,6 +25,9 @@ class TransactionPresenter extends Presenter
                     return 'convertaX';
                 case 7:
                     return 'refunded';
+                case 8:
+                    return 'cashback';
+
             }
 
             return '';
@@ -44,6 +47,8 @@ class TransactionPresenter extends Presenter
                     return 6;
                 case 'refunded':
                     return 7;
+                 case 'cashback':
+                    return 8;
             }
 
             return '';

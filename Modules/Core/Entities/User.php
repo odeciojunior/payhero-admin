@@ -44,12 +44,14 @@ use Laravel\Passport\HasApiTokens;
  * @property string $sex
  * @property string $mother_name
  * @property boolean $has_sale_before_getnet
- * @property integer $chargeback_tax
+ * @property integer $chargeback_rate
  * @property integer $account_score
  * @property integer $chargeback_score
  * @property integer $attendance_score
  * @property integer $tracking_score
  * @property integer $installment_cashback
+ * @property integer $level
+ * @property integer $total_commission_value
  * @property integer $attendance_average_response_time
  * @property string $updated_at
  * @property string $created_at
@@ -67,6 +69,9 @@ use Laravel\Passport\HasApiTokens;
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property Transfer[] $transfers
  * @property UserDocument[] $userDocuments
+ * @property Achievement $achievements
+ * @property Task $tasks
+ * @property Benefit $benefits
  * @method UserPresenter present()
  */
 class User extends Authenticable
@@ -122,13 +127,15 @@ class User extends Authenticable
         'mother_name',
         'has_sale_before_getnet',
         'account_is_approved',
-        'chargeback_tax',
+        'chargeback_rate',
         'account_score',
         'chargeback_score',
         'attendance_score',
         'tracking_score',
         'attendance_average_response_time',
         'installment_cashback',
+        'level',
+        'total_commission_value',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -340,6 +347,30 @@ class User extends Authenticable
     public function userTerms()
     {
         return $this->hasMany('Modules\Core\Entities\UserTerms');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function benefits()
+    {
+        return $this->belongsToMany(Benefit::class);
     }
 
 }

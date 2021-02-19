@@ -271,9 +271,12 @@
                                      id="nav-transfers"
                                      role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-                                    <table id='withdrawalsTable' class="table table-striped table-condensed unify">
+                                    <table id='withdrawalsTable'
+                                           class="table table-striped table-condensed unify"
+                                           style="margin-bottom: 3.143rem !important">
                                         <thead>
                                         <tr>
+                                            <th scope="col">Código Saque</th>
                                             <th scope="col">Conta</th>
                                             <th scope="col">Solicitação</th>
                                             <th scope="col">Liberação</th>
@@ -289,7 +292,7 @@
                                         </tbody>
                                     </table>
                                     <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
+                                        style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
@@ -407,13 +410,16 @@
                                                             <option value="WAITING_FOR_VALID_POST">
                                                                 Aguardando postagem válida
                                                             </option>
-                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação</option>
+                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                            </option>
                                                             <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
-                                                            <option value="WAITING_RELEASE">Aguardando liberação</option>
+                                                            <option value="WAITING_RELEASE">Aguardando liberação
+                                                            </option>
                                                             <option value="PAID">Liquidado</option>
                                                             <option value="REVERSED">Estornado</option>
                                                             <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
                                                             <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -481,7 +487,9 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <table id="statementTable" class="table table-condensed unify table-striped">
+                            <table id="statementTable"
+                                   class="table table-condensed unify table-striped"
+                                   style="margin-bottom: 3.143rem !important;">
                                 <thead>
                                 <tr>
                                     <th scope="col" class="headCenter">Razão</th>
@@ -502,7 +510,7 @@
                             </table>
                             <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top:10px;position:relative;">
+                                 style="margin-top: 10px;margin-bottom:100px; position:relative;">
                             </div>
                         </div>
 
@@ -699,7 +707,7 @@
                 <div id="" class="modal-content modal-content-style">
                     <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal"
                          style="height: 60px;">
-                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;">Confirmar Saque</h3>
+                        <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;"></h3>
                     </div>
                     <div class="modal-body">
 
@@ -711,15 +719,7 @@
                             </div>
                             <div id="debit-pending-informations" class="col-12 mt-20"
                                  style="display:none;background:  0 0 no-repeat padding-box;">
-                                <div class="col-12">
-                                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                                    <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
-                                        Você tem alguns valores em aberto, confira:
-                                    </p>
-                                    <div id="debit-itens">
 
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

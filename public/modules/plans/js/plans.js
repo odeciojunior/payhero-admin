@@ -11,10 +11,10 @@ $(function () {
     var pageCurrent;
     // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
 
-    $('#tab_plans').on('click', function () {
+    $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
-
         index();
+        $(this).off();
     });
 
     /**
@@ -235,6 +235,7 @@ $(function () {
 
                 } else {
                     $("#data-table-plan").html('');
+                    $('#count-plans').html(response.meta.total);
 
                     if (response.data[0].document_status == 'approved') {
                         $.each(response.data, function (index, value) {

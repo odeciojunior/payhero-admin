@@ -14,13 +14,13 @@ class AlterUsersAddScoreFields extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('chargeback_tax')->after('account_is_approved')->nullable();
-            $table->integer('account_score')->after('account_is_approved')->nullable();
-            $table->integer('chargeback_score')->after('account_is_approved')->nullable();
-            $table->integer('attendance_score')->after('account_is_approved')->nullable();
-            $table->integer('tracking_score')->after('account_is_approved')->nullable();
-            $table->integer('attendance_average_response_time')->after('account_is_approved')->nullable();
-            $table->integer('installment_cashback')->after('account_is_approved')->default(0);
+            $table->float('chargeback_rate')->after('account_is_approved')->nullable();
+            $table->float('account_score')->after('chargeback_rate')->nullable();
+            $table->float('chargeback_score')->after('account_score')->nullable();
+            $table->float('attendance_score')->after('chargeback_score')->nullable();
+            $table->float('tracking_score')->after('attendance_score')->nullable();
+            $table->float('attendance_average_response_time')->after('tracking_score')->nullable();
+            $table->float('installment_cashback')->after('attendance_average_response_time')->default(0.0);
         });
     }
 
@@ -32,14 +32,13 @@ class AlterUsersAddScoreFields extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('chargeback_tax');
+            $table->dropColumn('chargeback_rate');
             $table->dropColumn('account_score');
             $table->dropColumn('chargeback_score');
             $table->dropColumn('attendance_score');
             $table->dropColumn('tracking_score');
             $table->dropColumn('attendance_average_response_time');
             $table->dropColumn('installment_cashback');
-            
         });
     }
 }

@@ -118,6 +118,7 @@ $(document).ready(function () {
             'shopify_error': $("#shopify_error").val(),
             'plan': $('#plan').val(),
             'upsell': $("#upsell").val(),
+            'order_bump': $("#order-bump").val(),
         };
 
         if (urlParams) {
@@ -287,10 +288,19 @@ $(document).ready(function () {
                                             </a>`
                         }
 
+                        let cashback = '';
+                        if (value.cashback_value != '0.00') {
+                            cashback = `<a data-toggle="tooltip" title="Valor cashback: ${value.cashback_value}"
+                                                role="button" style='margin-left: 5px;' >
+                                                    <span style="color: #707070; font-size: 18px;" class="o-reload-1"></span>
+                                            </a>`
+                        }
+
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
-                                        ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
+                                        ${value.upsell ? '<div class="text-muted font-size-10"> (Upsell) </div>' : ''}
+                                        ${value.has_order_bump ? '<div class="text-muted font-size-10"> (Order Bump) </div>' : ''}
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
@@ -307,7 +317,10 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap;'><b>${value.total_paid}</b> ${cupomCode}</td>
+                                    <td style='white-space: nowrap;'><b>${value.total_paid}</b> <br>
+                                        ${cupomCode}
+                                        ${cashback}
+                                    </td>
                                     <td style="text-align: center">
                                         ${observation}
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'>

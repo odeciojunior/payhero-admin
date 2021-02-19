@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=65') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=53') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=54') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     @stack('css')
 

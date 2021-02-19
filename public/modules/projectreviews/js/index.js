@@ -4,9 +4,24 @@ $(document).ready(function () {
     let previewImageReview = $("#previewimagereview");
     let photoReview = $("#photoReview");
 
-    $('#tab_reviews').on('click', function () {
+    $('.tab_reviews').on('click', function () {
+        $.ajax({
+            method: "GET",
+            url: "/api/projectreviewsconfig/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            }, success: function success(response) {
+                let project = response.data;
+                localStorage.setItem('reviews_config_icon_type', project.reviews_config_icon_type);
+                localStorage.setItem('reviews_config_icon_color', project.reviews_config_icon_color);
+            }
+        });
+
         previewImageReview.imgAreaSelect({remove: true});
         loadReviews();
+        $(this).off();
     })
 
     let p = previewImageReview;
@@ -48,7 +63,7 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
-                    parent: $('body'),
+                    parent: $('#modal_content_review_form'),
                     onSelectEnd: function (img, selection) {
                         $('#photo_x1').val(selection.x1);
                         $('#photo_y1').val(selection.y1);
@@ -62,20 +77,6 @@ $(document).ready(function () {
 
     previewImageReview.on("click", function () {
         photoReview.click();
-    });
-
-    $.ajax({
-        method: "GET",
-        url: "/api/projectreviewsconfig/" + projectId,
-        dataType: "json",
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
-        }, success: function success(response) {
-            let project = response.data;
-            localStorage.setItem('reviews_config_icon_type', project.reviews_config_icon_type);
-            localStorage.setItem('reviews_config_icon_color', project.reviews_config_icon_color);
-        }
     });
 
     var initStarsPlugin = function (el, score, readOnly = true) {
@@ -129,11 +130,12 @@ $(document).ready(function () {
                     dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
                 } else {
                     let data = '';
+                    $('#count-project-reviews').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>
                             <td>
-                                <img src="${value.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'}"
+                                <img src="${value.photo || 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'}"
                                 class="img-fluid rounded-circle mr-2" width="35" height="35">
                                 ${value.name}
                             </td>
@@ -355,7 +357,7 @@ $(document).ready(function () {
             }, success: function success(response) {
                 let review = response.data;
 
-                $('.review-photo').attr('src', review.photo || 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png');
+                $('.review-photo').attr('src', review.photo || 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png');
                 $('.review-name').html(review.name);
                 $('.review-description').html(review.description);
                 $('.review-status').html(`${review.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);

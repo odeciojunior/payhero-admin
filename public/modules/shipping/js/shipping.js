@@ -13,7 +13,8 @@ $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
-    $("#tab-fretes").on('click', function () {
+    $(".tab-fretes").on('click', function () {
+        $(this).off();
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
     });
@@ -106,9 +107,6 @@ $(document).ready(function () {
             $(this).parent().children("#shipping-value-error").html("");
         }
     });
-
-    //carrega os itens na tabela
-    atualizarFrete();
 
     // carregar modal de detalhes
     $(document).on('click', '.detalhes-frete', function () {
@@ -332,6 +330,7 @@ $(document).ready(function () {
                 if (response.data == '') {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
+                    $('#count-fretes').html(response.meta.total);
                     $.each(response.data, function (index, value) {
 
                         let dados = `<tr>

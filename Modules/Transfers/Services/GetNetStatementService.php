@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Getnet\Details;
@@ -128,9 +130,9 @@ class GetNetStatementService
 
         $this->filters = $filters;
 
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
 
         if (request('debug')) {
 
@@ -142,8 +144,14 @@ class GetNetStatementService
 
         $this->totalInPeriod = 0;
 
-        $this->preparesNodeTransactions($transactions);
-        $this->preparesNodeAdjustments($adjustments);
+        if ($this->filters['status'] != 'PENDING_DEBIT') {
+
+            $this->preparesNodeTransactions($transactions);
+            $this->preparesNodeAdjustments($adjustments);
+        }
+
+        $this->preparesDatabasePendingDebtsWithSaleSearch();
+        //$this->preparesNodeChargeback();
 
         return [
             'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
@@ -166,10 +174,10 @@ class GetNetStatementService
         }
 
         $this->filters = $filters;
-
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+    
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
 
         $this->totalInPeriod = 0;
 
@@ -306,7 +314,15 @@ class GetNetStatementService
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
 
-                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
+                } elseif (
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)
+                    )
+                    ||
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && empty($subSellerRateConfirmDate)
+                    )
+                ) {
 
                     $details->setStatus('Aguardando liquidação')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
@@ -315,10 +331,13 @@ class GetNetStatementService
                 } elseif (
                     (
                         $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
-                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                        && in_array($transactionStatusCode,
+                            [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
                     )
                     ||
-                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && !empty($subSellerRateConfirmDate)
+                    )
                 ) {
 
                     $details->setStatus('Liquidado')
@@ -417,7 +436,8 @@ class GetNetStatementService
                     $statementItem->transactionDate = $adjustmentDate;
                     $statementItem->date = $date;
                     $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
-                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y', $statementItem->date)->format('Ymd')) : 0;
+                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
+                        $statementItem->date)->format('Ymd')) : 0;
 
                     $this->totalInPeriod += $amount;
                     $this->totalAdjustment += $amount;
@@ -425,6 +445,87 @@ class GetNetStatementService
                 }
 
             }
+        }
+    }
+
+    private function preparesDatabasePendingDebtsWithSaleSearch(): void
+    {
+
+        $pendingDebts = [];
+        $companyId = $this->filters['company_id'];
+
+        if (array_key_exists('sale_id', $this->filters)) {
+
+            $saleId = $this->filters['sale_id'];
+            $pendingDebts = PendingDebt::whereSaleId($saleId)
+                ->whereType('ADJUSTMENT')
+                ->whereCompanyId($companyId)
+                ->get();
+
+        } else {
+
+            if ($this->filters['status'] == 'PENDING_DEBIT') {
+
+                $pendingDebts = PendingDebt::doesntHave('withdrawals')
+                    ->whereNull('confirm_date')
+                    ->whereCompanyId($companyId)
+                    ->get();
+            }
+        }
+
+        foreach ($pendingDebts as $pendingDebt) {
+
+            $amount = $pendingDebt->value / 100;
+            $amount = $amount * -1;
+
+            $paymentDate = $pendingDebt->payment_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->payment_date)->format('d/m/Y') : '';
+            $transactionDate = $pendingDebt->request_date ? Carbon::createFromFormat('Y-m-d H:i:s',
+                $pendingDebt->request_date)->format('d/m/Y') : '';
+            $subSellerRateConfirmDate = $pendingDebt->confirm_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->confirm_date)->format('d/m/Y') : '';
+            $sequence = $pendingDebt->payment_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->payment_date)->format('Ymd') : 0;
+
+            $details = new Details();
+
+            if ($pendingDebt->type == 'ADJUSTMENT') {
+
+                $type = StatementItem::TYPE_ADJUSTMENT;
+                $details->setStatus('Ajuste de débito')
+                    ->setDescription($pendingDebt->reason)
+                    ->setType(Details::STATUS_ADJUSTMENT_DEBIT);
+            } else {
+
+                $type = StatementItem::TYPE_REVERSED;
+                $details->setStatus('Estornado')
+                    ->setDescription('Solicitação do estorno: ' . $transactionDate)
+                    ->setType(Details::STATUS_REVERSED);
+            }
+
+            $orderFromGetNetOrderId = null;
+
+            if ($pendingDebt->sale_id) {
+
+                $sale = Sale::select('gateway_order_id')->find($pendingDebt->sale_id);
+                $gateway_order_id = $sale->gateway_order_id;
+                $orderFromGetNetOrderId = $this->setOrderFromGetNetOrderId($gateway_order_id);
+            }
+
+            $statementItem = new StatementItem();
+
+            $statementItem->amount = $amount;
+            $statementItem->order = $orderFromGetNetOrderId;
+            $statementItem->details = $details;
+            $statementItem->type = $type;
+            $statementItem->transactionDate = $pendingDebt->adjustment_date ?? '';
+            $statementItem->date = $paymentDate;
+            $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
+            $statementItem->sequence = $sequence;
+
+            $this->totalInPeriod += $amount;
+            $this->totalChargeback += $amount;
+            $this->statementItems[] = $statementItem;
         }
     }
 
@@ -449,7 +550,7 @@ class GetNetStatementService
         return $date;
     }
 
-    public function accountStatementDataFilters()
+    public function getFiltersAndStatement()
     {
 
         $companyGetNet = Company::whereNotNull('subseller_getnet_id')
@@ -496,16 +597,28 @@ class GetNetStatementService
             ->setStatementDateField($statementDateField);
 
         if (!empty(request('sale'))) {
+
             $getNetBackOfficeService->setStatementSaleHashId(request('sale'));
-            $filters['sale'] = $endDate;
+            $filters['sale'] = request('sale');
         }
 
-        $filters['result'] = $getNetBackOfficeService->getStatement();
+        $statement = $getNetBackOfficeService->getStatement();
+
+        // Só vai ser true após a execução de $getNetBackOfficeService->getStatement()
+        if ($getSaleId = $getNetBackOfficeService->getSaleId()) {
+
+            $filters['sale_id'] = $getSaleId;
+        }
+
         $filters['start_date'] = $startDate;
         $filters['end_date'] = $endDate;
+        $filters['company_id'] = $companyGetNet->id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
 
-        return $filters;
+        return [
+            'filters' => $filters,
+            'statement' => $statement,
+        ];
     }
 }

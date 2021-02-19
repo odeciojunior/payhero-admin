@@ -12,13 +12,17 @@ let formatPlatform = {
     6: 'Outbrain'
 }
 
+
+
 $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
+
     //comportamentos da tela
-    $('#tab_pixels').on('click', function () {
+    $('.tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
+        $(this).off();
     });
 
     $('.check').on('click', function () {
@@ -34,14 +38,26 @@ $(function () {
     } else {
         $(':checkbox').val(0);
     }
+    $("#add-pixel").on('click', function () {
+        let value = $("#modal-create-pixel #select-platform option:selected").val();
+
+        $("#meta-tag-facebook").hide();
+        // $("#modal-create-pixel .facebook-meta-tag-tooltip .tooltip-inner").css('background', '#fff');
+
+
+        if (value == 'facebook') {
+            $("#meta-tag-facebook").show();
+        }
+    });
 
     $("#select-platform").change(function () {
         let value = $(this).val();
         $("#outbrain-info").hide();
-        $("#google-analytics-info").hide();
+        $("#google-analytics-info, #meta-tag-facebook").hide();
 
         if (value === 'facebook') {
             $("#input-code-pixel").html('').hide();
+            $("#meta-tag-facebook").show();
             $("#code-pixel").attr("placeholder", '52342343245553');
         } else if (value === 'google_adwords') {
             $("#input-code-pixel").html('AW-').show();
@@ -65,7 +81,6 @@ $(function () {
 
     });
 
-    atualizarPixel();
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
@@ -128,11 +143,12 @@ $(function () {
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
+                    $("#modal-edit-pixel #google-analytics-info,#modal-edit-pixel #meta-tag-facebook").hide();
                     $("#modal-edit-pixel #outbrain-info-edit").hide();
-                    $("#modal-edit-pixel #google-analytics-info").hide();
 
                     if (value === 'facebook') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #meta-tag-facebook").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
@@ -157,6 +173,7 @@ $(function () {
 
                 if (pixel.platform === 'facebook') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #meta-tag-facebook").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                 } else if (pixel.platform === 'google_adwords') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
@@ -177,8 +194,6 @@ $(function () {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                 }
-
-
             }
         });
     });
@@ -186,6 +201,8 @@ $(function () {
     function renderEditPixel(pixel) {
         $('#modal-edit-pixel .pixel-id').val(pixel.id_code);
         $('#modal-edit-pixel .pixel-description').val(pixel.name);
+        $('#modal-edit-pixel .pixel-code').val(pixel.code);
+        $("#modal-edit-pixel .pixel-code-meta-tag-facebook").val(pixel.code_meta_tag_facebook);
 
         if (pixel.platform == 'facebook') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 0).change();
@@ -211,7 +228,7 @@ $(function () {
         } else {//Desativado
             $('#modal-edit-pixel .pixel-status').prop("selectedIndex", 1).change();
         }
-        $('#modal-edit-pixel .pixel-code').val(pixel.code);
+
         if (pixel.checkout == '1') {
             $('#modal-edit-pixel .pixel-checkout').val(1).prop('checked', true);
         } else {
@@ -314,12 +331,12 @@ $(function () {
                 checkout: $("#modal-edit-pixel .pixel-checkout").val(),
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
                 purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val(),
-                edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val()
+                edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val(),
+                code_meta_tag_facebook: $("#modal-edit-pixel #code_meta_tag_facebook").val()
             },
             error: function (response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-
             },
             success: function success() {
                 loadingOnScreenRemove();
@@ -395,6 +412,7 @@ $(function () {
                     $('#table-pixel').addClass('table-striped');
 
                 } else {
+                    $('#count-pixels').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
                                     <td>${value.name}</td>
@@ -417,10 +435,11 @@ $(function () {
                 $("#select-platform").change(function () {
                     let value = $(this).val();
                     $("#outbrain-info").hide();
-                    $("#google-analytics-info").hide();
+                    $("#google-analytics-info, #meta-tag-facebook").hide();
 
                     if (value === 'facebook') {
                         $("#input-code-pixel").html('').hide();
+                        $("#meta-tag-facebook").show();
                         $("#code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#input-code-pixel").html('AW-').show();
@@ -441,7 +460,6 @@ $(function () {
                         $("#input-code-pixel").html('').hide();
                         $("#code-pixel").attr("placeholder", 'Código');
                     }
-
                 });
             }
         });

@@ -21,10 +21,8 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
-use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -363,16 +361,11 @@ class CompaniesApiController extends Controller
     public function openDocument(Request $request): JsonResponse
     {
         try {
-            $digitalOceanFileService = app(DigitalOceanFileService::class);
+
             $amazonFileService = app(AmazonFileService::class);
             $data = $request->all();
             if (!empty($data['document_url'])) {
                 $temporaryUrl = '';
-
-                // Gera o Link temporário de acordo com o driver
-                if (strstr($data['url'], 'digitaloceanspaces')) {
-                    $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['url'], 180);
-                }
 
                 if (strstr($data['url'], 'amazonaws')) {
                     $amazonFileService->setDisk('s3_documents');
@@ -563,49 +556,6 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar empresas'], 400);
-        }
-    }
-
-    public function checkDebitValue(Request $request, $idCompany): JsonResponse
-    {
-        try {
-            $company = (new Company())->find(current(Hashids::decode($idCompany)));
-
-            if (empty($company)) {
-                return response()->json(
-                    [
-                        'success' => false,
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                        'data' => []
-                    ],
-                    400
-                );
-            }
-
-            $getnetBackOffice = new GetnetBackOfficeService();
-            $data = $getnetBackOffice->getDiscounts($company);
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'data' => [
-                        'itens' => $data['items'],
-                        'amount' => number_format(abs($data['amount']), 2, ',', '.'),
-                    ]
-                ],
-                200
-            );
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    'data' => []
-                ],
-                400
-            );
         }
     }
 

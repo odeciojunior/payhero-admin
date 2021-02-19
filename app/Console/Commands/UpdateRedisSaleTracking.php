@@ -29,7 +29,7 @@ class UpdateRedisSaleTracking extends Command
                         $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
                         Redis::connection('redis-statement')->set(
                             "sale:has:tracking:{$sale->id}",
-                            $sale->has_valid_tracking
+                            $sale->status == 4 ? true : $sale->has_valid_tracking
                         );
                     }
                 }

@@ -6,13 +6,16 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\GetnetChargeback;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use stdClass;
@@ -141,9 +144,9 @@ class TrackingService
 
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
-                        'tracking_status' => $status,
-                        'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
-                        'event' => $event,
+                        'tracking_status'      => $status,
+                        'created_at'           => Carbon::parse($log->Date)->format('d/m/Y'),
+                        'event'                => $event,
                     ]);
                 }
             }
@@ -244,17 +247,17 @@ class TrackingService
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
             $commonAttributes = [
-                'sale_id' => $productPlanSale->sale_id,
-                'product_id' => $productPlanSale->product_id,
+                'sale_id'              => $productPlanSale->sale_id,
+                'product_id'           => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
-                'amount' => $productPlanSale->amount,
-                'delivery_id' => $productPlanSale->sale->delivery->id,
+                'amount'               => $productPlanSale->amount,
+                'delivery_id'          => $productPlanSale->sale->delivery->id,
             ];
 
             $newAttributes = [
-                'tracking_code' => $trackingCode,
+                'tracking_code'        => $trackingCode,
                 'tracking_status_enum' => $statusEnum,
-                'system_status_enum' => $systemStatusEnum,
+                'system_status_enum'   => $systemStatusEnum,
             ];
 
             $tracking = Tracking::where($commonAttributes)
@@ -472,5 +475,98 @@ class TrackingService
             ->first();
 
         return $productPlanSales->toArray();
+    }
+
+    public function getAveragePostingTimeInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+
+        $approvedSalesWithTrackingCode = Tracking::select(DB::raw('ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime'))
+            ->join('sales', 'sales.id', '=', 'trackings.sale_id')
+            ->whereIn('sales.gateway_id', $gatewayIds)
+            ->where('sales.payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+            ->whereIn('sales.status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])
+            ->whereBetween(
+                'sales.start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('sales.owner_id', $user->id)
+            ->get();
+
+        return $approvedSalesWithTrackingCode->toArray()[0]['averagePostingTime'] ?? null;
+    }
+
+    public function getUninformedTrackingCodeRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $untrackedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)
+            ->doesntHave('tracking')
+            ->count();
+
+        $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if (!$approvedSalesAmount) {
+            return 0;
+        }
+
+        return round(($untrackedSalesAmount * 100 / $approvedSalesAmount), 2);
+    }
+
+    public function getTrackingCodeProblemRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $salesModel = new Sale();
+        $salesWithTrackingCodeProblemsAmount = $salesModel->select(
+            DB::raw('sum(transactions.value) / 100 as total'),
+            DB::raw('count(distinct transactions.sale_id) as sales')
+        )->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.owner_id', $user->id)
+            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
+            ->whereNull('transactions.invitation_id')
+            //->whereIn('transactions.company_id', $userCompanies)
+            ->where(function ($query) {
+                $query->whereHas('tracking', function ($trackingsQuery) {
+                    $trackingPresenter = (new Tracking)->present();
+                    $status = [
+                        $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                        $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                        $trackingPresenter->getSystemStatusEnum('duplicated'),
+                    ];
+                    $trackingsQuery->whereIn('system_status_enum', $status);
+                });
+            })->count();
+
+        $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if (!$approvedSalesAmount) {
+            return 0;
+        }
+
+        return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
+    }
+
+    private function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
+    {
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
+            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+            ->whereIn('status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])
+            ->whereBetween(
+                'start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('owner_id', $user->id);
+
+        return $approvedSales;
     }
 }

@@ -58,6 +58,7 @@ class SaleService
                 'sale.transactions.anticipatedTransactions',
                 'sale.affiliate.user',
                 'sale.saleRefundHistory',
+                'sale.cashback'
             ];
 
             if ($withProducts) {
@@ -68,7 +69,8 @@ class SaleService
             $transactions = $transactionModel->with($relationsArray)
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id');
+                ->whereNull('invitation_id')
+                ->where('type', '<>', $transactionModel->present()->getType('cashback'));
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -186,6 +188,15 @@ class SaleService
                     'sale',
                     function ($querySale) {
                         $querySale->whereNotNull('upsell_id');
+                    }
+                );
+            }
+
+            if (!empty($filters['order_bump']) && $filters['order_bump'] == true) {
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) {
+                        $querySale->where('has_order_bump', true);
                     }
                 );
             }
