@@ -18,6 +18,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Getnet\Models\StatementAdjustment;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -1227,6 +1228,7 @@ class SaleService
             $customerModel = new Customer();
             $transactionModel = new Transaction();
             $salesModel = new Sale();
+            $blockReasonSaleModel = new BlockReasonSale();
             $userId = auth()->user()->account_owner_id;
 
             $userCompanies = $companyModel->where('user_id', $userId)
@@ -1242,30 +1244,36 @@ class SaleService
                     'sale.productsPlansSale',
                     'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
-                    }
+                    },
+                    'blockReasonSale' => function($blocked) use ($blockReasonSaleModel) {
+                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    },
                 ]
             )
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
-                ->where(function($queryStatus) use($transactionModel, $salesModel) {
-                    $queryStatus->where(function($transfered) use($transactionModel) {
-                            $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
-                        })
-                        ->orWhere(function($pending) use($transactionModel, $salesModel) {
-                            $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                        });
-                })
+                // ->where(function($queryStatus) use($transactionModel, $salesModel) {
+                //     $queryStatus->where(function($transfered) use($transactionModel) {
+                //             $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
+                //         })
+                //         ->orWhere(function($pending) use($transactionModel, $salesModel) {
+                //             $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                //                 ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
+                //         });
+                // })
                 ->whereDate('transactions.created_at', '>=', '2020-01-01')
-                ->whereHas(
-                    'sale',
-                    function ($f1) use ($salesModel) {
-                        $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                            ->orWhere('sales.has_valid_tracking', 0)
-                            ->whereNotNull('delivery_id');
-                    }
-                );
+                // ->whereHas(
+                //     'sale',
+                //     function ($f1) use ($salesModel) {
+                //         $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                //             ->orWhere('sales.has_valid_tracking', 0)
+                //             ->whereNotNull('delivery_id');
+                //     }
+                // );
+                ->whereHas('blockReasonSale', function($blocked) use ($blockReasonSaleModel) {
+                    $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                });
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));

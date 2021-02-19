@@ -316,6 +316,14 @@ class Sale extends Model
         return $this->hasMany(SaleContestation::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function blockReasonsSale()
+    {
+        return $this->hasMany(BlockReasonSale::class);
+    }
+
     public function getHashIdAttribute()
     {
 
