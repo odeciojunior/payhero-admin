@@ -202,11 +202,20 @@ class PixelsApiController extends Controller
                 ]
             );
             if ($pixelUpdated) {
-                (new PixelService())->updateCodeMetaTagFacebook(
-                    $project->id,
-                    $validated['code_meta_tag_facebook']
-                );
+                if (!empty($pixel->code_meta_tag_facebook) && empty($validated['code_meta_tag_facebook'])){
+                    $pixel->update(
+                        [
+                            'code_meta_tag_facebook' => ''
+                        ]
+                    );
+                }
 
+                if (!empty($validated['code_meta_tag_facebook'])) {
+                    (new PixelService())->updateCodeMetaTagFacebook(
+                        $project->id,
+                        $validated['code_meta_tag_facebook']
+                    );
+                }
                 return response()->json('Sucesso', 200);
             }
 
