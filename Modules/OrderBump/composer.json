@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/orderbump",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\OrderBump\\Providers\\OrderBumpServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\OrderBump\\": ""
+        }
+    }
+}

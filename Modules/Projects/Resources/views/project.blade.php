@@ -152,6 +152,12 @@
                                    aria-controls="tab_upsell" role="tab">Upsell <span id="count-upsell" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
+                            <li class="nav-item tab_order_bump" role="presentation">
+                                <span class="category-tabs">&nbsp;</span>
+                                <a id="tab_order_bump" class="nav-link" data-toggle="tab" href="#tab-order-bump-panel"
+                                   aria-controls="tab_order_bump" role="tab">Order Bump <span id="count-order-bump" class=" d-none tab-counter"> 0 </span>
+                                </a>
+                            </li>
                             <li class="nav-item tab_coupons" role="presentation">
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id='tab_coupons' class="nav-link" data-toggle="tab" href="#tab_coupons-panel"
@@ -223,9 +229,16 @@
                                 @include('plans::index')
                             </div>
                         </div>
+                        <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             <div class="card card-body">
                                 @include('projectupsellrule::index')
+                            </div>
+                        </div>
+                        <!--- Order Bump -->
+                        <div class="tab-pane" id="tab-order-bump-panel" role="tabpanel">
+                            <div class="card card-body">
+                                @include('orderbump::index')
                             </div>
                         </div>
                         <!-- Reviews -->
@@ -284,6 +297,7 @@
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/orderbump/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>

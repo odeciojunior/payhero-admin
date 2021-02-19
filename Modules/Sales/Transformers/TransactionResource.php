@@ -49,6 +49,7 @@ class TransactionResource extends JsonResource
             'is_chargeback_recovered'    => $sale->is_chargeback_recovered,
             'observation'      => $sale->observation,
             'cupom_code'       => $sale->cupom_code ?? null,
+            'has_order_bump'   => $sale->has_order_bump,
         ];
         $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
 

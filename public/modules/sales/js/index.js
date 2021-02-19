@@ -118,6 +118,7 @@ $(document).ready(function () {
             'shopify_error': $("#shopify_error").val(),
             'plan': $('#plan').val(),
             'upsell': $("#upsell").val(),
+            'order_bump': $("#order-bump").val(),
         };
 
         if (urlParams) {
@@ -290,7 +291,8 @@ $(document).ready(function () {
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
-                                        ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
+                                        ${value.upsell ? '<div class="text-muted font-size-10"> (Upsell) </div>' : ''}
+                                        ${value.has_order_bump ? '<div class="text-muted font-size-10"> (Order Bump) </div>' : ''}
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
