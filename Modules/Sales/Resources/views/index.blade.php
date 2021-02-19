@@ -244,7 +244,7 @@
 
                             <div class="col-md-3 d-sm-none d-md-block">
                                 <div style='display:block;'>
-                                    <div class="mt-30">
+                                    <div>
                                         <h5 class="gray font-size-16"> Acesso rápido </h5>
                                         <ul class="quick-list">
                                             <li>

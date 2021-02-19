@@ -702,3 +702,7 @@ a.label {
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
     white-space: normal;
 }
+
+#notification-amount {
+    padding: 5px 5px !important
+}

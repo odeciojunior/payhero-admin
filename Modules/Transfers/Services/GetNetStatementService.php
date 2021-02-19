@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Getnet\Details;
@@ -129,9 +130,9 @@ class GetNetStatementService
 
         $this->filters = $filters;
 
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
 
         if (request('debug')) {
 
@@ -173,10 +174,10 @@ class GetNetStatementService
         }
 
         $this->filters = $filters;
-
-        $transactions = array_reverse($data->list_transactions) ?? [];
-        $adjustments = array_reverse($data->adjustments) ?? [];
-        $chargeback = array_reverse($data->chargeback) ?? [];
+    
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
 
         $this->totalInPeriod = 0;
 
@@ -313,7 +314,15 @@ class GetNetStatementService
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
 
-                } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)) {
+                } elseif (
+                    (
+                        $hasOrderId && $isTransactionCredit && $hasValidTracking && $isReleaseStatus && empty($subSellerRateConfirmDate)
+                    )
+                    ||
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && empty($subSellerRateConfirmDate)
+                    )
+                ) {
 
                     $details->setStatus('Aguardando liquidação')
                         ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
@@ -322,10 +331,13 @@ class GetNetStatementService
                 } elseif (
                     (
                         $hasOrderId && $isTransactionCredit && $hasValidTracking && !empty($subSellerRateConfirmDate)
-                        && in_array($transactionStatusCode, [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
+                        && in_array($transactionStatusCode,
+                            [self::TRANSACTION_STATUS_CODE_APROVADO, self::TRANSACTION_STATUS_CODE_ESTORNADA])
                     )
                     ||
-                    ($transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA)
+                    (
+                        $transactionStatusCode == self::TRANSACTION_STATUS_CODE_ESTORNADA && !empty($subSellerRateConfirmDate)
+                    )
                 ) {
 
                     $details->setStatus('Liquidado')
@@ -466,42 +478,50 @@ class GetNetStatementService
             $amount = $pendingDebt->value / 100;
             $amount = $amount * -1;
 
-            $paymentDate = $pendingDebt->payment_date ?? '';
-            $transactionDate = $pendingDebt->request_date ?? '';
-            $subSellerRateConfirmDate = $pendingDebt->confirm_date ?? '';
-
-            foreach (['paymentDate', 'transactionDate', 'subSellerRateConfirmDate'] as $date) {
-
-                if ($date) {
-
-                    ${$date} = $this->formatDate(${$date});
-                }
-            }
+            $paymentDate = $pendingDebt->payment_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->payment_date)->format('d/m/Y') : '';
+            $transactionDate = $pendingDebt->request_date ? Carbon::createFromFormat('Y-m-d H:i:s',
+                $pendingDebt->request_date)->format('d/m/Y') : '';
+            $subSellerRateConfirmDate = $pendingDebt->confirm_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->confirm_date)->format('d/m/Y') : '';
+            $sequence = $pendingDebt->payment_date ? Carbon::createFromFormat('Y-m-d',
+                $pendingDebt->payment_date)->format('Ymd') : 0;
 
             $details = new Details();
 
             if ($pendingDebt->type == 'ADJUSTMENT') {
 
+                $type = StatementItem::TYPE_ADJUSTMENT;
                 $details->setStatus('Ajuste de débito')
                     ->setDescription($pendingDebt->reason)
                     ->setType(Details::STATUS_ADJUSTMENT_DEBIT);
             } else {
 
+                $type = StatementItem::TYPE_REVERSED;
                 $details->setStatus('Estornado')
-                    ->setDescription('Solicitação do estorno: ' . $this->formatDate($transactionDate))
+                    ->setDescription('Solicitação do estorno: ' . $transactionDate)
                     ->setType(Details::STATUS_REVERSED);
+            }
+
+            $orderFromGetNetOrderId = null;
+
+            if ($pendingDebt->sale_id) {
+
+                $sale = Sale::select('gateway_order_id')->find($pendingDebt->sale_id);
+                $gateway_order_id = $sale->gateway_order_id;
+                $orderFromGetNetOrderId = $this->setOrderFromGetNetOrderId($gateway_order_id);
             }
 
             $statementItem = new StatementItem();
 
             $statementItem->amount = $amount;
+            $statementItem->order = $orderFromGetNetOrderId;
             $statementItem->details = $details;
-            $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
+            $statementItem->type = $type;
             $statementItem->transactionDate = $pendingDebt->adjustment_date ?? '';
             $statementItem->date = $paymentDate;
             $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
-            $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
-                $statementItem->date)->format('Ymd')) : 0;
+            $statementItem->sequence = $sequence;
 
             $this->totalInPeriod += $amount;
             $this->totalChargeback += $amount;

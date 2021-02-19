@@ -38,7 +38,7 @@ class DashboardApiController extends Controller
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
-            GetnetBackOfficeService::dispatchGetnetGetDiscountsJob();
+//            GetnetBackOfficeService::dispatchGetnetGetDiscountsJob();
 
             return response()->json(['companies' => $companies]);
         } catch (Exception $e) {
