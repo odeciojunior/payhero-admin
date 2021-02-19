@@ -60,7 +60,7 @@ $(document).ready(function () {
                     $("#notification-amount").removeClass("badge-notification");
                     $("#notification-amount").addClass("badge-notification-false");
                 }
-                
+
                 $('#notificationBadge').html('New ' + response.qtd_notification)
             }
         });
@@ -98,7 +98,7 @@ $(document).ready(function () {
         data = getNotificationData(data);
 
         return `<a class="list-group-item dropdown-item item-notification d-flex flex-row justify-content-around align-self-center" href=` + data.link + ` role="menuitem" id='item-notification' style='` + data.background + `'>
-                    
+
                         <div class="mr-10 icon-notification d-flex justify-content-center align-self-center align-items-center" style='` + data.iconBackgroundColor + `'>
                             <span class='` + data.iconClass + `' style='` + data.iconColor + `'></span>
                         </div>
@@ -117,7 +117,7 @@ $(document).ready(function () {
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
                 message   = data.message + (data.message > 1 ? ' boletos compensados' : ' boleto compensado');
-                iconClass = 'o-currency-1'; 
+                iconClass = 'o-currency-1';
                 iconColor = 'color:#5EE2A1;';
                 iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/sales';

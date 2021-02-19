@@ -123,191 +123,136 @@
                 <div class="col-12 col-sm-4">
                     <div class="row">
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0">
-                            <div class="card card-shadow bg-white w-full chargeback-card">
+                            <div class="card mb-10 card-shadow bg-white w-full performace-card">
                                 <div
-                                    class="card-chargeback card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                    class="card-chargeback card-header mt-10 pb-0 d-flex justify-content-start align-items-center bg-white">
                                     <div class="font-size-14 gray-600 mr-auto">
-                                        <span class="card-desc">Saúde da Conta</span>
+                                        <span class="ml-0">Seu desempenho</span>
                                     </div>
-                                    <i class="o-question-help-1" data-toggle="tooltip" data-placement="bottom"
-                                       title="Taxa geral de chargeback de sua empresa"></i>
+{{--                                    <i class="o-question-help-1" data-toggle="tooltip" data-placement="bottom"--}}
+{{--                                       title="Taxa geral de chargeback de sua empresa"></i>--}}
                                 </div>
-                                <div class="card-body pb-5">
-                                    <div class="row d-flex align-items-topline align-items-center">
-                                        <div class="col text-center px-0 d-flex justify-content-center">
-                                            <div class="circle text-circle">
-                                                <strong>0.00%</strong>
+                                <div class="card-body pb-5 pt-0 mt-10 d-flex flex-column justify-content-start align-items-start">
+                                    <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
+                                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
+                                            <div id="level-icon" class="circle load">
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="pb-15"><b>Taxa de Chargeback</b></div>
-                                            <div class="table-responsive">
-                                                <table class="table table-condensed">
-                                                    <tr class="pb-15">
-                                                        <td class="text-right">
-                                                            <span id="total_sales_approved" class="text-money mr-1">0</span>
-                                                        </td>
-                                                        <td class="text-left">
-                                                            <div class="ml-10 w-p100">Vendas no Cartão</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-right">
-                                                            <span id="total_sales_chargeback" class="text-money mr-1">0</span>
-                                                        </td>
-                                                        <td class="text-left">
-                                                            <div class="ml-10 w-p100">Chargebacks</div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-{{--                                            <div class="mb-10 d-flex flex-row justify-content-center">--}}
-{{--                                                <span id="total_sales_approved" class="text-money mr-1">0</span>--}}
-{{--                                                <div class="ml-10 w-p100">Vendas no Cartão</div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="d-flex flex-row justify-content-center">--}}
-{{--                                                <span id="total_sales_chargeback" class="text-money mr-1">0</span>--}}
-{{--                                                <div class="ml-10 w-p100">Chargebacks</div>--}}
-{{--                                            </div>--}}
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row no-gutters1">
-                                                <div class="col-6 align-items-start w-25">
-                                                    <hr class="bg-grey-50 my-5">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 py-10 text-dark"><b>Atendimento</b></div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-condensed">
-                                                            <tr class="pb-15">
-                                                                <td class="text-right">
-                                                                    <span id="open-tickets" class="text-money">0</span>
-                                                                </td>
-                                                                <td class="text-left">
-                                                                    <div class="ml-10 w-p100">Abertos</div>
-                                                                </td>
-                                                                <td class="text-right">
-                                                                    <span id="closed-tickets"
-                                                                          class="text-money">0</span>
-                                                                </td>
-                                                                <td class="text-left">
-                                                                    <div class="ml-10 w-p100">Resolvidos</div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-right">
-                                                                    <span id="mediation-tickets"
-                                                                          class="text-money">0</span>
-                                                                </td>
-                                                                <td class="text-left">
-                                                                    <div class="ml-10 w-p100">Em mediação</div>
-                                                                </td>
-                                                                <td class="text-right">
-                                                                    <span id="total-tickets" class="text-money">0</span>
-                                                                </td>
-                                                                <td class="text-left">
-                                                                    <div class="ml-10 w-p100">Total</div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                {{--                                                <div class="col d-flex justify-content-center">--}}
-                                                {{--                                                    <span id="open-tickets" class="text-money">0</span>--}}
-                                                {{--                                                    <div class="ml-10 w-p100">Abertos</div>--}}
-                                                {{--                                                </div>--}}
-                                                {{--                                                <div class="col d-flex justify-content-center">--}}
-                                                {{--                                                    <span id="closed-tickets" class="text-money">0</span>--}}
-                                                {{--                                                    <div class="ml-10 w-p100">Resolvidos</div>--}}
-                                                {{--                                                </div>--}}
-                                            </div>
-                                            {{--                                            <div class="row">--}}
-                                            {{--                                                <div class="col d-flex justify-content-center">--}}
-                                            {{--                                                    <span id="mediation-tickets" class="text-money">0</span>--}}
-                                            {{--                                                    <div class="ml-10 w-p100">Em mediação</div>--}}
-                                            {{--                                                </div>--}}
-                                            {{--                                                <div class="col d-flex justify-content-center">--}}
-                                            {{--                                                    <span id="total-tickets" class="text-money">0</span>--}}
-                                            {{--                                                    <div class="ml-10 w-p100">Total</div>--}}
-                                            {{--                                                </div>--}}
-                                            {{--                                            </div>--}}
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row no-gutters1">
-                                                <div class="col-6 align-items-start w-25">
-                                                    <hr class="bg-grey-50 m-1">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 py-10 d-flex justify-content-between">
-                                                    <b class="text-dark">Códigos de Rastreio</b>
-
-                                                    <i class="o-question-help-1" data-toggle="tooltip"
-                                                       data-placement="bottom"
-                                                       title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row no-gutters">
-                                                <div class="col-6 mb-20 text-center d-flex flex-wrap flex-column">
-                                                    <label class="update-text text-money font-size-18"
-                                                           id="average_post_time"></label>
-                                                    <span class="font-size-11">Tempo médio de postagem</span>
-                                                </div>
-                                                <div class="col-6 mb-20 text-center d-flex flex-wrap flex-column">
-                                                    <label class="update-text text-money font-size-18"
-                                                           id="oldest_sale"></label>
-                                                    <span class="font-size-11">Venda mais antiga sem código</span>
-                                                </div>
-                                                <div class="col-6 mb-20 text-center d-flex flex-wrap flex-column">
-                                                    <label class="update-text text-money font-size-18"
-                                                           id="problem"></label>
-                                                    <span class="font-size-11">Códigos com problema</span>
-                                                </div>
-                                                <div class="col-6 mb-20 text-center d-flex flex-wrap flex-column">
-                                                    <label class="update-text text-money font-size-18"
-                                                           id="unknown"></label>
-                                                    <span class="font-size-11">Códigos não informados</span>
-                                                </div>
-                                            </div>
+                                        <div class="d-flex flex-column justify-content-center align-self-center">
+                                            <div id="level-description" class="load"></div>
+                                            <div id="level" class="load"></div>
                                         </div>
                                     </div>
+                                    <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
+                                        <div class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <div id="achievements-item-1" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-2" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/11903cdeba102415c7a49cb4cad3ff5fab04297fr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-3" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/37041bbe7e41e669a614cf99d0e9ae3585adc7f4r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-4" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/6eb8248218eb601f2534656bccb0566fbd3070b8r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-5" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/75f61864adba69fa157c052cf259f5cf9d098eadr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>
+                                        </div>
+                                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <div id="achievements-item-7" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/5dfc0ae74931e316225e6f1d50eaf52e943faeb7r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-8" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/a6412a5b02d8a235677b5651a080dd4d5d0d65fcr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-9" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/13df5623bdc33a79763d26aed5e09230a7932199r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-10" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/01417fb22aaf1c7c0387cd306d8f17236750350dr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-11" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/2fd11faccf8517a2ce5e5181f606259ca24bd5e4r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-12" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/4ea15727ab51ebc7697fa6b1785a31491f69fb2br1-200-141v2_hq.jpg)"></div>
+                                        </div>
+                                    </div>
+                                    <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                    </div>
+                                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <span class="title-performace">Cashback recebido</span>
+                                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">
+                                            <span class="o-reload-1 cashback-container-icon"></span>
+                                            <span class="cashback-container-icon">R$</span>
+                                            <span id="cashback-container-money"></span>
+                                        </div>
+                                    </div>
+
+                                    <div id="progess-performance" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <span id="progess-1"></span>
+                                            <span id="progess-2"></span>
+                                        </div>
+                                        <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <span id="progess-bar-1"></span>
+                                            <span id="progess-bar-2"></span>
+                                        </div>
+                                    </div>
+{{--                                    <div id="benefits" class="mt-25 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
+{{--                                        <span class="title-performace">Seus próximos benfefícios</span>--}}
+{{--                                        <div id="benefits-container" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-12 order-0 order-sm-1">
-                            <div class="card card-shadow sirius-card">
-                                <div
-                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">
-                                    <div class="font-size-16 text-white">
-                                        <b class="card-desc">A CloudFox mudou.</b>
-                                        <br/>
-                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>
-                                    </div>
-                                    <img class="img-fluid"
-                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"
-                                         height="60px" width="60px">
-                                </div>
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <p class="font-size-12">
-                                        A CloudFox está crescendo de forma exponencial, e vamos compartilhar nos
-                                        próximos meses novos produtos e serviços que vão te ajudar a vender mais, a
-                                        começar pelo Sirius.
-                                    </p>
-                                    <p class="font-size-12">
-                                        O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era
-                                        até este momento: uma empresa de processamento de pagamentos online.
-                                    </p>
-                                    {{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
-                                </div>
+                        <div class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-account">
+                            <div class="card card-shadow bg-white w-full h-full sirius-account-health">
+
                             </div>
                         </div>
+
+
+{{--                        <div class="col-lg-12 align-items-stretch order-0 order-sm-1">--}}
+{{--                            <div class="card card-shadow sirius-card">--}}
+{{--                                <div--}}
+{{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
+{{--                                    <div class="font-size-16 text-white">--}}
+{{--                                        <b class="card-desc">A CloudFox mudou.</b>--}}
+{{--                                        <br/>--}}
+{{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
+{{--                                    </div>--}}
+{{--                                    <img class="img-fluid"--}}
+{{--                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         height="60px" width="60px">--}}
+{{--                                </div>--}}
+{{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
+{{--                                    <p class="font-size-12">--}}
+{{--                                        A CloudFox está crescendo de forma exponencial, e vamos compartilhar nos--}}
+{{--                                        próximos meses novos produtos e serviços que vão te ajudar a vender mais, a--}}
+{{--                                        começar pelo Sirius.--}}
+{{--                                    </p>--}}
+{{--                                    <p class="font-size-12">--}}
+{{--                                        O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era--}}
+{{--                                        até este momento: uma empresa de processamento de pagamentos online.--}}
+{{--                                    </p>--}}
+{{--                                    --}}{{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+{{--                        <div class="col-lg-12 order-0 order-sm-1">--}}
+{{--                            <div class="card card-shadow sirius-card">--}}
+{{--                                <div--}}
+{{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
+{{--                                    <div class="font-size-16 text-white">--}}
+{{--                                        <b class="card-desc">A CloudFox mudou.</b>--}}
+{{--                                        <br/>--}}
+{{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
+{{--                                    </div>--}}
+{{--                                    <img class="img-fluid"--}}
+{{--                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         height="60px" width="60px">--}}
+{{--                                </div>--}}
+{{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
+{{--                                    <p class="font-size-12">--}}
+{{--                                        A CloudFox está crescendo de forma exponencial, e vamos compartilhar nos--}}
+{{--                                        próximos meses novos produtos e serviços que vão te ajudar a vender mais, a--}}
+{{--                                        começar pelo Sirius.--}}
+{{--                                    </p>--}}
+{{--                                    <p class="font-size-12">--}}
+{{--                                        O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era--}}
+{{--                                        até este momento: uma empresa de processamento de pagamentos online.--}}
+{{--                                    </p>--}}
+{{--                                    --}}{{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>
@@ -318,6 +263,8 @@
     </div>
 
     @push('scripts')
+        <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+        <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
         <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
