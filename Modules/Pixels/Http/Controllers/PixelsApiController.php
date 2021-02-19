@@ -12,6 +12,7 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\PixelService;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
@@ -69,12 +70,7 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param PixelStoreRequest $request
-     * @param $projectId
-     * @return JsonResponse
-     */
-    public function store(PixelStoreRequest $request, $projectId)
+    public function store(PixelStoreRequest $request, $projectId): JsonResponse
     {
         try {
             $pixelModel = new Pixel();
@@ -83,7 +79,7 @@ class PixelsApiController extends Controller
             $validator = $request->validated();
 
             if (!$validator || !isset($projectId)) {
-                return response()->json('Parametros invalidos', 400);
+                return response()->json('Parametros inválidos', 400);
             }
 
             $validator['project_id'] = current(Hashids::decode($projectId));
@@ -134,6 +130,12 @@ class PixelsApiController extends Controller
                 ]
             );
 
+            $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
+
+            if (!empty($codeMetaTag)) {
+                (new PixelService())->updateCodeMetaTagFacebook($project->id, $codeMetaTag);
+            }
+
             if ($pixel) {
                 return response()->json('Pixel Configurado com sucesso!', 200);
             }
@@ -146,12 +148,6 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param PixelUpdateRequest $request
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
     public function update(PixelUpdateRequest $request, $projectId, $id)
     {
         try {
@@ -206,6 +202,11 @@ class PixelsApiController extends Controller
                 ]
             );
             if ($pixelUpdated) {
+                (new PixelService())->updateCodeMetaTagFacebook(
+                    $project->id,
+                    $validated['code_meta_tag_facebook']
+                );
+
                 return response()->json('Sucesso', 200);
             }
 

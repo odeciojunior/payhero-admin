@@ -1043,7 +1043,7 @@ class ReportService
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::now()->subMonth();
+            $dataFormated = Carbon::now()->subMonth()->subDays(5);
             $endDate      = Carbon::now();
 
             while ($endDate->greaterThanOrEqualTo($dataFormated)) {
@@ -1056,7 +1056,7 @@ class ReportService
                 }
             }
 
-            $startDate = Carbon::now()->subMonth()->format('Y-m-d');
+            $startDate = Carbon::now()->subMonth()->subDays(5)->format('Y-m-d');
             $endDate   = Carbon::now()->addDay()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
@@ -1069,24 +1069,28 @@ class ReportService
                 ->groupBy('date');
 
             $orders         = $orders->get()->toArray();
+            $labelList      = array_reverse($labelList);
             $valueData      = [];
-            foreach ($labelList as $label) {
-                $value = 0;
+            foreach ($labelList as $key => $label) {
 
-                foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])
-                                ->subDay()->format('d/m') == $label) || (Carbon::parse($order['date'])
-                                ->format('d/m') == $label)) {
+                $valueData[$key] = 0;
 
-                        $value = FoxUtils::onlyNumbers($order['value']);
+                foreach ($orders as $order)
+                {
+                    if (($label == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(1)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(2)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(3)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(4)->format('d/m') == Carbon::parse($order['date'])->format('d/m'))
+                    ) {
+
+                        $valueData[$key] += substr(intval($order['value']), 0, -2);
                     }
                 }
-
-                array_push($valueData, substr(intval($value), 0, -2));
             }
 
             return [
-                'label_list' => array_reverse($labelList),
+                'label_list' => $labelList,
                 'value_data' => $valueData,
                 'currency'   => 'R$',
             ];

@@ -63,7 +63,7 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
-                    parent: $('body'),
+                    parent: $('#modal_content_review_form'),
                     onSelectEnd: function (img, selection) {
                         $('#photo_x1').val(selection.x1);
                         $('#photo_y1').val(selection.y1);
