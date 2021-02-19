@@ -128,8 +128,6 @@ class AccountHealthService
     public function updateAccountScore(User $user): void
     {
         try {
-            DB::beginTransaction();
-
             if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;
@@ -137,23 +135,21 @@ class AccountHealthService
 
             $startDate = now()->startOfDay()->subDays(140);
             $endDate = now()->endOfDay()->subDays(20);
-            $chargebackTax = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
+            $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);
             $chargebackScore = $this->getChargebackScore($user);
             $trackingScore = $this->getTrackingScore($user);
-            $accountScore = ($chargebackScore + $attendanceScore + $trackingScore) / 3;
+            $accountScore = round(($chargebackScore + $attendanceScore + $trackingScore) / 3, 2);
 
-            $user->account_score = $accountScore;
-            $user->attendance_score = $attendanceScore;
-            $user->chargeback_score = $chargebackScore;
-            $user->chargeback_tax = $chargebackTax;
-            $user->tracking_score = $trackingScore;
-            $user->save();
-
-            DB::commit();
+            $user->update([
+                'account_score'    => $accountScore,
+                'attendance_score' => $attendanceScore,
+                'chargeback_score' => $chargebackScore,
+                'chargeback_rate'  => $chargebackRate,
+                'tracking_score'   => $trackingScore
+            ]);
         } catch (\Exception $e) {
             report($e);
-            DB::rollBack();
         }
     }
 }
