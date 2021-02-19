@@ -1128,6 +1128,14 @@ input[type=radio] {
     opacity: 1;
 }
 
+#dropdown_profile_card {
+    top: 80%;
+    background-color: #FFFFFF;
+    box-shadow: 0px 1px 30px #00000026;
+    border-radius: 16px !important;
+    padding: 8px;
+}
+
 .ribbon span a {
     filter: brightness(0) invert(1);
 }

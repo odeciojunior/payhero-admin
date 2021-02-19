@@ -16,10 +16,10 @@
             <img id="logoSirius" class="navbar-brand-logo d-none" src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}">
             <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}"> </span> -->
         </div>
-        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
-            <span class="sr-only">Toggle Search</span>
-            <i class="icon wb-search" aria-hidden="true"></i>
-        </button>
+{{--        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">--}}
+{{--            <span class="sr-only">Toggle Search</span>--}}
+{{--            <i class="icon wb-search" aria-hidden="true"></i>--}}
+{{--        </button>--}}
     </div>
     <div class="navbar-container container-fluid">
         <input type='hidden' id='user'
@@ -59,15 +59,15 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                        data-animation="scale-up" role="button">
-                <span class="avatar avatar-online">
-                  <img class='img-user-menu-principal'
-                       src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}"
-                       onerror="this.onerror=null; this.src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'"
-                       alt="">
-                  <i></i>
-                </span>
+                        <span class="avatar avatar-online">
+                            <img class='img-user-menu-principal'
+                               src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}"
+                               onerror="this.onerror=null; this.src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'"
+                               alt="">
+                            <i></i>
+                        </span>
                     </a>
-                    <div class="dropdown-menu" role="menu">
+                    <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
                         <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value="" role="menuitem">
                             <!-- <i class="material-icons align-middle"> settings </i> Configurações -->
                             <img  height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}" />
@@ -87,18 +87,18 @@
                 </li>
             </ul>
         </div>
-        <div class="collapse navbar-search-overlap" id="site-navbar-search">
-            <form role="search">
-                <div class="form-group">
-                    <div class="input-search">
-                        <i class="input-search-icon wb-search" aria-hidden="true"></i>
-                        <input type="text" class="form-control" name="site-search" placeholder="Search">
-                        <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"
-                                data-toggle="collapse" aria-label="Close"></button>
-                    </div>
-                </div>
-            </form>
-        </div>
+{{--        <div class="collapse navbar-search-overlap" id="site-navbar-search">--}}
+{{--            <form role="search">--}}
+{{--                <div class="form-group">--}}
+{{--                    <div class="input-search">--}}
+{{--                        <i class="input-search-icon wb-search" aria-hidden="true"></i>--}}
+{{--                        <input type="text" class="form-control" name="site-search" placeholder="Search">--}}
+{{--                        <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"--}}
+{{--                                data-toggle="collapse" aria-label="Close"></button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </form>--}}
+{{--        </div>--}}
         <!-- End Site Navbar Seach -->
     </div>
 </nav>

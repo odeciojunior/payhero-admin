@@ -1,4 +1,99 @@
 $(document).ready(function () {
+
+    let levelInfo = {
+        1: {
+            name: 'Aventureiro',
+            title: 'Pronto para começar?',
+            icon: '/modules/global/adminremark/assets/images/nivel-1.png',
+        },
+        2: {
+            name: 'Viajante Espacial',
+            title: 'Nível 2',
+            icon: '/modules/global/adminremark/assets/images/nivel-2.png',
+        },
+        3: {
+            name: 'Conquistador',
+            title: 'Nível 3',
+            icon: '/modules/global/adminremark/assets/images/nivel-3.png',
+        },
+        4: {
+            name: 'Nível 4',
+            title: 'Nível 4',
+            icon: '/modules/global/adminremark/assets/images/nivel-4.png',
+        },
+        5: {
+            name: 'Nível 5',
+            title: 'Nível 5',
+            icon: '/modules/global/adminremark/assets/images/nivel-5.png',
+        },
+        6: {
+            name: 'Nível 6',
+            title: 'Nível 6',
+            icon: '/modules/global/adminremark/assets/images/nivel-6.png',
+        },
+    };
+
+    let scoreInfo = {
+        0: {
+            textColor: 'text-color-red',
+            bgColor: 'bg-color-red',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-red">mediano0</span>.'
+        },
+        1: {
+            textColor: 'text-color-red',
+            bgColor: 'bg-color-red',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-red">mediano1</span>.'
+        },
+        2: {
+            textColor: 'text-color-orange',
+            bgColor: 'bg-color-orange',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-orange">mediano2</span>.'
+        },
+        3: {
+            textColor: 'text-color-orange',
+            bgColor: 'bg-color-orange',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-orange">mediano3</span>.'
+        },
+        4: {
+            textColor: 'text-color-yellow',
+            bgColor: 'bg-color-yellow',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-yellow">mediano4</span>.'
+        },
+        5: {
+            textColor: 'text-color-yellow',
+            bgColor: 'bg-color-yellow',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-yellow">mediano5</span>.'
+        },
+        6: {
+            textColor: 'text-color-green',
+            bgColor: 'bg-color-green',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-green">mediano6</span>.'
+        },
+        7: {
+            textColor: 'text-color-green',
+            bgColor: 'bg-color-green',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-green">mediano7</span>.'
+        },
+        8: {
+            textColor: 'text-color-dark-green',
+            bgColor: 'bg-color-dark-green',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano8</span>.'
+        },
+        9: {
+            textColor: 'text-color-dark-green',
+            bgColor: 'bg-color-dark-green',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano9</span>.'
+        },
+        10: {
+            textColor: 'text-color-dark-green',
+            bgColor: 'bg-color-dark-green',
+            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano10</span>.'
+        },
+
+
+
+    }
+
     getProjects();
 
     function updateChart() {
@@ -126,6 +221,8 @@ $(document).ready(function () {
     $("#company").on("change", function () {
         updateValues();
         updateChart();
+        updatePerformace();
+        updateAccountHealth();
     });
     let userAccepted = true;
 
@@ -136,7 +233,7 @@ $(document).ready(function () {
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                'Accept': 'appliation/json',
             },
             error: function error(response) {
                 loadingOnScreenRemove();
@@ -158,6 +255,8 @@ $(document).ready(function () {
 
                     updateValues();
                     updateChart();
+                    updatePerformace();
+                    updateAccountHealth();
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -223,29 +322,627 @@ $(document).ready(function () {
 
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 
-                updateTrackings(data.trackings);
-                updateChargeback(data.chargeback_tax);
-                updateTickets(data.tickets);
+                //--updateTrackings(data.trackings);
+                //--updateChargeback(data.chargeback_tax);
+                //--updateTickets(data.tickets);
 
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
-                loadingOnScreenRemove();
+                //loadingOnScreenRemove();
             }
         });
     }
 
-    function updateChargeback(value) {
-        $('.circle').circleProgress({
-            size: 125,
-            startAngle: -Math.PI / 2,
-            value: value / 100,
-            fill: {
-                gradient: ["#F76B1C", "#FA6161"]
+    function updatePerformace() {
+
+        loadOnAnyEllipsis('.load', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto',
+                    margin: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
             }
         });
 
-        $('.circle strong').addClass('loaded')
-            .text(parseFloat(value).toFixed(2) + '%');
+        //--loadingOnChart('#chart-loading');
+
+        //$('.circle strong').addClass('loaded');
+        $('#achievements .achievements-item').addClass('opacity-3');
+        $('.task .task-icon').removeClass('o-checkmark-1');
+        $('.task .task-icon').removeClass('.task-icon-checked');
+
+        $.ajax({
+            method: "POST",
+            url: "/api/dashboard/get-performace",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                loadOnAnyEllipsis('.load', true)
+                //loadingOnScreenRemove();
+
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                let currentLevel = levelInfo[data.level];
+                $("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
+                $("#level-description").html('').html(`<span class="mb-1">${currentLevel.name}</span>`);
+                $("#level").html('').html(`<span>${currentLevel.title}</span>`);
+                $('#progess-1').text(`NÍVEL ${data.level}`);
+                $('#progess-2').text(`NÍVEL ${data.level + 1}`);
+
+                updateAchievements(data.achievements);
+
+                if ( data.level ===  1 || data.level ===2){
+                    updateTasks(data.level, data.tasks);
+                }
+
+                if ( data.level > 1){
+                    $('#cashback-container #cashback-container-money').text(`${data.money_cashbac}`);
+                    $("#cashback").show();
+                }
+
+                updateProgressBar(data.progress);
+                updateBenefits(data.level, data.benefits);
+
+
+                $(".moeda").html(data.currency);
+                //--$("#pending_money").html(data.pending_balance);
+                //--$("#available_money").html(data.available_balance);
+                //--$("#total_money").html(data.total_balance);
+                //--$("#today_money").html(data.today_balance);
+
+                //--$('#total_sales_approved').text(data.total_sales_approved);
+                //--$('#total_sales_chargeback').text(data.total_sales_chargeback);
+
+                //--let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance_total;
+                // if(data.blocked_balance_invite !== "0,00"){
+                //     title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
+                // }
+
+                //--$('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
+
+                //--updateTrackings(data.trackings);
+                // updateChargeback(data.chargeback_tax);
+                //--updateTickets(data.tickets);
+
+                loadOnAnyEllipsis('.load', true)
+                //loadingOnScreenRemove();
+            }
+        });
     }
+
+    function updateAchievements(data) {
+
+        if (!isEmpty(data)) {
+            $.each(data, function (index, value) {
+                //console.log(index);
+                var i = index + 1;
+                $(`#achievements #achievements-item-${i}`).removeClass('opacity-3');
+            });
+
+            $('#achievements').show();
+        } else {
+            $('#achievements .achievements-item').addClass('opacity-3');
+        }
+    }
+
+    function updateTasks(level, data) {
+        $('#tasks').html('');
+
+        if (!isEmpty(data)) {
+
+            $.each(data, function (index, value) {
+
+                let item = `<div class="d-flex justify-content-start align-items-center align-self-start task">
+                                 <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
+                                 <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.task}</p>
+                            </div>`;
+                $('#tasks').append(item);
+            });
+
+            if ( level === 1){
+                $("#tasks").height() > 140 ? $("#tasks").css({'max-height': '130px', 'overflow-y': 'scroll'}) : $("#tasks").css({'max-height': '130px', 'overflow-y': 'hidden'});
+            }
+            else {
+                $("#tasks").height() > 70 ? $("#tasks").css({'max-height': '65px', 'overflow-y': 'scroll'}) : $("#tasks").css({'max-height': '65px', 'overflow-y': 'hidden'});
+            }
+
+            $('#tasks').show();
+        } else {
+            $('#tasks').hide();
+        }
+    }
+
+    function updateCashback(money_cashback) {
+        $('#cashback-container #cashback-container-money').text(`${money_cashback}`);
+        $("#cashback").show();
+    }
+
+    function updateProgressBar(progress) {
+        $("#progess-bar-1").css({'width': '0%', 'padding-left': '0px'});
+        $("#progess-bar-2").css({'width': '100%', 'border-radius': '10px 10px 10px 10px'});
+
+        if (progress > 0) {
+            $('#progess-bar-1').text(`${progress}%`);
+            $("#progess-bar-1").css({'width': `${progress}%`, 'padding-right': '8px' });
+            $("#progess-bar-2").css({'width': `${100 - progress}%`, 'border-radius': '0px 10px 10px 0px'});
+        }
+    }
+
+    function updateBenefits(level, data) {
+        $('#benefits-container').html('');
+
+        if (!isEmpty(data)) {
+
+            $.each(data, function (index, value) {
+
+                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
+                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+                                 <p class="m-0">${value.benefit}</p>
+                            </div>`;
+                $('#benefits-container').append(item);
+            });
+
+            if ( level === 2){
+                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+            }
+            else {
+                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
+            }
+
+        }
+    }
+
+    function  nextCard() {
+        $(".card-indicators > .active").on("click", function () {
+            $('.sirius-account > .card').html('');
+            loadingOnAccountsHealth('.sirius-account > .card');
+            let card = $(this).data('slide-to');
+            switch(card) {
+                case 1:
+                    updateAccountHealth();
+                    break;
+                case 2:
+                    updateChargeback();
+                    break;
+                case 3:
+                    updateAttendance();
+                    break;
+                case 4:
+                    updateTracking();
+                    break;
+                default:
+                    alert('deu default');
+            }
+        });
+    }
+
+    function updateAccountHealth() {
+        loadingOnAccountsHealth('.sirius-account > .card');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/dashboard/get-account-health`,
+            dataType: "json",
+            data: {
+                company: $('#company').val(),
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                //loadingOnScreenRemove();
+                loadingOnAccountsHealthRemove('.sirius-loading');
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                let item = `
+                        <div
+                            class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <span class="ml-0">Saúde da Conta</span>
+                            </div>
+                                <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                    <li class="active" data-slide-to="1"></li>
+                                    <li class="" data-slide-to="2"></li>
+                                    <li class="" data-slide-to="3"></li>
+                                    <li class="" data-slide-to="4"></li>
+                                    <i class="o-angle-down-1 control-prev"></i>
+                                    <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
+                                </ol>
+                        </div>
+                        <div class="card-body pt-0 mt-15 d-flex flex-column justify-content-start align-items-start account-health">
+                            <div id="" class="d-flex flex-row justify-content-start align-items-start align-self-start" >
+                                <span id="account-health-chart-gauge" class="mr-15"><img src="/modules/global/adminremark/assets/images/temp.png"></span>
+                                <div class="d-flex flex-column justify-content-center align-self-center">
+                                    <span id="account-health-note"><span class="${scoreInfo[Math.floor(data.score)].textColor}">${data.score}</span>/10</span>
+                                    <p id="account-health-description">${scoreInfo[Math.floor(data.score)].description}</p>
+                                </div>
+                            </div>
+                            <div class="hr-horizontal mt-5 d-flex justify-content-center align-items-center align-self-center"></div>
+                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-around align-items-stretch align-self-stretch" >
+
+                                <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
+                                    <div id="account-health-note-chargebacks" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                        <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
+                                        <span class="account-health-note">${data.chargeback_score}</span>
+                                    </div>
+                                    <span class="account-health-note-description">Chargebacks</span>
+                                </div>
+
+                                <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
+
+                                <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
+                                    <div id="account-health-note-attendance" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                        <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
+                                        <span class="account-health-note">${data.attendance_score}</span>
+                                    </div>
+                                    <span class="account-health-note-description">Atendimento</span>
+                                </div>
+
+                                <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
+
+                                <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
+                                    <div id="account-health-note-tracking" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                        <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
+                                        <span class="account-health-note">${data.tracking_score}</span>
+                                    </div>
+                                    <span class="account-health-note-description">Cod. Rastreio</span>
+                                </div>
+                            </div>
+                            <div class="sirius-account-loading"></div>
+                        </div>
+                `;
+
+
+                $('.sirius-account > .card').append(item);
+                let score = data.score;
+
+                FusionCharts.ready(function(){
+                    //alert(score);
+                    var chartObj = new FusionCharts({
+                            type: 'angulargauge',
+                            renderAt: 'account-health-chart-gauge',
+                            width: '125',
+                            height: '88',
+                            dataFormat: 'json',
+                            dataSource: {
+                                "chart": {
+                                    "lowerLimit": "0",
+                                    "upperLimit": "10",
+                                    "lowerLimitDisplay": "0",
+                                    "upperLimitDisplay": "10",
+                                    //"showValue": "1",
+                                    "valueBelowPivot": "1",
+                                    "theme": "fusion",
+                                    "showTickMarks": "0",
+                                    "showTickValues": "0"
+                                },
+                                "colorRange": {
+                                    "color": [
+                                        {
+                                            "minValue": "0",
+                                            "maxValue": "1.99",
+                                            "code": "#FE330A"
+                                        },
+                                        {
+                                            "minValue": "2",
+                                            "maxValue": "3.99",
+                                            "code": "#FDAD00"
+                                        },
+                                        {
+                                            "minValue": "4",
+                                            "maxValue": "5.99",
+                                            "code": "#F2CB0A"
+                                        },
+                                        {
+                                            "minValue": "6",
+                                            "maxValue": "7.99",
+                                            "code": "#9FCC00"
+                                        },
+                                        {
+                                            "minValue": "8",
+                                            "maxValue": "10",
+                                            "code": "#177401"
+                                        }
+                                    ]
+                                },
+                                "dials": {
+                                    "dial": [
+                                        {
+                                            "value": score,
+                                            "editMode": "1"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    );
+                    chartObj.render();
+                });
+
+                //loadingOnAccountsHealthRemove('.sirius-loading');
+                setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 2000);
+                nextCard();
+            }
+        });
+    }
+
+    function updateChargeback() {
+        loadingOnAccountsHealth('.sirius-account > .card');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/dashboard/get-account-chargeback`,
+            dataType: "json",
+            data: {
+                company: $('#company').val(),
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                //loadingOnScreenRemove();
+                loadingOnAccountsHealthRemove('.sirius-loading');
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                let item = `
+                        <div
+                            class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <span class="ml-0">Chargebacks</span>
+                            </div>
+                                <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                    <li class="" data-slide-to="1"></li>
+                                    <li class="active" data-slide-to="2"></li>
+                                    <li class=""  data-slide-to="3"></li>
+                                    <li class=""  data-slide-to="4"></li>
+                                    <i class="o-angle-down-1 control-prev active" data-slide-to="1"></i>
+                                    <i class="o-angle-down-1 control-next active" data-slide-to="3"></i>
+                                </ol>
+                        </div>
+                        <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
+                            <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
+                                <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
+                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat(data.chargeback_tax).toFixed(2)}%</span>
+                            </div>
+                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="d-flex mr-60 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.total_sales_approved}</span>
+                                        <span class="account-health-note-description">Vendas no cartão</span>
+                                </div>
+                                <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.total_sales_chargeback}</span>
+                                        <span class="account-health-note-description">Chargebacks</span>
+                                </div>
+                            </div>
+                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>
+                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+
+                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
+                            </div>
+                            <div class="sirius-account-loading"></div>
+                        </div>
+                `;
+
+                $('.sirius-account > .card').append(item);
+
+                //$('#account-health-chart-description > div').html('')
+                //    .append(`<span id="account-health-note"><span class="${noteTextColor[Math.floor(data.note)]}">${data.note}</span>/10</span>`)
+                //    .append(`<p id="account-health-description">${noteDescription[Math.floor(data.note)]}</p>`);
+                //--$('#account-health-description span').addClass(noteTextColor[Math.floor(data.note)]);
+
+                // $('#account-health-note-chargebacks').html('').html(`
+                //                                                     <span class="mr-10 ${noteBgColor[Math.floor(data.chargebacks_note)]} account-health-note-circle"></span>
+                //                                                     <span class="account-health-note">${data.chargebacks_note}</span>
+                //                                                 `
+                // );
+                // $('#account-health-note-attendance').html('').html(`
+                //                                                     <span class="mr-10 ${noteBgColor[Math.floor(data.attendance_note)]} account-health-note-circle"></span>
+                //                                                     <span class="account-health-note">${data.attendance_note}</span>
+                //                                                 `
+                // );
+                // $('#account-health-note-tracking').html('').html(`
+                //                                                     <span class="mr-10 ${noteBgColor[Math.floor(data.tracking_note)]} account-health-note-circle"></span>
+                //                                                     <span class="account-health-note">${data.tracking_note}</span>
+                //                                                 `
+                // );
+                // $('#progess-2').text(`NÍVEL ${data.level + 1}`);
+                // $('#progess-2').text(`NÍVEL ${data.level + 1}`);
+                //getChart(response)
+                //loadingOnChartRemove('#chart-loading');
+                //loadingOnAccountsHealthRemove('.sirius-account > .card');
+                setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 2000);
+                nextCard();
+            }
+        });
+    }
+
+    function updateAttendance() {
+        loadingOnAccountsHealth('.sirius-account > .card');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/dashboard/get-account-attendance`,
+            dataType: "json",
+            data: {
+                company: $('#company').val(),
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                //loadingOnScreenRemove();
+                loadingOnAccountsHealthRemove('.sirius-loading');
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                let item = `
+                        <div
+                            class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <span class="ml-0">Atendimento</span>
+                            </div>
+                                <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                    <li class="" data-slide-to="1"></li>
+                                    <li class="" data-slide-to="2"></li>
+                                    <li class="active" data-slide-to="3"></li>
+                                    <li class=""  data-slide-to="4"></li>
+                                    <i class="o-angle-down-1 control-prev active" data-slide-to="2"></i>
+                                    <i class="o-angle-down-1 control-next active" data-slide-to="4"></i>
+                                </ol>
+                        </div>
+                        <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
+                            <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
+                                <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
+                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
+                            </div>
+                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.open || 0}</span>
+                                        <span class="account-health-note-description">Abertos</span>
+                                </div>
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.closed || 0}</span>
+                                        <span class="account-health-note-description">Resolvidos</span>
+                                </div>
+
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.mediation || 0}</span>
+                                        <span class="account-health-note-description">Mediação</span>
+                                </div>
+
+                                <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.total}</span>
+                                        <span class="account-health-note-description">Total</span>
+                                </div>
+
+                            </div>
+                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>
+                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+
+                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
+                            </div>
+                            <div class="sirius-account-loading"></div>
+                        </div>
+                `;
+
+                $('.sirius-account > .card').append(item);
+                setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 2000);
+                nextCard();
+            }
+        });
+    }
+
+    function updateTracking() {
+        loadingOnAccountsHealth('.sirius-account > .card');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/dashboard/get-account-tracking`,
+            dataType: "json",
+            data: {
+                company: $('#company').val(),
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                //loadingOnScreenRemove();
+                loadingOnAccountsHealthRemove('.sirius-loading');
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                let item = `
+                        <div
+                            class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <span class="ml-0">Códigos de Rastreio</span>
+                            </div>
+                                <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                    <li class="" data-slide-to="1"></li>
+                                    <li class="" data-slide-to="2"></li>
+                                    <li class="" data-slide-to="3"></li>
+                                    <li class="active"  data-slide-to="4"></li>
+                                    <i class="o-angle-down-1 control-prev active" data-slide-to="3"></i>
+                                    <i class="o-angle-down-1 control-next" ></i>
+                                </ol>
+                        </div>
+                        <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
+                            <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
+                                <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
+                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.tracking_score)].textColor}">${data.tracking_score}</span>
+                            </div>
+                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.average_post_time} dia${data.average_post_time === 1 ? '' : 's'}</span>
+                                        <span class="account-health-note-description font-size-12">Tempo médio de postagem</span>
+                                </div>
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.oldest_sale} dia${data.oldest_sale === 1 ? '' : 's'}</span>
+                                        <span class="account-health-note-description font-size-12">Venda mais antiga sem código</span>
+                                </div>
+
+                            </div>
+
+
+                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.problem} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
+                                        <span class="account-health-note-description font-size-12">Códigos com problema</span>
+                                </div>
+                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                        <span class="account-health-note">${data.unknown} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
+                                        <span class="account-health-note-description font-size-12">Códigos não informados</span>
+                                </div>
+
+                            </div>
+
+                            <div class="sirius-account-loading"></div>
+                        </div>
+                `;
+
+                $('.sirius-account > .card').append(item);
+                setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 2000);
+                nextCard();
+            }
+        });
+    }
+
+    // function updateChargeback(value) {
+    //     $('.circle').circleProgress({
+    //         size: 125,
+    //         startAngle: -Math.PI / 2,
+    //         value: value / 100,
+    //         fill: {
+    //             gradient: ["#F76B1C", "#FA6161"]
+    //         }
+    //     });
+    //
+    //     $('.circle strong').addClass('loaded')
+    //         .text(parseFloat(value).toFixed(2) + '%');
+    // }
 
     function updateTrackings(trackings) {
         $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));

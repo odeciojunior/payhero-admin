@@ -91,6 +91,38 @@ class DashboardApiController extends Controller
 
     private function getDataValues($companyHash): array
     {
+        return array (
+
+            'available_balance' => '3.637,98',
+            'total_balance' => '161.956,78',
+            'pending_balance' => '74.409,27',
+            'today_balance' => '0,00',
+            'currency' => 'R$',
+            'total_sales_approved' => 41050,
+            'total_sales_chargeback' => '1211',
+            'chargeback_tax' => 2.9500609013398296,
+            'trackings' =>
+                array (
+                    'total' => 55997,
+                    'unknown' => '509',
+                    'problem' => '195',
+                    'average_post_time' => '18',
+                    'oldest_sale' => 439,
+                    'unknown_percentage' => '0.91',
+                    'problem_percentage' => '0.35',
+                ),
+            'tickets' =>
+                array (
+                    'total' => 10544,
+                    'open' => '372',
+                    'closed' => '10128',
+                    'mediation' => '44',
+                ),
+            'blocked_balance' => '83.909,53',
+            'blocked_balance_invite' => '0,00',
+            'blocked_balance_pending' => '149,47',
+            'blocked_balance_total' => '84.059,00',
+        );
         try {
             if (empty($companyHash)) {
                 return [];
@@ -211,6 +243,17 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
+                'level_icon' => 'https://img2.gratispng.com/20180404/zse/kisspng-talisman-shendu-fan-art-cartoon-magic-jackie-chan-5ac4b2dd65f083.4597969715228402854176.jpg',
+                'level_description' => 'Aventureiro',
+                'level' => 'Nível 2' ? 'Pronto para começar?' : 'Nível 2',
+                'achievements' => [
+                    [
+                        'icon' => 'https://img2.gratispng.com/20180516/sre/kisspng-talisman-adventure-film-rooster-animated-series-5afc2c88aedca1.4754026115264759127162.jpg',
+                    ],
+                    [
+                        'icon' => 'https://img2.gratispng.com/20180516/sre/kisspng-talisman-adventure-film-rooster-animated-series-5afc2c88aedca1.4754026115264759127162.jpg',
+                    ],
+                ],
                 'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                 'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                 'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
@@ -310,5 +353,321 @@ class DashboardApiController extends Controller
         $data = $reportService->getDashboardChartData($companyId);
 
         return response()->json($data, Response::HTTP_OK);
+    }
+
+    public  function getPerformace(Request $request): JsonResponse
+    {
+        try {
+            if ($request->has('company') && !empty($request->input('company'))) {
+                $values = $this->getDataPerformace($request->company);
+
+                if ($values) {
+                    return response()->json($values, 200);
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
+    private function getDataPerformace($companyHash): array
+    {
+        return array (
+            'level' => 1,
+            'achievements' =>
+                array (
+                    0,
+                    1,
+                    2,
+                    3
+                ),
+            'tasks' =>
+                array (
+                    0 =>
+                        array (
+                            'task' => 'Tenha seus documentos aprovados',
+                            'status' => 1,
+                        ),
+                    1 =>
+                        array (
+                            'task' => 'Cadastre sua primeira loja',
+                            'status' => 0,
+                        ),
+                    2 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                    3 =>
+                        array (
+                            'task' => 'Fature R$1.000 (R$0 / R$1000)',
+                            'status' => 0,
+                        ),
+                    4 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                    5 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                    6 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                    7 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                    8 =>
+                        array (
+                            'task' => 'Faça sua primeira venda',
+                            'status' => 0,
+                        ),
+                ),
+            'progress' => '80',
+            'benefits' =>
+                array (
+                    0 =>
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => 'Cashback de 0,5%',
+                            'status' => 1,
+                        ),
+                    1 =>
+                        array (
+                            'card' => 'NÍVEL 3',
+                            'benefit' => 'Recebimentos mais rápidos',
+                            'status' => 0,
+                        ),
+//                    2 =>
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Gerente de Contas',
+//                            'status' => 0,
+//                        ),
+//                    3 =>
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Gerente de Contas',
+//                            'status' => 0,
+//                        ),
+                ),
+            'money_cashback' => '95,66',
+        );
+    }
+
+    public  function getAccountHealth(Request $request): JsonResponse
+    {
+        try {
+            if ($request->has('company') && !empty($request->input('company'))) {
+                $values = $this->getDataAccountHealth($request->company);
+
+                if ($values) {
+                    return response()->json($values, 200);
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
+    private function getDataAccountHealth($companyHash): array
+    {
+        return array (
+            'level' => 1,
+            'score' => '1.5',
+            'chargeback_score' => '7.9',
+            'attendance_score' => '8',
+            'tracking_score' => '10',
+        );
+    }
+
+    public  function getAccountChargeback(Request $request): JsonResponse
+    {
+        try {
+            if ($request->has('company') && !empty($request->input('company'))) {
+                $values = $this->getDataAccountChargeback($request->company);
+
+                if ($values) {
+                    return response()->json($values, 200);
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
+    private function getDataAccountChargeback($companyHash): array
+    {
+        return array (
+            'chargeback_score' => '7.9',
+            'chargeback_tax' => '2.962099691650278',
+            'total_sales_approved' => '1.522', //'41187',
+            'total_sales_chargeback' => '1220',
+        );
+    }
+
+    public  function getAccountAttendance(Request $request): JsonResponse
+    {
+        try {
+            if ($request->has('company') && !empty($request->input('company'))) {
+                $values = $this->getDataAccountAttendance($request->company);
+
+                if ($values) {
+                    return response()->json($values, 200);
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
+    private function getDataAccountAttendance($companyHash): array
+    {
+        return array (
+            'attendance_score' => '8.1',
+            'total' => '10688',
+            'open' => '250',
+            'closed' => '10411',
+            'mediation' => '27',
+        );
+    }
+
+    public  function getAccountTracking(Request $request): JsonResponse
+    {
+        try {
+            if ($request->has('company') && !empty($request->input('company'))) {
+                $values = $this->getDataAccountTracking($request->company);
+
+                if ($values) {
+                    return response()->json($values, 200);
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
+                }
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
+    private function getDataAccountTracking($companyHash): array
+    {
+        return array (
+            'tracking_score' => '10',
+            'average_post_time' => '18',
+            'oldest_sale' => '448',
+            'problem' => '195',
+            'problem_percentage' => '0.35',
+            'unknown' => '618',
+            'unknown_percentage' => '1.10',
+        );
     }
 }

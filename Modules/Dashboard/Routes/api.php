@@ -15,5 +15,11 @@ Route::group(
         Route::get('/dashboard/get-releases', 'DashboardApiController@getReleases');
         Route::get('/dashboard/get-chart-data', 'DashboardApiController@getChartData');
         Route::get('/dashboard/verifypendingdata', 'DashboardApiController@verifyPendingData');
+
+        Route::post('/dashboard/get-performace', 'DashboardApiController@getPerformace');
+        Route::get('/dashboard/get-account-health', 'DashboardApiController@getAccountHealth');
+        Route::get('/dashboard/get-account-chargeback', 'DashboardApiController@getAccountChargeback');
+        Route::get('/dashboard/get-account-attendance', 'DashboardApiController@getAccountAttendance');
+        Route::get('/dashboard/get-account-tracking', 'DashboardApiController@getAccountTracking');
     }
 );
