@@ -140,55 +140,49 @@ $(function () {
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
-                    $("#modal-edit-pixel #google-analytics-info,#modal-edit-pixel #meta-tag-facebook").hide();
-                    $("#modal-edit-pixel #outbrain-info-edit").hide();
+                    $("#modal-edit-pixel #input-code-pixel-edit, #modal-edit-pixel #meta-tag-facebook,#modal-edit-pixel .purchase-event-name-div").hide();
 
                     if (value === 'facebook') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #meta-tag-facebook").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #google-analytics-info").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
                     } else if (value === 'google_analytics_four') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
+                    } else if (value === 'taboola') {
+                        $("#modal-edit-pixel .purchase-event-name-div").show();
                     } else if (value === 'outbrain') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
-                        $("#modal-edit-pixel #outbrain-info-edit").show();
+                        $("#modal-edit-pixel .purchase-event-name-div").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                     }
                 });
 
+                $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                 if (pixel.platform === 'facebook') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #meta-tag-facebook").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                 } else if (pixel.platform === 'google_adwords') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                 } else if (pixel.platform === 'google_analytics_four') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                 } else if (pixel.platform === 'google_analytics') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
+                } else if (pixel.platform === 'taboola') {
+                    $("#modal-edit-pixel .purchase-event-name-div").show();
                 } else if (pixel.platform === 'outbrain') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
-                    $("#modal-edit-pixel #outbrain-info-edit").show();
+                    $("#modal-edit-pixel .purchase-event-name-div").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                 } else {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                 }
             }
@@ -215,11 +209,11 @@ $(function () {
         }
         if (pixel.platform == 'taboola') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 4).change();
-            $("#modal-edit-pixel .purchase-event-name").val(pixel.taboola_conversion_name);
+            $("#modal-edit-pixel .purchase-event-name").val(pixel.purchase_event_name);
         }
         if (pixel.platform == 'outbrain') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 5).change();
-            $("#modal-edit-pixel .purchase-event-name").val(pixel.outbrain_conversion_name);
+            $("#modal-edit-pixel .purchase-event-name").val(pixel.purchase_event_name);
         }
 
         if (pixel.status == '1') { //Ativo
@@ -331,7 +325,8 @@ $(function () {
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
                 purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val(),
                 edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val(),
-                code_meta_tag_facebook: $("#modal-edit-pixel #code_meta_tag_facebook").val()
+                code_meta_tag_facebook: $("#modal-edit-pixel #code_meta_tag_facebook").val(),
+                purchase_event_name: $("#modal-edit-pixel .purchase-event-name").val(),
             },
             error: function (response) {
                 loadingOnScreenRemove();

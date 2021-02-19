@@ -16,12 +16,9 @@ class AddColumnsToTablePixels extends Migration
         Schema::table(
             'pixels',
             function (Blueprint $table) {
-                $table->string('outbrain_conversion_name')->default('Purchase')->nullable()->after(
-                    'code_meta_tag_facebook'
-                );
-                $table->string('taboola_conversion_name')->default('make_purchase')->nullable()->after(
-                    'outbrain_conversion_name'
-                );
+                $table->string('purchase_event_name')
+                    ->nullable()
+                    ->after('code_meta_tag_facebook');
             }
         );
     }
@@ -36,7 +33,7 @@ class AddColumnsToTablePixels extends Migration
         Schema::table(
             'pixels',
             function (Blueprint $table) {
-                $table->dropColumn(['outbrain_conversion_name', 'taboola_conversion_name']);
+                $table->dropColumn(['purchase_event_name']);
             }
         );
     }

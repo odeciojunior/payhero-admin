@@ -19,8 +19,7 @@ class PixelEditResource extends JsonResource
             'purchase_card' => $this->purchase_card,
             'apply_on_plans' => $this->apply_on_plans,
             'code_meta_tag_facebook' => $this->code_meta_tag_facebook,
-            'outbrain_conversion_name' => $this->outbrain_conversion_name,
-            'taboola_conversion_name' => $this->taboola_conversion_name,
+            'purchase_event_name' => $this->purchase_event_name,
         ];
     }
 }
