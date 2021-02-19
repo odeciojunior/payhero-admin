@@ -47,15 +47,16 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property string $shopify_discount
  * @property string $dolar_quotation
  * @property boolean $first_confirmation
- * @property string $created_at
- * @property string $deleted_at
- * @property string $updated_at
  * @property int $attempts
  * @property string $gateway_card_flag
  * @property float $gateway_tax_percent
  * @property integer $gateway_tax_value
  * @property boolean $has_valid_tracking
+ * @property boolean $has_order_bump
  * @property string $observation
+ * @property string $created_at
+ * @property string $deleted_at
+ * @property string $updated_at
  * @property Checkout $checkout
  * @property Project $project
  * @property Shipping $shipping
@@ -154,6 +155,7 @@ class Sale extends Model
         'is_chargeback',
         'is_chargeback_recovered',
         'has_valid_tracking',
+        'has_order_bump',
         'observation',
     ];
     /**
