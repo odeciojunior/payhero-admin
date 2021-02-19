@@ -681,6 +681,7 @@ $(() => {
         loadingOnScreen();
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
+        $('#terms_affiliates').val($('#termsaffiliates').val());
         let verify = verificaParcelas(parcelas, parcelasJuros);
         let statusUrlAffiliates = 0;
         if ($('#status-url-affiliates').prop('checked')) {
