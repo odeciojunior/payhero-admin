@@ -50,6 +50,16 @@
                                placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255' aria-describedby="input-code-pixel">
                     </div>
                 </div>
+                {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
+                <div class="row purchase-event-name-div" style="display:none;">
+                    <div class="form-group col-12 my-20">
+                        <label for="purchase-event-name">Nome Evento Conversão </label>
+                        <input name="purchase-event-name" type="text"
+                               class="form-control pixel-code purchase-event-name"
+                               placeholder="Purchase" maxlength='255' aria-describedby="purchase-event-name">
+                    </div>
+                </div>
+                {{-- END INPUT NAME PURCHASE EVENT TABOOLA --}}
                 <div class="row">
                     <div class='form-group col-12'>
                         <label for="edit_pixel_plans">Executar no(s) plano(s)</label>
