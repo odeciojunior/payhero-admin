@@ -43,7 +43,7 @@ $(function () {
         console.log(value);
         if (value == 'facebook') {
             $("#meta-tag-facebook").show();
-        }else if (value == 'taboola'){
+        } else if (['taboola', 'outbrain'].includes(value)) {
             $(".purchase-event-name-div").show();
         }
     });
@@ -68,9 +68,10 @@ $(function () {
             $("#google-analytics-info").show();
             $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
         } else if (value === 'taboola') {
+            $("#code-pixel").attr("placeholder", '1010100');
             $(".purchase-event-name-div").show();
         } else if (value === 'outbrain') {
-            $("#outbrain-info").show();
+            $(".purchase-event-name-div").show();
             $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
         } else {
             $("#code-pixel").attr("placeholder", 'Código');
@@ -444,10 +445,10 @@ $(function () {
                     } else if (value === 'google_analytics_four') {
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                     } else if (value === 'taboola') {
-                        console.log('aqui');
                         $(".purchase-event-name-div").show();
                         $("#code-pixel").attr("placeholder", '1010100');
                     } else if (value === 'outbrain') {
+                        $(".purchase-event-name-div").show();
                         $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
                         $("#code-pixel").attr("placeholder", 'Código');

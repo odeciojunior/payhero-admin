@@ -28,8 +28,7 @@ class PixelUpdateRequest extends FormRequest
             'project_id' => 'nullable',
             'campaign' => 'nullable',
             'code_meta_tag_facebook' => 'nullable|string|max:255',
-            'outbrain_conversion_name' => 'nullable|string|max:255',
-            'taboola_conversion_name' => 'nullable|string|max:255',
+            'purchase_event_name' => 'required_if:platform,taboola,outbrain|max:255',
         ];
     }
 

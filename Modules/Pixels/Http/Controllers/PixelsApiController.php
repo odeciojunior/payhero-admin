@@ -114,6 +114,8 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
+            $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
+
             $pixel = $pixelModel->create(
                 [
                     'project_id' => $validator['project_id'],
@@ -127,11 +129,10 @@ class PixelsApiController extends Controller
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
-                    'purchase_event_name' => $validator['purchase-event-name']
+                    'purchase_event_name' => $codeMetaTag
                 ]
             );
 
-            $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
 
             if (!empty($codeMetaTag)) {
                 (new PixelService())->updateCodeMetaTagFacebook($project->id, $codeMetaTag);
@@ -190,11 +191,11 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
-            if ($pixel->platform == 'taboola' && empty($validated['taboola_conversion_name'] && empty($pixel->taboola_conversion_name))) {
-                $validated['taboola_conversion_name'] = 'make_purchase';
+            if ($pixel->platform == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
+                $validated['purchase_event_name'] = 'make_purchase';
             }
-            if ($pixel->platform == 'outbrain' && empty($validated['outbrain_conversion_name']) && empty($pixel->outbrain_conversion_name)) {
-                $validated['outbrain_conversion_name'] = 'Purchase';
+            if ($pixel->platform == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
+                $validated['purchase_event_name'] = 'Purchase';
             }
 
             $pixelUpdated = $pixel->update(
@@ -207,8 +208,7 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
                     'purchase_card' => $validated['purchase_card'],
-                    'taboola_conversion_name' => !empty($validated['taboola_conversion_name']) ? $validated['taboola_conversion_name'] : 'make_purchase',
-                    'outbrain_conversion_name' => !empty($validated['outbrain_conversion_name']) ? $validated['outbrain_conversion_name'] : 'Purchase'
+                    'purchase_event_name' => $validated['purchase_event_name'] ?? null
                 ]
             );
             if ($pixelUpdated) {
