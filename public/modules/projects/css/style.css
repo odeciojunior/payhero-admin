@@ -228,6 +228,10 @@
     margin-right: 0 !important;
 }
 
+.ck-editor__editable_inline {
+    min-height: 150px;
+}
+
 @media (min-width: 768px) {
     .s-control-magin {
         margin-top: calc(10% - 10px) !important;

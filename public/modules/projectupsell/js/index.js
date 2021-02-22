@@ -1,11 +1,32 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     let countdownInterval = null;
+    let descriptionconfig;
+
+    ClassicEditor
+        .create( document.querySelector( '#description_config' ), {
+            language: 'pt-br',
+            uiColor: '#F1F4F5',
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic','|',
+                'fontSize', 'italic','|',
+                'link', '|',
+                'undo', 'redo'
+            ]
+        })
+        .then( newEditor => {
+            descriptionconfig = newEditor;
+        })
+        .catch( error => {
+            console.error( error );
+        } );
 
     $('.tab_upsell').on('click', function () {
         loadUpsell();
         $(this).off();
     })
+
     function loadUpsell() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -329,7 +350,7 @@ $(document).ready(function () {
                 let upsellConfig = response.data;
                 $('#header_config').val(`${upsellConfig.header}`);
                 $('#title_config').val(`${upsellConfig.title}`);
-                $('#description_config').val(`${upsellConfig.description}`);
+                descriptionconfig.setData(`${upsellConfig.description ?? ' '}`);
                 $('#countdown_time').val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
@@ -353,7 +374,7 @@ $(document).ready(function () {
         }
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_config_upsell'));
-        let description = $('#description_config').val();
+        let description = descriptionconfig.getData();
         form_data.set('description', description);
 
         $.ajax({

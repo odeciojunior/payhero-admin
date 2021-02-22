@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=04') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=05') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -290,6 +290,10 @@
 
     @push('scripts')
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
@@ -302,8 +306,6 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
     @endpush
 @endsection
 
