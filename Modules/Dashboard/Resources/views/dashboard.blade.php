@@ -123,7 +123,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="row">
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0">
-                            <div class="card mb-10 card-shadow bg-white w-full performace-card">
+                            <div class="card card-shadow bg-white w-full performace-card">
                                 <div
                                     class="card-chargeback card-header mt-10 pb-0 d-flex justify-content-start align-items-center bg-white">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -263,8 +263,10 @@
     </div>
 
     @push('scripts')
-        <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
-        <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+{{--        <script type="text/javascript" src=https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>--}}
+{{--        <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>--}}
+
+        <script src='{{ asset('modules/dashboard/js/gauge.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>

@@ -155,7 +155,7 @@ body {
     /*height: 500px;*/
     /*height: 798px;*/
     /*height: 638px;*/
-    height: 530px;
+    height: 510px;
 }
 
 .page.dashboard .sirius-card {
@@ -634,14 +634,59 @@ body {
 
 .bg-color-red {
     background: #FE330A;
+    -webkit-animation: ripple-red .7s linear infinite;
+    animation: ripple-red .7s linear infinite;
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
+}
+
+@-webkit-keyframes ripple-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(254, 51, 10, 0.3), 0 0 0 5px rgba(254, 51, 10, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(254, 51, 10, 0.3), 0 0 0 15px rgba(254, 51, 10, 0);
+    }
+}
+
+@keyframes ripple-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(254, 51, 10, 0.3), 0 0 0 5px rgba(253, 173, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(253, 173, 0, 0.3), 0 0 0 15px rgba(254, 51, 10, 0);
+    }
 }
 
 .text-color-orange {
     color: #FDAD00;
 }
 
+
 .bg-color-orange {
     background: #FDAD00;
+    -webkit-animation: ripple-orange .7s linear infinite;
+    animation: ripple-orange .7s linear infinite;
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
+}
+
+@-webkit-keyframes ripple-orange {
+    0% {
+        box-shadow: 0 0 0 0 rgba(253, 173, 0, 0.3), 0 0 0 5px rgba(253, 173, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(253, 173, 0, 0.3), 0 0 0 15px rgba(253, 173, 0, 0);
+    }
+}
+
+@keyframes ripple-orange {
+    0% {
+        box-shadow: 0 0 0 0 rgba(253, 173, 0, 0.3), 0 0 0 5px rgba(253, 173, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(253, 173, 0, 0.3), 0 0 0 15px rgba(253, 173, 0, 0);
+    }
 }
 
 .text-color-yellow {
@@ -650,6 +695,28 @@ body {
 
 .bg-color-yellow {
     background: #F2CB0A;
+    -webkit-animation: ripple-yellow .7s linear infinite;
+    animation: ripple-yellow .7s linear infinite;
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
+}
+
+@-webkit-keyframes ripple-yellow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(242, 203, 10, 0.3), 0 0 0 5px rgba(242, 203, 10, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(242, 203, 10, 0.3), 0 0 0 15px rgba(242, 203, 10, 0);
+    }
+}
+
+@keyframes ripple-yellow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(242, 203, 10, 0.3), 0 0 0 5px rgba(242, 203, 10, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(242, 203, 10, 0.3), 0 0 0 15px rgba(242, 203, 10, 0);
+    }
 }
 
 .text-color-green {
@@ -658,6 +725,28 @@ body {
 
 .bg-color-green {
     background: #9FCC00;
+    -webkit-animation: ripple-green .7s linear infinite;
+    animation: ripple-green .7s linear infinite;
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
+}
+
+@-webkit-keyframes ripple-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(159, 204, 0, 0.3), 0 0 0 5px rgba(159, 204, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(159, 204, 0, 0.3), 0 0 0 15px rgba(159, 204, 0, 0);
+    }
+}
+
+@keyframes ripple-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(159, 204, 0, 0.3), 0 0 0 5px rgba(159, 204, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(159, 204, 0, 0.3), 0 0 0 15px rgba(159, 204, 0, 0);
+    }
 }
 
 .text-color-dark-green {
@@ -666,20 +755,36 @@ body {
 
 .bg-color-dark-green {
     background: #177401;
+    -webkit-animation: ripple-dark-green .7s linear infinite;
+    animation: ripple-dark-green .7s linear infinite;
+    -webkit-animation-delay: 3s;
+    animation-delay: 3s;
 }
 
+@-webkit-keyframes ripple-dark-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(23, 116, 1, 0.3), 0 0 0 5px rgba(253, 173, 0, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(23, 116, 1, 0.3), 0 0 0 15px rgba(23, 116, 1, 0);
+    }
+}
 
-/*#account-health-chart-gauge> img {*/
-/*    min-width: 125px;*/
-/*    min-height: 88px;*/
-/*    max-width: 125px;*/
-/*    max-height: 88px;*/
-/*    background: #FFFFFF no-repeat center;*/
-/*    background-size: cover;*/
-/*    -webkit-background-size: cover;*/
-/*    -moz-background-size: cover;*/
-/*    -o-background-size: cover;*/
-/*}*/
+@keyframes ripple-dark-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(23, 116, 1, 0.3), 0 0 0 5px rgba(23, 116, 1, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(23, 116, 1, 0.3), 0 0 0 15px rgba(23, 116, 1, 0);
+    }
+}
+
+#account-health-chart-gauge {
+    min-width: 125px;
+    min-height: 88px;
+    max-width: 125px;
+    max-height: 88px;
+}
 
 #account-health-note {
     font-size: 14.5px;
@@ -703,36 +808,15 @@ body {
 }
 
 #card-notes {
-    height: 48px;
+    max-height: 48px;
 }
 
-.account-health-note-circle{
+.account-health-note-circle {
     width: 12px;
     height: 12px;
-    /*opacity: 0.23;*/
     border-radius: 100%;
-    /*position: relative;*/
-    /*background-color: rgba(255, 255, 255, 0.23);*/
-    /*box-shadow: 0px 1px 5px;*/
+    content: "";
 }
-
-/*.account-health-circle-note > div {*/
-/*    width: 16px;*/
-/*    height: 16px;*/
-/*    !*opacity: 0.44;*!*/
-/*    border-radius: 100%;*/
-/*    position: absolute;*/
-/*    background-color: rgba(255, 255, 255, 0.44);*/
-/*}*/
-
-/*.account-health-circle-note > div > div {*/
-/*    width: 10px;*/
-/*    height: 10px;*/
-/*    !*opacity: 1;*!*/
-/*    border-radius: 100%;*/
-/*    background-color: rgba(255, 255, 255, 1);*/
-/*}*/
-
 
 .account-health-note {
     font-size: 20px;

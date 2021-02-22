@@ -91,38 +91,6 @@ class DashboardApiController extends Controller
 
     private function getDataValues($companyHash): array
     {
-        return array (
-
-            'available_balance' => '3.637,98',
-            'total_balance' => '161.956,78',
-            'pending_balance' => '74.409,27',
-            'today_balance' => '0,00',
-            'currency' => 'R$',
-            'total_sales_approved' => 41050,
-            'total_sales_chargeback' => '1211',
-            'chargeback_tax' => 2.9500609013398296,
-            'trackings' =>
-                array (
-                    'total' => 55997,
-                    'unknown' => '509',
-                    'problem' => '195',
-                    'average_post_time' => '18',
-                    'oldest_sale' => 439,
-                    'unknown_percentage' => '0.91',
-                    'problem_percentage' => '0.35',
-                ),
-            'tickets' =>
-                array (
-                    'total' => 10544,
-                    'open' => '372',
-                    'closed' => '10128',
-                    'mediation' => '44',
-                ),
-            'blocked_balance' => '83.909,53',
-            'blocked_balance_invite' => '0,00',
-            'blocked_balance_pending' => '149,47',
-            'blocked_balance_total' => '84.059,00',
-        );
         try {
             if (empty($companyHash)) {
                 return [];
@@ -243,17 +211,6 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'level_icon' => 'https://img2.gratispng.com/20180404/zse/kisspng-talisman-shendu-fan-art-cartoon-magic-jackie-chan-5ac4b2dd65f083.4597969715228402854176.jpg',
-                'level_description' => 'Aventureiro',
-                'level' => 'Nível 2' ? 'Pronto para começar?' : 'Nível 2',
-                'achievements' => [
-                    [
-                        'icon' => 'https://img2.gratispng.com/20180516/sre/kisspng-talisman-adventure-film-rooster-animated-series-5afc2c88aedca1.4754026115264759127162.jpg',
-                    ],
-                    [
-                        'icon' => 'https://img2.gratispng.com/20180516/sre/kisspng-talisman-adventure-film-rooster-animated-series-5afc2c88aedca1.4754026115264759127162.jpg',
-                    ],
-                ],
                 'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                 'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                 'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
@@ -328,20 +285,6 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getReleases(): JsonResponse
-    {
-        $releasesData = settings()->group('dashboard_releases')->all(true);
-        $releases = [];
-        foreach ($releasesData as $key => $value) {
-            $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json(
-            [
-                'releases' => $releases,
-            ]
-        );
-    }
 
     public function getChartData(Request $request)
     {
@@ -451,34 +394,34 @@ class DashboardApiController extends Controller
                         ),
                 ),
             'progress' => '80',
-            'benefits' =>
-                array (
-                    0 =>
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => 'Cashback de 0,5%',
-                            'status' => 1,
-                        ),
-                    1 =>
-                        array (
-                            'card' => 'NÍVEL 3',
-                            'benefit' => 'Recebimentos mais rápidos',
-                            'status' => 0,
-                        ),
-//                    2 =>
+//            'benefits' =>
+//                array (
+//                    0 =>
 //                        array (
 //                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
-//                            'status' => 0,
+//                            'benefit' => 'Cashback de 0,5%',
+//                            'status' => 1,
 //                        ),
-//                    3 =>
+//                    1 =>
 //                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
+//                            'card' => 'NÍVEL 3',
+//                            'benefit' => 'Recebimentos mais rápidos',
 //                            'status' => 0,
 //                        ),
-                ),
-            'money_cashback' => '95,66',
+////                    2 =>
+////                        array (
+////                            'card' => 'NÍVEL 2',
+////                            'benefit' => 'Gerente de Contas',
+////                            'status' => 0,
+////                        ),
+////                    3 =>
+////                        array (
+////                            'card' => 'NÍVEL 2',
+////                            'benefit' => 'Gerente de Contas',
+////                            'status' => 0,
+////                        ),
+//                ),
+//            'money_cashback' => '95,66',
         );
     }
 
@@ -520,13 +463,32 @@ class DashboardApiController extends Controller
 
     private function getDataAccountHealth($companyHash): array
     {
-        return array (
-            'level' => 1,
-            'score' => '1.5',
-            'chargeback_score' => '7.9',
-            'attendance_score' => '8',
-            'tracking_score' => '10',
-        );
+        try {
+            if (empty($companyHash)) {
+                return [];
+            }
+            $companyModel = new Company();
+            $companyId = current(Hashids::decode($companyHash));
+            $company = $companyModel->find($companyId);
+            $user = $company->user;
+
+            if (empty($company)) {
+                return [];
+            }
+
+            return array (
+                'level' => $user->level,
+                'account_score' => $user->account_score,
+                'chargeback_score' => $user->chargeback_score,
+                'attendance_score' => $user->attendance_score,
+                'tracking_score' => $user->tracking_score,
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
+        }
+
     }
 
     public  function getAccountChargeback(Request $request): JsonResponse
@@ -567,12 +529,55 @@ class DashboardApiController extends Controller
 
     private function getDataAccountChargeback($companyHash): array
     {
-        return array (
-            'chargeback_score' => '7.9',
-            'chargeback_tax' => '2.962099691650278',
-            'total_sales_approved' => '1.522', //'41187',
-            'total_sales_chargeback' => '1220',
-        );
+
+        try {
+            if (empty($companyHash)) {
+                return [];
+            }
+
+            $companyModel = new Company();
+            $saleModel = new Sale();
+            $companyId = current(Hashids::decode($companyHash));
+            $company = $companyModel->find($companyId);
+            $user = $company->user;
+            $userId = auth()->user()->account_owner_id;
+
+            if (empty($company)) {
+                return [];
+            }
+
+            //Chargeback
+            $chargebackData = $saleModel->selectRaw(
+                "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
+                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
+            )
+                ->where('payment_method', 1)
+                ->where('owner_id', $userId)
+                ->whereHas(
+                    'transactions',
+                    function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    }
+                )
+                ->first();
+
+            $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
+            $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
+
+            return [
+                'chargeback_score' => $user->chargeback_score,
+                'chargeback_rate' => $user->chargeback_rate ?? "0.00%",
+                //'chargeback_tax' => $chargebackTax ?? "0.00%",
+                'total_sales_approved' => $totalSalesApproved ?? 0,
+                'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
+
+            ];
+
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
+        }
     }
 
     public  function getAccountAttendance(Request $request): JsonResponse
@@ -613,13 +618,50 @@ class DashboardApiController extends Controller
 
     private function getDataAccountAttendance($companyHash): array
     {
-        return array (
-            'attendance_score' => '8.1',
-            'total' => '10688',
-            'open' => '250',
-            'closed' => '10411',
-            'mediation' => '27',
-        );
+        try {
+            if (empty($companyHash)) {
+                return [];
+            }
+            $companyModel = new Company();
+            $ticketsModel = new Ticket();
+            $companyId = current(Hashids::decode($companyHash));
+            $company = $companyModel->find($companyId);
+            $user = $company->user;
+            $userId = auth()->user()->account_owner_id;
+
+            if (empty($company)) {
+                return [];
+            }
+
+            //Tickets
+            $statusArray = [
+                $ticketsModel->present()->getTicketStatusEnum('open'),
+                $ticketsModel->present()->getTicketStatusEnum('closed'),
+                $ticketsModel->present()->getTicketStatusEnum('mediation'),
+            ];
+
+            $tickets = $ticketsModel->selectRaw(
+                "count(*) as total,
+                 sum(case when ticket_status_enum = ? then 1 else 0 end) as open,
+                 sum(case when ticket_status_enum = ? then 1 else 0 end) as closed,
+                 sum(case when ticket_status_enum = ? then 1 else 0 end) as mediation",
+                $statusArray
+            )->join('sales', 'tickets.sale_id', '=', 'sales.id')
+                ->where('sales.owner_id', $userId)
+                ->first();
+
+            return [
+                'attendance_score' => $user->attendance_score,
+                'total' => $tickets->total,
+                'open' => $tickets->open,
+                'closed' => $tickets->closed,
+                'mediation' => $tickets->mediation,
+            ];
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
+        }
     }
 
     public  function getAccountTracking(Request $request): JsonResponse
@@ -660,14 +702,71 @@ class DashboardApiController extends Controller
 
     private function getDataAccountTracking($companyHash): array
     {
-        return array (
-            'tracking_score' => '10',
-            'average_post_time' => '18',
-            'oldest_sale' => '448',
-            'problem' => '195',
-            'problem_percentage' => '0.35',
-            'unknown' => '618',
-            'unknown_percentage' => '1.10',
-        );
+        try {
+            if (empty($companyHash)) {
+                return [];
+            }
+            $companyModel = new Company();
+            $saleModel = new Sale();
+            $companyId = current(Hashids::decode($companyHash));
+            $company = $companyModel->find($companyId);
+            $user = $company->user;
+            $userId = auth()->user()->account_owner_id;
+
+            if (empty($company)) {
+                return [];
+            }
+
+            //Trackings
+            $trackingPresenter = (new Tracking())->present();
+            $trackingSystemStatus = [
+                $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                $trackingPresenter->getSystemStatusEnum('duplicated'),
+            ];
+            $trackingSystemStatus = implode(',', $trackingSystemStatus);
+
+            $trackingsInfo = DB::table("products_plans_sales as pps")
+                ->selectRaw(
+                    "count(*) as total,
+                                               ifnull(sum(if(t.id is null, 1, 0)), 0) as unknown,
+                                               ifnull(sum(if(t.system_status_enum in ({$trackingSystemStatus}), 1, 0)), 0) as problem,
+                                               ifnull(ceil(avg(timestampdiff(day, s.end_date, t.created_at))), 0) as average_post_time,
+                                               ifnull(max(if(t.id is null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale"
+                )
+                ->join('sales as s', 's.id', '=', 'pps.sale_id')
+                ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
+                ->leftJoin('products as p', 'p.id', '=', 'pps.product_id')
+                ->where('s.owner_id', $userId)
+                ->where('s.status', $saleModel->present()->getStatus('approved'))
+                ->where('p.type_enum', (new Product)->present()->getType('physical'))
+                ->first();
+
+            $trackingsInfo->unknown_percentage = $trackingsInfo->total ? number_format(
+                $trackingsInfo->unknown / $trackingsInfo->total * 100,
+                2
+            ) : '0.00';
+            $trackingsInfo->problem_percentage = $trackingsInfo->total ? number_format(
+                $trackingsInfo->problem / $trackingsInfo->total * 100,
+                2
+            ) : '0.00';
+
+
+            return [
+                'tracking_score' => $user->tracking_score,
+                'average_post_time' => $trackingsInfo->average_post_time,
+                'oldest_sale' => $trackingsInfo->oldest_sale,
+                'problem' => $trackingsInfo->problem,
+                'problem_percentage' => $trackingsInfo->problem_percentage,
+                'unknown' => $trackingsInfo->unknown,
+                'unknown_percentage' => $trackingsInfo->unknown_percentage,
+                'trackings' => $trackingsInfo,
+            ];
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
+        }
     }
 }
