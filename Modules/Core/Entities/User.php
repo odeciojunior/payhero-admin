@@ -165,17 +165,17 @@ class User extends Authenticable
     protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
 
     /**
-     * @param  Activity  $activity
-     * @param  string  $eventName
+     * @param Activity $activity
+     * @param string $eventName
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Usuário '.$this->name.' foi deletedo.';
+            $activity->description = 'Usuário ' . $this->name . ' foi deletado.';
         } elseif ($eventName == 'updated') {
-            $activity->description = 'Usuário '.$this->name.' foi atualizado.';
+            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
         } elseif ($eventName == 'created') {
-            $activity->description = 'Usuário '.$this->name.' foi criado.';
+            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
         } else {
             $activity->description = $eventName;
         }
@@ -318,7 +318,7 @@ class User extends Authenticable
     }
 
     /**
-     * @param  string  $token
+     * @param string $token
      */
     public function sendPasswordResetNotification($token)
     {
@@ -362,7 +362,12 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(Task::class);
+        return $this->belongsToMany(
+            Task::class,
+            'tasks_users',
+            'user_id',
+            'task_id'
+        );
     }
 
     /**

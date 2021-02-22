@@ -394,7 +394,7 @@ class DashboardApiController extends Controller
     private function getDataPerformace($companyHash): array
     {
         return array (
-            'level' => 1,
+            'level' => 2,
             'achievements' =>
                 array (
                     0,
