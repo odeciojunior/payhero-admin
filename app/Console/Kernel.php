@@ -107,6 +107,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('redis:update-sale-tracking')->hourly();
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
+
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('09:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
     }
 
     /**

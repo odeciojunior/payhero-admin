@@ -1,5 +1,27 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
+
+    let termsaffiliates;
+
+    ClassicEditor
+        .create( document.querySelector( '#termsaffiliates' ), {
+            language: 'pt-br',
+            uiColor: '#F1F4F5',
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic','|',
+                'link', '|',
+                'undo', 'redo'
+            ]
+        })
+        .then( newEditor => {
+            termsaffiliates = newEditor;
+        })
+        .catch( error => {
+            console.error( error );
+        } );
+
+
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
 
     // COMPORTAMENTOS DA TELA
@@ -274,7 +296,7 @@ $(() => {
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
-        $('#termsaffiliates').val(project.terms_affiliates);
+        termsaffiliates.setData(project.terms_affiliates ?? ' ');
 
         if (project.automatic_affiliation == 1) {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
@@ -681,6 +703,7 @@ $(() => {
         loadingOnScreen();
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
+        $('#terms_affiliates').val(termsaffiliates.getData());
         let verify = verificaParcelas(parcelas, parcelasJuros);
         let statusUrlAffiliates = 0;
         if ($('#status-url-affiliates').prop('checked')) {
