@@ -108,9 +108,13 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
+        /** Account health */
         $schedule->command('command:update-attendance-average-user')->dailyAt('02:00');
-
         $schedule->command('command:update-user-level')->dailyAt('01:30');
+        $schedule->command('account-health:update')->dailyAt('00:30');
+        $schedule->command('account-health:update')->dailyAt('06:30');
+        $schedule->command('account-health:update')->dailyAt('12:30');
+        $schedule->command('account-health:update')->dailyAt('18:30');
 
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('09:30');
