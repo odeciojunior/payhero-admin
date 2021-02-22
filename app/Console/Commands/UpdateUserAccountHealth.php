@@ -42,8 +42,11 @@ class UpdateUserAccountHealth extends Command
         $accountHealthService = new AccountHealthService();
 
         foreach (User::all() as $user) {
-            $this->line($user->id . ' - ' . $user->name);
-            $accountHealthService->updateAccountScore($user);
+            if ($user->id == $user->account_owner_id) {
+                $user->account_owner_id;
+                $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
+                $accountHealthService->updateAccountScore($user);
+            }
         }
 
 //        $users = [

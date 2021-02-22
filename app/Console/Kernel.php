@@ -111,7 +111,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:update-attendance-average-user')->dailyAt('02:00');
 
         $schedule->command('command:update-user-level')->dailyAt('01:30');
-        
+
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('09:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
     }
 
     /**

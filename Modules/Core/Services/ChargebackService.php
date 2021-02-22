@@ -113,8 +113,9 @@ class ChargebackService
     public function getTotalApprovedSales($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
 
-        $totalSaleApproved = Sale::where('gateway_id', 15)
+        $totalSaleApproved = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24]);
 
@@ -188,6 +189,8 @@ class ChargebackService
 
     public function getChargebackRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+
         $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
             $q->whereBetween(
                 'start_date',
@@ -197,7 +200,7 @@ class ChargebackService
 
         $chargebacksAmount = $getnetChargebacks->count();
 
-        $approvedSales = Sale::whereIn('gateway_id', [14, 15])
+        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,

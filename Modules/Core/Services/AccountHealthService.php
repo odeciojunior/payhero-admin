@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
@@ -22,7 +21,8 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user)
     {
-        $approvedSales = Sale::where('gateway_id', 15)
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,
