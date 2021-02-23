@@ -12,11 +12,8 @@ let formatPlatform = {
     6: 'Outbrain'
 }
 
-
-
 $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-
 
     //comportamentos da tela
     $('.tab_pixels').on('click', function () {
@@ -41,41 +38,42 @@ $(function () {
     $("#add-pixel").on('click', function () {
         let value = $("#modal-create-pixel #select-platform option:selected").val();
 
-        $("#meta-tag-facebook").hide();
-        // $("#modal-create-pixel .facebook-meta-tag-tooltip .tooltip-inner").css('background', '#fff');
+        $("#meta-tag-facebook, .purchase-event-name-div").hide();
 
-
+        console.log(value);
         if (value == 'facebook') {
             $("#meta-tag-facebook").show();
+        } else if (['taboola', 'outbrain'].includes(value)) {
+            $(".purchase-event-name-div").show();
         }
     });
 
     $("#select-platform").change(function () {
-        let value = $(this).val();
+        const value = $(this).val();
         $("#outbrain-info").hide();
-        $("#google-analytics-info, #meta-tag-facebook").hide();
+        $("#google-analytics-info, #meta-tag-facebook, .purchase-event-name-div").hide();
+        console.log('rodou aqui2');
 
+        $("#input-code-pixel").html('').hide();
         if (value === 'facebook') {
-            $("#input-code-pixel").html('').hide();
             $("#meta-tag-facebook").show();
             $("#code-pixel").attr("placeholder", '52342343245553');
         } else if (value === 'google_adwords') {
             $("#input-code-pixel").html('AW-').show();
             $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
         } else if (value === 'google_analytics') {
-            $("#input-code-pixel").html('').hide();
             $("#google-analytics-info").show();
             $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
         } else if (value === 'google_analytics_four') {
-            $("#input-code-pixel").html('').hide();
             $("#google-analytics-info").show();
             $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
+        } else if (value === 'taboola') {
+            $("#code-pixel").attr("placeholder", '1010100');
+            $(".purchase-event-name-div").show();
         } else if (value === 'outbrain') {
-            $("#input-code-pixel").html('').hide();
-            $("#outbrain-info").show();
+            $(".purchase-event-name-div").show();
             $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
         } else {
-            $("#input-code-pixel").html('').hide();
             $("#code-pixel").attr("placeholder", 'Código');
         }
 
@@ -143,55 +141,49 @@ $(function () {
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
-                    $("#modal-edit-pixel #google-analytics-info,#modal-edit-pixel #meta-tag-facebook").hide();
-                    $("#modal-edit-pixel #outbrain-info-edit").hide();
+                    $("#modal-edit-pixel #input-code-pixel-edit, #modal-edit-pixel #meta-tag-facebook,#modal-edit-pixel .purchase-event-name-div").hide();
 
                     if (value === 'facebook') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #meta-tag-facebook").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #google-analytics-info").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
                     } else if (value === 'google_analytics_four') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
+                    } else if (value === 'taboola') {
+                        $("#modal-edit-pixel .purchase-event-name-div").show();
                     } else if (value === 'outbrain') {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
-                        $("#modal-edit-pixel #outbrain-info-edit").show();
+                        $("#modal-edit-pixel .purchase-event-name-div").show();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
-                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                         $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                     }
                 });
 
+                $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                 if (pixel.platform === 'facebook') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #meta-tag-facebook").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                 } else if (pixel.platform === 'google_adwords') {
                     $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                 } else if (pixel.platform === 'google_analytics_four') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
                 } else if (pixel.platform === 'google_analytics') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #google-analytics-info").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'UA-8984567741-3');
+                } else if (pixel.platform === 'taboola') {
+                    $("#modal-edit-pixel .purchase-event-name-div").show();
                 } else if (pixel.platform === 'outbrain') {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
-                    $("#modal-edit-pixel #outbrain-info-edit").show();
+                    $("#modal-edit-pixel .purchase-event-name-div").show();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                 } else {
-                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
                     $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                 }
             }
@@ -218,9 +210,11 @@ $(function () {
         }
         if (pixel.platform == 'taboola') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 4).change();
+            $("#modal-edit-pixel .purchase-event-name").val(pixel.purchase_event_name);
         }
         if (pixel.platform == 'outbrain') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 5).change();
+            $("#modal-edit-pixel .purchase-event-name").val(pixel.purchase_event_name);
         }
 
         if (pixel.status == '1') { //Ativo
@@ -332,7 +326,8 @@ $(function () {
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
                 purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val(),
                 edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val(),
-                code_meta_tag_facebook: $("#modal-edit-pixel #code_meta_tag_facebook").val()
+                code_meta_tag_facebook: $("#modal-edit-pixel #code_meta_tag_facebook").val(),
+                purchase_event_name: $("#modal-edit-pixel .purchase-event-name").val(),
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -434,30 +429,28 @@ $(function () {
 
                 $("#select-platform").change(function () {
                     let value = $(this).val();
-                    $("#outbrain-info").hide();
-                    $("#google-analytics-info, #meta-tag-facebook").hide();
+                    $("#input-code-pixel").html('').hide();
 
+                    $("#google-analytics-info, #meta-tag-facebook, .purchase-event-name-div").hide();
+
+                    console.log('rodou aqui1');
                     if (value === 'facebook') {
-                        $("#input-code-pixel").html('').hide();
                         $("#meta-tag-facebook").show();
                         $("#code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#input-code-pixel").html('AW-').show();
                         $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#input-code-pixel").html('').hide();
-                        $("#google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
                     } else if (value === 'google_analytics_four') {
-                        $("#input-code-pixel").html('').hide();
-                        $("#google-analytics-info").show();
                         $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
+                    } else if (value === 'taboola') {
+                        $(".purchase-event-name-div").show();
+                        $("#code-pixel").attr("placeholder", '1010100');
                     } else if (value === 'outbrain') {
-                        $("#input-code-pixel").html('').hide();
-                        $("#outbrain-info").show();
+                        $(".purchase-event-name-div").show();
                         $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
-                        $("#input-code-pixel").html('').hide();
                         $("#code-pixel").attr("placeholder", 'Código');
                     }
                 });
