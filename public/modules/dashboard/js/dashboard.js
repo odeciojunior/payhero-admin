@@ -119,9 +119,6 @@ $(document).ready(function () {
             bgColor: 'bg-color-dark-green',
             description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-dark-green">mediano10</span>.'
         },
-
-
-
     }
 
     getProjects();
@@ -251,8 +248,6 @@ $(document).ready(function () {
     $("#company").on("change", function () {
         updateValues();
         updateChart();
-        updatePerformace();
-        updateAccountHealth();
     });
     let userAccepted = true;
 
@@ -362,6 +357,29 @@ $(document).ready(function () {
         });
     }
 
+    function  nextPerformace() {
+        //alert('nextPerformace');;
+        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 5000);
+        $(".sirius-performace .card-indicators > .active").on("click", function () {
+            //$('.sirius-account > .card').html('');
+            //loadingOnAccountsHealth('.sirius-account > .card');
+            alert('nextPerformace');
+            loadingOnAccountsHealth('.sirius-performace > .card');
+            //$('.sirius-performace > .card').toggle();
+            let card = $(this).data('slide-to');
+            switch(card) {
+                case 1:
+                    updatePerformace();
+                    break;
+                case 2:
+                    //alert('nextPerformace2');
+                    //updatePerformace();
+                    break;
+                default:
+            }
+        });
+    }
+
     function updatePerformace() {
 
         loadOnAnyEllipsis('.load', false, {
@@ -446,7 +464,9 @@ $(document).ready(function () {
                 // updateChargeback(data.chargeback_tax);
                 //--updateTickets(data.tickets);
 
-                loadOnAnyEllipsis('.load', true)
+                loadOnAnyEllipsis('.load', true);
+                nextPerformace();
+                //alert("depois do next");
                 //loadingOnScreenRemove();
             }
         });
@@ -508,7 +528,7 @@ $(document).ready(function () {
 
         var money = parseFloat(progress_money.replace('.','').replace(',','.'));
 
-        alert(progress_money + "  -  " + money);
+        //alert(progress_money + "  -  " + money);
         let percentage = (money * 100)/currentLevel.billedStop;
         //alert(percentage);
 
@@ -544,8 +564,8 @@ $(document).ready(function () {
     }
 
     function  nextCard() {
-        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 1000);
-        $(".card-indicators > .active").on("click", function () {
+        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 500);
+        $(".sirius-account .card-indicators > .active").on("click", function () {
             $('.sirius-account > .card').html('');
             loadingOnAccountsHealth('.sirius-account > .card');
             let card = $(this).data('slide-to');
@@ -563,7 +583,6 @@ $(document).ready(function () {
                     updateTracking();
                     break;
                 default:
-                    alert('deu default');
             }
         });
     }

@@ -122,15 +122,37 @@
                 </div>
                 <div class="col-12 col-sm-4">
                     <div class="row">
-                        <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0">
-                            <div class="card card-shadow bg-white w-full performace-card">
+
+                        <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-performace">
+                            <div id="performace-card-1" class="card card-shadow bg-white w-full performace-card">
+
+
+{{--                                <div class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">--}}
+{{--                                    <div class="font-size-14 gray-600 mr-auto">--}}
+{{--                                        <span class="ml-0">Seu desempenho</span>--}}
+{{--                                    </div>--}}
+{{--                                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">--}}
+{{--                                        <li class="active" data-slide-to="1"></li>--}}
+{{--                                        <li class="" data-slide-to="2"></li>--}}
+{{--                                        <li class="" data-slide-to="3"></li>--}}
+{{--                                        <li class="" data-slide-to="4"></li>--}}
+{{--                                        <i class="o-angle-down-1 control-prev"></i>--}}
+{{--                                        <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>--}}
+{{--                                    </ol>--}}
+{{--                                </div>--}}
+
+
                                 <div
-                                    class="card-chargeback card-header mt-10 pb-0 d-flex justify-content-start align-items-center bg-white">
+                                    class="card-header mt-10 pb-0 d-flex justify-content-between align-items-centerr bg-white">
                                     <div class="font-size-14 gray-600 mr-auto">
                                         <span class="ml-0">Seu desempenho</span>
                                     </div>
-{{--                                    <i class="o-question-help-1" data-toggle="tooltip" data-placement="bottom"--}}
-{{--                                       title="Taxa geral de chargeback de sua empresa"></i>--}}
+                                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                        <li class="active" data-slide-to="1"></li>
+                                        <li class="" data-slide-to="2"></li>
+                                        <i class="o-angle-down-1 control-prev"></i>
+                                        <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
+                                    </ol>
                                 </div>
                                 <div class="card-body pb-5 pt-0 mt-10 d-flex flex-column justify-content-start align-items-start">
                                     <div class="d-flex flex-row justify-content-start align-items-start align-self-start">

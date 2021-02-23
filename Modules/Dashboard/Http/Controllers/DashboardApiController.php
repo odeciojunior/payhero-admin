@@ -337,7 +337,7 @@ class DashboardApiController extends Controller
     private function getDataPerformace($companyHash): array
     {
         return array (
-            'level' => 2,
+            'level' => 1,
             'achievements' =>
                 array (
                     0,
@@ -393,34 +393,35 @@ class DashboardApiController extends Controller
                             'status' => 0,
                         ),
                 ),
+            //'progress_money' => '11.111,11',
             'progress_money' => '44.990,78',
-//            'benefits' =>
-//                array (
-//                    0 =>
+            'benefits' =>
+                array (
+                    0 =>
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => 'Cashback de 0,5%',
+                            'status' => 1,
+                        ),
+                    1 =>
+                        array (
+                            'card' => 'NÍVEL 3',
+                            'benefit' => 'Recebimentos mais rápidos',
+                            'status' => 0,
+                        ),
+//                    2 =>
 //                        array (
 //                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Cashback de 0,5%',
-//                            'status' => 1,
-//                        ),
-//                    1 =>
-//                        array (
-//                            'card' => 'NÍVEL 3',
-//                            'benefit' => 'Recebimentos mais rápidos',
+//                            'benefit' => 'Gerente de Contas',
 //                            'status' => 0,
 //                        ),
-////                    2 =>
-////                        array (
-////                            'card' => 'NÍVEL 2',
-////                            'benefit' => 'Gerente de Contas',
-////                            'status' => 0,
-////                        ),
-////                    3 =>
-////                        array (
-////                            'card' => 'NÍVEL 2',
-////                            'benefit' => 'Gerente de Contas',
-////                            'status' => 0,
-////                        ),
-//                ),
+//                    3 =>
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Gerente de Contas',
+//                            'status' => 0,
+//                        ),
+                ),
 //            'money_cashback' => '95,66',
         );
     }
