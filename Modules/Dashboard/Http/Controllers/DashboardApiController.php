@@ -338,7 +338,7 @@ class DashboardApiController extends Controller
 
     private function getDataPerformace($companyHash): array
     {
-        $company = Company::find(Hashids::decode($companyHash));
+        $company = Company::find(current(Hashids::decode($companyHash)));
         $user = $company->user;
         $taskService = new TaskService();
 

@@ -50,14 +50,21 @@ class TaskService
 
     public function getUserTasks(User $user)
     {
-        $tasks = Task::all();
-        foreach ($tasks as &$task) {
-            $task->status = 0;
-            if ($user->level === $task->level && in_array($task->id, $user->tasks()->pluck('id')->toArray())) {
+        $userTasks = $user->tasks();
+        $completedTasks = [];
+        $uncompletedTasks = [];
+
+        foreach ((new Task)->where('level', $user->level)->get() as $task) {
+            if (in_array($task->id, $userTasks->pluck('id')->toArray())) {
                 $task->status = 1;
+                $completedTasks[] = $task;
+            } else {
+                $task->status = 0;
+                $uncompletedTasks[] = $task;
             }
         }
-        return $tasks;
+
+        return array_merge($uncompletedTasks, $completedTasks);
     }
 
     private function validateApprovedDocsTask(User $user): bool

@@ -476,7 +476,7 @@ $(document).ready(function () {
 
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start task">
                                  <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
-                                 <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.task}</p>
+                                 <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.name}</p>
                             </div>`;
                 $('#tasks').append(item);
             });
