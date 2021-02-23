@@ -263,6 +263,7 @@ $(function () {
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
+        formData.append('purchase_event_name', $("#modal-create-pixel #purchase-event-name").val());
 
         loadingOnScreen();
         $.ajax({

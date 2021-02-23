@@ -24,7 +24,7 @@ class PixelStoreRequest extends FormRequest
             'affiliate_id' => 'nullable',
             'add_pixel_plans' => 'required|array',
             'code_meta_tag_facebook' => 'nullable|string|max:255',
-            'purchase_event_name' => 'required_if:platform,taboola,outbrain|max:255',
+            'purchase_event_name' => 'nullable|max:255',
         ];
     }
 
@@ -36,7 +36,6 @@ class PixelStoreRequest extends FormRequest
             'code.required' => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
-            'purchase_event_name.required_if' => 'O campo Nome do Evento Conversão não pode ser vazio'
         ];
     }
 
