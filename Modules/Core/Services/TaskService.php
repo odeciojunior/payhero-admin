@@ -16,8 +16,8 @@ class TaskService
         Task::TASK_CREATE_FIRST_STORE => 'validateCreateFirstStoreTask',
         Task::TASK_FIRST_SALE         => 'validateFirstSaleTask',
         Task::TASK_FIRST_1000_REVENUE => 'validateFirst1000RevenueTask',
-        Task::TASK_500_SALES          => 'validateTask',
-        Task::TASK_5_INVITATIONS      => 'validateTask',
+        Task::TASK_500_SALES          => 'validateFirst500SalesTask',
+        Task::TASK_5_INVITATIONS      => 'validate5InvitationsSentTask',
     ];
 
     public function checkUserCompletedTasks(User $user)
@@ -46,6 +46,18 @@ class TaskService
         }
 
         return false;
+    }
+
+    public function getUserTasks(User $user)
+    {
+        $tasks = Task::all();
+        foreach ($tasks as &$task) {
+            $task->status = 0;
+            if ($user->level === $task->level && in_array($task->id, $user->tasks()->pluck('id')->toArray())) {
+                $task->status = 1;
+            }
+        }
+        return $tasks;
     }
 
     private function validateApprovedDocsTask(User $user): bool
