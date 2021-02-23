@@ -5,31 +5,61 @@ $(document).ready(function () {
             name: 'Aventureiro',
             title: 'Pronto para começar?',
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '0',
+            messageStart: '0',
+            billedStop: '100000',
+            messageStop: '100K',
         },
         2: {
             name: 'Viajante Espacial',
             title: 'Nível 2',
             icon: '/modules/global/adminremark/assets/images/nivel-2.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '100000',
+            messageStart: '100K',
+            billedStop: '1000000',
+            messageStop: '1M',
         },
         3: {
             name: 'Conquistador',
             title: 'Nível 3',
             icon: '/modules/global/adminremark/assets/images/nivel-3.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '1000000',
+            messageStart: '1M',
+            billedStop: '10000000',
+            messageStop: '10M',
         },
         4: {
-            name: 'Nível 4',
+            name: 'Colonizador',
             title: 'Nível 4',
             icon: '/modules/global/adminremark/assets/images/nivel-4.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '10000000',
+            unityStart: '10M',
+            billedStop: '50000000',
+            unityStop: '50M',
         },
         5: {
-            name: 'Nível 5',
+            name: 'Capitão Galáctico',
             title: 'Nível 5',
             icon: '/modules/global/adminremark/assets/images/nivel-5.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '50000000',
+            unityStart: '50M',
+            billedStop: '100000000',
+            unityStop: '100M',
         },
         6: {
-            name: 'Nível 6',
+            name: 'Sirius Major',
             title: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
+            message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            billedStart: '100000000',
+            unityStart: '100M',
+            billedStop: '500000000',
+            unityStop: '500M',
         },
     };
 
@@ -77,17 +107,17 @@ $(document).ready(function () {
         8: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano8</span>.'
+            description: 'Sua conta precisa de atenção. <br>Seu desempenho é <span class="text-color-dark-green">mediano8</span>.'
         },
         9: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano9</span>.'
+            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-dark-green">mediano9</span>.'
         },
         10: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. Seu desempenho é <span class="text-color-dark-green">mediano10</span>.'
+            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-dark-green">mediano10</span>.'
         },
 
 
@@ -379,8 +409,6 @@ $(document).ready(function () {
                 $("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
                 $("#level-description").html('').html(`<span class="mb-1">${currentLevel.name}</span>`);
                 $("#level").html('').html(`<span>${currentLevel.title}</span>`);
-                $('#progess-1').text(`NÍVEL ${data.level}`);
-                $('#progess-2').text(`NÍVEL ${data.level + 1}`);
 
                 updateAchievements(data.achievements);
 
@@ -393,7 +421,8 @@ $(document).ready(function () {
                     $("#cashback").show();
                 }
 
-                updateProgressBar(data.progress);
+                //updateProgressBar(data.progress);
+                updateProgressBar(data.progress_money, currentLevel);
                 updateBenefits(data.level, data.benefits);
 
 
@@ -470,14 +499,23 @@ $(document).ready(function () {
         $("#cashback").show();
     }
 
-    function updateProgressBar(progress) {
+    function updateProgressBar(progress_money, currentLevel) {
         $("#progess-bar-1").css({'width': '0%', 'padding-left': '0px'});
         $("#progess-bar-2").css({'width': '100%', 'border-radius': '10px 10px 10px 10px'});
 
-        if (progress > 0) {
-            $('#progess-bar-1').text(`${progress}%`);
-            $("#progess-bar-1").css({'width': `${progress}%`, 'padding-right': '8px' });
-            $("#progess-bar-2").css({'width': `${100 - progress}%`, 'border-radius': '0px 10px 10px 0px'});
+        $('#progess-1').text(`${currentLevel.messageStart}`);
+        $('#progess-2').text(`${currentLevel.messageStop}`);
+
+        var money = parseFloat(progress_money.replace('.','').replace(',','.'));
+
+        alert(progress_money + "  -  " + money);
+        let percentage = (money * 100)/currentLevel.billedStop;
+        //alert(percentage);
+
+        if (percentage > 0) {
+            $('#progess-bar-1').text(`R$ ${progress_money}`);
+            $("#progess-bar-1").css({'width': `${percentage}%`, 'padding-right': '8px' });
+            $("#progess-bar-2").css({'width': `${100 - percentage}%`, 'border-radius': '0px 10px 10px 0px'});
         }
     }
 

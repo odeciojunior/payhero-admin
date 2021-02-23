@@ -393,7 +393,7 @@ class DashboardApiController extends Controller
                             'status' => 0,
                         ),
                 ),
-            'progress' => '80',
+            'progress_money' => '44.990,78',
 //            'benefits' =>
 //                array (
 //                    0 =>
