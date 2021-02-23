@@ -41,12 +41,12 @@ class UpdateUserCompletedTasks extends Command
     {
         $taskService = new TaskService();
 
-        foreach ($taskService->getUserTasks(User::find(26)) as $task) {
-            $this->line($task->id);
-            $this->line($task->name);
-            $this->line($task->status);
-        }
-        dd();
+//        foreach ($taskService->getUserTasks(User::find(26)) as $task) {
+//            $this->line($task->id);
+//            $this->line($task->name);
+//            $this->line($task->status);
+//        }
+//        dd();
 
 //        $users = [
 //            26, 557, 577, 42, 109, 152, 153, 154,
