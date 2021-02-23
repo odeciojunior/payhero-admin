@@ -24,13 +24,11 @@ class PixelStoreRequest extends FormRequest
             'affiliate_id' => 'nullable',
             'add_pixel_plans' => 'required|array',
             'code_meta_tag_facebook' => 'nullable|string|max:255',
+            'purchase_event_name' => 'nullable|max:255',
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.required' => 'O campo Descrição é obrigatório',
@@ -41,11 +39,7 @@ class PixelStoreRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
