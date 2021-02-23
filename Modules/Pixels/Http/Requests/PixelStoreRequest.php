@@ -24,14 +24,11 @@ class PixelStoreRequest extends FormRequest
             'affiliate_id' => 'nullable',
             'add_pixel_plans' => 'required|array',
             'code_meta_tag_facebook' => 'nullable|string|max:255',
-            'purchase-event-name' => 'nullable|string|max:255',
+            'purchase_event_name' => 'required_if:platform,taboola,outbrain|max:255',
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.required' => 'O campo Descrição é obrigatório',
@@ -39,14 +36,11 @@ class PixelStoreRequest extends FormRequest
             'code.required' => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
+            'purchase_event_name.required_if' => 'O campo Nome do Evento Conversão não pode ser vazio'
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
