@@ -243,7 +243,7 @@ class EmailService
             $sendGridService = new SendgridService();
 
             if (getenv('APP_ENV') != 'production') {
-                $fromEmail = getenv('EMAIL_TEST');
+                $fromEmail = getenv('APP_EMAIL_TEST');
             }
 
             if (stristr($fromEmail, 'invalido') === false &&
