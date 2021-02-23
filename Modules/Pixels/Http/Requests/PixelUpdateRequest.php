@@ -10,11 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class PixelUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|max:100|string',
@@ -28,13 +24,11 @@ class PixelUpdateRequest extends FormRequest
             'project_id' => 'nullable',
             'campaign' => 'nullable',
             'code_meta_tag_facebook' => 'nullable|string|max:255',
+            'purchase_event_name' => 'nullable|max:255',
         ];
     }
 
-    /**
-     * @return array|string[]
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.required' => 'O campo Descrição é obrigatório',
@@ -45,11 +39,8 @@ class PixelUpdateRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     * @return bool
-     */
-    public function authorize()
+
+    public function authorize(): bool
     {
         return true;
     }

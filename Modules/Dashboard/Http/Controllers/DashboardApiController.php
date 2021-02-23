@@ -12,12 +12,14 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\ReportService;
+use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -211,20 +213,20 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                'today_balance' => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                'currency' => 'R$',
-                'total_sales_approved' => $totalSalesApproved ?? 0,
-                'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
-                'chargeback_tax' => $chargebackTax ?? "0.00%",
-                'trackings' => $trackingsInfo,
-                'tickets' => $tickets,
-                'blocked_balance' => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
-                'blocked_balance_invite' => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
+                'available_balance'       => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                'total_balance'           => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                'pending_balance'         => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                'today_balance'           => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                'currency'                => 'R$',
+                'total_sales_approved'    => $totalSalesApproved ?? 0,
+                'total_sales_chargeback'  => $totalSalesChargeBack ?? 0,
+                'chargeback_tax'          => $chargebackTax ?? "0.00%",
+                'trackings'               => $trackingsInfo,
+                'tickets'                 => $tickets,
+                'blocked_balance'         => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
+                'blocked_balance_invite'  => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
                 'blocked_balance_pending' => number_format(intval($blockedBalancePending) / 100, 2, ',', '.'),
-                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                'blocked_balance_total'   => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
@@ -256,19 +258,19 @@ class DashboardApiController extends Controller
             foreach ($companies as $company) {
                 if ($company->created_at <= '2020-07-01' && $companyService->verifyFieldsEmpty($company)) {
                     $companyArray[] = [
-                        'id_code' => Hashids::encode($company->id),
+                        'id_code'      => Hashids::encode($company->id),
                         'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : Str::limit(
                                 $company->fantasy_name,
                                 20
                             ) ?? '',
-                        'type' => $company->company_type,
+                        'type'         => $company->company_type,
                     ];
                 }
             }
 
             return response()->json(
                 [
-                    'companies' => $companyArray,
+                    'companies'         => $companyArray,
                     'pending_user_data' => $pendingUserData,
                 ],
                 200
@@ -291,14 +293,14 @@ class DashboardApiController extends Controller
         $data = \request()->all();
         $companyId = current(Hashids::decode($data['company']));
 
-        $reportService =  new ReportService();
+        $reportService = new ReportService();
 
         $data = $reportService->getDashboardChartData($companyId);
 
         return response()->json($data, Response::HTTP_OK);
     }
 
-    public  function getPerformace(Request $request): JsonResponse
+    public function getPerformace(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -336,80 +338,19 @@ class DashboardApiController extends Controller
 
     private function getDataPerformace($companyHash): array
     {
-        return array (
-            'level' => 1,
-            'achievements' =>
-                array (
-                    0,
-                    1,
-                    2,
-                    3
-                ),
-            'tasks' =>
-                array (
-                    0 =>
-                        array (
-                            'task' => 'Tenha seus documentos aprovados',
-                            'status' => 1,
-                        ),
-                    1 =>
-                        array (
-                            'task' => 'Cadastre sua primeira loja',
-                            'status' => 0,
-                        ),
-                    2 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                    3 =>
-                        array (
-                            'task' => 'Fature R$1.000 (R$0 / R$1000)',
-                            'status' => 0,
-                        ),
-                    4 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                    5 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                    6 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                    7 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                    8 =>
-                        array (
-                            'task' => 'Faça sua primeira venda',
-                            'status' => 0,
-                        ),
-                ),
-            //'progress_money' => '11.111,11',
-            'progress_money' => '44.990,78',
-            'benefits' =>
-                array (
-                    0 =>
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => 'Cashback de 0,5%',
-                            'status' => 1,
-                        ),
-                    1 =>
-                        array (
-                            'card' => 'NÍVEL 3',
-                            'benefit' => 'Recebimentos mais rápidos',
-                            'status' => 0,
-                        ),
-//                    2 =>
+        $company = Company::find(current(Hashids::decode($companyHash)));
+        $user = $company->user;
+        $taskService = new TaskService();
+
+        return [
+            'level'          => $user->level,
+            'achievements'   => [0, 1, 2, 3],
+            'tasks'          => $taskService->getUserTasks($user),
+            'progress_money' => $user->total_commission_value,
+//            'benefits' =>
+//                array (
+//                    0 =>
+
 //                        array (
 //                            'card' => 'NÍVEL 2',
 //                            'benefit' => 'Gerente de Contas',
@@ -421,12 +362,12 @@ class DashboardApiController extends Controller
 //                            'benefit' => 'Gerente de Contas',
 //                            'status' => 0,
 //                        ),
-                ),
+//                ),
 //            'money_cashback' => '95,66',
-        );
+        ];
     }
 
-    public  function getAccountHealth(Request $request): JsonResponse
+    public function getAccountHealth(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -477,12 +418,12 @@ class DashboardApiController extends Controller
                 return [];
             }
 
-            return array (
-                'level' => $user->level,
-                'account_score' => $user->account_score,
+            return array(
+                'level'            => $user->level,
+                'account_score'    => $user->account_score,
                 'chargeback_score' => $user->chargeback_score,
                 'attendance_score' => $user->attendance_score,
-                'tracking_score' => $user->tracking_score,
+                'tracking_score'   => $user->tracking_score,
             );
         } catch (Exception $e) {
             report($e);
@@ -492,7 +433,7 @@ class DashboardApiController extends Controller
 
     }
 
-    public  function getAccountChargeback(Request $request): JsonResponse
+    public function getAccountChargeback(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -566,10 +507,10 @@ class DashboardApiController extends Controller
             $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
 
             return [
-                'chargeback_score' => $user->chargeback_score,
-                'chargeback_rate' => $user->chargeback_rate ?? "0.00%",
+                'chargeback_score'       => $user->chargeback_score,
+                'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
                 //'chargeback_tax' => $chargebackTax ?? "0.00%",
-                'total_sales_approved' => $totalSalesApproved ?? 0,
+                'total_sales_approved'   => $totalSalesApproved ?? 0,
                 'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
 
             ];
@@ -581,7 +522,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    public  function getAccountAttendance(Request $request): JsonResponse
+    public function getAccountAttendance(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -653,10 +594,10 @@ class DashboardApiController extends Controller
 
             return [
                 'attendance_score' => $user->attendance_score,
-                'total' => $tickets->total,
-                'open' => $tickets->open,
-                'closed' => $tickets->closed,
-                'mediation' => $tickets->mediation,
+                'total'            => $tickets->total,
+                'open'             => $tickets->open,
+                'closed'           => $tickets->closed,
+                'mediation'        => $tickets->mediation,
             ];
         } catch (Exception $e) {
             report($e);
@@ -665,7 +606,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    public  function getAccountTracking(Request $request): JsonResponse
+    public function getAccountTracking(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -755,14 +696,14 @@ class DashboardApiController extends Controller
 
 
             return [
-                'tracking_score' => $user->tracking_score,
-                'average_post_time' => $trackingsInfo->average_post_time,
-                'oldest_sale' => $trackingsInfo->oldest_sale,
-                'problem' => $trackingsInfo->problem,
+                'tracking_score'     => $user->tracking_score,
+                'average_post_time'  => $trackingsInfo->average_post_time,
+                'oldest_sale'        => $trackingsInfo->oldest_sale,
+                'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
-                'unknown' => $trackingsInfo->unknown,
+                'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
-                'trackings' => $trackingsInfo,
+                'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
             report($e);
