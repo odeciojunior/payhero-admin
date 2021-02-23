@@ -40,7 +40,6 @@ $(function () {
 
         $("#meta-tag-facebook, .purchase-event-name-div").hide();
 
-        console.log(value);
         if (value == 'facebook') {
             $("#meta-tag-facebook").show();
         } else if (['taboola', 'outbrain'].includes(value)) {
@@ -52,7 +51,6 @@ $(function () {
         const value = $(this).val();
         $("#outbrain-info").hide();
         $("#google-analytics-info, #meta-tag-facebook, .purchase-event-name-div").hide();
-        console.log('rodou aqui2');
 
         $("#input-code-pixel").html('').hide();
         if (value === 'facebook') {
@@ -433,7 +431,6 @@ $(function () {
 
                     $("#google-analytics-info, #meta-tag-facebook, .purchase-event-name-div").hide();
 
-                    console.log('rodou aqui1');
                     if (value === 'facebook') {
                         $("#meta-tag-facebook").show();
                         $("#code-pixel").attr("placeholder", '52342343245553');
