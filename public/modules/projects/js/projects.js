@@ -1132,6 +1132,7 @@ $(() => {
     let secondCategory = [
         "tab_pixels",
         "tab_upsell",
+        "tab_order_bump",
         "tab_coupons",
         "tab_reviews",
     ]
