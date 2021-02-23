@@ -29,10 +29,6 @@ class TaskService
 
     public function checkCompletedTask(User $user, Task $task): bool
     {
-        if ($task->level != $user->level) {
-            return false;
-        }
-
         $userTask = $user->tasks->where(['task_id', $task->id])->first();
         if ($userTask) {
             return true;
