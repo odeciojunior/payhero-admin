@@ -346,7 +346,8 @@ class DashboardApiController extends Controller
             'level'          => $user->level,
             'achievements'   => [0, 1, 2, 3],
             'tasks'          => $taskService->getUserTasks($user),
-            'progress_money' => $user->total_commission_value,
+            //'progress_money' => $user->total_commission_value,
+            'progress_money' => '7.431.816,92',
 //            'benefits' =>
 //                array (
 //                    0 =>
@@ -363,7 +364,7 @@ class DashboardApiController extends Controller
 //                            'status' => 0,
 //                        ),
 //                ),
-//            'money_cashback' => '95,66',
+            'money_cashback' => '95,66',
         ];
     }
 

@@ -465,7 +465,7 @@ $(document).ready(function () {
                 //--updateTickets(data.tickets);
 
                 loadOnAnyEllipsis('.load', true);
-                nextPerformace();
+                //nextPerformace();
                 //alert("depois do next");
                 //loadingOnScreenRemove();
             }
@@ -526,7 +526,7 @@ $(document).ready(function () {
         $('#progess-1').text(`${currentLevel.messageStart}`);
         $('#progess-2').text(`${currentLevel.messageStop}`);
 
-        var money = parseFloat(progress_money.replace('.','').replace(',','.'));
+        var money = parseFloat(progress_money).toFixed(2); // parseFloat(progress_money).toFixed(2);
 
         //alert(progress_money + "  -  " + money);
         let percentage = (money * 100)/currentLevel.billedStop;
