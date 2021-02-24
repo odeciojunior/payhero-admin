@@ -10,7 +10,6 @@ $(document).ready(function () {
             toolbar: [
                 'heading', '|',
                 'bold', 'italic','|',
-                'fontSize', 'italic','|',
                 'link', '|',
                 'undo', 'redo'
             ]

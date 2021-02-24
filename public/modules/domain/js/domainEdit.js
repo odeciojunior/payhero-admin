@@ -453,7 +453,7 @@ $(document).ready(function () {
             data += '<tr>';
             data += '<td >' + value.type + '</td>';
             data += '<td style="word-break: break-word;">' + value.name + '</td>';
-            data += '<td style="word-break: break-word;">' + value.content + '</,td>';
+            data += `<td style="word-break: break-word;"> <span id="1+${index}" data-toggle="tooltip" data-placement="top" title="${value.content_complete}">${value.content}</span></td>`;
 
             if (!value.proxy) {
                 proxyVar = '';
@@ -496,6 +496,10 @@ $(document).ready(function () {
 
             data += "</td>";
             data += '</tr>';
+
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
         });
         $("#loaderLine").remove();
         $("#new-registers-table").addClass('table-striped');

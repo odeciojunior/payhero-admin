@@ -43,14 +43,15 @@ class DomainRecordsIndexResource extends JsonResource
             }
 
             $newRegister = [
-                'id'          => Hashids::encode($record->id),
-                'type'        => $record->type,
-                'proxy'       => $record->proxy,
-                'domain_name' => $this->resource['domain']->name,
-                //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
-                'name'        => $record->name,
-                'content'     => substr($content, 0, 20),
-                'system_flag' => $record->system_flag,
+                'id'                   => Hashids::encode($record->id),
+                'type'                 => $record->type,
+                'proxy'                => $record->proxy,
+                'domain_name'          => $this->resource['domain']->name,
+                //'name'                 => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
+                'name'                 => $record->name,
+                'content'              => substr($content, 0, 20),
+                'content_complete'     => $content,
+                'system_flag'          => $record->system_flag,
 
             ];
 
