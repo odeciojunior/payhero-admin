@@ -345,7 +345,7 @@ class DashboardApiController extends Controller
         return [
             'level'          => $user->level,
             'achievements'   => [0, 1, 2, 3],
-            'tasks'          => $taskService->getUserTasks($user),
+            'tasks'          => $taskService->getCurrentUserTasks($user),
             //'progress_money' => $user->total_commission_value,
             'progress_money' => '7.431.816,92',
 //            'benefits' =>

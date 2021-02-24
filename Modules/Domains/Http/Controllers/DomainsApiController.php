@@ -14,10 +14,12 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Task;
 use Modules\Core\Services\CloudflareErrorsService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\TaskService;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
 use Modules\Domains\Transformers\DomainResource;
@@ -440,12 +442,8 @@ class DomainsApiController extends Controller
 
                                 try {
                                     if (!empty($domain->project->shopifyIntegrations)) {
-                                        $domain->update(
-                                            [
-                                                'status' => $domainModel->present()
-                                                    ->getStatus('approved'),
-                                            ]
-                                        );
+                                        $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
+                                        TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
 
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
                                             try {
@@ -593,18 +591,10 @@ class DomainsApiController extends Controller
                                 }
                             } else {
                                 // não e integracao shopify, validar dominio
-                                $domain->update(
-                                    [
-                                        'status' => $domainModel->present()->getStatus('approved'),
-                                    ]
-                                );
+                                $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
+                                TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
 
-                                return response()->json(
-                                    [
-                                        'message' => 'Dominio revalidado com sucesso!',
-                                    ],
-                                    200
-                                );
+                                return response()->json(['message' => 'Dominio revalidado com sucesso!']);
                             }
                         } else {
                             $domain->update(

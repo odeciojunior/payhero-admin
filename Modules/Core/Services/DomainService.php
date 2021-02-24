@@ -9,6 +9,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\DomainApprovedEvent;
 
@@ -153,9 +154,8 @@ class DomainService
                     }
 
                     if ($responseValidateDomain && $responseValidateLink) {
-                        $domain->update([
-                            'status' => $this->getDomainModel()->present()->getStatus('approved'),
-                        ]);
+                        $domain->update(['status' => $this->getDomainModel()->present()->getStatus('approved')]);
+                        TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
                     }
 
                     if (!empty($domain->project->shopify_id)) {
@@ -179,10 +179,8 @@ class DomainService
                                     //template normal
 
                                     if ($shopify->checkCartTemplate($htmlCart)) {
-                                        $domain->update([
-                                            'status' => $this->getDomainModel()->present()
-                                                ->getStatus('approved'),
-                                        ]);
+                                        $domain->update(['status' => $this->getDomainModel()->present()->getStatus('approved')]);
+                                        TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
 
                                         return true;
                                     } else {
@@ -241,6 +239,7 @@ class DomainService
                     ]);
 
                     event(new DomainApprovedEvent($domain, $domain->project, $domain->project->users));
+                    TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
                 } else {
                     $domain->update([
                         'status' => $this->getDomainModel()->present()->getStatus('pending'),
