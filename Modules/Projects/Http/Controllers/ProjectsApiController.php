@@ -17,17 +17,18 @@ use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
+use Modules\Core\Services\TaskService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
@@ -205,6 +206,8 @@ class ProjectsApiController extends Controller
 
             $projectNotificationService->createProjectNotificationDefault($project->id);
             $projectService->createUpsellConfig($project->id);
+
+            TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             return response()->json(['message' => 'Projeto salvo com sucesso']);
         } catch (Exception $e) {

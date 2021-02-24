@@ -314,7 +314,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany('Modules\Core\Entities\Projects', 'users_projects', 'user_id', 'project_id');
+        return $this->belongsToMany('Modules\Core\Entities\Project', 'users_projects', 'user_id', 'project_id');
     }
 
     /**
