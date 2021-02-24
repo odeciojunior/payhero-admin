@@ -151,7 +151,7 @@ body {
     /*height: 400px;*/
 }
 
-.page.dashboard .performace-card {
+.page.dashboard .performace-card, .page.dashboard .performace-card {
     /*height: 500px;*/
     /*height: 798px;*/
     /*height: 638px;*/
@@ -388,15 +388,15 @@ body {
 }
 
 #level-icon {
-    /*max-width: 90px;*/
-    /*max-height: 90px;*/
+    /*width: 97px;*/
+    /*height: 97px;*/
     max-width: 97px;
     max-height: 97px;
 }
 
 #level-icon > img {
-    min-width: 97px;
-    min-height: 97px;
+    /*min-width: 97px;*/
+    /*min-height: 97px;*/
     max-width: 97px;
     max-height: 97px;
     background: #FFFFFF no-repeat center;
@@ -460,7 +460,7 @@ body {
     font-weight: 900;
     font-size: 16px;
     border-radius: 100%;
-    -webkit-text-stroke: 3.2px rgba(255, 255, 255, 1);
+    -webkit-text-stroke: 2.8px rgba(255, 255, 255, 1);
 }
 
 .task-icon-checked:hover {
@@ -473,11 +473,13 @@ body {
 
 .task p {
     font-size: 14px;
+    color: #6A6A6A;
 }
 
 .task-description-checked {
     font-weight: bold;
-    color: #000000;
+    color: #5D5D5D;
+    opacity: 0.43;
 }
 
 #cashback {
@@ -505,14 +507,19 @@ body {
     line-height: 33px;
 }
 
-#progess-performance > div > span {
+#progress- > div > span {
     font-size: 10px;
     font-weight: bold;
     color: #5A5A5A;
     letter-spacing: 0px;
 }
 
-#progess-bar-1 {
+#progress-bar {
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #EFEFEF;
+}
+
+#progress-bar-1 {
     height: 25px;
     width: 0%;
     background: #2E85EC 0% 0% no-repeat padding-box;
@@ -525,12 +532,17 @@ body {
     /*padding-left: 5px;*/
 }
 
-#progess-bar-2 {
+#progress-bar-2 {
     height: 25px;
     width: 100%;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #EFEFEF;
-    border-radius: 10px 10px 10px 10px;
+    /*background: #FFFFFF 0% 0% no-repeat padding-box;*/
+    /*border: 1px solid #EFEFEF;*/
+    /*border-radius: 10px 10px 10px 10px;*/
+    line-height: 25px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #2E85EC !important;
+    text-align: left;
 }
 
 .benefit-button {
@@ -801,7 +813,7 @@ body {
 }
 
 #account-health-description {
-    font-size: 13px;
+    font-size: 12px;
     text-align: left;
     letter-spacing: 0px;
     color: #A5A5A5;

@@ -7,7 +7,7 @@ $(document).ready(function () {
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
             message: 'Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
             billedStart: '0',
-            messageStart: '0',
+            messageStart: '0K',
             billedStop: '100000',
             messageStop: '100K',
         },
@@ -358,22 +358,22 @@ $(document).ready(function () {
     }
 
     function  nextPerformace() {
-        //alert('nextPerformace');;
-        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 5000);
+        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 1000);
         $(".sirius-performace .card-indicators > .active").on("click", function () {
+            setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 1500);
             //$('.sirius-account > .card').html('');
-            //loadingOnAccountsHealth('.sirius-account > .card');
-            alert('nextPerformace');
+
             loadingOnAccountsHealth('.sirius-performace > .card');
-            //$('.sirius-performace > .card').toggle();
+
             let card = $(this).data('slide-to');
             switch(card) {
                 case 1:
-                    updatePerformace();
+                    $('#performace-card-2').hide();
+                    $('#performace-card-1').show();
                     break;
                 case 2:
-                    //alert('nextPerformace2');
-                    //updatePerformace();
+                    $('#performace-card-1').hide();
+                    $('#performace-card-2').show();
                     break;
                 default:
             }
@@ -382,26 +382,6 @@ $(document).ready(function () {
 
     function updatePerformace() {
 
-        loadOnAnyEllipsis('.load', false, {
-            styles: {
-                container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto',
-                    margin: 'auto'
-                },
-                loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
-                },
-
-            }
-        });
-
-        //--loadingOnChart('#chart-loading');
-
-        //$('.circle strong').addClass('loaded');
         $('#achievements .achievements-item').addClass('opacity-3');
         $('.task .task-icon').removeClass('o-checkmark-1');
         $('.task .task-icon').removeClass('.task-icon-checked');
@@ -416,7 +396,7 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                loadOnAnyEllipsis('.load', true)
+                //loadOnAnyEllipsis('.load', true)
                 //loadingOnScreenRemove();
 
                 errorAjaxResponse(response);
@@ -435,8 +415,9 @@ $(document).ready(function () {
                 }
 
                 if ( data.level > 1){
-                    $('#cashback-container #cashback-container-money').text(`${data.money_cashback}`);
-                    $("#cashback").show();
+                    updateCashback(data.money_cashback)
+                    //$('#cashback-container #cashback-container-money').text(`${data.money_cashback}`);
+                    //$("#cashback").show();
                 }
 
                 //updateProgressBar(data.progress);
@@ -445,27 +426,9 @@ $(document).ready(function () {
 
 
                 $(".moeda").html(data.currency);
-                //--$("#pending_money").html(data.pending_balance);
-                //--$("#available_money").html(data.available_balance);
-                //--$("#total_money").html(data.total_balance);
-                //--$("#today_money").html(data.today_balance);
 
-                //--$('#total_sales_approved').text(data.total_sales_approved);
-                //--$('#total_sales_chargeback').text(data.total_sales_chargeback);
-
-                //--let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance_total;
-                // if(data.blocked_balance_invite !== "0,00"){
-                //     title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
-                // }
-
-                //--$('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
-
-                //--updateTrackings(data.trackings);
-                // updateChargeback(data.chargeback_tax);
-                //--updateTickets(data.tickets);
-
-                loadOnAnyEllipsis('.load', true);
-                //nextPerformace();
+                //loadOnAnyEllipsis('.load', true);
+                nextPerformace();
                 //alert("depois do next");
                 //loadingOnScreenRemove();
             }
@@ -515,27 +478,37 @@ $(document).ready(function () {
     }
 
     function updateCashback(money_cashback) {
-        $('#cashback-container #cashback-container-money').text(`${money_cashback}`);
+        var money = money_cashback/100;
+        $('#cashback-container #cashback-container-money').text(`${money.toLocaleString('pt-br',{minimumFractionDigits: 2}) }`);
         $("#cashback").show();
     }
 
     function updateProgressBar(progress_money, currentLevel) {
-        $("#progess-bar-1").css({'width': '0%', 'padding-left': '0px'});
-        $("#progess-bar-2").css({'width': '100%', 'border-radius': '10px 10px 10px 10px'});
+        $("#progress-bar-1").css({'width': '0%'}); //, 'padding-right': '0px'});
+        $("#progress-bar-2").css({'width': '100%'}); //, 'padding-left': '0px'});  //, 'border-radius': '10px 10px 10px 10px'});
 
-        $('#progess-1').text(`${currentLevel.messageStart}`);
-        $('#progess-2').text(`${currentLevel.messageStop}`);
+        $('#progress-1').text(`${currentLevel.messageStart}`);
+        $('#progress-2').text(`${currentLevel.messageStop}`);
 
-        var money = parseFloat(progress_money).toFixed(2); // parseFloat(progress_money).toFixed(2);
+        var money = progress_money/100;
 
         //alert(progress_money + "  -  " + money);
         let percentage = (money * 100)/currentLevel.billedStop;
-        //alert(percentage);
 
         if (percentage > 0) {
-            $('#progess-bar-1').text(`R$ ${progress_money}`);
-            $("#progess-bar-1").css({'width': `${percentage}%`, 'padding-right': '8px' });
-            $("#progess-bar-2").css({'width': `${100 - percentage}%`, 'border-radius': '0px 10px 10px 0px'});
+            $("#progress-bar-1").css({'width': `${percentage}%` });
+            $("#progress-bar-2").css({'width': `${100 - percentage}%`} );
+
+            if ( $('#progress-bar-1').width() > 40) {
+                $('#progress-bar-1').text(`${parseFloat(percentage).toFixed(0) }%`)
+                $("#progress-bar-1").css({'padding-right': '8px' });
+                $("#progress-bar-2").css({'padding-left': '0px' });
+            } else {
+                $('#progress-bar-2').text(`${percentage > 1 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1)  }%`);
+                $("#progress-bar-2").css({'padding-left': '8px' });
+                $("#progress-bar-1").css({'padding-right': '0px' });
+            }
+
         }
     }
 
@@ -619,7 +592,7 @@ $(document).ready(function () {
                                     <li class="" data-slide-to="2"></li>
                                     <li class="" data-slide-to="3"></li>
                                     <li class="" data-slide-to="4"></li>
-                                    <i class="o-angle-down-1 control-prev"></i>
+                                    <i class="o-angle-down-1 control-prev active" data-slide-to="4"></i>
                                     <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
                                 </ol>
                         </div>
@@ -627,7 +600,7 @@ $(document).ready(function () {
                             <div id="" class="d-flex flex-row justify-content-start align-items-start align-self-start" >
                                 <canvas id="account-health-chart-gauge" class="mr-15"></canvas>
                                 <div class="mt-15 d-flex flex-column justify-content-center align-self-center">
-                                    <span id="account-health-note"><span class="${scoreInfo[Math.floor(data.account_score)].textColor}">${data.account_score}</span>/10</span>
+                                    <span id="account-health-note"><span class="${scoreInfo[Math.floor(data.account_score)].textColor}">${data.account_score >= 1 ? data.account_score : 0 }</span>/10</span>
                                     <p id="account-health-description">${scoreInfo[Math.floor(data.account_score)].description}</p>
                                 </div>
                             </div>
@@ -637,7 +610,7 @@ $(document).ready(function () {
                                 <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                     <div id="account-health-note-chargebacks" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                         <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
-                                        <span class="account-health-note">${data.chargeback_score}</span>
+                                        <span class="account-health-note">${data.chargeback_score >= 1 ? data.chargeback_score : 0 }</span>
                                     </div>
                                     <span class="account-health-note-description">Chargebacks</span>
                                 </div>
@@ -647,7 +620,7 @@ $(document).ready(function () {
                                 <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                     <div id="account-health-note-attendance" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                         <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
-                                        <span class="account-health-note">${data.attendance_score}</span>
+                                        <span class="account-health-note">${data.attendance_score >= 1 ? data.attendance_score : 0 }</span>
                                     </div>
                                     <span class="account-health-note-description">Atendimento</span>
                                 </div>
@@ -657,7 +630,7 @@ $(document).ready(function () {
                                 <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                     <div id="account-health-note-tracking" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                         <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
-                                        <span class="account-health-note">${data.tracking_score}</span>
+                                        <span class="account-health-note">${data.tracking_score >= 1 ? data.tracking_score : 0 }</span>
                                     </div>
                                     <span class="account-health-note-description">Cod. Rastreio</span>
                                 </div>
@@ -854,7 +827,7 @@ $(document).ready(function () {
                             <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>
                             <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
 
-                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
+                                <a href="" class="tips-chargeback">Dicas para melhorar seu atendimento <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
                             </div>
                             <div class="sirius-account-loading"></div>
                         </div>
@@ -899,7 +872,7 @@ $(document).ready(function () {
                                     <li class="" data-slide-to="3"></li>
                                     <li class="active"  data-slide-to="4"></li>
                                     <i class="o-angle-down-1 control-prev active" data-slide-to="3"></i>
-                                    <i class="o-angle-down-1 control-next" ></i>
+                                    <i class="o-angle-down-1 control-next active" data-slide-to="1"></i>
                                 </ol>
                         </div>
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">

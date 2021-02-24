@@ -125,23 +125,6 @@
 
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-performace">
                             <div id="performace-card-1" class="card card-shadow bg-white w-full performace-card">
-
-
-{{--                                <div class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">--}}
-{{--                                    <div class="font-size-14 gray-600 mr-auto">--}}
-{{--                                        <span class="ml-0">Seu desempenho</span>--}}
-{{--                                    </div>--}}
-{{--                                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">--}}
-{{--                                        <li class="active" data-slide-to="1"></li>--}}
-{{--                                        <li class="" data-slide-to="2"></li>--}}
-{{--                                        <li class="" data-slide-to="3"></li>--}}
-{{--                                        <li class="" data-slide-to="4"></li>--}}
-{{--                                        <i class="o-angle-down-1 control-prev"></i>--}}
-{{--                                        <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>--}}
-{{--                                    </ol>--}}
-{{--                                </div>--}}
-
-
                                 <div
                                     class="card-header mt-10 pb-0 d-flex justify-content-between align-items-centerr bg-white">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -150,19 +133,19 @@
                                     <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                                         <li class="active" data-slide-to="1"></li>
                                         <li class="" data-slide-to="2"></li>
-                                        <i class="o-angle-down-1 control-prev"></i>
+                                        <i class="o-angle-down-1 control-prev active" data-slide-to="2"></i>
                                         <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
                                     </ol>
                                 </div>
                                 <div class="card-body pb-5 pt-0 mt-10 d-flex flex-column justify-content-start align-items-start">
                                     <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
                                         <div class=" text-center px-0 d-flex justify-content-center mr-20">
-                                            <div id="level-icon" class="circle load">
+                                            <div id="level-icon" class="circle">
                                             </div>
                                         </div>
                                         <div class="d-flex flex-column justify-content-center align-self-center">
-                                            <div id="level-description" class="load"></div>
-                                            <div id="level" class="load"></div>
+                                            <div id="level-description"></div>
+                                            <div id="level"></div>
                                         </div>
                                     </div>
                                     <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
@@ -194,14 +177,14 @@
                                         </div>
                                     </div>
 
-                                    <div id="progess-performance" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                    <div id="progress" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                                            <span id="progess-1"></span>
-                                            <span id="progess-2"></span>
+                                            <span id="progress-1"></span>
+                                            <span id="progress-2"></span>
                                         </div>
-                                        <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                                            <span id="progess-bar-1"></span>
-                                            <span id="progess-bar-2"></span>
+                                        <div id="progress-bar" class="mt-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <span id="progress-bar-1"></span>
+                                            <span id="progress-bar-2"></span>
                                         </div>
                                     </div>
 {{--                                    <div id="benefits" class="mt-25 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
@@ -209,6 +192,77 @@
 {{--                                        <div id="benefits-container" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
 {{--                                        </div>--}}
 {{--                                    </div>--}}
+                                </div>
+                            </div>
+
+                            <div id="performace-card-2" class="card card-shadow bg-white w-full performace-card" style="display: none;">
+                                <div
+                                    class="card-header mt-10 pb-0 d-flex justify-content-between align-items-centerr bg-white">
+                                    <div class="font-size-14 gray-600 mr-auto">
+                                        <span class="ml-0">Seu desempenho</span>
+                                    </div>
+                                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                                        <li class="" data-slide-to="1"></li>
+                                        <li class="active" data-slide-to="2"></li>
+                                        <i class="o-angle-down-1 control-prev active" data-slide-to="1"></i>
+                                        <i class="o-angle-down-1 control-next active" data-slide-to="1"></i>
+                                    </ol>
+                                </div>
+                                <div class="card-body pb-5 pt-0 mt-10 d-flex flex-column justify-content-start align-items-start">
+                                    <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
+                                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
+                                            <div id="level-icon" class="circle">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center align-self-center">
+                                            <div id="level-description"></div>
+                                            <div id="level" ></div>
+                                        </div>
+                                    </div>
+                                    <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
+                                        <div class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <div id="achievements-item-1" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-2" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/11903cdeba102415c7a49cb4cad3ff5fab04297fr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-3" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/37041bbe7e41e669a614cf99d0e9ae3585adc7f4r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-4" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/6eb8248218eb601f2534656bccb0566fbd3070b8r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-5" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/75f61864adba69fa157c052cf259f5cf9d098eadr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>
+                                        </div>
+                                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <div id="achievements-item-7" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/5dfc0ae74931e316225e6f1d50eaf52e943faeb7r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-8" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/a6412a5b02d8a235677b5651a080dd4d5d0d65fcr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-9" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/13df5623bdc33a79763d26aed5e09230a7932199r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-10" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/01417fb22aaf1c7c0387cd306d8f17236750350dr1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-11" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/2fd11faccf8517a2ce5e5181f606259ca24bd5e4r1-200-141v2_hq.jpg)"></div>
+                                            <div id="achievements-item-12" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/4ea15727ab51ebc7697fa6b1785a31491f69fb2br1-200-141v2_hq.jpg)"></div>
+                                        </div>
+                                    </div>
+                                    <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                    </div>
+                                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <span class="title-performace">Cashback recebido</span>
+                                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">
+                                            <span class="o-reload-1 cashback-container-icon"></span>
+                                            <span class="cashback-container-icon">R$</span>
+                                            <span id="cashback-container-money"></span>
+                                        </div>
+                                    </div>
+
+                                    <div id="progress" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <span id="progress-1"></span>
+                                            <span id="progress-2"></span>
+                                        </div>
+                                        <div id="progress-bar" class="mt-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                            <span id="progress-bar-1"></span>
+                                            <span id="progress-bar-2"></span>
+                                        </div>
+                                    </div>
+                                    {{--                                    <div id="benefits" class="mt-25 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
+                                    {{--                                        <span class="title-performace">Seus próximos benfefícios</span>--}}
+                                    {{--                                        <div id="benefits-container" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
