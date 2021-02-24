@@ -17,6 +17,7 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->string('name', 100);
             $table->integer('level');
+            $table->integer('priority');
             $table->timestamps();
         });
 
