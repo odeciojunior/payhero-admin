@@ -16,8 +16,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $sale_id
  * @property integer $customer_id
  * @property string $subject
+ * @property integer $subject_enum
  * @property string $description
- * @property integer $ticket_category_enum
+ * @property integer $ticket_subcategory_enum
  * @property integer $ticket_status_enum
  * @property integer $last_message_type_enum
  * @property string  $last_message_date
@@ -54,6 +55,7 @@ class Ticket extends Model
         'sale_id',
         'customer_id',
         'subject',
+        'subject_enum',
         'description',
         'ticket_category_enum',
         'ticket_status_enum',
