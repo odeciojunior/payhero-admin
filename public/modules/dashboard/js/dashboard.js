@@ -217,9 +217,6 @@ $(document).ready(function () {
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
 
                 let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance_total;
-                // if(data.blocked_balance_invite !== "0,00"){
-                //     title += "\ne saldo bloqueado referente à convites de R$ " + data.blocked_balance_invite;
-                // }
 
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 

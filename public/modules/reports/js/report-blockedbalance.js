@@ -310,6 +310,7 @@ $(document).ready(function () {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
                     $('#commission_blocked').text(`R$ ${response.commission}`);
+                    $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
                     $('#total').text(`R$ ${response.total}`);
                 }
             }

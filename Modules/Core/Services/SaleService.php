@@ -1252,7 +1252,7 @@ class SaleService
             )
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id')
+                // ->whereNull('invitation_id')
                 // ->where(function($queryStatus) use($transactionModel, $salesModel) {
                 //     $queryStatus->where(function($transfered) use($transactionModel) {
                 //             $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
@@ -1274,6 +1274,10 @@ class SaleService
                 ->whereHas('blockReasonSale', function($blocked) use ($blockReasonSaleModel) {
                     $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
                 });
+
+            if (empty($filters["invite"])) {
+                $transactions->whereNull('invitation_id');
+            }
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -1343,6 +1347,7 @@ class SaleService
     public function getResumeBlocked($filters)
     {
         $transactionModel = new Transaction();
+        $filters['invite'] = 1;
         $transactions = $this->getSalesBlockedBalance($filters);
         $transactionStatus = implode(
             ',',
@@ -1355,15 +1360,26 @@ class SaleService
         $resume = $transactions->without(['sale'])
             ->select(
                 DB::raw(
-                    "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
+                    "
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 1 ELSE 0 END) as total_sales,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 
+                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission,
+                     sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN 
+                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission_invite,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                            (sales.sub_total + sales.shipment_value) - 
+                            (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
+                            ELSE 0 END
+                        ) as total"
                 )
             )
             ->first()
             ->toArray();
 
         $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+        $resume['commission_invite'] = number_format($resume['commission_invite'], 2, ',', '.');
         $resume['total'] = number_format($resume['total'], 2, ',', '.');
 
         return $resume;

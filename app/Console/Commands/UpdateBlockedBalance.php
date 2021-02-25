@@ -25,7 +25,7 @@ class UpdateBlockedBalance extends Command
      */
     protected $description = 'Command description';
 
-    public $blokReasons;
+    public $blockReasons;
 
     /**
      * Create a new command instance.
@@ -69,7 +69,7 @@ class UpdateBlockedBalance extends Command
             ->whereIn('sales.status', [1,24]);
 
         $blockReasonModel = new BlockReason;
-        $this->blokReasons = $blockReasonModel->get();
+        $this->blockReasons = $blockReasonModel->get();
 
         foreach ($transactions->cursor() as $transaction) {
             
@@ -102,7 +102,7 @@ class UpdateBlockedBalance extends Command
 
     public function createBlockReasonSale($saleId, $reason)
     {
-        $blockReason = $this->blokReasons->where('reason_enum', $reason)->first();
+        $blockReason = $this->blockReasons->where('reason_enum', $reason)->first();
         $this->info($saleId . ' -- ' . $reason);
 
         return BlockReasonSale::firstOrCreate([

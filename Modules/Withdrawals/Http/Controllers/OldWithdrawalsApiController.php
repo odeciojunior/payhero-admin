@@ -157,7 +157,7 @@ class OldWithdrawalsApiController extends Controller
             // verify blocked balance
             $blockedValue = $companyService->getBlockedBalance($company);
 
-            $availableBalance = $company->balance - $blockedValue->from_sales + $blockedValue->from_invites;
+            $availableBalance = $company->balance - $blockedValue;
 
             if ($withdrawalValue > $availableBalance) {
                 return response()->json(
