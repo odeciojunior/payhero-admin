@@ -43,7 +43,6 @@ class UpdateUserCompletedTasks extends Command
         $now = now();
         foreach (User::with('tasks')->whereNull('deleted_at')->get() as $user) {
             if ($user->id == $user->account_owner_id) {
-                $user->account_owner_id;
                 $this->line($user->id . ' - ' . $user->name);
                 $taskService->checkUserCompletedTasks($user);
             }
