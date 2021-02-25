@@ -453,7 +453,24 @@ $(document).ready(function () {
             data += '<tr>';
             data += '<td >' + value.type + '</td>';
             data += '<td style="word-break: break-word;">' + value.name + '</td>';
-            data += '<td style="word-break: break-word;">' + value.content + '</,td>';
+            data += `<td style="word-break: break-word;">
+<div class="row align-items-center">
+
+                        <!-- Target -->
+                        <input id="copy-data-${index}"
+                               class="col-8 mr-1" 
+                               data-toggle="tooltip" 
+                               data-placement="left"  
+                               title="${value.content_complete}" 
+                               value="${value.content_complete}"
+                               readonly>
+
+                        <!-- Trigger -->
+                        <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
+                            <span class="material-icons icon-copy-1"> content_copy </span>
+                        </button>
+</div> 
+                    </td>`;
 
             if (!value.proxy) {
                 proxyVar = '';
@@ -497,6 +514,25 @@ $(document).ready(function () {
             data += "</td>";
             data += '</tr>';
         });
+
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+
+
+            $(".copy-data").on("click", function () {
+                var clipboard = new ClipboardJS('.copy-data')
+
+                clipboard.on('success', function(e) {
+                    console.info('Action:', e.action);
+                    console.info('Text:', e.text);
+                    console.info('Trigger:', e.trigger);
+                    alertCustom('success', 'Link copiado!');
+                    e.clearSelection();
+                });
+            });
+        })
+
         $("#loaderLine").remove();
         $("#new-registers-table").addClass('table-striped');
         if (cont > 0) {
@@ -505,7 +541,6 @@ $(document).ready(function () {
             $("#empty-info").show();
         }
         $("#table-body-new-records").append(data);
-
     }
 
     /**
