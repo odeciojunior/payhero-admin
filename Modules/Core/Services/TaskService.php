@@ -132,6 +132,6 @@ class TaskService
 
     private function validateFirstWithdrawalTask(User $user): bool
     {
-        return $user->companies()->whereHas('withdrawals')->where('ids', '0')->count() > 0;
+        return $user->companies()->whereHas('withdrawals')->where('id', '0')->count() > 0;
     }
 }
