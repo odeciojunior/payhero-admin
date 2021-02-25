@@ -19,16 +19,23 @@ class TaskService
         Task::TASK_FIRST_WITHDRAWAL   => 'validateFirstWithdrawalTask',
     ];
 
+    private $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = Task::all();
+    }
+
     public function checkUserCompletedTasks(User $user)
     {
-        foreach (Task::all() as $task) {
+        foreach ($this->tasks as $task) {
             $this->checkCompletedTask($user, $task);
         }
     }
 
     public function checkCompletedTask(User $user, Task $task): bool
     {
-        $userTask = $user->tasks->where(['task_ids', $task->id])->first();
+        $userTask = $user->tasks->where('id', $task->id)->first();
         if ($userTask) {
             return true;
         }
