@@ -7,62 +7,49 @@ use Modules\Core\Entities\TicketMessage;
 
 class TicketPresenter extends Presenter
 {
+
     public function getTicketCategoryEnum($category = 0)
     {
-        if(!$category) $category = $this->ticket_category_enum;
+        if (!$category) $category = $this->ticket_category_enum;
 
-        if (is_numeric($category)) {
-            switch ($category) {
-                case 1:
-                    return 'complaint';
-                case 2:
-                    return 'doubt';
-                case 3:
-                    return 'suggestion';
-                default:
-                    return '';
-            }
-        } else {
-            switch ($category) {
-                case 'complaint':
-                    return 1;
-                case 'doubt':
-                    return 2;
-                case 'suggestion':
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
+        $categoryArray = [
+            1 => 'complaint',
+            2 => 'doubt',
+            3 => 'suggestion',
+        ];
+
+        return (is_numeric($category) ? $categoryArray[$category] : array_search($category, $categoryArray)) ?? '';
+    }
+
+    public function getSubjectEnum($subject = 0)
+    {
+        if (!$subject) $subject = $this->ticket_category_enum;
+
+        $subjectArray = [
+            1 => "differs_from_advertised",
+            2 => "damaged_by_transport",
+            3 => "manufacturing_defect",
+            4 => "tracking_code_not_received",
+            5 => "non_trackable_order",
+            6 => "delivery_delay",
+            7 => "delivery_to_wrong_address",
+            8 => "others",
+        ];
+
+        return (is_numeric($subject) ? $subjectArray[$subject] : array_search($subject, $subjectArray)) ?? '';
     }
 
     public function getTicketStatusEnum($status = 0)
     {
-        if(!$status) $status = $this->ticket_status_enum;
+        if (!$status) $status = $this->ticket_status_enum;
 
-        if (is_numeric($status)) {
-            switch ($status) {
-                case 1:
-                    return 'open';
-                case 2:
-                    return 'closed';
-                case 3:
-                    return 'mediation';
-                default:
-                    return '';
-            }
-        } else {
-            switch ($status) {
-                case 'open':
-                    return 1;
-                case 'closed':
-                    return 2;
-                case 'mediation':
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
+        $statusArray = [
+            1 => 'open',
+            2 => 'closed',
+            3 => 'mediation',
+        ];
+
+        return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?? '';
     }
 
     public function getLastMessageType($type = 0)
