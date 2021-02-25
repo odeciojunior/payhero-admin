@@ -454,22 +454,21 @@ $(document).ready(function () {
             data += '<td >' + value.type + '</td>';
             data += '<td style="word-break: break-word;">' + value.name + '</td>';
             data += `<td style="word-break: break-word;">
-<div class="row align-items-center">
-
-                        <!-- Target -->
-                        <input id="copy-data-${index}"
-                               class="col-8 mr-1" 
-                               data-toggle="tooltip" 
-                               data-placement="left"  
-                               title="${value.content_complete}" 
-                               value="${value.content_complete}"
-                               readonly>
-
-                        <!-- Trigger -->
-                        <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
-                            <span class="material-icons icon-copy-1"> content_copy </span>
-                        </button>
-</div> 
+                        <div class="row align-items-center">
+                            <!-- Target -->
+                            <input id="copy-data-${index}"
+                                   class="col-8 mr-1" 
+                                   data-toggle="tooltip" 
+                                   data-placement="left"  
+                                   title="${value.content_complete}" 
+                                   value="${value.content_complete}"
+                                   readonly>
+        
+                                <!-- Trigger -->
+                                <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
+                                </button>
+                        </div> 
                     </td>`;
 
             if (!value.proxy) {
