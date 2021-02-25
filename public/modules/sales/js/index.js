@@ -26,7 +26,7 @@ $(document).ready(function () {
 
     $("#bt_get_xls").on("click", function () {
         $('#modal-export-sale').modal('show');
-        exportFormat = 'xls';
+        exportFormat = 'xlsx';
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
