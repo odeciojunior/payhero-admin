@@ -232,6 +232,11 @@
     min-height: 150px;
 }
 
+.tooltip-inner, .tooltip {
+    background-color: #000 !important;
+    border-radius: 4px;
+}
+
 @media (min-width: 768px) {
     .s-control-magin {
         margin-top: calc(10% - 10px) !important;
