@@ -907,7 +907,7 @@ class ShopifyService
                         [
                             'name' => $title,
                             'description' => mb_substr($description, 0, 100),
-                            'price' => $variant->getPrice() > 1000 ? 100 : $variant->getPrice(),
+                            'price' => $variant->getPrice(),
                             'status' => '1',
                             'project_id' => $projectId,
                         ]
@@ -949,7 +949,7 @@ class ShopifyService
                             'name' => $title,
                             'description' => mb_substr($description, 0, 100),
                             'code' => '',
-                            'price' => $variant->getPrice() > 1000 ? 100 : $variant->getPrice(),
+                            'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                             'status' => '1',
                         ]
                     );
@@ -1006,7 +1006,7 @@ class ShopifyService
                         'name' => $title,
                         'description' => mb_substr($description, 0, 100),
                         'code' => '',
-                        'price' => $variant->getPrice() > 1000 ? 100 : $variant->getPrice(),
+                        'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                         'status' => '1',
                     ]
                 );
