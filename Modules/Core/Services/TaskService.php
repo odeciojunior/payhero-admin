@@ -114,7 +114,9 @@ class TaskService
                     Sale::STATUS_CHARGEBACK,
                     Sale::STATUS_REFUNDED,
                     Sale::STATUS_IN_DISPUTE
-                ])->where('owner_id', $user->id)->count() > 0;
+                ])
+                ->where('owner_id', $user->id)
+                ->count() > 0;
     }
 
     private function validateFirst1000RevenueTask(User $user): bool
