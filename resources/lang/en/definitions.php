@@ -152,7 +152,7 @@ return [
                 "manufacturing_defect" => "Produto não funciona (defeito de fábrica)",
                 "tracking_code_not_received" => "Não recebi o código de rastreio",
                 "non_trackable_order" => "Não consigo rastrear meu pedido",
-                "delivery delay" => "Demora na entrega",
+                "delivery_delay" => "Demora na entrega",
                 "delivery_to_wrong_address" => "Entrega no endereço errado",
                 "others" => 'Outros',
             ],
