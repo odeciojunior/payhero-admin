@@ -120,6 +120,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('09:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
+
+        /** Tasks */
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('06:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('10:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('14:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('18:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('22:30');
     }
 
     /**

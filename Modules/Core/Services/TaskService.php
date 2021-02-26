@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Task;
@@ -114,33 +115,26 @@ class TaskService
 
     private function validateFirstSaleTask(User $user)
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        return Sale::whereIn('gateway_id', $gatewayIds)
-                ->whereIn('status', [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_IN_DISPUTE
-                ])
-                ->where('owner_id', $user->id)
-                ->count() > 0;
+        return Transaction::where('user_id', $user->id)->limit(1)->count() > 0;
     }
 
     private function validateFirst1000RevenueTask(User $user): bool
     {
         $transactionModel = new Transaction;
         $transactionPresent = $transactionModel->present();
-        $revenue = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
-            ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
-            ->where('companies.user_id', $user->id)
-            ->groupBy('companies.user_id')
-            ->selectRaw('companies.user_id, SUM(transactions.value) as value')->first();
+        $revenue = $transactionModel
+            ->whereIn('status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
+            ->where('user_id', $user->id)
+            ->groupBy('user_id')
+            ->selectRaw('user_id, SUM(transactions.value) as value')->first();
 
         return $revenue && $revenue->value >= 100000;
     }
 
     private function validateFirstWithdrawalTask(User $user): bool
     {
-        return $user->companies()->whereHas('withdrawals')->where('id', '0')->count() > 0;
+        return Company::whereHas('withdrawals', function ($query) {
+                $query->where('is_released', true);
+            })->where('user_id', $user->id)->count() > 0;
     }
 }
