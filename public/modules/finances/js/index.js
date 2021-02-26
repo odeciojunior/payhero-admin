@@ -238,13 +238,15 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>');
                 $('.saltoTotal').html('<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>');
                 $('.saldoBloqueado').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>');
-                $('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
+                //$('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
 
 
                 // Saldo bloqueado
                 $('.saldoBloqueado').html('<span class="currency"><small class="font-size-12"> R$ </small> </span> <strong> <span class="blocked-balance">' + response.blocked_balance + '</span> </strong>');
                 // Saldo Debito Pendente
-                $('.saldoDebito').html(`<span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span> <span class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">${response.pending_debt_balance}</span>`);
+                //$('.saldoDebito').html(`<span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span> <span class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">${response.pending_debt_balance}</span>`);
+                $('#go-to-pending-debt').show();
+                $('#go-to-pending-debt').html(response.pending_debt_balance);
 
                 $('.totalConta').html('<span class="currency">R$ </span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$ </span>' + isEmpty(response.available_balance));
@@ -264,7 +266,6 @@ $(document).ready(function () {
                 loadOnAnyEllipsis('.price', true);
             }
         });
-
 
         function isEmpty(value) {
             if (value.length === 0) {
@@ -1227,5 +1228,24 @@ $(document).ready(function () {
             $('.table tr:visible:last > td:first').addClass('teste-1')
             $('.table tr:visible:last > td:last').addClass('teste-2')
         }, 100);
-    })
+    });
+});
+
+/*$("#go-to-pending-debt").bind("click", function () {
+
+    $("#nav-statement-tab").click();
+    $('#statement_status_select option[value="PENDING_DEBIT"]').prop('selected', true);
+    $("#bt_filtro_statement").click();
+});*/
+
+$("#go-to-pending-debt").on("click", function () {
+
+    $("#nav-statement-tab").click();
+    $('#statement_status_select option[value="PENDING_DEBIT"]').prop('selected', true);
+
+    $('#date_range_statement').attr('disabled', true).addClass('disableFields');
+    $('#payment_method').attr('disabled', true).addClass('disableFields');
+    $('#statement_sale').attr('disabled', true).addClass('disableFields');
+
+    $("#bt_filtro_statement").click();
 });
