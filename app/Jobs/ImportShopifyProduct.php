@@ -28,7 +28,7 @@ class ImportShopifyProduct implements ShouldQueue
     {
         $integration = $this->project->shopifyIntegrations->first();
 
-        $shopifyService = new ShopifyService($integration->url_store, $integration->token);
+        $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
         $shopifyService->importShopifyProduct($this->project->id, $this->userId, $this->productId);
     }
