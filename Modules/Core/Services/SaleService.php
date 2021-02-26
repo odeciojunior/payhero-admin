@@ -1366,7 +1366,7 @@ class SaleService
                         if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
                      ) / 100 as commission,
                      sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN 
-                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                        if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum('transfered')}), transactions.value, 0) ELSE 0 END
                      ) / 100 as commission_invite,
                      sum(CASE WHEN transactions.invitation_id IS NULL THEN
                             (sales.sub_total + sales.shipment_value) - 
