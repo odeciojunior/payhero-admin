@@ -19,6 +19,7 @@ class TicketResource extends JsonResource
         return [
             'id'                     => Hashids::encode($this->id),
             'subject'                => $this->subject,
+            'subject_enum'           => $this->subject_enum,
             'description'            => $this->description,
             'ticket_category_enum'   => $this->ticket_category_enum,
             'ticket_category'        => __('definitions.enum.ticket.category.' . $this->present()

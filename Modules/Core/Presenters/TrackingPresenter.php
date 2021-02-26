@@ -16,11 +16,7 @@ class TrackingPresenter extends Presenter
             5 => 'exception',
         ];
 
-        if (is_numeric($status)) {
-            return $statusArray[$status] ?? '';
-        } else {
-            return array_search($status, $statusArray) ?? '';
-        }
+        return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?? '';
     }
 
     public function getSystemStatusEnum($status)
@@ -34,10 +30,6 @@ class TrackingPresenter extends Presenter
             7 => 'checked_manually', // Código de rastreio verificado manualmente (no Manager)
         ];
 
-        if (is_numeric($status)) {
-            return $statusArray[$status] ?? '';
-        } else {
-            return array_search($status, $statusArray) ?? '';
-        }
+       return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?? '';
     }
 }

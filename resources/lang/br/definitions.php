@@ -118,6 +118,29 @@ return [
                 "exception"        => "Problema na entrega",
             ],
         ],
+        "ticket" => [
+            "category" => [
+                "complaint" => "Reclamação",
+                "doubt" => "Dúvida",
+                "suggestion" => "Sugestão",
+
+            ],
+            "subject" => [
+                "differs_from_advertised" => "Produto difere do anunciado",
+                "damaged_by_transport" => "Produto danificado pelo transporte",
+                "manufacturing_defect" => "Produto não funciona (defeito de fábrica)",
+                "tracking_code_not_received" => "Não recebi o código de rastreio",
+                "non_trackable_order" => "Não consigo rastrear meu pedido",
+                "delivery_delay" => "Demora na entrega",
+                "delivery_to_wrong_address" => "Entrega no endereço errado",
+                "others" => 'Outros',
+            ],
+            "status" => [
+                "open" => "Aberto",
+                "closed" => "Resolvido",
+                "mediation" => "Em mediação",
+            ],
+        ],
         "user_document_type"    => [
             "personal_document" => "Documento Pessoal",
             "address_document"  => "Comprovante de residência",
