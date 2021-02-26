@@ -4,7 +4,6 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
@@ -54,6 +53,7 @@ class TaskService
         try {
             $user->tasks()->attach($task);
             $user->update();
+            //TODO: notification here
             return true;
         } catch (\Exception $e) {
             report($e);
