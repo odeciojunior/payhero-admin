@@ -136,7 +136,7 @@ $(document).ready(function () {
 
         //updateProgressBar(data.progress);
         updateProgressBar(data.billed, currentLevel);
-        updateBenefits(data.level, data.benefits);
+
 
 
     }
@@ -210,29 +210,7 @@ $(document).ready(function () {
         }
     }
 
-    function updateBenefits(level, data) {
-        $('#benefits-container').html('');
 
-        if (!isEmpty(data)) {
-
-            $.each(data, function (index, value) {
-
-                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
-                                 <p class="m-0">${value.benefit}</p>
-                            </div>`;
-                $('#benefits-container').append(item);
-            });
-
-            if ( level === 2){
-                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
-            }
-            else {
-                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
-            }
-
-        }
-    }
 
     function updatePerformanceCard2(data) {
         let currentLevel = levelInfo[data.level];
@@ -288,6 +266,8 @@ $(document).ready(function () {
             //$(this).removeClass("active");
         });
 
+        updateBenefits(data.level, data.benefits);
+
 
         //--updateAchievements(data.achievements);
 
@@ -305,8 +285,30 @@ $(document).ready(function () {
         //updateProgressBar(data.progress_money, currentLevel);
         //--updateBenefits(data.level, data.benefits);
 
+    }
 
-        $(".moeda").html(data.currency);
+    function updateBenefits(level, data) {
+        $('#benefits-container').html('');
+
+        if (!isEmpty(data)) {
+
+            $.each(data, function (index, value) {
+
+                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
+                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+                                 <p class="m-0">${value.benefit}</p>
+                            </div>`;
+                $('#benefits-container').append(item);
+            });
+
+            if ( level === 2){
+                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+            }
+            else {
+                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
+            }
+
+        }
     }
 
 });

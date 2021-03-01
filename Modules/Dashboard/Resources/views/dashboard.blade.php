@@ -229,18 +229,14 @@
                                             <p id="level-message" class="level-description">
                                             </p>
                                         </div>
-
-
                                     </div>
 
-
                                     <div id="levels" class="mt-15 mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-{{--                                        <div id="achievements-item-1" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                        <div id="achievements-item-2" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/11903cdeba102415c7a49cb4cad3ff5fab04297fr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                        <div id="achievements-item-3" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/37041bbe7e41e669a614cf99d0e9ae3585adc7f4r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                        <div id="achievements-item-4" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/6eb8248218eb601f2534656bccb0566fbd3070b8r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                        <div id="achievements-item-5" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/75f61864adba69fa157c052cf259f5cf9d098eadr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                        <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>--}}
+                                    </div>
+                                    <div id="benefits" class="mt-25 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <span class="title-performance">Seus próximos benfefícios</span>
+                                        <div id="benefits-container" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        </div>
                                     </div>
 
                                     <div class="d-flex flex-row justify-content-start align-items-start align-self-start">

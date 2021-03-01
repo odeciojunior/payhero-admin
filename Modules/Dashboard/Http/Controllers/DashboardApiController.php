@@ -347,28 +347,28 @@ class DashboardApiController extends Controller
             'level'          => $user->level,
             'achievements'   => [0, 1, 2, 3],
 
-            //'tasks'          => $user->level < 3 ? $taskService->getUserTasks($user) : [],
+            'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user)($user) : [],
+            //'tasks'          =>  $taskService->getCurrentUserTasks($user),
             'billed' => $user->total_commission_value,
 
-            'tasks'          => $taskService->getCurrentUserTasks($user),
+            'money_cashback' => 950066, //$this->getCashbackReceivedValue(),
 
-//            'benefits' =>
-//                array (
-//                    0 =>
+            'benefits' =>
+                array (
+                    0 =>
 
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
-//                            'status' => 0,
-//                        ),
-//                    3 =>
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
-//                            'status' => 0,
-//                        ),
-//                ),
-            'money_cashback' => '950066',
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => 'Gerente de Contas',
+                            'status' => 0,
+                        ),
+                    3 =>
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => 'Gerente de Contas',
+                            'status' => 0,
+                        ),
+                ),
         ];
     }
 
