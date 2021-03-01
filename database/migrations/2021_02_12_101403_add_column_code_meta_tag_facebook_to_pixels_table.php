@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddClosingDateToPendingDebtsTable extends Migration
+class AddColumnCodeMetaTagFacebookToPixelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,20 @@ class AddClosingDateToPendingDebtsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pending_debts', function (Blueprint $table) {
-            $table->date('closing_date')
-                ->nullable()->default(null)->after('request_date');
+        Schema::table('pixels', function (Blueprint $table) {
+            $table->string('code_meta_tag_facebook')->nullable()->after('apply_on_plans');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()
     {
-        Schema::table('pending_debts', function (Blueprint $table) {
-            $table->dropColumn('closing_date');
+        Schema::table('pixels', function (Blueprint $table) {
+            $table->dropColumn(['code_meta_tag_facebook']);
         });
-
     }
 }

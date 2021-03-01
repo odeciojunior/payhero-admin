@@ -71,7 +71,6 @@ class ReportService
         $saleModel    = new Sale();
 
         if (Carbon::parse($data['startDate'])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
-
             $labelList   = [];
             $currentHour = date('H');
             $startHour   = 0;
@@ -93,7 +92,7 @@ class ReportService
 
         $orders = $saleModel
             ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
-            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+            ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->whereIn('transaction.company_id', $userCompanies);
             })
@@ -166,7 +165,7 @@ class ReportService
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
@@ -223,7 +222,6 @@ class ReportService
     private function getByTwentyDays($date, $projectId, $currency)
     {
         try {
-
             $companyModel   = new Company();
             $saleModel      = new Sale();
             $affiliateModel = new Affiliate();
@@ -255,7 +253,7 @@ class ReportService
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
@@ -276,10 +274,11 @@ class ReportService
                 $creditCardValue = 0;
                 $boletoValue     = 0;
                 foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])
+                    if (
+                        (Carbon::parse($order['date'])
                                ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
-                                                                                ->format('d/m') == $label)) {
-
+                                                                                ->format('d/m') == $label)
+                    ) {
                         if ($order['payment_method'] == 1) {
                             $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                         } else {
@@ -343,7 +342,7 @@ class ReportService
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
@@ -366,7 +365,6 @@ class ReportService
                 foreach ($orders as $order) {
                     for ($x = 1; $x <= 3; $x++) {
                         if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
-
                             if ($order['payment_method'] == '1') {
                                 $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                             } else {
@@ -432,7 +430,7 @@ class ReportService
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
@@ -454,7 +452,6 @@ class ReportService
                 foreach ($orders as $order) {
                     for ($x = 1; $x <= 6; $x++) {
                         if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
-
                             if ($order['payment_method'] == 1) {
                                 $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                             } else {
@@ -514,7 +511,7 @@ class ReportService
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
-                ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
@@ -537,7 +534,6 @@ class ReportService
                 $boletoValue     = 0;
                 foreach ($orders as $order) {
                     if (Carbon::parse($order['date'])->format('m/y') == $label) {
-
                         if ($order['payment_method'] == 1) {
                             $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                             $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
@@ -571,7 +567,7 @@ class ReportService
     {
         if ($date['startDate'] == $date['endDate']) {
             return $this->getCheckoutsByHours($date, $projectId);
-        } else if ($date['startDate'] != $date['endDate']) {
+        } elseif ($date['startDate'] != $date['endDate']) {
             $data       = null;
             $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
             $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
@@ -579,17 +575,16 @@ class ReportService
             if ($projectId) {
                 if ($diffInDays <= 20) {
                     return $this->getCheckoutsByDays($date, $projectId);
-                } else if ($diffInDays > 20 && $diffInDays <= 40) {
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getCheckoutsByTwentyDays($date, $projectId);
-                } else if ($diffInDays > 40 && $diffInDays <= 60) {
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getCheckoutsByFortyDays($date, $projectId);
-                } else if ($diffInDays > 60 && $diffInDays <= 140) {
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getCheckoutsByWeek($date, $projectId);
-                } else if ($diffInDays > 140) {
+                } elseif ($diffInDays > 140) {
                     return $this->getCheckoutsByMonth($date, $projectId);
                 }
             } else {
-
                 return [
                     'label_list'    => ['', ''],
                     'checkout_data' => [0, 0],
@@ -674,7 +669,6 @@ class ReportService
     private function getCheckoutsByMonth($date, $projectId)
     {
         try {
-
             $checkoutModel = new Checkout();
             $affiliateModel = new Affiliate();
 
@@ -736,7 +730,6 @@ class ReportService
     private function getCheckoutsByFortyDays($date, $projectId)
     {
         try {
-
             $checkoutModel = new Checkout();
             $affiliateModel = new Affiliate();
 
@@ -807,7 +800,6 @@ class ReportService
     private function getCheckoutsByTwentyDays($date, $projectId)
     {
         try {
-
             $checkoutModel = new Checkout();
             $affiliateModel = new Affiliate();
 
@@ -848,8 +840,10 @@ class ReportService
             foreach ($labelList as $label) {
                 $checkoutValue = 0;
                 foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])->subDays(1)
-                               ->format('d/m') == $label) || (Carbon::parse($order['date'])->format('d/m') == $label)) {
+                    if (
+                        (Carbon::parse($order['date'])->subDay()
+                               ->format('d/m') == $label) || (Carbon::parse($order['date'])->format('d/m') == $label)
+                    ) {
                         $checkoutValue += $order['count'];
                     }
                 }
@@ -940,7 +934,6 @@ class ReportService
         $affiliateModel = new Affiliate();
 
         if (Carbon::parse($data['startDate'])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
-
             $labelList   = [];
             $currentHour = date('H');
             $startHour   = 0;
@@ -1037,31 +1030,31 @@ class ReportService
     }
 
     /**
+     * @param $companyId
      * @return array
      */
     public function getDashboardChartData($companyId)
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::parse(Carbon::now()->subMonth());
-            $endDate      = Carbon::parse(Carbon::now());
+            $dataFormated = Carbon::now()->subMonth()->subDays(5);
+            $endDate      = Carbon::now();
 
-            while ($dataFormated->lessThanOrEqualTo($endDate)) {
-                array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->addDays(6);
-                if ($dataFormated->diffInDays($endDate) < 6 && $dataFormated->diffInDays($endDate) > 0) {
-                    array_push($labelList, $dataFormated->format('d/m'));
-                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
-                    array_push($labelList, $dataFormated->format('d/m'));
+            while ($endDate->greaterThanOrEqualTo($dataFormated)) {
+                array_push($labelList, $endDate->format('d/m'));
+                $endDate = $endDate->subDays(5);
+                if ($endDate->diffInDays($dataFormated) < 1) {
+                    $endDate = $endDate->subDays($endDate->diffInDays($dataFormated));
+                    array_push($labelList, $endDate->format('d/m'));
                     break;
                 }
             }
 
-            $startDate = Carbon::now()->subMonth()->format('Y-m-d');
+            $startDate = Carbon::now()->subMonth()->subDays(5)->format('Y-m-d');
             $endDate   = Carbon::now()->addDay()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
-                ->leftJoin('transactions as transaction', function($join) use ($companyId) {
+                ->leftJoin('transactions as transaction', function ($join) use ($companyId) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->where('transaction.company_id', $companyId);
                 })
@@ -1070,28 +1063,27 @@ class ReportService
                 ->groupBy('date');
 
             $orders         = $orders->get()->toArray();
+            $labelList      = array_reverse($labelList);
             $valueData      = [];
-            foreach ($labelList as $label) {
-                $value = 0;
+            foreach ($labelList as $key => $label) {
+                $valueData[$key] = 0;
 
                 foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])
-                                ->subDay()->format('d/m') == $label) || (Carbon::parse($order['date'])
-                                ->format('d/m') == $label)) {
-
-                        $value = FoxUtils::onlyNumbers($order['value']);
+                    if (
+                        ($label == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDay()->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(2)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(3)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
+                        (Carbon::createFromFormat('d/m', $label)->subDays(4)->format('d/m') == Carbon::parse($order['date'])->format('d/m'))
+                    ) {
+                        $valueData[$key] += substr(FoxUtils::onlyNumbers($order['value']), 0, -2);
                     }
                 }
-
-                array_push($valueData, substr(intval($value), 0, -2));
             }
 
-            $valueDataReverse = array_reverse($valueData);
-            $labelListReverse = array_reverse($labelList);
-
             return [
-                'label_list' => $labelListReverse,
-                'value_data' => $valueDataReverse,
+                'label_list' => $labelList,
+                'value_data' => $valueData,
                 'currency'   => 'R$',
             ];
         } catch (Exception $e) {
@@ -1105,4 +1097,3 @@ class ReportService
         }
     }
 }
-

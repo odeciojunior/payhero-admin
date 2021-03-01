@@ -160,6 +160,13 @@
                                         </div>
                                         <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                             <label class="switch mr-2">
+                                                <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <span class="switch-text"> Order Bump </span>
+                                        </div>
+                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <label class="switch mr-2">
                                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                                 <span class="slider round"></span>
                                             </label>
@@ -237,7 +244,7 @@
 
                             <div class="col-md-3 d-sm-none d-md-block">
                                 <div style='display:block;'>
-                                    <div class="mt-30">
+                                    <div>
                                         <h5 class="gray font-size-16"> Acesso rápido </h5>
                                         <ul class="quick-list">
                                             <li>

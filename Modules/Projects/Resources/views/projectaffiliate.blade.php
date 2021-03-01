@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=s0') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=02') }}">
 @endpush
 
 @section('content')

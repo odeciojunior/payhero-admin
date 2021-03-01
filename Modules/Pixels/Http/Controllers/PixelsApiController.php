@@ -12,6 +12,7 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\PixelService;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
@@ -69,12 +70,7 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param PixelStoreRequest $request
-     * @param $projectId
-     * @return JsonResponse
-     */
-    public function store(PixelStoreRequest $request, $projectId)
+    public function store(PixelStoreRequest $request, $projectId): JsonResponse
     {
         try {
             $pixelModel = new Pixel();
@@ -83,7 +79,7 @@ class PixelsApiController extends Controller
             $validator = $request->validated();
 
             if (!$validator || !isset($projectId)) {
-                return response()->json('Parametros invalidos', 400);
+                return response()->json('Parametros inválidos', 400);
             }
 
             $validator['project_id'] = current(Hashids::decode($projectId));
@@ -102,7 +98,7 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => 'Sem permissão para salvar pixels'], 403);
             }
 
-            if ($validator['platform'] != 'outbrain' || $validator['platform'] != 'taboola') {
+            if ($validator['platform'] == 'google_adwords') {
                 $order = ['AW-'];
                 $validator['code'] = str_replace($order, '', $validator['code']);
             }
@@ -118,6 +114,15 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
+            $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
+
+            if ($validator['platform'] == 'taboola' && empty($validator['purchase_event_name'])) {
+                $validated['purchase_event_name'] = 'make_purchase';
+            }
+            if ($validator['platform'] == 'outbrain' && empty($validator['purchase_event_name'])) {
+                $validated['purchase_event_name'] = 'Purchase';
+            }
+
             $pixel = $pixelModel->create(
                 [
                     'project_id' => $validator['project_id'],
@@ -131,8 +136,15 @@ class PixelsApiController extends Controller
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
+                    'code_meta_tag_facebook' => $codeMetaTag,
+                    'purchase_event_name' => $validator['purchase_event_name']
                 ]
             );
+
+
+            if (!empty($codeMetaTag)) {
+                (new PixelService())->updateCodeMetaTagFacebook($project->id, $codeMetaTag);
+            }
 
             if ($pixel) {
                 return response()->json('Pixel Configurado com sucesso!', 200);
@@ -146,12 +158,6 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param PixelUpdateRequest $request
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
     public function update(PixelUpdateRequest $request, $projectId, $id)
     {
         try {
@@ -177,7 +183,7 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
             }
 
-            if ($validated['platform'] != 'outbrain' || $validated['platform'] != 'taboola') {
+            if ($validated['platform'] == 'google_adwords') {
                 $order = ['AW-'];
                 $validated['code'] = str_replace($order, '', $validated['code']);
             }
@@ -193,6 +199,13 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
+            if ($pixel->platform == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
+                $validated['purchase_event_name'] = 'make_purchase';
+            }
+            if ($pixel->platform == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
+                $validated['purchase_event_name'] = 'Purchase';
+            }
+
             $pixelUpdated = $pixel->update(
                 [
                     'name' => $validated['name'],
@@ -203,9 +216,24 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
                     'purchase_card' => $validated['purchase_card'],
+                    'purchase_event_name' => $validated['purchase_event_name'] ?? null
                 ]
             );
             if ($pixelUpdated) {
+                if (!empty($pixel->code_meta_tag_facebook) && empty($validated['code_meta_tag_facebook'])) {
+                    $pixel->update(
+                        [
+                            'code_meta_tag_facebook' => ''
+                        ]
+                    );
+                }
+
+                if (!empty($validated['code_meta_tag_facebook'])) {
+                    (new PixelService())->updateCodeMetaTagFacebook(
+                        $project->id,
+                        $validated['code_meta_tag_facebook']
+                    );
+                }
                 return response()->json('Sucesso', 200);
             }
 

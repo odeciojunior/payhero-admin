@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Jobs\ImportShopifyProduct;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -896,10 +897,10 @@ class ShopifyService
                     ->first();
                 if (!empty($productPlan)) {
                     $plan = $planModel->find($productPlan->plan_id);
-                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costProduct = $this->getCostShopify($variant);
-                        if($costProduct !== '') {
-                            $productPlan->update(['cost' =>  $costProduct * 100]);
+                        if ($costProduct !== '') {
+                            $productPlan->update(['cost' => $costProduct * 100]);
                         }
                     }
 
@@ -949,7 +950,7 @@ class ShopifyService
                             'name' => $title,
                             'description' => mb_substr($description, 0, 100),
                             'code' => '',
-                            'price' => $variant->getPrice(),
+                            'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                             'status' => '1',
                         ]
                     );
@@ -959,13 +960,13 @@ class ShopifyService
                         'plan_id' => $plan->id,
                         'amount' => 1,
                     ];
-                    if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costShopify = $this->getCostShopify($variant);
-                        if($costShopify !== '') {
-                            $dataProductPlan['cost'] =  $costShopify * 100;
+                        if ($costShopify !== '') {
+                            $dataProductPlan['cost'] = $costShopify * 100;
                         }
                     }
- 
+
                     $productPlanModel->create($dataProductPlan);
 
                     $plan->update(['code' => Hashids::encode($plan->id)]);
@@ -1006,7 +1007,7 @@ class ShopifyService
                         'name' => $title,
                         'description' => mb_substr($description, 0, 100),
                         'code' => '',
-                        'price' => $variant->getPrice(),
+                        'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                         'status' => '1',
                     ]
                 );
@@ -1017,10 +1018,10 @@ class ShopifyService
                     'plan_id' => $plan->id,
                     'amount' => '1',
                 ];
-                if(($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                     $costShopify = $this->getCostShopify($variant);
-                    if($costShopify !== '') {
-                        $dataProductPlan['cost'] =  $costShopify * 100;
+                    if ($costShopify !== '') {
+                        $dataProductPlan['cost'] = $costShopify * 100;
                     }
                 }
 
@@ -1126,6 +1127,7 @@ class ShopifyService
                 ]
             );
 
+        $project = $projectModel->find($projectId);
 
         $pagination = $this->getShopProducts();
         $storeProducts = $pagination->current();
@@ -1134,7 +1136,7 @@ class ShopifyService
         while ($nextPagination) {
             foreach ($storeProducts as $shopifyProduct) {
                 try {
-                    $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+                    ImportShopifyProduct::dispatch($project, $userId,$shopifyProduct->getId());
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -1148,10 +1150,10 @@ class ShopifyService
             }
         }
 
-        $this->createShopifyIntegrationWebhook($projectId, "https://sirius.cloudfox.net/postback/shopify/");
+        if (FoxUtils::isProduction()) {
+            $this->createShopifyIntegrationWebhook($projectId, "https://sirius.cloudfox.net/postback/shopify/");
+        }
 
-
-        $project = $projectModel->find($projectId);
 
         $user = $userModel->find($userId);
         if (!empty($project) && !empty($user)) {
@@ -1169,6 +1171,7 @@ class ShopifyService
      * @param $projectId
      * @param $url
      * @return bool
+     * @throws Exception
      */
     public function createShopifyIntegrationWebhook($projectId, $url)
     {
@@ -2280,16 +2283,14 @@ class ShopifyService
     public function getCostShopify($variant)
     {
         try {
-
             $cost = $this->getShopInventoryItem($variant->getInventoryItemId());
-            if(method_exists($cost, 'getCost')) {
+            if (method_exists($cost, 'getCost')) {
                 $cost = $cost->getCost();
                 $cost = (empty($cost)) ? 0 : $cost;
             } else {
                 $cost = '';
             }
             return $cost;
-
         } catch (Exception $e) {
             return '';
         }

@@ -191,6 +191,15 @@ class SaleService
                 );
             }
 
+            if (!empty($filters['order_bump']) && $filters['order_bump'] == true) {
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) {
+                        $querySale->where('has_order_bump', true);
+                    }
+                );
+            }
+
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $dateType = $filters["date_type"];

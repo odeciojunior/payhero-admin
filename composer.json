@@ -1,19 +1,20 @@
 {
-    "name"             : "laravel/laravel",
-    "description"      : "The Laravel Framework.",
-    "keywords"         : [
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": [
         "framework",
         "laravel"
     ],
-    "license"          : "MIT",
-    "type"             : "project",
-    "require"          : {
+    "license": "MIT",
+    "type": "project",
+    "require": {
         "php": "^7.4",
         "ext-json": "*",
         "arcanedev/log-viewer": "~7.0",
         "barryvdh/laravel-cors": "2.0.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "cloudflare/sdk": "^1.0",
+        "cloudfox/getnet": "1.x-dev",
         "doctrine/dbal": "^2.10",
         "ebanx/ebanx": "dev-master",
         "fideloper/proxy": "^4.0",
@@ -52,7 +53,7 @@
         "vitorccsiqueira/zenvia-php": "2.1",
         "yajra/laravel-datatables": "^1.2"
     },
-    "require-dev"      : {
+    "require-dev": {
         "ext-curl": "*",
         "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-query-detector": "^1.4",
@@ -66,37 +67,37 @@
         "shuchkin/simplexlsx": "^0.8.13",
         "symfony/thanks": "^1.0"
     },
-    "autoload"         : {
+    "autoload": {
         "classmap": [
             "database/seeds",
             "database/factories"
         ],
-        "psr-4"   : {
+        "psr-4": {
             "App\\": "app/"
         }
     },
-    "autoload-dev"     : {
+    "autoload-dev": {
         "psr-4": {
-            "App\\"    : "app/",
+            "App\\": "app/",
             "Modules\\": "Modules/"
         },
         "classmap": [
             "tests"
         ]
     },
-    "extra"            : {
+    "extra": {
         "laravel": {
             "dont-discover": []
         }
     },
-    "scripts"          : {
+    "scripts": {
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
-        "post-create-project-cmd"  : [
+        "post-create-project-cmd": [
             "@php artisan key:generate"
         ],
-        "post-autoload-dump"       : [
+        "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover",
             "@php artisan config:clear",
@@ -104,11 +105,17 @@
             "@php artisan route:clear"
         ]
     },
-    "config"           : {
-        "preferred-install"  : "dist",
-        "sort-packages"      : true,
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
         "optimize-autoloader": true
     },
     "minimum-stability": "dev",
-    "prefer-stable"    : true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Cloudfox-net/getnet.git"
+        }
+    ]
 }

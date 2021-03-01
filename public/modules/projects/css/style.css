@@ -216,10 +216,30 @@
     font: normal normal bold 13px Muli;
 }
 
+.nav-tabs .nav-link {
+    margin: 0 5px !important;
+}
+
+.nav-tabs-horizontal li:first-child > a {
+    margin-left: 0 !important;
+}
+
+.nav-tabs-horizontal li:last-child > a {
+    margin-right: 0 !important;
+}
+
+.ck-editor__editable_inline {
+    min-height: 150px;
+}
+
+.tooltip-inner, .tooltip {
+    background-color: #000 !important;
+    border-radius: 4px;
+}
+
 @media (min-width: 768px) {
     .s-control-magin {
         margin-top: calc(10% - 10px) !important;
         margin-bottom: calc(10% - 10px) !important;
     }
-
 }

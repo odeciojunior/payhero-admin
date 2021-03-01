@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=06') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -152,6 +152,12 @@
                                    aria-controls="tab_upsell" role="tab">Upsell <span id="count-upsell" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
+                            <li class="nav-item tab_order_bump" role="presentation">
+                                <span class="category-tabs">&nbsp;</span>
+                                <a id="tab_order_bump" class="nav-link" data-toggle="tab" href="#tab-order-bump-panel"
+                                   aria-controls="tab_order_bump" role="tab">Order Bump <span id="count-order-bump" class=" d-none tab-counter"> 0 </span>
+                                </a>
+                            </li>
                             <li class="nav-item tab_coupons" role="presentation">
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id='tab_coupons' class="nav-link" data-toggle="tab" href="#tab_coupons-panel"
@@ -223,9 +229,16 @@
                                 @include('plans::index')
                             </div>
                         </div>
+                        <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
                             <div class="card card-body">
                                 @include('projectupsellrule::index')
+                            </div>
+                        </div>
+                        <!--- Order Bump -->
+                        <div class="tab-pane" id="tab-order-bump-panel" role="tabpanel">
+                            <div class="card card-body">
+                                @include('orderbump::index')
                             </div>
                         </div>
                         <!-- Reviews -->
@@ -277,6 +290,10 @@
 
     @push('scripts')
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
@@ -284,12 +301,11 @@
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/orderbump/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
+        <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
     @endpush
 @endsection
 

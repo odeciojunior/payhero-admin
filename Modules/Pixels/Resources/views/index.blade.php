@@ -1,3 +1,9 @@
+<style>
+    .tooltip-inner {
+        background: #f5f7f8;
+    }
+</style>
+
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;" >
@@ -67,6 +73,12 @@
             </div>
         </div>
     </div>
+    <script>
+
+        // let value = $("#modal-create-pixel #select-platform option:selected").val();
+            // $("#modal-edit-pixel #outbrain-info-edit").hide();
+            // $("#modal-edit-pixel #google-analytics-info").hide();
+    </script>
 </div>
 
 <!-- Edit -->
@@ -165,24 +177,6 @@
                     <div class="panel-collapse collapse" id="facebook-details" aria-labelledby="exampleHeadingFirst"
                          role="tabpanel" style="">
                         <div class="panel-body">
-                            <!--
-                                                        <ul>
-                                                            <li>Acesse o Gerenciador de Eventos</li>
-                                                            <li>Selecione o pixel que você deseja configurar.</li>
-                                                            <li>Clique em <strong>Continuar configuraçõ do pixel</strong></li>
-                                                            <li>Selecione o <strong>código</strong></li>
-                                                            <li>Exemplo código pixel facebook: <strong>2868143445789125</strong></li>
-                                                            <li>
-                                                                <span> Clique em <strong>Adicionar pixel</strong></span>
-                                                                <a class="ml-10 rounded-add pointer">
-                                                                    <i class="icon wb-plus" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>Cole o código do facebook no campo <strong>Código</strong> do formulário</li>
-                                                            <li>Selecione um ou mais planos para ser executado o pixel</li>
-                                                        </ul>
-                            -->
-
                             Nós enviamos os seguintes eventos:
                             <ul>
                                 <li>InitiateCheckout</li>

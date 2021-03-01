@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-md-4 col-sm-12">
-                        <div class="d-flex flex-column text-center" id="div-img-review" style="position: relative;">
+                        <div class="text-center">
                             <input name="photo" type="file" class="form-control" id="photoReview"
                                    style="display:none;" accept="image/*">
                             <label for="photoReview">Selecione uma foto</label>

@@ -329,6 +329,14 @@ class Project extends Model
         return $this->hasMany(ProjectReviews::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function orderBumpRules()
+    {
+        return $this->hasMany(OrderBumpRule::class);
+    }
+
     public function getFinalizingPurchaseConfigToogleAttribute()
     {
 

@@ -13,38 +13,33 @@ class PixelStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'campaign'        => 'nullable',
-            'name'            => 'required|max:100',
-            'code'            => 'required',
-            'platform'        => 'required',
-            'status'          => 'nullable',
-            'checkout'        => 'nullable',
+            'campaign' => 'nullable',
+            'name' => 'required|max:100',
+            'code' => 'required',
+            'platform' => 'required',
+            'status' => 'nullable',
+            'checkout' => 'nullable',
             'purchase_boleto' => 'nullable',
-            'purchase_card'   => 'nullable',
-            'affiliate_id'    => 'nullable',
+            'purchase_card' => 'nullable',
+            'affiliate_id' => 'nullable',
             'add_pixel_plans' => 'required|array',
+            'code_meta_tag_facebook' => 'nullable|string|max:255',
+            'purchase_event_name' => 'nullable|max:255',
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.required'            => 'O campo Descrição é obrigatório',
-            'name.max'                 => 'O campo Descrição permite apenas 100 caracteres',
-            'code.required'            => 'O campo Código é obrigatório',
-            'platform.required'        => 'O campo Plataforma é obrigatório',
+            'name.required' => 'O campo Descrição é obrigatório',
+            'name.max' => 'O campo Descrição permite apenas 100 caracteres',
+            'code.required' => 'O campo Código é obrigatório',
+            'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }

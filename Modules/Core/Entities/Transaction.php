@@ -15,6 +15,7 @@ use Exception;
  * @property integer $sale_id
  * @property integer $gateway_id
  * @property integer $company_id
+ * @property integer $user_id
  * @property string $value
  * @property integer $type
  * @property string $status
@@ -54,6 +55,7 @@ class Transaction extends Model
         'sale_id',
         'gateway_id',
         'company_id',
+        'user_id',
         'invitation_id',
         'value',
         'type',
@@ -102,6 +104,11 @@ class Transaction extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function sale()

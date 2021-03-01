@@ -10,189 +10,199 @@ return [
     */
     'enum' => [
         "personal_document_status" => [
-            "pending"   => "Pendente",
+            "pending" => "Pendente",
             "analyzing" => "Em análise",
-            "approved"  => "Aprovado",
-            "refused"   => "Recusado",
+            "approved" => "Aprovado",
+            "refused" => "Recusado",
         ],
-        "address_document_status"  => [
-            "pending"   => "Pendente",
+        "address_document_status" => [
+            "pending" => "Pendente",
             "analyzing" => "Em análise",
-            "approved"  => "Aprovado",
-            "refused"   => "Recusado",
+            "approved" => "Aprovado",
+            "refused" => "Recusado",
         ],
         "contract_document_status" => [
-            "pending"   => "Pendente",
+            "pending" => "Pendente",
             "analyzing" => "Em análise",
-            "approved"  => "Aprovado",
-            "refused"   => "Recusado",
+            "approved" => "Aprovado",
+            "refused" => "Recusado",
         ],
-        "bank_document_status"     => [
-            "pending"   => "Pendente",
+        "bank_document_status" => [
+            "pending" => "Pendente",
             "analyzing" => "Em análise",
-            "approved"  => "Aprovado",
-            "refused"   => "Recusado",
+            "approved" => "Aprovado",
+            "refused" => "Recusado",
         ],
-        "status"                   => [
-            "pending"   => "Pendente",
+        "status" => [
+            "pending" => "Pendente",
             "analyzing" => "Em análise",
-            "approved"  => "Aprovado",
-            "refused"   => "Recusado",
+            "approved" => "Aprovado",
+            "refused" => "Recusado",
         ],
-        "status_affiliate"         => [
-            "active"   => "Ativo",
+        "status_affiliate" => [
+            "active" => "Ativo",
             "disabled" => "Desativado",
         ],
-        "pixel"                    => [
+        "pixel" => [
             "status" => [
-                "active"   => "Ativo",
+                "active" => "Ativo",
                 "disabled" => "Desativado",
             ],
         ],
-        "discount_coupon"          => [
+        "discount_coupon" => [
             "status" => [
-                "active"   => "Ativo",
+                "active" => "Ativo",
                 "disabled" => "Desativado",
             ],
         ],
-        "shipping"                 => [
-            "status"       => [
-                "active"   => "Ativo",
+        "shipping" => [
+            "status" => [
+                "active" => "Ativo",
                 "disabled" => "Desativado",
             ],
             "pre_selected" => [
                 "yes" => "Sim",
-                "no"  => "Não",
+                "no" => "Não",
             ],
-            "type"         => [
+            "type" => [
                 'static' => 'Estático',
-                'sedex'  => 'SEDEX - Calculado automaticamente',
-                'pac'    => 'PAC - Calculado automaticamente',
+                'sedex' => 'SEDEX - Calculado automaticamente',
+                'pac' => 'PAC - Calculado automaticamente',
             ],
         ],
-        "plan"                     => [
+        "plan" => [
             "status" => [
-                "active"   => "Ativo",
+                "active" => "Ativo",
                 "disabled" => "Desativado",
             ],
         ],
-        "withdrawals"              => [
+        "withdrawals" => [
             "status" => [
-                "pending"    => "Pendente",
-                "approved"   => "Aprovado",
+                "pending" => "Pendente",
+                "approved" => "Aprovado",
                 "transfered" => "Transferido",
-                "refused"    => "Recusado",
-                'in_review'  => "Em Revisão",
+                "refused" => "Recusado",
+                'in_review' => "Em Revisão",
                 'processing' => "Processando",
-                'returned'   => "Retornado",
-                'liquidating'   => "Liquidando",
-                'partially_liquidated'   => "Parcialmente Liquidado",
+                'returned' => "Retornado",
+                'liquidating' => "Liquidando",
+                'partially_liquidated' => "Parcialmente Liquidado",
             ],
         ],
-        "invitation"               => [
+        "invitation" => [
             "status" => [
                 "accepted" => "Aceito",
-                "pending"  => "Pendente",
-                "expired"  => "Expirado",
+                "pending" => "Pendente",
+                "expired" => "Expirado",
             ],
         ],
-        "checkout"                 => [
+        "checkout" => [
             "status" => [
-                'accessed'       => 'Acessado',
+                'accessed' => 'Acessado',
                 'abandoned cart' => 'Não recuperado',
-                'recovered'      => 'Recuperado',
+                'recovered' => 'Recuperado',
                 'sale finalized' => 'Venda finalizada',
             ],
         ],
-        "sale"                     => [
+        "sale" => [
             "status" => [
-                "approved"             => "Aprovado",
-                "canceled"             => "Cancelado",
-                "charge_back"          => "Chargeback",
-                'in_proccess'          => "Em análise",
-                "pending"              => "Pendente",
-                "refused"              => "Recusado",
-                "refunded"             => "Estornado",
-                "partial_refunded"     => "Estorno Parcial",
-                "in_review"            => "Revisão Antifraude",
-                "system_error"         => "Erro de sistema",
-                "billet_refunded"      => "Estornado",
+                "approved" => "Aprovado",
+                "canceled" => "Cancelado",
+                "charge_back" => "Chargeback",
+                'in_proccess' => "Em análise",
+                "pending" => "Pendente",
+                "refused" => "Recusado",
+                "refunded" => "Estornado",
+                "partial_refunded" => "Estorno Parcial",
+                "in_review" => "Revisão Antifraude",
+                "system_error" => "Erro de sistema",
+                "billet_refunded" => "Estornado",
                 "chargeback_recovered" => "Recuperado",
-                "in_dispute"           => "Em disputa",
+                "in_dispute" => "Em disputa",
             ],
         ],
-        "product_plan_sale"        => [
+        "product_plan_sale" => [
             "tracking_status_enum" => [
-                "posted"           => "Postado",
-                "dispatched"       => "Em trânsito",
-                "delivered"        => "Entregue",
+                "posted" => "Postado",
+                "dispatched" => "Em trânsito",
+                "delivered" => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega",
+                "exception" => "Problema na entrega",
             ],
         ],
-        "tracking"                 => [
+        "tracking" => [
             "tracking_status_enum" => [
-                "posted"           => "Postado",
-                "dispatched"       => "Em trânsito",
-                "delivered"        => "Entregue",
+                "posted" => "Postado",
+                "dispatched" => "Em trânsito",
+                "delivered" => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega",
+                "exception" => "Problema na entrega",
             ],
         ],
-        "ticket"                   => [
+        "ticket" => [
             "category" => [
-                "complaint"  => "Reclamação",
-                "doubt"      => "Dúvida",
+                "complaint" => "Reclamação",
+                "doubt" => "Dúvida",
                 "suggestion" => "Sugestão",
 
             ],
-            "status"   => [
-                "open"      => "Aberto",
-                "closed"    => "Resolvido",
+            "subject" => [
+                "differs_from_advertised" => "Produto difere do anunciado",
+                "damaged_by_transport" => "Produto danificado pelo transporte",
+                "manufacturing_defect" => "Produto não funciona (defeito de fábrica)",
+                "tracking_code_not_received" => "Não recebi o código de rastreio",
+                "non_trackable_order" => "Não consigo rastrear meu pedido",
+                "delivery_delay" => "Demora na entrega",
+                "delivery_to_wrong_address" => "Entrega no endereço errado",
+                "others" => 'Outros',
+            ],
+            "status" => [
+                "open" => "Aberto",
+                "closed" => "Resolvido",
                 "mediation" => "Em mediação",
             ],
         ],
-        "invoices"                 => [
+        "invoices" => [
             "status" => [
-                "pending"            => "Pendente",
-                "send"               => "Enviado",
-                "completed"          => "Finalizado",
-                'error'              => "Erro",
-                "in_process"         => "Em processamento",
+                "pending" => "Pendente",
+                "send" => "Enviado",
+                "completed" => "Finalizado",
+                'error' => "Erro",
+                "in_process" => "Em processamento",
                 "error_max_attempts" => "Maximo de tentativas",
-                "canceled"           => "Cancelado",
-                "rejected"           => "Rejeitado",
+                "canceled" => "Cancelado",
+                "rejected" => "Rejeitado",
             ],
         ],
-        "role"                     => [
+        "role" => [
             "account_owner" => "Dono da conta",
-            "admin"         => "Administrativo",
-            "attendance"    => "Atendimento",
+            "admin" => "Administrativo",
+            "attendance" => "Atendimento",
         ],
-        "user_document_type"       => [
+        "user_document_type" => [
             "personal_document" => "Documento Pessoal",
-            "address_document"  => "Comprovante de residência",
+            "address_document" => "Comprovante de residência",
         ],
-        "company_document_type"    => [
-            "bank_document_status"     => "Documento Bancário",
-            "address_document_status"  => "Comprovante de endereço empresarial",
+        "company_document_type" => [
+            "bank_document_status" => "Documento Bancário",
+            "address_document_status" => "Comprovante de endereço empresarial",
             "contract_document_status" => "Contrato social",
         ],
-        "country"                  => [
-            "brazil"        => "Brasil",
-            "portugal"      => "Portugal",
-            "usa"           => "Estados Unidos",
-            "germany"       => "Alemanha",
-            "spain"         => "Espanha",
-            "france"        => "França",
-            "italy"         => "Itália",
-            "chile"         => "Chile",
+        "country" => [
+            "brazil" => "Brasil",
+            "portugal" => "Portugal",
+            "usa" => "Estados Unidos",
+            "germany" => "Alemanha",
+            "spain" => "Espanha",
+            "france" => "França",
+            "italy" => "Itália",
+            "chile" => "Chile",
             "unitedkingdom" => "Reino Unido",
         ],
-        "currency"                 => [
-            "real"  => "R$",
+        "currency" => [
+            "real" => "R$",
             "dolar" => "$",
-            "euro"  => "€",
+            "euro" => "€",
         ],
     ],
 
