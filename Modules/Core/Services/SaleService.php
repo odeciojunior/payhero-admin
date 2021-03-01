@@ -56,7 +56,6 @@ class SaleService
                 'sale.shipping',
                 'sale.checkout',
                 'sale.delivery',
-                'sale.transactions.anticipatedTransactions',
                 'sale.affiliate.user',
                 'sale.saleRefundHistory',
             ];
@@ -237,8 +236,6 @@ class SaleService
                 $transactionModel->present()->getStatusEnum('paid'),
                 $transactionModel->present()
                     ->getStatusEnum('transfered'),
-                $transactionModel->present()
-                    ->getStatusEnum('anticipated'),
             ]
         );
         $statusDispute = (new Sale())->present()->getStatus('in_dispute');
@@ -294,9 +291,6 @@ class SaleService
     {
         $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
             ->first();
-
-        $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
-        $valueAnticipable = $anticipatedTransaction->value ?? 0;
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -427,7 +421,7 @@ class SaleService
             ) : '',
             'affiliate_comission' => $affiliateComission,
             'refund_value' => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
-            'value_anticipable' => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
+            'value_anticipable' => '0,00',
             'total_paid_value' => number_format($sale->total_paid_value, 2, ',', '.'),
             'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first(
             )->refund_observation : null,
@@ -880,39 +874,6 @@ class SaleService
                         'balance' => $transaction->company->balance -= $refundValue,
                     ]
                 );
-            } else {
-                if ($transaction->status_enum == $transactionModel->present()
-                        ->getStatusEnum('anticipated') && !empty($transaction->company)) {
-                    $anticipatedValue = $transaction->anticipatedTransactions()->first()->value;
-
-                    $refundValue = $anticipatedValue;
-
-                    if ($transaction->type == $transactionModel->present()->getType('producer')) {
-                        $refundValue += $saleTax;
-                        if (!empty($inviteTransaction)) {
-                            $refundValue += $inviteTransaction->value;
-                        }
-                    }
-
-                    $transferModel->create(
-                        [
-                            'transaction_id' => $transaction->id,
-                            'user_id' => $transaction->company->user_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                            'reason' => 'Taxa de estorno de boleto',
-                            'is_refund_tax' => 1,
-                            'company_id' => $transaction->company->id,
-                        ]
-                    );
-
-                    $transaction->company->update(
-                        [
-                            'balance' => $transaction->company->balance -= $refundValue,
-                        ]
-                    );
-                }
             }
 
             $transaction->update(
