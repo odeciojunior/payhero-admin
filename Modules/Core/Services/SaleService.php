@@ -1238,11 +1238,6 @@ class SaleService
             $transactionModel = new Transaction();
             $salesModel = new Sale();
             $blockReasonSaleModel = new BlockReasonSale();
-            $userId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companyModel->where('user_id', $userId)
-                ->pluck('id')
-                ->toArray();
 
             $transactions = $transactionModel->with(
                 [
@@ -1259,27 +1254,8 @@ class SaleService
                     },
                 ]
             )
-                ->whereIn('company_id', $userCompanies)
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                // ->whereNull('invitation_id')
-                // ->where(function($queryStatus) use($transactionModel, $salesModel) {
-                //     $queryStatus->where(function($transfered) use($transactionModel) {
-                //             $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
-                //         })
-                //         ->orWhere(function($pending) use($transactionModel, $salesModel) {
-                //             $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                //                 ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                //         });
-                // })
-                ->whereDate('transactions.created_at', '>=', '2020-01-01')
-                // ->whereHas(
-                //     'sale',
-                //     function ($f1) use ($salesModel) {
-                //         $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                //             ->orWhere('sales.has_valid_tracking', 0)
-                //             ->whereNotNull('delivery_id');
-                //     }
-                // );
                 ->whereHas('blockReasonSale', function($blocked) use ($blockReasonSaleModel) {
                     $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
                 });
