@@ -9,6 +9,7 @@
     <meta name="app-debug" content="{{ getenv('APP_DEBUG') }}">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @if(getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'false')
 
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
