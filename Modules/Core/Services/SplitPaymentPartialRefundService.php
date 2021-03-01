@@ -117,6 +117,7 @@ class SplitPaymentPartialRefundService
                     Transaction::create([
                                             'sale_id'       => $this->sale->id,
                                             'company_id'    => $invite->company_id,
+                                            'user_id'       => $invite->company->user_id,
                                             'value'         => $inviteValue,
                                             'release_date'  => $transactionRefundedAffiliateInvite->release_date,
                                             'status'        => $this->transactionStatus,
@@ -148,6 +149,7 @@ class SplitPaymentPartialRefundService
                 Transaction::create([
                                         'sale_id'          => $this->sale->id,
                                         'company_id'       => $affiliate->company->id,
+                                        'user_id'          => $affiliate->company->user_id,
                                         'value'            => $affiliateValue,
                                         'percentage_rate'  => $percentageRate,
                                         'release_date'     => $transactionRefundedAffiliate->release_date,
@@ -201,6 +203,7 @@ class SplitPaymentPartialRefundService
             Transaction::create([
                                     'sale_id'       => $this->sale->id,
                                     'company_id'    => $invite->company->id,
+                                    'company_id'    => $invite->company->user_id,
                                     'value'         => $inviteValue,
                                     'release_date'  => $transactionRefundedProducerInvite->release_date,
                                     'status'        => $this->transactionStatus,
@@ -239,6 +242,7 @@ class SplitPaymentPartialRefundService
         Transaction::create([
                                 'sale_id'          => $this->sale->id,
                                 'company_id'       => $producerCompany->id,
+                                'user_id'          => $producerCompany->user_id,
                                 'value'            => $this->producerValue,
                                 'release_date'     => $transactionRefundedProducer->release_date,
                                 'status'           => $this->transactionStatus,
