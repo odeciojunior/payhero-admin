@@ -300,11 +300,11 @@ class DashboardApiController extends Controller
         return response()->json($data, Response::HTTP_OK);
     }
 
-    public function getPerformace(Request $request): JsonResponse
+    public function getPerformance(Request $request): JsonResponse
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataPerformace($request->company);
+                $values = $this->getDataPerformance($request->company);
 
                 if ($values) {
                     return response()->json($values, 200);
@@ -336,17 +336,22 @@ class DashboardApiController extends Controller
         }
     }
 
-    private function getDataPerformace($companyHash): array
+    private function getDataPerformance($companyHash): array
     {
         $company = Company::find(current(Hashids::decode($companyHash)));
         $user = $company->user;
         $taskService = new TaskService();
+        //$cashback = $this->getCashbackReceivedValue();
 
         return [
             'level'          => $user->level,
             'achievements'   => [0, 1, 2, 3],
-            'tasks'          => $user->level < 3 ? $taskService->getUserTasks($user) : [],
-            'progress_money' => $user->total_commission_value,
+
+            //'tasks'          => $user->level < 3 ? $taskService->getUserTasks($user) : [],
+            'billed' => $user->total_commission_value,
+
+            'tasks'          => $taskService->getCurrentUserTasks($user),
+
 //            'benefits' =>
 //                array (
 //                    0 =>
@@ -710,5 +715,9 @@ class DashboardApiController extends Controller
 
             return [];
         }
+    }
+
+    function getCashbackReceivedValue() {
+        return Transaction::where('user_id', auth()->user()->account_owner_id)->whete('type_enum', 8)->sum('value');
     }
 }
