@@ -35,7 +35,7 @@ class PostBackTrackingmoreController extends Controller
                 ->get();
 
             foreach ($trackings as $tracking) {
-                $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale);
+                $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale, false, false);
             }
 
             return response()->json(['message' => 'Postback received!']);
