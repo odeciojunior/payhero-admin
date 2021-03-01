@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Services\TrackingmoreService;
+use Modules\Core\Services\TrackingService;
 
 class PostBackTrackingmoreController extends Controller
 {
@@ -24,27 +25,17 @@ class PostBackTrackingmoreController extends Controller
         try {
             $data = $request->all();
 
-            $trackingmoreService = new TrackingmoreService();
+            $trackingService = new TrackingService();
             $trackingModel = new Tracking();
 
             $trackingCode = $data['data']['tracking_number'] ?? '';
-            $trackingStatus = $data['data']['status'] ?? '';
-            $trackingStatus = $trackingmoreService->parseStatus($trackingStatus);
 
-            $trackings = $trackingModel->where('tracking_code', $trackingCode)->get();
+            $trackings = $trackingModel->with('productPlanSale')
+                ->where('tracking_code', $trackingCode)
+                ->get();
 
             foreach ($trackings as $tracking) {
-                if ($tracking->tracking_status_enum != $trackingStatus) {
-                    $tracking->tracking_status_enum = $trackingStatus;
-                    if(in_array($tracking->system_status_enum, [
-                        $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
-                        $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
-                    ])) {
-                        $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
-                    }
-                    $tracking->save();
-                    event(new CheckSaleHasValidTrackingEvent($tracking->sale_id));
-                }
+                $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale);
             }
 
             return response()->json(['message' => 'Postback received!']);

@@ -143,4 +143,9 @@ class Transaction extends Model
     public function withdrawal() {
         return $this->belongsTo(Withdrawal::class);
     }
+
+    public function blockReasonSale()
+    {
+        return $this->hasMany(BlockReasonSale::class, 'sale_id', 'sale_id');
+    }
 }

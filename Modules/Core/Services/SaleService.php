@@ -18,6 +18,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Getnet\Models\StatementAdjustment;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -1236,11 +1237,7 @@ class SaleService
             $customerModel = new Customer();
             $transactionModel = new Transaction();
             $salesModel = new Sale();
-            $userId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companyModel->where('user_id', $userId)
-                ->pluck('id')
-                ->toArray();
+            $blockReasonSaleModel = new BlockReasonSale();
 
             $transactions = $transactionModel->with(
                 [
@@ -1251,30 +1248,21 @@ class SaleService
                     'sale.productsPlansSale',
                     'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
-                    }
+                    },
+                    'blockReasonSale' => function($blocked) use ($blockReasonSaleModel) {
+                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    },
                 ]
             )
-                ->whereIn('company_id', $userCompanies)
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id')
-                ->where(function($queryStatus) use($transactionModel, $salesModel) {
-                    $queryStatus->where(function($transfered) use($transactionModel) {
-                            $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
-                        })
-                        ->orWhere(function($pending) use($transactionModel, $salesModel) {
-                            $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                        });
-                })
-                ->whereDate('transactions.created_at', '>=', '2020-01-01')
-                ->whereHas(
-                    'sale',
-                    function ($f1) use ($salesModel) {
-                        $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                            ->orWhere('sales.has_valid_tracking', 0)
-                            ->whereNotNull('delivery_id');
-                    }
-                );
+                ->whereHas('blockReasonSale', function($blocked) use ($blockReasonSaleModel) {
+                    $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                });
+
+            if (empty($filters["invite"])) {
+                $transactions->whereNull('invitation_id');
+            }
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -1344,6 +1332,7 @@ class SaleService
     public function getResumeBlocked($filters)
     {
         $transactionModel = new Transaction();
+        $filters['invite'] = 1;
         $transactions = $this->getSalesBlockedBalance($filters);
         $transactionStatus = implode(
             ',',
@@ -1356,15 +1345,26 @@ class SaleService
         $resume = $transactions->without(['sale'])
             ->select(
                 DB::raw(
-                    "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
+                    "
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 1 ELSE 0 END) as total_sales,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 
+                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission,
+                     sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN 
+                        if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum('transfered')}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission_invite,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                            (sales.sub_total + sales.shipment_value) - 
+                            (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
+                            ELSE 0 END
+                        ) as total"
                 )
             )
             ->first()
             ->toArray();
 
         $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+        $resume['commission_invite'] = number_format($resume['commission_invite'], 2, ',', '.');
         $resume['total'] = number_format($resume['total'], 2, ',', '.');
 
         return $resume;
