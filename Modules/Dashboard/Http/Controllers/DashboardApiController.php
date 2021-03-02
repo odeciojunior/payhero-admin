@@ -40,8 +40,6 @@ class DashboardApiController extends Controller
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
-//            GetnetBackOfficeService::dispatchGetnetGetDiscountsJob();
-
             return response()->json(['companies' => $companies]);
         } catch (Exception $e) {
             report($e);
@@ -119,9 +117,9 @@ class DashboardApiController extends Controller
 
             $availableBalance = $companyService->getAvailableBalance(
                     $company
-                ) - $blockedBalance->from_sales - $blockedBalance->from_invites;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance->from_sales + $blockedBalance->from_invites;
-            $blockedBalanceTotal = $blockedBalance->from_sales + $blockedBalance->from_invites + $blockedBalancePending;
+                ) - $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
+            $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
 
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),

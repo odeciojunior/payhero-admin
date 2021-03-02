@@ -40,9 +40,9 @@ class OldFinancesApiController extends Controller
 
             $companyService = new CompanyService();
 
-            $blockedBalance = $companyService->getBlockedBalance($company);
+            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
             $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE) - $blockedBalancePending;
 
@@ -50,9 +50,9 @@ class OldFinancesApiController extends Controller
 
             $totalBalance = $availableBalance + $pendingBalance;
 
-            $availableBalance -= ($blockedBalance->from_sales + $blockedBalance->from_invites);
+            $availableBalance -= $blockedBalance;
 
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance->from_sales + $blockedBalance->from_invites;
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
             return response()->json(
                 [

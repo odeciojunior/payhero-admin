@@ -48,9 +48,9 @@ class FinancesApiController
 
             $totalBalance = $availableBalance + $pendingBalance;
 
-            $blockedBalance = $companyService->getBlockedBalance($company);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance->from_sales + $blockedBalance->from_invites;
+            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
             $pendingDebtBalance = $companyService->getPendingDebtBalance($company);
 
