@@ -140,7 +140,7 @@
                                 <div class="card-body pb-5 pt-0 mt-10 d-flex flex-column justify-content-start align-items-start">
                                     <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
                                         <div class=" text-center px-0 d-flex justify-content-center mr-20">
-                                            <div id="level-icon" class="circle">
+                                            <div id="level-icon">
                                             </div>
                                         </div>
                                         <div class="d-flex flex-column justify-content-center align-self-center">
@@ -231,39 +231,25 @@
                                         </div>
                                     </div>
 
-                                    <div id="levels" class="mt-15 mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                                    <div id="levels" class="mt-15 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                                     </div>
-                                    <div id="benefits" class="mt-25 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                                        <span class="title-performance">Seus próximos benfefícios</span>
-                                        <div id="benefits-container" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <span class="title-performance">Benefícios ativos</span>
+                                        <div id="benefits-active-container" class="mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                                         </div>
                                     </div>
 
-                                    <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
-                                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
-                                            <div id="level-icon" class="circle">
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center align-self-center">
-                                            <div class="level" ></div>
-                                            <div id="level-description"></div>
+                                    <div class="benefits mt-10 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                        <span class="title-performance">Seus próximos benfefícios</span>
+                                        <div id="benefits-container" class="mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                                         </div>
                                     </div>
+
 {{--                                    <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">--}}
 {{--                                        <div class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">--}}
-{{--                                            <div id="achievements-item-1" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-2" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/11903cdeba102415c7a49cb4cad3ff5fab04297fr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-3" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/37041bbe7e41e669a614cf99d0e9ae3585adc7f4r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-4" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/6eb8248218eb601f2534656bccb0566fbd3070b8r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-5" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/75f61864adba69fa157c052cf259f5cf9d098eadr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>--}}
+{{--                                          <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>--}}
 {{--                                        </div>--}}
 {{--                                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">--}}
-{{--                                            <div id="achievements-item-7" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/5dfc0ae74931e316225e6f1d50eaf52e943faeb7r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-8" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/a6412a5b02d8a235677b5651a080dd4d5d0d65fcr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-9" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/13df5623bdc33a79763d26aed5e09230a7932199r1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-10" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/01417fb22aaf1c7c0387cd306d8f17236750350dr1-200-141v2_hq.jpg)"></div>--}}
-{{--                                            <div id="achievements-item-11" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/2fd11faccf8517a2ce5e5181f606259ca24bd5e4r1-200-141v2_hq.jpg)"></div>--}}
 {{--                                            <div id="achievements-item-12" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/4ea15727ab51ebc7697fa6b1785a31491f69fb2br1-200-141v2_hq.jpg)"></div>--}}
 {{--                                        </div>--}}
 {{--                                    </div>--}}

@@ -5,7 +5,7 @@ $(document).ready(function () {
             name: 'Aventureiro',
             title: 'Pronto para começar?',
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
-            message: '1Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '1Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '0',
             messageStart: '0K',
             billedStop: '100000',
@@ -15,7 +15,7 @@ $(document).ready(function () {
             name: 'Viajante Espacial',
             title: 'Nível 2',
             icon: '/modules/global/adminremark/assets/images/nivel-2.png',
-            message: '2Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '2Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '100000',
             messageStart: '100K',
             billedStop: '1000000',
@@ -25,7 +25,7 @@ $(document).ready(function () {
             name: 'Conquistador',
             title: 'Nível 3',
             icon: '/modules/global/adminremark/assets/images/nivel-3.png',
-            message: '3Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '3Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '1000000',
             messageStart: '1M',
             billedStop: '10000000',
@@ -35,7 +35,7 @@ $(document).ready(function () {
             name: 'Colonizador',
             title: 'Nível 4',
             icon: '/modules/global/adminremark/assets/images/nivel-4.png',
-            message: '4Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '4Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '10000000',
             messageStart: '10M',
             billedStop: '50000000',
@@ -45,7 +45,7 @@ $(document).ready(function () {
             name: 'Capitão Galáctico',
             title: 'Nível 5',
             icon: '/modules/global/adminremark/assets/images/nivel-5.png',
-            message: '5Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '5Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '50000000',
             messageStart: '50M',
             billedStop: '100000000',
@@ -55,7 +55,7 @@ $(document).ready(function () {
             name: 'Sirius Major',
             title: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
-            message: '6Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação Canis Major, onde brilha a maior estrela do universo.',
+            message: '6Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
             billedStart: '100000000',
             messageStart: '100M',
             billedStop: '500000000',
@@ -287,12 +287,57 @@ $(document).ready(function () {
 
     }
 
-    function updateBenefits(level, data) {
+    function updateBenefits(level, benefits) {
+        $('#benefits-active-container').html('');
         $('#benefits-container').html('');
 
-        if (!isEmpty(data)) {
+        if (!isEmpty(benefits.active)) {
 
-            $.each(data, function (index, value) {
+            $.each(benefits.active, function (index, value) {
+
+                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
+                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+                                 <p class="m-0">${value.benefit}</p>
+                            </div>`;
+                $('#benefits-container').append(item);
+            });
+
+            if ( level === 2){
+                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+            }
+            else {
+                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
+            }
+
+        } else {
+
+            //d-flex flex-row justify-content-start align-items-start align-self-start
+            //<div class="d-flex flex-row justify-content-start align-items-start align-self-start">
+
+            //</div>
+
+            $('#benefits-active-container').html(`
+                                                    <div class="d-flex justify-content-start align-items-center align-self-start benefit">
+                                                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
+                                                            <div id="benefits-empty">
+                                                                <img src="/modules/global/adminremark/assets/images/benefits-empty.png" alt="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center align-self-center">
+                                                            <div class="level mb-1">
+                                                                Você ainda não tem nenhum benefício ativo em sua conta.
+                                                            </div>
+                                                            <div class="level-description">
+                                                                Suba de nível para mudar isso :)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    `);
+        }
+
+        if (!isEmpty(benefits.next)) {
+
+            $.each(benefits.next, function (index, value) {
 
                 let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
                                  <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
@@ -309,6 +354,29 @@ $(document).ready(function () {
             }
 
         }
+
+    // function updateBenefits(level, data) {
+    //     $('#benefits-container').html('');
+    //
+    //     if (!isEmpty(data)) {
+    //
+    //         $.each(data, function (index, value) {
+    //
+    //             let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
+    //                              <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+    //                              <p class="m-0">${value.benefit}</p>
+    //                         </div>`;
+    //             $('#benefits-container').append(item);
+    //         });
+    //
+    //         if ( level === 2){
+    //             $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+    //         }
+    //         else {
+    //             $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
+    //         }
+    //
+    //     }
     }
 
 });

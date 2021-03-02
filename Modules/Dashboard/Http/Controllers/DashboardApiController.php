@@ -351,10 +351,11 @@ class DashboardApiController extends Controller
             //'tasks'          =>  $taskService->getCurrentUserTasks($user),
             'billed' => $user->total_commission_value,
 
-            'money_cashback' => 950066, //$this->getCashbackReceivedValue(),
+            'money_cashback' => 950066,  //$this->getCashbackReceivedValue(),  //950066,
 
-            'benefits' =>
-                array (
+            'benefits' => array(
+                'active' => array (),
+                'next' => array (
                     0 =>
 
                         array (
@@ -369,6 +370,7 @@ class DashboardApiController extends Controller
                             'status' => 0,
                         ),
                 ),
+            ),
         ];
     }
 
