@@ -526,7 +526,7 @@ class GetNetStatementService
             $statementItem->details = $details;
             $statementItem->type = $type;
             $statementItem->transactionDate = $pendingDebt->adjustment_date ?? '';
-            $statementItem->date = $paymentDate;
+            $statementItem->date = '';//$paymentDate; // TODO Rupert em 02/03/2021: A pedido do Julio
             $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
             $statementItem->sequence = $sequence;
 
