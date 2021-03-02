@@ -174,7 +174,7 @@ class GetNetStatementService
         }
 
         $this->filters = $filters;
-    
+
         $transactions = array_reverse($data->list_transactions ?? []);
         $adjustments = array_reverse($data->adjustments ?? []);
         //$chargeback = array_reverse($data->chargeback ?? []);
@@ -462,6 +462,19 @@ class GetNetStatementService
                 ->whereCompanyId($companyId)
                 ->get();
 
+        } else if (array_key_exists('withdrawal_id', $this->filters)) {
+
+            $withdrawal_id = $this->filters['withdrawal_id'];
+
+            $pendingDebts = PendingDebt::select('pending_debts.*')
+                ->join('pending_debt_withdrawals', function ($j) use ($withdrawal_id){
+                    return $j->on('pending_debt_withdrawals.pending_debt_id', '=', 'pending_debts.id')
+                        ->where('pending_debt_withdrawals.withdrawal_id', $withdrawal_id);
+                })
+                ->whereType('ADJUSTMENT')
+                ->whereCompanyId($companyId)
+                ->get();
+
         } else {
 
             if ($this->filters['status'] == 'PENDING_DEBIT') {
@@ -615,6 +628,7 @@ class GetNetStatementService
         $filters['company_id'] = $companyGetNet->id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
+        $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));;
 
         return [
             'filters' => $filters,
