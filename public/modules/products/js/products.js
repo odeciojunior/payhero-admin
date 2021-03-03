@@ -206,7 +206,7 @@ $(document).ready(function () {
                                 }, success: function (response) {
                                     loadOnAny('.page', true);
                                     alertCustom('success', response.message);
-                                    window.location = "/products";
+                                    // window.location = "/products";
                                 }
                             });
                         }
@@ -214,7 +214,7 @@ $(document).ready(function () {
 
                 } else {
                     alertCustom('success', 'Ocorreu um erro, tente novamente mais tarde');
-                    window.location = "/products";
+                    // window.location = "/products";
                 }
 
                 loadingOnScreenRemove();
@@ -308,7 +308,7 @@ $(document).ready(function () {
                     loadingOnScreenRemove();
 
                     alertCustom('success', response.message);
-                    window.location = "/products";
+                    // window.location = "/products";
                 }
             });
         });

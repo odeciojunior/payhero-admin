@@ -1031,7 +1031,7 @@ class ReportService
 
     /**
      * @param $companyId
-     * @return array
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function getDashboardChartData($companyId)
     {
@@ -1076,7 +1076,11 @@ class ReportService
                         (Carbon::createFromFormat('d/m', $label)->subDays(3)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
                         (Carbon::createFromFormat('d/m', $label)->subDays(4)->format('d/m') == Carbon::parse($order['date'])->format('d/m'))
                     ) {
-                        $valueData[$key] += substr(FoxUtils::onlyNumbers($order['value']), 0, -2);
+                        if ($order['value'] >= 100) {
+                            $order['value'] = (int) substr($order['value'], 0, -2);
+                        }
+
+                        $valueData[$key] += (int) FoxUtils::onlyNumbers($order['value']);
                     }
                 }
             }

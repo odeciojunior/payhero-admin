@@ -224,12 +224,14 @@ class TrackingService
      * @param string $trackingCode
      * @param ProductPlanSale $productPlanSale
      * @param bool $logging
+     * @param bool $notify
      * @return Tracking|null
      */
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false
+        $logging = false,
+        $notify = true
     )
     {
         try {
@@ -283,7 +285,7 @@ class TrackingService
             }
 
             if (!empty($tracking)) {
-                event(new TrackingCodeUpdatedEvent($tracking->id));
+                if($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 

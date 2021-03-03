@@ -226,7 +226,7 @@ $(() => {
 
     $('#update-sale-observation').click(function () {
 
-        let sale = $('#sale-code').text();
+        let sale = $('#sale-code').text().substring(0, 8)
 
         $.ajax({
             method: "POST",
