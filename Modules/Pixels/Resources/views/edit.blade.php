@@ -40,16 +40,30 @@
                     <input value="" name="code" id='code-pixel' type="text" class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel-edit">
                 </div>
-                <div class="row" id="meta-tag-facebook" style="display:none;">
+                {{-- INPUT RADIO FACEBOOK-API --}}
+                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
+                    <label class="col-md-5">
+                        <input type="radio" id="default-api-facebook" name="api-facebook" value="default" class="col-md-2 api-facebook-check" checked >
+                        Padrão
+                    </label>
+                    <label class="col-md-5">
+                        <input type="radio" id="api-facebook" name="api-facebook" value="api" class="col-md-2 api-facebook-check" >
+                        API
+                    </label>
+                </div>
+                {{-- INPUT RADIO FACEBOOK-API --}}
+
+                {{-- INPUT TOKEN FACEBOOK --}}
+                <div class="row" id="div-facebook-token-api" style="display:none;">
                     <div class="form-group col-12 my-20">
-                        <a class="facebook-meta-tag-tooltip" data-html="true" data-toggle="tooltip" title="<img src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/meta-tag-facebook' />">
-                            <i class="ml-2 icon wb-info-circle"  aria-hidden="true"></i>
-                        </a>
-                        <label for="code_meta_tag_facebook">Meta-tag verificação do facebook</label>
-                        <input name="code_meta_tag_facebook" type="text" id='code_meta_tag_facebook' class="form-control pixel-code-meta-tag-facebook"
-                               placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255' aria-describedby="input-code-pixel">
+                        <label for="facebook-token-api">Token Facebook</label>
+                        <input name="facebook-token-api" type="text" id='facebook-token-api'
+                               class="form-control pixel-code"
+                               placeholder="Token" maxlength='255'>
                     </div>
                 </div>
+                {{-- INPUT TOKEN FACEBOOK --}}
+
                 {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
                 <div class="row purchase-event-name-div" style="display:none;">
                     <div class="form-group col-12 my-20">

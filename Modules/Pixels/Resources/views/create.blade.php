@@ -37,19 +37,30 @@
                     <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
                 </div>
-                <div class="row" id="meta-tag-facebook" style="display:none;">
+                {{-- INPUT RADIO FACEBOOK-API --}}
+                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
+                        <label class="col-md-5">
+                            <input type="radio" name="api-facebook" value="default" class="col-md-2" checked >
+                            Padrão
+                        </label>
+                        <label class="col-md-5">
+                            <input type="radio" name="api-facebook" value="api" class="col-md-2" >
+                            API
+                        </label>
+                </div>
+                {{-- INPUT RADIO FACEBOOK-API --}}
+
+                {{-- INPUT TOKEN FACEBOOK --}}
+                <div class="row" id="div-facebook-token-api" style="display:none;">
                     <div class="form-group col-12 my-20">
-                        <a class="facebook-meta-tag-tooltip" data-html="true" data-toggle="tooltip"
-                           title="<img src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/meta-tag-facebook' />">
-                            <i class="ml-2 icon wb-info-circle" aria-hidden="true"></i>
-                        </a>
-                        <label for="code_meta_tag_facebook">Meta-tag verificação do facebook</label>
-                        <input name="code_meta_tag_facebook" type="text" id='code_meta_tag_facebook'
+                        <label for="facebook-token-api">Token Facebook</label>
+                        <input name="facebook-token-api" type="text" id='facebook-token-api'
                                class="form-control pixel-code"
-                               placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255'
-                               aria-describedby="input-code-pixel">
+                               placeholder="Token" maxlength='255'>
                     </div>
                 </div>
+                {{-- INPUT TOKEN FACEBOOK --}}
+
                 {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
                 <div class="row purchase-event-name-div" style="display:none;">
                     <div class="form-group col-12 my-20">
@@ -60,6 +71,8 @@
                     </div>
                 </div>
                 {{-- END INPUT NAME PURCHASE EVENT TABOOLA --}}
+
+
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
                         <label for="add_pixel_plans">Executar no(s) plano(s)</label>
