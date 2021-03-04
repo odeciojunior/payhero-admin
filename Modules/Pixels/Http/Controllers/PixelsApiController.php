@@ -116,6 +116,10 @@ class PixelsApiController extends Controller
 
             $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
 
+            if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
+                $validated['purchase_event_name'] = null;
+            }
+
             if ($validator['platform'] == 'taboola' && empty($validator['purchase_event_name'])) {
                 $validated['purchase_event_name'] = 'make_purchase';
             }
@@ -199,6 +203,10 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
+            if (!in_array($validated['platform'], ['taboola', 'outbrain'])) {
+                $validated['purchase_event_name'] = null;
+            }
+
             if ($pixel->platform == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
                 $validated['purchase_event_name'] = 'make_purchase';
             }
@@ -216,7 +224,7 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
                     'purchase_card' => $validated['purchase_card'],
-                    'purchase_event_name' => $validated['purchase_event_name'] ?? null
+                    'purchase_event_name' => $validated['purchase_event_name']
                 ]
             );
             if ($pixelUpdated) {
