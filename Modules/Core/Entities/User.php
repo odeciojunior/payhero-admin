@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
@@ -371,11 +372,11 @@ class User extends Authenticable
     }
 
     /**
-     * @return BelongsToMany
+     * @return HasManyThrough
      */
     public function benefits()
     {
-        return $this->belongsToMany(Benefit::class);
+        return $this->hasManyThrough(Benefit::class, UserBenefit::class, 'user_id', 'id', 'id', 'benefit_id');
     }
 
 }
