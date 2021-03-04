@@ -495,7 +495,7 @@ $(() => {
             if(sale.has_contestation){
                 $('#div_refund_transaction').html('<button disabled class="btn btn-danger btn-sm">Estorno desabilitado, existe pelo menos uma contestação</button>');
             }else{
-                $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação1</button>');
+                $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
             }
 
         } else {
