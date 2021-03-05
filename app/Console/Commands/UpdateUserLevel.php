@@ -49,43 +49,43 @@ class UpdateUserLevel extends Command
             ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
         foreach ($transactions->cursor() as $transaction) {
-            if($transaction->value > 10000000000) {
+            if ($transaction->value > 10000000000) {
                 $level = 6;
-            } elseif($transaction->value > 5000000000) {
+            } elseif ($transaction->value > 5000000000) {
                 $level = 5;
-            } elseif($transaction->value > 1000000000) {
+            } elseif ($transaction->value > 1000000000) {
                 $level = 4;
-            } elseif($transaction->value > 100000000) {
+            } elseif ($transaction->value > 100000000) {
                 $level = 3;
-            } elseif($transaction->value > 10000000) {
+            } elseif ($transaction->value > 10000000) {
                 $level = 2;
             } else {
                 $level = 1;
             }
 
             $user = User::with('benefits')->find($transaction->user_id);
-            if(!empty($user)) {
+            if (!empty($user)) {
                 $user->update([
                     'level' => $level,
                     'total_commission_value' => $transaction->value,
                 ]);
-            }
 
-            $newBenefits = Benefit::where('level', $level)->get();
+                $newBenefits = Benefit::where('level', '<=', $level)->get();
 
-            $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
-            $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
-            if($oldCashbackBenefit && $newCashbackBenefit){
-                $oldCashbackBenefit->delete();
+                $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
+                $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
+                if ($oldCashbackBenefit && $newCashbackBenefit) {
+                    UserBenefit::where('benefit_id', $oldCashbackBenefit->benefit_id)
+                        ->where('user_id', $user->id)
+                        ->delete();
+                }
+                foreach ($newBenefits as $benefit) {
+                    UserBenefit::firstOrCreate([
+                        'benefit_id' => $benefit->id,
+                        'user_id' => $user->id,
+                    ]);
+                }
             }
-            foreach ($newBenefits as $benefit) {
-                UserBenefit::firstOrCreate([
-                    'benefit_id' => $benefit->id,
-                    'user_id' => $user->id,
-                ]);
-            }
-
         }
-
     }
 }
