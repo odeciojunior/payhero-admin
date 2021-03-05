@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserBenefit;
 
 class UpdateUserLevel extends Command
 {
@@ -61,14 +63,28 @@ class UpdateUserLevel extends Command
                 $level = 1;
             }
 
-            // $this->info($level . ' - '. $transaction->value);
-            $user = User::find($transaction->user_id);
+            $user = User::with('benefits')->find($transaction->user_id);
             if(!empty($user)) {
                 $user->update([
                     'level' => $level,
                     'total_commission_value' => $transaction->value,
                 ]);
             }
+
+            $newBenefits = Benefit::where('level', $level)->get();
+
+            $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
+            $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
+            if($oldCashbackBenefit && $newCashbackBenefit){
+                $oldCashbackBenefit->delete();
+            }
+            foreach ($newBenefits as $benefit) {
+                UserBenefit::firstOrCreate([
+                    'benefit_id' => $benefit->id,
+                    'user_id' => $user->id,
+                ]);
+            }
+
         }
 
     }

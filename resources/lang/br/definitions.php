@@ -8,6 +8,12 @@ return [
     | Definicoes de cada campo ao se traduzir para ser utilizado nas views
     |
     */
+    'benefit' => [
+        'cashback' => 'Cashback',
+        'get_faster' => 'Receba + rápido',
+        'account_manager' => 'Gerente de contas',
+        'rate_reduction' => 'Redução da taxa',
+    ],
     'enum' => [
         "personal_document_status" => [
             "pending"   => "Pendente",

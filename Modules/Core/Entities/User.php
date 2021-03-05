@@ -5,10 +5,12 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Presenters\UserPresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -19,7 +21,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Laravel\Passport\HasApiTokens;
 
 /**
- * @property int $id
+ * @property integer $id
  * @property string $name
  * @property string $email
  * @property string $password
@@ -36,11 +38,11 @@ use Laravel\Passport\HasApiTokens;
  * @property string $complement
  * @property string $photo
  * @property string $date_birth
- * @property bool $address_document_status
- * @property bool $personal_document_status
+ * @property boolean $address_document_status
+ * @property boolean $personal_document_status
  * @property string $transaction_rate
- * @property bool $account_is_approved
- * @property json $id_wall_result
+ * @property boolean $account_is_approved
+ * @property string $id_wall_result
  * @property string $sex
  * @property string $mother_name
  * @property boolean $has_sale_before_getnet
@@ -56,22 +58,22 @@ use Laravel\Passport\HasApiTokens;
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
- * @property int $invites_amount
- * @property AffiliateRequest[] $affiliateRequests
- * @property Affiliate[] $affiliates
- * @property Company[] $companies
- * @property ConvertaxIntegration[] $convertaxIntegrations
- * @property HotzappIntegration[] $hotzappIntegrations
- * @property Invitation[] $invitations
- * @property NotazzIntegration[] $notazzIntegrations
- * @property Product[] $products
- * @property Sale[] $sales
- * @property ShopifyIntegration[] $shopifyIntegrations
- * @property Transfer[] $transfers
- * @property UserDocument[] $userDocuments
- * @property Achievement $achievements
- * @property Task $tasks
- * @property Benefit $benefits
+ * @property integer $invites_amount
+ * @property Collection $affiliateRequests
+ * @property Collection $affiliates
+ * @property Collection $companies
+ * @property Collection $convertaxIntegrations
+ * @property Collection $hotzappIntegrations
+ * @property Collection $invitations
+ * @property Collection $notazzIntegrations
+ * @property Collection $products
+ * @property Collection $sales
+ * @property Collection $shopifyIntegrations
+ * @property Collection $transfers
+ * @property Collection $userDocuments
+ * @property Collection $achievements
+ * @property Collection $tasks
+ * @property Collection $benefits
  * @method UserPresenter present()
  */
 class User extends Authenticable
@@ -186,7 +188,7 @@ class User extends Authenticable
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('Modules\Core\Entities\AffiliateRequest');
+        return $this->hasMany(AffiliateRequest::class);
     }
 
     /**
@@ -194,7 +196,7 @@ class User extends Authenticable
      */
     public function affiliates()
     {
-        return $this->hasMany('Modules\Core\Entities\Affiliate');
+        return $this->hasMany(Affiliate::class);
     }
 
     /**
@@ -202,7 +204,7 @@ class User extends Authenticable
      */
     public function companies()
     {
-        return $this->hasMany('Modules\Core\Entities\Company');
+        return $this->hasMany(Company::class);
     }
 
     /**
@@ -210,7 +212,7 @@ class User extends Authenticable
      */
     public function convertaxIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ConvertaxIntegration');
+        return $this->hasMany(ConvertaxIntegration::class);
     }
 
     /**
@@ -218,7 +220,7 @@ class User extends Authenticable
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
+        return $this->hasMany(HotzappIntegration::class);
     }
 
     /**
@@ -226,7 +228,7 @@ class User extends Authenticable
      */
     public function invitations()
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation', 'user_invited');
+        return $this->hasMany(Invitation::class, 'user_invited');
     }
 
     /**
@@ -234,7 +236,7 @@ class User extends Authenticable
      */
     public function invites()
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation', 'invite');
+        return $this->hasMany(Invitation::class, 'invite');
     }
 
     /**
@@ -242,7 +244,7 @@ class User extends Authenticable
      */
     public function notazzIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\NotazzIntegration');
+        return $this->hasMany(NotazzIntegration::class);
     }
 
     /**
@@ -250,7 +252,7 @@ class User extends Authenticable
      */
     public function products()
     {
-        return $this->hasMany('Modules\Core\Entities\Product');
+        return $this->hasMany(Product::class);
     }
 
     /**
@@ -258,7 +260,7 @@ class User extends Authenticable
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale', 'owner_id');
+        return $this->hasMany(Sale::class, 'owner_id');
     }
 
     /**
@@ -266,15 +268,7 @@ class User extends Authenticable
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ShopifyIntegration');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function smsMessages()
-    {
-        return $this->hasMany('Modules\Core\Entities\SmsMessage', 'user');
+        return $this->hasMany(ShopifyIntegration::class);
     }
 
     /**
@@ -282,7 +276,7 @@ class User extends Authenticable
      */
     public function transfers()
     {
-        return $this->hasMany('Modules\Core\Entities\Transfer');
+        return $this->hasMany(Transfer::class);
     }
 
     /**
@@ -290,15 +284,7 @@ class User extends Authenticable
      */
     public function userDocuments()
     {
-        return $this->hasMany('Modules\Core\Entities\UserDocument');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function userShoppings()
-    {
-        return $this->hasMany('Modules\Core\Entities\UserShopping', 'client');
+        return $this->hasMany(UserDocument::class);
     }
 
     /**
@@ -306,7 +292,7 @@ class User extends Authenticable
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UserProject');
+        return $this->hasMany(UserProject::class);
     }
 
     /**
@@ -314,7 +300,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany('Modules\Core\Entities\Project', 'users_projects', 'user_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'users_projects', 'user_id', 'project_id');
     }
 
     /**
@@ -338,7 +324,7 @@ class User extends Authenticable
      */
     public function userDevices()
     {
-        return $this->hasMany('Modules\Core\Entities\UserDevice');
+        return $this->hasMany(UserDevice::class);
     }
 
     /**
@@ -346,7 +332,7 @@ class User extends Authenticable
      */
     public function userTerms()
     {
-        return $this->hasMany('Modules\Core\Entities\UserTerms');
+        return $this->hasMany(UserTerms::class);
     }
 
     /**
@@ -371,11 +357,11 @@ class User extends Authenticable
     }
 
     /**
-     * @return BelongsToMany
+     * @return HasManyThrough
      */
     public function benefits()
     {
-        return $this->belongsToMany(Benefit::class);
+        return $this->hasManyThrough(Benefit::class, UserBenefit::class, 'user_id', 'id', 'id', 'benefit_id');
     }
 
 }

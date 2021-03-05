@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * @property integer $id
@@ -16,7 +17,7 @@ class Benefit extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'integer';
@@ -33,10 +34,10 @@ class Benefit extends Model
     ];
 
     /**
-     * @return BelongsToMany
+     * @return HasManyThrough
      */
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasManyThrough(User::class, UserBenefit::class, 'benefit_id', 'id', 'id', 'user_id');
     }
 }
