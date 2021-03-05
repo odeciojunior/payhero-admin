@@ -73,12 +73,6 @@
             </div>
         </div>
     </div>
-    <script>
-
-        // let value = $("#modal-create-pixel #select-platform option:selected").val();
-            // $("#modal-edit-pixel #outbrain-info-edit").hide();
-            // $("#modal-edit-pixel #google-analytics-info").hide();
-    </script>
 </div>
 
 <!-- Edit -->

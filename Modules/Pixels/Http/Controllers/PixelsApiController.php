@@ -117,14 +117,14 @@ class PixelsApiController extends Controller
             $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
 
             if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
-                $validated['purchase_event_name'] = null;
+                $validator['purchase_event_name'] = null;
             }
 
             if ($validator['platform'] == 'taboola' && empty($validator['purchase_event_name'])) {
-                $validated['purchase_event_name'] = 'make_purchase';
+                $validator['purchase_event_name'] = 'make_purchase';
             }
             if ($validator['platform'] == 'outbrain' && empty($validator['purchase_event_name'])) {
-                $validated['purchase_event_name'] = 'Purchase';
+                $validator['purchase_event_name'] = 'Purchase';
             }
 
             $pixel = $pixelModel->create(
