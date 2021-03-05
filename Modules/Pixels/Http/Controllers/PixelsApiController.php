@@ -141,7 +141,7 @@ class PixelsApiController extends Controller
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
                     'code_meta_tag_facebook' => $codeMetaTag,
-                    'purchase_event_name' => $validator['purchase_event_name']
+                    'purchase_event_name' => $validator['purchase_event_name'] ?? null
                 ]
             );
 
@@ -224,7 +224,7 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
                     'purchase_card' => $validated['purchase_card'],
-                    'purchase_event_name' => $validated['purchase_event_name']
+                    'purchase_event_name' => $validated['purchase_event_name'] ?? null
                 ]
             );
             if ($pixelUpdated) {
