@@ -452,7 +452,7 @@ class GetNetStatementService
 
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
-                ->whereType('ADJUSTMENT')
+                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
                 ->whereCompanyId($companyId)
                 ->get();
 
@@ -461,11 +461,11 @@ class GetNetStatementService
             $withdrawal_id = $this->filters['withdrawal_id'];
 
             $pendingDebts = PendingDebt::select('pending_debts.*')
-                ->join('pending_debt_withdrawals', function ($j) use ($withdrawal_id){
+                ->join('pending_debt_withdrawals', function ($j) use ($withdrawal_id) {
                     return $j->on('pending_debt_withdrawals.pending_debt_id', '=', 'pending_debts.id')
                         ->where('pending_debt_withdrawals.withdrawal_id', $withdrawal_id);
                 })
-                ->whereType('ADJUSTMENT')
+                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
                 ->whereCompanyId($companyId)
                 ->get();
 
