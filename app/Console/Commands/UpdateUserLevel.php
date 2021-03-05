@@ -71,7 +71,7 @@ class UpdateUserLevel extends Command
                 ]);
             }
 
-            $newBenefits = Benefit::where('level', $level)->get();
+            $newBenefits = Benefit::where('level', '<=',  $level)->get();
 
             $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
             $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
