@@ -275,7 +275,7 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
         case 500:
             break;
         case 413:
-            alertCustom('error', 'O tamanho da imagem não pode exceder 2mb.')
+            alertCustom('error', 'O tamanho do arquivo é maior que o limite máximo.')
             break;
         case 422:
             break;
