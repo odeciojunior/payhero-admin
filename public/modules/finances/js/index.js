@@ -798,7 +798,7 @@ $(document).ready(function () {
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip()
-                    })
+                    });
 
                     pagination(response, 'withdrawals', updateWithdrawalsTable);
                 }

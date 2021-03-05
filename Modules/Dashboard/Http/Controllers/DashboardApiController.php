@@ -211,20 +211,19 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'available_balance'       => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'total_balance'           => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance'         => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                'today_balance'           => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                'currency'                => 'R$',
-                'total_sales_approved'    => $totalSalesApproved ?? 0,
-                'total_sales_chargeback'  => $totalSalesChargeBack ?? 0,
-                'chargeback_tax'          => $chargebackTax ?? "0.00%",
-                'trackings'               => $trackingsInfo,
-                'tickets'                 => $tickets,
-                'blocked_balance'         => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
-                'blocked_balance_invite'  => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
+                'available_balance'         => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                'total_balance'             => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                'pending_balance'           => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                'today_balance'             => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                'currency'                  => 'R$',
+                'total_sales_approved'      => $totalSalesApproved ?? 0,
+                'total_sales_chargeback'    => $totalSalesChargeBack ?? 0,
+                'chargeback_tax'            => $chargebackTax ?? "0.00%",
+                'trackings'                 => $trackingsInfo,
+                'tickets'                   => $tickets,
+                'blocked_balance' => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
                 'blocked_balance_pending' => number_format(intval($blockedBalancePending) / 100, 2, ',', '.'),
-                'blocked_balance_total'   => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
@@ -344,28 +343,65 @@ class DashboardApiController extends Controller
         return [
             'level'          => $user->level,
             'achievements'   => [0, 1, 2, 3],
-
-            'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user)($user) : [],
-            //'tasks'          =>  $taskService->getCurrentUserTasks($user),
+            'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
             'billed' => $user->total_commission_value,
-
-            'money_cashback' => 950066,  //$this->getCashbackReceivedValue(),  //950066,
+            'money_cashback' => $this->getCashbackReceivedValue(),  //950066,
 
             'benefits' => array(
-                'active' => array (),
+                'active' => array (
+//                    0 =>
+//
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Gerente de Contas',
+//                            //'status' => 0,
+//                        ),
+//                    1 =>
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Gerente de Contas',
+//                            //'status' => 0,
+//                        ),
+//                    2=>
+//
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => '0,5% de Cashback',
+//                            //'status' => 0,
+//                        ),
+//                    3 =>
+//                        array (
+//                            'card' => 'NÍVEL 2',
+//                            'benefit' => 'Recebimentos mais rápidos',
+//                            //'status' => 0,
+//                        ),
+                ),
                 'next' => array (
                     0 =>
 
                         array (
                             'card' => 'NÍVEL 2',
                             'benefit' => 'Gerente de Contas',
-                            'status' => 0,
+                            //'status' => 0,
+                        ),
+                    1 =>
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => 'Gerente de Contas',
+                            //'status' => 0,
+                        ),
+                    2=>
+
+                        array (
+                            'card' => 'NÍVEL 2',
+                            'benefit' => '0,5% de Cashback',
+                            //'status' => 0,
                         ),
                     3 =>
                         array (
                             'card' => 'NÍVEL 2',
-                            'benefit' => 'Gerente de Contas',
-                            'status' => 0,
+                            'benefit' => 'Recebimentos mais rápidos',
+                            //'status' => 0,
                         ),
                 ),
             ),
@@ -718,6 +754,7 @@ class DashboardApiController extends Controller
     }
 
     function getCashbackReceivedValue() {
-        return Transaction::where('user_id', auth()->user()->account_owner_id)->whete('type_enum', 8)->sum('value');
+        //dd(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->toSql());
+        return Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value');
     }
 }

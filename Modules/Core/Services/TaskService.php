@@ -63,7 +63,7 @@ class TaskService
 
     public function getCurrentUserTasks(User $user): array
     {
-        $tasks = (new Task)->where('level', $user->level)->orderBy('priority')->get();
+        $tasks = (new Task)->select('id', 'name', 'level', 'priority')->where('level', $user->level)->orderBy('priority')->get();
         $userTasks = $user->tasks();
         $completedTasks = [];
         $uncompletedTasks = [];
@@ -89,7 +89,11 @@ class TaskService
                 $currentTasks[] = $completedTasks[count($completedTasks) - 2];
                 $currentTasks[] = $uncompletedTasks[0];
             }
-        } else {
+        }
+        elseif (empty($uncompletedTasks) ) {
+            $currentTasks = $completedTasks;
+        }
+        else {
             $currentTasks = array_slice($uncompletedTasks, 0, 3);
         }
 

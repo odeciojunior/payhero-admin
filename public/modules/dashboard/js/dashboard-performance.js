@@ -5,7 +5,7 @@ $(document).ready(function () {
             name: 'Aventureiro',
             title: 'Pronto para começar?',
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
-            message: '1Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
             billedStart: '0',
             messageStart: '0K',
             billedStop: '100000',
@@ -15,7 +15,7 @@ $(document).ready(function () {
             name: 'Viajante Espacial',
             title: 'Nível 2',
             icon: '/modules/global/adminremark/assets/images/nivel-2.png',
-            message: '2Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
             billedStart: '100000',
             messageStart: '100K',
             billedStop: '1000000',
@@ -25,7 +25,7 @@ $(document).ready(function () {
             name: 'Conquistador',
             title: 'Nível 3',
             icon: '/modules/global/adminremark/assets/images/nivel-3.png',
-            message: '3Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
             billedStart: '1000000',
             messageStart: '1M',
             billedStop: '10000000',
@@ -35,7 +35,7 @@ $(document).ready(function () {
             name: 'Colonizador',
             title: 'Nível 4',
             icon: '/modules/global/adminremark/assets/images/nivel-4.png',
-            message: '4Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
             billedStart: '10000000',
             messageStart: '10M',
             billedStop: '50000000',
@@ -45,7 +45,7 @@ $(document).ready(function () {
             name: 'Capitão Galáctico',
             title: 'Nível 5',
             icon: '/modules/global/adminremark/assets/images/nivel-5.png',
-            message: '5Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
             billedStart: '50000000',
             messageStart: '50M',
             billedStop: '100000000',
@@ -55,7 +55,7 @@ $(document).ready(function () {
             name: 'Sirius Major',
             title: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
-            message: '6Você acaba de chegar na Central de Operações Sirius. A partir daqui, você será treinado e deverá provar que merece um lugar no foguete que nos levará para uma longa viagem espacial, que tem como objetivo final atingir a constelação',
+            message: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
             billedStart: '100000000',
             messageStart: '100M',
             billedStop: '500000000',
@@ -64,11 +64,9 @@ $(document).ready(function () {
     };
 
     function  nextPerformance() {
-        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 1000);
+        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
-            setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-loading'); }, 500);
-            //$('.sirius-account > .card').html('');
-
+            setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
             loadingOnAccountsHealth('.sirius-performance > .card');
 
             let card = $(this).data('slide-to');
@@ -88,9 +86,8 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
+        loadingOnAccountsHealth('.sirius-performance > .card');
         $('#achievements .achievements-item').addClass('opacity-3');
-        $('.task .task-icon').removeClass('o-checkmark-1');
-        $('.task .task-icon').removeClass('.task-icon-checked');
 
         $.ajax({
             method: "POST",
@@ -100,9 +97,11 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {company: $('#company').val()},
-            error: function error(response) {;
-
+            data: {
+                company: $('#company').val(),
+            },
+            error: function error(response) {
+                loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -124,21 +123,13 @@ $(document).ready(function () {
 
         updateAchievements(data.achievements);
 
-        //if ( tasks.len data.level ===  1 || data.level ===2){
         updateTasks(data.level, data.tasks);
-        //}
 
         if ( data.level > 1){
             updateCashback(data.money_cashback)
-            //$('#cashback-container #cashback-container-money').text(`${data.money_cashback}`);
-            //$("#cashback").show();
         }
 
-        //updateProgressBar(data.progress);
         updateProgressBar(data.billed, currentLevel);
-
-
-
     }
 
     function updateAchievements(data) {
@@ -169,7 +160,21 @@ $(document).ready(function () {
                             </div>`;
                 $('#tasks').append(item);
             });
-            $('#tasks').show();
+
+            if ($("#tasks").height() > 105) {
+                $("#tasks").hover(
+                    function () {
+                        console.log('Entrei scroll');
+                        $("#tasks").css({'overflow-y': 'scroll'});
+                    }, function () {
+                        console.log('Entrei hidden');
+                        $("#tasks").css({'overflow-y': 'hidden'});
+                    }
+                );
+            }
+
+            $("#tasks").css({'max-height': '95px', 'overflow-y': 'hidden'});
+
         } else {
             $('#tasks').hide();
         }
@@ -182,61 +187,42 @@ $(document).ready(function () {
     }
 
     function updateProgressBar(billed, currentLevel) {
-        $("#progress-bar-1").css({'width': '0%'}); //, 'padding-right': '0px'});
-        $("#progress-bar-2").css({'width': '100%'}); //, 'padding-left': '0px'});  //, 'border-radius': '10px 10px 10px 10px'});
 
-        $('#progress-1').text(`${currentLevel.messageStart}`);
-        $('.progress-billed').text(`Total faturado ${(billed/100).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`)
-        $('#progress-2').text(`${currentLevel.messageStop}`);
+        $('#progress-message-1').text(`${currentLevel.messageStart}`);
+        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed/100).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`);
+        $('#progress-message-2').text(`${currentLevel.messageStop}`);
 
-        //alert(progress_money + "  -  " + money);
         var percentage = billed /currentLevel.billedStop;
 
-        if (percentage > 0) {
-            percentage = percentage > 10 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1);
-            $("#progress-bar-1").css({'width': `${percentage}%` });
-            $("#progress-bar-2").css({'width': `${100 - percentage}%`} );
-
-            if ( $('#progress-bar-1').width() > 40) {
-                $('#progress-bar-1').text(`${parseFloat(percentage).toFixed(0) }%`)
-                $("#progress-bar-1").css({'padding-right': '8px' });
-                $("#progress-bar-2").css({'padding-left': '0px' });
-            } else {
-                $('#progress-bar-2').text(`${percentage > 1 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1)  }%`);
-                $("#progress-bar-2").css({'padding-left': '8px' });
-                $("#progress-bar-1").css({'padding-right': '0px' });
-            }
-
+        percentage = percentage > 10 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1);
+        $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
+        if (percentage > 13) {
+            $('#progress-bar > span').text(`${Math.floor(percentage) }%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9 }%`, 'color': '#FFFFFF'});
         }
+        else {
+            $('#progress-bar > span').text(`${percentage > 1 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1)  }%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3 }%`, 'color': '#2E85EC' });
+        }
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
     }
-
-
 
     function updatePerformanceCard2(data) {
         let currentLevel = levelInfo[data.level];
-        //data.billed = data.billed/100;
-        //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
+
         $("#level-full").text('').text(`${currentLevel.name}`);
         $("#level-message").text('').text(currentLevel.message);
-        //$("#billed").text(`R$${data.billed.toLocaleString('pt-br', {minimumFractionDigits: 2})}`);
         $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
 
 
         $.each(levelInfo, function (index, value) {
-
-            //<div id="level-item-1" className="level-item"
-              //   style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)">
-            //     <img src="">
-            // </div>
-            // <span
-            //     className="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
-            // <p className="m-0">${value.benefit}</p>
-
-            //alert(index);
             if (data.level == index) {
                 $("#level-current").show();
-                //alert(data.level);
             }
 
             let item = ` <div id="level-item-${index}" class="level-item ${ data.level == index ? 'active' : '' }" data-level="${index}" data-level-current="${data.level}">
@@ -244,47 +230,25 @@ $(document).ready(function () {
 
                          </div>`;
             $('#levels').append(item);
-
-
         });
 
         $(".level-item").click(function () {
 
             let level = $(this).data('level');
-            //alert(level);
             let currentLevel = levelInfo[level];
             $(this).data('level-current') ===  level ? $("#level-current").show() : $("#level-current").hide();
             $(".level-item").removeClass("active");
             $(this).addClass("active");
-            //$(`#level-item-${index}`).removeClass("active");
-
 
             $("#level-full").text('').text(`${currentLevel.name}`);
             $("#level-message").text('').text(currentLevel.message);
             $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
-            //$(this).removeClass("active");
         });
 
         updateBenefits(data.level, data.benefits);
 
-
-        //--updateAchievements(data.achievements);
-
-        //if ( tasks.len data.level ===  1 || data.level ===2){
-        //--updateTasks(data.level, data.tasks);
-        //}
-
-        if ( data.level > 1){
-            //--updateCashback(data.money_cashback)
-            //$('#cashback-container #cashback-container-money').text(`${data.money_cashback}`);
-            //$("#cashback").show();
-        }
-
-        //updateProgressBar(data.progress);
-        //updateProgressBar(data.progress_money, currentLevel);
-        //--updateBenefits(data.level, data.benefits);
-
+        $('#performance-card-2').hide();
     }
 
     function updateBenefits(level, benefits) {
@@ -295,43 +259,40 @@ $(document).ready(function () {
 
             $.each(benefits.active, function (index, value) {
 
-                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+                let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
+                                 <span class="benefits-button benefits-button-checked d-flex justify-content-around align-items-center">${value.card}</span>
                                  <p class="m-0">${value.benefit}</p>
                             </div>`;
-                $('#benefits-container').append(item);
+                $('#benefits-active-container').append(item);
             });
 
-            if ( level === 2){
-                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+            if ($("#benefits-active-container").height() > 92) {
+                $("#benefits-active-container").hover(
+                    function () {
+                        $("#benefits-active-container").css({'overflow-y': 'scroll'});
+                    }, function () {
+                        $("#benefits-active-container").css({'overflow-y': 'hidden'});
+                    }
+                );
             }
-            else {
-                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
-            }
+            $("#benefits-active-container").css({'max-height': '60px', 'overflow-y': 'hidden'});
 
         } else {
 
-            //d-flex flex-row justify-content-start align-items-start align-self-start
-            //<div class="d-flex flex-row justify-content-start align-items-start align-self-start">
-
-            //</div>
-
             $('#benefits-active-container').html(`
-                                                    <div class="d-flex justify-content-start align-items-center align-self-start benefit">
-                                                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
-                                                            <div id="benefits-empty">
-                                                                <img src="/modules/global/adminremark/assets/images/benefits-empty.png" alt="">
+                                                        <div class="d-flex justify-content-start align-items-center align-self-start">
+                                                            <div id="benefits-empty-image" class=" text-center px-0 d-flex justify-content-center mr-20">
+                                                                <img src="/modules/global/adminremark/assets/images/empty-benefits.png" alt="">
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-center align-self-center">
+                                                                <div class="benefits-name mb-1">
+                                                                    Você ainda não tem nenhum benefício ativo em sua conta.
+                                                                </div>
+                                                                <div class="benefits-description">
+                                                                    Suba de nível para mudar isso :)
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex flex-column justify-content-center align-self-center">
-                                                            <div class="level mb-1">
-                                                                Você ainda não tem nenhum benefício ativo em sua conta.
-                                                            </div>
-                                                            <div class="level-description">
-                                                                Suba de nível para mudar isso :)
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                     `);
         }
 
@@ -339,44 +300,26 @@ $(document).ready(function () {
 
             $.each(benefits.next, function (index, value) {
 
-                let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
+                let item = `<div class="d-flex justify-content-start align-items-center align-self-start">
+                                 <span class="benefits-button d-flex justify-content-around align-items-center">${value.card}</span>
                                  <p class="m-0">${value.benefit}</p>
                             </div>`;
                 $('#benefits-container').append(item);
             });
 
-            if ( level === 2){
-                $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
+            if ($("#benefits-container").height() > 92) {
+                $("#benefits-container").hover(
+                    function () {
+                        $("#benefits-container").css({'overflow-y': 'scroll'});
+                    }, function () {
+                        $("#benefits-container").css({'overflow-y': 'hidden'});
+                    }
+                );
             }
-            else {
-                $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
-            }
+            $("#benefits-container").css({'max-height': '60px', 'overflow-y': 'hidden'});
 
         }
 
-    // function updateBenefits(level, data) {
-    //     $('#benefits-container').html('');
-    //
-    //     if (!isEmpty(data)) {
-    //
-    //         $.each(data, function (index, value) {
-    //
-    //             let item = `<div class="mb-10 d-flex justify-content-start align-items-center align-self-start benefit">
-    //                              <span class="benefit-button ${value.status === 1 ? 'benefit-button-checked' : ''} d-flex justify-content-around align-items-center">${value.card}</span>
-    //                              <p class="m-0">${value.benefit}</p>
-    //                         </div>`;
-    //             $('#benefits-container').append(item);
-    //         });
-    //
-    //         if ( level === 2){
-    //             $("#benefits-container").height() > 83 ? $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '80px', 'overflow-y': 'hidden'});
-    //         }
-    //         else {
-    //             $("#benefits-container").height() > 122 ? $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'scroll'}) : $("#benefits-container").css({'max-height': '120px', 'overflow-y': 'hidden'});
-    //         }
-    //
-    //     }
     }
 
 });
