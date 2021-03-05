@@ -15,8 +15,6 @@ class PopulateUserBenefitsTable extends Migration
      */
     public function up()
     {
-        Artisan::call('command:update-user-level');
-
         $benefits = Benefit::all();
 
         User::select('id', 'level')
