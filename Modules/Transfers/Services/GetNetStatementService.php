@@ -161,7 +161,7 @@ class GetNetStatementService
                 $hasOrderId = empty($summary->order_id) ? false : true;
                 $isTransactionCredit = $details->transaction_sign == '+';
                 $isReleaseStatus = $details->release_status == 'S';
-                $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}");
+                $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
                 $transactionStatusCode = $summary->transaction_status_code;
 
                 $details = new Details();

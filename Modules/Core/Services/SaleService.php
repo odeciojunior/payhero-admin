@@ -830,8 +830,13 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
-        $transferModel = new Transfer();
-        $transactionModel = new Transaction();
+
+        if(in_array($sale->gateway_id, [14, 15])){
+            $this->refundBilletNewFinances($sale);
+        }
+        else {
+            $this->refundBilletOldFinances($sale);
+        }
 
         $sale->update(
             [
@@ -840,13 +845,132 @@ class SaleService
             ]
         );
 
+        $transactionUser = Transaction::where('sale_id', $sale->id)
+                                      ->where('type', (new Transaction)->present()->getType('producer'))
+                                      ->first();
+
+        //Transferencia de entrada do cliente
+        Transfer::create(
+            [
+                'transaction_id' => $transactionUser->id,
+                'user_id' => auth()->user()->account_owner_id,
+                'customer_id' => $sale->customer_id,
+                'company_id' => $transactionUser->company_id,
+                'value' => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+                'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
+                'type' => 'in',
+                'reason' => 'Estorno de boleto',
+            ]
+        );
+
+        $sale->customer->update(
+            [
+                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+            ]
+        );
+
+        if (!empty($sale->shopify_order)) {
+            try {
+                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
+                if (!empty($shopifyIntegration)) {
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopifyService->cancelOrder($sale);
+                }
+            } catch (Exception $e) {
+            }
+        }
+
+        event(new BilletRefundedEvent($sale));
+    }
+
+    public function refundBilletNewFinances(Sale $sale)
+    {
+
+        $transactionModel = new Transaction();
+
+        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+        $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
+        $saleTax = $cloudfoxTransaction->value;
+        $getnetService = new GetnetBackOfficeService();
+
+        foreach ($sale->transactions as $transaction) {
+
+            $transaction->update([
+                    'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
+                    'status' => 'billet_refunded',
+            ]);
+
+            if(empty($transaction->company_id)) {
+                continue;
+            }
+
+            $refundValue = $transaction->value;
+
+            if ($transaction->type == $transactionModel->present()->getType('producer')) {
+                $refundValue += $saleTax;
+                if (!empty($inviteTransaction)) {
+                    $refundValue += $inviteTransaction->value;
+                }
+            }
+
+            if(!$transaction->is_waiting_withdrawal && empty($transaction->withdrawal_id)) {
+                $transaction->update([
+                    'is_waiting_withdrawal' => true
+                ]);
+            }
+
+            PendingDebt::create(
+                [
+                    'company_id' => $transaction->company_id,
+                    'sale_id' => $sale->id,
+                    'type' => PendingDebt::REVERSED,
+                    'request_date' => Carbon::now(),
+                    'reason' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
+                    'value' => $refundValue,
+                ]
+            );
+
+            if (FoxUtils::isProduction()) {
+                $merchantId = env('GET_NET_MERCHANT_ID_PRODUCTION');
+                $sellerId = env('GET_NET_SELLER_ID_PRODUCTION');
+                $subSellerId = $transaction->company->subseller_getnet_id;
+            } else {
+                $merchantId = env('GET_NET_MERCHANT_ID_SANDBOX');
+                $sellerId = env('GET_NET_SELLER_ID_SANDBOX');
+                $subSellerId = $transaction->company->subseller_getnet_homolog_id;
+            }
+
+            $adjustmentData = [
+                'seller_id' => $sellerId,
+                'merchant_id' => $merchantId,
+                'subseller_id' => $subSellerId,
+                'type_adjustment' => 2,
+                'amount' => $refundValue,
+                'date_adjustment' => today()->addDay()->format('Y-m-d\TH:i:s') . 'Z',
+                'description' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
+            ];
+
+            $response = $getnetService->sendCurl('v1/mgm/adjustment/request-adjustments', 'POST', $adjustmentData);
+
+            $ajdustmentResponse = json_decode($response);
+
+            if(!is_null($ajdustmentResponse->msg_Erro)) {
+                report(new Exception('Erro ao gerar um débito pendente no estorno de boleto da venda ' . $sale->id . ' - ' . $ajdustmentResponse->msg_Erro));
+            }
+        }
+    }
+
+    public function refundBilletOldFinances(Sale $sale)
+    {
+        $transactionModel = new Transaction();
+
         $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
         $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
         $saleTax = $cloudfoxTransaction->value;
 
         foreach ($sale->transactions as $transaction) {
             if ($transaction->status_enum == $transactionModel->present()
-                    ->getStatusEnum('transfered') && !empty($transaction->company)) {
+                    ->getStatusEnum('transfered') && !empty($transaction->company_id)) {
                 $refundValue = $transaction->value;
 
                 if ($transaction->type == $transactionModel->present()->getType('producer')) {
@@ -856,13 +980,13 @@ class SaleService
                     }
                 }
 
-                $transferModel->create(
+                Transfer::create(
                     [
                         'transaction_id' => $transaction->id,
                         'user_id' => $transaction->company->user_id,
                         'value' => $refundValue,
                         'type' => 'out',
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                        'type_enum' => (new Transfer)->present()->getTypeEnum('out'),
                         'reason' => 'Taxa de estorno de boleto',
                         'is_refund_tax' => 1,
                         'company_id' => $transaction->company->id,
@@ -884,46 +1008,6 @@ class SaleService
             );
         }
 
-        $sale->customer->update(
-            [
-                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-            ]
-        );
-
-        $transactionUser = $transactionModel->where('sale_id', $sale->id)
-            ->whereIn(
-                'company_id',
-                (new CompanyService())->getCompaniesUser()
-                    ->pluck('id')
-            )
-            ->first();
-
-        //Transferencia de entrada do cliente
-        $transferModel->create(
-            [
-                'transaction_id' => $transactionUser->id,
-                'user_id' => auth()->user()->account_owner_id,
-                'customer_id' => $sale->customer_id,
-                'company_id' => $transactionUser->company_id,
-                'value' => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                'type' => 'in',
-                'reason' => 'Estorno de boleto',
-            ]
-        );
-
-        if (!empty($sale->shopify_order)) {
-            try {
-                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $shopifyService->cancelOrder($sale);
-                }
-            } catch (Exception $e) {
-            }
-        }
-
-        event(new BilletRefundedEvent($sale));
     }
 
     public function recalcSaleRefundPartial($sale, $partialValues)
