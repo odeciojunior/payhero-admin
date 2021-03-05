@@ -12,7 +12,6 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
-use Modules\Core\Services\PixelService;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
@@ -207,6 +206,8 @@ class PixelsApiController extends Controller
                 $validated['purchase_event_name'] = null;
             }
 
+            $validated['is_api'] = false;
+
             if ($validated['platform'] == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
                 $validated['purchase_event_name'] = 'make_purchase';
             } elseif ($validated['platform'] == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
@@ -216,7 +217,6 @@ class PixelsApiController extends Controller
                 if ($validated['is_api'] == 'api') {
                     $validated['is_api'] = true;
                 } else {
-                    $validated['is_api'] = false;
                     $validated['facebook_token_api'] = null;
                 }
             }
