@@ -275,7 +275,7 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
         case 500:
             break;
         case 413:
-            alertCustom('error', 'O tamanho da imagem não pode exceder 2mb.')
+            alertCustom('error', 'O tamanho do arquivo é maior que o limite máximo.')
             break;
         case 422:
             break;
@@ -361,13 +361,57 @@ function pagination(response, model, callback) {
     $('table').addClass('table-striped')
 }
 
-function copyToClipboard(element) {
-    var $temp = $("<input>");
-    $("body").append($temp);
-    $temp.val($(element).html()).select();
-    document.execCommand("copy");
-    $temp.remove();
-    alertCustom('success', 'Link copiado com sucesso')
+function copyToClipboard(elem) {
+    // create hidden text element, if it doesn't already exist
+    var targetId = "_hiddenCopyText_";
+    var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+    var origSelectionStart, origSelectionEnd;
+
+    console.log(elem.tagName)
+    if (isInput) {
+        // can just use the original source element for the selection and copy
+        target = elem;
+        origSelectionStart = elem.selectionStart;
+        origSelectionEnd = elem.selectionEnd;
+    } else {
+        // must use a temporary form element for the selection and copy
+        target = document.getElementById(targetId);
+        if (!target) {
+            var target = document.createElement("textarea");
+            target.style.position = "absolute";
+            target.style.left = "-9999px";
+            target.style.top = "0";
+            target.id = targetId;
+            document.body.appendChild(target);
+        }
+        target.textContent = elem.textContent;
+    }
+    // select the content
+    var currentFocus = document.activeElement;
+    target.focus();
+    target.setSelectionRange(0, target.value.length);
+
+    // copy the selection
+    var succeed;
+    try {
+        succeed = document.execCommand("copy");
+    } catch(e) {
+        succeed = false;
+    }
+    // restore original focus
+    if (currentFocus && typeof currentFocus.focus === "function") {
+        currentFocus.focus();
+    }
+
+    if (isInput) {
+        // restore prior selection
+        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+    } else {
+        // clear temporary content
+        target.textContent = "";
+    }
+    console.log(target)
+    return succeed;
 }
 
 function errorAjaxResponse(response) {

@@ -543,12 +543,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cloudfox-net/getnet.git",
-                "reference": "ba807ec0660a0dad80498a20961d3701be56ddaa"
+                "reference": "63a1968d60d69b43204dccd789347628fbc5fc6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cloudfox-net/getnet/zipball/ba807ec0660a0dad80498a20961d3701be56ddaa",
-                "reference": "ba807ec0660a0dad80498a20961d3701be56ddaa",
+                "url": "https://api.github.com/repos/Cloudfox-net/getnet/zipball/63a1968d60d69b43204dccd789347628fbc5fc6c",
+                "reference": "63a1968d60d69b43204dccd789347628fbc5fc6c",
                 "shasum": ""
             },
             "require": {
@@ -595,7 +595,7 @@
                 "source": "https://github.com/Cloudfox-net/getnet/tree/master",
                 "issues": "https://github.com/Cloudfox-net/getnet/issues"
             },
-            "time": "2021-02-22T13:58:45+00:00"
+            "time": "2021-02-26T22:07:49+00:00"
         },
         {
             "name": "clue/stream-filter",

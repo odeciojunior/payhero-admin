@@ -38,8 +38,6 @@ class DashboardApiController extends Controller
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
-//            GetnetBackOfficeService::dispatchGetnetGetDiscountsJob();
-
             return response()->json(['companies' => $companies]);
         } catch (Exception $e) {
             report($e);
@@ -117,9 +115,9 @@ class DashboardApiController extends Controller
 
             $availableBalance = $companyService->getAvailableBalance(
                     $company
-                ) - $blockedBalance->from_sales - $blockedBalance->from_invites;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance->from_sales + $blockedBalance->from_invites;
-            $blockedBalanceTotal = $blockedBalance->from_sales + $blockedBalance->from_invites + $blockedBalancePending;
+                ) - $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
+            $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
 
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
@@ -221,8 +219,7 @@ class DashboardApiController extends Controller
                 'chargeback_tax' => $chargebackTax ?? "0.00%",
                 'trackings' => $trackingsInfo,
                 'tickets' => $tickets,
-                'blocked_balance' => number_format(intval($blockedBalance->from_sales) / 100, 2, ',', '.'),
-                'blocked_balance_invite' => number_format(intval($blockedBalance->from_invites) / 100, 2, ',', '.'),
+                'blocked_balance' => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
                 'blocked_balance_pending' => number_format(intval($blockedBalancePending) / 100, 2, ',', '.'),
                 'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];

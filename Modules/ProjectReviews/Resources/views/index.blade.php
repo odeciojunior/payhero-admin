@@ -17,7 +17,7 @@
         </div>
     </div>
 </div>
-<div class="card shadow">
+<div class="card shadow mb-0">
     <div style='min-height: 300px'>
         <div class='table-responsive'>
             <table id='table-reviews' class='table text-left table-striped unify' style='width:100%'>
@@ -37,7 +37,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-review" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+<ul id="pagination-review" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>
 {{-- Modal add-edit review --}}

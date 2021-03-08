@@ -1031,14 +1031,14 @@ class ReportService
 
     /**
      * @param $companyId
-     * @return array
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function getDashboardChartData($companyId)
     {
         try {
             $labelList    = [];
-            $dataFormated = Carbon::now()->subMonths(1)->subMonth()->subDays(5);
-            $endDate      = Carbon::now()->subMonths(1);
+            $dataFormated = Carbon::now()->subMonth()->subDays(5);
+            $endDate      = Carbon::now();
 
             while ($endDate->greaterThanOrEqualTo($dataFormated)) {
                 array_push($labelList, $endDate->format('d/m'));
@@ -1050,8 +1050,8 @@ class ReportService
                 }
             }
 
-            $startDate = Carbon::now()->subMonths(1)->subMonth()->subDays(5)->format('Y-m-d');
-            $endDate   = Carbon::now()->subMonths(1)->addDay()->format('Y-m-d');
+            $startDate = Carbon::now()->subMonth()->subDays(5)->format('Y-m-d');
+            $endDate   = Carbon::now()->addDay()->format('Y-m-d');
 
             $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
                 ->leftJoin('transactions as transaction', function ($join) use ($companyId) {
@@ -1076,7 +1076,11 @@ class ReportService
                         (Carbon::createFromFormat('d/m', $label)->subDays(3)->format('d/m') == Carbon::parse($order['date'])->format('d/m')) ||
                         (Carbon::createFromFormat('d/m', $label)->subDays(4)->format('d/m') == Carbon::parse($order['date'])->format('d/m'))
                     ) {
-                        $valueData[$key] += substr(intval($order['value'] ?? 0), 0, -2);
+                        if ($order['value'] >= 100) {
+                            $order['value'] = (int) substr($order['value'], 0, -2);
+                        }
+
+                        $valueData[$key] += (int) FoxUtils::onlyNumbers($order['value']);
                     }
                 }
             }

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\PendingDebt;
@@ -19,7 +20,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
-use Modules\Getnet\Models\StatementAdjustment;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
 use PagarMe\Client as PagarmeClient;
@@ -31,6 +31,13 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SaleService
 {
+    public function getPaginetedSales($filters)
+    {
+        $transactions = $this->getSalesQueryBuilder($filters);
+
+        return $transactions->paginate(10);
+    }
+
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
         try {
@@ -55,7 +62,6 @@ class SaleService
                 'sale.shipping',
                 'sale.checkout',
                 'sale.delivery',
-                'sale.transactions.anticipatedTransactions',
                 'sale.affiliate.user',
                 'sale.saleRefundHistory',
             ];
@@ -219,13 +225,6 @@ class SaleService
         }
     }
 
-    public function getPaginetedSales($filters)
-    {
-        $transactions = $this->getSalesQueryBuilder($filters);
-
-        return $transactions->paginate(10);
-    }
-
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
@@ -236,8 +235,6 @@ class SaleService
                 $transactionModel->present()->getStatusEnum('paid'),
                 $transactionModel->present()
                     ->getStatusEnum('transfered'),
-                $transactionModel->present()
-                    ->getStatusEnum('anticipated'),
             ]
         );
         $statusDispute = (new Sale())->present()->getStatus('in_dispute');
@@ -293,9 +290,6 @@ class SaleService
     {
         $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
             ->first();
-
-        $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
-        $valueAnticipable = $anticipatedTransaction->value ?? 0;
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -426,12 +420,10 @@ class SaleService
             ) : '',
             'affiliate_comission' => $affiliateComission,
             'refund_value' => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
-            'value_anticipable' => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
+            'value_anticipable' => '0,00',
             'total_paid_value' => number_format($sale->total_paid_value, 2, ',', '.'),
-            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first(
-            )->refund_observation : null,
-            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first(
-                )->user_id,
+            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
+            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             'company_name' => $companyName,
         ];
     }
@@ -665,7 +657,7 @@ class SaleService
                                 $details = $item->details[0];
 
                                 $transactionStatusCode = $summary->transaction_status_code;
-                                $hasOrderId = empty($summary->order_id) ? false: true;
+                                $hasOrderId = empty($summary->order_id) ? false : true;
                                 $isTransactionCredit = $details->transaction_sign == '+';
 
                                 $refundObservation = 'Estorno da venda: ' . Hashids::connection('sale_id')->encode($sale->id);
@@ -674,7 +666,7 @@ class SaleService
                                     && $hasOrderId
                                     && $isTransactionCredit
                                     && $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO
-                                ){
+                                ) {
                                     PendingDebt::create(
                                         [
                                             'company_id' => $company->id,
@@ -698,6 +690,74 @@ class SaleService
                 }
                 $refundTransaction->save();
             }
+
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function saleIsGetnet(Sale $sale): bool
+    {
+        if (in_array($sale->gateway_id, [14, 15])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function recalcSaleRefundPartial($sale, $partialValues)
+    {
+        try {
+            $companyModel = new Company();
+            $transferModel = new Transfer();
+
+            $refundTransactions = $sale->transactions;
+
+            // criar tranfer de saida e apagar transacoes
+            foreach ($refundTransactions as $refundTransaction) {
+                $company = $companyModel->find($refundTransaction->company_id);
+                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
+                    $transferModel->create(
+                        [
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $company->user_id,
+                            'value' => $refundTransaction->value,
+                            'type' => 'out',
+                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                            'reason' => 'refunded',
+                            'company_id' => $company->id,
+                        ]
+                    );
+
+                    $company->update(
+                        [
+                            'balance' => $company->balance -= $refundTransaction->value,
+                        ]
+                    );
+                }
+            }
+
+            // recriar transacoes com splitPayment
+            $totalValue = $partialValues['total_value_with_interest'];
+            $cloudfoxValue = $partialValues['cloudfox_value'];
+            $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
+
+            SplitPaymentPartialRefundService::perform(
+                $sale,
+                $totalValue,
+                $cloudfoxValue,
+                $installmentFreeTaxValue,
+                $refundTransactions
+            );
+
+            foreach ($refundTransactions as $refundTransaction) {
+                $refundTransaction->delete();
+            }
+
+            // verify transfers
+            $transfersService = new TransfersService();
+            $transfersService->verifyTransactions($sale->id);
 
             return true;
         } catch (Exception $ex) {
@@ -835,8 +895,12 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
-        $transferModel = new Transfer();
-        $transactionModel = new Transaction();
+
+        if (in_array($sale->gateway_id, [14, 15])) {
+            $this->refundBilletNewFinances($sale);
+        } else {
+            $this->refundBilletOldFinances($sale);
+        }
 
         $sale->update(
             [
@@ -845,108 +909,27 @@ class SaleService
             ]
         );
 
-        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-        $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
-        $saleTax = $cloudfoxTransaction->value;
-
-        foreach ($sale->transactions as $transaction) {
-            if ($transaction->status_enum == $transactionModel->present()
-                    ->getStatusEnum('transfered') && !empty($transaction->company)) {
-                $refundValue = $transaction->value;
-
-                if ($transaction->type == $transactionModel->present()->getType('producer')) {
-                    $refundValue += $saleTax;
-                    if (!empty($inviteTransaction)) {
-                        $refundValue += $inviteTransaction->value;
-                    }
-                }
-
-                $transferModel->create(
-                    [
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $transaction->company->user_id,
-                        'value' => $refundValue,
-                        'type' => 'out',
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'reason' => 'Taxa de estorno de boleto',
-                        'is_refund_tax' => 1,
-                        'company_id' => $transaction->company->id,
-                    ]
-                );
-
-                $transaction->company->update(
-                    [
-                        'balance' => $transaction->company->balance -= $refundValue,
-                    ]
-                );
-            } else {
-                if ($transaction->status_enum == $transactionModel->present()
-                        ->getStatusEnum('anticipated') && !empty($transaction->company)) {
-                    $anticipatedValue = $transaction->anticipatedTransactions()->first()->value;
-
-                    $refundValue = $anticipatedValue;
-
-                    if ($transaction->type == $transactionModel->present()->getType('producer')) {
-                        $refundValue += $saleTax;
-                        if (!empty($inviteTransaction)) {
-                            $refundValue += $inviteTransaction->value;
-                        }
-                    }
-
-                    $transferModel->create(
-                        [
-                            'transaction_id' => $transaction->id,
-                            'user_id' => $transaction->company->user_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                            'reason' => 'Taxa de estorno de boleto',
-                            'is_refund_tax' => 1,
-                            'company_id' => $transaction->company->id,
-                        ]
-                    );
-
-                    $transaction->company->update(
-                        [
-                            'balance' => $transaction->company->balance -= $refundValue,
-                        ]
-                    );
-                }
-            }
-
-            $transaction->update(
-                [
-                    'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
-                    'status' => 'billet_refunded',
-                ]
-            );
-        }
-
-        $sale->customer->update(
-            [
-                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-            ]
-        );
-
-        $transactionUser = $transactionModel->where('sale_id', $sale->id)
-            ->whereIn(
-                'company_id',
-                (new CompanyService())->getCompaniesUser()
-                    ->pluck('id')
-            )
+        $transactionUser = Transaction::where('sale_id', $sale->id)
+            ->where('type', (new Transaction)->present()->getType('producer'))
             ->first();
 
         //Transferencia de entrada do cliente
-        $transferModel->create(
+        Transfer::create(
             [
                 'transaction_id' => $transactionUser->id,
                 'user_id' => auth()->user()->account_owner_id,
                 'customer_id' => $sale->customer_id,
                 'company_id' => $transactionUser->company_id,
                 'value' => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
                 'type' => 'in',
                 'reason' => 'Estorno de boleto',
+            ]
+        );
+
+        $sale->customer->update(
+            [
+                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
             ]
         );
 
@@ -964,63 +947,131 @@ class SaleService
         event(new BilletRefundedEvent($sale));
     }
 
-    public function recalcSaleRefundPartial($sale, $partialValues)
+    public function refundBilletNewFinances(Sale $sale)
     {
-        try {
-            $companyModel = new Company();
-            $transferModel = new Transfer();
 
-            $refundTransactions = $sale->transactions;
+        $transactionModel = new Transaction();
 
-            // criar tranfer de saida e apagar transacoes
-            foreach ($refundTransactions as $refundTransaction) {
-                $company = $companyModel->find($refundTransaction->company_id);
-                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
-                    $transferModel->create(
-                        [
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $company->user_id,
-                            'value' => $refundTransaction->value,
-                            'type' => 'out',
-                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                            'reason' => 'refunded',
-                            'company_id' => $company->id,
-                        ]
-                    );
+        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+        $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
+        $saleTax = $cloudfoxTransaction->value;
+        $getnetService = new GetnetBackOfficeService();
 
-                    $company->update(
-                        [
-                            'balance' => $company->balance -= $refundTransaction->value,
-                        ]
-                    );
+        foreach ($sale->transactions as $transaction) {
+
+            $transaction->update([
+                'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
+                'status' => 'billet_refunded',
+            ]);
+
+            if (empty($transaction->company_id)) {
+                continue;
+            }
+
+            $refundValue = $transaction->value;
+
+            if ($transaction->type == $transactionModel->present()->getType('producer')) {
+                $refundValue += $saleTax;
+                if (!empty($inviteTransaction)) {
+                    $refundValue += $inviteTransaction->value;
                 }
             }
 
-            // recriar transacoes com splitPayment
-            $totalValue = $partialValues['total_value_with_interest'];
-            $cloudfoxValue = $partialValues['cloudfox_value'];
-            $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
-
-            SplitPaymentPartialRefundService::perform(
-                $sale,
-                $totalValue,
-                $cloudfoxValue,
-                $installmentFreeTaxValue,
-                $refundTransactions
-            );
-
-            foreach ($refundTransactions as $refundTransaction) {
-                $refundTransaction->delete();
+            if (!$transaction->is_waiting_withdrawal && empty($transaction->withdrawal_id)) {
+                $transaction->update([
+                    'is_waiting_withdrawal' => true
+                ]);
             }
 
-            // verify transfers
-            $transfersService = new TransfersService();
-            $transfersService->verifyTransactions($sale->id);
+            PendingDebt::create(
+                [
+                    'company_id' => $transaction->company_id,
+                    'sale_id' => $sale->id,
+                    'type' => PendingDebt::REVERSED,
+                    'request_date' => Carbon::now(),
+                    'reason' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
+                    'value' => $refundValue,
+                ]
+            );
 
-            return true;
-        } catch (Exception $ex) {
-            throw $ex;
+            if (FoxUtils::isProduction()) {
+                $merchantId = env('GET_NET_MERCHANT_ID_PRODUCTION');
+                $sellerId = env('GET_NET_SELLER_ID_PRODUCTION');
+                $subSellerId = $transaction->company->subseller_getnet_id;
+            } else {
+                $merchantId = env('GET_NET_MERCHANT_ID_SANDBOX');
+                $sellerId = env('GET_NET_SELLER_ID_SANDBOX');
+                $subSellerId = $transaction->company->subseller_getnet_homolog_id;
+            }
+
+            $adjustmentData = [
+                'seller_id' => $sellerId,
+                'merchant_id' => $merchantId,
+                'subseller_id' => $subSellerId,
+                'type_adjustment' => 2,
+                'amount' => $refundValue,
+                'date_adjustment' => today()->addDay()->format('Y-m-d\TH:i:s') . 'Z',
+                'description' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
+            ];
+
+            $response = $getnetService->sendCurl('v1/mgm/adjustment/request-adjustments', 'POST', $adjustmentData);
+
+            $ajdustmentResponse = json_decode($response);
+
+            if (!is_null($ajdustmentResponse->msg_Erro)) {
+                report(new Exception('Erro ao gerar um débito pendente no estorno de boleto da venda ' . $sale->id . ' - ' . $ajdustmentResponse->msg_Erro));
+            }
         }
+    }
+
+    public function refundBilletOldFinances(Sale $sale)
+    {
+        $transactionModel = new Transaction();
+
+        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+        $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
+        $saleTax = $cloudfoxTransaction->value;
+
+        foreach ($sale->transactions as $transaction) {
+            if ($transaction->status_enum == $transactionModel->present()
+                    ->getStatusEnum('transfered') && !empty($transaction->company_id)) {
+                $refundValue = $transaction->value;
+
+                if ($transaction->type == $transactionModel->present()->getType('producer')) {
+                    $refundValue += $saleTax;
+                    if (!empty($inviteTransaction)) {
+                        $refundValue += $inviteTransaction->value;
+                    }
+                }
+
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $transaction->company->user_id,
+                        'value' => $refundValue,
+                        'type' => 'out',
+                        'type_enum' => (new Transfer)->present()->getTypeEnum('out'),
+                        'reason' => 'Taxa de estorno de boleto',
+                        'is_refund_tax' => 1,
+                        'company_id' => $transaction->company->id,
+                    ]
+                );
+
+                $transaction->company->update(
+                    [
+                        'balance' => $transaction->company->balance -= $refundValue,
+                    ]
+                );
+            }
+
+            $transaction->update(
+                [
+                    'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
+                    'status' => 'billet_refunded',
+                ]
+            );
+        }
+
     }
 
     public function getValuesPartialRefund($sale, $refundValue)
@@ -1097,6 +1148,174 @@ class SaleService
         $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
         $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
         $sale->update(['interest_total_value' => $interesetTotalValue]);
+    }
+
+    public function getResumeBlocked($filters)
+    {
+        $transactionModel = new Transaction();
+        $filters['invite'] = 1;
+        $transactions = $this->getSalesBlockedBalance($filters);
+        $transactionStatus = implode(
+            ',',
+            [
+                $transactionModel->present()->getStatusEnum('transfered'),
+                $transactionModel->present()->getStatusEnum('paid'),
+            ]
+        );
+
+        $resume = $transactions->without(['sale'])
+            ->select(
+                DB::raw(
+                    "
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 1 ELSE 0 END) as total_sales,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission,
+                     sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN
+                        if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum('transfered')}), transactions.value, 0) ELSE 0 END
+                     ) / 100 as commission_invite,
+                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                            (sales.sub_total + sales.shipment_value) -
+                            (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
+                            ELSE 0 END
+                        ) as total"
+                )
+            )
+            ->first()
+            ->toArray();
+
+        $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+        $resume['commission_invite'] = number_format($resume['commission_invite'], 2, ',', '.');
+        $resume['total'] = number_format($resume['total'], 2, ',', '.');
+
+        return $resume;
+    }
+
+    public function getSalesBlockedBalance($filters)
+    {
+        try {
+            $companyModel = new Company();
+            $customerModel = new Customer();
+            $transactionModel = new Transaction();
+            $salesModel = new Sale();
+            $blockReasonSaleModel = new BlockReasonSale();
+
+            $transactions = $transactionModel->with(
+                [
+                    'sale.project',
+                    'sale.customer',
+                    'sale.plansSales.plan',
+                    'sale.tracking',
+                    'sale.productsPlansSale',
+                    'sale.affiliate' => function ($funtionTrash) {
+                        $funtionTrash->withTrashed()->with('user');
+                    },
+                    'blockReasonSale' => function ($blocked) use ($blockReasonSaleModel) {
+                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    },
+                ]
+            )
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->whereHas('blockReasonSale', function ($blocked) use ($blockReasonSaleModel) {
+                    $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                });
+
+            if (empty($filters["invite"])) {
+                $transactions->whereNull('invitation_id');
+            }
+
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->where('sales.project_id', $projectId);
+            }
+
+            if (!empty($filters["transaction"])) {
+                $saleId = current(
+                    Hashids::connection('sale_id')
+                        ->decode(str_replace('#', '', $filters["transaction"]))
+                );
+
+                $transactions->where('sales.id', $saleId);
+            }
+
+            if (!empty($filters["client"])) {
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $transactions->whereIn('sales.customer_id', $customers);
+            }
+
+            if (!empty($filters['customer_document'])) {
+                $customers = $customerModel->where(
+                    'document',
+                    FoxUtils::onlyNumbers($filters["customer_document"])
+                )->pluck('id');
+
+                if (count($customers) < 1) {
+                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                }
+
+                $transactions->whereIn('sales.customer_id', $customers);
+            }
+
+            if (!empty($filters["payment_method"])) {
+                $transactions->where('sales.payment_method', $filters["payment_method"]);
+            }
+
+            $status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
+            if (!empty($filters["plan"])) {
+                $planId = current(Hashids::decode($filters["plan"]));
+                $transactions->whereHas(
+                    'sale.plansSales',
+                    function ($query) use ($planId) {
+                        $query->where('plan_id', $planId);
+                    }
+                );
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $transactions->whereBetween(
+                'sales.' . $filters["date_type"],
+                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+            )
+                ->whereIn('sales.status', $status)
+                ->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
+
+            return $transactions;
+        } catch (Exception $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
+    public function getResumePending($filters)
+    {
+        $transactionModel = new Transaction();
+        $transactions = $this->getSalesPendingBalance($filters);
+        $transactionStatus = implode(
+            ',',
+            [
+                $transactionModel->present()->getStatusEnum('paid'),
+            ]
+        );
+
+        $resume = $transactions->without(['sale'])
+            ->select(
+                DB::raw(
+                    "count(sales.id) as total_sales,
+                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
+                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
+                )
+            )
+            ->first()
+            ->toArray();
+
+        $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
+        $resume['total'] = FoxUtils::formatMoney($resume['total']);
+
+        return $resume;
     }
 
     public function getSalesPendingBalance($filters)
@@ -1229,175 +1448,6 @@ class SaleService
         }
     }
 
-    public function getSalesBlockedBalance($filters)
-    {
-        try {
-            $companyModel = new Company();
-            $customerModel = new Customer();
-            $transactionModel = new Transaction();
-            $salesModel = new Sale();
-            $userId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companyModel->where('user_id', $userId)
-                ->pluck('id')
-                ->toArray();
-
-            $transactions = $transactionModel->with(
-                [
-                    'sale.project',
-                    'sale.customer',
-                    'sale.plansSales.plan',
-                    'sale.tracking',
-                    'sale.productsPlansSale',
-                    'sale.affiliate' => function ($funtionTrash) {
-                        $funtionTrash->withTrashed()->with('user');
-                    }
-                ]
-            )
-                ->whereIn('company_id', $userCompanies)
-                ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id')
-                ->where(function($queryStatus) use($transactionModel, $salesModel) {
-                    $queryStatus->where(function($transfered) use($transactionModel) {
-                            $transfered->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('transfered'));
-                        })
-                        ->orWhere(function($pending) use($transactionModel, $salesModel) {
-                            $pending->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                ->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-                        });
-                })
-                ->whereDate('transactions.created_at', '>=', '2020-01-01')
-                ->whereHas(
-                    'sale',
-                    function ($f1) use ($salesModel) {
-                        $f1->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                            ->orWhere('sales.has_valid_tracking', 0)
-                            ->whereNotNull('delivery_id');
-                    }
-                );
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->where('sales.project_id', $projectId);
-            }
-
-            if (!empty($filters["transaction"])) {
-                $saleId = current(
-                    Hashids::connection('sale_id')
-                        ->decode(str_replace('#', '', $filters["transaction"]))
-                );
-
-                $transactions->where('sales.id', $saleId);
-            }
-
-            if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
-                $transactions->whereIn('sales.customer_id', $customers);
-            }
-
-            if (!empty($filters['customer_document'])) {
-                $customers = $customerModel->where(
-                    'document',
-                    FoxUtils::onlyNumbers($filters["customer_document"])
-                )->pluck('id');
-
-                if (count($customers) < 1) {
-                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
-                }
-
-                $transactions->whereIn('sales.customer_id', $customers);
-            }
-
-            if (!empty($filters["payment_method"])) {
-                $transactions->where('sales.payment_method', $filters["payment_method"]);
-            }
-
-            $status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
-            if (!empty($filters["plan"])) {
-                $planId = current(Hashids::decode($filters["plan"]));
-                $transactions->whereHas(
-                    'sale.plansSales',
-                    function ($query) use ($planId) {
-                        $query->where('plan_id', $planId);
-                    }
-                );
-            }
-
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $transactions->whereBetween(
-                'sales.' . $filters["date_type"],
-                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-            )
-                ->whereIn('sales.status', $status)
-                ->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
-
-            return $transactions;
-        } catch (Exception $e) {
-            report($e);
-
-            return null;
-        }
-    }
-
-    public function getResumeBlocked($filters)
-    {
-        $transactionModel = new Transaction();
-        $transactions = $this->getSalesBlockedBalance($filters);
-        $transactionStatus = implode(
-            ',',
-            [
-                $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),
-            ]
-        );
-
-        $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw(
-                    "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
-                )
-            )
-            ->first()
-            ->toArray();
-
-        $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
-        $resume['total'] = number_format($resume['total'], 2, ',', '.');
-
-        return $resume;
-    }
-
-    public function getResumePending($filters)
-    {
-        $transactionModel = new Transaction();
-        $transactions = $this->getSalesPendingBalance($filters);
-        $transactionStatus = implode(
-            ',',
-            [
-                $transactionModel->present()->getStatusEnum('paid'),
-            ]
-        );
-
-        $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw(
-                    "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
-                )
-            )
-            ->first()
-            ->toArray();
-
-        $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
-        $resume['total'] = FoxUtils::formatMoney($resume['total']);
-
-        return $resume;
-    }
-
     public function getPendingBalance($filters)
     {
         $transactions = $this->getSalesPendingBalance($filters);
@@ -1410,14 +1460,5 @@ class SaleService
         $transactions = $this->getSalesBlockedBalance($filters);
 
         return $transactions->paginate(10);
-    }
-
-    public function saleIsGetnet(Sale $sale): bool
-    {
-        if (in_array($sale->gateway_id, [14, 15])) {
-            return true;
-        }
-
-        return false;
     }
 }

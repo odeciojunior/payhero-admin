@@ -226,7 +226,7 @@ $(() => {
 
     $('#update-sale-observation').click(function () {
 
-        let sale = $('#sale-code').text();
+        let sale = $('#sale-code').text().substring(0, 8)
 
         $.ajax({
             method: "POST",
@@ -491,7 +491,13 @@ $(() => {
         }
 
         if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8 || sale.status == 24) && sale.userPermissionRefunded) {
-            $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
+
+            if(sale.has_contestation){
+                $('#div_refund_transaction').html('<button disabled class="btn btn-danger btn-sm">Estorno desabilitado, venda está em disputa</button>');
+            }else{
+                $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
+            }
+
         } else {
             $('#div_refund_transaction').html('');
         }

@@ -80,6 +80,7 @@ class SalesResource extends JsonResource
             'thank_page_url'    => $thankPageUrl,
             'company_name' => $this->details->company_name,
             'has_order_bump' => $this->has_order_bump,
+            'has_contestation' => $this->contestations->count() ? true : false,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         if (count($shopifyIntegrations) > 0) {
