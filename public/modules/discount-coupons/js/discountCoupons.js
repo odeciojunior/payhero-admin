@@ -159,7 +159,7 @@ $(function () {
             },
             success: function success(data) {
                 loadingOnScreenRemove();
-                alertCustom("success", "Cupom atualizado com sucesso");
+                alertCustom("success", data.message);
                 atualizarCoupon();
             }
         });
@@ -250,75 +250,4 @@ $(function () {
         $('.rule-value').val('');
 
     }
-    // function pagination(response) {
-    //     if (response.meta.last_page == 1) {
-    //         $("#primeira_pagina_pixel").hide();
-    //         $("#ultima_pagina_pixel").hide();
-    //     } else {
-    //
-    //         $("#pagination-coupons").html("");
-    //
-    //         let primeira_pagina_pixel = "<button id='primeira_pagina_coupons' class='btn nav-btn'>1</button>";
-    //
-    //         $("#pagination-coupons").append(primeira_pagina_pixel);
-    //
-    //         if (response.meta.current_page == '1') {
-    //             $("#primeira_pagina_coupons").attr('disabled', true);
-    //             $("#primeira_pagina_coupons").addClass('nav-btn');
-    //             $("#primeira_pagina_coupons").addClass('active');
-    //         }
-    //
-    //         $('#primeira_pagina_coupons').on("click", function () {
-    //             atualizarCoupon('?page=1');
-    //         });
-    //
-    //         for (x = 3; x > 0; x--) {
-    //             if (response.meta.current_page - x <= 1) {
-    //                 continue;
-    //             }
-    //             $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-    //             $('#pagina_coupons_' + (response.meta.current_page - x)).on("click", function () {
-    //                 atualizarCoupon('?page=' + $(this).html());
-    //             });
-    //         }
-    //
-    //         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-    //             let pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-    //
-    //             $("#pagination-coupons").append(pagina_atual_coupons);
-    //
-    //             $("#pagina_atual_coupons").attr('disabled', true);
-    //             $("#pagina_atual_coupons").addClass('nav-btn');
-    //             $("#pagina_atual_coupons").addClass('active');
-    //         }
-    //         for (x = 1; x < 4; x++) {
-    //
-    //             if (response.meta.current_page + x >= response.meta.last_page) {
-    //                 continue;
-    //             }
-    //
-    //             $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-    //
-    //             $('#pagina_coupons_' + (response.meta.current_page + x)).on("click", function () {
-    //                 atualizarCoupon('?page=' + $(this).html());
-    //             });
-    //         }
-    //
-    //         if (response.meta.last_page != '1') {
-    //             let ultima_pagina_coupons = "<button id='ultima_pagina_coupons' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-    //
-    //             $("#pagination-coupons").append(ultima_pagina_coupons);
-    //
-    //             if (response.meta.current_page == response.meta.last_page) {
-    //                 $("#ultima_pagina_coupons").attr('disabled', true);
-    //                 $("#ultima_pagina_coupons").addClass('nav-btn');
-    //                 $("#ultima_pagina_coupons").addClass('active');
-    //             }
-    //
-    //             $('#ultima_pagina_coupons').on("click", function () {
-    //                 atualizarCoupon('?page=' + response.meta.last_page);
-    //             });
-    //         }
-    //     }
-    // }
 });
