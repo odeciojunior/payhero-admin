@@ -448,7 +448,7 @@ class GetNetStatementService
         $pendingDebts = [];
         $companyId = $this->filters['company_id'];
 
-        if (array_key_exists('sale_id', $this->filters)) {
+        if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
 
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
@@ -456,7 +456,7 @@ class GetNetStatementService
                 ->whereCompanyId($companyId)
                 ->get();
 
-        } elseif (array_key_exists('withdrawal_id', $this->filters)) {
+        } elseif (array_key_exists('withdrawal_id', $this->filters) && !empty($this->filters['withdrawal_id'])) {
 
             $withdrawal_id = $this->filters['withdrawal_id'];
 
