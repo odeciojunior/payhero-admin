@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
@@ -20,6 +19,7 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
+Use Modules\Core\Services\BenefitService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -338,7 +338,7 @@ class DashboardApiController extends Controller
         $company = Company::find(current(Hashids::decode($companyHash)));
         $user = $company->user;
         $taskService = new TaskService();
-        //$cashback = $this->getCashbackReceivedValue();
+        $benefitService = new BenefitService();
 
         return [
             'level'          => $user->level,
@@ -347,64 +347,8 @@ class DashboardApiController extends Controller
             'billed' => $user->total_commission_value,
             'money_cashback' => $this->getCashbackReceivedValue(),  //950066,
 
-            'benefits' => array(
-                'active' => array (
-//                    0 =>
-//
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
-//                            //'status' => 0,
-//                        ),
-//                    1 =>
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Gerente de Contas',
-//                            //'status' => 0,
-//                        ),
-//                    2=>
-//
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => '0,5% de Cashback',
-//                            //'status' => 0,
-//                        ),
-//                    3 =>
-//                        array (
-//                            'card' => 'NÍVEL 2',
-//                            'benefit' => 'Recebimentos mais rápidos',
-//                            //'status' => 0,
-//                        ),
-                ),
-                'next' => array (
-                    0 =>
+            'benefits' => $benefitService->getUserBenefits($user),
 
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => 'Gerente de Contas',
-                            //'status' => 0,
-                        ),
-                    1 =>
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => 'Gerente de Contas',
-                            //'status' => 0,
-                        ),
-                    2=>
-
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => '0,5% de Cashback',
-                            //'status' => 0,
-                        ),
-                    3 =>
-                        array (
-                            'card' => 'NÍVEL 2',
-                            'benefit' => 'Recebimentos mais rápidos',
-                            //'status' => 0,
-                        ),
-                ),
-            ),
         ];
     }
 

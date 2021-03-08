@@ -161,19 +161,20 @@ $(document).ready(function () {
                 $('#tasks').append(item);
             });
 
-            if ($("#tasks").height() > 105) {
+            if (data.length > 3) {
                 $("#tasks").hover(
                     function () {
                         console.log('Entrei scroll');
                         $("#tasks").css({'overflow-y': 'scroll'});
                     }, function () {
-                        console.log('Entrei hidden');
+                        console.log('Sai hidden');
                         $("#tasks").css({'overflow-y': 'hidden'});
                     }
                 );
             }
 
             $("#tasks").css({'max-height': '95px', 'overflow-y': 'hidden'});
+            $('#tasks').show();
 
         } else {
             $('#tasks').hide();
@@ -194,14 +195,14 @@ $(document).ready(function () {
 
         var percentage = billed /currentLevel.billedStop;
 
-        percentage = percentage > 10 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1);
+        percentage = percentage > 10 ? percentage : parseFloat(percentage).toFixed(1);
         $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
         if (percentage > 13) {
-            $('#progress-bar > span').text(`${Math.floor(percentage) }%`);
+            $('#progress-bar > span').text(`${Math.trunc(percentage) }%`);
             $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9 }%`, 'color': '#FFFFFF'});
         }
         else {
-            $('#progress-bar > span').text(`${percentage > 1 ? parseFloat(percentage).toFixed(0) : parseFloat(percentage).toFixed(1)  }%`);
+            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)  }%`);
             $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3 }%`, 'color': '#2E85EC' });
         }
 
@@ -260,13 +261,14 @@ $(document).ready(function () {
             $.each(benefits.active, function (index, value) {
 
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefits-button benefits-button-checked d-flex justify-content-around align-items-center">${value.card}</span>
-                                 <p class="m-0">${value.benefit}</p>
+                                 <span class="benefits-button ${value.status ? 'benefits-button-checked' : 'benefits-button-blocked'} d-flex justify-content-around align-items-center">${value.status ? 'Ativo' : 'Inativo'}</span>
+                                 <p class="m-0">${value.name}</p>
                             </div>`;
                 $('#benefits-active-container').append(item);
             });
 
-            if ($("#benefits-active-container").height() > 92) {
+            //if ($("#benefits-active-container").height() > 92) {
+            if (benefits.active.length > 2) {
                 $("#benefits-active-container").hover(
                     function () {
                         $("#benefits-active-container").css({'overflow-y': 'scroll'});
@@ -301,13 +303,14 @@ $(document).ready(function () {
             $.each(benefits.next, function (index, value) {
 
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start">
-                                 <span class="benefits-button d-flex justify-content-around align-items-center">${value.card}</span>
-                                 <p class="m-0">${value.benefit}</p>
+                                 <span class="benefits-button d-flex justify-content-around align-items-center">NÍVEL ${value.level}</span>
+                                 <p class="m-0">${value.name}</p>
                             </div>`;
                 $('#benefits-container').append(item);
             });
 
-            if ($("#benefits-container").height() > 92) {
+            //if ($("#benefits-container").height() > 92) {
+            if (benefits.next.length > 2) {
                 $("#benefits-container").hover(
                     function () {
                         $("#benefits-container").css({'overflow-y': 'scroll'});

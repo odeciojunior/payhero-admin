@@ -4,63 +4,64 @@ $(document).ready(function () {
         0: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-red">mediano0</span>.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
         },
         1: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-red">mediano1</span>.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
         },
         2: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-orange">mediano2</span>.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
         },
         3: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-orange">mediano3</span>.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
         },
         4: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-yellow">mediano4</span>.'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
         },
         5: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-yellow">mediano5</span>.'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
         },
         6: {
             textColor: 'text-color-green',
             bgColor: 'bg-color-green',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-green">mediano6</span>.'
+            description: 'Continue assim. Seu desempenho é <span class="text-color-green">bom</span>!'
         },
         7: {
             textColor: 'text-color-green',
             bgColor: 'bg-color-green',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-green">mediano7</span>.'
+            description: 'Continue assim. Seu desempenho é <span class="text-color-green">bom</span>!'
         },
         8: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. <br>Seu desempenho é <span class="text-color-dark-green">mediano8</span>.'
+            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         9: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-dark-green">mediano9</span>.'
+            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         10: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'Sua conta precisa de atenção. <br> Seu desempenho é <span class="text-color-dark-green">mediano10</span>.'
+            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
     }
 
 
     function  nextCard() {
-        setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
+        //setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
+        loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading ');
         $(".sirius-account .card-indicators > .active").on("click", function () {
             $('.sirius-account > .card').html('');
             loadingOnAccountsHealth('.sirius-account > .card');
@@ -244,11 +245,11 @@ $(document).ready(function () {
                 subColor: '#666666'
             },
             staticZones: [
-                {strokeStyle: "#FE330A", min: 0, max: 2, height: 1.3},
-                {strokeStyle: "#FDAD00", min: 2, max: 4, height: 1.3},
-                {strokeStyle: "#F2CB0A", min: 4, max: 6, height: 1.3},
-                {strokeStyle: "#9FCC00", min: 6, max: 8, height: 1.3},
-                {strokeStyle: "#177401", min: 8, max: 10, height: 1.3}
+                {strokeStyle: "#FF3006", min: 0, max: 2, height: 1.3},
+                {strokeStyle: "#FFAF00", min: 2, max: 4, height: 1.3},
+                {strokeStyle: "#F2CC11", min: 4, max: 6, height: 1.3},
+                {strokeStyle: "#1BCE68", min: 6, max: 8, height: 1.3},
+                {strokeStyle: "#04A74A", min: 8, max: 10, height: 1.3}
             ],
 
         };
