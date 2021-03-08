@@ -72,13 +72,6 @@ class UpdateUserLevel extends Command
 
                 $newBenefits = Benefit::where('level', '<=', $level)->get();
 
-                $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
-                $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
-                if ($oldCashbackBenefit && $newCashbackBenefit) {
-                    UserBenefit::where('benefit_id', $oldCashbackBenefit->benefit_id)
-                        ->where('user_id', $user->id)
-                        ->delete();
-                }
                 foreach ($newBenefits as $benefit) {
                     UserBenefit::firstOrCreate([
                         'benefit_id' => $benefit->id,
