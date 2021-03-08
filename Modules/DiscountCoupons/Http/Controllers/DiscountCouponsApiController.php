@@ -271,7 +271,7 @@ class DiscountCouponsApiController extends Controller
                         [
                             'message' => 'Não é possível ter mais de 1 cupom ativo com o mesmo código'
                         ],
-                        \Symfony\Component\HttpFoundation\Response::HTTP_OK
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
                     );
                 }
 

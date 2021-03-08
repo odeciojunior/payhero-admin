@@ -154,6 +154,9 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
+                if (response.status === 400) {
+                    atualizarCoupon();
+                }
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
