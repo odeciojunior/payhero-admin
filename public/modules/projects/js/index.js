@@ -21,6 +21,11 @@ $(() => {
             success: (response) => {
                 if (response.data.length) {
                     $.each(response.data, (key, project) => {
+                        if(verifyAccountFrozen()) {
+                            linkProject = '';
+                        } else {
+                            linkProject = `<a href="/projects/${project.id}${project.affiliated ? '/' + project.affiliate_id : ''}" class="stretched-link"></a>`;
+                        }
                         let data = `<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 name_project" data-id="${project.id}">
                                         <div class="card">
                                             ${project.shopify_id != null && !project.affiliated ? '<div class="ribbon"><span>Shopify <a class="ribbon-shopify-default"></a></span></div>' : ''}
@@ -29,12 +34,16 @@ $(() => {
                                             <div class="card-body">
                                                 <h5 class="card-title">${project.name}</h5>
                                                 <p class="card-text sm">Criado em ${project.created_at}</p>
-                                                <a href="/projects/${project.id}${project.affiliated ? '/' + project.affiliate_id : ''}" class="stretched-link"></a>
+                                                ${linkProject}
                                             </div>
                                         </div>
                                     </div>`;
                         $('#data-table-projects').append(data);
-                        $('#btn-add-project').show();
+                        if(verifyAccountFrozen()) {
+                           $('#btn-add-project').hide();
+                        } else {
+                            $('#btn-add-project').show();
+                        }
                     });
 
                     Sortable.create(document.getElementById('data-table-projects'), {
@@ -69,6 +78,11 @@ $(() => {
                 }
 
                 loadingOnScreenRemove();
+                if(verifyAccountFrozen()) {
+                    $('#btn-config').css({"visibility":"hidden"});
+                } else {
+                    $('#btn-config').css({"visibility":"visible"});
+                }
             }
         });
     }
