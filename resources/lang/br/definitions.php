@@ -9,8 +9,9 @@ return [
     |
     */
     'benefit' => [
-        'cashback' => 'Cashback',
+        'cashback_05_55' => 'Cashback',
         'get_faster' => 'Receba + rápido',
+        'cashback_1_11' => 'Cashback',
         'account_manager' => 'Gerente de contas',
         'rate_reduction' => 'Redução da taxa',
     ],
