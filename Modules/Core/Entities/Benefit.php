@@ -34,6 +34,15 @@ class Benefit extends Model
     ];
 
     /**
+     * Fill the model with an array of attributes.
+     **/
+    public function fill(array $attributes)
+    {
+        $this->hidden[] = 'laravel_through_key';
+        return parent::fill($attributes);
+    }
+
+    /**
      * @return HasManyThrough
      */
     public function users()
