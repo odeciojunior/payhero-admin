@@ -77,7 +77,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
+                            <ul id="pagination-coupons" class="pagination-sm text-right margin-chat-pagination" style="position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>
