@@ -13,7 +13,7 @@ class PopulateBenefitsTable extends Migration
     public function up()
     {
         Benefit::firstOrCreate([
-            'name' => 'cashback',
+            'name' => 'cashback_1',
             'level' => 2,
             'description' => 'Receba de 0,5% até 5,5% de cashback',
         ]);
@@ -25,7 +25,7 @@ class PopulateBenefitsTable extends Migration
         ]);
 
         Benefit::firstOrCreate([
-            'name' => 'cashback',
+            'name' => 'cashback_2',
             'level' => 3,
             'description' => 'Receba de 1% até 11% de cashback',
         ]);

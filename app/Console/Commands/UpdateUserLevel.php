@@ -7,6 +7,7 @@ use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserBenefit;
+use Modules\Core\Services\BenefitsService;
 
 class UpdateUserLevel extends Command
 {
@@ -70,21 +71,16 @@ class UpdateUserLevel extends Command
                     'total_commission_value' => $transaction->value,
                 ]);
 
-                $newBenefits = Benefit::where('level', '<=', $level)->get();
+                $benefits = Benefit::where('level', $level)->get();
 
-                $oldCashbackBenefit = $user->benefits->where('name', 'cashback')->first();
-                $newCashbackBenefit = $newBenefits->where('name', 'cashback')->first();
-                if ($oldCashbackBenefit && $newCashbackBenefit) {
-                    UserBenefit::where('benefit_id', $oldCashbackBenefit->benefit_id)
-                        ->where('user_id', $user->id)
-                        ->delete();
-                }
-                foreach ($newBenefits as $benefit) {
+                foreach ($benefits as $benefit) {
                     UserBenefit::firstOrCreate([
                         'benefit_id' => $benefit->id,
                         'user_id' => $user->id,
                     ]);
                 }
+
+                BenefitsService::updateUserCashback($user);
             }
         }
     }

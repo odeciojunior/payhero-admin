@@ -301,6 +301,7 @@ $(document).ready(function () {
                                         ${value.sale_code}
                                         ${value.upsell ? '<div class="text-muted font-size-10"> (Upsell) </div>' : ''}
                                         ${value.has_order_bump ? '<div class="text-muted font-size-10"> (Order Bump) </div>' : ''}
+                                        ${/* TODO: remover quando o layout for ajustado */ value.cashback_value !== '0.00' ? `<div class="text-muted font-size-10">Cashback:<br><b class="text-success">${value.cashback_value}</b><div>` : ''}
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
