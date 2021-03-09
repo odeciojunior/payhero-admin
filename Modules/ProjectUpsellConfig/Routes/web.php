@@ -10,16 +10,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(
-    [
-        'middleware' => ['web', 'auth'],
-    ],
-    function() {
+// Route::group(
+//     [
+//         'middleware' => ['web', 'auth'],
+//     ],
+//     function() {
 
-        Route::Resource('/projectupsellconfig', 'ProjectUpsellConfigController')
-             ->only('index', 'create', 'edit')->middleware('role:account_owner|admin');
-    }
-);
+//         Route::Resource('/projectupsellconfig', 'ProjectUpsellConfigController')
+//              ->only('index', 'create', 'edit')->middleware('role:account_owner|admin');
+//     }
+// );
 //Route::prefix('projectupsellconfig')->group(function() {
 //    Route::get('/', 'ProjectUpsellConfigController@index');
 //});

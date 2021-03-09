@@ -149,12 +149,12 @@
                             <span class="site-menu-title">Recuperação</span>
                         </a>
                     </li>
-                    <li class="site-menu-item">
+{{--                     <li class="site-menu-item">
                         <a href="{{ route('antifraud.index') }}">
                             <span class="bg-menu"></span>
                             <span class="site-menu-title">Antifraude</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
                             <span class="bg-menu"></span>

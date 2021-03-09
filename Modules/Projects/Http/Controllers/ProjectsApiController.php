@@ -492,7 +492,7 @@ class ProjectsApiController extends Controller
                 ->with([
                     'affiliates' => function ($query) use ($userId) {
                         $query->where('user_id', $userId);
-                    }, 'sales'
+                    }
                 ])->first();
 
             $companies = Company::where('user_id', auth()->user()->id)->pluck('id');
@@ -520,7 +520,7 @@ class ProjectsApiController extends Controller
 
             $project->open_tickets = $saleModel->where('project_id', $project->id)
                                          ->whereHas('tickets', function ($query) {
-                                             $query->where('status', (new Ticket())->present()->getLastMessageType('open'));
+                                             $query->where('ticket_status_enum', (new Ticket())->present()->getTicketStatusEnum('open'));
                                          })
                                         ->count();
 
