@@ -47,6 +47,7 @@ class VerifyFrozenAccountWeb
             '/apps',
             '/invitations',
             '/logout',
+            '/send-authenticated'
         ];
 
         foreach ($excepts as $except) {
