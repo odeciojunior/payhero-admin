@@ -71,7 +71,7 @@ class UpdateUserLevel extends Command
                     'total_commission_value' => $transaction->value,
                 ]);
 
-                $benefits = Benefit::where('level', '<=', $level)->get();
+                $benefits = Benefit::where('level', $level)->get();
 
                 foreach ($benefits as $benefit) {
                     UserBenefit::firstOrCreate([
