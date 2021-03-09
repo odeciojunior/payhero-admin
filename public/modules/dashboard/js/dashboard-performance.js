@@ -168,6 +168,14 @@ $(document).ready(function () {
                             <div id="achievements-item-12" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/4ea15727ab51ebc7697fa6b1785a31491f69fb2br1-200-141v2_hq.jpg)"></div>
                         </div>
                     </div>
+                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                        <span class="title-performance">Cashback recebido</span>
+                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">
+                            <span class="o-reload-1 cashback-container-icon"></span>
+                            <span class="cashback-container-icon">R$</span>
+                            <span id="cashback-container-money"></span>
+                        </div>
+                    </div>
                     <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
 
                     <div id="progress" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
