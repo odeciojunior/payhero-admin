@@ -22,14 +22,6 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user, Carbon $startDate, Carbon $endDate)
     {
-        $user->update([
-                          'account_score'    => 0,
-                          'attendance_score' => 0,
-                          'chargeback_score' => 0,
-                          'chargeback_rate'  => 0,
-                          'tracking_score'   => 0,
-                      ]);
-
         $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
         $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
