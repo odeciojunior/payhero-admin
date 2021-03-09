@@ -30,6 +30,8 @@ class UserPresenter extends Presenter
                     return 'withdrawal blocked';
                 case 3:
                     return 'account blocked';
+                case 4:
+                    return 'account frozen';
             }
 
             return '';
@@ -41,6 +43,8 @@ class UserPresenter extends Presenter
                     return 2;
                 case 'account blocked':
                     return 3;
+                case 'account frozen':
+                    return 4;
             }
 
             return '';

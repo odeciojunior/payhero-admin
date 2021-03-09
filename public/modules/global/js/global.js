@@ -526,6 +526,7 @@ function ajaxVerifyDocumentPending() {
             //     $('#document-pending').show();
             //     $('#document-pending .top-alert-action').attr('href', response.link);
             // }
+            $('#accountStatus').val(response.accountStatus);
             if(response.accountType == 'owner') {
                 if (response.analyzing) {
                     $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
@@ -540,7 +541,12 @@ function ajaxVerifyDocumentPending() {
                     $('.top-alert-message').html('Um de seus documentos foi recusado');
                     $('#document-pending').show();
                     $('#document-pending .top-alert-action').attr('data-value-url', response.link);
-                }
+                } else if (response.accountStatus == 'account frozen') {
+                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
+                    $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
+                    $('#document-pending .top-alert-action').hide();
+                    $('#document-pending').show();  
+                 }
             }
         },
     });
@@ -672,3 +678,10 @@ $(document).ready(function () {
         }
     });
 })
+
+function verifyAccountFrozen() {
+    if($('#accountStatus').val() == 'account frozen') {
+        return true;
+    }
+    return false;
+}
