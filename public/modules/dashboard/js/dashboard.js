@@ -64,7 +64,7 @@ $(document).ready(function () {
                         },
                         axisY: {
                             labelInterpolationFnc: function labelInterpolationFnc(value) {
-                               let str = parseInt(value)
+                                let str = parseInt(value)
 
                                 if (str > 0) {
                                     str = str / 1e3 + "K"
