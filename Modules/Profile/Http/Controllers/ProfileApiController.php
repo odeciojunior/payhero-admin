@@ -652,7 +652,8 @@ class ProfileApiController
                     'analyzing' => $analyzing,
                     'refused' => $refused,
                     'link' => $link,
-                    'accountType' => $accountType
+                    'accountType' => $accountType,
+                    'accountStatus' => $user->present()->getStatus($user->status),
                 ]
             );
         } catch (Exception $e) {
