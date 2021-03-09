@@ -138,7 +138,8 @@ class TaskService
     private function validateFirstWithdrawalTask(User $user): bool
     {
         return Company::whereHas('withdrawals', function ($query) {
-                $query->where('is_released', true);
+                //$query->where('is_released', true);
+                $query->where('status', 3);
             })->where('user_id', $user->id)->count() > 0;
     }
 }

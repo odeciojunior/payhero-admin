@@ -262,7 +262,7 @@ $(document).ready(function () {
     }
 
     function updateChargeback() {
-        loadingOnAccountsHealth('.sirius-account > .card');
+        //loadingOnAccountsHealth('.sirius-account > .card');
 
         $.ajax({
             method: "GET",
@@ -299,7 +299,7 @@ $(document).ready(function () {
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
                             <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
                                 <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
-                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat(data.chargeback_rate).toFixed(2)}%</span>
+                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor}">${data.chargeback_score}</span>
                             </div>
                             <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
                                 <div class="d-flex mr-60 flex-column flex-nowrap justify-content-start align-items-start align-self-start">

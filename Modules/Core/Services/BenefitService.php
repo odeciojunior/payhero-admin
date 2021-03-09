@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\User;
+use Modules\Dashboard\Transformers\BenefitCollection;;
 
 /**
  * Class BenefitService
@@ -18,18 +19,10 @@ class BenefitService
         $activeBenefits = $user->benefits;
         $nextBenefits = Benefit::select('id', 'name', 'level', 'description')->where('level', $user->level+1)->orderBy('id')->get();
 
-        foreach ($activeBenefits as &$activeBenefit) {
-            $activeBenefit->name = __('definitions.benefit.'.$activeBenefit->name);
-            $activeBenefit->status = 0;
-        }
-
-        foreach ($nextBenefits as &$nextBenefit) {
-            $nextBenefit->name = __('definitions.benefit.'.$nextBenefit->name);
-        }
 
         return  [
-            'active' => $activeBenefits,
-            'next' => $nextBenefits,
+            'active' => new BenefitCollection($activeBenefits),
+            'next'    => new BenefitCollection($nextBenefits),
         ];
 
     }

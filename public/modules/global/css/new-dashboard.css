@@ -166,7 +166,7 @@ body {
 }
 
 .page.dashboard .stats-card {
-    height: 200px;
+    /*height: 200px;*/
     height: 170px;
 }
 
@@ -179,7 +179,8 @@ body {
     /*height: 500px;*/
     /*height: 798px;*/
     /*height: 638px;*/
-    height: 510px;
+    /*height: 510px;*/
+    min-height: 230px;
 }
 
 .page.dashboard .sirius-card {
