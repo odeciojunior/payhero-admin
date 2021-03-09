@@ -35,6 +35,7 @@ class VerifyFrozenAccountApi
             '/api/tickets/sendmessage',
             '/api/old_finances/export',
             '/api/transfers/account-statement-data/export',
+            '/api/logout',
         ];
 
         if(strtoupper($request->method()) == 'GET') {

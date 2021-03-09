@@ -46,6 +46,7 @@ class VerifyFrozenAccountWeb
             '/affiliates',
             '/apps',
             '/invitations',
+            '/logout',
         ];
 
         foreach ($excepts as $except) {
