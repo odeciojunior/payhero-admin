@@ -176,7 +176,7 @@ $(document).ready(function () {
                 $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
             },
             success: response => {
-                if (response.allowed) {
+                if (response.allowed && verifyAccountFrozen() == false) {
                     $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
                     $('#blocked-withdrawal').hide();
                 } else {

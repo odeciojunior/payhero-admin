@@ -161,7 +161,14 @@ class GetNetStatementService
                 $hasOrderId = empty($summary->order_id) ? false : true;
                 $isTransactionCredit = $details->transaction_sign == '+';
                 $isReleaseStatus = $details->release_status == 'S';
-                $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
+
+                if ($hasOrderId && $this->isDigitalProduct($summary->order_id)) {
+
+                    $hasValidTracking = true;
+                } else {
+
+                    $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
+                }
                 $transactionStatusCode = $summary->transaction_status_code;
 
                 $details = new Details();
@@ -312,6 +319,15 @@ class GetNetStatementService
         }
     }
 
+    private function isDigitalProduct($orderId): bool
+    {
+
+        $findTextDigital = '-D';
+        $isDigital = strpos($orderId, $findTextDigital);
+
+        return $isDigital !== false;
+    }
+
     private function canAddStatementItem($date, $status, $paymentMethod): bool
     {
 
@@ -448,7 +464,7 @@ class GetNetStatementService
         $pendingDebts = [];
         $companyId = $this->filters['company_id'];
 
-        if (array_key_exists('sale_id', $this->filters)) {
+        if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
 
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
@@ -456,7 +472,7 @@ class GetNetStatementService
                 ->whereCompanyId($companyId)
                 ->get();
 
-        } elseif (array_key_exists('withdrawal_id', $this->filters)) {
+        } elseif (array_key_exists('withdrawal_id', $this->filters) && !empty($this->filters['withdrawal_id'])) {
 
             $withdrawal_id = $this->filters['withdrawal_id'];
 

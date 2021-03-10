@@ -92,18 +92,38 @@ $(document).ready(function () {
         endDate = end.format('YYYY-MM-DD');
     });
 
-    $(document).on({
-            mouseenter: function () {
-                $(this).css('cursor', 'pointer').text('Regerar');
-                $(this).css("background", "#545B62");
-            },
-            mouseleave: function () {
-                var status = $(this).attr('status');
-                $(this).removeAttr("style");
-                $(this).text(status);
-            }
-        }, '.boleto-pending'
-    );
+    function hoverBilletPending()
+    {
+        if(verifyAccountFrozen() == true) {
+            console.log($('#accountStatus').val());
+            $(document).on({
+                    mouseenter: function () {
+                        var status = $(this).attr('status');
+                        $(this).removeAttr("style");
+                        $(this).text(status);
+                    },
+                    mouseleave: function () {
+                        var status = $(this).attr('status');
+                        $(this).removeAttr("style");
+                        $(this).text(status);
+                    }
+                }, '.boleto-pending'
+            );
+        } else {
+            $(document).on({
+                    mouseenter: function () {
+                        $(this).css('cursor', 'pointer').text('Regerar');
+                        $(this).css("background", "#545B62");
+                    },
+                    mouseleave: function () {
+                        var status = $(this).attr('status');
+                        $(this).removeAttr("style");
+                        $(this).text(status);
+                    }
+                }, '.boleto-pending'
+            );
+        }
+    }
 
     function getFilters(urlParams = false) {
         let data = {
@@ -139,10 +159,13 @@ $(document).ready(function () {
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
 
-        let saleId = $(this).attr('sale');
-        $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
-
-        $('#modal_regerar_boleto').modal('show');
+        if(verifyAccountFrozen() == false) {
+ 
+            let saleId = $(this).attr('sale');
+            $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
+ 
+            $('#modal_regerar_boleto').modal('show');
+        }
     });
 
     //Salvar boleto regerado
@@ -338,6 +361,7 @@ $(document).ready(function () {
         if (updateResume) {
             salesResume();
         }
+        hoverBilletPending();
     }
 
     // Download do relatorio

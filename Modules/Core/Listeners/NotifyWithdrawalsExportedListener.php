@@ -13,7 +13,7 @@ class NotifyWithdrawalsExportedListener
 {
     /**
      * Handle the event.
-     * @param SalesExportedEvent $event
+     * @param WithdrawalsExportedEvent $event
      * @return void
      */
     public function handle(WithdrawalsExportedEvent $event)
@@ -35,9 +35,6 @@ class NotifyWithdrawalsExportedListener
                 'report_name' => 'Relatório de Transferências',
                 'download_link' => $downloadLink,
             ];
-
-            Log::info($userEmail);
-            Log::info($userName);
 
             $sendGridService->sendEmail('noreply@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
 
