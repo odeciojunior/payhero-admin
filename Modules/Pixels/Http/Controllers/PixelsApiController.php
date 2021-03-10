@@ -206,7 +206,6 @@ class PixelsApiController extends Controller
                 $validated['purchase_event_name'] = null;
             }
 
-            $validated['is_api'] = false;
 
             if ($validated['platform'] == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
                 $validated['purchase_event_name'] = 'make_purchase';
@@ -217,8 +216,13 @@ class PixelsApiController extends Controller
                 if ($validated['is_api'] == 'api') {
                     $validated['is_api'] = true;
                 } else {
+                    $validated['is_api'] = false;
                     $validated['facebook_token_api'] = null;
                 }
+            }
+
+            if ($validated['platform'] != 'facebook') {
+                $validated['is_api'] = false;
             }
 
             $pixelUpdated = $pixel->update(
