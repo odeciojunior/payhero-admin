@@ -911,6 +911,14 @@ class SaleService
             ]
         );
 
+        SaleLog::create(
+            [
+                'sale_id' => $sale->id,
+                'status' => 'billet_refunded',
+                'status_enum' => (new Sale())->present()->getStatus('billet_refunded'),
+            ]
+        );
+
         $transactionUser = Transaction::where('sale_id', $sale->id)
             ->where('type', (new Transaction)->present()->getType('producer'))
             ->first();
