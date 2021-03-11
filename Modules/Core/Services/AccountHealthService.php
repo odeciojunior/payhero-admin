@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
@@ -20,25 +19,17 @@ class AccountHealthService
         $this->attendanceService = new AttendanceService();
     }
 
-    public function userHasMinimumSalesAmount(User $user, Carbon $startDate, Carbon $endDate)
+    public function userHasMinimumSalesAmount(User $user)
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+        $totalApprovedSales = Sale::where('owner_id', $user->id)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
-            ])->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )->where('owner_id', $user->id);
+            ])->count();
 
-
-        $approvedSalesAmount = $approvedSales->count();
-        $minimumSalesToEvaluate = 100;
-        return $approvedSalesAmount >= $minimumSalesToEvaluate;
+        return $totalApprovedSales >= 100;
     }
 
     public function getAttendanceScore(User $user): float
@@ -134,13 +125,13 @@ class AccountHealthService
     {
         try {
 
-            $startDate = now()->startOfDay()->subDays(140);
-            $endDate = now()->endOfDay()->subDays(20);
-
-            if (!$this->userHasMinimumSalesAmount($user, $startDate, $endDate)) {
+            if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;
             }
+
+            $startDate = now()->startOfDay()->subDays(140);
+            $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);
