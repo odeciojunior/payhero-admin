@@ -38,22 +38,23 @@
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
                 </div>
                 {{-- INPUT RADIO FACEBOOK-API --}}
-                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
-                        <label class="col-md-5">
-                            <input type="radio" name="api-facebook" value="default" class="col-md-2" checked >
-                            Padrão
-                        </label>
-                        <label class="col-md-5">
-                            <input type="radio" name="api-facebook" value="api" class="col-md-2" >
-                            API
-                        </label>
+                <div class="form-group col-md-6 row mt-4" id="api-facebook" style="display:none;">
+                    <label class="col-md-5 form-check-label">
+                        <input type="radio" name="api-facebook" value="default" class="col-md-2 form-check-input"
+                               checked>
+                        Padrão
+                    </label>
+                    <label class="col-md-5 form-check-label">
+                        <input type="radio" name="api-facebook" value="api" class="col-md-2 form-check-input">
+                        API
+                    </label>
                 </div>
                 {{-- INPUT RADIO FACEBOOK-API --}}
 
                 {{-- INPUT TOKEN FACEBOOK --}}
                 <div class="row" id="div-facebook-token-api" style="display:none;">
                     <div class="form-group col-12 my-20">
-                        <label for="facebook-token-api">Token Facebook</label>
+                        <label for="facebook-token-api">Token Acesso API Conversões</label>
                         <input name="facebook-token-api" type="text" id='facebook-token-api'
                                class="form-control pixel-code"
                                placeholder="Token" maxlength='255'>
