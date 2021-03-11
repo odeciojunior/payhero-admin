@@ -10,8 +10,8 @@ class Alien extends Achievement implements AchievementCheck
 {
     const ACHIEVEMENT_ID = 8;
 
-    public function didUserAchieve(User $user): bool
+    public function userAchieved(User $user): bool
     {
-        return true; //throw new Exception('not implemented');
+        return false; //throw new Exception('not implemented');
     }
 }

@@ -10,8 +10,8 @@ class MeteoricSupport extends Achievement implements AchievementCheck
 {
     const ACHIEVEMENT_ID = 2;
 
-    public function didUserAchieve(User $user): bool
+    public function userAchieved(User $user): bool
     {
-        return true; //throw new Exception('not implemented');
+        return $user->attendance_average_response_time > 0 && $user->attendance_average_response_time <= 3;
     }
 }

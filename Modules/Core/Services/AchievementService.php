@@ -45,7 +45,7 @@ class AchievementService
             return true;
         }
 
-        if ($achievement->didUserAchieve($user)) {
+        if ($achievement-> userAchieved($user)) {
             return $this->setUserAchievement($user, $achievement);
         }
 
