@@ -86,8 +86,11 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    $("#div-create").show()
-
+                    if(verifyAccountFrozen()) {
+                        $('#div-create').hide();
+                    } else {
+                        $('#div-create').show();
+                    }
                     updateProducts();
                 } else {
                     $("#project-empty").show();
@@ -203,7 +206,9 @@ $(document).ready(function () {
                             page: pageCurrent !== null ? pageCurrent : null,
                         };
                         setCookie('filterProduct', 1, product);
-                        window.location.href = "/products/" + $(this).data('code') + "/edit";
+                        if(verifyAccountFrozen() == false) {
+                            window.location.href = "/products/" + $(this).data('code') + "/edit";
+                        }
                     });
 
                     $("img").on("error", function () {

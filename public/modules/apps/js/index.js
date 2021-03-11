@@ -86,6 +86,9 @@ $(document).ready(function () {
             error: function error(response) {
                 loadingOnScreenRemove()
                 errorAjaxResponse(response);
+                if(verifyAccountFrozen()) {
+                    $('.add-btn').removeAttr('href');
+                }
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
@@ -93,11 +96,19 @@ $(document).ready(function () {
 
                     updateUsedApps();
                 }
+                if(verifyAccountFrozen()) {
+                    $('.add-btn').removeAttr('href');
+                }
                 $("#project-not-empty").show();
 
                 loadingOnScreenRemove()
             }
         });
     }
+    $('.app-integration').on('click', function() {
+        if(verifyAccountFrozen() == false) {
+            window.location.href = $(this).data('url');
+        }
+    });
 });
 

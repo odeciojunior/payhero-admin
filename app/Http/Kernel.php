@@ -29,6 +29,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope;
 use Laravel\Passport\Http\Middleware\CheckScopes;
 use Spatie\Permission\Middlewares\RoleMiddleware;
+use App\Http\Middleware\VerifyFrozenAccountWeb;
+use App\Http\Middleware\VerifyFrozenAccountApi;
 
 class Kernel extends HttpKernel
 {
@@ -59,11 +61,13 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            VerifyFrozenAccountWeb::class,
         ],
 
         'api' => [
             'throttle:500,1',
             'bindings',
+            VerifyFrozenAccountApi::class,
         ],
 
         'api-socialite' => [

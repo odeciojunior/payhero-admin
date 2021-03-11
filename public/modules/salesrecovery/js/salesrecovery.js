@@ -190,33 +190,37 @@ $(document).ready(function () {
                     });
 
                     if ($("#type_recovery").val() == '5') {
-                        $(".sale_status").hover(
-                            function () {
-                                $(this).css('cursor', 'pointer').text('Regerar');
-                                $(this).css("background", "#545B62");
-                            }, function () {
-                                var status = $(this).attr('status');
-                                $(this).removeAttr("style");
-                                $(this).text(status);
-                            }
-                        );
+                        if(verifyAccountFrozen() == false) {
+                            $(".sale_status").hover(
+                                function () {
+                                    $(this).css('cursor', 'pointer').text('Regerar');
+                                    $(this).css("background", "#545B62");
+                                }, function () {
+                                    var status = $(this).attr('status');
+                                    $(this).removeAttr("style");
+                                    $(this).text(status);
+                                }
+                            );
+                        }
 
                         $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                         $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
                         $('.sale_status').on('click', function () {
-                            $('#saleId').val('');
-                            let saleId = $(this).attr('sale_id');
-                            $('#saleId').val(saleId);
-                            $('#modal_regerar_boleto').modal('show');
+                            if(verifyAccountFrozen() == false) {
+                                $('#saleId').val('');
+                                let saleId = $(this).attr('sale_id');
+                                $('#saleId').val(saleId);
+                                $('#modal_regerar_boleto').modal('show');
 
-                            $('#bt_send').unbind('click');
-                            $('#bt_send').on('click', function () {
-                                loadingOnScreen();
+                                $('#bt_send').unbind('click');
+                                $('#bt_send').on('click', function () {
+                                    loadingOnScreen();
 
-                                regenerateBoleto(saleId);
+                                    regenerateBoleto(saleId);
 
-                            });
+                                });
+                            }
                         });
                     }
                     $('.details-cart-recovery').unbind('click');
