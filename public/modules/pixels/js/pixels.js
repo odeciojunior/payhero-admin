@@ -115,7 +115,6 @@ $(function () {
     }
 
     $("#modal-edit-pixel input[type=radio]").change(function () {
-        console.log(this.value);
         if (this.value === 'api') {
             $("#modal-edit-pixel #div-facebook-token-api").show()
         } else {
@@ -151,7 +150,6 @@ $(function () {
                 });
 
                 $("#modal-edit-pixel.api-facebook-check").change(function () {
-                    console.log(this.value);
                     if (this.value === 'api') {
                         $("#modal-edit-pixel#div-facebook-token-api").show()
                     } else {
@@ -162,7 +160,6 @@ $(function () {
 
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
-                    console.log('')
                     let value = $(this).val();
                     $("#modal-edit-pixel #input-code-pixel-edit, #modal-edit-pixel #api-facebook,#modal-edit-pixel .purchase-event-name-div, #modal-edit-pixel #div-facebook-token-api").hide();
 
@@ -344,7 +341,6 @@ $(function () {
     //atualizar pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         loadingOnScreen();
-        console.log($("#modal-edit-pixel input[type=radio]:checked").val());
         let pixel = $('#modal-edit-pixel .pixel-id').val();
         $.ajax({
             method: "PUT",
