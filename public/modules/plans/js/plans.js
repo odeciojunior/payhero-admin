@@ -9,7 +9,6 @@ $(function () {
 
     var card_div_edit;
     var pageCurrent;
-    // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
 
     $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
@@ -74,7 +73,7 @@ $(function () {
                         $('#select_currency').prop('selectedIndex', 1);
                     }
 
-                    $(document).on('click', '.btnDelete', function (event) {
+                    $(document).on('click', '#btn-remove-create-plan', function (event) {
                         event.preventDefault();
                         $(this).parent().parent().remove();
                         //remove o card container que fica sobrando
@@ -85,8 +84,6 @@ $(function () {
                         })
                     });
 
-                    //product
-                    //$('#price').mask('#.###,#0', {reverse: true});
                     var qtd_products = '1';
 
                     var div_products = $('#products_div_' + qtd_products).parent().clone();
@@ -95,19 +92,34 @@ $(function () {
                      * Add new product in array
                      */
                     $('#add_product_plan').on('click', function () {
-
                         qtd_products++;
 
                         var new_div = div_products.clone();
-                        var new_product = $('#products').clone();
-                        // var opt = new_div.find('option:selected');
-                        // opt.remove();
-                        // var select = new_div.find('select');
                         var input = new_div.find('.products_amount');
 
                         input.addClass('products_amount');
                         div_products = new_div;
-                        $('#products').after('<div class="card container">' + new_div.html() + '</div>');
+                        $('#products').append(`
+                                    <div class="row card p-10 card-products">
+                                        ${new_div.html()}           
+                                        <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
+                                           <button id="btn-remove-create-plan" class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                                <b>Remover </b>
+                                                <span class="o-bin-1"></span>
+                                            </button>
+                                        </div>      
+                                    </div>
+                                `);
+
+                        $(`.products_div_1:last .form-group:first-child select`).first().remove()
+                        $(`.products_div_1:last .form-group:first-child span`).first().remove()
+                        $(`.products_div_1:last .form-group:first-child`).first().append(`
+                                    <select id='products_div_${qtd_products}' name="products[]" class="form-control plan_product plan_product_create"></select>
+                                `)
+
+                        getProducts(`#products_div_${qtd_products}`)
+
+
                         $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
                         $('.products_amount').mask('0#');
 
@@ -116,6 +128,7 @@ $(function () {
                         } else {
                             $('.card.container .select_currency_create').prop('selectedIndex', 1);
                         }
+
                         bindModalKeys();
                     });
 
@@ -175,7 +188,12 @@ $(function () {
     $("#add-plan").on('click', function () {
         $('#modal_add_plan').attr('data-backdrop', 'static');
         create();
+
+        $("#product_1").select2({
+            dropdownParent: $('#conteudo_modal_add')
+        })
         $('.btn-close-add-plan').on('click', function () {
+            $("#product_1").select2('enable', false)
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');
         });
@@ -351,19 +369,27 @@ $(function () {
                             $('#plan-name_edit').val(response.data.name);
                             $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
-                            //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
+                                    let btnRemove = ` 
+                                                <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
+                                                   <button class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                                        <b>Remover </b>
+                                                        <span class="o-bin-1"></span>
+                                                    </button>
+                                                </div>`
+
+                                    let showButton = index !== 0  ?  btnRemove : ''
                                     $('.products_row_edit').append(`
-                                        <div class='card container '>
+                                        <div class='card p-10 card-products'>
                                             <div id="products_div_edit" class="row">
                                                 <div class="form-group col-sm-9 col-md-9 col-lg-9">
                                                     <label>Produtos do plano:</label>
                                                     <select id="product_${index}" name="products[]" class="form-control products_edit plan_product">
-                                                        <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
+                                                        <option value="${value.product_id}" selected> ${value.product_name} </option>
                                                      </select>
                                                 </div>
                                                 <div class="form-group col-sm-3 col-md-3 col-lg-3">
@@ -387,14 +413,8 @@ $(function () {
                                                     </select>
                                                 </div>
 
-                                                <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
-                                                   <!--<label class="display-xsm-none">Remover:</label>-->
-
-                                                   <button class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
-                                                        <b>Remover </b>
-                                                        <span class="o-bin-1"></span>
-                                                    </button>
-                                                </div>
+                                               ${showButton}
+                                               
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
@@ -448,28 +468,6 @@ $(function () {
                                     $('#select_currency_' + index).val(value.currency);
                                 });
                                 bindModalKeys();
-                                // $('.products_cost').bind('keyup', calcularTotal)
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/api/products/userproducts",
-                                    data: {project: projectId},
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    error: function error() {
-                                        $("#modal-content").hide();
-                                        errorAjaxResponse(response);
-
-                                    },
-                                    success: function success(response) {
-                                        $("#products_edit").html('');
-                                        $(response.data).each(function (index, data) {
-                                            $("#products_edit").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''} data-cost="${data.cost}">${data.name}</option>`);
-                                        });
-                                    }
-                                });
                             }
                             $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
@@ -496,6 +494,9 @@ $(function () {
                                             }
                                         });
 
+                                        selectProduct.select2({
+                                            dropdownParent: $('#conteudo_modal_add')
+                                        })
                                     });
                                 }
                             });
@@ -516,9 +517,9 @@ $(function () {
 
                             loadingOnScreenRemove()
 
-                            $(document).on('click', '.btnDelete', function (event) {
+                            $(document).on('click', '#btn-remove-edit-plan', function (event) {
                                 event.preventDefault();
-                                $(this).parent().parent().remove();
+                                $(this).parent().parent().parent().remove();
                                 //remove o card container que fica sobrando
                                 $('.card.container').each(function () {
                                     if ($.trim($(this).html()) == '') {
@@ -528,21 +529,47 @@ $(function () {
                             });
 
                             //product
-                            //$('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
 
                             $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
-                                var div_products = card_div_edit;
 
-                                var new_div = div_products.clone();
+                                var new_div = $('.products_row_edit').find('#products_div_edit').first().clone();
                                 var input = new_div.find('.products_amount');
+                                // let productEdit = products.attr('id', `products_row_edit_${qtd_products}`)
 
                                 input.addClass('products_amount');
 
-                                div_products = new_div;
+                                $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                                $('.products_amount').mask('0#');
 
-                                $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
+                                if($('#currency_type_project').val() == 1) {
+                                    $('.card.container .select_currency_edit').prop('selectedIndex', 0);
+                                } else {
+                                    $('.card.container .select_currency_edit').prop('selectedIndex', 1);
+                                }
+
+                                $('.products_row_edit').append(`
+                                    <div class="card p-10 card-products">
+                                        <div class="row products_row_edit_${qtd_products}">
+                                            ${new_div.html()}           
+                                            <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
+                                               <button id="btn-remove-edit-plan" class='btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row'>
+                                                    <b>Remover </b>
+                                                    <span class="o-bin-1"></span>
+                                                </button>
+                                            </div>                             
+                                        </div>
+                                    </div>
+                                `);
+
+                                $(`.products_row_edit_${qtd_products} .form-group:first-child span`).remove()
+                                $(`.products_row_edit_${qtd_products} .form-group:first-child`).append(`
+                                    <select id='products_row_edit_${qtd_products}' name="products[]" class="form-control products_edit"></select>
+                                `)
+
+                                getProducts(`#products_row_edit_${qtd_products}`)
+
                                 $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                                 $('.products_amount').mask('0#');
@@ -924,7 +951,6 @@ $(function () {
     $(document).on('click', '.bt-update-cost-block', function (event) {
 
         loadingOnScreen();
-        console.log($('#add_cost_on_plans').val());
         $.ajax({
             method: "POST",
             url: '/api/plans/update-bulk-cost',
@@ -998,11 +1024,41 @@ $(function () {
                 // index(pageCurrent);
             }
         });
-
     });
 
     $(document).on('change', '#cost_currency_type', function (event) {
         $('#div_update_cost_shopify').show();
     });
+
+    function getProducts(elementSelector) {
+        $.ajax({
+            method: "POST",
+            url: "/api/products/userproducts",
+            data: {project: projectId},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error() {
+                $("#modal-content").hide();
+                errorAjaxResponse(response);
+
+            },
+            success: function success(response) {
+                $(response.data).each(function (index, data) {
+                    if (data.id) {
+                        $(elementSelector).append(
+                            `<option value="${data.id}" data-cost="${data.cost}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`
+                        )
+                    }
+                });
+
+                $(elementSelector).select2({
+                    dropdownParent: $('#conteudo_modal_add')
+                })
+            }
+        });
+    }
 })
 ;
