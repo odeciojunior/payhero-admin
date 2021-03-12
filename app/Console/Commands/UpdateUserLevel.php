@@ -49,6 +49,9 @@ class UpdateUserLevel extends Command
             ->groupBy('companies.user_id')
             ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
+        $progressBar = $this->output->createProgressBar($transactions->count());
+        $progressBar->start();
+
         foreach ($transactions->cursor() as $transaction) {
             if ($transaction->value > 10000000000) {
                 $level = 6;
@@ -64,8 +67,9 @@ class UpdateUserLevel extends Command
                 $level = 1;
             }
 
-            $user = User::with('benefits')->find($transaction->user_id);
+            $user = User::find($transaction->user_id);
             if (!empty($user)) {
+
                 $user->update([
                     'level' => $level,
                     'total_commission_value' => $transaction->value,
@@ -82,6 +86,8 @@ class UpdateUserLevel extends Command
 
                 BenefitsService::updateUserCashback($user);
             }
+            $progressBar->advance();
         }
+        $progressBar->finish();
     }
 }

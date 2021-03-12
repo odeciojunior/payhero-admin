@@ -362,7 +362,8 @@ class User extends Authenticable
     public function benefits()
     {
         return $this->hasManyThrough(Benefit::class, UserBenefit::class, 'user_id', 'id', 'id', 'benefit_id')
-            ->select('benefits.*', 'user_benefits.disabled');
+            ->join('users', 'users.id', '=', 'user_benefits.user_id')
+            ->select('benefits.*', 'user_benefits.disabled', 'users.installment_cashback');
 
     }
 

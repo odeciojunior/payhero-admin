@@ -20,8 +20,8 @@ class GenericCommand extends Command
     {
         try {
 
-            $user = User::with('benefits')->find(557);
-
+            $user = User::with('benefits')->find(557)->benefits->toArray();
+            dd($user);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

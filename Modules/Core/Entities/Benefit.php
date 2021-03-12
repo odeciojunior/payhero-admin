@@ -44,6 +44,16 @@ class Benefit extends Model
         return parent::fill($attributes);
     }
 
+    public function getDescriptionAttribute($value)
+    {
+        if($this->name === 'cashback' && !empty($this->installment_cashback)){
+            $minPercentual = $this->installment_cashback;
+            $maxPercentual = $this->installment_cashback * 11;
+            return "Receba de {$minPercentual}% até {$maxPercentual}% de cashback";
+        }
+        return $value;
+    }
+
     /**
      * @return HasManyThrough
      */
