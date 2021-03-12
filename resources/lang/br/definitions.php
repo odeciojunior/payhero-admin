@@ -9,7 +9,7 @@ return [
     |
     */
     'benefit' => [
-        'cashback' => 'Cashback de :percentual%',
+        'cashback' => 'Cashback',
         'get_faster' => 'Receba + rápido',
         'account_manager' => 'Gerente de contas',
         'rate_reduction' => 'Redução da taxa',

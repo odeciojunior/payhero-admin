@@ -48,7 +48,7 @@ class Benefit extends Model
     {
         if ($value === 'cashback' && !empty($this->installment_cashback)) {
             $percentual = $this->installment_cashback;
-            return __("definitions.benefit.{$value}", ['percentual' => $percentual]);
+            return "Cashback de {$percentual}%";
         }
         return __("definitions.benefit.{$value}");
     }
