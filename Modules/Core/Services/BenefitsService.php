@@ -14,16 +14,13 @@ class BenefitsService
             $user->load('benefits');
         }
 
-        $cashback1 = $user->benefits->where('name', 'cashback_1')
+        $cashback = $user->benefits->where('name', 'Cashback')
             ->where('disabled', 0)
             ->first();
-        $cashback2 = $user->benefits->where('name', 'cashback_2')
-            ->where('disabled', 0)
-            ->first();
-        if (!is_null($cashback2) && $user->installment_cashback != 1) {
+        if (!is_null($cashback) && $user->level > 2 && $user->installment_cashback != 1) {
             $user->installment_cashback = 1;
             $user->save();
-        } else if (!is_null($cashback1) && $user->installment_cashback != 0.5) {
+        } else if (!is_null($cashback) && $user->level == 2 && $user->installment_cashback != 0.5) {
             $user->installment_cashback = 0.5;
             $user->save();
         } else if ($user->installment_cashback != 0) {

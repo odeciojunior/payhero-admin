@@ -332,7 +332,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                        <span class="mb-10 title-performance">Benefícios atual</span>
+                        <span class="mb-10 title-performance">Benefícios atuais</span>
                         <div id="benefits-active-container" class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         </div>
                     </div>
