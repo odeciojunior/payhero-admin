@@ -14,7 +14,7 @@ class BenefitsService
             $user->load('benefits');
         }
 
-        $cashback = $user->benefits->where('name', 'cashback')
+        $cashback = $user->benefits->where('name', 'Cashback')
             ->where('disabled', 0)
             ->first();
         if (!is_null($cashback) && $user->level > 2 && $user->installment_cashback != 1) {
