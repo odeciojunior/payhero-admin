@@ -80,7 +80,7 @@ class GetNetStatementService
 
         return [
             'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
-            'totalInPeriod' => $this->totalInPeriod,
+            'totalInPeriod' => number_format($this->totalInPeriod, 2),
             'totalAdjustment' => $this->totalAdjustment,
             'totalChargeback' => $this->totalChargeback,
             'totalReversed' => $this->totalReversed,
