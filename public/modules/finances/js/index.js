@@ -1068,9 +1068,9 @@ $(document).ready(function () {
 
     let envDebug = $("meta[name=app-debug]").attr('content');
 
-    if (envDebug == 'true') {
-        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
-    }
+    //if (envDebug == 'true') {
+        rangesToDateRangeStatement['Todo período'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    //}
 
     $('#date_range_statement').daterangepicker({
         maxSpan: {
