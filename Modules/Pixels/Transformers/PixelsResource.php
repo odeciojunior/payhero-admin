@@ -23,6 +23,9 @@ class PixelsResource extends JsonResource
             'status_translated' => Lang::get(
                 'definitions.enum.pixel.status.' . $this->present()->getStatus($this->status)
             ),
+            'is_api' => $this->is_api,
+            'facebook_token' => $this->facebook_token,
+            'value_percentage_purchase_boleto' => $this->value_percentage_purchase_boleto,
         ];
     }
 }

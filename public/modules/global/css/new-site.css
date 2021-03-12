@@ -301,8 +301,8 @@ input[type=date], date-pad {
 }
 
 input[type=radio] {
-    display: none;
-    visibility: hidden;
+    /*display: none;*/
+    /*visibility: hidden;*/
 }
 
 .site-menubar {
