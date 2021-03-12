@@ -953,7 +953,6 @@ $(document).ready(function () {
                     return false;
                 }
 
-
                 items.forEach(function (item) {
                     let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
 
