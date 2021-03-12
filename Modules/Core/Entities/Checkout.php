@@ -51,6 +51,12 @@ use App\Traits\LogsActivity;
 class Checkout extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+
+    const STATUS_ACCESSED = 1;
+    const STATUS_ABANDONED_CART = 2;
+    const STATUS_RECOVERED = 3;
+    const STATUS_SALE_FINALIZED = 4;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\AccountHealthService;
 use Modules\Core\Services\AchievementService;
 
 class UpdateUserAchievements extends Command
@@ -43,7 +41,7 @@ class UpdateUserAchievements extends Command
     {
         $achievementService = new AchievementService();
         $now = now();
-        foreach (User::with('achievements')->whereNull('deleted_at')->where('id', 26)->get() as $user) {
+        foreach (User::with('achievements')->whereNull('deleted_at')->whereIn('id', [26, 557])->get() as $user) {
             if ($user->id == $user->account_owner_id) {
                 $this->line($user->id . ' - ' . $user->name);
                 $achievementService->checkUserAchievements($user);
