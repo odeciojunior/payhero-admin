@@ -20,20 +20,14 @@ class AccountHealthService
         $this->attendanceService = new AttendanceService();
     }
 
-    public function userHasMinimumSalesAmount(User $user, Carbon $startDate, Carbon $endDate)
+    public function userHasMinimumSalesAmount(User $user)
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-            ->whereIn('status', [
+        $approvedSales = Sale::whereIn('status', [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
-            ])->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )->where('owner_id', $user->id);
+            ])->where('owner_id', $user->id);
 
 
         $approvedSalesAmount = $approvedSales->count();
@@ -133,14 +127,13 @@ class AccountHealthService
     public function updateAccountScore(User $user): void
     {
         try {
-
-            $startDate = now()->startOfDay()->subDays(140);
-            $endDate = now()->endOfDay()->subDays(20);
-
-            if (!$this->userHasMinimumSalesAmount($user, $startDate, $endDate)) {
+            if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;
             }
+
+            $startDate = now()->startOfDay()->subDays(140);
+            $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);

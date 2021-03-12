@@ -77,9 +77,9 @@ $(document).ready(function () {
                 case 2:
                     updatePerformanceCard2(data);
                     break;
-                // case 3:
-                //     updateAttendance();
-                //     break;
+                case 3:
+                    updatePerformanceCard3(data);
+                    break;
                 // case 4:
                 //     updateTracking();
                 //     break;
@@ -95,7 +95,7 @@ $(document).ready(function () {
         //$('#achievements .achievements-item').addClass('opacity-3');
 
         $.ajax({
-            method: "POST",
+            method: "GET",
             url: "/api/dashboard/get-performance",
             dataType: "json",
             headers: {
@@ -134,7 +134,8 @@ $(document).ready(function () {
                     <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                         <li class="active" data-slide-to="1"></li>
                         <li class="" data-slide-to="2"></li>
-                        <i class="o-angle-down-1 control-prev active" data-slide-to="2"></i>
+                        <li class="" data-slide-to="3"></li>
+                        <i class="o-angle-down-1 control-prev active" data-slide-to="3"></i>
                         <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
                     </ol>
                 </div>
@@ -151,22 +152,12 @@ $(document).ready(function () {
                         </div>
                     </div>
                     <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
-                        <div class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                            <div id="achievements-item-1" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/1ccee66facee377777d3e3f943ccb0ae2a8bedd6r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-2" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/11903cdeba102415c7a49cb4cad3ff5fab04297fr1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-3" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/37041bbe7e41e669a614cf99d0e9ae3585adc7f4r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-4" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/6eb8248218eb601f2534656bccb0566fbd3070b8r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-5" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/75f61864adba69fa157c052cf259f5cf9d098eadr1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-6" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/35146e6d525ad92d4ad71c3018824ddde4249a05r1-200-141v2_hq.jpg)"></div>
+                        <div id="achievements-item-1" class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
-                        <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                            <div id="achievements-item-7" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/5dfc0ae74931e316225e6f1d50eaf52e943faeb7r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-8" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/a6412a5b02d8a235677b5651a080dd4d5d0d65fcr1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-9" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/13df5623bdc33a79763d26aed5e09230a7932199r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-10" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/01417fb22aaf1c7c0387cd306d8f17236750350dr1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-11" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/2fd11faccf8517a2ce5e5181f606259ca24bd5e4r1-200-141v2_hq.jpg)"></div>
-                            <div id="achievements-item-12" class="achievements-item" style="background-image: url(https://pm1.narvii.com/7191/4ea15727ab51ebc7697fa6b1785a31491f69fb2br1-200-141v2_hq.jpg)"></div>
+                        <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
+                    </div>
+                     <div id="achievements11111" class="mt-15 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                     </div>
                     <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <span class="title-performance">Cashback recebido</span>
@@ -211,27 +202,32 @@ $(document).ready(function () {
         nextPerformance(data);
     }
 
-    function updateAchievements(data) {
+    function updateAchievements(achievements) {
 
-        if (!isEmpty(data)) {
-            $.each(data, function (index, value) {
-                //console.log(index);
-                var i = index + 1;
-                $(`#achievements #achievements-item-${i}`).removeClass('opacity-3');
+        if (!isEmpty(achievements)) {
+            let achievementsLength = achievements.length/2;
+
+            $.each(achievements, function (index, value) {
+
+                let item = ` <div  class="achievements-item ${value.active === true ? '' : 'not-active'} opacity-3" >
+                             <img src="${value.icon}">
+
+                         </div>`;
+                if (index < achievementsLength  ){
+                    $('#achievements > #achievements-item-1').append(item);
+                } else {
+                    $('#achievements > #achievements-item-2').append(item);
+                }
             });
-
-            $('#achievements').show();
-        } else {
-            $('#achievements .achievements-item').addClass('opacity-3');
         }
     }
 
-    function updateTasks(level, data) {
+    function updateTasks(level, tasks) {
         $('#tasks').html('');
 
-        if (!isEmpty(data)) {
+        if (!isEmpty(tasks)) {
 
-            $.each(data, function (index, value) {
+            $.each(tasks, function (index, value) {
 
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start task">
                                  <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
@@ -240,7 +236,7 @@ $(document).ready(function () {
                 $('#tasks').append(item);
             });
 
-            if (data.length > 3) {
+            if (tasks.length > 3) {
                 $("#tasks").hover(
                     function () {
                         console.log('Entrei scroll');
@@ -307,8 +303,9 @@ $(document).ready(function () {
                     <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                         <li class="" data-slide-to="1"></li>
                         <li class="active" data-slide-to="2"></li>
+                        <li class="" data-slide-to="3"></li>
                         <i class="o-angle-down-1 control-prev active" data-slide-to="1"></i>
-                        <i class="o-angle-down-1 control-next active" data-slide-to="1"></i>
+                        <i class="o-angle-down-1 control-next active" data-slide-to="3"></i>
                     </ol>
                 </div>
                 <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start align-items-start">
@@ -452,6 +449,34 @@ $(document).ready(function () {
 
         }
 
+    }
+
+    function updatePerformanceCard3(data) {
+        loadingOnAccountsHealth('.sirius-performance > .card');
+        let currentLevel = levelInfo[data.level];
+
+        let item = `
+                <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
+                    <div class="mr-auto">
+                        <span class="ml-0 title-performance">Seu desempenho</span>
+                    </div>
+                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+                        <li class="" data-slide-to="1"></li>
+                        <li class="" data-slide-to="2"></li>
+                        <li class="active" data-slide-to="3"></li>
+                        <i class="o-angle-down-1 control-prev active" data-slide-to="2"></i>
+                        <i class="o-angle-down-1 control-next active" data-slide-to="1"></i>
+                    </ol>
+                </div>
+
+
+        `;
+
+        $('.sirius-performance > .card').append(item);
+
+
+        //$('#performance-card-2').hide();
+        nextPerformance(data);
     }
 
 });

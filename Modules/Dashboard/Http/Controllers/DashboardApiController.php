@@ -108,6 +108,8 @@ class DashboardApiController extends Controller
                 return [];
             }
 
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
+
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance(
                     $company,
@@ -118,7 +120,7 @@ class DashboardApiController extends Controller
                     $company
                 ) - $blockedBalance;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
-
+            $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
                 $transactionModel->present()->getStatusEnum('transfered'),
@@ -137,6 +139,7 @@ class DashboardApiController extends Controller
                 'pending_balance'           => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
                 'today_balance'             => number_format(intval($todayBalance) / 100, 2, ',', '.'),
                 'currency'                  => 'R$',
+                'blocked_balance_total'     => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
@@ -255,9 +258,95 @@ class DashboardApiController extends Controller
 
         return [
             'level'          => $user->level,
-            'achievements'   => [0, 1, 2, 3],
+            'achievements'   => array (
+                 [
+                    'name' => 'VELOCIDADE DA LUZ',
+                    'desciption' => 'FAÇA ENTREGAS RÁPIDAS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/VelocidadeLuz.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => true,
+                ],
+                [
+                    'name' => 'SUPORTE METEÓRICO',
+                    'desciption' => 'TENHA UM ATENDIMENTO RÁPIDO',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/SuporteMeteorico.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => true,
+                ],
+                [
+                    'name' => 'COLONIZADOR',
+                    'desciption' => 'TENHA +10 CONVITES APROVADOS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Colonizador.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'COMERCIANTE CELESTE',
+                    'desciption' => '+1000 VENDAS APROVADAS NO CARTÃO',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/ComercianteCeleste.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'POEIRA ESTELAR',
+                    'desciption' => '100 VENDAS DIGITAIS APROVADAS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/PoeiraEstelar.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'ESTRELA CADENTE',
+                    'desciption' => '10 AFILIADOS ATIVOS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/estrelaCadente.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'GUERRA NAS ESTRELAS',
+                    'desciption' => '50% DE BOLETOS APROVADOS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/GuerraNasEstrelas.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'EXTRATERRESTE',
+                    'desciption' => 'RECUPERE 6% DOS CARRINHOS ABADONADOS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Extraterrestre.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'MOCHILEIRO DAS GALÁXIAS',
+                    'desciption' => 'FAÇA VENDAS EM 5 PROJETOS DIFERENTES',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/MochileiroGalaxias.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'ÓRBITA CAPITALISTA',
+                    'desciption' => 'REALIZE 50 SAQUES',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/OrbitaCapitalista.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'LUNÁTICO',
+                    'desciption' => 'FAÇA LOGIN POR 21 DIAS',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Lunatico.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+                [
+                    'name' => 'AO INFINITO E ALÉM',
+                    'desciption' => 'FAÇA 50 VENDAS COM ORDERBUMP OU UPSELL',
+                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/AoInfinioAlem.png',
+                    'storytelling' => 'Narração da história não feito ainda',
+                    'active' => false,
+                ],
+
+            ),
             'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
-            'billed' => $user->total_commission_value,
+            'billed'         => $user->total_commission_value,
             'money_cashback' => $this->getCashbackReceivedValue(),  //950066,
 
             'benefits' => $benefitService->getUserBenefits($user),
@@ -376,7 +465,7 @@ class DashboardApiController extends Controller
             }
 
             $companyModel = new Company();
-            //$saleModel = new Sale();
+            $saleModel = new Sale();
             $companyId = current(Hashids::decode($companyHash));
             $company = $companyModel->find($companyId);
             $user = $company->user;
@@ -387,59 +476,61 @@ class DashboardApiController extends Controller
             }
 
             //Chargeback
-            $startDate = now()->startOfDay()->subDays(140);
-            $endDate = now()->endOfDay()->subDays(20);
+            //-$startDate = now()->startOfDay()->subDays(140);
+            //-$endDate = now()->endOfDay()->subDays(20);
 
 
-            $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+//            $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+//
+//            $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
+//                $q->whereBetween(
+//                    'start_date',
+//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+//                );
+//            })->where('user_id', $userId);
+//
+//            $chargebacksAmount = $getnetChargebacks->count();
+//
+//            $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
+//                ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+//                ->whereIn('status', [
+//                    Sale::STATUS_APPROVED,
+//                    Sale::STATUS_CHARGEBACK,
+//                    Sale::STATUS_REFUNDED,
+//                    Sale::STATUS_IN_DISPUTE
+//                ])->whereBetween(
+//                    'start_date',
+//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+//                )->where('owner_id', $user->id);
+//
+//            $approvedSalesAmount = $approvedSales->count();
 
-            $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
-                $q->whereBetween(
-                    'start_date',
-                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-                );
-            })->where('user_id', $userId);
-
-            $chargebacksAmount = $getnetChargebacks->count();
-
-            $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-                ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-                ->whereIn('status', [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_IN_DISPUTE
-                ])->whereBetween(
-                    'start_date',
-                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-                )->where('owner_id', $user->id);
-
-            $approvedSalesAmount = $approvedSales->count();
 
 
+            $chargebackData = $saleModel->selectRaw(
+                "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
+                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
+            )
+                ->where('payment_method', 1)
+                ->where('owner_id', $userId)
+                ->whereHas(
+                    'transactions',
+                    function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    }
+                )
+                ->first();
 
-//            $chargebackData = $saleModel->selectRaw(
-//                "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
-//                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
-//            )
-//                ->where('payment_method', 1)
-//                ->where('owner_id', $userId)
-//                ->whereHas(
-//                    'transactions',
-//                    function ($query) use ($companyId) {
-//                        $query->where('company_id', $companyId);
-//                    }
-//                )
-//                ->first();
-
-            //$totalSalesChargeBack = $chargebackData->contSalesChargeBack;
-            //$totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
+            $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
+            $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
 
             return [
                 'chargeback_score'       => $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
-                'total_sales_approved'   => $approvedSalesAmount ?? 0 , //$totalSalesApproved ?? 0,
-                'total_sales_chargeback' => $chargebacksAmount ?? 0, //$totalSalesChargeBack ?? 0,
+                'total_sales_approved'   => $totalSalesApproved ?? 0 ,
+                'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
+                //'total_sales_approved'   => $approvedSalesAmount ?? 0,
+                //'total_sales_chargeback' => $chargebacksAmount ?? 0,
 
             ];
 

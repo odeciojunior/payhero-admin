@@ -447,13 +447,37 @@ body {
 .achievements-item {
     /*width: 35px;*/
     /*height: 35px;*/
-    width: 40px;
-    height: 40px;
-    background: #FFFFFF no-repeat center;
+
+    /*width: 40px;*/
+    /*height: 40px;*/
+    /*background: #FFFFFF no-repeat center;*/
+    /*background-size: cover;*/
+    /*-webkit-background-size: cover;*/
+    /*-moz-background-size: cover;*/
+    /*-o-background-size: cover;*/
+
+    height: 55px;
+    position: relative;
+
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.achievements-item > img {
+    /*width: 35px;*/
+    height: 45px;
+    /*opacity:0.3;*/
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
+    cursor: pointer;
+}
+.achievements-item.not-active img {
+    filter: grayscale(100%);
 }
 
 .opacity-3 {
