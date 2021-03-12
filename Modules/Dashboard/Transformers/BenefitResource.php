@@ -20,7 +20,7 @@ class BenefitResource extends JsonResource
     {
         return [
             'id'             => $this->id,
-            'name'           => __('definitions.benefit.'.$this->name),
+            'name'           => $this->name,
             'level'          => $this->level,
             'description'    => $this->description,
         ];
