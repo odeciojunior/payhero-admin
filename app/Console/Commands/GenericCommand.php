@@ -8,6 +8,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
@@ -20,8 +21,9 @@ class GenericCommand extends Command
     {
         try {
 
-            $user = User::with('benefits')->find(557)->benefits->toArray();
-            dd($user);
+            $user = User::with('benefits')->find(2387);
+            BenefitsService::updateUserCashback($user);
+
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

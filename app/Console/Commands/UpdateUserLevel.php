@@ -46,11 +46,9 @@ class UpdateUserLevel extends Command
         $transactionPresent = $transactionModel->present();
         $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
             ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
+            ->where('companies.user_id', 2387)
             ->groupBy('companies.user_id')
             ->selectRaw('companies.user_id, SUM(transactions.value) as value');
-
-        $progressBar = $this->output->createProgressBar($transactions->count());
-        $progressBar->start();
 
         foreach ($transactions->cursor() as $transaction) {
             if ($transaction->value > 10000000000) {
@@ -75,7 +73,7 @@ class UpdateUserLevel extends Command
                     'total_commission_value' => $transaction->value,
                 ]);
 
-                $benefits = Benefit::where('level', $level)->get();
+                $benefits = Benefit::where('level', '<=', $level)->get();
 
                 foreach ($benefits as $benefit) {
                     UserBenefit::firstOrCreate([
@@ -86,8 +84,6 @@ class UpdateUserLevel extends Command
 
                 BenefitsService::updateUserCashback($user);
             }
-            $progressBar->advance();
         }
-        $progressBar->finish();
     }
 }
