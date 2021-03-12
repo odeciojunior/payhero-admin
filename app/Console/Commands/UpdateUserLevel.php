@@ -46,7 +46,6 @@ class UpdateUserLevel extends Command
         $transactionPresent = $transactionModel->present();
         $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
             ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
-            ->where('companies.user_id', 2387)
             ->groupBy('companies.user_id')
             ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
