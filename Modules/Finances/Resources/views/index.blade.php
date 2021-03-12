@@ -424,6 +424,8 @@
                                                             <option value="PENDING_DEBIT">Débitos pendentes</option>
                                                         </select>
                                                     </div>
+                                                    <input name="withdrawal_id" id="withdrawal_id" type="hidden"
+                                                           class="select-pad" placeholder="Id do Saque">
                                                 </div>
 
                                                 <div class="mt-30 col-md-4 d-none d-md-block">

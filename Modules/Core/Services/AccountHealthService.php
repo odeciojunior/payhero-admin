@@ -21,19 +21,15 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user)
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+        $totalApprovedSales = Sale::where('owner_id', $user->id)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
-            ])->where('owner_id', $user->id);
+            ])->count();
 
-        $approvedSalesAmount = $approvedSales->count();
-        $minimumSalesToEvaluate = 100;
-        return $approvedSalesAmount >= $minimumSalesToEvaluate;
+        return $totalApprovedSales >= 100;
     }
 
     public function getAttendanceScore(User $user): float
@@ -128,6 +124,7 @@ class AccountHealthService
     public function updateAccountScore(User $user): void
     {
         try {
+
             if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;
@@ -135,6 +132,7 @@ class AccountHealthService
 
             $startDate = now()->startOfDay()->subDays(140);
             $endDate = now()->endOfDay()->subDays(20);
+
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);
             $chargebackScore = $this->getChargebackScore($user);

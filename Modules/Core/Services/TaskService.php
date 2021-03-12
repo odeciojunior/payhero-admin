@@ -7,6 +7,7 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\Withdrawal;
 
 class TaskService
 {
@@ -63,7 +64,7 @@ class TaskService
 
     public function getCurrentUserTasks(User $user): array
     {
-        $tasks = (new Task)->where('level', $user->level)->orderBy('priority')->get();
+        $tasks = (new Task)->select('id', 'name', 'level', 'priority')->where('level', $user->level)->orderBy('priority')->get();
         $userTasks = $user->tasks();
         $completedTasks = [];
         $uncompletedTasks = [];
@@ -89,6 +90,8 @@ class TaskService
                 $currentTasks[] = $completedTasks[count($completedTasks) - 2];
                 $currentTasks[] = $uncompletedTasks[0];
             }
+        } elseif (empty($uncompletedTasks)) {
+            $currentTasks = $completedTasks;
         } else {
             $currentTasks = array_slice($uncompletedTasks, 0, 3);
         }
@@ -134,7 +137,7 @@ class TaskService
     private function validateFirstWithdrawalTask(User $user): bool
     {
         return Company::whereHas('withdrawals', function ($query) {
-                $query->where('is_released', true);
+                $query->where('status', Withdrawal::STATUS_TRANSFERED);
             })->where('user_id', $user->id)->count() > 0;
     }
 }

@@ -32,6 +32,16 @@ class Withdrawal extends Model
     use LogsActivity;
     use PresentableTrait;
 
+    const STATUS_PENDING = 1;
+    const STATUS_APPROVED = 2;
+    const STATUS_TRANSFERED = 3;
+    const STATUS_REFUSED = 4;
+    const STATUS_IN_REVIEW = 5;
+    const STATUS_PROCESSING = 6;
+    const STATUS_RETURNED = 7;
+    const STATUS_LIQUIDATING = 8;
+    const STATUS_PARTIALLY_LIQUIDATED = 9;
+
     protected $presenter = WithdrawalPresenter::class;
 
     protected $keyType = 'integer';

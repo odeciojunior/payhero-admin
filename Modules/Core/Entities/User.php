@@ -363,7 +363,9 @@ class User extends Authenticable
     {
         return $this->hasManyThrough(Benefit::class, UserBenefit::class, 'user_id', 'id', 'id', 'benefit_id')
             ->join('users', 'users.id', '=', 'user_benefits.user_id')
-            ->select('benefits.*', 'user_benefits.disabled', 'users.installment_cashback');
+            ->select('benefits.*', 'user_benefits.disabled', 'users.installment_cashback')
+            ->orderBy('user_benefits.disabled')
+            ->orderBy('benefits.id');
 
     }
 

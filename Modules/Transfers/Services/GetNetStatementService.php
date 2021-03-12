@@ -50,81 +50,6 @@ class GetNetStatementService
     protected float $totalChargeback = 0;
     protected float $totalReversed = 0;
 
-    private function translateTransactionStatusCode(int $status)
-    {
-
-        switch ($status) {
-
-            case self::TRANSACTION_STATUS_CODE_APROVADO:
-                return 'Aprovado';
-            case self::TRANSACTION_STATUS_CODE_AGUARDANDO:
-                return 'Aguardando';
-            case self::TRANSACTION_STATUS_CODE_PENDENTE:
-                return 'Pendente';
-            case self::TRANSACTION_STATUS_CODE_PENDENTE_PAGAMENTO:
-                return 'Pendente Pagamento';
-            case self::TRANSACTION_STATUS_CODE_TIMEOUT:
-                return 'Timeout';
-            case self::TRANSACTION_STATUS_CODE_DESFEITA:
-                return 'Desfeita';
-            case self::TRANSACTION_STATUS_CODE_INEXISTENTE:
-                return 'Inexistente';
-            case self::TRANSACTION_STATUS_CODE_NEGADO_ADMINISTRADORA:
-                return 'Negado - Administradora';
-            case self::TRANSACTION_STATUS_CODE_ESTORNADA:
-                return 'Estornada';
-            case self::TRANSACTION_STATUS_CODE_REPETIDA:
-                return 'Repetida';
-            case self::TRANSACTION_STATUS_CODE_ESTORNADA_CONCILIACAO:
-                return 'Estornada Conciliação';
-            case self::TRANSACTION_STATUS_CODE_CANCELADA_SEM_CONFIRMACAO:
-                return 'Cancelada - Sem Confirmação';
-            case self::TRANSACTION_STATUS_CODE_NEGADO_MGM:
-                return 'Negado - MGM';
-        }
-        return '';
-    }
-
-    private function canAddStatementItem($date, $status, $paymentMethod): bool
-    {
-
-        $isValidStatusFilter = true;
-        $isValidPaymentMethodFilter = true;
-
-        if (!array_key_exists('sale', $this->filters)) {
-
-            if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
-
-                $startDate = $this->filters['start_date']->format('Ymd');
-                $endDate = $this->filters['end_date']->format('Ymd');
-                $date = Carbon::createFromFormat('d/m/Y', $date)->format('Ymd');
-
-                if ($date < $startDate || $date > $endDate) {
-
-                    return false;
-                }
-            }
-        }
-
-        if ($status && array_key_exists('status', $this->filters) && $this->filters['status'] != 'ALL') {
-
-            if ($status !== $this->filters['status']) {
-
-                $isValidStatusFilter = false;
-            }
-        }
-
-        if (array_key_exists('payment_method', $this->filters) && $this->filters['payment_method'] != 'ALL') {
-
-            if (!$paymentMethod || ($paymentMethod !== $this->filters['payment_method'])) {
-
-                $isValidPaymentMethodFilter = false;
-            }
-        }
-
-        return $isValidStatusFilter && $isValidPaymentMethodFilter;
-    }
-
     public function performWebStatement(stdClass $data, array $filters = [])
     {
 
@@ -163,60 +88,6 @@ class GetNetStatementService
         ];
     }
 
-    public function performStatement(stdClass $data, array $filters = [])
-    {
-
-        if (isset($data->errors)) {
-
-            //dd($data->errors);
-            $exception = new Exception('Houve um erro ao processar a requisição na getnet em ' . __METHOD__ . ' :: ' . $data->errors[0]->message);
-            report($exception);
-        }
-
-        $this->filters = $filters;
-    
-        $transactions = array_reverse($data->list_transactions ?? []);
-        $adjustments = array_reverse($data->adjustments ?? []);
-        //$chargeback = array_reverse($data->chargeback ?? []);
-
-        $this->totalInPeriod = 0;
-
-        $this->preparesNodeTransactions($transactions);
-        $this->preparesNodeAdjustments($adjustments);
-
-        return [
-            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
-            'totalInPeriod' => $this->totalInPeriod,
-            'totalAdjustment' => $this->totalAdjustment,
-            'totalChargeback' => $this->totalChargeback,
-            'totalReversed' => $this->totalReversed,
-            'totalTransactions' => $this->totalTransactions,
-        ];
-    }
-
-    public function setOrderFromGetNetOrderId($getOrderId): ?Order
-    {
-
-        if (!empty($getOrderId)) {
-
-            $arrayOrderId = explode('-', $getOrderId);
-
-            if (count($arrayOrderId)) {
-
-                $hashId = $arrayOrderId[0];
-
-                $order = new Order();
-                return $order->setSaleId(current(Hashids::connection('sale_id')->decode($arrayOrderId[0])))
-                    ->setHashId($hashId)
-                    ->setOrderId($getOrderId);
-            } else {
-
-                //TODO
-                return null;
-            }
-        }
-    }
-
     private function preparesNodeTransactions($transactions): void
     {
 
@@ -225,7 +96,7 @@ class GetNetStatementService
             if (count($item->details) == 0) {
 
                 report(new Exception('GETNET::STATEMENT $item->details == 0'));
-            } else if (count($item->details) > 1) {
+            } elseif (count($item->details) > 1) {
 
                 report(new Exception('GETNET::STATEMENT $item->details > 1'));
             }
@@ -246,7 +117,12 @@ class GetNetStatementService
                 $subSellerRateClosingDate = $details->subseller_rate_closing_date ?? '';
                 $subSellerRateConfirmDate = $details->subseller_rate_confirm_date ?? '';
 
-                foreach (['paymentDate', 'transactionDate', 'subSellerRateClosingDate', 'subSellerRateConfirmDate'] as $date) {
+                foreach ([
+                             'paymentDate',
+                             'transactionDate',
+                             'subSellerRateClosingDate',
+                             'subSellerRateConfirmDate'
+                         ] as $date) {
 
                     if ($date) {
 
@@ -259,7 +135,7 @@ class GetNetStatementService
                     $paidWith = null;
                     $type = StatementItem::TYPE_REVERSED;
 
-                } else if ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
+                } elseif ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
 
                     $paidWith = null;
                     $type = StatementItem::TYPE_CHARGEBACK;
@@ -285,7 +161,14 @@ class GetNetStatementService
                 $hasOrderId = empty($summary->order_id) ? false : true;
                 $isTransactionCredit = $details->transaction_sign == '+';
                 $isReleaseStatus = $details->release_status == 'S';
-                $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}");
+
+                if ($hasOrderId && $this->isDigitalProduct($summary->order_id)) {
+
+                    $hasValidTracking = true;
+                } else {
+
+                    $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
+                }
                 $transactionStatusCode = $summary->transaction_status_code;
 
                 $details = new Details();
@@ -374,7 +257,8 @@ class GetNetStatementService
                     $statementItem->transactionDate = $transactionDate;
                     $statementItem->date = $date;
                     $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
-                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y', $statementItem->date)->format('Ymd')) : 0;
+                    $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
+                        $statementItem->date)->format('Ymd')) : 0;
 
                     $this->totalInPeriod += $amount;
                     $this->statementItems[] = $statementItem;
@@ -383,7 +267,7 @@ class GetNetStatementService
 
                         $this->totalReversed += $amount;
 
-                    } else if ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
+                    } elseif ($transactionType == self::SUMMARY_TRANSACTION_TYPE_CHARGEBACK) {
 
                         $this->totalChargeback += $amount;
 
@@ -394,6 +278,94 @@ class GetNetStatementService
                 }
             }
         }
+    }
+
+    private function formatDate(string $date): string
+    {
+
+        if (!empty($date)) {
+
+            try {
+
+                $date = Carbon::parse($date)->format('d/m/Y');
+            } catch (Exception $exception) {
+
+            }
+        }
+
+        return $date;
+    }
+
+    public function setOrderFromGetNetOrderId($getOrderId): ?Order
+    {
+
+        if (!empty($getOrderId)) {
+
+            $arrayOrderId = explode('-', $getOrderId);
+
+            if (count($arrayOrderId)) {
+
+                $hashId = $arrayOrderId[0];
+
+                $order = new Order();
+                return $order->setSaleId(current(Hashids::connection('sale_id')->decode($arrayOrderId[0])))
+                    ->setHashId($hashId)
+                    ->setOrderId($getOrderId);
+            } else {
+
+                //TODO
+                return null;
+            }
+        }
+    }
+
+    private function isDigitalProduct($orderId): bool
+    {
+
+        $findTextDigital = '-D';
+        $isDigital = strpos($orderId, $findTextDigital);
+
+        return $isDigital !== false;
+    }
+
+    private function canAddStatementItem($date, $status, $paymentMethod): bool
+    {
+
+        $isValidStatusFilter = true;
+        $isValidPaymentMethodFilter = true;
+
+        if (!array_key_exists('sale', $this->filters)) {
+
+            if (array_key_exists('start_date', $this->filters) && array_key_exists('end_date', $this->filters)) {
+
+                $startDate = $this->filters['start_date']->format('Ymd');
+                $endDate = $this->filters['end_date']->format('Ymd');
+                $date = Carbon::createFromFormat('d/m/Y', $date)->format('Ymd');
+
+                if ($date < $startDate || $date > $endDate) {
+
+                    return false;
+                }
+            }
+        }
+
+        if ($status && array_key_exists('status', $this->filters) && $this->filters['status'] != 'ALL') {
+
+            if ($status !== $this->filters['status']) {
+
+                $isValidStatusFilter = false;
+            }
+        }
+
+        if (array_key_exists('payment_method', $this->filters) && $this->filters['payment_method'] != 'ALL') {
+
+            if (!$paymentMethod || ($paymentMethod !== $this->filters['payment_method'])) {
+
+                $isValidPaymentMethodFilter = false;
+            }
+        }
+
+        return $isValidStatusFilter && $isValidPaymentMethodFilter;
     }
 
     private function preparesNodeAdjustments($adjustments): void
@@ -411,7 +383,12 @@ class GetNetStatementService
                 $subSellerRateClosingDate = $adjustment->subseller_rate_closing_date ?? '';
                 $subSellerRateConfirmDate = $adjustment->subseller_rate_confirm_date ?? '';
 
-                foreach (['paymentDate', 'adjustmentDate', 'subSellerRateClosingDate', 'subSellerRateConfirmDate'] as $date) {
+                foreach ([
+                             'paymentDate',
+                             'adjustmentDate',
+                             'subSellerRateClosingDate',
+                             'subSellerRateConfirmDate'
+                         ] as $date) {
 
                     if ($date) {
 
@@ -428,13 +405,46 @@ class GetNetStatementService
 
                 if ($this->canAddStatementItem($date, $details->getType(), null)) {
 
+                    $order = null;
+
+                    $findTextChargeBack = 'Chargeback da venda #';
+                    $findTextReverse = 'Estorno da venda:';
+                    $adjustmentReason = $adjustment->adjustment_reason;
+
+                    $adjustIsChargeBack = strpos($adjustmentReason, $findTextChargeBack);
+                    $adjustIsReverse = strpos($adjustmentReason, $findTextReverse);
+
+                    if ($adjustIsChargeBack !== false || $adjustIsReverse !== false) {
+
+                        $hashId = explode('#', $adjustmentReason);
+
+                        if (count($hashId) == 2) {
+
+                            // TODO Rupert em 02/03/2021: Para evitar consulta vou montar um objeto com a propriedade "setOrderId" incompleta
+
+                            $order = new Order();
+                            $order->setSaleId(current(Hashids::connection('sale_id')->decode($hashId[1])))
+                                ->setHashId($hashId[1])
+                                ->setOrderId('-');
+                            /*$saleId = current(Hashids::connection('sale_id')->decode($hashId[1]));
+
+                            if (!empty($saleId)) {
+
+                                $sale = Sale::select('gateway_order_id')->find($saleId);
+                                $gateway_order_id = $sale->gateway_order_id;
+                                $orderFromGetNetOrderId = $this->setOrderFromGetNetOrderId($gateway_order_id);
+                            }*/
+                        }
+                    }
+
                     $statementItem = new StatementItem();
 
                     $statementItem->amount = $amount;
+                    $statementItem->order = $order;
                     $statementItem->details = $details;
                     $statementItem->type = StatementItem::TYPE_ADJUSTMENT;
                     $statementItem->transactionDate = $adjustmentDate;
-                    $statementItem->date = $date;
+                    $statementItem->date = '';//$date; // TODO Rupert em 02/03/2021: A pedido do Julio
                     $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
                     $statementItem->sequence = $statementItem->date ? (Carbon::createFromFormat('d/m/Y',
                         $statementItem->date)->format('Ymd')) : 0;
@@ -454,11 +464,24 @@ class GetNetStatementService
         $pendingDebts = [];
         $companyId = $this->filters['company_id'];
 
-        if (array_key_exists('sale_id', $this->filters)) {
+        if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
 
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
-                ->whereType('ADJUSTMENT')
+                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
+                ->whereCompanyId($companyId)
+                ->get();
+
+        } elseif (array_key_exists('withdrawal_id', $this->filters) && !empty($this->filters['withdrawal_id'])) {
+
+            $withdrawal_id = $this->filters['withdrawal_id'];
+
+            $pendingDebts = PendingDebt::select('pending_debts.*')
+                ->join('pending_debt_withdrawals', function ($j) use ($withdrawal_id) {
+                    return $j->on('pending_debt_withdrawals.pending_debt_id', '=', 'pending_debts.id')
+                        ->where('pending_debt_withdrawals.withdrawal_id', $withdrawal_id);
+                })
+                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
                 ->whereCompanyId($companyId)
                 ->get();
 
@@ -519,7 +542,7 @@ class GetNetStatementService
             $statementItem->details = $details;
             $statementItem->type = $type;
             $statementItem->transactionDate = $pendingDebt->adjustment_date ?? '';
-            $statementItem->date = $paymentDate;
+            $statementItem->date = '';//$paymentDate; // TODO Rupert em 02/03/2021: A pedido do Julio
             $statementItem->subSellerRateConfirmDate = $subSellerRateConfirmDate;
             $statementItem->sequence = $sequence;
 
@@ -529,25 +552,35 @@ class GetNetStatementService
         }
     }
 
-    private function preparesNodeChargeback(): void
+    public function performStatement(stdClass $data, array $filters = [])
     {
 
-    }
+        if (isset($data->errors)) {
 
-    private function formatDate(string $date): string
-    {
-
-        if (!empty($date)) {
-
-            try {
-
-                $date = Carbon::parse($date)->format('d/m/Y');
-            } catch (Exception $exception) {
-
-            }
+            //dd($data->errors);
+            $exception = new Exception('Houve um erro ao processar a requisição na getnet em ' . __METHOD__ . ' :: ' . $data->errors[0]->message);
+            report($exception);
         }
 
-        return $date;
+        $this->filters = $filters;
+
+        $transactions = array_reverse($data->list_transactions ?? []);
+        $adjustments = array_reverse($data->adjustments ?? []);
+        //$chargeback = array_reverse($data->chargeback ?? []);
+
+        $this->totalInPeriod = 0;
+
+        $this->preparesNodeTransactions($transactions);
+        $this->preparesNodeAdjustments($adjustments);
+
+        return [
+            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
+            'totalInPeriod' => $this->totalInPeriod,
+            'totalAdjustment' => $this->totalAdjustment,
+            'totalChargeback' => $this->totalChargeback,
+            'totalReversed' => $this->totalReversed,
+            'totalTransactions' => $this->totalTransactions,
+        ];
     }
 
     public function getFiltersAndStatement()
@@ -615,10 +648,51 @@ class GetNetStatementService
         $filters['company_id'] = $companyGetNet->id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
+        $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));;
 
         return [
             'filters' => $filters,
             'statement' => $statement,
         ];
+    }
+
+    private function translateTransactionStatusCode(int $status)
+    {
+
+        switch ($status) {
+
+            case self::TRANSACTION_STATUS_CODE_APROVADO:
+                return 'Aprovado';
+            case self::TRANSACTION_STATUS_CODE_AGUARDANDO:
+                return 'Aguardando';
+            case self::TRANSACTION_STATUS_CODE_PENDENTE:
+                return 'Pendente';
+            case self::TRANSACTION_STATUS_CODE_PENDENTE_PAGAMENTO:
+                return 'Pendente Pagamento';
+            case self::TRANSACTION_STATUS_CODE_TIMEOUT:
+                return 'Timeout';
+            case self::TRANSACTION_STATUS_CODE_DESFEITA:
+                return 'Desfeita';
+            case self::TRANSACTION_STATUS_CODE_INEXISTENTE:
+                return 'Inexistente';
+            case self::TRANSACTION_STATUS_CODE_NEGADO_ADMINISTRADORA:
+                return 'Negado - Administradora';
+            case self::TRANSACTION_STATUS_CODE_ESTORNADA:
+                return 'Estornada';
+            case self::TRANSACTION_STATUS_CODE_REPETIDA:
+                return 'Repetida';
+            case self::TRANSACTION_STATUS_CODE_ESTORNADA_CONCILIACAO:
+                return 'Estornada Conciliação';
+            case self::TRANSACTION_STATUS_CODE_CANCELADA_SEM_CONFIRMACAO:
+                return 'Cancelada - Sem Confirmação';
+            case self::TRANSACTION_STATUS_CODE_NEGADO_MGM:
+                return 'Negado - MGM';
+        }
+        return '';
+    }
+
+    private function preparesNodeChargeback(): void
+    {
+
     }
 }

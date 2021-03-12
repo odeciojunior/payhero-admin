@@ -7,6 +7,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Illuminate\Support\Facades\DB;
@@ -579,36 +580,77 @@ class CompanyService
         return $arrayFields;
     }
 
-    public function getBlockedBalance(Company $company)
+    public function getBlockedBalance(Company $company, $liquidationType = null)
     {
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
+        $blockReasonSaleModel = new BlockReasonSale();
 
-        return $transactiosModel->whereNull('invitation_id')
+        $blockedBalance = $transactiosModel
             ->where('company_id', $company->id)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
-            ->whereDate('created_at', '>=', '2020-01-01')
-            ->whereHas('sale', function ($query) use ($salesModel) {
-                $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                    ->orWhere('sales.has_valid_tracking', 0)
-                    ->whereNotNull('delivery_id');
-            })->select(DB::raw('sum(if(invitation_id is null, value, 0)) as from_sales'),
-                DB::raw('sum(if(invitation_id is not null, value, 0)) as from_invites'),
-            )->first();
+            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
+                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+            });
+
+        if(!empty($liquidationType)) {
+            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
+            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+            }
+        }
+
+        return $blockedBalance->sum('value');
     }
 
-    public function getBlockedBalancePending(Company $company)
+    public function getBlockedBalanceInvites(Company $company, $liquidationType = null)
     {
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
+        $blockReasonSaleModel = new BlockReasonSale();
 
-        return $transactiosModel->whereNull('invitation_id')
+        $blockedBalance = $transactiosModel
+            ->whereNotNull('invitation_id')
+            ->where('company_id', $company->id)
+            ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
+            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
+                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+            });
+
+        if(!empty($liquidationType)) {
+            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
+            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+            }
+        }
+
+        return $blockedBalance->sum('value');
+    }
+
+    public function getBlockedBalancePending(Company $company, $liquidationType = null)
+    {
+        $salesModel = new Sale();
+        $transactiosModel = new Transaction();
+        $blockReasonSaleModel = new BlockReasonSale();
+
+        $blockedBalance = $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $company->id)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
-            ->whereDate('created_at', '>=', '2020-01-01')
-            ->whereHas('sale', function ($query) use ($salesModel) {
-                $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-            })->sum('value');
+            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
+                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+            });
+
+        if(!empty($liquidationType)) {
+            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
+            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+            }
+        }
+
+        return $blockedBalance->sum('value');
     }
 
     public function getPendingDebtBalance(Company $company){

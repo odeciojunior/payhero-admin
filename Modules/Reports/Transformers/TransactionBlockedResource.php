@@ -40,17 +40,23 @@ class TransactionBlockedResource extends JsonResource
             'brand'            => $flag,
         ];
 
-        if($sale->status == 24) {
-            $data['reason_blocked'] = 'Em disputa';
-        } elseif($sale->tracking->count() < $sale->productsPlansSale->count()){
-            $data['reason_blocked'] = 'Sem rastreio';
-        } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('duplicated'))->count()) {
-            $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
-        } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('no_tracking_info'))->count()) {
-            $data['reason_blocked'] = 'Rastreio sem movimentação';
-        } else {
-            $data['reason_blocked'] = 'Motivo não listado';
+        // if($sale->status == 24) {
+        //     $data['reason_blocked'] = 'Em disputa';
+        // } elseif($sale->tracking->count() < $sale->productsPlansSale->count()){
+        //     $data['reason_blocked'] = 'Sem rastreio';
+        // } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('duplicated'))->count()) {
+        //     $data['reason_blocked'] = 'Já existe uma venda com o código de rastreio informado';
+        // } elseif($sale->tracking->where('system_status_enum', (new Tracking())->present()->getSystemStatusEnum('no_tracking_info'))->count()) {
+        //     $data['reason_blocked'] = 'Rastreio sem movimentação';
+        // } else {
+        //     $data['reason_blocked'] = 'Motivo não listado';
+        // }
+        $reasonBlock = '';
+        foreach ($this->blockReasonSale as $blockReasonSale) {
+            if(!empty($reasonBlock)) $reasonBlock .= ', ';
+            $reasonBlock .= $blockReasonSale->observation;
         }
+        $data['reason_blocked'] = $reasonBlock;
 
         if ($sale->owner_id == auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'producer';

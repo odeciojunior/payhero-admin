@@ -109,6 +109,9 @@ $(document).ready(function () {
 
                 $('.delete-affiliate').on('click', function (event) {
                     event.preventDefault();
+                    if(verifyAccountFrozen()) {
+                        return;
+                    }
                     let affiliate = $(this).attr('affiliate');
                     $('#modal-delete-affiliate').modal('show');
 
@@ -141,6 +144,9 @@ $(document).ready(function () {
 
                 $(document).on('click', '.edit-affiliate', function () {
                     let affiliate = $(this).attr('affiliate');
+                    if(verifyAccountFrozen()) {
+                        return;
+                    }
                     $.ajax({
                         method: "GET",
                         url: "/api/affiliates/" + affiliate + "/edit",
@@ -267,7 +273,7 @@ $(document).ready(function () {
                         data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
                         // data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center'>";
-                        if (value.status != 3) {
+                        if (value.status != 3  && verifyAccountFrozen() == false) {
                             data += "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" + value.id + "' status='3'>Aprovar</a>";
                             if (value.status != 4) {
                                 data += "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" + value.id + "' status='4'>Recusar</a>";

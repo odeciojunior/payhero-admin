@@ -176,7 +176,7 @@ $(document).ready(function () {
                 $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
             },
             success: response => {
-                if (response.allowed) {
+                if (response.allowed && verifyAccountFrozen() == false) {
                     $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
                     $('#blocked-withdrawal').hide();
                 } else {
@@ -781,7 +781,7 @@ $(document).ready(function () {
                         `;
 
                         if (data.debt_pending_value != null && data.debt_pending_value != 'R$ 0,00') {
-                            tableData += `<br> <small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small>`;
+                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small></a>`;
                         }
                         tableData += `
                             </td>
@@ -798,7 +798,7 @@ $(document).ready(function () {
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip()
-                    })
+                    });
 
                     pagination(response, 'withdrawals', updateWithdrawalsTable);
                 }
@@ -920,7 +920,7 @@ $(document).ready(function () {
         $('#pagination-statement').html('');
         loadOnTable('#table-statement-body', '#statementTable');
 
-        let link = '/api/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val() + '&payment_method=' + $("#payment_method").val();
+        let link = '/api/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val() + '&payment_method=' + $("#payment_method").val() + '&withdrawal_id=' + $("#withdrawal_id").val();
 
         $(".numbers").hide();
 
@@ -1122,7 +1122,7 @@ $(document).ready(function () {
 
             $('#date_range_statement').attr('disabled', true).addClass('disableFields');
             $('#payment_method').attr('disabled', true).addClass('disableFields');
-            $('#statement_sale').attr('disabled', true).addClass('disableFields');
+            $('#statement_sale').val('').attr('disabled', true).addClass('disableFields');
 
         } else {
 
@@ -1240,12 +1240,26 @@ $(document).ready(function () {
 
 $("#go-to-pending-debt").on("click", function () {
 
+    selectPendingDebt();
+    $("#bt_filtro_statement").click();
+});
+
+
+$(document).on('click', '.pending_debit_withdrawal_id', function () {
+
+    selectPendingDebt();
+
+    $('#withdrawal_id').val($(this).attr('withdrawal_id'));
+    $("#bt_filtro_statement").click();
+    $('#withdrawal_id').val('');
+});
+
+function selectPendingDebt() {
+
     $("#nav-statement-tab").click();
     $('#statement_status_select option[value="PENDING_DEBIT"]').prop('selected', true);
 
     $('#date_range_statement').attr('disabled', true).addClass('disableFields');
     $('#payment_method').attr('disabled', true).addClass('disableFields');
-    $('#statement_sale').attr('disabled', true).addClass('disableFields');
-
-    $("#bt_filtro_statement").click();
-});
+    $('#statement_sale').val('').attr('disabled', true).addClass('disableFields');
+}
