@@ -31,6 +31,20 @@
                         </select>
                     </div>
                 </div>
+                {{-- INPUT RADIO FACEBOOK-API --}}
+                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
+                    <label class="col-md-5">
+                        <input type="radio" id="default-api-facebook" name="api-facebook" value="default"
+                               class="col-md-2 api-facebook-check form-check-input" checked>
+                        Padrão
+                    </label>
+                    <label class="col-md-5">
+                        <input type="radio" id="api-facebook" name="api-facebook" value="api"
+                               class="col-md-2 api-facebook-check form-check-label">
+                        API
+                    </label>
+                </div>
+                {{-- INPUT RADIO FACEBOOK-API --}}
                 <label for="code">Código</label>
                 <div class="input-group mb-3">
                     <div class='input-group-prepend'>
@@ -40,18 +54,7 @@
                     <input value="" name="code" id='code-pixel' type="text" class="form-control pixel-code"
                            placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel-edit">
                 </div>
-                {{-- INPUT RADIO FACEBOOK-API --}}
-                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
-                    <label class="col-md-5">
-                        <input type="radio" id="default-api-facebook" name="api-facebook" value="default" class="col-md-2 api-facebook-check form-check-input" checked >
-                        Padrão
-                    </label>
-                    <label class="col-md-5">
-                        <input type="radio" id="api-facebook" name="api-facebook" value="api" class="col-md-2 api-facebook-check form-check-label" >
-                        API
-                    </label>
-                </div>
-                {{-- INPUT RADIO FACEBOOK-API --}}
+
 
                 {{-- INPUT TOKEN FACEBOOK --}}
                 <div class="row" id="div-facebook-token-api" style="display:none;">

@@ -28,15 +28,6 @@
                         </select>
                     </div>
                 </div>
-                <label for="code">Código</label>
-                <div class="input-group mb-3">
-                    <div class='input-group-prepend'>
-                        <span class='input-group-text' id='input-code-pixel'
-                              style='background:#f3f3f3;display:none'></span>
-                    </div>
-                    <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
-                           placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
-                </div>
                 {{-- INPUT RADIO FACEBOOK-API --}}
                 <div class="form-group col-md-6 row mt-4" id="api-facebook" style="display:none;">
                     <label class="col-md-5 form-check-label">
@@ -50,6 +41,16 @@
                     </label>
                 </div>
                 {{-- INPUT RADIO FACEBOOK-API --}}
+                <label for="code">Código</label>
+                <div class="input-group mb-3">
+                    <div class='input-group-prepend'>
+                        <span class='input-group-text' id='input-code-pixel'
+                              style='background:#f3f3f3;display:none'></span>
+                    </div>
+                    <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
+                           placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
+                </div>
+
 
                 {{-- INPUT TOKEN FACEBOOK --}}
                 <div class="row" id="div-facebook-token-api" style="display:none;">
