@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Artisan;
 use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\UserBenefit;
 
@@ -40,8 +39,6 @@ class PopulateBenefitsTable extends Migration
             'level' => 4,
             'description' => 'Redução proporcional da taxa',
         ]);
-
-        Artisan::call('command:update-user-level');
     }
 
     /**
