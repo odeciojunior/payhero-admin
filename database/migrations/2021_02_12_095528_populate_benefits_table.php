@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Artisan;
 use Modules\Core\Entities\Benefit;
+use Modules\Core\Entities\UserBenefit;
 
 class PopulateBenefitsTable extends Migration
 {
@@ -12,6 +14,9 @@ class PopulateBenefitsTable extends Migration
      */
     public function up()
     {
+        UserBenefit::query()->delete();
+        Benefit::query()->delete();
+
         Benefit::firstOrCreate([
             'name' => 'cashback',
             'level' => 2,
@@ -35,6 +40,8 @@ class PopulateBenefitsTable extends Migration
             'level' => 4,
             'description' => 'Redução proporcional da taxa',
         ]);
+
+        Artisan::call('command:update-user-level');
     }
 
     /**

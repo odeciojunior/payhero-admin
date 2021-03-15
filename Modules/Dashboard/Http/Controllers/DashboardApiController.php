@@ -21,7 +21,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
-Use Modules\Core\Services\BenefitService;
+Use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -251,7 +251,7 @@ class DashboardApiController extends Controller
         $company = Company::find(current(Hashids::decode($companyHash)));
         $user = $company->user;
         $taskService = new TaskService();
-        $benefitService = new BenefitService();
+        $benefitService = new BenefitsService();
 
         return [
             'level'          => $user->level,
