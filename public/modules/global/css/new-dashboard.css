@@ -386,6 +386,9 @@ body {
     }
 }
 
+#company-select > div > div {
+    width: 100%;
+}
 #company {
     border-radius: 8px;
 }
@@ -535,31 +538,6 @@ body {
     opacity: 0.43;
 }
 
-#cashback {
-    /*display: none !important;*/
-    display: none;
-}
-
-.cashback-container-icon {
-    font-size: 19px;
-    font-weight: 300;
-    color: #6fe5ab;
-    margin-right: 10px;
-    -webkit-text-stroke: 0.3px rgba(111, 229, 171, 1);
-}
-
-.cashback-container-icon:hover {
-    color: #6FE5AB;
-}
-
-#cashback-container-money {
-    font-size: 33px;
-    font-weight: bold;
-    color: #6FE5AB;
-    letter-spacing: 0px;
-    line-height: 33px;
-}
-
 #progress > div > span {
     font-size: 10px;
     font-weight: bold;
@@ -626,6 +604,26 @@ body {
     font-size: 10px;
     color: #A5A5A5;
     text-align: left;
+}
+
+.cashback-container-icon {
+    font-size: 19px;
+    font-weight: 300;
+    color: #6fe5ab;
+    margin-right: 10px;
+    -webkit-text-stroke: 0.3px rgba(111, 229, 171, 1);
+}
+
+.cashback-container-icon:hover {
+    color: #6FE5AB;
+}
+
+#cashback-container-money {
+    font-size: 33px;
+    font-weight: bold;
+    color: #6FE5AB;
+    letter-spacing: 0px;
+    line-height: 33px;
 }
 
 .page.dashboard .sirius-account {
