@@ -80,9 +80,6 @@ $(document).ready(function () {
                 case 3:
                     updatePerformanceCard3(data);
                     break;
-                // case 4:
-                //     updateTracking();
-                //     break;
                 default:
             }
         });
@@ -160,15 +157,7 @@ $(document).ready(function () {
                         <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
                     </div>
-<!--                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">-->
-<!--                        <span class="title-performance">Cashback recebido</span>-->
-<!--                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">-->
-<!--                            <span class="o-reload-1 cashback-container-icon"></span>-->
-<!--                            <span class="cashback-container-icon">R$</span>-->
-<!--                            <span id="cashback-container-money"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
+                    <div id="tasks" class="d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
 
                     <div id="progress" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
@@ -245,7 +234,7 @@ $(document).ready(function () {
                 );
             }
 
-            $("#tasks").css({'max-height': '95px', 'overflow-y': 'hidden'});
+            $("#tasks").css({'margin-top': '20px', 'max-height': '95px', 'overflow-y': 'hidden'});
             $('#tasks').show();
 
         } else {
@@ -253,9 +242,8 @@ $(document).ready(function () {
         }
     }
 
-    function updateCashback(money_cashback) {
-        var money = money_cashback/100;
-        $('#cashback-container #cashback-container-money').text(`${money.toLocaleString('pt-br',{minimumFractionDigits: 2}) }`);
+    function updateCashback(money) {
+        $('#cashback-container #cashback-container-money').text(`${money }`);
         $(".sirius-cashback > .card").removeClass('d-none');
     }
 
@@ -326,7 +314,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                        <span class="mb-10 title-performance">Benefícios atual</span>
+                        <span class="mb-10 title-performance">Benefícios ativos</span>
                         <div id="benefits-active-container" class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         </div>
                     </div>
@@ -492,7 +480,7 @@ $(document).ready(function () {
                                 </div>
                                 <div class="d-flex flex-column justify-content-center align-self-center">
                                     <div class="achievements-list-name level mb-1">${value.name}</div>
-                                    <div class="achievements-list-description level-description">${value.desciption}</div>
+                                    <div class="achievements-list-description level-description">${value.description}</div>
                                 </div>
                             </div>`;
 
@@ -518,7 +506,7 @@ $(document).ready(function () {
                             </div>
                             <div class="d-flex flex-column justify-content-center align-self-center">
                                 <div class="achievements-list-name level mb-1">${value.name}</div>
-                                <div class="achievements-list-description level-description">${value.desciption}</div>
+                                <div class="achievements-list-description level-description">${value.description}</div>
                             </div>
                         </div>`;
 

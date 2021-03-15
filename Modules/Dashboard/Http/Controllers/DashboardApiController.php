@@ -261,87 +261,87 @@ class DashboardApiController extends Controller
             'achievements'   => array (
                  [
                     'name' => 'VELOCIDADE DA LUZ',
-                    'desciption' => 'FAÇA ENTREGAS RÁPIDAS',
+                    'description' => 'FAÇA ENTREGAS RÁPIDAS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/VelocidadeLuz.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => true,
                 ],
                 [
                     'name' => 'SUPORTE METEÓRICO',
-                    'desciption' => 'TENHA UM ATENDIMENTO RÁPIDO',
+                    'description' => 'TENHA UM ATENDIMENTO RÁPIDO',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/SuporteMeteorico.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => true,
                 ],
                 [
                     'name' => 'COLONIZADOR',
-                    'desciption' => 'TENHA +10 CONVITES APROVADOS',
+                    'description' => 'TENHA +10 CONVITES APROVADOS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Colonizador.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => true,
                 ],
                 [
                     'name' => 'COMERCIANTE CELESTE',
-                    'desciption' => '+1000 VENDAS APROVADAS NO CARTÃO',
+                    'description' => '+1000 VENDAS APROVADAS NO CARTÃO',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/ComercianteCeleste.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'POEIRA ESTELAR',
-                    'desciption' => '100 VENDAS DIGITAIS APROVADAS',
+                    'description' => '100 VENDAS DIGITAIS APROVADAS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/PoeiraEstelar.png',
                     'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
+                    'active' => true,
                 ],
                 [
                     'name' => 'ESTRELA CADENTE',
-                    'desciption' => '10 AFILIADOS ATIVOS',
+                    'description' => '10 AFILIADOS ATIVOS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/estrelaCadente.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'GUERRA NAS ESTRELAS',
-                    'desciption' => '50% DE BOLETOS APROVADOS',
+                    'description' => '50% DE BOLETOS APROVADOS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/GuerraNasEstrelas.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'EXTRATERRESTE',
-                    'desciption' => 'RECUPERE 6% DOS CARRINHOS ABADONADOS',
+                    'description' => 'RECUPERE 6% DOS CARRINHOS ABADONADOS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Extraterrestre.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'MOCHILEIRO DAS GALÁXIAS',
-                    'desciption' => 'FAÇA VENDAS EM 5 PROJETOS DIFERENTES',
+                    'description' => 'FAÇA VENDAS EM 5 PROJETOS DIFERENTES',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/MochileiroGalaxias.png',
                     'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
+                    'active' => true,
                 ],
                 [
                     'name' => 'ÓRBITA CAPITALISTA',
-                    'desciption' => 'REALIZE 50 SAQUES',
+                    'description' => 'REALIZE 50 SAQUES',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/OrbitaCapitalista.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'LUNÁTICO',
-                    'desciption' => 'FAÇA LOGIN POR 21 DIAS',
+                    'description' => 'FAÇA LOGIN POR 21 DIAS',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Lunatico.png',
                     'storytelling' => 'Narração da história não feito ainda',
                     'active' => false,
                 ],
                 [
                     'name' => 'AO INFINITO E ALÉM',
-                    'desciption' => 'FAÇA 50 VENDAS COM ORDERBUMP OU UPSELL',
+                    'description' => 'FAÇA 50 VENDAS COM ORDERBUMP OU UPSELL',
                     'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/AoInfinioAlem.png',
                     'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
+                    'active' => true,
                 ],
 
             ),
@@ -732,7 +732,7 @@ class DashboardApiController extends Controller
     }
 
     function getCashbackReceivedValue() {
-        //dd(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->toSql());
-        return Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value');
+        return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
+        //return FoxUtils::formatMoney(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value'));
     }
 }
