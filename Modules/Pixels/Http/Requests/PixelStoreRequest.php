@@ -6,11 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PixelStoreRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|max:100',
@@ -26,6 +22,7 @@ class PixelStoreRequest extends FormRequest
             'purchase_boleto' => 'nullable',
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
+            'value_percentage_purchase_boleto' => 'nullable|numeric',
         ];
     }
 
@@ -37,6 +34,7 @@ class PixelStoreRequest extends FormRequest
             'code.required' => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
+            'value_percentage_purchase_boleto.numeric' => 'O campo % Valor Boleto deve ser numero',
         ];
     }
 

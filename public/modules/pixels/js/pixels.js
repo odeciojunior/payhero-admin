@@ -291,9 +291,61 @@ $(function () {
         $("#modal-delete-pixel").modal('show');
     });
 
+    function validateDataCreatePixel(formData) {
+        if (formData.get('name').length > 100) {
+            alertCustom('error', 'O campo Descrição permite apenas 100 caracteres')
+            return false;
+        }
+
+        if (formData.get('name').length < 1) {
+            alertCustom('error', 'O campo Descrição é obrigatório')
+            return false;
+        }
+
+        if (formData.get('value_percentage_purchase_boleto').length > 3) {
+            alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
+            return false;
+        }
+
+        if (formData.get('code').length < 1) {
+            alertCustom('error', 'O campo Código é obrigatório')
+            return false;
+        }
+
+        if (formData.get('value_percentage_purchase_boleto').length < 1) {
+            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
+            return false;
+        }
+
+        if (isNaN(parseInt(formData.get('value_percentage_purchase_boleto')))) {
+            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
+            return false;
+        }
+
+        if (formData.get('value_percentage_purchase_boleto') > 100) {
+            alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 0 e 100')
+            return false;
+        }
+
+
+        if (formData.get('platform') == 'facebook') {
+            if (formData.get('api-facebook') == 'api' && formData.get('facebook-token-api').length < 1) {
+                alertCustom('error', 'O campo Token Acesso API de Conversões é obrigatório');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     //criar novo pixel
     $("#modal-create-pixel .btn-save").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
+
+        if (!validateDataCreatePixel(formData)) {
+            return false;
+        }
+
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
