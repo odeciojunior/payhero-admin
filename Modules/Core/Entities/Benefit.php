@@ -16,13 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class Benefit extends Model
 {
     /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'integer';
-
-    /**
      * @var array
      */
     protected $fillable = [
@@ -33,15 +26,9 @@ class Benefit extends Model
         'updated_at'
     ];
 
-    /**
-     * Fill the model with an array of attributes.
-     * @param array $attributes
-     * @return Benefit
-     */
-    public function fill(array $attributes)
+    public function getOriginalNameAttribute()
     {
-        $this->hidden[] = 'laravel_through_key';
-        return parent::fill($attributes);
+        return $this->attributes['name'];
     }
 
     public function getNameAttribute($value)
@@ -59,14 +46,6 @@ class Benefit extends Model
             $minPercentual = $this->installment_cashback;
             $maxPercentual = $this->installment_cashback * 11;
             return "Receba de {$minPercentual}% até {$maxPercentual}% de cashback";
-        }
-        return $value;
-    }
-
-    public function getLevelAttribute($value)
-    {
-        if ($this->attributes['name'] === 'cashback' && ($this->installment_cashback ?? 0) > 0.5) {
-            return 3;
         }
         return $value;
     }

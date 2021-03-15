@@ -13,18 +13,19 @@ class PixelStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'campaign' => 'nullable',
             'name' => 'required|max:100',
-            'code' => 'required',
             'platform' => 'required',
             'status' => 'nullable',
-            'checkout' => 'nullable',
-            'purchase_boleto' => 'nullable',
-            'purchase_card' => 'nullable',
-            'affiliate_id' => 'nullable',
-            'add_pixel_plans' => 'required|array',
-            'code_meta_tag_facebook' => 'nullable|string|max:255',
+            'code' => 'required',
+            'api-facebook' => 'nullable|string',
+            'facebook-token-api' => 'nullable|string',
             'purchase_event_name' => 'nullable|max:255',
+            'add_pixel_plans' => 'required|array',
+            'checkout' => 'nullable',
+            'purchase_card' => 'nullable',
+            'purchase_boleto' => 'nullable',
+            'campaign' => 'nullable',
+            'affiliate_id' => 'nullable',
         ];
     }
 

@@ -14,6 +14,7 @@ class FallingStar extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
+        //TODO: Refactor with query builder
         $sql = 'SELECT u.id, count(*) AS total_affiliates
                 FROM users u
                          INNER JOIN users_projects up ON u.id = up.user_id
@@ -34,6 +35,6 @@ class FallingStar extends Achievement implements AchievementCheck
 
         $queryReturn = DB::select($sql, [$user->id]);
 
-        return count($queryReturn) && $queryReturn[0]['total_affiliates'] >= 10;
+        return count($queryReturn) && $queryReturn[0]->total_affiliates >= 10;
     }
 }

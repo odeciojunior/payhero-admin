@@ -12,7 +12,6 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
-use Modules\Core\Services\PixelService;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
@@ -114,7 +113,8 @@ class PixelsApiController extends Controller
 
             $applyPlanEncoded = json_encode($applyPlanArray);
 
-            $codeMetaTag = $validator['code_meta_tag_facebook'] ?? null;
+            $facebookToken = null;
+            $isApi = false;
 
             if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
                 $validator['purchase_event_name'] = null;
@@ -122,9 +122,13 @@ class PixelsApiController extends Controller
 
             if ($validator['platform'] == 'taboola' && empty($validator['purchase_event_name'])) {
                 $validator['purchase_event_name'] = 'make_purchase';
-            }
-            if ($validator['platform'] == 'outbrain' && empty($validator['purchase_event_name'])) {
+            } elseif ($validator['platform'] == 'outbrain' && empty($validator['purchase_event_name'])) {
                 $validator['purchase_event_name'] = 'Purchase';
+            } elseif ($validator['platform'] == 'facebook') {
+                if (!empty($validator['api-facebook']) && $validator['api-facebook'] == 'api') {
+                    $facebookToken = $validator['facebook-token-api'];
+                    $isApi = true;
+                }
             }
 
             $pixel = $pixelModel->create(
@@ -140,15 +144,11 @@ class PixelsApiController extends Controller
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
-                    'code_meta_tag_facebook' => $codeMetaTag,
-                    'purchase_event_name' => $validator['purchase_event_name'] ?? null
+                    'purchase_event_name' => $validator['purchase_event_name'],
+                    'facebook_token' => $facebookToken,
+                    'is_api' => $isApi
                 ]
             );
-
-
-            if (!empty($codeMetaTag)) {
-                (new PixelService())->updateCodeMetaTagFacebook($project->id, $codeMetaTag);
-            }
 
             if ($pixel) {
                 return response()->json('Pixel Configurado com sucesso!', 200);
@@ -202,16 +202,27 @@ class PixelsApiController extends Controller
             }
 
             $applyPlanEncoded = json_encode($applyPlanArray);
-
             if (!in_array($validated['platform'], ['taboola', 'outbrain'])) {
                 $validated['purchase_event_name'] = null;
             }
 
-            if ($pixel->platform == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
+
+            if ($validated['platform'] == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
                 $validated['purchase_event_name'] = 'make_purchase';
-            }
-            if ($pixel->platform == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
+            } elseif ($validated['platform'] == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
                 $validated['purchase_event_name'] = 'Purchase';
+            } elseif ($validated['platform'] == 'facebook') {
+                $validated['purchase_event_name'] = '';
+                if ($validated['is_api'] == 'api') {
+                    $validated['is_api'] = true;
+                } else {
+                    $validated['is_api'] = false;
+                    $validated['facebook_token_api'] = null;
+                }
+            }
+
+            if ($validated['platform'] != 'facebook') {
+                $validated['is_api'] = false;
             }
 
             $pixelUpdated = $pixel->update(
@@ -224,24 +235,12 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
                     'purchase_card' => $validated['purchase_card'],
-                    'purchase_event_name' => $validated['purchase_event_name'] ?? null
+                    'purchase_event_name' => $validated['purchase_event_name'] ?? null,
+                    'facebook_token' => $validated['facebook_token_api'],
+                    'is_api' => $validated['is_api']
                 ]
             );
             if ($pixelUpdated) {
-                if (!empty($pixel->code_meta_tag_facebook) && empty($validated['code_meta_tag_facebook'])) {
-                    $pixel->update(
-                        [
-                            'code_meta_tag_facebook' => ''
-                        ]
-                    );
-                }
-
-                if (!empty($validated['code_meta_tag_facebook'])) {
-                    (new PixelService())->updateCodeMetaTagFacebook(
-                        $project->id,
-                        $validated['code_meta_tag_facebook']
-                    );
-                }
                 return response()->json('Sucesso', 200);
             }
 
@@ -253,12 +252,7 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($projectId, $id)
+    public function destroy($projectId, $id): JsonResponse
     {
         try {
             if (empty($projectId) || empty($id)) {
@@ -291,12 +285,7 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
-    public function show($projectId, $id)
+    public function show($projectId, $id): JsonResponse
     {
         try {
             if (empty($id) || empty($projectId)) {
@@ -336,11 +325,6 @@ class PixelsApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse|PixelEditResource
-     */
     public function edit($projectId, $id)
     {
         try {
