@@ -16,16 +16,16 @@ class VerifyFrozenAccountApi
      */
     public function handle($request, Closure $next)
     {
-        if ((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') && 
+        if ((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') &&
             $this->inExceptArray($request) == false) {
-            return response()->json(['message' => 'Conta congelada!'], 400);
+            return response()->json(['message' => 'Conta congelada!5'], 400);
         }
 
         return $next($request);
     }
 
     protected function inExceptArray($request)
-    {   
+    {
         $excepts = [
             '/api/dashboard/getvalues',
             '/api/recovery/details',

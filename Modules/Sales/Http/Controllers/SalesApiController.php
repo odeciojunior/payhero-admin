@@ -156,6 +156,13 @@ class SalesApiController extends Controller
                 ->where('id', Hashids::connection('sale_id')->decode($saleId))
                 ->first();
 
+            if(!in_array($sale->gateway_id, [14,15])) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
 
             $transaction = $transactionModel->where('sale_id', $sale->id)
