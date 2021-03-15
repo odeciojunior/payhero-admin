@@ -112,6 +112,9 @@ $(document).ready(function () {
             success: function success(data) {
 
                 updatePerformanceCard1(data);
+                if ( data.level > 1){
+                    updateCashback(data.money_cashback)
+                }
                 //nextPerformance(data);
                 //updatePerformanceCard2(data);
 
@@ -191,10 +194,6 @@ $(document).ready(function () {
 
         updateTasks(data.level, data.tasks);
 
-        if ( data.level > 1){
-            updateCashback(data.money_cashback)
-        }
-
         updateProgressBar(data.billed, currentLevel);
 
         nextPerformance(data);
@@ -257,7 +256,7 @@ $(document).ready(function () {
     function updateCashback(money_cashback) {
         var money = money_cashback/100;
         $('#cashback-container #cashback-container-money').text(`${money.toLocaleString('pt-br',{minimumFractionDigits: 2}) }`);
-        $("#cashback").show();
+        $(".sirius-cashback > .card").removeClass('d-none');
     }
 
     function updateProgressBar(billed, currentLevel) {
