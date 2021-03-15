@@ -80,7 +80,7 @@ class GetNetStatementService
 
         return [
             'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
-            'totalInPeriod' => $this->totalInPeriod,
+            'totalInPeriod' => number_format($this->totalInPeriod, 2),
             'totalAdjustment' => $this->totalAdjustment,
             'totalChargeback' => $this->totalChargeback,
             'totalReversed' => $this->totalReversed,
@@ -161,7 +161,14 @@ class GetNetStatementService
                 $hasOrderId = empty($summary->order_id) ? false : true;
                 $isTransactionCredit = $details->transaction_sign == '+';
                 $isReleaseStatus = $details->release_status == 'S';
-                $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
+
+                if ($hasOrderId && $this->isDigitalProduct($summary->order_id)) {
+
+                    $hasValidTracking = true;
+                } else {
+
+                    $hasValidTracking = (boolean)Redis::connection('redis-statement')->get("sale:has:tracking:{$orderFromGetNetOrderId->getSaleId()}") ?? true;
+                }
                 $transactionStatusCode = $summary->transaction_status_code;
 
                 $details = new Details();
@@ -310,6 +317,15 @@ class GetNetStatementService
                 return null;
             }
         }
+    }
+
+    private function isDigitalProduct($orderId): bool
+    {
+
+        $findTextDigital = '-D';
+        $isDigital = strpos($orderId, $findTextDigital);
+
+        return $isDigital !== false;
     }
 
     private function canAddStatementItem($date, $status, $paymentMethod): bool

@@ -458,7 +458,7 @@ $(document).ready(function () {
         let item = `
                 <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
                     <div class="mr-auto">
-                        <span class="ml-0 title-performance">Seu desempenho</span>
+                        <span class="ml-0 title-performance">Suas conquistas</span>
                     </div>
                     <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                         <li class="" data-slide-to="1"></li>
@@ -469,14 +469,78 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
+                <div id="card-achievements" class="card-body pb-20 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
 
+                </div>
         `;
 
         $('.sirius-performance > .card').append(item);
 
+        updateAchievementsCard(data.achievements);
 
-        //$('#performance-card-2').hide();
         nextPerformance(data);
     }
 
+    function  updateAchievementsCard(achievements) {
+        if (!isEmpty(achievements)) {
+
+            const isActiveAchievements = achievements => achievements.active === true;
+            const achievementsActive = achievements.filter(isActiveAchievements);
+            const achievementsActiveLength = achievementsActive.length;
+
+            $.each(achievementsActive, function (index, value) {
+                let item = ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
+                                <div class="achievements-list-icon mr-20 d-flex justify-content-center ">
+                                    <img src="${value.icon}" alt="${value.name}">
+                                </div>
+                                <div class="d-flex flex-column justify-content-center align-self-center">
+                                    <div class="achievements-list-name level mb-1">${value.name}</div>
+                                    <div class="achievements-list-description level-description">${value.desciption}</div>
+                                </div>
+                            </div>`;
+
+                if (index < (achievementsActiveLength - 1)) {
+                    item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
+                }
+
+                $('#card-achievements').append(item);
+            });
+
+            $('#card-achievements').append(`<div class="title-performance mt-15 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`);
+
+
+            const isNotActiveAchievements = achievements => achievements.active === false;
+            const achievementsNotActive = achievements.filter(isNotActiveAchievements);
+            const achievementsNotActiveLength = achievementsNotActive.length;
+
+            $.each(achievementsNotActive, function (index, value) {
+
+                let item = ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
+                            <div class="achievements-list-icon mr-20 ${value.active === true ? '' : 'not-active'} d-flex justify-content-center ">
+                                <img src="${value.icon}" alt="${value.name}">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-self-center">
+                                <div class="achievements-list-name level mb-1">${value.name}</div>
+                                <div class="achievements-list-description level-description">${value.desciption}</div>
+                            </div>
+                        </div>`;
+
+                if (index < (achievementsNotActiveLength - 1)) {
+                    item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
+                }
+
+                $('#card-achievements').append(item);
+            });
+
+            $("#card-achievements").hover(
+                function () {
+                    $("#card-achievements").css({'overflow-y': 'scroll'});
+                }, function () {
+                    $("#card-achievements").css({'overflow-y': 'hidden'});
+                }
+            );
+
+            $("#card-achievements").css({'max-height': '400px', 'overflow-y': 'hidden'});
+        }
+    }
 });

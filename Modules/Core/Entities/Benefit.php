@@ -44,6 +44,33 @@ class Benefit extends Model
         return parent::fill($attributes);
     }
 
+    public function getNameAttribute($value)
+    {
+        if ($value === 'cashback' && !empty($this->installment_cashback)) {
+            $percentual = $this->installment_cashback;
+            return "Cashback de {$percentual}%";
+        }
+        return __("definitions.benefit.{$value}");
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        if ($this->attributes['name'] === 'cashback' && !empty($this->installment_cashback)) {
+            $minPercentual = $this->installment_cashback;
+            $maxPercentual = $this->installment_cashback * 11;
+            return "Receba de {$minPercentual}% até {$maxPercentual}% de cashback";
+        }
+        return $value;
+    }
+
+    public function getLevelAttribute($value)
+    {
+        if ($this->attributes['name'] === 'cashback' && ($this->installment_cashback ?? 0) > 0.5) {
+            return 3;
+        }
+        return $value;
+    }
+
     /**
      * @return HasManyThrough
      */

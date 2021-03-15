@@ -7,6 +7,7 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\Withdrawal;
 
 class TaskService
 {
@@ -89,11 +90,9 @@ class TaskService
                 $currentTasks[] = $completedTasks[count($completedTasks) - 2];
                 $currentTasks[] = $uncompletedTasks[0];
             }
-        }
-        elseif (empty($uncompletedTasks) ) {
+        } elseif (empty($uncompletedTasks)) {
             $currentTasks = $completedTasks;
-        }
-        else {
+        } else {
             $currentTasks = array_slice($uncompletedTasks, 0, 3);
         }
 

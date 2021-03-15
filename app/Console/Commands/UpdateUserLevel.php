@@ -64,14 +64,15 @@ class UpdateUserLevel extends Command
                 $level = 1;
             }
 
-            $user = User::with('benefits')->find($transaction->user_id);
+            $user = User::find($transaction->user_id);
             if (!empty($user)) {
+
                 $user->update([
                     'level' => $level,
                     'total_commission_value' => $transaction->value,
                 ]);
 
-                $benefits = Benefit::where('level', $level)->get();
+                $benefits = Benefit::where('level', '<=', $level)->get();
 
                 foreach ($benefits as $benefit) {
                     UserBenefit::firstOrCreate([

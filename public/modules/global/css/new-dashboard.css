@@ -465,18 +465,16 @@ body {
     justify-content: center;
 }
 
-
 .achievements-item > img {
-    /*width: 35px;*/
     height: 45px;
-    /*opacity:0.3;*/
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     cursor: pointer;
 }
-.achievements-item.not-active img {
+
+.not-active > img {
     filter: grayscale(100%);
 }
 
@@ -601,18 +599,47 @@ body {
     color: #FFFFFF;
 }
 
+.achievements-list > .achievements-list-icon{
+    max-width: 47px;
+    max-height: 47px;
+}
+
+.achievements-list > .achievements-list-icon  img {
+    max-width: 47px;
+    max-height: 47px;
+    background: #FFFFFF no-repeat center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.achievements-list .achievements-list-name {
+    font-weight: bold;
+    font-size: 12px;
+    color: #000000;
+    text-align: left;
+}
+
+.achievements-list .achievements-list-description {
+    font-size: 10px;
+    color: #A5A5A5;
+    text-align: left;
+}
+
 .page.dashboard .sirius-account {
     /*height: 296px;*/
     height: 230px;
 }
 
-.page.dashboard .sirius-account .hr-horizontal {
+.page.dashboard .hr-horizontal {
     height: 1px;
     width: 100%;
     background-color: #DBDBDB;
+    min-height: 1px;
 }
 
-.page.dashboard .sirius-account .hr-vertical {
+.page.dashboard .hr-vertical {
     height: 100%;
     width: 1px;
     background-color: #DBDBDB;
