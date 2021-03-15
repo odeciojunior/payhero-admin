@@ -157,19 +157,17 @@ $(document).ready(function () {
                         <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
                     </div>
-                     <div id="achievements11111" class="mt-15 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                    </div>
-                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                        <span class="title-performance">Cashback recebido</span>
-                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">
-                            <span class="o-reload-1 cashback-container-icon"></span>
-                            <span class="cashback-container-icon">R$</span>
-                            <span id="cashback-container-money"></span>
-                        </div>
-                    </div>
+<!--                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">-->
+<!--                        <span class="title-performance">Cashback recebido</span>-->
+<!--                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">-->
+<!--                            <span class="o-reload-1 cashback-container-icon"></span>-->
+<!--                            <span class="cashback-container-icon">R$</span>-->
+<!--                            <span id="cashback-container-money"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
 
-                    <div id="progress" class="mt-25 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                    <div id="progress" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                             <span id="progress-message-1"></span>
                             <span id="progress-message-2"></span>
@@ -209,7 +207,7 @@ $(document).ready(function () {
 
             $.each(achievements, function (index, value) {
 
-                let item = ` <div  class="achievements-item ${value.active === true ? '' : 'not-active'} opacity-3" >
+                let item = ` <div  class="achievements-item ${value.active === true ? '' : 'not-active'} " >
                              <img src="${value.icon}">
 
                          </div>`;
@@ -334,7 +332,7 @@ $(document).ready(function () {
                         </div>
                     </div>
 
-                    <div class="benefits mt-10 mb-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <span class="title-performance">Seus próximos benefícios</span>
                         <div id="benefits-container" class="mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         </div>
@@ -469,7 +467,7 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
-                <div id="card-achievements" class="card-body pb-20 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
+                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 mb-10 d-flex flex-column justify-content-start align-items-start">
 
                 </div>
         `;
