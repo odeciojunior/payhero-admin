@@ -21,15 +21,17 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user)
     {
-        $totalApprovedSales = Sale::where('owner_id', $user->id)
-            ->whereIn('status', [
+        $approvedSales = Sale::whereIn('status', [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
-            ])->count();
+            ])->where('owner_id', $user->id);
 
-        return $totalApprovedSales >= 100;
+
+        $approvedSalesAmount = $approvedSales->count();
+        $minimumSalesToEvaluate = 100;
+        return $approvedSalesAmount >= $minimumSalesToEvaluate;
     }
 
     public function getAttendanceScore(User $user): float
@@ -124,7 +126,6 @@ class AccountHealthService
     public function updateAccountScore(User $user): void
     {
         try {
-
             if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return;

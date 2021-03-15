@@ -16,7 +16,7 @@ class VerifyFrozenAccountWeb
      */
     public function handle($request, Closure $next)
     {
-        if((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') && 
+        if((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') &&
             $this->inExceptArray($request) == false) {
 
             return response()->redirectTo('/dashboard')->withErrors(['accountErrors' => 'Conta congelada']);
@@ -27,7 +27,7 @@ class VerifyFrozenAccountWeb
 
 
     protected function inExceptArray($request)
-    {   
+    {
         $excepts = [
             '/dashboard',
             '/sales',
