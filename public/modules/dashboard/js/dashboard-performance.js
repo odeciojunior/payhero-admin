@@ -466,9 +466,13 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
-                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 mb-10 d-flex flex-column justify-content-start align-items-start">
+                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
 
                 </div>
+                <div style="background: linear-gradient(to top, white, #ffffffcc, transparent);
+                            height: 30px;
+                            margin-top: -30px;
+                            z-index: 1;"></div>
         `;
 
         $('.sirius-performance > .card').append(item);
@@ -528,6 +532,8 @@ $(document).ready(function () {
 
                 $('#card-achievements').append(item);
             });
+
+            $('#card-achievements .achievements-list:last-child').addClass('mb-30');
 
             $("#card-achievements").hover(
                 function () {
