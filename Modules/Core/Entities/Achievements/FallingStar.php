@@ -35,6 +35,6 @@ class FallingStar extends Achievement implements AchievementCheck
 
         $queryReturn = DB::select($sql, [$user->id]);
 
-        return count($queryReturn) && $queryReturn[0]['total_affiliates'] >= 10;
+        return count($queryReturn) && $queryReturn[0]->total_affiliates >= 10;
     }
 }

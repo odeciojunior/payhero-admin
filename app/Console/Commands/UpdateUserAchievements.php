@@ -41,7 +41,7 @@ class UpdateUserAchievements extends Command
     {
         $achievementService = new AchievementService();
         $now = now();
-        foreach (User::with('achievements')->whereNull('deleted_at')->whereIn('id', [26, 557])->get() as $user) {
+        foreach (User::with('achievements')->whereNull('deleted_at')->get() as $user) {
             if ($user->id == $user->account_owner_id) {
                 $this->line($user->id . ' - ' . $user->name);
                 $achievementService->checkUserAchievements($user);

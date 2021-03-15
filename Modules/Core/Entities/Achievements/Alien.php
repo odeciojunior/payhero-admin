@@ -49,6 +49,8 @@ class Alien extends Achievement implements AchievementCheck
                 ]);
         })->where('owner_id', $user->id)->count();
 
+        if (!$recoveredCheckouts || !$totalCheckouts) return false;
+
         return ($recoveredCheckouts / $totalCheckouts * 100) >= 6;
     }
 }
