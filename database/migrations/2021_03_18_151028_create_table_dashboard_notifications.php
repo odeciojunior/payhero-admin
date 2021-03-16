@@ -18,8 +18,8 @@ class CreateTableDashboardNotifications extends Migration
         Schema::create('dashboard_notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->string('type');
-            $table->integer('id_type')->nullable(false);
+            $table->bigInteger('subject_id');
+            $table->string('subject_type');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
