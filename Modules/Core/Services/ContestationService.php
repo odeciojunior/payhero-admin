@@ -1,0 +1,369 @@
+<?php
+
+namespace Modules\Core\Services;
+
+
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleContestation;
+use Modules\Sales\Http\Controllers\SalesController;
+use PDF;
+use stringEncode\Exception;
+use Vinkla\Hashids\Facades\Hashids;
+
+class ContestationService
+{
+
+    public function getTotalValueChargebacks($filters)
+    {
+
+        $qty_total_paid_value = $this->getQuery($filters)->sum('total_paid_value');
+        return 'R$ ' . number_format($qty_total_paid_value, 2, ',', '.');
+    }
+
+    function getQuery($filters)
+    {
+
+        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'users.name as user_name', 'sales.total_paid_value')
+            ->join('sales', 'sales.id', 'sale_contestations.sale_id')
+            ->leftJoin('users', 'users.id', '=', 'sales.owner_id')
+            //  ->leftJoin('transactions', 'sales.id', '=', 'transactions.sale_id')
+//                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
+            ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
+        ->where('sales.owner_id', \Auth::id());
+
+
+
+        //Data da compra = transaction_date, Data do chargeback =  adjustment_date
+        $contestations->when(request('date_type'), function ($query, $search) {
+
+            $dateRange = FoxUtils::validateDateRange(request('date_range'));
+
+            $search_input_date = 'sales.start_date';
+
+            if ($search == 'adjustment_date') {
+                $search_input_date = 'sale_contestations.file_date';
+            }
+
+            if ($search == 'expiration_date') {
+                $search_input_date = 'sale_contestations.expiration_date';
+            }
+
+            return $query->whereBetween(
+                $search_input_date,
+                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+            );
+
+        });
+
+        $contestations->when(request('transaction'), function ($query, $search) {
+
+            $sale_id = Hashids::connection('sale_id')->decode($search);
+            return $query->where('sale_contestations.sale_id', $sale_id[0]);
+        });
+
+        $contestations->when(request('status'), function ($query, $status) {
+            if (in_array($status, [1, 2, 3, 4, 5, 6, 7, 10, 20, 21, 22, 24, 99])) {
+                if ($status == 7) {
+                    return $query->whereIn('sales.status', [7, 22]);
+                } else {
+                    return $query->where('sales.status', $status);
+                }
+            } else {
+                if ($status == 'chargeback_recovered')
+                    return $query->where('sales.is_chargeback_recovered', true)->where('sales.status', 1);
+                if ($status == '')
+                    return $query->where('sales.status', null);
+            }
+        });
+
+        $contestations->when(request('is_contested'), function ($query, $val) {
+            return $query->where('sale_contestations.is_contested', $val == 1);
+        });
+
+        $contestations->when(request('order_by_expiration_date'), function ($query, $search) {
+            return $query->orderBy('expiration_date', 'desc');
+        });
+
+        $contestations->when(!request('order_by_expiration_date'), function ($query, $search) {
+            $data_type = \request('date_type');
+
+            if ($data_type == 'transaction_date')
+                return $query->orderBy('sales.start_date', 'desc');
+
+            if ($data_type == 'adjustment_date')
+                return $query->orderBy('sale_contestations.file_date', 'desc');
+
+            if ($data_type == 'expiration_date')
+                return $query->orderBy('sale_contestations.expiration_date', 'desc');
+
+        });
+
+
+//        $contestations->when(request('fantasy_name'), function ($query, $search) {
+//            return $query->where(
+//                'companies.fantasy_name',
+//                'like',
+//                '%' . $search . '%'
+//            );
+//        });
+
+        $contestations->when(request('getnet_terminal_nsu'), function ($query, $search) {
+            return $query->where('data', 'like', "%" . $search . "%");
+        });
+
+        $contestations->when(request('project'), function ($query, $search) {
+            $projectId = current(Hashids::decode($search));
+            return $query->where('sales.project_id', $projectId);
+        });
+
+        $contestations->when(request('customer'), function ($query, $search) {
+            return $query->where('sales.customer_id', $search);
+        });
+
+        $contestations->when(request('customer_document'), function ($query, $search) {
+
+            return $query->where(
+                'customers.document',
+                'like',
+                '%' . $search . '%'
+            );
+        });
+
+        return $contestations;
+
+    }
+
+    public function getTotalChargebacks($filters)
+    {
+        $getnetChargebacks = $this->getQuery($filters);
+
+        return $getnetChargebacks->count();
+    }
+
+    public function getTotalApprovedSales($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $totalSaleApproved = Sale::where('gateway_id', 15)
+            ->where('payment_method', 1)
+            ->whereIn('status', [1, 4, 7, 24]);
+
+        if ($filters['date_type'] == 'transaction_date') {
+            $totalSaleApproved->whereBetween(
+                'sales.start_date',
+                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+            );
+        } else {
+
+            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
+                $query->whereBetween(
+                    'sale_contestations.created_at',
+                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+                );
+            });
+        }
+
+        if (!empty($filters['transaction'])) {
+            preg_match_all('/[0-9A-Za-z]+/', $filters['transaction'], $matches);
+            $transactions = array_map(
+                function ($item) {
+                    return is_numeric($item)
+                        ? $item
+                        : current(Hashids::connection('sale_id')->decode($item));
+                },
+                current($matches)
+            );
+            $totalSaleApproved->whereIn('id', $transactions);
+        }
+
+//        if (!empty($filters['fantasy_name'])) {
+//            $totalSaleApproved->whereHas(
+//                'user.companies',
+//                function ($query) use ($filters) {
+//                    $query->where(
+//                        'fantasy_name',
+//                        'like',
+//                        '%' . $filters['fantasy_name'] . '%'
+//                    );
+//                }
+//            );
+//        }
+
+        if (!empty($filters['project'])) {
+            $projectId = current(Hashids::decode($filters['project']));
+            $totalSaleApproved->where('project_id', $projectId);
+        }
+
+        if (!empty($filters['user'])) {
+            $userId = current(Hashids::decode($filters['user']));
+            $totalSaleApproved->where('owner_id', $userId);
+        }
+
+        if (!empty($filters['customer'])) {
+            $totalSaleApproved->where('customer_id', $filters['customer']);
+
+        }
+
+        if (!empty($filters['customer_document'])) {
+            $document = $filters['customer_document'];
+            $totalSaleApproved->whereHas(
+                'customer',
+                function ($query) use ($document) {
+                    $query->where('document', $document);
+                }
+            );
+        }
+
+        return $totalSaleApproved->count();
+    }
+
+    public function getChargebackTax($totalChargebacks, $totalApprovedSales)
+    {
+        if ($totalApprovedSales == 0)
+            return '0,00%';
+
+        $totalChargebackTax = $totalChargebacks > 0 ? number_format(($totalChargebacks * 100) / $totalApprovedSales, 2, ',', '.') . '%' : '0,00%';
+        return $totalChargebackTax;
+    }
+
+    public function generateDispute(SaleContestation $contestation)
+    {
+        $productService = new ProductService;
+
+        $sale = Sale::with([
+            'transactions',
+            'customer',
+            'delivery',
+            'trackings',
+        ])->find($contestation->sale_id);
+
+        if (empty($sale->id)) {
+            throw new Exception('Venda não encontrada');
+        }
+
+        $ip = geoip()->getLocation($sale->checkout->ip);
+
+        $products = $productService->getProductsBySale($sale);
+        $products_str = '';
+        foreach ($products as $product) {
+            $products_str .= $product->name . ', ';
+        }
+
+        $affiliateComission = '';
+
+        if (!empty($sale->affiliate_id)) {
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+
+            $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
+            if (!empty($affiliateTransaction)) {
+                $affiliateValue = $affiliateTransaction->value;
+                $affiliateComission = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
+            }
+            $affiliateName = $affiliate->user->name;
+        }
+
+        $saleTrackings = $sale->trackings->pluck('tracking_code')->toArray();
+        $saleTrackings = array_unique($saleTrackings);
+
+        $trackings = [];
+        foreach ($saleTrackings as $saleTracking) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://tracking.cloudfox.net/api/tracking/detail/' . $saleTracking);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $return = json_decode(curl_exec($ch));
+            curl_close($ch);
+            if (!empty($return->data)) {
+                $trackings[] = $return->data;
+            }
+        }
+
+        $request = new Request();
+        $encoded_saleid = Hashids::connection('sale_id')->encode($sale->id);
+        $request->merge(["sale_id" => $encoded_saleid]);
+        $sale_details = (new SalesController())->getSaleDetail($request, true);
+
+        $dataSale = (object)[
+            'id' => $encoded_saleid,
+            'data_decoded' => json_decode($contestation->data, true),
+            'transaction_date' => \Carbon\Carbon::parse($contestation->transaction_date)->format('d/m/Y'),
+            'products_str' => $products_str,
+            'tranckings' => $trackings,
+            'nsu' => $contestation->nsu,
+            'payment_method' => $sale->payment_method,
+            'flag' => $sale->flag,
+            'start_date' => $sale->start_date,
+            'hours' => $sale->hours,
+            'status' => $sale->status,
+            'installments_amount' => $sale->installments_amount,
+            'boleto_link' => $sale->boleto_link,
+            'boleto_digitable_line' => $sale->boleto_digitable_line,
+            'boleto_due_date' => $sale->boleto_due_date,
+            'attempts' => $sale->attempts,
+            'shipment_value' => $sale->shipment_value,
+            'transaction_rate' => $sale->details->transaction_rate ?? null,
+            'percentage_rate' => $sale->details->percentage_rate ?? null,
+            'total' => $sale->details->total ?? null,
+            'subTotal' => $sale->details->subTotal ?? null,
+            'discount' => $sale->details->discount ?? null,
+            'comission' => $sale->details->comission ?? null,
+            'convertax_value' => $sale->details->convertax_value ?? null,
+            'taxa' => $sale->details->taxa ?? null,
+            'taxaReal' => $sale->details->taxaReal ?? null,
+            'installment_tax_value' => $sale->present()->getInstallmentValue,
+            'release_date' => isset($sale->details->release_date) ? $sale->details->release_date : null,
+            'affiliate_comission' => $affiliateComission,
+            'shopify_order' => $sale->shopify_order ?? null,
+            'automatic_discount' => $sale->details->automatic_discount ?? 0,
+            'refund_value' => $sale->details->refund_value ?? '0,00',
+            'value_anticipable' => $sale->details->value_anticipable ?? null,
+            'total_paid_value' => $sale->total_paid_value,
+            'customer' => (object)$sale->customer->getAttributes(),
+            'delivery' => (object)$sale->delivery->getAttributes(),
+            'affiliate' => $affiliateName ?? null,
+            'ip' => (object)$ip,
+            'operational_system' => $sale->checkout->operational_system,
+            'browser' => $sale->checkout->browser,
+        ];
+
+        $pages = ['resume', 'user', 'sale', 'payment'];
+        foreach ($trackings as $tracking) {
+            $pages[] = 'tracking';
+        }
+        $numero_atividade = $dataSale->data_decoded['Número de Atividade'];
+        $numero_referencia = $dataSale->data_decoded['Número de Referência'];
+
+        $pdf_name = $numero_referencia . '_' . $numero_atividade . '.pdf';
+        $tracking = array_shift($trackings);
+
+        $pdf = PDF::loadView('chargebacks::contestchargeback', compact('dataSale', 'contestation', 'products', 'tracking', 'sale_details'));
+
+        return $this->uploadPdfToS3($pdf, $pdf_name);
+
+    }
+
+    private function uploadPdfToS3($pdf, $pdf_name)
+    {
+        $path = 'uploads/private/contestations/' . $pdf_name;
+
+        Storage::disk('s3_documents')->put(
+            $path,
+            $pdf->output(),
+            'private'
+        );
+
+        $path = Storage::disk('s3_documents')->temporaryUrl($path, Carbon::now()
+            ->addSeconds(60));
+
+        return [
+            'file_path' => $path,
+            'file_name' => $pdf_name
+        ];
+
+
+    }
+
+}
