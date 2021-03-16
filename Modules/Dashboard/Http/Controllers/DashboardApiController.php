@@ -318,10 +318,10 @@ class DashboardApiController extends Controller
 
             return array(
                 'level'            => $user->level,
-                'account_score'    => $user->account_score,
-                'chargeback_score' => $user->chargeback_score,
-                'attendance_score' => $user->attendance_score,
-                'tracking_score'   => $user->tracking_score,
+                'account_score'    => round($user->account_score, 1),
+                'chargeback_score' => round($user->chargeback_score, 1),
+                'attendance_score' => round($user->attendance_score, 1),
+                'tracking_score'   => round($user->tracking_score, 1)
             );
         } catch (Exception $e) {
             report($e);

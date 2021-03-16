@@ -63,14 +63,16 @@ $(document).ready(function () {
         },
     };
 
-    function  nextPerformance(data) {
-        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
+    function nextPerformance(data) {
+        setTimeout(function () {
+            loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+        }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
             //setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
             loadingOnAccountsHealth('.sirius-performance > .card');
             let card = $(this).data('slide-to');
-            switch(card) {
+            switch (card) {
                 case 1:
                     updatePerformanceCard1(data);
                     break;
@@ -109,7 +111,7 @@ $(document).ready(function () {
             success: function success(data) {
 
                 updatePerformanceCard1(data);
-                if ( data.level > 1){
+                if (data.level > 1) {
                     updateCashback(data.money_cashback)
                 }
                 //nextPerformance(data);
@@ -191,15 +193,15 @@ $(document).ready(function () {
     function updateAchievements(achievements) {
 
         if (!isEmpty(achievements)) {
-            let achievementsLength = achievements.length/2;
+            let achievementsLength = achievements.length / 2;
 
             $.each(achievements, function (index, value) {
 
-                let item = ` <div  class="achievements-item ${value.active === true ? '' : 'not-active'} " >
+                let item = ` <div  class="achievements-item ${value.active ? '' : 'not-active'} " >
                              <img src="${value.icon}">
 
                          </div>`;
-                if (index < achievementsLength  ){
+                if (index < achievementsLength) {
                     $('#achievements > #achievements-item-1').append(item);
                 } else {
                     $('#achievements > #achievements-item-2').append(item);
@@ -243,27 +245,29 @@ $(document).ready(function () {
     }
 
     function updateCashback(money) {
-        $('#cashback-container #cashback-container-money').text(`${money }`);
+        $('#cashback-container #cashback-container-money').text(`${money}`);
         $(".sirius-cashback > .card").removeClass('d-none');
     }
 
     function updateProgressBar(billed, currentLevel) {
 
         $('#progress-message-1').text(`${currentLevel.messageStart}`);
-        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed/100).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`);
+        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed / 100).toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL'
+        })}`);
         $('#progress-message-2').text(`${currentLevel.messageStop}`);
 
-        var percentage = billed /currentLevel.billedStop;
+        var percentage = billed / currentLevel.billedStop;
 
         percentage = percentage > 10 ? percentage : parseFloat(percentage).toFixed(1);
         $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
         if (percentage > 13) {
-            $('#progress-bar > span').text(`${Math.trunc(percentage) }%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9 }%`, 'color': '#FFFFFF'});
-        }
-        else {
-            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)  }%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3 }%`, 'color': '#2E85EC' });
+            $('#progress-bar > span').text(`${Math.trunc(percentage)}%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9}%`, 'color': '#FFFFFF'});
+        } else {
+            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)}%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3}%`, 'color': '#2E85EC'});
         }
 
         $(function () {
@@ -338,7 +342,7 @@ $(document).ready(function () {
                 $("#level-current").show();
             }
 
-            let item = ` <div id="level-item-${index}" class="level-item ${ data.level == index ? 'active' : '' }" data-level="${index}" data-level-current="${data.level}">
+            let item = ` <div id="level-item-${index}" class="level-item ${data.level == index ? 'active' : ''}" data-level="${index}" data-level-current="${data.level}">
                              <img src="${value.icon}">
 
                          </div>`;
@@ -349,7 +353,7 @@ $(document).ready(function () {
 
             let level = $(this).data('level');
             let currentLevel = levelInfo[level];
-            $(this).data('level-current') ===  level ? $("#level-current").show() : $("#level-current").hide();
+            $(this).data('level-current') === level ? $("#level-current").show() : $("#level-current").hide();
             $(".level-item").removeClass("active");
             $(this).addClass("active");
 
@@ -374,7 +378,7 @@ $(document).ready(function () {
             $.each(benefits.active, function (index, value) {
 
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefits-button ${value.disabled ? 'benefits-button-blocked' : 'benefits-button-checked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo' }</span>
+                                 <span class="benefits-button ${value.disabled ? 'benefits-button-blocked' : 'benefits-button-checked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo'}</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
                 $('#benefits-active-container').append(item);
@@ -470,18 +474,18 @@ $(document).ready(function () {
         nextPerformance(data);
     }
 
-    function  updateAchievementsCard(achievements) {
+    function updateAchievementsCard(achievements) {
         if (!isEmpty(achievements)) {
             const element = $('#card-achievements');
             let item = "";
 
-            const isActiveAchievements = achievements => achievements.active === true;
+            const isActiveAchievements = achievements => achievements.active;
             const achievementsActive = achievements.filter(isActiveAchievements);
-            item +=achievementsList(achievementsActive);
+            item += achievementsList(achievementsActive);
 
             item += `<div class="title-performance mt-15 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`;
 
-            const isNotActiveAchievements = achievements => achievements.active === false;
+            const isNotActiveAchievements = achievements => !achievements.active;
             const achievementsNotActive = achievements.filter(isNotActiveAchievements);
             item += achievementsList(achievementsNotActive);
 
@@ -498,8 +502,8 @@ $(document).ready(function () {
 
         $.each(achievements, function (index, value) {
 
-             item += ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
-                            <div class="achievements-list-icon mr-20 ${value.active === true ? '' : 'not-active'} d-flex justify-content-center ">
+            item += ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
+                            <div class="achievements-list-icon mr-20 ${value.active ? '' : 'not-active'} d-flex justify-content-center ">
                                 <img src="${value.icon}" alt="${value.name}">
                             </div>
                             <div class="d-flex flex-column justify-content-center align-self-center">
