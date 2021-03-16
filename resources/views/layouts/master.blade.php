@@ -1,5 +1,7 @@
+
+{{--<html class="no-js" lang="en">--}}
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html class="no-js css-menubar" lang="en">
 <head>
     <title>Sirius</title>
     <meta charset="utf-8">
@@ -44,6 +46,9 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css') }}">
+
 {{--    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
@@ -133,6 +138,7 @@
     verifyDocumentPending();
 </script>
 
+<script src="{{ asset('modules/global/adminremark/global/js/Plugin/asscrollable.js') }}"></script>
 
 @stack('scripts')
 

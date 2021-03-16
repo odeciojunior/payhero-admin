@@ -3,9 +3,9 @@ $(document).ready(function () {
     let levelInfo = {
         1: {
             name: 'Aventureiro',
-            title: 'Pronto para começar?',
+            description: 'Pronto para começar?',
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
-            message: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
+            storytelling: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
             billedStart: '0',
             messageStart: '0K',
             billedStop: '100000',
@@ -13,9 +13,9 @@ $(document).ready(function () {
         },
         2: {
             name: 'Viajante Espacial',
-            title: 'Nível 2',
+            description: 'Nível 2',
             icon: '/modules/global/adminremark/assets/images/nivel-2.png',
-            message: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
+            storytelling: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
             billedStart: '100000',
             messageStart: '100K',
             billedStop: '1000000',
@@ -23,9 +23,9 @@ $(document).ready(function () {
         },
         3: {
             name: 'Conquistador',
-            title: 'Nível 3',
+            description: 'Nível 3',
             icon: '/modules/global/adminremark/assets/images/nivel-3.png',
-            message: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
+            storytelling: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
             billedStart: '1000000',
             messageStart: '1M',
             billedStop: '10000000',
@@ -33,9 +33,9 @@ $(document).ready(function () {
         },
         4: {
             name: 'Colonizador',
-            title: 'Nível 4',
+            description: 'Nível 4',
             icon: '/modules/global/adminremark/assets/images/nivel-4.png',
-            message: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
+            storytelling: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
             billedStart: '10000000',
             messageStart: '10M',
             billedStop: '50000000',
@@ -43,9 +43,9 @@ $(document).ready(function () {
         },
         5: {
             name: 'Capitão Galáctico',
-            title: 'Nível 5',
+            description: 'Nível 5',
             icon: '/modules/global/adminremark/assets/images/nivel-5.png',
-            message: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
+            storytelling: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
             billedStart: '50000000',
             messageStart: '50M',
             billedStop: '100000000',
@@ -53,9 +53,9 @@ $(document).ready(function () {
         },
         6: {
             name: 'Sirius Major',
-            title: 'Nível 6',
+            description: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
-            message: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
+            storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
             billedStart: '100000000',
             messageStart: '100M',
             billedStop: '500000000',
@@ -63,14 +63,16 @@ $(document).ready(function () {
         },
     };
 
-    function  nextPerformance(data) {
-        setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
+    function nextPerformance(data) {
+        setTimeout(function () {
+            loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+        }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
             //setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
             loadingOnAccountsHealth('.sirius-performance > .card');
             let card = $(this).data('slide-to');
-            switch(card) {
+            switch (card) {
                 case 1:
                     updatePerformanceCard1(data);
                     break;
@@ -80,9 +82,6 @@ $(document).ready(function () {
                 case 3:
                     updatePerformanceCard3(data);
                     break;
-                // case 4:
-                //     updateTracking();
-                //     break;
                 default:
             }
         });
@@ -112,7 +111,7 @@ $(document).ready(function () {
             success: function success(data) {
 
                 updatePerformanceCard1(data);
-                if ( data.level > 1){
+                if (data.level > 1) {
                     updateCashback(data.money_cashback)
                 }
                 //nextPerformance(data);
@@ -126,7 +125,7 @@ $(document).ready(function () {
         let currentLevel = levelInfo[data.level];
         //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
         //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.title);
+        //$("#level-description").text('').text(currentLevel.description);
 
 
         let item = `
@@ -151,7 +150,7 @@ $(document).ready(function () {
                         </div>
                         <div class="d-flex flex-column justify-content-center align-self-center">
                             <div id="level" class="level mb-1">${currentLevel.name}</div>
-                            <div id="level-description" class="level-description">${currentLevel.title}</div>
+                            <div id="level-description" class="level-description">${currentLevel.description}</div>
                         </div>
                     </div>
                     <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
@@ -160,15 +159,7 @@ $(document).ready(function () {
                         <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
                     </div>
-<!--                    <div id="cashback" class="mt-20  flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">-->
-<!--                        <span class="title-performance">Cashback recebido</span>-->
-<!--                        <div id="cashback-container" class="mt-15 d-flex flex-row justify-content-start align-items-center align-self-start">-->
-<!--                            <span class="o-reload-1 cashback-container-icon"></span>-->
-<!--                            <span class="cashback-container-icon">R$</span>-->
-<!--                            <span id="cashback-container-money"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div id="tasks" class="mt-20 d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
+                    <div id="tasks" class="d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
 
                     <div id="progress" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
@@ -202,15 +193,15 @@ $(document).ready(function () {
     function updateAchievements(achievements) {
 
         if (!isEmpty(achievements)) {
-            let achievementsLength = achievements.length/2;
+            let achievementsLength = achievements.length / 2;
 
             $.each(achievements, function (index, value) {
 
-                let item = ` <div  class="achievements-item ${value.active === true ? '' : 'not-active'} " >
+                let item = ` <div  class="achievements-item ${value.active ? '' : 'not-active'} " >
                              <img src="${value.icon}">
 
                          </div>`;
-                if (index < achievementsLength  ){
+                if (index < achievementsLength) {
                     $('#achievements > #achievements-item-1').append(item);
                 } else {
                     $('#achievements > #achievements-item-2').append(item);
@@ -245,7 +236,7 @@ $(document).ready(function () {
                 );
             }
 
-            $("#tasks").css({'max-height': '95px', 'overflow-y': 'hidden'});
+            $("#tasks").css({'margin-top': '20px', 'max-height': '95px', 'overflow-y': 'hidden'});
             $('#tasks').show();
 
         } else {
@@ -253,29 +244,30 @@ $(document).ready(function () {
         }
     }
 
-    function updateCashback(money_cashback) {
-        var money = money_cashback/100;
-        $('#cashback-container #cashback-container-money').text(`${money.toLocaleString('pt-br',{minimumFractionDigits: 2}) }`);
+    function updateCashback(money) {
+        $('#cashback-container #cashback-container-money').text(`${money}`);
         $(".sirius-cashback > .card").removeClass('d-none');
     }
 
     function updateProgressBar(billed, currentLevel) {
 
         $('#progress-message-1').text(`${currentLevel.messageStart}`);
-        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed/100).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}`);
+        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed / 100).toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL'
+        })}`);
         $('#progress-message-2').text(`${currentLevel.messageStop}`);
 
-        var percentage = billed /currentLevel.billedStop;
+        var percentage = billed / currentLevel.billedStop;
 
         percentage = percentage > 10 ? percentage : parseFloat(percentage).toFixed(1);
         $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
         if (percentage > 13) {
-            $('#progress-bar > span').text(`${Math.trunc(percentage) }%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9 }%`, 'color': '#FFFFFF'});
-        }
-        else {
-            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)  }%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3 }%`, 'color': '#2E85EC' });
+            $('#progress-bar > span').text(`${Math.trunc(percentage)}%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9}%`, 'color': '#FFFFFF'});
+        } else {
+            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)}%`);
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3}%`, 'color': '#2E85EC'});
         }
 
         $(function () {
@@ -289,7 +281,7 @@ $(document).ready(function () {
 
         //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
         //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.title);
+        //$("#level-description").text('').text(currentLevel.description);
 
 
         let item = `
@@ -318,7 +310,7 @@ $(document).ready(function () {
                                     <span id="billed-message" class="ml-0">R$${currentLevel.messageStart} - R$${currentLevel.messageStop}</span>
                                 </div>
                             </div>
-                            <p id="level-message" class="level-description">${currentLevel.message}</p>
+                            <p id="level-message" class="level-description">${currentLevel.storytelling}</p>
                         </div>
                     </div>
 
@@ -326,7 +318,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                        <span class="mb-10 title-performance">Benefícios atual</span>
+                        <span class="mb-10 title-performance">Benefícios ativos</span>
                         <div id="benefits-active-container" class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         </div>
                     </div>
@@ -342,7 +334,7 @@ $(document).ready(function () {
 
         $('.sirius-performance > .card').append(item);
         // $("#level-full").text('').text(`${currentLevel.name}`);
-        // $("#level-message").text('').text(currentLevel.message);
+        // $("#level-message").text('').text(currentLevel.storytelling);
         // $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
         $.each(levelInfo, function (index, value) {
@@ -350,7 +342,7 @@ $(document).ready(function () {
                 $("#level-current").show();
             }
 
-            let item = ` <div id="level-item-${index}" class="level-item ${ data.level == index ? 'active' : '' }" data-level="${index}" data-level-current="${data.level}">
+            let item = ` <div id="level-item-${index}" class="level-item ${data.level == index ? 'active' : ''}" data-level="${index}" data-level-current="${data.level}">
                              <img src="${value.icon}">
 
                          </div>`;
@@ -361,12 +353,12 @@ $(document).ready(function () {
 
             let level = $(this).data('level');
             let currentLevel = levelInfo[level];
-            $(this).data('level-current') ===  level ? $("#level-current").show() : $("#level-current").hide();
+            $(this).data('level-current') === level ? $("#level-current").show() : $("#level-current").hide();
             $(".level-item").removeClass("active");
             $(this).addClass("active");
 
             $("#level-full").text('').text(`${currentLevel.name}`);
-            $("#level-message").text('').text(currentLevel.message);
+            $("#level-message").text('').text(currentLevel.storytelling);
             $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
         });
@@ -386,7 +378,7 @@ $(document).ready(function () {
             $.each(benefits.active, function (index, value) {
 
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefits-button ${value.disabled ? 'benefits-button-blocked' : 'benefits-button-checked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo' }</span>
+                                 <span class="benefits-button ${value.disabled ? 'benefits-button-blocked' : 'benefits-button-checked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo'}</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
                 $('#benefits-active-container').append(item);
@@ -466,7 +458,7 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
-                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
+                <div id="card-achievements" data-plugin="scrollable" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
 
                 </div>
                 <div style="background: linear-gradient(to top, white, #ffffffcc, transparent);
@@ -482,68 +474,49 @@ $(document).ready(function () {
         nextPerformance(data);
     }
 
-    function  updateAchievementsCard(achievements) {
+    function updateAchievementsCard(achievements) {
         if (!isEmpty(achievements)) {
+            const element = $('#card-achievements');
+            let item = "";
 
-            const isActiveAchievements = achievements => achievements.active === true;
+            const isActiveAchievements = achievements => achievements.active;
             const achievementsActive = achievements.filter(isActiveAchievements);
-            const achievementsActiveLength = achievementsActive.length;
+            item += achievementsList(achievementsActive);
 
-            $.each(achievementsActive, function (index, value) {
-                let item = ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
-                                <div class="achievements-list-icon mr-20 d-flex justify-content-center ">
-                                    <img src="${value.icon}" alt="${value.name}">
-                                </div>
-                                <div class="d-flex flex-column justify-content-center align-self-center">
-                                    <div class="achievements-list-name level mb-1">${value.name}</div>
-                                    <div class="achievements-list-description level-description">${value.desciption}</div>
-                                </div>
-                            </div>`;
+            item += `<div class="title-performance mt-15 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`;
 
-                if (index < (achievementsActiveLength - 1)) {
-                    item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
-                }
-
-                $('#card-achievements').append(item);
-            });
-
-            $('#card-achievements').append(`<div class="title-performance mt-15 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`);
-
-
-            const isNotActiveAchievements = achievements => achievements.active === false;
+            const isNotActiveAchievements = achievements => !achievements.active;
             const achievementsNotActive = achievements.filter(isNotActiveAchievements);
-            const achievementsNotActiveLength = achievementsNotActive.length;
+            item += achievementsList(achievementsNotActive);
 
-            $.each(achievementsNotActive, function (index, value) {
+            element.append(item);
+            //element.asScrollbar();
 
-                let item = ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
-                            <div class="achievements-list-icon mr-20 ${value.active === true ? '' : 'not-active'} d-flex justify-content-center ">
+        }
+    }
+
+    function achievementsList(achievements) {
+
+        const achievementsLength = achievements.length;
+        let item = '';
+
+        $.each(achievements, function (index, value) {
+
+            item += ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
+                            <div class="achievements-list-icon mr-20 ${value.active ? '' : 'not-active'} d-flex justify-content-center ">
                                 <img src="${value.icon}" alt="${value.name}">
                             </div>
                             <div class="d-flex flex-column justify-content-center align-self-center">
                                 <div class="achievements-list-name level mb-1">${value.name}</div>
-                                <div class="achievements-list-description level-description">${value.desciption}</div>
+                                <div class="achievements-list-description level-description">${value.description}</div>
                             </div>
                         </div>`;
 
-                if (index < (achievementsNotActiveLength - 1)) {
-                    item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
-                }
+            if (index < (achievementsLength - 1)) {
+                item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
+            }
+        });
 
-                $('#card-achievements').append(item);
-            });
-
-            $('#card-achievements .achievements-list:last-child').addClass('mb-30');
-
-            $("#card-achievements").hover(
-                function () {
-                    $("#card-achievements").css({'overflow-y': 'scroll'});
-                }, function () {
-                    $("#card-achievements").css({'overflow-y': 'hidden'});
-                }
-            );
-
-            $("#card-achievements").css({'max-height': '400px', 'overflow-y': 'hidden'});
-        }
+        return item;
     }
 });

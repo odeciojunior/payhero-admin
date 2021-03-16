@@ -13,11 +13,13 @@ class CreateTableDashboardNotifications extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('dashboard_notifications');
+
         Schema::create('dashboard_notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned()->index();
             $table->string('type');
-            $table->text('data');
+            $table->integer('id_type')->nullable(false);
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
