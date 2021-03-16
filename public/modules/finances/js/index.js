@@ -176,7 +176,7 @@ $(document).ready(function () {
                 $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
             },
             success: response => {
-                if (response.allowed) {
+                if (response.allowed && verifyAccountFrozen() == false) {
                     $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
                     $('#blocked-withdrawal').hide();
                 } else {
@@ -953,7 +953,6 @@ $(document).ready(function () {
                     return false;
                 }
 
-
                 items.forEach(function (item) {
                     let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
 
@@ -1069,9 +1068,9 @@ $(document).ready(function () {
 
     let envDebug = $("meta[name=app-debug]").attr('content');
 
-    if (envDebug == 'true') {
-        rangesToDateRangeStatement['TODO O PERÍODO - TESTE'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
-    }
+    //if (envDebug == 'true') {
+        rangesToDateRangeStatement['Todo período'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    //}
 
     $('#date_range_statement').daterangepicker({
         maxSpan: {

@@ -541,6 +541,18 @@ $(() => {
         } else {
             $('#div_delivery').css('display', 'none');
         }
+        if(verifyAccountFrozen() == true) {
+            $('.btn-edit-client').hide();
+            $('#update-sale-observation').hide();
+            $('#saleReSendEmail').hide();
+            $('#div_refund_transaction').hide();
+            $('#div_refund_billet').hide();
+        } else {
+            $('.btn-edit-client').show();
+            $('#update-sale-observation').show();
+            $('#div_refund_transaction').show();
+            $('#div_refund_billet').show();
+        }
     }
 
     function getNotazz(invoices) {

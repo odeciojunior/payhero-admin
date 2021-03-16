@@ -45,7 +45,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=50') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=01') }}">
     @stack('css')

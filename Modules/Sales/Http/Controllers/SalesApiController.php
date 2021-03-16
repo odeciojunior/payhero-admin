@@ -156,6 +156,13 @@ class SalesApiController extends Controller
                 ->where('id', Hashids::connection('sale_id')->decode($saleId))
                 ->first();
 
+            if(!in_array($sale->gateway_id, [14,15])) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
 
             $transaction = $transactionModel->where('sale_id', $sale->id)
@@ -256,16 +263,25 @@ class SalesApiController extends Controller
 
             $sale = $saleModel->with('customer')->where('id', $saleId)->first();
 
-            $transactionUser = $transactionModel->where('sale_id', $sale->id)
-                ->whereIn('company_id', $companyService->getCompaniesUser()->pluck('id'))
+            $producerTransaction = $transactionModel->where('sale_id', $sale->id)
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->first();
 
-            $pendingBalance = $companyService->getPendingBalance($transactionUser->company);
+            if(in_array($sale->gateway_id, [14, 15])){
+                $pendingBalance = $companyService->getPendingBalance($producerTransaction->company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+                $availableBalance = $companyService->getAvailableBalance($producerTransaction->company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+                $totalBalance = $pendingBalance + $availableBalance;
+            }
+            else {
+                $pendingBalance = $companyService->getPendingBalance($producerTransaction->company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+                $availableBalance = $companyService->getAvailableBalance($producerTransaction->company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+                $totalBalance = $pendingBalance + $availableBalance;
+            }
 
-            if ($transactionUser->company->balance + $pendingBalance - preg_replace("/[^0-9]/", "",
-                    $sale->total_paid_value) < -1000) {
-                return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'],
-                    Response::HTTP_BAD_REQUEST);
+            if ($totalBalance - FoxUtils::onlyNumbers($sale->total_paid_value) < 0) {
+                return response()->json([
+                    'message' => 'Saldo insuficiente para realizar o estorno'
+                ],Response::HTTP_BAD_REQUEST);
             }
 
             $saleService->refundBillet($sale);

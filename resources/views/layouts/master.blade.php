@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=65') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=100') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=54') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     @stack('css')
@@ -101,7 +101,7 @@
         </div>
     </div>
 </div>
-
+<input type="hidden" id="accountStatus">
 @yield('content')
 
 <!-- Plugins -->
@@ -128,7 +128,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=551') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=552') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
