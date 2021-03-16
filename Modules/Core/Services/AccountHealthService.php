@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 
+/**
+ * Class AccountHealthService
+ * @package Modules\Core\Services
+ */
 class AccountHealthService
 {
     private ChargebackService $chargebackService;
