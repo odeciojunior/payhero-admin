@@ -3,8 +3,8 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Achievement;
-use Modules\Core\Entities\User;
 use Modules\Core\Entities\Achievements;
+use Modules\Core\Entities\User;
 
 class AchievementService
 {
@@ -45,7 +45,7 @@ class AchievementService
             return true;
         }
 
-        if ($achievement-> userAchieved($user)) {
+        if ($achievement->userAchieved($user)) {
             return $this->setUserAchievement($user, $achievement);
         }
 
@@ -63,5 +63,14 @@ class AchievementService
             report($e);
             return false;
         }
+    }
+
+    public function getCurrentUserAchievements(User $user): array
+    {
+        $achievements = (new Achievement())->select('id', 'name', 'description', 'icon', 'storytelling')
+            ->selectRaw('EXISTS(SELECT user_id FROM achievement_user WHERE user_id = ' . $user->id . ' AND achievement_id = achievements.id) AS active')
+            ->get([$user->id])->toArray();
+
+        return $achievements;
     }
 }
