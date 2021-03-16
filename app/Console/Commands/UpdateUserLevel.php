@@ -64,27 +64,27 @@ class UpdateUserLevel extends Command
                 $level = 1;
             }
 
-            $user = User::find($transaction->user_id);
+            $user = User::with('benefits')->find($transaction->user_id);
+
             if (!empty($user)) {
+                $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
 
                 $user->update([
                     'level' => $level,
                     'total_commission_value' => $transaction->value,
                 ]);
 
-                $benefits = Benefit::where('level', '<=', $level)
-                    ->whereDoesntHave('users', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    })->get();
+                $this->warn("Nível: {$level}");
 
+                $benefits = $user->benefits
+                    ->where('enabled', 0)
+                    ->where('level', '<=', $level);
                 foreach ($benefits as $benefit) {
-                    UserBenefit::firstOrCreate([
-                        'benefit_id' => $benefit->id,
-                        'user_id' => $user->id,
-                        'level' => $level,
-                    ]);
-                }
+                    $benefit->enabled = 1;
+                    $benefit->save();
 
+                    $this->line('Benefício ' . __('definitions.benefit.' . $benefit->name) . ' ativado!');
+                }
                 BenefitsService::updateUserCashback($user);
             }
         }

@@ -26,30 +26,6 @@ class Benefit extends Model
         'updated_at'
     ];
 
-    public function getOriginalNameAttribute()
-    {
-        return $this->attributes['name'];
-    }
-
-    public function getNameAttribute($value)
-    {
-        if ($value === 'cashback' && !empty($this->installment_cashback)) {
-            $percentual = $this->installment_cashback;
-            return "Cashback de {$percentual}%";
-        }
-        return __("definitions.benefit.{$value}");
-    }
-
-    public function getDescriptionAttribute($value)
-    {
-        if ($this->attributes['name'] === 'cashback' && !empty($this->installment_cashback)) {
-            $minPercentual = $this->installment_cashback;
-            $maxPercentual = $this->installment_cashback * 11;
-            return "Receba de {$minPercentual}% até {$maxPercentual}% de cashback";
-        }
-        return $value;
-    }
-
     /**
      * @return HasManyThrough
      */

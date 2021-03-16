@@ -19,10 +19,10 @@ class BenefitResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'             => $this->id,
-            'name'           => $this->name,
-            'level'          => $this->level,
-            'description'    => $this->description,
+            'id' => $this->id,
+            'name' => __('definitions.benefit.' . $this->name),
+            'level' => $this->level,
+            'description' => $this->description,
         ];
     }
 }

@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $id
  * @property integer $user_id
  * @property integer $benefit_id
- * @property integer $level
- * @property boolean $disabled
+ * @property boolean $enabled
  * @property User $user
  * @property User $benefit
  * @property string $created_at
@@ -24,8 +23,7 @@ class UserBenefit extends Model
     protected $fillable = [
         'user_id',
         'benefit_id',
-        'level',
-        'disabled',
+        'enabled',
         'created_at',
         'updated_at'
     ];
