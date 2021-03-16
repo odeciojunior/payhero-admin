@@ -146,7 +146,13 @@ class PixelsApiController extends Controller
             );
 
             if ($pixel) {
-                return response()->json('Pixel Configurado com sucesso!', 200);
+                return response()->json(
+                    [
+                        'message' => 'Pixel Configurado com sucesso!',
+                        'success' => true
+                    ],
+                    200
+                );
             }
 
             return response()->json('Erro ao criar pixel', 400);
@@ -232,7 +238,8 @@ class PixelsApiController extends Controller
                     'purchase_card' => $validated['purchase_card'],
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
-                    'is_api' => $validated['is_api']
+                    'is_api' => $validated['is_api'],
+                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto']
                 ]
             );
             if ($pixelUpdated) {

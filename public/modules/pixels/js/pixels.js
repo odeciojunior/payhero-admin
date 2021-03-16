@@ -1,9 +1,9 @@
-let statusPixel = {
+const statusPixel = {
     1: "success",
     0: "danger",
 };
 
-let formatPlatform = {
+const formatPlatform = {
     1: 'Facebook',
     2: 'Google Adwords',
     3: 'Google Analytics',
@@ -13,12 +13,14 @@ let formatPlatform = {
 }
 
 $(function () {
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let currentPage;
+
+    const projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
     $('.tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
-        atualizarPixel();
+        atualizarPixel(currentPage);
         $(this).off();
     });
 
@@ -35,8 +37,9 @@ $(function () {
     } else {
         $(':checkbox').val(0);
     }
+
     $("#add-pixel").on('click', function () {
-        let valueSelectPlatform = $("#modal-create-pixel #select-platform option:selected").val();
+        const valueSelectPlatform = $("#modal-create-pixel #select-platform option:selected").val();
 
         $(".purchase-event-name-div, #api-facebook").hide();
 
@@ -60,28 +63,34 @@ $(function () {
         $("#outbrain-info, #google-analytics-info, #api-facebook, .purchase-event-name-div, #div-facebook-token-api, #input-code-pixel").hide();
 
         $("#input-code-pixel").html('');
-        if (value === 'facebook') {
-            $("#api-facebook").show();
-            $("#code-pixel").attr("placeholder", '52342343245553');
-        } else if (value === 'google_adwords') {
-            $("#input-code-pixel").html('AW-').show();
-            $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
-        } else if (value === 'google_analytics') {
-            $("#google-analytics-info").show();
-            $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
-        } else if (value === 'google_analytics_four') {
-            $("#google-analytics-info").show();
-            $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
-        } else if (value === 'taboola') {
-            $("#code-pixel").attr("placeholder", '1010100');
-            $(".purchase-event-name-div").show();
-        } else if (value === 'outbrain') {
-            $(".purchase-event-name-div").show();
-            $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
-        } else {
-            $("#code-pixel").attr("placeholder", 'Código');
+        switch (value) {
+            case "facebook":
+                $("#api-facebook").show();
+                $("#code-pixel").attr("placeholder", '52342343245553');
+                break;
+            case "google_adwords":
+                $("#input-code-pixel").html('AW-').show();
+                $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
+                break;
+            case "google_analytics":
+                $("#google-analytics-info").show();
+                $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
+                break;
+            case "google_analytics_four":
+                $("#google-analytics-info").show();
+                $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
+                break;
+            case "taboola":
+                $("#code-pixel").attr("placeholder", '1010100');
+                $(".purchase-event-name-div").show();
+                break;
+            case "outbrain":
+                $(".purchase-event-name-div").show();
+                $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
+                break;
+            default:
+                $("#code-pixel").attr("placeholder", 'Código');
         }
-
     });
 
     // carregar modal de detalhes
@@ -123,12 +132,11 @@ $(function () {
     });
     // carregar modal de edicao
     $(document).on('click', '.edit-pixel', function () {
-        let pixel = $(this).attr('pixel');
         $("#edit_pixel_plans").val(null).trigger('change');
 
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId + "/pixels/" + pixel + "/edit",
+            url: `/api/project/${projectId}/pixels/${$(this).attr('pixel')}/edit`,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -138,7 +146,7 @@ $(function () {
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
-                let pixel = response.data;
+                const pixel = response.data;
                 renderEditPixel(pixel);
 
                 $('.check').on('click', function () {
@@ -160,7 +168,7 @@ $(function () {
 
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
-                    let value = $(this).val();
+                    const value = $(this).val();
                     $("#modal-edit-pixel #input-code-pixel-edit, #modal-edit-pixel #api-facebook,#modal-edit-pixel .purchase-event-name-div, #modal-edit-pixel #div-facebook-token-api").hide();
 
 
@@ -221,6 +229,7 @@ $(function () {
         $('#modal-edit-pixel .pixel-id').val(pixel.id_code);
         $('#modal-edit-pixel .pixel-description').val(pixel.name);
         $('#modal-edit-pixel .pixel-code').val(pixel.code);
+        $('#modal-edit-pixel #percentage-value').val(pixel.value_percentage_purchase_boleto);
 
         if (pixel.platform == 'facebook') {
             $("#modal-edit-pixel #facebook-token-api").val('');
@@ -286,7 +295,7 @@ $(function () {
 
     //carregar modal delecao
     $(document).on('click', '.delete-pixel', function (event) {
-        let pixel = $(this).attr('pixel');
+        const pixel = $(this).attr('pixel');
         $("#modal-delete-pixel .btn-delete").attr("pixel", pixel);
         $("#modal-delete-pixel").modal('show');
     });
@@ -322,7 +331,7 @@ $(function () {
             return false;
         }
 
-        if (formData.get('value_percentage_purchase_boleto') > 100) {
+        if (formData.get('value_percentage_purchase_boleto') > 100 || formData.get('value_percentage_purchase_boleto') < 10) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 0 e 100')
             return false;
         }
@@ -340,7 +349,7 @@ $(function () {
 
     //criar novo pixel
     $("#modal-create-pixel .btn-save").on('click', function () {
-        let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
+        const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
         if (!validateDataCreatePixel(formData)) {
             return false;
@@ -380,12 +389,16 @@ $(function () {
                 $(".loading").css("visibility", "hidden");
                 errorAjaxResponse(response);
 
-            }), success: function success() {
+            }), success: function success(response) {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
-                alertCustom("success", "Pixel Adicionado!");
-                atualizarPixel();
-                clearFields();
+                if (response.success) {
+                    alertCustom("success", response.message);
+                    atualizarPixel();
+                    clearFields();
+                } else {
+                    alertCustom("error", response.message);
+                }
             }
         });
     });
@@ -393,10 +406,10 @@ $(function () {
     //atualizar pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         loadingOnScreen();
-        let pixel = $('#modal-edit-pixel .pixel-id').val();
+        const pixelId = $('#modal-edit-pixel .pixel-id').val();
         $.ajax({
             method: "PUT",
-            url: "/api/project/" + projectId + "/pixels/" + pixel,
+            url: `/api/project/${projectId}/pixels/${pixelId}`,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -414,6 +427,7 @@ $(function () {
                 purchase_event_name: $("#modal-edit-pixel .purchase-event-name").val(),
                 is_api: $("#modal-edit-pixel input[type=radio]:checked").val(),
                 facebook_token_api: $("#modal-edit-pixel #facebook-token-api").val(),
+                value_percentage_purchase_boleto: $("#modal-edit-pixel #percentage-value").val(),
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -422,7 +436,7 @@ $(function () {
             success: function success() {
                 loadingOnScreenRemove();
                 alertCustom("success", "Pixel atualizado com sucesso");
-                atualizarPixel();
+                atualizarPixel(currentPage);
             }
         });
     });
@@ -430,7 +444,7 @@ $(function () {
     // deletar pixel
     $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
         loadingOnScreen();
-        let pixel = $(this).attr('pixel');
+        const pixel = $(this).attr('pixel');
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/pixels/" + pixel,
@@ -457,14 +471,15 @@ $(function () {
             success: function success() {
                 loadingOnScreenRemove();
                 alertCustom("success", "Pixel Removido com sucesso");
-                atualizarPixel();
+                atualizarPixel(currentPage);
             }
 
         });
     });
 
     function atualizarPixel() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        currentPage = link;
 
         if (link == null) {
             link = '/api/project/' + projectId + '/pixels';
@@ -494,7 +509,7 @@ $(function () {
                 } else {
                     $('#count-pixels').html(response.meta.total)
                     $.each(response.data, function (index, value) {
-                        let data = `<tr>
+                        const data = `<tr>
                                     <td>${value.name}</td>
                                     <td>${value.code}</td>
                                     <td>${formatPlatform[value.platform_enum]}</td>
@@ -513,7 +528,7 @@ $(function () {
                 pagination(response, 'pixels', atualizarPixel);
 
                 $("#select-platform").change(function () {
-                    let value = $(this).val();
+                    const value = $(this).val();
                     $("#input-code-pixel").html('').hide();
 
                     $("#google-analytics-info, #api-facebook, .purchase-event-name-div").hide();
@@ -584,7 +599,7 @@ $(function () {
                 },
                 processResults: function (res) {
                     if (res.meta.current_page === 1) {
-                        let allObject = {
+                        const allObject = {
                             id: 'all',
                             name: 'Qualquer plano',
                             description: ''
@@ -606,9 +621,9 @@ $(function () {
     }
 
     $("#add_pixel_plans, #edit_pixel_plans").on('select2:select', function () {
-        let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
-            selectPlan.val('all').trigger("change");
+        const planSelect = $(this);
+        if ((planSelect.val().length > 1 && planSelect.val().includes('all')) || (planSelect.val().includes('all') && planSelect.val() != 'all')) {
+            planSelect.val('all').trigger("change");
         }
     });
 });

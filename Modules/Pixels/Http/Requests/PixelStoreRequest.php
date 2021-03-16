@@ -22,7 +22,7 @@ class PixelStoreRequest extends FormRequest
             'purchase_boleto' => 'nullable',
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
-            'value_percentage_purchase_boleto' => 'nullable|numeric',
+            'value_percentage_purchase_boleto' => 'nullable|numeric|max:100|min:10',
         ];
     }
 
@@ -35,6 +35,8 @@ class PixelStoreRequest extends FormRequest
             'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
             'value_percentage_purchase_boleto.numeric' => 'O campo % Valor Boleto deve ser numero',
+            'value_percentage_purchase_boleto.min' => 'O valor do campo % Valor Boleto deve ser no mínimo 10',
+            'value_percentage_purchase_boleto.max' => 'O valor do campo % Valor Boleto deve ser no máximo 100',
         ];
     }
 

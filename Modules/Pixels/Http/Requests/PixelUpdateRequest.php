@@ -26,6 +26,7 @@ class PixelUpdateRequest extends FormRequest
             'purchase_event_name' => 'nullable|max:255',
             'is_api' => 'nullable|string',
             'facebook_token_api' => 'nullable|string',
+            'value_percentage_purchase_boleto' => 'nullable|numeric|max:100|min:10',
         ];
     }
 
@@ -37,6 +38,8 @@ class PixelUpdateRequest extends FormRequest
             'code.required' => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
             'edit_pixel_plans.required' => 'O campo Plano é obrigatório',
+            'value_percentage_purchase_boleto.min' => 'O valor do campo % Valor Boleto deve ser no mínimo 10',
+            'value_percentage_purchase_boleto.max' => 'O valor do campo % Valor Boleto deve ser no máximo 100',
         ];
     }
 
