@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserBenefit;
 use Modules\Core\Services\BenefitsService;
 
 class UpdateUserLevel extends Command

@@ -17,12 +17,12 @@ class AlterUserBenefits extends Migration
      */
     public function up()
     {
-//        Schema::table('user_benefits', function (Blueprint $table) {
-//            $table->dropColumn(['level', 'disabled']);
-//            $table->boolean('enabled')
-//                ->default(0)
-//                ->after('benefit_id');
-//        });
+        Schema::table('user_benefits', function (Blueprint $table) {
+            $table->dropColumn(['level', 'disabled']);
+            $table->boolean('enabled')
+                ->default(0)
+                ->after('benefit_id');
+        });
 
         $users = User::select('id')->get();
         $benefits = Benefit::select('id')->get();
