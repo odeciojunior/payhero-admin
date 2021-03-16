@@ -10,18 +10,16 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\GetnetChargeback;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\AchievementService;
+use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
-Use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -134,12 +132,12 @@ class DashboardApiController extends Controller
                 ->sum('t.value');
 
             return [
-                'available_balance'         => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'total_balance'             => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance'           => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                'today_balance'             => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                'currency'                  => 'R$',
-                'blocked_balance_total'     => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                'available_balance'     => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                'total_balance'         => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                'pending_balance'       => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                'today_balance'         => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                'currency'              => 'R$',
+                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
             ];
         } catch (Exception $e) {
             report($e);
@@ -255,102 +253,15 @@ class DashboardApiController extends Controller
         $user = $company->user;
         $taskService = new TaskService();
         $benefitService = new BenefitsService();
+        $achievementService = new AchievementService();
 
         return [
             'level'          => $user->level,
-            'achievements'   => array (
-                 [
-                    'name' => 'VELOCIDADE DA LUZ',
-                    'description' => 'FAÇA ENTREGAS RÁPIDAS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/VelocidadeLuz.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-                [
-                    'name' => 'SUPORTE METEÓRICO',
-                    'description' => 'TENHA UM ATENDIMENTO RÁPIDO',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/SuporteMeteorico.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-                [
-                    'name' => 'COLONIZADOR',
-                    'description' => 'TENHA +10 CONVITES APROVADOS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Colonizador.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-                [
-                    'name' => 'COMERCIANTE CELESTE',
-                    'description' => '+1000 VENDAS APROVADAS NO CARTÃO',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/ComercianteCeleste.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'POEIRA ESTELAR',
-                    'description' => '100 VENDAS DIGITAIS APROVADAS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/PoeiraEstelar.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-                [
-                    'name' => 'ESTRELA CADENTE',
-                    'description' => '10 AFILIADOS ATIVOS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/estrelaCadente.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'GUERRA NAS ESTRELAS',
-                    'description' => '50% DE BOLETOS APROVADOS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/GuerraNasEstrelas.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'EXTRATERRESTE',
-                    'description' => 'RECUPERE 6% DOS CARRINHOS ABADONADOS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Extraterrestre.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'MOCHILEIRO DAS GALÁXIAS',
-                    'description' => 'FAÇA VENDAS EM 5 PROJETOS DIFERENTES',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/MochileiroGalaxias.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-                [
-                    'name' => 'ÓRBITA CAPITALISTA',
-                    'description' => 'REALIZE 50 SAQUES',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/OrbitaCapitalista.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'LUNÁTICO',
-                    'description' => 'FAÇA LOGIN POR 21 DIAS',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/Lunatico.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => false,
-                ],
-                [
-                    'name' => 'AO INFINITO E ALÉM',
-                    'description' => 'FAÇA 50 VENDAS COM ORDERBUMP OU UPSELL',
-                    'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/AoInfinioAlem.png',
-                    'storytelling' => 'Narração da história não feito ainda',
-                    'active' => true,
-                ],
-
-            ),
+            'achievements'   => $achievementService->getCurrentUserAchievements($user),
             'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
             'billed'         => $user->total_commission_value,
-            'money_cashback' => $this->getCashbackReceivedValue(),  //950066,
-
-            'benefits' => $benefitService->getUserBenefits($user),
-
+            'money_cashback' => $this->getCashbackReceivedValue(),
+            'benefits'       => $benefitService->getUserBenefits($user),
         ];
     }
 
@@ -506,7 +417,6 @@ class DashboardApiController extends Controller
 //            $approvedSalesAmount = $approvedSales->count();
 
 
-
             $chargebackData = $saleModel->selectRaw(
                 "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                              SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
@@ -527,7 +437,7 @@ class DashboardApiController extends Controller
             return [
                 'chargeback_score'       => $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
-                'total_sales_approved'   => $totalSalesApproved ?? 0 ,
+                'total_sales_approved'   => $totalSalesApproved ?? 0,
                 'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                 //'total_sales_approved'   => $approvedSalesAmount ?? 0,
                 //'total_sales_chargeback' => $chargebacksAmount ?? 0,
@@ -731,7 +641,8 @@ class DashboardApiController extends Controller
         }
     }
 
-    function getCashbackReceivedValue() {
+    function getCashbackReceivedValue()
+    {
         return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
         //return FoxUtils::formatMoney(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value'));
     }
