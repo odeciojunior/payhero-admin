@@ -18,6 +18,7 @@ use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -1470,5 +1471,22 @@ class SaleService
         $transactions = $this->getSalesBlockedBalance($filters);
 
         return $transactions->paginate(10);
+    }
+
+    public function getApprovedSalesInPeriod(User $user, \Illuminate\Support\Carbon $startDate, Carbon $endDate)
+    {
+        $approvedSales = Sale::whereIn('status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])
+            ->whereBetween(
+                'start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('owner_id', $user->id);
+
+        return $approvedSales;
     }
 }

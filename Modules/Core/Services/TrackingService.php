@@ -505,11 +505,12 @@ class TrackingService
 
     public function getUninformedTrackingCodeRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $untrackedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)
+        $saleService = new SaleService();
+        $untrackedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)
             ->doesntHave('tracking')
             ->count();
 
-        $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
         if (!$approvedSalesAmount) {
             return 0;
@@ -543,32 +544,13 @@ class TrackingService
                 });
             })->count();
 
-        $approvedSalesAmount = $this->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+        $saleService = new SaleService();
+        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
         if (!$approvedSalesAmount) {
             return 0;
         }
 
         return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
-    }
-
-    private function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
-    {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-            ->whereIn('status', [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])
-            ->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )
-            ->where('owner_id', $user->id);
-
-        return $approvedSales;
     }
 }
