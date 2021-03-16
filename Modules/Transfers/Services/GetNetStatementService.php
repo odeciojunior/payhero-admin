@@ -516,7 +516,7 @@ class GetNetStatementService
 
                 $type = StatementItem::TYPE_ADJUSTMENT;
                 $details->setStatus('Ajuste de débito')
-                    ->setDescription($pendingDebt->reason)
+                    ->setDescription($pendingDebt->reason ?? '')
                     ->setType(Details::STATUS_ADJUSTMENT_DEBIT);
             } else {
 
