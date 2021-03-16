@@ -3,9 +3,9 @@ $(document).ready(function () {
     let levelInfo = {
         1: {
             name: 'Aventureiro',
-            title: 'Pronto para começar?',
+            description: 'Pronto para começar?',
             icon: '/modules/global/adminremark/assets/images/nivel-1.png',
-            message: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
+            storytelling: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
             billedStart: '0',
             messageStart: '0K',
             billedStop: '100000',
@@ -13,9 +13,9 @@ $(document).ready(function () {
         },
         2: {
             name: 'Viajante Espacial',
-            title: 'Nível 2',
+            description: 'Nível 2',
             icon: '/modules/global/adminremark/assets/images/nivel-2.png',
-            message: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
+            storytelling: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
             billedStart: '100000',
             messageStart: '100K',
             billedStop: '1000000',
@@ -23,9 +23,9 @@ $(document).ready(function () {
         },
         3: {
             name: 'Conquistador',
-            title: 'Nível 3',
+            description: 'Nível 3',
             icon: '/modules/global/adminremark/assets/images/nivel-3.png',
-            message: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
+            storytelling: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
             billedStart: '1000000',
             messageStart: '1M',
             billedStop: '10000000',
@@ -33,9 +33,9 @@ $(document).ready(function () {
         },
         4: {
             name: 'Colonizador',
-            title: 'Nível 4',
+            description: 'Nível 4',
             icon: '/modules/global/adminremark/assets/images/nivel-4.png',
-            message: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
+            storytelling: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
             billedStart: '10000000',
             messageStart: '10M',
             billedStop: '50000000',
@@ -43,9 +43,9 @@ $(document).ready(function () {
         },
         5: {
             name: 'Capitão Galáctico',
-            title: 'Nível 5',
+            description: 'Nível 5',
             icon: '/modules/global/adminremark/assets/images/nivel-5.png',
-            message: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
+            storytelling: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
             billedStart: '50000000',
             messageStart: '50M',
             billedStop: '100000000',
@@ -53,9 +53,9 @@ $(document).ready(function () {
         },
         6: {
             name: 'Sirius Major',
-            title: 'Nível 6',
+            description: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
-            message: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
+            storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
             billedStart: '100000000',
             messageStart: '100M',
             billedStop: '500000000',
@@ -123,7 +123,7 @@ $(document).ready(function () {
         let currentLevel = levelInfo[data.level];
         //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
         //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.title);
+        //$("#level-description").text('').text(currentLevel.description);
 
 
         let item = `
@@ -148,7 +148,7 @@ $(document).ready(function () {
                         </div>
                         <div class="d-flex flex-column justify-content-center align-self-center">
                             <div id="level" class="level mb-1">${currentLevel.name}</div>
-                            <div id="level-description" class="level-description">${currentLevel.title}</div>
+                            <div id="level-description" class="level-description">${currentLevel.description}</div>
                         </div>
                     </div>
                     <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
@@ -277,7 +277,7 @@ $(document).ready(function () {
 
         //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
         //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.title);
+        //$("#level-description").text('').text(currentLevel.description);
 
 
         let item = `
@@ -306,7 +306,7 @@ $(document).ready(function () {
                                     <span id="billed-message" class="ml-0">R$${currentLevel.messageStart} - R$${currentLevel.messageStop}</span>
                                 </div>
                             </div>
-                            <p id="level-message" class="level-description">${currentLevel.message}</p>
+                            <p id="level-message" class="level-description">${currentLevel.storytelling}</p>
                         </div>
                     </div>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
 
         $('.sirius-performance > .card').append(item);
         // $("#level-full").text('').text(`${currentLevel.name}`);
-        // $("#level-message").text('').text(currentLevel.message);
+        // $("#level-message").text('').text(currentLevel.storytelling);
         // $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
         $.each(levelInfo, function (index, value) {
@@ -354,7 +354,7 @@ $(document).ready(function () {
             $(this).addClass("active");
 
             $("#level-full").text('').text(`${currentLevel.name}`);
-            $("#level-message").text('').text(currentLevel.message);
+            $("#level-message").text('').text(currentLevel.storytelling);
             $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
         });
@@ -486,7 +486,7 @@ $(document).ready(function () {
             item += achievementsList(achievementsNotActive);
 
             element.append(item);
-            element.asScrollbar();
+            //element.asScrollbar();
 
         }
     }

@@ -452,9 +452,9 @@ body {
     overflow-y: hidden;
 }
 
-/*#card-achievements:hover {*/
-/*    overflow-y: scroll;*/
-/*}*/
+#card-achievements:hover {
+    overflow-y: scroll;
+}
 
 #card-achievements .achievements-list:last-child {
     padding-bottom: 30px;
