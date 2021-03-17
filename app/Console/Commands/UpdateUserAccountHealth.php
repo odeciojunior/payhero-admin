@@ -45,7 +45,7 @@ class UpdateUserAccountHealth extends Command
             if ($user->id == $user->account_owner_id) {
                 $user->account_owner_id;
                 $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
-                if (!$accountHealthService->getAttendanceScore($user)) {
+                if (!$accountHealthService->updateAccountScore($user)) {
                     $this->line('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 }
             }
