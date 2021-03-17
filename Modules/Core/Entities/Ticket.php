@@ -2,13 +2,13 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TicketPresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -21,7 +21,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $ticket_subcategory_enum
  * @property integer $ticket_status_enum
  * @property integer $last_message_type_enum
- * @property string  $last_message_date
+ * @property string $last_message_date
  * @property boolean $mediation_notified
  * @property boolean $ignore_balance_block
  * @property tinyInteger $classification_enum
@@ -38,6 +38,23 @@ use Spatie\Activitylog\Models\Activity;
 class Ticket extends Model
 {
     use PresentableTrait, LogsActivity;
+
+    const CATEGORY_COMPLAINT = 1;
+    const CATEGORY_DOUBT = 2;
+    const CATEGORY_SUGGESTION = 3;
+
+    const SUBJECT_DIFFERS_FROM_ADVERTISED = 1;
+    const SUBJECT_DAMAGED_BY_TRANSPORT = 2;
+    const SUBJECT_MANUFACTURING_DEFECT = 3;
+    const SUBJECT_TRACKING_CODE_NOT_RECEIVED = 4;
+    const SUBJECT_NON_TRACKABLE_ORDER = 5;
+    const SUBJECT_DELIVERY_DELAY = 6;
+    const SUBJECT_DELIVERY_TO_WRONG_ADDRESS = 7;
+    const SUBJECT_OTHERS = 8;
+
+    const STATUS_OPEN = 1;
+    const STATUS_CLOSED = 2;
+    const STATUS_MEDIATION = 3;
 
     /**
      * @var string
@@ -95,7 +112,7 @@ class Ticket extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'O chamado foi deletedo.';
+            $activity->description = 'O chamado foi deletado.';
         } else if ($eventName == 'updated') {
             $activity->description = 'O chamado foi atualizado.';
         } else if ($eventName == 'created') {
