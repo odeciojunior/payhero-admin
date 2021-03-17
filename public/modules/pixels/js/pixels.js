@@ -325,7 +325,6 @@ $(function () {
             alertCustom('error', 'O campo % Valor Boleto é obrigatório')
             return false;
         }
-        console.log();
         if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
             alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
             return false;
