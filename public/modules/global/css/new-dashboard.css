@@ -448,13 +448,20 @@ body {
 }
 
 #card-achievements {
-    max-height:400px;
-    overflow-y: hidden;
+    height:400px;
+    /*width: 200px;*/
+    /*overflow-y: hidden;*/
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    overflow: hidden;
+    /*border: 1px solid #e0e0e0;*/
+    /*background-color: #fefefe;*/
 }
 
-#card-achievements:hover {
-    overflow-y: scroll;
-}
+/*#card-achievements:hover {*/
+/*    overflow-y: scroll;*/
+/*}*/
 
 #card-achievements .achievements-list:last-child {
     padding-bottom: 30px;
@@ -635,7 +642,7 @@ body {
 
 .page.dashboard .sirius-account {
     /*height: 296px;*/
-    height: 230px;
+    height: 225px;
 }
 
 .page.dashboard .hr-horizontal {

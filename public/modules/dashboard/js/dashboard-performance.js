@@ -459,8 +459,10 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
-                <div id="card-achievements" data-plugin="scrollable" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
+                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
+                    <div>
 
+                    </div>
                 </div>
                 <div style="background: linear-gradient(to top, white, #ffffffcc, transparent);
                             height: 30px;
@@ -477,7 +479,7 @@ $(document).ready(function () {
 
     function updateAchievementsCard(achievements) {
         if (!isEmpty(achievements)) {
-            const element = $('#card-achievements');
+            const element = $('#card-achievements > div');
             let item = "";
 
             const isActiveAchievements = achievements => achievements.active;
@@ -491,6 +493,11 @@ $(document).ready(function () {
             item += achievementsList(achievementsNotActive);
 
             element.append(item);
+
+
+            //$('#card-achievements').asScrollable('destroy');
+            $('#card-achievements').asScrollable({"direction": "vertical", "contentSelector": ">", "containerSelector": ">"});
+
             //element.asScrollbar();
 
         }

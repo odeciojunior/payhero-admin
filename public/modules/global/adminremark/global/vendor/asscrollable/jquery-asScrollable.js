@@ -1,10 +1,10 @@
 /**
-* jQuery asScrollable v0.4.10
-* https://github.com/amazingSurge/jquery-asScrollable
-*
-* Copyright (c) amazingSurge
-* Released under the LGPL-3.0 license
-*/
+ * jQuery asScrollable v0.4.10
+ * https://github.com/amazingSurge/jquery-asScrollable
+ *
+ * Copyright (c) amazingSurge
+ * Released under the LGPL-3.0 license
+ */
 (function(global, factory) {
   if (typeof define === 'function' && define.amd) {
     define(['jquery'], factory);
@@ -26,23 +26,23 @@
     return obj && obj.__esModule
       ? obj
       : {
-          default: obj
-        };
+        default: obj
+      };
   }
 
   var _typeof =
     typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
       ? function(obj) {
-          return typeof obj;
-        }
+        return typeof obj;
+      }
       : function(obj) {
-          return obj &&
-          typeof Symbol === 'function' &&
-          obj.constructor === Symbol &&
-          obj !== Symbol.prototype
-            ? 'symbol'
-            : typeof obj;
-        };
+        return obj &&
+        typeof Symbol === 'function' &&
+        obj.constructor === Symbol &&
+        obj !== Symbol.prototype
+          ? 'symbol'
+          : typeof obj;
+      };
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -745,7 +745,7 @@
           value: function getScrollLength(direction) {
             var scrollLength = this.$content[0][
               this.attributes[direction].scrollLength
-            ];
+              ];
             return scrollLength - this.getContainerLength(direction);
           }
         },
@@ -958,8 +958,8 @@
               }
               api.setHandleLength(
                 api.getBarLength() *
-                  containerLength /
-                  (scrollLength + containerLength),
+                containerLength /
+                (scrollLength + containerLength),
                 true
               );
             } else {
