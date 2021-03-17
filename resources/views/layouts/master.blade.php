@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-{{--<html class="no-js css-menubar" lang="en">--}}
+<html class="no-js">
 <head>
     <title>Sirius</title>
     <meta charset="utf-8">
@@ -37,6 +36,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png?v=1') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=04') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2545') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
@@ -113,8 +113,8 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>--}}
+{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>--}}
 {{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
@@ -137,7 +137,12 @@
     verifyDocumentPending();
 </script>
 
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin/asscrollable.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/global/js/Plugin/asscrollable.js') }}"></script>--}}
+{{--<script src="js/jquery.js"></script>--}}
+{{--<script src="js/jquery-asScrollbar.js"></script>--}}
+{{--<script src="../dist/jquery-asScrollable.js"></script>--}}
 
 @stack('scripts')
 
