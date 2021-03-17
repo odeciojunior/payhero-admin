@@ -6,7 +6,8 @@
 
 <div class='row no-gutters mb-10'>
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;" >
+        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline"
+           data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;">
             <span class="o-info-1" style="font-size: 24px;"></span>
         </a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-info-pixel"
@@ -95,8 +96,7 @@
                    style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                     Fechar
                 </a>
-                <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-update"
-                        data-dismiss="modal">
+                <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-update">
                     <i class="material-icons btn-fix"> save </i> Atualizar
                 </button>
             </div>
@@ -141,10 +141,14 @@
                 <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-center">
-                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button type="button"
+                        class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                        data-dismiss="modal" style="width: 20%;">
                     <b>Cancelar</b>
                 </button>
-                <button pixel="" type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button pixel="" type="button"
+                        class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                        data-dismiss="modal" style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>
