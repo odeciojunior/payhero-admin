@@ -2,11 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TrackingPresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -30,6 +30,22 @@ use Spatie\Activitylog\Models\Activity;
 class Tracking extends Model
 {
     use PresentableTrait, LogsActivity;
+
+    /** Tracking Status */
+    const STATUS_POSTED           = 1;
+    const STATUS_DISPATCHED       = 2;
+    const STATUS_DELIVERED        = 3;
+    const STATUS_OUT_FOR_DELIVERY = 4;
+    const STATUS_EXCEPTION        = 5;
+
+    /** System Status */
+    const SYSTEM_STATUS_VALID              = 1; // O código passou em todas as validações
+    const SYSTEM_STATUS_NO_TRACKING_INFO   = 2; // O código é reconhecido pela transportadora mas ainda não tem nenhuma movimentação
+    const SYSTEM_STATUS_UNKNOWN_CARRIERr   = 3; // O código não foi reconhecido por nenhuma transportadora
+    const SYSTEM_STATUS_POSTED_BEFORE_SALE = 4; // A data de postagem da remessa é anterior a data da venda
+    const SYSTEM_STATUS_DUPLICATED         = 5; // Já existe uma venda com esse código de rastreio cadastrado
+    const SYSTEM_STATUS_CHECKED_MANUALLY   = 7; // Código de rastreio verificado manualmente (no Manager)
+
     /**
      * @var string
      */
