@@ -466,7 +466,7 @@ $(function () {
             },
             success: function success() {
                 loadingOnScreenRemove();
-                $("#modal-edit-pixel .btn-update").modal('hide');
+                $("#modal-edit-pixel").modal('hide');
                 alertCustom("success", "Pixel atualizado com sucesso");
                 atualizarPixel(currentPage);
             }
