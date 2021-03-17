@@ -43,13 +43,18 @@ class Ticket extends Model
     const CATEGORY_DOUBT = 2;
     const CATEGORY_SUGGESTION = 3;
 
+    //Delivered item
     const SUBJECT_DIFFERS_FROM_ADVERTISED = 1;
     const SUBJECT_DAMAGED_BY_TRANSPORT = 2;
     const SUBJECT_MANUFACTURING_DEFECT = 3;
+
+    //Not delivered item
     const SUBJECT_TRACKING_CODE_NOT_RECEIVED = 4;
     const SUBJECT_NON_TRACKABLE_ORDER = 5;
     const SUBJECT_DELIVERY_DELAY = 6;
     const SUBJECT_DELIVERY_TO_WRONG_ADDRESS = 7;
+
+    //Others
     const SUBJECT_OTHERS = 8;
 
     const STATUS_OPEN = 1;
