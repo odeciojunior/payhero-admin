@@ -301,7 +301,7 @@ $(document).ready(function () {
                                 <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
                                 <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor}">${data.chargeback_score}</span>
                             </div>
-                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                            <div id="card-notes" class="mt-30 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
                                 <div class="d-flex mr-60 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                         <span class="account-health-note">${data.total_sales_approved}</span>
                                         <span class="account-health-note-description">Vendas no cartão</span>
@@ -311,10 +311,10 @@ $(document).ready(function () {
                                         <span class="account-health-note-description">Chargebacks</span>
                                 </div>
                             </div>
-                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>
-                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
-                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
-                            </div>
+<!--                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>-->
+<!--                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >-->
+<!--                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>-->
+<!--                            </div>-->
                             <div class="sirius-account-loading"></div>
                         </div>
                 `;
@@ -366,7 +366,7 @@ $(document).ready(function () {
                                 <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
                                 <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
                             </div>
-                            <div id="card-notes" class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                            <div id="card-notes" class="mt-30 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
                                 <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                         <span class="account-health-note">${data.open || 0}</span>
                                         <span class="account-health-note-description">Abertos</span>
@@ -384,10 +384,10 @@ $(document).ready(function () {
                                         <span class="account-health-note-description">Total</span>
                                 </div>
                             </div>
-                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>
-                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
-                                <a href="" class="tips-chargeback">Dicas para melhorar seu atendimento <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
-                            </div>
+<!--                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>-->
+<!--                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >-->
+<!--                                <a href="" class="tips-chargeback">Dicas para melhorar seu atendimento <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>-->
+<!--                            </div>-->
                             <div class="sirius-account-loading"></div>
                         </div>
                 `;

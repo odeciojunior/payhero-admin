@@ -1,7 +1,6 @@
-
-{{--<html class="no-js" lang="en">--}}
 <!DOCTYPE html>
-<html class="no-js css-menubar" lang="en">
+<html class="no-js" lang="en">
+{{--<html class="no-js css-menubar" lang="en">--}}
 <head>
     <title>Sirius</title>
     <meta charset="utf-8">

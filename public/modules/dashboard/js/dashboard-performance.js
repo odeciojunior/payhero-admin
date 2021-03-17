@@ -259,6 +259,7 @@ $(document).ready(function () {
         $('#progress-message-2').text(`${currentLevel.messageStop}`);
 
         var percentage = billed / currentLevel.billedStop;
+        percentage = percentage > 100 ? 99 : percentage;
 
         percentage = percentage > 10 ? percentage : parseFloat(percentage).toFixed(1);
         $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
