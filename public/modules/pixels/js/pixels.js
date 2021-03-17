@@ -300,48 +300,55 @@ $(function () {
         $("#modal-delete-pixel").modal('show');
     });
 
-    function validateDataCreatePixel(formData) {
-        if (formData.get('name').length > 100) {
+    function validateDataPixelForm(formData) {
+        if (formData.name.length > 100) {
             alertCustom('error', 'O campo Descrição permite apenas 100 caracteres')
             return false;
         }
 
-        if (formData.get('name').length < 1) {
+        if (formData.name.length < 1) {
             alertCustom('error', 'O campo Descrição é obrigatório')
             return false;
         }
 
-        if (formData.get('value_percentage_purchase_boleto').length > 3) {
-            alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
-            return false;
-        }
-
-        if (formData.get('code').length < 1) {
+        if (formData.code.length < 1) {
             alertCustom('error', 'O campo Código é obrigatório')
             return false;
         }
 
-        if (formData.get('value_percentage_purchase_boleto').length < 1) {
-            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
+        if (formData.value_percentage_purchase_boleto.length > 3) {
+            alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
             return false;
         }
 
-        if (isNaN(parseInt(formData.get('value_percentage_purchase_boleto')))) {
+        if (formData.value_percentage_purchase_boleto.length < 1) {
+            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
+            return false;
+        }
+        console.log();
+        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
             alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
             return false;
         }
 
-        if (formData.get('value_percentage_purchase_boleto') > 100 || formData.get('value_percentage_purchase_boleto') < 10) {
-            alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 0 e 100')
+        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
+            alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
             return false;
         }
 
+        if (formData.platform == 'facebook' && formData.is_api == 'api' && formData.facebook_token_api.length < 1) {
+            alertCustom('error', 'O campo Token Acesso API de Conversões é obrigatório');
+            return false;
+        }
 
-        if (formData.get('platform') == 'facebook') {
-            if (formData.get('api-facebook') == 'api' && formData.get('facebook-token-api').length < 1) {
-                alertCustom('error', 'O campo Token Acesso API de Conversões é obrigatório');
-                return false;
-            }
+        if (['taboola', 'outbrain'].includes(formData.platform) && formData.purchase_event_name.length < 1) {
+            alertCustom('error', 'O campo Nome evento de conversão é obrigatório');
+            return false;
+        }
+
+        if (formData.plans_apply == null) {
+            alertCustom('error', 'É obrigatório selecionar um ou mais planos');
+            return false;
         }
 
         return true;
@@ -351,10 +358,20 @@ $(function () {
     $("#modal-create-pixel .btn-save").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
-        if (!validateDataCreatePixel(formData)) {
+        if (!validateDataPixelForm({
+            'name': formData.get('name'),
+            'platform': formData.get('platform'),
+            'is_api': formData.get('api-facebook'),
+            'code': formData.get('code'),
+            'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
+            'facebook_token_api': formData.get('facebook-token-api'),
+            'purchase_event_name': formData.get('purchase-event-name'),
+            'plans_apply': formData.get('add_pixel_plans[]')
+        })) {
             return false;
         }
 
+        formData.set('value_percentage_purchase_boleto', parseInt(formData.get('value_percentage_purchase_boleto')));
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
@@ -405,8 +422,22 @@ $(function () {
 
     //atualizar pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
+        if (!validateDataPixelForm({
+            'name': $("#modal-edit-pixel .pixel-description").val(),
+            'platform': $("#modal-edit-pixel .pixel-platform").val(),
+            'is_api': $("#modal-edit-pixel input[type=radio]:checked").val(),
+            'code': $("#modal-edit-pixel .pixel-code").val(),
+            'value_percentage_purchase_boleto': $("#modal-edit-pixel #percentage-value").val(),
+            'facebook_token_api': $("#modal-edit-pixel #facebook-token-api").val(),
+            'purchase_event_name': $("#modal-edit-pixel .purchase-event-name").val(),
+            'plans_apply': $("#modal-edit-pixel .apply_plans").val()
+        })) {
+            return false;
+        }
+
         loadingOnScreen();
         const pixelId = $('#modal-edit-pixel .pixel-id').val();
+
         $.ajax({
             method: "PUT",
             url: `/api/project/${projectId}/pixels/${pixelId}`,
@@ -435,6 +466,7 @@ $(function () {
             },
             success: function success() {
                 loadingOnScreenRemove();
+                $("#modal-edit-pixel .btn-update").modal('hide');
                 alertCustom("success", "Pixel atualizado com sucesso");
                 atualizarPixel(currentPage);
             }
