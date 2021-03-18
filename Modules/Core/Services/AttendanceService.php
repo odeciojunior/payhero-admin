@@ -62,7 +62,7 @@ class AttendanceService
                 $message->where('type_enum', $ticketMesageModel->present()->getType('from_admin'));
             })->groupBy('sales.owner_id');
 
-        $averageResponseTime = $tickets->get()[0]['average_response_time'];
+        $averageResponseTime = isset($tickets->get()[0]) ? $tickets->get()[0]['average_response_time'] : 0;
 
         return round($averageResponseTime / 24, 2) ?? null;
     }
