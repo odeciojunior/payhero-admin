@@ -41,7 +41,7 @@ class UpdateUserAccountHealth extends Command
     {
         $accountHealthService = new AccountHealthService();
 
-        foreach (User::whereIn('id', [557])->get() as $user) {
+        foreach (User::all() as $user) {
             if ($user->id == $user->account_owner_id) {
                 $user->account_owner_id;
                 $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);

@@ -103,6 +103,10 @@ class AccountHealthService
         $endDate = now()->endOfDay()->subDays(20);
         $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
+        // 100
+        // 1
+        // 30%
+        // 1.5
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
 
