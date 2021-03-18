@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\BoletoService;
 
@@ -27,14 +28,15 @@ class VerifyBoletoPaid extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return void
-     */
     public function handle()
     {
-        /** @var BoletoService $boletoService */
+        $start = now();
+
         $boletoService = new BoletoService();
         $boletoService->verifyBoletoPaid();
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

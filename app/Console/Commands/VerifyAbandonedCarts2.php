@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\CartRecoveryService;
 
@@ -26,14 +27,16 @@ class VerifyAbandonedCarts2 extends Command
     {
         parent::__construct();
     }
-
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
+    
     public function handle()
     {
+        $start = now();
+
         $cartRecoveryService = new CartRecoveryService();
         $cartRecoveryService->verifyAbandonedCarts2();
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

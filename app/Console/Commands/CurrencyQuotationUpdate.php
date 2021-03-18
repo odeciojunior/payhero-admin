@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -29,18 +30,20 @@ class CurrencyQuotationUpdate extends Command
         parent::__construct();
     }
 
-    /**
-     *
-     */
     public function handle()
     {
+        $start = now();
+
         try {
             $currencyQuotationService = new CurrencyQuotationService();
 
             $currencyQuotationService->updateQuotations();
         } catch (Exception $e) {
-            Log::warning('VerifyPendingDomains - Erro no command ');
             report($e);
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
