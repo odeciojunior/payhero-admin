@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\TransfersService;
 
@@ -32,12 +33,15 @@ class VerifyTransfers extends Command
         parent::__construct();
     }
 
-    /**
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
-     */
     public function handle()
     {
+        $start = now();
+
         $transfersService = new TransfersService();
         $transfersService->verifyTransactions();
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

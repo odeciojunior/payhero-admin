@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -21,6 +22,7 @@ class UpdateRedisSaleTracking extends Command
     public function handle()
     {
         try{
+            $start = now();
 
             $sales = Sale::where('gateway_id', 15)->chunk(
                 1000,
@@ -34,6 +36,9 @@ class UpdateRedisSaleTracking extends Command
                     }
                 }
             );
+            $end = now();
+
+            report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
 
             return 0;
         }

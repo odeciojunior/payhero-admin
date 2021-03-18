@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
@@ -32,14 +33,10 @@ class VerifyTrackingsWithoutInfo extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
-     */
     public function handle()
     {
+        $start = now();
+
         $trackingModel = new Tracking();
         $trackingService = new TrackingService();
 
@@ -58,6 +55,9 @@ class VerifyTrackingsWithoutInfo extends Command
                     }
                 }
             });
+
+        $end = now();
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
 
         return;
     }

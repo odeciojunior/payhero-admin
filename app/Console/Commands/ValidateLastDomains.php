@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -34,14 +35,10 @@ class ValidateLastDomains extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     * @throws PresenterException
-     */
     public function handle()
     {
+        $start = now();
+
         $domainModel = new Domain();
         $sendgridService = new SendgridService();
 
@@ -69,5 +66,9 @@ class ValidateLastDomains extends Command
 
             $count++;
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
