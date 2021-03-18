@@ -68,30 +68,29 @@ class AccountHealthService
         $endDate = now()->endOfDay()->subDay();
         $complaintTickets = $this->attendanceService->getComplaintTicketsInPeriod($user, $startDate, $endDate);
         $totalComplaintTickets = count($complaintTickets);
-        $maxTotalScore = $totalComplaintTickets * 3;
         $totalScore = 0;
         foreach ($complaintTickets as $ticket) {
             $totalScore += $this->getTicketScore($ticket);
         }
-        return round(10 - $totalScore / $maxTotalScore * 10, 1);
+        return round($totalScore / $totalComplaintTickets, 1);
     }
 
     public function getTicketScore(Ticket $ticket): int
     {
         $scores = [
             //Delivered Items
-            Ticket::SUBJECT_DIFFERS_FROM_ADVERTISED    => 3,
-            Ticket::SUBJECT_DAMAGED_BY_TRANSPORT       => 1,
-            Ticket::SUBJECT_MANUFACTURING_DEFECT       => 1,
+            Ticket::SUBJECT_DIFFERS_FROM_ADVERTISED    => 0,
+            Ticket::SUBJECT_DAMAGED_BY_TRANSPORT       => 4,
+            Ticket::SUBJECT_MANUFACTURING_DEFECT       => 4,
 
             //Not delivered Items
             Ticket::SUBJECT_TRACKING_CODE_NOT_RECEIVED => (new TrackingCodeNotInformed)->calculateScore($ticket),
             Ticket::SUBJECT_NON_TRACKABLE_ORDER        => (new NonTrackableOrder)->calculateScore($ticket),
             Ticket::SUBJECT_DELIVERY_DELAY             => (new DeliveryDelay)->calculateScore($ticket),
-            Ticket::SUBJECT_DELIVERY_TO_WRONG_ADDRESS  => 3,
+            Ticket::SUBJECT_DELIVERY_TO_WRONG_ADDRESS  => 0,
 
             //Others
-            Ticket::SUBJECT_OTHERS                     => 0,
+            Ticket::SUBJECT_OTHERS                     => 10,
         ];
 
         return isset($scores[$ticket->subject_enum]) ? $scores[$ticket->subject_enum] : 0;
@@ -103,10 +102,6 @@ class AccountHealthService
         $endDate = now()->endOfDay()->subDays(20);
         $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
-        // 100
-        // 1
-        // 30%
-        // 1.5
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
 

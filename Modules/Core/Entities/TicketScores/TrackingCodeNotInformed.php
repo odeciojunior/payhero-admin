@@ -14,9 +14,9 @@ class TrackingCodeNotInformed implements TicketScore
         $ticketDate = Carbon::make($ticket->created_at)->startOfDay();
 
         if ($ticketDate->diffInDays($saleDate) <= 7) {
-            return 0;
+            return 7;
         }
 
-        return 2;
+        return 0;
     }
 }
