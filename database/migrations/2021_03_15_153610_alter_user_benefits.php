@@ -24,7 +24,7 @@ class AlterUserBenefits extends Migration
                 ->after('benefit_id');
         });
 
-        $users = User::select('id')->get();
+        $users = User::select('id', 'level')->get();
         $benefits = Benefit::select('id')->get();
         foreach ($users as $user){
             foreach ($benefits as $benefit){
@@ -33,6 +33,8 @@ class AlterUserBenefits extends Migration
                     'benefit_id' => $benefit->id
                 ]);
             }
+            $user->installment_cashback = 0;
+            $user->save();
         }
     }
 
