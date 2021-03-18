@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -29,12 +30,10 @@ class GenerateNotazzInvoicesSalesApproved extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
+        $start = now();
+
         try {
 
             $notazzService = new NotazzService();
@@ -45,8 +44,12 @@ class GenerateNotazzInvoicesSalesApproved extends Command
             //gera as invoices ainda nao geradas
             $notazzService->generateInvoicesSalesApproved();
         } catch (Exception $e) {
-            Log::warning('GenerateNotazzInvoicesSalesApproved - Erro no command ');
             report($e);
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
+
     }
 }
