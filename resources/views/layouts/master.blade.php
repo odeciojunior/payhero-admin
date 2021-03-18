@@ -46,8 +46,6 @@
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css') }}">
-
 {{--    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
@@ -66,6 +64,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=100') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=60') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -137,12 +136,10 @@
     verifyDocumentPending();
 </script>
 
+
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-{{--<script src="{{ asset('modules/global/adminremark/global/js/Plugin/asscrollable.js') }}"></script>--}}
-{{--<script src="js/jquery.js"></script>--}}
-{{--<script src="js/jquery-asScrollbar.js"></script>--}}
-{{--<script src="../dist/jquery-asScrollable.js"></script>--}}
+
 
 @stack('scripts')
 

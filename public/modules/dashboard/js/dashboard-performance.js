@@ -111,7 +111,7 @@ $(document).ready(function () {
             success: function success(data) {
 
                 updatePerformanceCard1(data);
-                if (data.level > 1) {
+                if ((data.level > 1) && (data.money_cashback !== '0,00')) {
                     updateCashback(data.money_cashback)
                 }
                 //nextPerformance(data);
@@ -141,7 +141,7 @@ $(document).ready(function () {
                         <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
                     </ol>
                 </div>
-                <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start align-items-start">
+                <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
                     <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
                         <div class=" text-center px-0 d-flex justify-content-center mr-20">
                             <div id="level-icon">
@@ -159,8 +159,10 @@ $(document).ready(function () {
                         <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                         </div>
                     </div>
-                    <div id="tasks" class="d-none d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch"></div>
-
+                    <div id="tasks">
+                        <div class="d-flex flex-column justify-content-start align-items-start">
+                        </div>
+                    </div>
                     <div id="progress" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                             <span id="progress-message-1"></span>
@@ -179,7 +181,6 @@ $(document).ready(function () {
         `;
 
         $('.sirius-performance > .card').append(item);
-
 
         updateAchievements(data.achievements);
 
@@ -211,7 +212,9 @@ $(document).ready(function () {
     }
 
     function updateTasks(level, tasks) {
-        $('#tasks').html('');
+        const elementTask =  $('#tasks');
+        const elementTaskScroll = $('#tasks > div');
+        elementTaskScroll.html('');
 
         if (!isEmpty(tasks)) {
 
@@ -221,32 +224,19 @@ $(document).ready(function () {
                                  <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
                                  <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.name}</p>
                             </div>`;
-                $('#tasks').append(item);
+                $(elementTaskScroll).append(item);
             });
 
+            elementTask.css({'margin-top': '20px'}).show();
+
             if (tasks.length > 3) {
-                $("#tasks").hover(
-                    function () {
-                        console.log('Entrei scroll');
-                        $("#tasks").css({'overflow-y': 'scroll'});
-                    }, function () {
-                        console.log('Sai hidden');
-                        $("#tasks").css({'overflow-y': 'hidden'});
-                    }
-                );
+                elementTask.css({'margin-top': '0'}).asScrollable();
+                $('#achievements').css({'margin-bottom': '20px'});
             }
 
-            $("#tasks").css({'margin-top': '20px', 'max-height': '95px', 'overflow-y': 'hidden'});
-            $('#tasks').show();
-
         } else {
-            $('#tasks').hide();
+            elementTask.hide();
         }
-    }
-
-    function updateCashback(money) {
-        $('#cashback-container #cashback-container-money').text(`${money}`);
-        $(".sirius-cashback > .card").removeClass('d-none');
     }
 
     function updateProgressBar(billed, currentLevel) {
@@ -276,6 +266,11 @@ $(document).ready(function () {
         });
     }
 
+    function updateCashback(money) {
+        $('#cashback-container #cashback-container-money').text(`${money}`);
+        $(".sirius-cashback > .card").removeClass('d-none');
+    }
+
     function updatePerformanceCard2(data) {
         loadingOnAccountsHealth('.sirius-performance > .card');
         let currentLevel = levelInfo[data.level];
@@ -298,7 +293,7 @@ $(document).ready(function () {
                         <i class="o-angle-down-1 control-next active" data-slide-to="3"></i>
                     </ol>
                 </div>
-                <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start align-items-start">
+                <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start">
                     <div id="card-level-description" >
                         <div class="p-15 d-flex flex-column flex-nowrap justify-content-start align-items-stretch align-self-stretch ">
                             <div class="d-flex flex-row justify-content-between align-items-center">
@@ -318,17 +313,22 @@ $(document).ready(function () {
                     <div id="levels" class="mt-15 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                     </div>
 
-                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
                         <span class="mb-10 title-performance">Benefícios ativos</span>
-                        <div id="benefits-active-container" class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                        <div id="benefits-active-container">
+                            <div class="d-flex flex-column flex-nowrap justify-content-start ">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                        <span class="title-performance">Seus próximos benefícios</span>
-                        <div id="benefits-container" class="mt-10 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
+                        <span class="mb-10 title-performance">Benefícios ativos</span>
+                        <div id="benefits-container">
+                            <div class="d-flex flex-column flex-nowrap justify-content-start ">
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
         `;
@@ -366,12 +366,17 @@ $(document).ready(function () {
 
         updateBenefits(data.level, data.benefits);
 
-        //$('#performance-card-2').hide();
         nextPerformance(data);
     }
 
     function updateBenefits(level, benefits) {
-        $('#benefits-active-container').html('');
+        $('#benefits-active-container > div').html('');
+
+        //const elementBenefitsActiveContainer = $('#benefits-active-container');
+        //elementBenefitsActiveContainer.html('');
+
+
+
         $('#benefits-container').html('');
 
         if (!isEmpty(benefits.active)) {
@@ -386,15 +391,8 @@ $(document).ready(function () {
             });
 
             if (benefits.active.length > 2) {
-                $("#benefits-active-container").hover(
-                    function () {
-                        $("#benefits-active-container").css({'overflow-y': 'scroll'});
-                    }, function () {
-                        $("#benefits-active-container").css({'overflow-y': 'hidden'});
-                    }
-                );
+                $('#benefits-active-container').asScrollable();
             }
-            $("#benefits-active-container").css({'max-height': '60px', 'overflow-y': 'hidden'});
 
         } else {
 
@@ -427,16 +425,8 @@ $(document).ready(function () {
             });
 
             if (benefits.next.length > 2) {
-                $("#benefits-container").hover(
-                    function () {
-                        $("#benefits-container").css({'overflow-y': 'scroll'});
-                    }, function () {
-                        $("#benefits-container").css({'overflow-y': 'hidden'});
-                    }
-                );
+                $('#benefits-container').asScrollable();
             }
-            $("#benefits-container").css({'max-height': '60px', 'overflow-y': 'hidden'});
-
         }
 
     }
@@ -446,7 +436,7 @@ $(document).ready(function () {
         let currentLevel = levelInfo[data.level];
 
         let item = `
-                <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
+                <div class="card-header mt-10 mb-20 pb-0 d-flex justify-content-between align-items-center bg-white">
                     <div class="mr-auto">
                         <span class="ml-0 title-performance">Suas conquistas</span>
                     </div>
@@ -459,15 +449,11 @@ $(document).ready(function () {
                     </ol>
                 </div>
 
-                <div id="card-achievements" class="card-body pb-0 pt-0 mt-20 d-flex flex-column justify-content-start align-items-start">
-                    <div>
-
+                <div id="card-achievements" class="card-body pb-0 pt-0 ">
+                    <div class="d-flex flex-column justify-content-start align-items-start">
                     </div>
                 </div>
-                <div style="background: linear-gradient(to top, white, #ffffffcc, transparent);
-                            height: 30px;
-                            margin-top: -30px;
-                            z-index: 1;"></div>
+                <div class="list-linear-gradient"></div>
         `;
 
         $('.sirius-performance > .card').append(item);
@@ -494,11 +480,7 @@ $(document).ready(function () {
 
             element.append(item);
 
-
-            //$('#card-achievements').asScrollable('destroy');
-            $('#card-achievements').asScrollable({"direction": "vertical", "contentSelector": ">", "containerSelector": ">"});
-
-            //element.asScrollbar();
+            $('#card-achievements').asScrollable();
 
         }
     }
