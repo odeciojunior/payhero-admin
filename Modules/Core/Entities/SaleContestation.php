@@ -52,4 +52,9 @@ class SaleContestation extends Model
     {
         return $this->belongsTo(Sale::class);
     }
+
+    public function files()
+    {
+        return $this->hasMany(SaleContestationFile::class, 'contestation_sale_id');
+    }
 }

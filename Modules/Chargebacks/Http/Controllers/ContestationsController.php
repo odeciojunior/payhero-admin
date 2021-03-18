@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Chargebacks\Transformers\ContestationResource;
+use Modules\Chargebacks\Transformers\SaleContestationFileResource;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\ContestationService;
@@ -264,7 +265,6 @@ class ContestationsController extends Controller
 
     }
 
-
     private function sendGmail($request):void
     {
 
@@ -283,4 +283,20 @@ class ContestationsController extends Controller
                ;
         });
     }
+
+    public function getContestationFiles($salecontestation)
+    {
+
+        try {
+
+            $saleContestation = SaleContestation::find(current(Hashids::decode($salecontestation)));
+            return SaleContestationFileResource::collection($saleContestation->files);
+
+        } catch (\stringEncode\Exception $e) {
+            report($e);
+        }
+
+    }
+
+
 }

@@ -23,6 +23,8 @@ Route::middleware(['web', 'auth', 'role:account_owner|admin'])->prefix('contesta
     Route::get('/generation-dispute/{id}', 'ContestationsController@generateDispute')->name('contestations.generateDispute');
     Route::post('/send-contestation', 'ContestationsController@sendContestation')->name('contestations.sendContestation');
 
+    Route::get('/get-contestation-files/{salecontestation}', 'ContestationsController@getContestationFiles')->name('contestations.getContestationFiles');
+
 });
 
 //Route::prefix('chargebacks')->group(function() {

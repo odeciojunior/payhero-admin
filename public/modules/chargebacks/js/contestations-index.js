@@ -202,13 +202,13 @@ $(document).ready(function () {
         let data = {
             transaction: $("#transaction").val().split('#').join(''),
             // fantasy_name: $("#fantasy_name").val(),
-            project: $("#project").val(),
-            customer: $("#customer").val(),
-            customer_document: $("#customer_document").val(),
-            date_range: $("#date_range").val(),
-            date_type: $("#date_type").val(),
-            order_by_expiration_date: $("#expiration_date").is(":checked") ? 1:0,
-            status: $("#status").val(),
+            project: $("#project").val() ?? '',
+            customer: $("#customer").val() ?? '',
+            customer_document: $("#customer_document").val() ?? '',
+            date_range: $("#date_range").val() ?? '',
+            date_type: $("#date_type").val() ?? '',
+            order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
+            status: $("#status").val() ?? '',
         }
         if (urlParams) {
             let params = "";
@@ -258,13 +258,13 @@ $(document).ready(function () {
                     dados += `
                                 <tr>
                                     <td id='${value.id}'><span>${value.sale_code}</span></td>
-                                    <td>${value.company}<br><small>(${value.project})</small></td>
-                                    <td>${value.customer}</td>
+                                    <td title="${value.company}">${value.company_limit}<br><small class="text-muted">(${value.project})</small></td>
+                                    <td>${value.customer}<br><small class="text-muted"> Pagamento em ${value.adjustment_date}</small></td>
                                    `;
 
                     if (value.sale_status in statusObject) {
                         dados += `<td class='copy_link'>
-                                    <div class="d-flex align-items-center" style=" flex-wrap: wrap; flex-direction: column;">
+                                    <div class="d-flex justify-content-center align-items-center" >
                                         <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? 'pointer' : 'cursor-default'}' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${statusObject[value.sale_status]}</span>
                                         ${value.sale_has_valid_tracking ? '<i class="material-icons font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido">local_shipping</i>' : value.sale_only_digital_products ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>' : '<i class="material-icons font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado">local_shipping</i>'}
                                         ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ''}
@@ -274,18 +274,18 @@ $(document).ready(function () {
                         dados += `<td><span class='badge badge-danger'> Vazio</span></td>`;
                     }
                     dados += `
-                                    <td>${value.file_date}
-                                    <hr><small> Pagamento: ${value.adjustment_date}</small>
-                                    <hr><small> Expiração: ${value.expiration}</small>
+                                    <td>${value.file_date}<br>
+                                    <small class="text-muted"> Expira em ${value.expiration}</small>
                                     </td>
                                     <td>${value.reason}</td>
-                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>
-                                    <td style="min-width: 50px;">
-                                         <a role="button" class="pointer mr-5 detalhes_venda pointer" venda="${value.transaction_id}" data-target="#modal_detalhes" data-toggle="modal"
-                                        data-tooltip='tooltip' title="Detalhes da venda" style="margin-right:10px;">
-                                            <i class='material-icons gradient'>remove_red_eye</i>
+<!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
+                                    <td>
+                                       <a role='button' class='contetation_file pointer' style="margin-right:5px" contestation='${value.id}'>
+                                       <span class="o-download-cloud-1"></span>
                                         </a>
-                                         <a role="button" title="${value.observation ? value.observation : 'Adicionar observação'} " class="contestation_observation pointer" data-contestation="${value.id}" style='margin-right:10px;'> <i class=' icon-observation-value  icon-observation-value_${value.id} material-icons ${value.observation ? 'green' : ''}'>info</i> </a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
+                                            <span class="o-eye-1"></span>
+                                        </a>
                                   </td>
                                 </tr>`;
 
@@ -298,66 +298,7 @@ $(document).ready(function () {
                 }
                 pagination(response);
 
-                vendaDetails();
                 contestationDetails();
-
-                $(".contestation_observation").unbind('click');
-                $(".contestation_observation").on('click', function (event) {
-                    event.preventDefault();
-                    let contestation = $(this).attr('data-contestation');
-                    $("#observation").val('');
-
-                    loadOnAny('#observation-modal .modal-user-observation-body');
-
-                    $("#observation-modal").modal('show');
-
-                    $.ajax({
-                        method: "GET",
-                        url: "contestations/get-observation/" + contestation,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function (response) {
-                            loadOnAny('#observation-modal .modal-user-observation-body', true);
-                            errorAjaxResponse(response);
-                        },
-                        success: function (response) {
-                            loadOnAny('#observation-modal .modal-user-observation-body', true);
-                            $("#observation").val(response.data.observation);
-                            $("#update-contestation-observation").attr('contestation', response.data.id);
-
-                            $("#update-contestation-observation").unbind('click');
-                            $("#update-contestation-observation").on('click', function () {
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "contestations/set-observation/" + contestation,
-                                    data: {
-                                        'observation': $("#observation").val()
-                                    },
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    error: function (response) {
-                                        errorAjaxResponse(response);
-                                    },
-                                    success: function (response) {
-                                        $('#observation-modal').modal('hide');
-                                        $("#observation").val('');
-                                        contestation = '';
-                                       // updateUsersTable(currentPage);
-
-                                    }
-
-                                });
-
-                                $(".icon-observation-value_" +response.data.id ).addClass('green')
-
-                            });
-
-                        }
-                    });
-                });
 
                 $(".contestation_pdf").unbind('click');
                 $(".contestation_pdf").on('click', function (event) {
@@ -387,13 +328,13 @@ $(document).ready(function () {
                                 $('#pdf-modal').modal('hide');
                                 alertCustom('success', response.message);
                             },
-                            complete: function(data) {
+                            complete: function (data) {
                                 loadOnAny('#pdf-modal .modal-user-pdf-body', true);
                             }
 
                         });
 
-                        $(".icon-observation-value_" +response.data.id ).addClass('green')
+                        $(".icon-observation-value_" + response.data.id).addClass('green')
 
                     });
 
@@ -459,43 +400,11 @@ $(document).ready(function () {
                 loadOnAny('.total-number', true);
                 $('#total-contestation').html(response.total_contestation);
                 $('#total-contestation-value').html(response.total_contestation_value);
-                $('#total-contestation-tax').html(response.total_contestation_tax + ' (' + response.total_contestation + ' de ' + response.total_sale_approved + ' aprovadas' + ')');
-                $('#total-chargeback-tax').html(response.total_chargeback_tax + ' (' + response.total_chargeback + ' de ' + response.total_contestation + ' contestações' + ')');
+                $('#total-contestation-tax').html(' (' + response.total_contestation_tax + ' de ' + response.total_sale_approved + ')');
+                $('#total-chargeback-tax').html(' (' + response.total_chargeback_tax + ')');
+                $('#total-chargeback-tax-val').html(response.total_chargeback);
+
             }
-        });
-    }
-
-    function vendaDetails() {
-        $(".detalhes_venda").on('click', function () {
-            loadOnAny('#modal-details .modal-body');
-            let venda = $(this).attr('venda');
-
-            $('#modal_titulo').html('Detalhes da venda');
-
-            $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-
-            let data = {sale_id: venda};
-
-            $.ajax({
-                method: "POST",
-                url: '/sales/venda/detalhe',
-                data: data,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                error: function (response) {
-                    loadOnAny('#modal-details .modal-body', true);
-                    errorAjaxResponse(response);
-                },
-                success: function (response) {
-                    $('.modal-body').html(response);
-
-                    $('.subTotal').mask('#.###,#0', {reverse: true});
-                    $("#refundAmount").mask('##.###,#0', {reverse: true});
-
-                    loadOnAny('#modal-details .modal-body', true);
-                }
-            });
         });
     }
 
@@ -606,7 +515,6 @@ $(document).ready(function () {
             getTotalValues();
         }
     });
-
 
 
 });

@@ -21,7 +21,7 @@ class ContestationService
     {
 
         $qty_total_paid_value = $this->getQuery($filters)->sum('total_paid_value');
-        return 'R$ ' . number_format($qty_total_paid_value, 2, ',', '.');
+        return number_format($qty_total_paid_value, 2, ',', '.');
     }
 
     function getQuery($filters)
