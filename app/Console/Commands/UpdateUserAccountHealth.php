@@ -45,38 +45,12 @@ class UpdateUserAccountHealth extends Command
             if ($user->id == $user->account_owner_id) {
                 $user->account_owner_id;
                 $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
-                $accountHealthService->updateAccountScore($user);
+                if (!$accountHealthService->updateAccountScore($user)) {
+                    $this->line('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
+                }
             }
         }
 
-//        $users = [
-//            26, 557, 577, 42, 109, 152, 153, 154,
-//            178, 271, 526, 534, 557, 717, 1542, 1829,
-//            1837, 2073, 2100, 2159, 2174, 2239, 2366, 2367,
-//            2387, 2498, 2588, 2877, 3155, 3195, 3227, 3241,
-//            3301, 3420,
-//        ];
-
-//        foreach ($users as $id) {
-//            if (Sale::where('gateway_id', 15)
-//                    ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-//                    ->whereIn('status', [
-//                        Sale::STATUS_APPROVED,
-//                        Sale::STATUS_CHARGEBACK,
-//                        Sale::STATUS_REFUNDED,
-//                        Sale::STATUS_IN_DISPUTE
-//                    ])->where('owner_id', $id)->count() < 100) {
-//                continue;
-//            }
-//
-//            $user = User::find($id);
-//            $this->line('user: ' . $user->name);
-//            $this->line('attendance score: ' . $att = $accountHealthService->getAttendanceScore($user));
-//            $this->line('tracking score: ' . $trck = $accountHealthService->getTrackingScore($user));
-//            $this->line('chargeback score: ' . $cb = $accountHealthService->getChargebackScore($user));
-//            $this->line('partial account health: ' . round(($att + $trck + $cb) / 3, 2));
-//            $this->line('------------------------------------------------------------------');
-//        }
         return 0;
     }
 }

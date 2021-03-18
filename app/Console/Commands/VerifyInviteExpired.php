@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Exception;
@@ -29,13 +30,12 @@ class VerifyInviteExpired extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
+        $start = now();
+
         try {
+
             $invitationModel = new Invitation();
 
             $invites = $invitationModel->where('expiration_date', '<=', Carbon::now()->toDateString())->get();
@@ -45,5 +45,8 @@ class VerifyInviteExpired extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        $end = now();
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

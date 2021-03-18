@@ -14,23 +14,16 @@ class Alien extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
-        $totalCheckouts = User::join('sales', function ($query) {
-            $query->on('owner_id', '=', 'users.id')
-                ->where('payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
-                ->whereIn('sales.status', [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_IN_DISPUTE
-                ]);
-        })->join('checkouts', function ($query) {
-            $query->on('checkouts.id', '=', 'sales.checkout_id')
-                ->where('payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
+        $totalCheckouts = User::join('users_projects', function ($query) use ($user) {
+            $query->on('users.id', '=', 'user_id')
+                ->where('user_id', $user->id);
+        })->join('checkouts', function ($query) use ($user) {
+            $query->on('checkouts.project_id', '=', 'users_projects.project_id')
                 ->whereIn('checkouts.status_enum', [
                     Checkout::STATUS_ABANDONED_CART,
                     Checkout::STATUS_RECOVERED
                 ]);
-        })->where('owner_id', $user->id)->count();
+        })->count();
 
         $recoveredCheckouts = User::join('sales', function ($query) {
             $query->on('owner_id', '=', 'users.id')

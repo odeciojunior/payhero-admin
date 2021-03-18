@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\DomainService;
 
 class VerifyPendingDomains extends Command
@@ -45,18 +45,17 @@ class VerifyPendingDomains extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
+        $start = now();
         try {
-
-            $result = $this->getDomainService()->verifyPendingDomains();
+            $this->getDomainService()->verifyPendingDomains();
         } catch (Exception $e) {
-            Log::warning('VerifyPendingDomains - Erro no command ');
             report($e);
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

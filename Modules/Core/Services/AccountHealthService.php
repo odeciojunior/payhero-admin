@@ -4,6 +4,10 @@ namespace Modules\Core\Services;
 
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\TicketScores\DeliveryDelay;
+use Modules\Core\Entities\TicketScores\NonTrackableOrder;
+use Modules\Core\Entities\TicketScores\TrackingCodeNotInformed;
 use Modules\Core\Entities\User;
 
 /**
@@ -26,12 +30,11 @@ class AccountHealthService
     public function userHasMinimumSalesAmount(User $user)
     {
         $approvedSales = Sale::whereIn('status', [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])->where('owner_id', $user->id);
-
+            Sale::STATUS_APPROVED,
+            Sale::STATUS_CHARGEBACK,
+            Sale::STATUS_REFUNDED,
+            Sale::STATUS_IN_DISPUTE
+        ])->where('owner_id', $user->id);
 
         $approvedSalesAmount = $approvedSales->count();
         $minimumSalesToEvaluate = 100;
@@ -40,16 +43,60 @@ class AccountHealthService
 
     public function getAttendanceScore(User $user): float
     {
+        /** Response Time Score */
         $averageResponseTime = $this->attendanceService->getAverageResponseTimeInDays($user);
-        $score = 0;
-        $maxScore = 10;
+        $responseTimeScore = 0;
+        $maxResponseTimeScore = 10;
         $minimumDaysToMaxScore = 1;
         if ($averageResponseTime <= $minimumDaysToMaxScore) {
-            $score = 10;
+            $responseTimeScore = 10;
         } else if ($averageResponseTime <= 5) {
-            $score = ($maxScore + $minimumDaysToMaxScore) - ($averageResponseTime * 2);
+            $responseTimeScore = ($maxResponseTimeScore + $minimumDaysToMaxScore) - ($averageResponseTime * 2);
         }
-        return $score;
+
+        /** Complaint Tickets Score */
+        $ticketsScore = $this->getTicketsScore($user);
+
+        /** Attendance Score */
+        $attendanceScore = ($responseTimeScore + $ticketsScore) / 2;
+        return round($attendanceScore, 1);
+    }
+
+    private function getTicketsScore(User $user): float
+    {
+        $startDate = now()->startOfDay()->subDays(41);
+        $endDate = now()->endOfDay()->subDay();
+        $complaintTickets = $this->attendanceService->getComplaintTicketsInPeriod($user, $startDate, $endDate);
+        $totalComplaintTickets = count($complaintTickets);
+        $totalScore = 0;
+
+        if(!$totalComplaintTickets) return 10;
+
+        foreach ($complaintTickets as $ticket) {
+            $totalScore += $this->getTicketScore($ticket);
+        }
+        return round($totalScore / $totalComplaintTickets, 1);
+    }
+
+    public function getTicketScore(Ticket $ticket): int
+    {
+        $scores = [
+            //Delivered Items
+            Ticket::SUBJECT_DIFFERS_FROM_ADVERTISED    => 0,
+            Ticket::SUBJECT_DAMAGED_BY_TRANSPORT       => 4,
+            Ticket::SUBJECT_MANUFACTURING_DEFECT       => 4,
+
+            //Not delivered Items
+            Ticket::SUBJECT_TRACKING_CODE_NOT_RECEIVED => (new TrackingCodeNotInformed)->calculateScore($ticket),
+            Ticket::SUBJECT_NON_TRACKABLE_ORDER        => (new NonTrackableOrder)->calculateScore($ticket),
+            Ticket::SUBJECT_DELIVERY_DELAY             => (new DeliveryDelay)->calculateScore($ticket),
+            Ticket::SUBJECT_DELIVERY_TO_WRONG_ADDRESS  => 0,
+
+            //Others
+            Ticket::SUBJECT_OTHERS                     => 10,
+        ];
+
+        return isset($scores[$ticket->subject_enum]) ? $scores[$ticket->subject_enum] : 0;
     }
 
     public function getChargebackScore(User $user): float
@@ -127,12 +174,12 @@ class AccountHealthService
         return $score;
     }
 
-    public function updateAccountScore(User $user): void
+    public function updateAccountScore(User $user): bool
     {
         try {
             if (!$this->userHasMinimumSalesAmount($user)) {
                 Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
-                return;
+                return false;
             }
 
             $startDate = now()->startOfDay()->subDays(140);
@@ -151,8 +198,13 @@ class AccountHealthService
                 'chargeback_rate'  => $chargebackRate,
                 'tracking_score'   => $trackingScore
             ]);
+
+            return true;
         } catch (\Exception $e) {
+            echo $e->getTraceAsString();
+            dd($e->getMessage());
             report($e);
+            return false;
         }
     }
 }

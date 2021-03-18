@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -31,12 +32,10 @@ class ShopifyReorderSales extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
+        $start = now();
+
         //Dia anterior
         $saleModel     = new Sale();
         $salePresenter = $saleModel->present();
@@ -66,5 +65,9 @@ class ShopifyReorderSales extends Command
                 $this->line('erro -> ' . $e->getMessage());
             }
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

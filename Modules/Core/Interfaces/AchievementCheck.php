@@ -6,5 +6,5 @@ use Modules\Core\Entities\User;
 
 interface AchievementCheck
 {
-    public function  userAchieved(User $user): bool;
+    public function userAchieved(User $user): bool;
 }

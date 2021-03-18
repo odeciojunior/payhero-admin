@@ -190,7 +190,6 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function (response) {
-                console.log(response);
             },
             success: function (response) {
                 downloadFile(response, 'export.xlsx')
