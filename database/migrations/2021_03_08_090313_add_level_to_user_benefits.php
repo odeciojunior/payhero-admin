@@ -18,8 +18,6 @@ class AddLevelToUserBenefits extends Migration
             $table->integer('level')
                 ->after('benefit_id');
         });
-
-        Artisan::call('command:update-user-level');
     }
 
     /**
