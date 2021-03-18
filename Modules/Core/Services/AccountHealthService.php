@@ -69,6 +69,9 @@ class AccountHealthService
         $complaintTickets = $this->attendanceService->getComplaintTicketsInPeriod($user, $startDate, $endDate);
         $totalComplaintTickets = count($complaintTickets);
         $totalScore = 0;
+
+        if(!$totalComplaintTickets) return 10;
+
         foreach ($complaintTickets as $ticket) {
             $totalScore += $this->getTicketScore($ticket);
         }
@@ -198,6 +201,8 @@ class AccountHealthService
 
             return true;
         } catch (\Exception $e) {
+            echo $e->getTraceAsString();
+            dd($e->getMessage());
             report($e);
             return false;
         }
