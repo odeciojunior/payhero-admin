@@ -41,12 +41,16 @@ class UpdateUserCompletedTasks extends Command
     {
         $taskService = new TaskService();
         $now = now();
-        foreach (User::with('tasks')->whereNull('deleted_at')->get() as $user) {
-            if ($user->id == $user->account_owner_id) {
-                $this->line($user->id . ' - ' . $user->name);
-                $taskService->checkUserCompletedTasks($user);
-            }
+        $users = User::with('tasks')
+            ->whereRaw('id = account_owner_id')
+            ->whereNull('deleted_at')
+            ->get();
+
+        foreach ($users as $user) {
+            $this->line($user->id . ' - ' . $user->name);
+            $taskService->checkUserCompletedTasks($user);
         }
+
         $this->line($now);
         $this->line(now());
         return 0;
