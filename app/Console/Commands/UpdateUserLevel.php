@@ -43,10 +43,10 @@ class UpdateUserLevel extends Command
     {
         $transactionModel = new Transaction;
         $transactionPresent = $transactionModel->present();
-        $transactions = $transactionModel
+        $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
             ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
-            ->groupBy('user_id')
-            ->selectRaw('user_id, SUM(transactions.value) as value');
+            ->groupBy('companies.user_id')
+            ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
         foreach ($transactions->cursor() as $transaction) {
             if ($transaction->value > 10000000000) {
@@ -68,28 +68,32 @@ class UpdateUserLevel extends Command
             if (!empty($user)) {
                 $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
 
-                if($user->level != $level){
-                    //TODO: notification
-                }
+                $previousLevel = $user->level;
 
                 $user->update([
-                    'level' => $level,
                     'total_commission_value' => $transaction->value,
+                    'level' => $level
                 ]);
 
-                $this->warn("Nível: {$level}");
-
-                $benefits = $user->benefits
-                    ->where('enabled', 0)
-                    ->where('level', '<=', $level);
-                foreach ($benefits as $benefit) {
-                    $benefit->enabled = 1;
-                    $benefit->save();
-
-                    $this->line('Benefício ' . __('definitions.benefit.' . $benefit->name) . ' ativado!');
+                if ($previousLevel != $level) {
+                    $this->info("Nível {$previousLevel} -> {$level}");
+                    //TODO: remove after running the first time in production
+                    if ($previousLevel == 0) {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', '<=', $level);
+                    } else {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', $level);
+                    }
+                    foreach ($benefits as $benefit) {
+                        $benefit->enabled = 1;
+                        $benefit->save();
+                    }
+                    BenefitsService::updateUserCashback($user);
+                    event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
                 }
-                BenefitsService::updateUserCashback($user);
-                event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
             }
         }
 

@@ -134,7 +134,7 @@ class TaskService
             ->where('user_id', $user->id)
             ->sum('value');
 
-        return $revenue && $revenue->value >= 100000;
+        return $revenue >= 100000;
     }
 
     private function validateFirstWithdrawalTask(User $user): bool
