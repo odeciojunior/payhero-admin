@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\User;
+use Modules\Core\Events\NotifyUserLevelUpdateEvent;
 
 class AchievementService
 {
@@ -23,6 +24,7 @@ class AchievementService
         }
 
         if ($achievement->userAchieved($user)) {
+            event(new NotifyUserLevelUpdateEvent($user, $achievement));
             return $this->setUserAchievement($user, $achievement);
         }
 
