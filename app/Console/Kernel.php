@@ -110,7 +110,7 @@ class Kernel extends ConsoleKernel
 
         /** Account health */
         $schedule->command('command:update-attendance-average-user')->dailyAt('02:00');
-        $schedule->command('command:update-user-level')->dailyAt('01:30');
+        $schedule->command('command:update-user-level')->dailyAt('11:15');
         $schedule->command('account-health:update')->dailyAt('00:30');
         $schedule->command('account-health:update')->dailyAt('06:30');
         $schedule->command('account-health:update')->dailyAt('12:30');
