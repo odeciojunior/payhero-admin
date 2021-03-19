@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\NotazzService;
 
 class GenerateNotazzInvoicesSalesApproved extends Command
@@ -32,10 +30,7 @@ class GenerateNotazzInvoicesSalesApproved extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
-
             $notazzService = new NotazzService();
 
             //gera primeiramente as invoices retroativas se existirem
@@ -46,10 +41,5 @@ class GenerateNotazzInvoicesSalesApproved extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
-
     }
 }
