@@ -41,7 +41,6 @@ class VerifyTransfersGetnet extends Command
 
     public function handle()
     {
-        $start = now();
 
         $companyModel = new Company();
         $transactionModel = new Transaction();

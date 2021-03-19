@@ -34,11 +34,6 @@ class CheckGetnetTransactions extends Command
 
     public function handle()
     {
-        $start = now();
-
         (new TransactionsService())->verifyGetnetTransactions();
-
-        $end = now();
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

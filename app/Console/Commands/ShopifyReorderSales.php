@@ -34,8 +34,6 @@ class ShopifyReorderSales extends Command
 
     public function handle()
     {
-        $start = now();
-
         //Dia anterior
         $saleModel     = new Sale();
         $salePresenter = $saleModel->present();
@@ -65,9 +63,5 @@ class ShopifyReorderSales extends Command
                 $this->line('erro -> ' . $e->getMessage());
             }
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
