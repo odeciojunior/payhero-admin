@@ -110,7 +110,7 @@ $(document).ready(function () {
             },
             success: function success(data) {
 
-                //updatePerformanceCard1(data);
+                updatePerformanceCard1(data);
                 if ((data.level > 1) && (data.money_cashback !== '0,00')) {
                     updateCashback(data.money_cashback)
                 }
