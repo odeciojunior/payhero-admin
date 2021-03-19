@@ -15,28 +15,35 @@ class BenefitsService
             $user->load('benefits');
         }
         $benefits = $user->benefits;
-
         $cashback2 = $benefits->where('name', 'cashback_2')
             ->where('enabled', 1)
             ->first();
         $cashback1 = $benefits->where('name', 'cashback_1')
             ->where('enabled', 1)
             ->first();
-        if (!is_null($cashback2) && $user->installment_cashback != 1) {
-            $user->installment_cashback = 1;
-            $user->save();
+        if (!is_null($cashback2)) {
+            if ($user->installment_cashback != 1) {
+                $user->installment_cashback = 1;
+                $user->save();
+            }
             if (!is_null($cashback1)) {
                 $cashback1->enabled = 0;
                 $cashback1->save();
             }
-        } else if (!is_null($cashback1) && $user->installment_cashback != 0.5) {
-            $user->installment_cashback = 0.5;
-            $user->save();
+        } else if (!is_null($cashback1)) {
+            if ($user->installment_cashback != 0.5) {
+                $user->installment_cashback = 0.5;
+                $user->save();
+            }
             if (!is_null($cashback2)) {
                 $cashback2->enabled = 0;
                 $cashback2->save();
             }
-        } else if (is_null($cashback1) && is_null($cashback2) && $user->installment_cashback != 0) {
+        } else if (is_null($cashback1) && is_null($cashback2)) {
+            if ($user->installment_cashback != 0) {
+                $user->installment_cashback = 0;
+                $user->save();
+            }
             $user->installment_cashback = 0;
             $user->save();
         }
