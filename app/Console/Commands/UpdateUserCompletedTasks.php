@@ -43,7 +43,6 @@ class UpdateUserCompletedTasks extends Command
         $now = now();
         $users = User::with('tasks')
             ->whereRaw('id = account_owner_id')
-            ->whereNull('deleted_at')
             ->get();
 
         foreach ($users as $user) {
