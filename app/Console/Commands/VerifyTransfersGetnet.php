@@ -119,10 +119,10 @@ class VerifyTransfersGetnet extends Command
             } catch (Exception $e) {
                 report($e);
             }
-
-            $end = now();
-
-            report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
         }
+
+        $end = now();
+
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
