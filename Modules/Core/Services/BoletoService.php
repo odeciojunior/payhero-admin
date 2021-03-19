@@ -613,12 +613,10 @@ class BoletoService
                     ];
                     event(new BoletoPaidEvent($data));
                 } catch (Exception $e) {
-                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao enviar boletos para e-mails - Boletos compensados');
             report($e);
         }
     }

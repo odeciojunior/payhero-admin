@@ -34,13 +34,7 @@ class ChangeBoletoPendingToCanceled extends Command
 
     public function handle()
     {
-        $start = now();
-
         $boletoService = new BoletoService();
         $boletoService->changeBoletoPendingToCanceled();
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

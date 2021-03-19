@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\NotazzService;
 
 class VerifyPendingNotazzInvoices extends Command
@@ -24,37 +22,19 @@ class VerifyPendingNotazzInvoices extends Command
      */
     protected $description = 'Faz o envio de todas as invoices pendentes e depois marca como completa as enviadas';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
-        $start = now();
-
         try {
-
             $notazzService = new NotazzService();
 
             $notazzService->verifyPendingInvoices();
-
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
