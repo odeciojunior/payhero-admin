@@ -67,23 +67,31 @@ class UpdateUserLevel extends Command
             if (!empty($user)) {
                 $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
 
+                $previousLevel = $user->level;
+
                 $user->update([
-                    'level' => $level,
                     'total_commission_value' => $transaction->value,
+                    'level' => $level
                 ]);
 
-                $this->warn("Nível: {$level}");
-
-                $benefits = $user->benefits
-                    ->where('enabled', 0)
-                    ->where('level', '<=', $level);
-                foreach ($benefits as $benefit) {
-                    $benefit->enabled = 1;
-                    $benefit->save();
-
-                    $this->line('Benefício ' . __('definitions.benefit.' . $benefit->name) . ' ativado!');
+                if ($previousLevel != $level) {
+                    $this->info("Nível {$previousLevel} -> {$level}");
+                    //TODO: remove after running the first time in production
+                    if ($previousLevel == 0) {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', '<=', $level);
+                    } else {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', $level);
+                    }
+                    foreach ($benefits as $benefit) {
+                        $benefit->enabled = 1;
+                        $benefit->save();
+                    }
+                    BenefitsService::updateUserCashback($user);
                 }
-                BenefitsService::updateUserCashback($user);
             }
         }
     }
