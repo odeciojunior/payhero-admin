@@ -19,7 +19,10 @@ class SkySeller extends Achievement implements AchievementCheck
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
-            ])->where('owner_id', $user->id)->count();
+            ])->where(function ($query) use ($user) {
+                $query->where('owner_id', $user->id)
+                    ->orWhere('affiliate_id', $user->id);
+            })->count();
 
         return $totalCreditCardApprovedSales >= 1000;
     }

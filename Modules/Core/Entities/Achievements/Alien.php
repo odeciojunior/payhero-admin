@@ -44,6 +44,6 @@ class Alien extends Achievement implements AchievementCheck
 
         if (!$recoveredCheckouts || !$totalCheckouts) return false;
 
-        return ($recoveredCheckouts / $totalCheckouts * 100) >= 6;
+        return ($recoveredCheckouts / $totalCheckouts) >= 0.06;
     }
 }
