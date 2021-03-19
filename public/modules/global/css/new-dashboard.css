@@ -793,21 +793,21 @@ body {
     animation-delay: 3s;
 }
 
-@-webkit-keyframes ripple-orange {
+@-webkit-keyframes ripple-yellow {
     0% {
-        box-shadow: 0 0 0 0 var(--color-ripple-orange-3), 0 0 0 5px var(--color-ripple-orange-3);
+        box-shadow: 0 0 0 0 var(--color-ripple-yellow-3), 0 0 0 5px var(--color-ripple-yellow-3);
     }
     to {
-        box-shadow: 0 0 0 5px var(--color-ripple-orange-3), 0 0 0 15px var(--color-ripple-orange-0);
+        box-shadow: 0 0 0 5px var(--color-ripple-yellow-3), 0 0 0 15px var(--color-ripple-yellow-0);
     }
 }
 
-@keyframes ripple-orange {
+@keyframes ripple-yellow {
     0% {
-        box-shadow: 0 0 0 0 var(--color-ripple-orange-3), 0 0 0 5px var(--color-ripple-orange-3);
+        box-shadow: 0 0 0 0 var(--color-ripple-yellow-3), 0 0 0 5px var(--color-ripple-yellow-3);
     }
     to {
-        box-shadow: 0 0 0 5px var(--color-ripple-orange-3), 0 0 0 15px var(--color-ripple-orange-0);
+        box-shadow: 0 0 0 5px var(--color-ripple-yellow-3), 0 0 0 15px var(--color-ripple-yellow-0);
     }
 }
 
