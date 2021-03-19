@@ -48,9 +48,17 @@ class BenefitsService
         $activeBenefits = $benefits->where('enabled', 1);
         $nextBenefits = $benefits->where('level', $user->level + 1)
             ->where('enabled', 0);
+//        $disabledBenefits = $benefits->where('level', '<=', $user->level)
+//            ->where('enabled', 0)
+//            ->reject(function ($item) use ($activeBenefits) {
+//                return $activeBenefits->where('name', 'cashback_2')->count()
+//                    && $item->name == 'cashback_1'
+//                    && $item->enabled == 0;
+//            });
 
         return [
             'active' => new BenefitCollection($activeBenefits),
+            //'disabled' => new BenefitCollection($disabledBenefits),
             'next' => new BenefitCollection($nextBenefits),
         ];
     }
