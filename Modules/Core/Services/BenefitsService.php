@@ -46,11 +46,14 @@ class BenefitsService
     {
         $benefits = $user->benefits;
         $activeBenefits = $benefits->where('enabled', 1);
+        //$disabledBenefits = $benefits->where('level', '<=', $user->level)
+        //    ->where('enabled', 0);
         $nextBenefits = $benefits->where('level', $user->level + 1)
             ->where('enabled', 0);
 
         return [
             'active' => new BenefitCollection($activeBenefits),
+            //'disabled' => new BenefitCollection($disabledBenefits),
             'next' => new BenefitCollection($nextBenefits),
         ];
     }
