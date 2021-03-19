@@ -37,8 +37,6 @@ class CheckUpdateCompanyGetnet extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
             $companies = Company::where('get_net_status', 2)->get();
             $getnet = new GetnetBackOfficeService();
@@ -70,8 +68,5 @@ class CheckUpdateCompanyGetnet extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

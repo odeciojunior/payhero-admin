@@ -22,8 +22,6 @@ class UpdateRedisSaleTracking extends Command
     public function handle()
     {
         try{
-            $start = now();
-
             $sales = Sale::where('gateway_id', 15)->chunk(
                 1000,
                 function ($sales) {
@@ -36,9 +34,6 @@ class UpdateRedisSaleTracking extends Command
                     }
                 }
             );
-            $end = now();
-
-            report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
 
             return 0;
         }

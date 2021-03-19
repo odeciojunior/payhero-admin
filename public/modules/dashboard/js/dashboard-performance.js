@@ -213,8 +213,7 @@ $(document).ready(function () {
 
     function updateTasks(level, tasks) {
         const elementTask =  $('#tasks');
-        const elementTaskScroll = $('#tasks > div');
-        elementTaskScroll.html('');
+        elementTask.first('div').html('');
 
         if (!isEmpty(tasks)) {
 
@@ -224,7 +223,7 @@ $(document).ready(function () {
                                  <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
                                  <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.name}</p>
                             </div>`;
-                $(elementTaskScroll).append(item);
+                elementTask.first('div').append(item);
             });
 
             elementTask.css({'margin-top': '20px'}).show();
@@ -322,7 +321,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
-                        <span class="mb-10 title-performance">Benefícios ativos</span>
+                        <span class="mb-10 title-performance">Seus próximos benefícios</span>
                         <div id="benefits-container">
                             <div class="d-flex flex-column flex-nowrap justify-content-start ">
                             </div>

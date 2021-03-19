@@ -4,6 +4,7 @@ namespace Modules\Core\Entities\Achievements;
 
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Achievement;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Interfaces\AchievementCheck;
@@ -14,6 +15,10 @@ class FallingStar extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
+        //TODO: Está com "return false;" pois não existem afiliados ativos no momento
+        //TODO: otimizar tabela affilliates com a coluna producer_id (users)
+        return false;
+
         //TODO: Refactor with query builder
         $sql = 'SELECT u.id, count(*) AS total_affiliates
                 FROM users u

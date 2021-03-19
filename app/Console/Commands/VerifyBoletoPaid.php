@@ -30,13 +30,7 @@ class VerifyBoletoPaid extends Command
 
     public function handle()
     {
-        $start = now();
-
         $boletoService = new BoletoService();
         $boletoService->verifyBoletoPaid();
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

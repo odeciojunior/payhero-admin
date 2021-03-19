@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
@@ -36,8 +35,8 @@ class TaskService
 
     public function checkCompletedTask(User $user, Task $task): bool
     {
-        $userTask = $user->tasks->where('id', $task->id)->first();
-        if ($userTask) {
+        $hasTask = $user->tasks->contains('id', $task->id);
+        if ($hasTask) {
             return true;
         }
 
@@ -111,33 +110,36 @@ class TaskService
 
     private function validateDomainApprovedTask(User $user): bool
     {
-        return $user->projects()->whereHas('domains', function ($query) {
-                $query->where('domains.status', (new Domain())->present()->getStatus('approved'));
-            })->count() > 0;
+        $approvedDomain = $user->projects()->whereHas('domains', function ($query) {
+            $query->where('domains.status', (new Domain())->present()->getStatus('approved'));
+        })->limit(1)->get();
+
+        return $approvedDomain->count() > 0;
     }
 
-    private function validateFirstSaleTask(User $user)
+    private function validateFirstSaleTask(User $user): bool
     {
-        return Transaction::where('user_id', $user->id)->limit(1)->count() > 0;
+        $transactions = Transaction::where('user_id', $user->id)
+            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+            ->limit(1)->get();
+
+        return $transactions->count() > 0;
     }
 
     private function validateFirst1000RevenueTask(User $user): bool
     {
         $transactionModel = new Transaction;
-        $transactionPresent = $transactionModel->present();
         $revenue = $transactionModel
-            ->whereIn('status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
+            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
             ->where('user_id', $user->id)
-            ->groupBy('user_id')
-            ->selectRaw('user_id, SUM(transactions.value) as value')->first();
+            ->sum('value');
 
         return $revenue && $revenue->value >= 100000;
     }
 
     private function validateFirstWithdrawalTask(User $user): bool
     {
-        return Company::whereHas('withdrawals', function ($query) {
-                $query->where('status', 3);
-            })->where('user_id', $user->id)->count() > 0;
+        return Withdrawal::where('status', Withdrawal::STATUS_TRANSFERED)
+                ->whereIn('company_id', $user->companies()->pluck('id'))->count() > 0;
     }
 }

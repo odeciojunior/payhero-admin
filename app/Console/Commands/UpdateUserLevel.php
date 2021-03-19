@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Events\NotifyUserLevelUpdateEvent;
 use Modules\Core\Services\BenefitsService;
 
 class UpdateUserLevel extends Command
@@ -91,8 +92,11 @@ class UpdateUserLevel extends Command
                         $benefit->save();
                     }
                     BenefitsService::updateUserCashback($user);
+                    event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
                 }
             }
         }
+
+        return 0;
     }
 }

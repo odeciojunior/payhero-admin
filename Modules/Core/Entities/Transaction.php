@@ -2,13 +2,13 @@
 
 namespace Modules\Core\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Laracasts\Presenter\PresentableTrait;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Core\Presenters\TransactionPresenter;
 use App\Traits\LogsActivity;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\TransactionPresenter;
 
 /**
  * @property integer $id
@@ -40,6 +40,28 @@ class Transaction extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+
+    const TYPE_CLOUDFOX   = 1;
+    const TYPE_PRODUCER   = 2;
+    const TYPE_INVITATION = 3;
+    const TYPE_AFFILIATE  = 4;
+    const TYPE_PARTNER    = 5;
+    const TYPE_CONVERTAX  = 6;
+    const TYPE_REFUNDED   = 7;
+    const TYPE_CASHBACK   = 8;
+
+    const STATUS_TRANSFERRED        =  1;
+    const STATUS_PAID               =  2;
+    const STATUS_PENDING            =  3;
+    const STATUS_CHARGEBACK         =  4;
+    const STATUS_CANCELED           =  5;
+    const STATUS_REFUNDED           =  6;
+    const STATUS_REFUSED            =  7;
+    const STATUS_PENDING_ANTIFRAUD  =  8;
+    const STATUS_CANCELED_ANTIFRAUD =  9;
+    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_ANTECIPATED        = 12;
+    const STATUS_BILLET_REFUNDED    = 13;
 
     protected $presenter = TransactionPresenter::class;
 
@@ -136,11 +158,13 @@ class Transaction extends Model
         return $this->hasMany(ProductPlanSale::class, 'sale_id', 'sale_id');
     }
 
-    public function gateway() {
+    public function gateway()
+    {
         return $this->belongsTo(Gateway::class);
     }
 
-    public function withdrawal() {
+    public function withdrawal()
+    {
         return $this->belongsTo(Withdrawal::class);
     }
 
