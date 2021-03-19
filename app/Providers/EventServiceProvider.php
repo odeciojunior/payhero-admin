@@ -111,7 +111,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \Modules\Core\Events\NotifyUserLevelUpdateEvent::class => [
             \Modules\Core\Listeners\NotifyUserLevelUpdateCreateListener::class,
-            \Modules\Core\Listeners\NotifyUserLevelUpdateSendEmailListener::class
+//            \Modules\Core\Listeners\NotifyUserLevelUpdateSendEmailListener::class
         ]
     ];
 
