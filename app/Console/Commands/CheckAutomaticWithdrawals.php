@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -36,13 +37,9 @@ class CheckAutomaticWithdrawals extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
+        $start = now();
 
         $service = new WithdrawalService();
         $withdrawalSettingsModel = new WithdrawalSettings();
@@ -95,6 +92,9 @@ class CheckAutomaticWithdrawals extends Command
         }
 
         settings()->group('withdrawal_request')->set('withdrawal_request', true);
+
+        $end = now();
+        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
 
         return 0;
     }

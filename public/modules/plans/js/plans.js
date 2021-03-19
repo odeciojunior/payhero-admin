@@ -560,11 +560,7 @@ $(function () {
                                         hasNoValue = true;
                                     }
                                 });
-                                $('.products_cost_update').each(function () {
-                                    if ($(this).val() == '') {
-                                        hasNoValue = true;
-                                    }
-                                });
+
                                 if (hasNoValue) {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;

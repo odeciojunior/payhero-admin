@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\NotazzService;
 
 class GenerateNotazzInvoicesSalesApproved extends Command
@@ -29,14 +28,9 @@ class GenerateNotazzInvoicesSalesApproved extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
         try {
-
             $notazzService = new NotazzService();
 
             //gera primeiramente as invoices retroativas se existirem
@@ -45,7 +39,6 @@ class GenerateNotazzInvoicesSalesApproved extends Command
             //gera as invoices ainda nao geradas
             $notazzService->generateInvoicesSalesApproved();
         } catch (Exception $e) {
-            Log::warning('GenerateNotazzInvoicesSalesApproved - Erro no command ');
             report($e);
         }
     }
