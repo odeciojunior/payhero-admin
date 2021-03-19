@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boletoexpiring')->dailyAt('11:30');
 
         // abandoned carts
-        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
+        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
 
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
