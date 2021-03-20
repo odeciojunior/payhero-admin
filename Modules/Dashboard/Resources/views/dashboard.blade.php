@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=14') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=150') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
@@ -229,9 +229,9 @@
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
 {{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
-        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=1' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=1' . random_int(100, 10000)) }}"></script>
     @endpush
 
 @endsection

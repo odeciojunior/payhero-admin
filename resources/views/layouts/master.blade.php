@@ -64,7 +64,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=100') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=60') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
@@ -137,8 +137,8 @@
 </script>
 
 
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=1') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=1') }}"></script>
 
 
 @stack('scripts')
