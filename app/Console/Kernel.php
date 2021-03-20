@@ -95,7 +95,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
         /** Account health */
-        $schedule->command('command:update-attendance-average-user')->dailyAt('02:00');
+        $schedule->command('account-health:user:update-average-response-time')->dailyAt('02:00');
         $schedule->command('command:update-user-level')->dailyAt('11:15');
         $schedule->command('account-health:update')->dailyAt('00:30');
         $schedule->command('account-health:update')->dailyAt('06:30');
