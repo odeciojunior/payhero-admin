@@ -52,44 +52,45 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div style="display: none" class="page-header container" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
                     <h1 class="page-title">Contestações</h1>
                 </div>
             </div>
         </div>
-        <div class="page-content container" >
-            <div class="fixhalf"></div>
-            <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
-                @csrf
-                <div id="" class="card shadow p-20">
-                    <div class="row align-items-baseline mb-md-15">
+        <div id="project-not-empty" style="display:none">
+            <div class="page-content container">
+                <div class="fixhalf"></div>
+                <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
+                    @csrf
+                    <div id="" class="card shadow p-20">
+                        <div class="row align-items-baseline mb-md-15">
 
-                        <div class="col-sm-12 col-md">
-                            <label for="transaction">Transação</label>
-                            <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                            <div class="col-sm-12 col-md">
+                                <label for="transaction">Transação</label>
+                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                            </div>
+
+
+                            <div class="col-sm-12 col-md">
+                                <label for="date_type">Data</label>
+                                <select name='date_type' id="date_type" class="form-control select-pad">
+                                    <option value="expiration_date">Data da expiração</option>
+                                    <option value="transaction_date">Data da compra</option>
+                                    <option value="adjustment_date">Data da contestação</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12 col-md">
+                                <label for="date_type">&nbsp;</label>
+                                <input name='date_range' id="date_range" class="select-pad"
+                                       placeholder="Clique para editar..." readonly style="">
+                            </div>
+
+
                         </div>
-
-
-                        <div class="col-sm-12 col-md">
-                            <label for="date_type">Data</label>
-                            <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="expiration_date">Data da expiração</option>
-                                <option value="transaction_date">Data da compra</option>
-                                <option value="adjustment_date">Data da contestação</option>
-                            </select>
-                        </div>
-
-                        <div class="col-sm-12 col-md">
-                            <label for="date_type">&nbsp;</label>
-                            <input name='date_range' id="date_range" class="select-pad"
-                                   placeholder="Clique para editar..." readonly style="">
-                        </div>
-
-
-                    </div>
-                    <div class="row collapse" id="bt_collapse">
+                        <div class="row collapse" id="bt_collapse">
 
                             <div class="d-flex flex-wrap" style="width:100%">
                                 <div class="col-sm-12 col-md">
@@ -162,89 +163,92 @@
                             </div>
                         </div>
                     </div>
-            </form>
-            <div class="fixhalf"></div>
+                </form>
+                <div class="fixhalf"></div>
 
-            <div class="row justify-content-center">
-                <div class="col-md-3">
-                    <div class="card shadow" style='display:block;'>
-                        <div class="card-body">
-                            <h5 class="gray font-size-16">N° de contestações</h5>
-                            <h4 class="number"><span class="font-size-30 bold" id="total-contestation"></span><span
-                                    id="total-contestation-tax"></span></h4>
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <div class="card shadow" style='display:block;'>
+                            <div class="card-body">
+                                <h5 class="gray font-size-16">N° de contestações</h5>
+                                <h4 class="number"><span class="font-size-30 bold" id="total-contestation"></span><span
+                                        id="total-contestation-tax"></span></h4>
 
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-3">
-                    <div class="card shadow" style='display:block;'>
-                        <div class="card-body">
-                            <h5 class="gray font-size-16">Resultantes em chargeback</h5>
-                            <h4 class="number"><span class="font-size-30 bold" id="total-chargeback-tax-val"></span>
-                                <span id="total-chargeback-tax"></span></h4>
+                    <div class="col-md-3">
+                        <div class="card shadow" style='display:block;'>
+                            <div class="card-body">
+                                <h5 class="gray font-size-16">Resultantes em chargeback</h5>
+                                <h4 class="number"><span class="font-size-30 bold" id="total-chargeback-tax-val"></span>
+                                    <span id="total-chargeback-tax"></span></h4>
 
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-3">
-                    <div class="card shadow" style='display:block;'>
-                        <div class="card-body">
-                            <h5 class="gray font-size-16">Total em R$</h5>
-                            <h4 class="number" style="">R$ <span class="font-size-30 bold"
-                                                                 id="total-contestation-value"></span></h4>
-                        </div>
-                        <div class="s-border-right yellow"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div style="display:block;">
-                        <div>
-                            <h5 class="gray font-size-16"> O que são contestações </h5>
-                            <p>
-                                São ocorrências enviadas pelas operadoras de crédito
-                                após contestações do titular do cartão
-                            </p>
+                    <div class="col-md-3">
+                        <div class="card shadow" style='display:block;'>
+                            <div class="card-body">
+                                <h5 class="gray font-size-16">Total em R$</h5>
+                                <h4 class="number" style="">R$ <span class="font-size-30 bold"
+                                                                     id="total-contestation-value"></span></h4>
+                            </div>
+                            <div class="s-border-right yellow"></div>
                         </div>
                     </div>
+
+                    <div class="col-md-3">
+                        <div style="display:block;">
+                            <div>
+                                <h5 class="gray font-size-16"> O que são contestações </h5>
+                                <p>
+                                    São ocorrências enviadas pelas operadoras de crédito
+                                    após contestações do titular do cartão
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-            </div>
+                <div class="card shadow" style="min-height: 300px">
+                    <div class="page-invoice-table table-responsive">
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
+                               style="width:100%;">
+                            <thead>
+                            <tr>
+                                <td class="table-title">Transação</td>
+                                <td class="table-title" style="min-width: 200px;">Empresa</td>
+                                <td class="table-title">Compra</td>
+                                <td class="table-title" style="min-width: 150px;">Status</td>
+                                <td class="table-title" style="min-width: 170px;">Data</td>
+                                <td class="table-title">Motivo</td>
+                                {{--                            <td class="table-title">Valor</td>--}}
+                                <td class="table-title" style="min-width: 100px;"></td>
+                            </tr>
+                            </thead>
+                            <tbody id="chargebacks-table-data">
+                            {{-- js carrega... --}}
+                            </tbody>
+                        </table>
+                    </div>
 
-            <div class="card shadow" style="min-height: 300px">
-                <div class="page-invoice-table table-responsive">
-                    <table id="chargebacks-table" class="table-vendas table table-striped unify" style="width:100%;">
-                        <thead>
-                        <tr>
-                            <td class="table-title">Transação</td>
-                            <td class="table-title" style="min-width: 200px;">Empresa</td>
-                            <td class="table-title">Compra</td>
-                            <td class="table-title" style="min-width: 150px;">Status</td>
-                            <td class="table-title" style="min-width: 170px;">Data</td>
-                            <td class="table-title">Motivo</td>
-                            {{--                            <td class="table-title">Valor</td>--}}
-                            <td class="table-title" style="min-width: 100px;"></td>
-                        </tr>
-                        </thead>
-                        <tbody id="chargebacks-table-data">
-                        {{-- js carrega... --}}
-                        </tbody>
-                    </table>
                 </div>
+                <ul id="pagination" class="pagination-sm mb-5" style="margin-top:10px;position:relative;float:right">
+                    {{-- js carrega... --}}
+                </ul>
+                @include('chargebacks::contestations-files')
+                @include('sales::details')
 
-            </div>
-            <ul id="pagination" class="pagination-sm mb-5" style="margin-top:10px;position:relative;float:right">
-                {{-- js carrega... --}}
-            </ul>
-            @include('chargebacks::contestations-files')
-            @include('sales::details')
-
-            <br>
-
+                <br>
 
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+        @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
     </div>
 
     @push('scripts')

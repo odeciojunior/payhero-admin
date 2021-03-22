@@ -59,8 +59,6 @@ $(() => {
             }
         });
 
-
-
     });
 
     $("#sendfilesform").on('submit', function(e){
@@ -127,6 +125,8 @@ $(() => {
 
     });
 
+
+
     $(document).on("click", "button.btn-remove-file" , function(e) {
         e.preventDefault();
         $(this).prop("disabled", true);
@@ -154,5 +154,33 @@ $(() => {
 
     });
 
-
+    getProjects();
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#page_header").show()
+                } else {
+                    $("#page_header").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+                loadingOnScreenRemove();
+            }
+        });
+    }
 });
