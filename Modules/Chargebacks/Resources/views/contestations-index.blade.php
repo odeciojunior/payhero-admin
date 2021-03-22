@@ -203,10 +203,10 @@
                     <div class="col-md-3">
                         <div style="display:block;">
                             <div>
-                                <h5 class="gray font-size-16"> O que são contestações </h5>
+                                <h5 class="gray font-size-16"> O que são contestações? </h5>
                                 <p>
                                     São ocorrências enviadas pelas operadoras de crédito
-                                    após contestações do titular do cartão
+                                    após contestações do titular do cartão.
                                 </p>
                             </div>
                         </div>
