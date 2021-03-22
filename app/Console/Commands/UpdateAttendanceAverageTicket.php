@@ -4,8 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Ticket;
-use Modules\Core\Entities\TicketMessage;
-use Carbon\Carbon;
+use Modules\Core\Services\AttendanceService;
 
 class UpdateAttendanceAverageTicket extends Command
 {
@@ -14,7 +13,7 @@ class UpdateAttendanceAverageTicket extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update-attendance-average-ticket';
+    protected $signature = 'account-health:tickets:update-average-response-time';
 
     /**
      * The console command description.
@@ -41,50 +40,19 @@ class UpdateAttendanceAverageTicket extends Command
     public function handle()
     {
         try {
-            
-            $tickets = Ticket::with('messages')->get();
-
-            $ticketMesagePresenter = (new TicketMessage)->present();
-
-            foreach ($tickets as $ticket) {
-                
-                $average = 0;
-                $lastCustomer = '';
-                $lastProducer = '';
-                $firstProducer = '';
-
-                foreach ($ticket->messages as $key => $message) {
-                    
-                    if($message->type_enum == $ticketMesagePresenter->getType('from_customer')) {
-                        $lastCustomer = $message;
+            $attendanceService = new AttendanceService();
+            Ticket::with('messages')
+                ->chunk(500, function ($tickets) use ($attendanceService) {
+                    foreach ($tickets as $ticket) {
+                        $averageResponseTime = $attendanceService->getTicketAverageResponseTime($ticket);
+                        $this->line($ticket->id . ' -- ' . $averageResponseTime . "h");
+                        $ticket->update(['average_response_time' => $averageResponseTime]);
                     }
-
-                    if($message->type_enum == $ticketMesagePresenter->getType('from_admin')) {
-                        $lastProducer = $message;
-
-                        if(empty($firstProducer)) {
-                            $firstProducer = $message;
-                            if(!empty($lastCustomer))
-                                $average = Carbon::parse($lastProducer->created_at)->diffInHours($lastCustomer->created_at);
-                            else
-                                $average = Carbon::parse($lastProducer->created_at)->diffInHours($ticket->created_at);
-                        } else {
-                            if(!empty($lastCustomer)) {
-                                $average = ($average + Carbon::parse($lastProducer->created_at)->diffInHours($lastCustomer->created_at)) / 2;
-                            } else{
-                                $average = ($average + Carbon::parse($lastProducer->created_at)->diffInHours($ticket->created_at)) / 2;
-                            }
-                        }
-                    }
-
-                }
-
-                $this->info($ticket->id . ' -- ' . $average);
-                $ticket->update(['average_response_time' => $average]);
-            }
-
-        } catch (Exception $e) {
+                });
+        } catch (\Exception $e) {
             report($e);
         }
+
+        return 0;
     }
 }

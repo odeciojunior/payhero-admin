@@ -11,10 +11,6 @@ class AttendanceService
 {
     public function getCurrentUnsolvedTicketsRate(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        //40 dias
-        //abertos como reclamação
-        //validar cada registro de tracking contra a data da venda
-        //atraso = data da venda - data do chamado
         return 0;
     }
 
@@ -65,5 +61,38 @@ class AttendanceService
         $averageResponseTime = isset($tickets->get()[0]) ? $tickets->get()[0]['average_response_time'] : 0;
 
         return round($averageResponseTime / 24, 2) ?? null;
+    }
+
+    public function getTicketAverageResponseTime(Ticket $ticket): float
+    {
+        /** we start creating an array of replies[type, date], assuming the first interaction is the creation of ticket by customer */
+        $replies[] = ['type' => TicketMessage::TYPE_FROM_CUSTOMER, 'date' => $ticket->created_at];
+        $lastMessageType = TicketMessage::TYPE_FROM_CUSTOMER;
+
+        /** It iterates over all messages and add to $replies only the next of different type, excluding system messages */
+        foreach ($ticket->messages as $key => $message) {
+            if ($message->type_enum != $lastMessageType && $message->type_enum != TicketMessage::TYPE_FROM_SYSTEM) {
+                $replies[] = ['type' => $message->type_enum, 'date' => $message->created_at];
+                $lastMessageType = $message->type_enum;
+            }
+        }
+
+        /** If the last message is from customer, it indicates that seller didn't answer yet,
+         * so this interaction is virtually calculated by current datetime, keeping our customer/seller answer pairs */
+        if ($replies[array_key_last($replies)]['type'] == TicketMessage::TYPE_FROM_CUSTOMER) {
+            $replies[] = ['type' => TicketMessage::TYPE_FROM_ADMIN, 'date' => now()];
+        }
+
+        $totalEllapsedTime = 0;
+        foreach ($replies as $key => $reply) {
+            /** Our array is made by a customer message forwarded by a seller message, again and again,
+             * setting virtual pairs, so we can subtract current key date (customer) from the next key date (seller)
+             * without array index issues */
+            if ($reply['type'] == TicketMessage::TYPE_FROM_CUSTOMER) {
+                $totalEllapsedTime += Carbon::parse($replies[$key]['date'])->diffInHours($replies[$key + 1]['date']);
+            }
+        }
+
+        return round($totalEllapsedTime / count($replies));
     }
 }
