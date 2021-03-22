@@ -4,7 +4,6 @@ namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -19,16 +18,8 @@ use Modules\Pixels\Transformers\PixelsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class PixelsApiController
- * @package Modules\Pixels\Http\Controllers
- */
 class PixelsApiController extends Controller
 {
-    /**
-     * @param $projectId
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index($projectId)
     {
         try {
@@ -98,8 +89,7 @@ class PixelsApiController extends Controller
             }
 
             if ($validator['platform'] == 'google_adwords') {
-                $order = ['AW-'];
-                $validator['code'] = str_replace($order, '', $validator['code']);
+                $validator['code'] = str_replace(['AW-'], '', $validator['code']);
             }
 
             $applyPlanArray = [];
@@ -131,6 +121,10 @@ class PixelsApiController extends Controller
                 }
             }
 
+            if (empty($validator['value_percentage_purchase_boleto'])) {
+                $validator['value_percentage_purchase_boleto'] = 100;
+            }
+
             $pixel = $pixelModel->create(
                 [
                     'project_id' => $validator['project_id'],
@@ -146,12 +140,19 @@ class PixelsApiController extends Controller
                     'apply_on_plans' => $applyPlanEncoded,
                     'purchase_event_name' => $validator['purchase_event_name'],
                     'facebook_token' => $facebookToken,
-                    'is_api' => $isApi
+                    'is_api' => $isApi,
+                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto']
                 ]
             );
 
             if ($pixel) {
-                return response()->json('Pixel Configurado com sucesso!', 200);
+                return response()->json(
+                    [
+                        'message' => 'Pixel Configurado com sucesso!',
+                        'success' => true
+                    ],
+                    200
+                );
             }
 
             return response()->json('Erro ao criar pixel', 400);
@@ -237,7 +238,8 @@ class PixelsApiController extends Controller
                     'purchase_card' => $validated['purchase_card'],
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
-                    'is_api' => $validated['is_api']
+                    'is_api' => $validated['is_api'],
+                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto']
                 ]
             );
             if ($pixelUpdated) {

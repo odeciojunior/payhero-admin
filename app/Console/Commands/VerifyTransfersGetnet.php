@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -66,7 +67,6 @@ class VerifyTransfersGetnet extends Command
             );
 
         foreach ($transactions->cursor() as $transaction) {
-
             try {
                 if (!empty($transaction->company_id)) {
 

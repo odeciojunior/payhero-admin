@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -34,11 +35,6 @@ class DeleteTemporaryFiles extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
     public function handle()
     {
         try {
@@ -58,7 +54,6 @@ class DeleteTemporaryFiles extends Command
             print('DeleteTemporaryFiles - Success !' . PHP_EOL);
             print('Deleted temp files: ' . $totalDeleteFiles . PHP_EOL);
         } catch (Exception $e) {
-            Log::warning('DeleteTemporaryFiles - Error command ');
             report($e);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -29,9 +30,6 @@ class CurrencyQuotationUpdate extends Command
         parent::__construct();
     }
 
-    /**
-     *
-     */
     public function handle()
     {
         try {
@@ -39,7 +37,6 @@ class CurrencyQuotationUpdate extends Command
 
             $currencyQuotationService->updateQuotations();
         } catch (Exception $e) {
-            Log::warning('VerifyPendingDomains - Erro no command ');
             report($e);
         }
     }

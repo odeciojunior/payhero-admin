@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\BoletoService;
 
@@ -27,13 +28,8 @@ class VerifyBoletoPaid extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return void
-     */
     public function handle()
     {
-        /** @var BoletoService $boletoService */
         $boletoService = new BoletoService();
         $boletoService->verifyBoletoPaid();
     }

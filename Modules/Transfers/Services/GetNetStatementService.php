@@ -466,9 +466,11 @@ class GetNetStatementService
 
         if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
 
+            // Em 18/03/2021: Se carregarmos os REVERSED mostraremos um valor negativo.
+            // Ex: kZ7k7VNZ logado na conta de VITOR MONTEIRO DA SILVA
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
-                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
+                ->whereIn('type', ['ADJUSTMENT'])
                 ->whereCompanyId($companyId)
                 ->get();
 
@@ -516,7 +518,7 @@ class GetNetStatementService
 
                 $type = StatementItem::TYPE_ADJUSTMENT;
                 $details->setStatus('Ajuste de débito')
-                    ->setDescription($pendingDebt->reason)
+                    ->setDescription($pendingDebt->reason ?? '')
                     ->setType(Details::STATUS_ADJUSTMENT_DEBIT);
             } else {
 

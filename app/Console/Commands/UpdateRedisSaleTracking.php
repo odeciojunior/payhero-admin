@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -21,7 +22,6 @@ class UpdateRedisSaleTracking extends Command
     public function handle()
     {
         try{
-
             $sales = Sale::where('gateway_id', 15)->chunk(
                 1000,
                 function ($sales) {

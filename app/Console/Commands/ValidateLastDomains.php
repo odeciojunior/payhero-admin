@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -34,12 +35,6 @@ class ValidateLastDomains extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     * @throws PresenterException
-     */
     public function handle()
     {
         $domainModel = new Domain();
