@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DashboardNotification;
+use Modules\Core\Entities\Log;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -649,58 +650,110 @@ class DashboardApiController extends Controller
         return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
     }
 
-    public function getAchievement()
+    /**
+     * @return JsonResponse
+     */
+    public function getAchievement(): JsonResponse
     {
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        if (!($user->id == $user->account_owner_id)) {
-            return \response()->json(
-                [
-                    'message' => 'Usuário não é o dono da conta'
-                ],
-                Response::HTTP_UNAUTHORIZED
-            );
-        }
+            if (!($user->id == $user->account_owner_id)) {
+                return \response()->json(
+                    [
+                        'message' => 'Usuário não é o dono da conta'
+                    ],
+                    Response::HTTP_UNAUTHORIZED
+                );
+            }
 
-        $results = DashboardNotification::where(
-            [
-                'user_id' => $user->id,
-                'read_at' => null,
-            ]
-        )
-            ->get(
-                [
+            $results = DashboardNotification::where([
+                    'user_id' => $user->id,
+                    'read_at' => null,
+                ])
+                ->get([
+                    'id',
                     'subject_id',
                     'subject_type'
-                ]
+                ]);
+
+            $data = [];
+            foreach ($results as $key => $result) {
+                if ($result->subject_type == UpdateUserLevel::class) {
+                    $data[$key] = (new UserLevel())->getLevelData($result->subject_id);
+                    $data[$key]['achievement'] = \hashids()->encode($result->id);
+                    $data[$key]['type'] = 1;
+                    $data[$key]['benefits'] = $user->benefits->where(
+                        [
+                            'enabled' => 1,
+                            'level' => $user->level
+                        ]
+                    )
+                        ->toArray();
+                    continue;
+                }
+
+                if ($result->subject_type == UpdateUserAchievements::class) {
+                    $data[$key] = Achievement::find($result->subject_id)->toArray();
+                    $data[$key]['achievement'] = \hashids()->encode($result->id);
+                    $data[$key]['benefits'] = 0;
+                    continue;
+                }
+            }
+
+            return \response()->json(
+                [
+                    'data' => $data
+                ],
+                Response::HTTP_OK
             );
+        } catch (Exception $exception) {
+            report($exception);
 
-        $data = [];
-        foreach ($results as $key => $result) {
-            if ($result->subject_type == UpdateUserLevel::class) {
-                $data[$key] = (new UserLevel())->getLevelData($result->subject_id);
-                $data[$key]['type'] = 1;
-                $data[$key]['benefits'] = $user->benefits->where(
-                    [
-                        'enabled' => 1,
-                        'level' => $user->level
-                    ]
-                );
-                continue;
-            }
-
-            if ($result->subject_type == UpdateUserAchievements::class) {
-                $data[$key] = Achievement::find($result->subject_id)->toArray();
-                $data[$key]['benefits'] = 0;
-                continue;
-            }
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
+    }
 
-        return \response()->json(
-            [
-                'data' => $data
-            ],
-            Response::HTTP_OK
-        );
+    /**
+     * @param $achievement
+     * @return JsonResponse
+     */
+    public function updateAchievement($achievement): JsonResponse
+    {
+        try {
+            $idAchievement = \hashids()->decode($achievement);
+
+            if (!DashboardNotification::find($idAchievement)) {
+                return \response()->json(
+                    [
+                        'message' => 'Conquista não encontrada !'
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+//            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
+
+            return \response()->json(
+                [
+                    'message' => 'Conquista atualizada !'
+                ],
+                Response::HTTP_OK
+            );
+        } catch (Exception $exception) {
+            report($exception);
+
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao atualizar a conquista'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }

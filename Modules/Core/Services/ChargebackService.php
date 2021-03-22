@@ -190,16 +190,6 @@ class ChargebackService
     public function getChargebackRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
         $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-
-        $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
-            $q->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            );
-        })->where('user_id', $user->id);
-
-        $chargebacksAmount = $getnetChargebacks->count();
-
         $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('status', [
@@ -210,8 +200,23 @@ class ChargebackService
             ])->whereBetween(
                 'start_date',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )->where('owner_id', $user->id);
+            )->where(function ($query) use ($user) {
+                $query->where('owner_id', $user->id)
+                    ->orWhere('affiliate_id', $user->id);
+            });
 
+        if ($approvedSales->count() < 50) {
+            return 1.2;
+        }
+
+        $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
+            $q->whereBetween(
+                'start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            );
+        })->where('user_id', $user->id);
+
+        $chargebacksAmount = $getnetChargebacks->count();
         $approvedSalesAmount = $approvedSales->count();
 
         return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;

@@ -34,7 +34,10 @@ class AccountHealthService
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
             Sale::STATUS_IN_DISPUTE
-        ])->where('owner_id', $user->id);
+        ])->where(function ($query) use ($user) {
+            $query->where('owner_id', $user->id)
+                ->orWhere('affiliate_id', $user->id);
+        });
 
         $approvedSalesAmount = $approvedSales->count();
         $minimumSalesToEvaluate = 100;
@@ -70,7 +73,7 @@ class AccountHealthService
         $totalComplaintTickets = count($complaintTickets);
         $totalScore = 0;
 
-        if(!$totalComplaintTickets) return 10;
+        if (!$totalComplaintTickets) return 10;
 
         foreach ($complaintTickets as $ticket) {
             $totalScore += $this->getTicketScore($ticket);
@@ -201,6 +204,7 @@ class AccountHealthService
 
             return true;
         } catch (\Exception $e) {
+            //TODO: remover apos testes
             echo $e->getTraceAsString();
             dd($e->getMessage());
             report($e);

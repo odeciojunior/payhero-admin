@@ -3,12 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Task;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\TaskService;
 
 class CheckUserCompletedSalesTasks extends Command
@@ -52,30 +48,30 @@ class CheckUserCompletedSalesTasks extends Command
 
         $firstSaleUsers = User::whereDoesntHave('tasks', function ($query) {
             $query->where('id', Task::TASK_FIRST_SALE);
-        })->get();
+        })->whereRaw('id = account_owner_id')
+            ->get();
 
         $firstSaleTask = Task::find(Task::TASK_FIRST_SALE);
         foreach ($firstSaleUsers as $user) {
-            if ($user->id == $user->account_owner_id) {
-                $this->line($user->id . ' - ' . $user->name);
-                $taskService->checkCompletedTask($user, $firstSaleTask);
-            }
+            $this->line($user->id . ' - ' . $user->name);
+            $taskService->checkCompletedTask($user, $firstSaleTask);
         }
+
+        unset($firstSaleTask);
 
         $this->line('');
         $this->line('First R$ 1000 revenue Task');
         $this->line('--------------------------------------------------');
 
         $first1000RevenueUsers = User::whereDoesntHave('tasks', function ($query) {
-            $query->where('id', Task::TASK_FIRST_SALE);
-        })->get();
+            $query->where('id', Task::TASK_FIRST_1000_REVENUE);
+        })->whereRaw('id = account_owner_id')
+            ->get();
 
         $first1000RevenueTask = Task::find(Task::TASK_FIRST_1000_REVENUE);
         foreach ($first1000RevenueUsers as $user) {
-            if ($user->id == $user->account_owner_id) {
-                $this->line($user->id . ' - ' . $user->name);
-                $taskService->checkCompletedTask($user, $first1000RevenueTask);
-            }
+            $this->line($user->id . ' - ' . $user->name);
+            $taskService->checkCompletedTask($user, $first1000RevenueTask);
         }
 
         $this->line($now);

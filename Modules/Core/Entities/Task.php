@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Core\Entities\Tasks;
 
 /**
  * @property integer $id
@@ -23,12 +24,23 @@ class Task extends Model
     const TASK_FIRST_1000_REVENUE = 5;
     const TASK_FIRST_WITHDRAWAL   = 6;
 
+    const TASKS_CLASS = [
+        Task::TASK_APPROVED_DOCS      => Tasks\ApprovedDocuments::class,
+        Task::TASK_CREATE_FIRST_STORE => Tasks\CreateFirstStore::class,
+        Task::TASK_DOMAIN_APPROVED    => Tasks\ApprovedDomain::class,
+        Task::TASK_FIRST_SALE         => Tasks\FirstSale::class,
+        Task::TASK_FIRST_1000_REVENUE => Tasks\First1000Revenue::class,
+        Task::TASK_FIRST_WITHDRAWAL   => Tasks\FirstWithdrawal::class
+    ];
+
     /**
      * The "type" of the auto-incrementing ID.
      *
      * @var string
      */
     protected $keyType = 'integer';
+
+    protected $table = 'tasks';
 
     /**
      * @var array

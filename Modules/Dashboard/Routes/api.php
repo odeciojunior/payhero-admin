@@ -22,5 +22,6 @@ Route::group(
         Route::get('/dashboard/get-account-attendance', 'DashboardApiController@getAccountAttendance');
         Route::get('/dashboard/get-account-tracking', 'DashboardApiController@getAccountTracking');
         Route::get('/dashboard/verify-achievements', 'DashboardApiController@getAchievement');
+        Route::put('/dashboard/verify-achievements/{achievement}', 'DashboardApiController@updateAchievement');
     }
 );

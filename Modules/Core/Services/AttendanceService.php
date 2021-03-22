@@ -84,15 +84,17 @@ class AttendanceService
         }
 
         $totalEllapsedTime = 0;
+        $repliesCount = 0;
         foreach ($replies as $key => $reply) {
             /** Our array is made by a customer message forwarded by a seller message, again and again,
              * setting virtual pairs, so we can subtract current key date (customer) from the next key date (seller)
              * without array index issues */
             if ($reply['type'] == TicketMessage::TYPE_FROM_CUSTOMER) {
-                $totalEllapsedTime += Carbon::parse($replies[$key]['date'])->diffInHours($replies[$key + 1]['date']);
+                $totalEllapsedTime += Carbon::parse($replies[$key + 1]['date'])->diffInMinutes($replies[$key]['date']);
+                $repliesCount++;
             }
         }
 
-        return round($totalEllapsedTime / count($replies));
+        return round(($totalEllapsedTime / 60) / $repliesCount);
     }
 }

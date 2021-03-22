@@ -2,23 +2,11 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Task;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\Withdrawal;
 
 class TaskService
 {
-    const CHECK_COMPLETED_TASK_METHODS = [
-        Task::TASK_APPROVED_DOCS      => 'validateApprovedDocsTask',
-        Task::TASK_CREATE_FIRST_STORE => 'validateCreateFirstStoreTask',
-        Task::TASK_DOMAIN_APPROVED    => 'validateDomainApprovedTask',
-        Task::TASK_FIRST_SALE         => 'validateFirstSaleTask',
-        Task::TASK_FIRST_1000_REVENUE => 'validateFirst1000RevenueTask',
-        Task::TASK_FIRST_WITHDRAWAL   => 'validateFirstWithdrawalTask',
-    ];
-
     private $tasks;
 
     public function __construct()
@@ -40,8 +28,9 @@ class TaskService
             return true;
         }
 
-        $methodName = TaskService::CHECK_COMPLETED_TASK_METHODS[$task->id];
-        if ($this->{$methodName}($user)) {
+        $taskClass = Task::TASKS_CLASS[$task->id];
+        $task = $taskClass::find($task->id);
+        if ($task->userCompletedTask($user)) {
             return $this->setCompletedTask($user, $task);
         }
 
@@ -96,50 +85,5 @@ class TaskService
         }
 
         return $currentTasks;
-    }
-
-    private function validateApprovedDocsTask(User $user): bool
-    {
-        return $user->account_is_approved;
-    }
-
-    private function validateCreateFirstStoreTask(User $user): bool
-    {
-        return $user->projects()->count() > 0;
-    }
-
-    private function validateDomainApprovedTask(User $user): bool
-    {
-        $approvedDomain = $user->projects()->whereHas('domains', function ($query) {
-            $query->where('domains.status', (new Domain())->present()->getStatus('approved'));
-        })->limit(1)->get();
-
-        return $approvedDomain->count() > 0;
-    }
-
-    private function validateFirstSaleTask(User $user): bool
-    {
-        $transactions = Transaction::where('user_id', $user->id)
-            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->limit(1)->get();
-
-        return $transactions->count() > 0;
-    }
-
-    private function validateFirst1000RevenueTask(User $user): bool
-    {
-        $transactionModel = new Transaction;
-        $revenue = $transactionModel
-            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->where('user_id', $user->id)
-            ->sum('value');
-
-        return $revenue >= 100000;
-    }
-
-    private function validateFirstWithdrawalTask(User $user): bool
-    {
-        return Withdrawal::where('status', Withdrawal::STATUS_TRANSFERED)
-                ->whereIn('company_id', $user->companies()->pluck('id'))->count() > 0;
     }
 }
