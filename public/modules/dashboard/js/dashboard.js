@@ -419,9 +419,14 @@ $(document).ready(function () {
     }
 
     function showConfetti() {
+
+        let referenceElement = document.querySelector('#reward-check')
+        let startY = (referenceElement.offsetHeight + referenceElement.getBoundingClientRect().y) / window.innerHeight;
+
         let count = 200;
+
         let defaults = {
-            origin: {y: .75},
+            origin: {y: startY},
             startVelocity: 60,
             zIndex: 1700,
         };
