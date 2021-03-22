@@ -7,12 +7,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
-use Modules\Core\Entities\SaleWhiteBlackListResult;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsService;
 use Modules\Core\Services\SaleService;
-use Modules\Sales\Transformers\SalesResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -69,7 +67,7 @@ class ContestationResource extends JsonResource
             'expiration' => $this->expiration_date ? with(new Carbon($this->expiration_date))->format('d/m/Y') : '',
             'has_expired' => $this->expiration_date  ? \Carbon\Carbon::parse($this->expiration_date)->lessThan(\Carbon\Carbon::now()) : false,
             'expiration_user' => $this->expiration_date ? ((Carbon::parse($this->expiration_date))->subDay(3))->format('d/m/Y') : '',
-            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? $result_decode['Codigo do Motivo de Chargeback'] . ' - ' . $this->returnReasonDescription($result_decode['Codigo do Motivo de Chargeback'], $result_decode['Motivo do Chargeback']) : '',
+            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? $result_decode['Codigo do Motivo de Chargeback'] . ' - ' . FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback'], $result_decode['Motivo do Chargeback']) : '',
             'observation' =>  $this->observation ?? '',
             'is_contested' =>  $this->is_contested ?? '',
             'amount' => isset($this->sale->original_total_paid_value) ? 'R$ ' . number_format(intval($this->sale->original_total_paid_value) / 100, 2, ',', '.') :
@@ -79,86 +77,6 @@ class ContestationResource extends JsonResource
 
         ];
     }
-
-    public function returnReasonDescription(string $code, $reason = null)
-    {
-
-        switch($code) {
-            case '4837':
-            case '74':
-            case '103':
-            case '104':
-            case '4540':
-            case '4755':
-            return 'Portador não reconhece a transação';
-            case '4840':
-            case '57':
-            return 'Múltiplas transações fraudulentas';
-            case '4860':
-            case '75':
-            case '136':
-            case '137':
-            case '85':
-            case '4513':
-            return 'Cancelamento / crédito não processado';
-            case '4855':
-            case '79':
-            case '131':
-            case '30':
-            case '4554':
-            return 'Mercadoria / serviços não prestados';
-            case '4841':
-            case '132':
-            case '41':
-            case '4544':
-            return 'Cancelamento de transações recorrentes';
-            case '133':
-            case '134':
-            case '53':
-            case '4553':
-            return 'Mercadoria falsificada / defeituosa ou não conforme com o descrito';
-            case '4853':
-            case '135':
-            return 'Desacordo comercial (no geral)';
-            case '4859':
-                return 'Valor adicional cobrado por um serviço prestado ou NO SHOW';
-            case '4834':
-            case '73':
-            case '1261':
-            case '82':
-            case '4512':
-            return 'Duplicidade da transação';
-            case '4831':
-            case '1262':
-            case '86':
-            case '4515':
-            return 'Pagamentos por outros meios';
-            case '123':
-            case '4530':
-            return 'Moeda incorreta';
-            case '124':
-            case '4507':
-            case '4523':
-            return 'Valor da transação ou número de conta incorreta ou inexistente';
-            case '4527':
-                return 'Falta de impressão';
-            case '4534':
-                return 'Múltiplos comprovantes';
-            case '80':
-            case '4753':
-            return 'Erro / divergência de processamento';
-            case '125':
-            case '77':
-            return 'Valor incorreto';
-            case '4850':
-                return 'Transação fraudulenta/sem autorização';
-            default:
-                return isset($reason) ? str_replace("?", "Ã", $reason) : '';
-
-        }
-
-    }
-
 
     /**
      * @param mixed $offset
