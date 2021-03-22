@@ -23,6 +23,8 @@ class BenefitResource extends JsonResource
             'name' => __('definitions.benefit.' . $this->name),
             'level' => $this->level,
             'description' => $this->description,
+            'enabled' => $this->enabled,
+
         ];
     }
 }

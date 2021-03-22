@@ -161,6 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
+                    verifyAchievements();
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -408,7 +409,6 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
 
                     getDataDashboard();
-
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
@@ -418,4 +418,64 @@ $(document).ready(function () {
             }
         });
     }
+
+    function verifyAchievements() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-achievements',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+
+                if (!isEmpty(response.data)) {
+                    response.data.forEach((data) => {
+                        $('#benefits').hide();
+
+                        $('#reward-check').attr('data-achievement', data.achievement)
+                        $('#icon').attr("src", data.icon);
+                        $('#description').text(data.description)
+                        $('#name').text(data.name)
+                        $('#storytelling').text(data.storytelling)
+
+                        if (data.type === 1 && !isEmpty(data.benefits)) {
+                            $('#benefits-data').text('Cashback de 0,5%')
+                            $('#benefits').show()
+                        }
+
+                        $('#modal-achievement').modal('show')
+                    })
+
+                }
+            }
+        });
+    }
+
+    $('#reward-check').click(() => {
+        let achievement = $('#reward-check').data('achievement')
+
+        $.ajax({
+            method: "PUT",
+            url: '/api/dashboard/verify-achievements/' + achievement,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                $('#modal-achievement').modal('Close')
+            },
+            success: function success() {
+                $('#modal-achievement').modal('Close')
+            }
+        });
+    })
 });

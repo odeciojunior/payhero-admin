@@ -11,6 +11,8 @@
     @endpush
 
     <div class="page dashboard">
+        @include('dashboard::achievement-details')
+
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-8 mb-15">
@@ -31,7 +33,7 @@
         <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
                     <div class="row">
                         <div class="col-12 col-sm-6">
                             <div class="card card-shadow bg-white stats-card">
@@ -120,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
                     <div class="row">
 
                         <div class="col-12  d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-performance">
