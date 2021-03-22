@@ -2,9 +2,9 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\LogsActivity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TicketMessagePresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -23,6 +23,10 @@ use Spatie\Activitylog\Models\Activity;
 class TicketMessage extends Model
 {
     use PresentableTrait, LogsActivity;
+
+    const TYPE_FROM_CUSTOMER = 1;
+    const TYPE_FROM_ADMIN    = 2;
+    const TYPE_FROM_SYSTEM   = 3;
 
     protected $presenter = TicketMessagePresenter::class;
 
