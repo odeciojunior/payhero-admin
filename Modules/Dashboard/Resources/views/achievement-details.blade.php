@@ -19,14 +19,14 @@
                 <div id="name"></div>
                 <div id="storytelling"></div>
 
-                <div id="reward">
-                    <div id="reward-title"></div>
+                <div id="benefits">
+                    <div id="benefits-title"></div>
                     <div class="d-flex justify-content-center align-items-center">
-                        <span class="material-icons">done</span> <span id="reward-data"></span>
+                        <span class="material-icons">done</span> <span id="benefits-data"></span>
                     </div>
                 </div>
 
-                <div id="reward-check" class="btn btn-primary">Ok, legal!</div>
+                <div id="reward-check" class="btn btn-primary" >Ok, legal!</div>
             </div>
         </div>
     </div>
