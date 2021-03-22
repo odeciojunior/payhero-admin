@@ -36,7 +36,7 @@ $(() => {
 
                     let data = `<tr id="${value.id}">
                         <td>
-                            ${value.type}
+                            ${value.type_str}
                         </td>
                         <td>
                               <a href="${value.file}" target="_blank">Arquivo</a>
@@ -45,7 +45,7 @@ $(() => {
                             ${value.created_at}
                         </td>
                          <td>
-                               <button type="button" title="Apagar arquivo" data-removeroute="${value.remove_route}" class="btn btn-danger btn-remove-file"  data-contestationfile="${value.id}"><i class="fa fa-trash-o"></i></button>
+                             <button type="button" title="Apagar arquivo" data-removeroute="${value.remove_route}" class="btn btn-danger btn-remove-file"  data-contestationfile="${value.id}"><i class="fa fa-trash-o"></i></button>
                         </td>
                      </tr>`;
 
@@ -98,7 +98,7 @@ $(() => {
                 $.each(response.data, function (index, value) {
                     let data = `<tr id="${value.id}">
                         <td>
-                            ${value.type}
+                            ${value.type_str}
                         </td>
                         <td>
                             <a href="${value.file}" target="_blank">Arquivo</a>

@@ -158,8 +158,8 @@ $(document).ready(function () {
         let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
         let endDate = moment().format('YYYY-MM-DD');
         $('#date_range').daterangepicker({
-            startDate: moment().subtract(30, 'days'),
-            endDate: moment(),
+            startDate:moment(),
+            endDate:  moment().add(30, 'days'),
             opens: 'center',
             maxDate: moment().add(3, 'month'),
             alwaysShowCalendar: true,
