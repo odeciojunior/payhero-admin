@@ -51,8 +51,6 @@ class UpdateListsFoxActiveCampaign extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
             // 2 - Usuários Ativos na plataforma
             $this->listActives(2);
@@ -78,9 +76,6 @@ class UpdateListsFoxActiveCampaign extends Command
         } catch (Exception $e) {
             report($e);
         }
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 
     private function listUsers100k($listId)

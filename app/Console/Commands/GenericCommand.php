@@ -3,10 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Entities\Sale;
 
 class GenericCommand extends Command
 {
@@ -17,59 +14,43 @@ class GenericCommand extends Command
     public function handle()
     {
         try {
+            /** \Vinkla\Hashids\Facades\Hashids */
+            $hash = hashids()->encode(1);
+            // result: v2RmA83EbZPVpYB
+            $number = current(hashids()->decode('v2RmA83EbZPVpYB'));
+            // result: 1
 
-            $tService = new TrackingService();
+            /** \Vinkla\Hashids\Facades\Hashids with options */
+            $hash = hashids()->connection('sale_id')->encode(1);
+            // result: A83EbZPV
+            $number = current(hashids()->connection('sale_id')->decode('A83EbZPV'));
+            // result: 1
 
-            $trackings = Tracking::with('productPlanSale')
-                ->whereIn('tracking_code', [
-                    'LB742801369SE',
-                    'LB770911135SE',
-                    'LB132612191HK',
-                    'LZ486416437CN',
-                    'LB162492183HK',
-                    'LB162493100HK',
-                    'LB162487824HK',
-                    'LB162487838HK',
-                    'SYAE003406761',
-                    'LB163431557HK',
-                    'LB163428972HK',
-                    'LB163427889HK',
-                    'LB163432328HK',
-                    'LP00427410422172',
-                    'LZ596867765CN',
-                    'LB163434108HK',
-                    'LB163434099HK',
-                    'LB163429862HK',
-                    'LB397462015SE',
-                    'LB397697735SE',
-                    'LB163993566HK',
-                    'LB164568392HK',
-                    'LB165130081HK',
-                    'LB165214453HK',
-                    'LZ608340514CN',
-                    'LZ608340545CN',
-                    'LZ608340151CN',
-                    'LZ608340695CN',
-                    'LZ608340426CN',
-                    'LZ608340236CN',
-                    'LZ608340032CN',
-                    'LB165209688HK',
-                    'LB165206749HK',
-                    'LB165211315HK',
-                    'LB091488435HK',
-                    'LB091484898HK',
-                    'LB091484005HK',
-                    'LB091484915HK',
-                    'LB091491125HK',
-                    'LB166020652HK',
-                    'LB166018906HK',
-                ])
-                ->orderByDesc('id')
-                ->get();
+            /** \Vinkla\Hashids\Facades\Hashids direct encode & decode */
+            $hash = hashids_encode(2);
+            // result: n12wq7GrVGBANP4
+            $number = hashids_decode('n12wq7GrVGBANP4');
+            // result: 1
 
-            foreach ($trackings as $t) {
-                $tService->createOrUpdateTracking($t->tracking_code, $t->productPlanSale);
-            }
+            /** \Vinkla\Hashids\Facades\Hashids direct encode & decode with connection */
+            $hash = hashids_encode(2, 'sale_id');
+            // result: q7GrVGBA
+            $number = hashids_decode('q7GrVGBA', 'sale_id');
+            // result: 1
+
+            /** \Modules\Core\Services\FoxUtils */
+            $production = foxutils()->isProduction();
+            //result: false
+            $number = foxutils()->onlyNumbers('2,436.24');
+            //result: 243624
+
+
+            /** Debug a Query Builder */
+            $query = Sale::whereBetween('start_date', ['2021-02-17 00:00:00', '2021-03-19 23:59:59'])
+                            ->where('status', Sale::STATUS_APPROVED);
+            $sql = builder2sql($query);
+            //result: select * from `sales` where `start_date` between '2021-02-17 00:00:00' and '2021-03-19 23:59:59'
+            // and `status` = 1 and `sales`.`deleted_at` is null
 
         } catch (\Exception $e) {
             $this->error($e->getMessage());

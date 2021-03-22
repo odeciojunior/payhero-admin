@@ -44,24 +44,24 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         // generate all sale approved invoices
-        $schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
+        $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
 
         // verify pending notazz invoices
-        $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
+        $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
 
         // pega as ultimas quotacoes das moedas
         $schedule->command('update:currencyquotation')->dailyAt('14:00');
 
         // notify user to paid boletos
-        $schedule->command('verify:boletopaid')->dailyAt('12:00');
+        $schedule->command('verify:boletopaid')->dailyAt('10:30');
 
         // boletos
         $schedule->command('verify:boletowaitingpayment')->dailyAt('10:00');
-        $schedule->command('verify:boleto2')->dailyAt('11:00');
-        $schedule->command('verify:boletoexpiring')->dailyAt('11:30');
+        $schedule->command('verify:boleto2')->dailyAt('11:15');
+        $schedule->command('verify:boletoexpiring')->dailyAt('11:00');
 
         // abandoned carts
-        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
+        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
 
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
@@ -70,25 +70,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
 
-        // restart queues running on supervisor
-        $schedule->command('queue:restart')->hourly();
-
-        // verify redis status (ON - OFF)
-        $schedule->command('verify:redis')->everyThirtyMinutes();
-
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
 
-        //verify users that has antecipation enabled and does not have approved sales in the last three days
-
-        //restart all shopify webhooks from shopify integrations
-//        $schedule->command('restartShopifyWebhooks')->weekly();
-
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
-
-        //Reorder shopify hourly
-        // $schedule->command('command:ShopifyReorderSalesHourly')->hourly();
 
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
@@ -102,16 +88,14 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:getnet-transactions')->dailyAt('06:00');
+        $schedule->command('check:getnet-transactions')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('09:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
     }
 
     /**
