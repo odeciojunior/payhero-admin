@@ -10,8 +10,8 @@
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
     @endpush
 
+    @include('dashboard::achievement-details')
     <div class="page dashboard">
-        @include('dashboard::achievement-details')
 
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
@@ -33,7 +33,7 @@
         <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
                     <div class="row">
                         <div class="col-12 col-sm-6">
                             <div class="card card-shadow bg-white stats-card">
@@ -122,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
                         <div class="col-12  d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-performance">
@@ -230,6 +230,7 @@
         <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
+        <script src='{{ asset('modules/global/js/confetti.browser.min.js') }}'></script>
 {{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
         <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=1' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1' . random_int(100, 10000)) }}"></script>
