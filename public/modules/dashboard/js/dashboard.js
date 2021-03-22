@@ -408,6 +408,7 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
 
                     getDataDashboard();
+                    verifyAchievements();
 
                 } else {
                     $("#project-empty").show();
@@ -418,4 +419,44 @@ $(document).ready(function () {
             }
         });
     }
+
+    function verifyAchievements() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-achievements',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+
+                console.log(response.data)
+                if (!isEmpty(response.data)) {
+                    response.data.forEach((data) => {
+                        // $('#reward').hide();
+                        $('#icon').attr("src", data.icon);
+                        $('#description').text(data.description)
+                        $('#name').text(data.name)
+                        $('#storytelling').text(data.storytelling)
+
+                        if (data.type === 1) {
+                            $('#reward').show()
+                            $('#reward-data').text('Cashback de 0,5%')
+                        }
+                    })
+
+                    $('#modal-achievement').modal('show')
+                }
+            }
+        });
+    }
+
+    $('#reward-check').click(() => {
+        console.log('entrei')
+    })
 });

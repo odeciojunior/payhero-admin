@@ -2,6 +2,8 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Console\Commands\UpdateUserAchievements;
+use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -9,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\DashboardNotification;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -18,6 +22,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\Performance\UserLevel;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
@@ -110,13 +115,13 @@ class DashboardApiController extends Controller
 
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance(
-                    $company,
-                    CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-                ) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+                $company,
+                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+            ) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
             $availableBalance = $companyService->getAvailableBalance(
-                    $company
-                ) - $blockedBalance;
+                $company
+            ) - $blockedBalance;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
             $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [
@@ -171,9 +176,9 @@ class DashboardApiController extends Controller
                     $companyArray[] = [
                         'id_code'      => Hashids::encode($company->id),
                         'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : Str::limit(
-                                $company->fantasy_name,
-                                20
-                            ) ?? '',
+                            $company->fantasy_name,
+                            20
+                        ) ?? '',
                         'type'         => $company->company_type,
                     ];
                 }
@@ -328,7 +333,6 @@ class DashboardApiController extends Controller
 
             return [];
         }
-
     }
 
     public function getAccountChargeback(Request $request): JsonResponse
@@ -443,7 +447,6 @@ class DashboardApiController extends Controller
                 //'total_sales_chargeback' => $chargebacksAmount ?? 0,
 
             ];
-
         } catch (Exception $e) {
             report($e);
 
@@ -611,7 +614,7 @@ class DashboardApiController extends Controller
                 ->leftJoin('products as p', 'p.id', '=', 'pps.product_id')
                 ->where('s.owner_id', $userId)
                 ->where('s.status', $saleModel->present()->getStatus('approved'))
-                ->where('p.type_enum', (new Product)->present()->getType('physical'))
+                ->where('p.type_enum', (new Product())->present()->getType('physical'))
                 ->first();
 
             $trackingsInfo->unknown_percentage = $trackingsInfo->total ? number_format(
@@ -645,5 +648,60 @@ class DashboardApiController extends Controller
     {
         return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
         //return FoxUtils::formatMoney(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value'));
+    }
+
+    public function getAchievement()
+    {
+        $user = auth()->user();
+
+        if (!($user->id == $user->account_owner_id)) {
+            return \response()->json(
+                [
+                    'message' => 'Usuário não é o dono da conta'
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $results = DashboardNotification::where(
+            [
+                'user_id' => $user->id,
+                'read_at' => null,
+            ]
+        )
+            ->get(
+                [
+                    'subject_id',
+                    'subject_type'
+                ]
+            );
+
+        $data = [];
+        foreach ($results as $key => $result) {
+            if ($result->subject_type == UpdateUserLevel::class) {
+                $data[$key] = (new UserLevel())->getLevelData($result->subject_id);
+                $data[$key]['type'] = 1;
+                $data[$key]['benefits'] = $user->benefits->where(
+                    [
+                        'enabled' => 1,
+                        'level' => $user->level
+                    ]
+                );
+                continue;
+            }
+
+            if ($result->subject_type == UpdateUserAchievements::class) {
+                $data[$key] = Achievement::find($result->subject_id)->toArray();
+                $data[$key]['benefits'] = 0;
+                continue;
+            }
+        }
+
+        return \response()->json(
+            [
+                'data' => $data
+            ],
+            Response::HTTP_OK
+        );
     }
 }

@@ -92,7 +92,10 @@ class UpdateUserLevel extends Command
                         $benefit->save();
                     }
                     BenefitsService::updateUserCashback($user);
-                    event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
+
+                    if ($user->level < 1) {
+                        event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
+                    }
                 }
             }
         }
