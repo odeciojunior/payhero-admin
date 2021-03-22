@@ -435,7 +435,7 @@ $(document).ready(function () {
         let currentLevel = levelInfo[data.level];
 
         let item = `
-                <div class="card-header mt-10 mb-20 pb-0 d-flex justify-content-between align-items-center bg-white">
+                <div class="card-header pb-5 mt-10 d-flex justify-content-between align-items-center bg-white">
                     <div class="mr-auto">
                         <span class="ml-0 title-performance">Suas conquistas</span>
                     </div>
@@ -447,12 +447,12 @@ $(document).ready(function () {
                         <i class="o-angle-down-1 control-next active" data-slide-to="1"></i>
                     </ol>
                 </div>
-
+                <div class="list-linear-gradient-top"></div>
                 <div id="card-achievements" class="card-body pb-0 pt-0 ">
                     <div class="d-flex flex-column justify-content-start align-items-start">
                     </div>
                 </div>
-                <div class="list-linear-gradient"></div>
+                <div class="list-linear-gradient-bottom"></div>
         `;
 
         $('.sirius-performance > .card').append(item);
@@ -471,7 +471,9 @@ $(document).ready(function () {
             const achievementsActive = achievements.filter(isActiveAchievements);
             item += achievementsList(achievementsActive);
 
-            item += `<div class="title-performance mt-15 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`;
+            if(achievementsActive.length) {
+                item += `<div class="title-performance mt-20 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`;
+            }
 
             const isNotActiveAchievements = achievements => !achievements.active;
             const achievementsNotActive = achievements.filter(isNotActiveAchievements);
