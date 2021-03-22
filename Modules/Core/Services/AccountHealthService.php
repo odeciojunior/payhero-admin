@@ -36,7 +36,7 @@ class AccountHealthService
             Sale::STATUS_IN_DISPUTE
         ])->where(function ($query) use ($user) {
             $query->where('owner_id', $user->id)
-                ->orWhere('affiliate_ids', $user->id);
+                ->orWhere('affiliate_id', $user->id);
         });
 
         $approvedSalesAmount = $approvedSales->count();
