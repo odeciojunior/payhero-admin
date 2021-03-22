@@ -4,32 +4,32 @@ $(document).ready(function () {
         0: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua situação para evitar bloqueios.'
         },
         1: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua situação para evitar bloqueios.'
         },
         2: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua conta está muito baixa.'
         },
         3: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua conta está muito baixa.'
         },
         4: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. Fique de olho!'
         },
         5: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. Fique de olho!'
         },
         6: {
             textColor: 'text-color-green',
@@ -44,17 +44,17 @@ $(document).ready(function () {
         8: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         9: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         10: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
     }
 
@@ -103,6 +103,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+
+                $(".page.dashboard .sirius-account").css({'height': 'auto'});
 
                 if (!data.account_score) {
                     //alert(data.account_score);

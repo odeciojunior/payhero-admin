@@ -644,6 +644,5 @@ class DashboardApiController extends Controller
     function getCashbackReceivedValue()
     {
         return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
-        //return FoxUtils::formatMoney(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value'));
     }
 }

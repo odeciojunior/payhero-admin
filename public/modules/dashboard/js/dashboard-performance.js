@@ -383,7 +383,7 @@ $(document).ready(function () {
             $.each(benefits.active, function (index, value) {
 
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefits-button ${value.disabled ? 'benefits-button-blocked' : 'benefits-button-checked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo'}</span>
+                                 <span class="benefits-button ${value.enabled ? 'benefits-button-checked' : 'benefits-button-blocked'} d-flex justify-content-around align-items-center">${value.disabled ? 'Inativo' : 'Ativo'}</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
                 $('#benefits-active-container').append(item);
