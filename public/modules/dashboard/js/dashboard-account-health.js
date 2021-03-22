@@ -104,7 +104,6 @@ $(document).ready(function () {
             },
             success: function success(data) {
 
-                $(".page.dashboard .sirius-account").css({'height': 'auto'});
 
                 if (!data.account_score) {
                     //alert(data.account_score);
@@ -164,12 +163,13 @@ $(document).ready(function () {
                             </div>
                     `;
 
-                    //<span id="account-health-chart-gauge" class="mr-15"><img src="/modules/global/adminremark/assets/images/temp.png"></span>
                     $('.sirius-account > .card').append(item);
 
                     nextCard();
                     updateGauge(data.account_score);
                 }
+
+                $(".page.dashboard .sirius-account").css({'height': ' 225px'});
             }
         });
     }
