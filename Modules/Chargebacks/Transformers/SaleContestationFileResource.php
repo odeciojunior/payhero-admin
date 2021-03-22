@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\SaleWhiteBlackListResult;
 use Modules\Core\Entities\UserProject;
@@ -27,13 +28,16 @@ class SaleContestationFileResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        $expiration = now()->addMinutes(config('session.lifetime'));
+        $url = Storage::disk('s3_documents')->temporaryUrl($this->file, $expiration);
         return [
             'id' => Hashids::encode($this->id),
-            'user_id' => 1,
-             'contestation_sale_id' => 1,
-            'type' => 1,
-            'file' => 1,
+            'sale_hash' => Hashids::connection('sale_id')->encode($this->contestation->sale_id),
+            'user_id' => Hashids::encode($this->user_id),
+            'contestation_sale_id' => Hashids::encode($this->contestation_sale_id),
+            'type' => $this->type,
+            'file' => $url,
+            'remove_route' => route('contestations.removeContestationFiles', Hashids::encode($this->id)),
             'created_at' => with(new Carbon($this->created_at))->format('d/m/Y') ,
         ];
     }

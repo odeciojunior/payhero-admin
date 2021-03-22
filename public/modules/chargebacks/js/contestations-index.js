@@ -209,6 +209,7 @@ $(document).ready(function () {
             date_type: $("#date_type").val() ?? '',
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             status: $("#status").val() ?? '',
+            is_contested: $("#is_contested").val() ?? '',
         }
         if (urlParams) {
             let params = "";
@@ -275,12 +276,12 @@ $(document).ready(function () {
                     }
                     dados += `
                                     <td>${value.file_date}<br>
-                                    <small class="text-muted"> Expira em ${value.expiration}</small>
+                                    <small class="text-muted"> ${value.has_expired ? 'Expirado em ' : 'Expira em '} ${value.expiration}</small>
                                     </td>
                                     <td>${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
                                     <td>
-                                       <a role='button' class='contetation_file pointer' style="margin-right:5px" contestation='${value.id}'>
+                                       <a  role='button' class='contetation_file pointer ${value.has_expired ? 'd-none' : ''} ' style="margin-right:5px" contestation='${value.id}'>
                                        <span class="o-download-cloud-1"></span>
                                         </a>
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>

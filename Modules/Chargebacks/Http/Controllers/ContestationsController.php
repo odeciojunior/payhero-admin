@@ -14,6 +14,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Chargebacks\Transformers\ContestationResource;
 use Modules\Chargebacks\Transformers\SaleContestationFileResource;
 use Modules\Core\Entities\SaleContestation;
+use Modules\Core\Entities\SaleContestationFile;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\ContestationService;
 use Spatie\Activitylog\Models\Activity;
@@ -83,7 +84,6 @@ class ContestationsController extends Controller
             ]);
 
         } catch (Exception $e) {
-            dd($e->getMessage());
             report($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
@@ -106,8 +106,7 @@ class ContestationsController extends Controller
                 ]
             )->find($contestationsId);
 
-            return view('chargebacks::contestations-show', ['contestationsDetails' => $contestationsDetails]);
-
+            return new ContestationResource($contestationsDetails);
 
         } catch (Exception $e) {
             report($e);
@@ -260,7 +259,6 @@ class ContestationsController extends Controller
 
         } catch (Exception $e) {
             report($e);
-            dd($e->getMessage());
         }
 
     }
@@ -297,6 +295,61 @@ class ContestationsController extends Controller
         }
 
     }
+
+    public function sendContestationFiles(Request $request)
+    {
+
+        try {
+
+            $files = $request->allFiles();
+            $data = $request->all();
+            $contestationService = new ContestationService();
+            $files_paths = $contestationService->sendContestationFiles($files);
+            $saleContestation = SaleContestation::find(current(Hashids::decode($data['contestation'])));
+
+            foreach($files_paths as $file) {
+                $contestationfile = new SaleContestationFile();
+                $contestationfile->contestation_sale_id = $saleContestation->id;
+                $contestationfile->user_id = \Auth::id();
+                $contestationfile->type = $data['type'];
+                $contestationfile->file = $file;
+                $contestationfile->save();
+            }
+
+            return SaleContestationFileResource::collection($saleContestation->files);
+
+        } catch (\stringEncode\Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro'], 400);
+        }
+
+    }
+
+    public function removeContestationFiles($contestationfile)
+    {
+
+        try {
+            $saleContestation = SaleContestationFile::find(current(Hashids::decode($contestationfile)));
+
+            if($saleContestation) {
+                $contestationService = new ContestationService();
+                $contestationService->removeFile($saleContestation);
+            }
+
+            return [];
+
+        } catch (\stringEncode\Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro'], 400);
+        }
+
+    }
+
+
+
+
+
+
 
 
 }

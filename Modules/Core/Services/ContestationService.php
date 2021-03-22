@@ -5,10 +5,12 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
+use Modules\Core\Entities\SaleContestationFile;
 use Modules\Sales\Http\Controllers\SalesController;
 use PDF;
 use stringEncode\Exception;
@@ -33,8 +35,7 @@ class ContestationService
             //  ->leftJoin('transactions', 'sales.id', '=', 'transactions.sale_id')
 //                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-        ->where('sales.owner_id', \Auth::id());
-
+            ->where('sales.owner_id', \Auth::id());
 
 
         //Data da compra = transaction_date, Data do chargeback =  adjustment_date
@@ -42,10 +43,14 @@ class ContestationService
 
             $dateRange = FoxUtils::validateDateRange(request('date_range'));
 
-            $search_input_date = 'sales.start_date';
+            $search_input_date = 'sale_contestations.expiration_date';
 
             if ($search == 'adjustment_date') {
                 $search_input_date = 'sale_contestations.file_date';
+            }
+
+            if ($search == 'transaction_date') {
+                $search_input_date = 'sales.start_date';
             }
 
             if ($search == 'expiration_date') {
@@ -81,11 +86,18 @@ class ContestationService
         });
 
         $contestations->when(request('is_contested'), function ($query, $val) {
-            return $query->where('sale_contestations.is_contested', $val == 1);
+            if($val == 1){
+                return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
+            }
+
+            if($val == 2){
+                return $query->whereDate('sale_contestations.expiration_date', '>', date('Y-m-d'));
+            }
+
         });
 
         $contestations->when(request('order_by_expiration_date'), function ($query, $search) {
-            return $query->orderBy('expiration_date', 'desc');
+            return $query->orderBy('expiration_date', 'asc');
         });
 
         $contestations->when(!request('order_by_expiration_date'), function ($query, $search) {
@@ -98,7 +110,7 @@ class ContestationService
                 return $query->orderBy('sale_contestations.file_date', 'desc');
 
             if ($data_type == 'expiration_date')
-                return $query->orderBy('sale_contestations.expiration_date', 'desc');
+                return $query->orderBy('sale_contestations.expiration_date', 'asc');
 
         });
 
@@ -363,7 +375,55 @@ class ContestationService
             'file_name' => $pdf_name
         ];
 
+    }
+
+    public function sendContestationFiles($files)
+    {
+
+        $paths = [];
+        $amazonFileService = app(AmazonFileService::class);
+        $amazonFileService->setDisk('s3_documents');
+        foreach ($files['files'] as $file) {
+
+            $image = $file->getClientOriginalName();
+            $extension = pathinfo($image, PATHINFO_EXTENSION);
+            $image_name = uniqid() . time() . '.' . $extension;
+            $path = 'uploads/private/contestations';
+
+            $pathamz = $amazonFileService->uploadFile(
+                $path,
+                $file,
+                $image_name,
+                null,
+                'private'
+            );
+
+            $paths[] = $amazonFileService->getPath($pathamz);
+
+        }
+
+        return $paths;
+
 
     }
+
+    public function removeFile(SaleContestationFile $saleContestationFile )
+    {
+
+        try {
+
+            $sDrive = Storage::disk('s3_documents');
+            if($sDrive->exists($saleContestationFile->file)){
+                $sDrive->delete($saleContestationFile->file);
+                $saleContestationFile->delete();
+            }
+
+        } catch (Exception $e) {
+            Log::warning('DeleteTemporaryFiles - Error command ');
+            report($e);
+        }
+
+    }
+
 
 }

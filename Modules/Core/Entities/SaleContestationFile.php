@@ -32,7 +32,7 @@ class SaleContestationFile extends Model
      */
     public function contestation()
     {
-        return $this->belongsTo(SaleContestation::class);
+        return $this->belongsTo(SaleContestation::class, 'contestation_sale_id', 'id');
     }
 
     public function user()
