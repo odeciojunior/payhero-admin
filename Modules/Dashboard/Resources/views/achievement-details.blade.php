@@ -26,7 +26,8 @@
                     </div>
                 </div>
 
-                <div id="reward-check" class="btn btn-primary" >Ok, legal!</div>
+                <div id="reward-check" class="btn btn-primary" data-dismiss="modal" aria-label="close"
+                     data-target="#modal-achievement">Ok, legal!</div>
             </div>
         </div>
     </div>
