@@ -418,10 +418,10 @@ $(document).ready(function () {
         });
     }
 
-    function showConfetti() {
+    function showConfetti(element) {
 
         setTimeout(() => {
-            let referenceElement = document.querySelector('[id*=reward-check-data-]:last-child')
+            let referenceElement = document.querySelector(element)
             let startY = (referenceElement.offsetHeight + referenceElement.getBoundingClientRect().y) / window.innerHeight;
             console.log('entrei')
             let count = 200;
@@ -463,7 +463,7 @@ $(document).ready(function () {
         }, 501)
     }
 
-    // function showConfett() {
+    // function showConfetti() {
     //
     //     let velocity = window.innerWidth * 4 / 100;
     //
@@ -533,14 +533,14 @@ $(document).ready(function () {
                                             </div>
                                         </div>
                                         <div class="modal-body">
-                            
+
                                             <div id="description">${data.description}<strong id="description-level"></strong></div>
                                             <div id="name">${data.name}</div>
                                             <div id="storytelling">${data.storytelling}</div>
-                            
+
                                             ${modal_is_level_type}
-                            
-                                            <div id="reward-check-data-${index}" 
+
+                                            <div id="reward-check-data-${index}"
                                                 class="btn btn-primary"
                                                  data-dismiss="modal"
                                                  aria-label="close"
@@ -557,7 +557,7 @@ $(document).ready(function () {
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
                             $('body').addClass('blurred');
-                            showConfetti();
+                            showConfetti(`#modal-achievement-data-${index}`);
                         });
 
                         $(`#modal-achievement-data-${index}`).on('hidden.bs.modal', function () {
