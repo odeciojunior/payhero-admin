@@ -11,12 +11,12 @@ class First1000Revenue extends Task implements TaskCheck
 {
     public function userCompletedTask(User $user): bool
     {
-        $transactionModel = new Transaction;
-        $revenue = $transactionModel
+        $revenue = Transaction::where('user_id', $user->id)
             ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->where('user_id', $user->id)
-            ->sum('value');
+            ->selectRaw('sum(value) as total_value')
+            ->havingRaw('sum(value) > 100000')
+            ->first();
 
-        return $revenue >= 100000;
+        return $revenue && $revenue->total_value >= 100000;
     }
 }

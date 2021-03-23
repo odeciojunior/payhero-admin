@@ -1473,9 +1473,9 @@ class SaleService
         return $transactions->paginate(10);
     }
 
-    public function getApprovedSalesInPeriod(User $user, \Illuminate\Support\Carbon $startDate, Carbon $endDate)
+    public function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
-        $approvedSales = Sale::whereIn('status', [
+        return Sale::whereIn('status', [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
@@ -1486,7 +1486,5 @@ class SaleService
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             )
             ->where('owner_id', $user->id);
-
-        return $approvedSales;
     }
 }
