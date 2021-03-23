@@ -62,30 +62,31 @@
                 <form method="post" id="sendfilesform" name="sendfilesform"
                       action="{{ route('contestations.sendContestationFiles') }}" enctype="multipart/form-data">
                     @csrf
-                    <div class="row"></div>
-                    <div class="form-group">
-                        <label for="observation">Escolha uma categoria</label>
-                        <select name="type" class="form-control" id="type">
-                            <option value="NOTA_FISCAL">Nota fiscal</option>
-                            <option value="POLITICA_VENDA">Politica de venda</option>
-                            <option value="ENTREGA">Entrega</option>
-                            <option value="INFO_ACORDO">Informação do acordo</option>
-                            <option value="OUTROS">Nota fiscal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pdf">Enviar os arquivos</label>
-                        <input type="file" name="files[]" id="multiplefiles"
-                               class="form-control" multiple/>
-                    </div>
-                    <div class="row mt-10 mb-0">
-                        <div class="col-12 text-left">
-                            <input type="hidden" value="" name="contestation" id="contestation">
-                            <button id="update-contestation-observation" contestation="" type="submit"
-                                    class="btn btn-primary">Enviar
-                            </button>
+
+                        <div class="form-group">
+                            <label for="observation">Escolha uma categoria</label>
+                            <select name="type" class="form-control" id="type">
+                                <option value="NOTA_FISCAL">Nota fiscal</option>
+                                <option value="POLITICA_VENDA">Politica de venda</option>
+                                <option value="ENTREGA">Entrega</option>
+                                <option value="INFO_ACORDO">Informação do acordo</option>
+                                <option value="OUTROS">Outros</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="pdf">Enviar os arquivos</label>
+                            <input type="file" name="files[]" id="multiplefiles"
+                                   class="form-control" multiple/>
+                        </div>
+                        <div class="row mt-10 mb-0">
+                            <div class="col-12 text-left">
+                                <input type="hidden" value="" name="contestation" id="contestation">
+                                <button id="update-contestation-observation" contestation="" type="submit"
+                                        class="btn btn-primary">Enviar
+                                </button>
+                            </div>
+                        </div>
+
 
                 </form>
 
