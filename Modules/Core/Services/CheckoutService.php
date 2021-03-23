@@ -122,55 +122,29 @@ class CheckoutService
         foreach ($checkoutPlans as $checkoutPlan) {
             if (!empty($checkoutPlan->plan)) {
                 $total += intval(
-                        preg_replace(
-                            "/[^0-9]/",
-                            "",
-                            $checkoutPlan->plan->price
-                        )
-                    ) * intval($checkoutPlan->amount);
+                    preg_replace(
+                        "/[^0-9]/",
+                        "",
+                        $checkoutPlan->plan->price
+                    )
+                ) * intval($checkoutPlan->amount);
             }
         }
 
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount, $partialValues = [], $refundObservation): array
+    public function cancelPayment($sale): array
     {
         try {
-            $saleService = new SaleService();
-            $transactionModel = new Transaction();
-            $transferModel = new Transfer();
-            $companyModel = new Company();
-            $saleAmount = Str::replaceFirst(
-                ',',
-                '',
-                Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value))
-            );
-            /**
-             * TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
-             * if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
-             */
-
-            if ($refundAmount > $saleAmount) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Valor não confere com o da Venda.',
-                ];
-            }
-
-            $hashSaleId = Hashids::connection('sale_id')->encode($sale->id);
+            $idEncoded = hashids_encode($sale->id, 'sale_id');
             if (FoxUtils::isProduction()) {
-                $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . $hashSaleId;
+                $urlCancelPayment = "https://checkout.cloudfox.net/api/payment/cancel/{$idEncoded}";
             } else {
-                $urlCancelPayment = 'http://' . env('CHECKOUT_URL') . '/api/payment/cancel/' . $hashSaleId;
+                $urlCancelPayment = 'http://' . env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
             }
 
-            $dataCancel = [
-                'refundAmount' => (!empty($partialValues['value_to_refund'])) ? $partialValues['value_to_refund'] : $refundAmount,
-                'partial' => (!empty($partialValues)) ? true : false,
-            ];
-
-            $response = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
+            $response = $this->runCurl($urlCancelPayment, 'POST');
 
             if (($response->status ?? '') != 'success') {
                 return [
@@ -179,46 +153,9 @@ class CheckoutService
                     'error' => $response->message,
                 ];
             }
-            $checkUpdate = $saleService->updateSaleRefunded(
-                $sale,
-                $refundAmount,
-                $response,
-                $partialValues,
-                $refundObservation
-            );
-
-            if (!$checkUpdate) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Venda Estornada, mas não atualizada na plataforma.',
-                ];
-            }
-
-            if (!$saleService->saleIsGetnet($sale)) {
-                $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
-                $transaction = $transactionModel->where('sale_id', $sale->id)
-                    ->whereIn('company_id', $userCompanies)
-                    ->first();
-                $transferModel->create(
-                    [
-                        'transaction_id' => $transaction->id,
-                        'user_id' => auth()->user()->account_owner_id,
-                        'value' => 100,
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'type' => 'out',
-                        'reason' => 'Taxa de estorno',
-                        'is_refund_tax' => 1,
-                        'company_id' => $transaction->company_id,
-                    ]
-                );
-                $transaction->company->update(
-                    [
-                        'balance' => $transaction->company->balance -= 100,
-                    ]
-                );
-            }
 
             return [
+                'response' => $response,
                 'status' => 'success',
                 'message' => 'Venda Estornada com sucesso.',
             ];

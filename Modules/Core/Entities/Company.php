@@ -77,6 +77,26 @@ class Company extends Model
     use PresentableTrait;
     use SoftDeletes;
 
+    public const PHYSICAL_PERSON = 1;
+    public const JURIDICAL_PERSON = 2;
+
+    public const STATUS_PENDING = 1;
+    public const STATUS_ANALYZING = 2;
+    public const STATUS_APPROVED = 3;
+    public const STATUS_REFUSED = 4;
+
+    public const DOCUMENT_STATUS_PENDING = 1;
+    public const DOCUMENT_STATUS_ANALYZING = 2;
+    public const DOCUMENT_STATUS_APPROVED = 3;
+    public const DOCUMENT_STATUS_REFUSED = 4;
+
+    public const GETNET_STATUS_APPROVED = 1;
+    public const GETNET_STATUS_REVIEW = 2;
+    public const GETNET_STATUS_REPROVED = 3;
+    public const GETNET_STATUS_APPROVED_GETNET = 4;
+    public const GETNET_STATUS_ERROR = 5;
+    public const GETNET_STATUS_PENDING = 6;
+
     protected $presenter = CompanyPresenter::class;
     /**
      * The accessors to append to the model's array form.
