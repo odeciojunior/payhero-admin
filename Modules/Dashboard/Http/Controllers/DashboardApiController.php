@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -23,10 +24,10 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Performance\UserLevel;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
+use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -324,10 +325,10 @@ class DashboardApiController extends Controller
 
             return array(
                 'level'            => $user->level,
-                'account_score'    => round($user->account_score, 1),
-                'chargeback_score' => round($user->chargeback_score, 1),
-                'attendance_score' => round($user->attendance_score, 1),
-                'tracking_score'   => round($user->tracking_score, 1)
+                'account_score'    =>  $user->account_score > 1 ?  round($user->account_score, 1) : $user->account_score,
+                'chargeback_score' =>  $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
+                'attendance_score' =>  $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
+                'tracking_score'   => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
             );
         } catch (Exception $e) {
             report($e);
@@ -440,7 +441,7 @@ class DashboardApiController extends Controller
             $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
 
             return [
-                'chargeback_score'       => $user->chargeback_score,
+                'chargeback_score'       => $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
                 'total_sales_approved'   => $totalSalesApproved ?? 0,
                 'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
@@ -526,7 +527,7 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'attendance_score' => $user->attendance_score,
+                'attendance_score' => $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -629,14 +630,14 @@ class DashboardApiController extends Controller
 
 
             return [
-                'tracking_score'     => $user->tracking_score,
+                'tracking_score'     => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
                 'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
                 'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
-                'trackings'          => $trackingsInfo,
+                //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
             report($e);
@@ -651,9 +652,9 @@ class DashboardApiController extends Controller
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function getAchievement(): JsonResponse
+    public function getAchievements()
     {
         try {
             $user = auth()->user();
@@ -667,46 +668,21 @@ class DashboardApiController extends Controller
                 );
             }
 
-            $results = DashboardNotification::where([
-                    'user_id' => $user->id,
-                    'read_at' => null,
-                ])
-                ->get([
-                    'id',
-                    'subject_id',
-                    'subject_type'
-                ]);
+            $dashboardNotifications = DashboardNotification::where([
+                                                                      'user_id' => $user->id,
+                                                                      'read_at' => null,
+                                                                  ])->get([
+                                                                      'id',
+                                                                      'subject_id',
+                                                                      'subject_type'
+                                                                  ]);
 
-            $data = [];
-            foreach ($results as $key => $result) {
-                if ($result->subject_type == UpdateUserLevel::class) {
-                    $data[$key] = (new UserLevel())->getLevelData($result->subject_id);
-                    $data[$key]['achievement'] = \hashids()->encode($result->id);
-                    $data[$key]['type'] = 1;
-                    $data[$key]['benefits'] = $user->benefits->where(
-                        [
-                            'enabled' => 1,
-                            'level' => $user->level
-                        ]
-                    )
-                        ->toArray();
-                    continue;
-                }
+            if (!empty($dashboardNotifications))
+                return DashboardAchievementsResource::collection($dashboardNotifications);
 
-                if ($result->subject_type == UpdateUserAchievements::class) {
-                    $data[$key] = Achievement::find($result->subject_id)->toArray();
-                    $data[$key]['achievement'] = \hashids()->encode($result->id);
-                    $data[$key]['benefits'] = 0;
-                    continue;
-                }
-            }
-
-            return \response()->json(
-                [
-                    'data' => $data
-                ],
-                Response::HTTP_OK
-            );
+            return \response()->json([
+                                         'message' => 'Usuário não tem novas conquistas',
+                                     ]);
         } catch (Exception $exception) {
             report($exception);
 
@@ -723,7 +699,7 @@ class DashboardApiController extends Controller
      * @param $achievement
      * @return JsonResponse
      */
-    public function updateAchievement($achievement): JsonResponse
+    public function updateAchievements($achievement): JsonResponse
     {
         try {
             $idAchievement = \hashids()->decode($achievement);
@@ -737,7 +713,7 @@ class DashboardApiController extends Controller
                 );
             }
 
-//            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
+            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
 
             return \response()->json(
                 [

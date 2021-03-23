@@ -43,7 +43,7 @@ class UserLevel
         '6' => [
             'name' => 'Sirius Major',
             'description' => 'Nível 6',
-            'storytelling' => 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
+            'storytelling' => 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!',
             'icon' => 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/nivel-6.png',
         ],
     ];

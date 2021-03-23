@@ -211,7 +211,7 @@ body {
         table.unify tr {
             border-bottom: 3px solid #DDDDDD;
             display: block;
-            margin-bottom: .625em;
+            /*margin-bottom: .625em;*/
         }
 
         table.unify td {
@@ -227,8 +227,8 @@ body {
             content: attr(aria-label);
             */
             content: attr(data-label);
-        / float: left;
-        / font-weight: bold;
+            float: left;
+            font-weight: bold;
             text-transform: uppercase;
         }
 
