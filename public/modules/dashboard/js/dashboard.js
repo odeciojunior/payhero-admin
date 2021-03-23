@@ -33,8 +33,8 @@ $(document).ready(function () {
 
         let haveData = 0;
 
-        chartData.value_data.forEach(function(elem, index){
-            if(elem) haveData += parseInt(elem)
+        chartData.value_data.forEach(function (elem, index) {
+            if (elem) haveData += parseInt(elem)
         });
 
         if (haveData > 0) {
@@ -235,7 +235,6 @@ $(document).ready(function () {
     }
 
 
-
     // function updateTrackings(trackings) {
     //     $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
     //     $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
@@ -418,6 +417,88 @@ $(document).ready(function () {
             }
         });
     }
+
+    function showConfetti() {
+
+        let referenceElement = document.querySelector('#reward-check')
+        let startY = (referenceElement.offsetHeight + referenceElement.getBoundingClientRect().y) / window.innerHeight;
+
+        let count = 200;
+
+        let defaults = {
+            origin: {y: startY},
+            startVelocity: 60,
+            zIndex: 1700,
+        };
+        let fire = function (particleRatio, opts) {
+            confetti({
+                ...defaults,
+                ...opts,
+                particleCount: Math.floor(count * particleRatio)
+            });
+        }
+        fire(0.25, {
+            spread: 26,
+        });
+        fire(0.2, {
+            spread: 60,
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8,
+            startVelocity: 20
+        });
+        fire(0.1, {
+            spread: 120,
+            decay: 0.92,
+            scalar: 1.2,
+            startVelocity: 40
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 40
+        });
+    }
+
+    // function showConfett() {
+    //
+    //     let velocity = window.innerWidth * 4 / 100;
+    //
+    //     let end = Date.now() + velocity * 20;
+    //
+    //     let common = {
+    //         particleCount: 5,
+    //         spread: velocity,
+    //         zIndex: 1700,
+    //         startVelocity: velocity,
+    //     };
+    //
+    //     (function frame() {
+    //         confetti({
+    //             ...common,
+    //             angle: 60,
+    //             origin: {x: 0},
+    //         });
+    //         confetti({
+    //             ...common,
+    //             angle: 120,
+    //             origin: {x: 1},
+    //         });
+    //         if (Date.now() < end) {
+    //             requestAnimationFrame(frame);
+    //         }
+    //     }());
+    // }
+
+    $('#modal-achievement').on('shown.bs.modal', function () {
+        $('body').addClass('blurred');
+        showConfetti();
+    });
+
+    $('#modal-achievement').on('hidden.bs.modal', function () {
+        $('body').removeClass('blurred');
+    });
 
     function verifyAchievements() {
         $.ajax({
