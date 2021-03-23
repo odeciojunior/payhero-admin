@@ -741,6 +741,11 @@ input[type=radio] {
     color: #707070;
     margin-bottom: 20px;
 }
+@media screen and (max-width: 767px) {
+    .table td, .table {
+        margin-bottom: 0px;
+    }
+}
 
 .table td {
     padding: 15px 12px !important;

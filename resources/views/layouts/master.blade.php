@@ -61,8 +61,8 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=100') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=60') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=110') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=65') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')

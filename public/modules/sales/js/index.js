@@ -342,7 +342,7 @@ $(document).ready(function () {
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
-                                    <td class='display-sm-none display-m-none display-lg-none text-center'>
+                                    <td class=' text-center'>
                                         ${value.sale_code} <br>
                                         ${upsell}
                                         ${has_order_bump}

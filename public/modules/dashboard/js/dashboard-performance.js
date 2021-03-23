@@ -55,7 +55,7 @@ $(document).ready(function () {
             name: 'Sirius Major',
             description: 'Nível 6',
             icon: '/modules/global/adminremark/assets/images/nivel-6.png',
-            storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sírius, a estrela mais brilhante!',
+            storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!',
             billedStart: '100000000',
             messageStart: '100M',
             billedStop: '500000000',
@@ -320,7 +320,7 @@ $(document).ready(function () {
                         </div>
                     </div>
 
-                    <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
+                    <div id="benefits-next-container" class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
                         <span class="mb-10 title-performance">Seus próximos benefícios</span>
                         <div id="benefits-container">
                             <div class="d-flex flex-column flex-nowrap justify-content-start ">
@@ -414,6 +414,7 @@ $(document).ready(function () {
 
         if (!isEmpty(benefits.next)) {
 
+            $("#benefits-next-container").addClass('d-flex');
             $.each(benefits.next, function (index, value) {
 
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start">
@@ -426,6 +427,9 @@ $(document).ready(function () {
             if (benefits.next.length > 2) {
                 $('#benefits-container').asScrollable();
             }
+        }
+        else  {
+            $("#benefits-next-container").removeClass('d-flex').hide();
         }
 
     }

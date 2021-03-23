@@ -211,7 +211,7 @@ body {
         table.unify tr {
             border-bottom: 3px solid #DDDDDD;
             display: block;
-            margin-bottom: .625em;
+            /*margin-bottom: .625em;*/
         }
 
         table.unify td {

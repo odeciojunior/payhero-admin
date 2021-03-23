@@ -324,10 +324,10 @@ class DashboardApiController extends Controller
 
             return array(
                 'level'            => $user->level,
-                'account_score'    => round($user->account_score, 1),
-                'chargeback_score' => round($user->chargeback_score, 1),
-                'attendance_score' => round($user->attendance_score, 1),
-                'tracking_score'   => round($user->tracking_score, 1)
+                'account_score'    =>  $user->account_score > 1 ?  round($user->account_score, 1) : $user->account_score,
+                'chargeback_score' =>  $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
+                'attendance_score' =>  $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
+                'tracking_score'   => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
             );
         } catch (Exception $e) {
             report($e);
@@ -440,7 +440,7 @@ class DashboardApiController extends Controller
             $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
 
             return [
-                'chargeback_score'       => $user->chargeback_score,
+                'chargeback_score'       => $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
                 'total_sales_approved'   => $totalSalesApproved ?? 0,
                 'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
@@ -526,7 +526,7 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'attendance_score' => $user->attendance_score,
+                'attendance_score' => $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -629,14 +629,14 @@ class DashboardApiController extends Controller
 
 
             return [
-                'tracking_score'     => $user->tracking_score,
+                'tracking_score'     => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
                 'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
                 'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
-                'trackings'          => $trackingsInfo,
+                //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
             report($e);

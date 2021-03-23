@@ -138,7 +138,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-chargebacks" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.chargeback_score >= 1 ? data.chargeback_score : 0}</span>
+                                            <span class="account-health-note">${data.chargeback_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Chargebacks</span>
                                     </div>
@@ -146,7 +146,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-attendance" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.attendance_score >= 1 ? data.attendance_score : 0}</span>
+                                            <span class="account-health-note">${data.attendance_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Atendimento</span>
                                     </div>
@@ -154,7 +154,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-tracking" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.tracking_score >= 1 ? data.tracking_score : 0}</span>
+                                            <span class="account-health-note">${data.tracking_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Cod. Rastreio</span>
                                     </div>

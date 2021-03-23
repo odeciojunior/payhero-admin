@@ -28,7 +28,7 @@ class TransactionResource extends JsonResource
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'               => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'       => Hashids::encode($this->sale->id),
-            'upsell'           => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
+            'upsell'           => 'XZKl8zDG', //Hashids::connection('sale_id')->encode($this->sale->upsell_id),
             'project'          => $sale->project->name,
             'product'          => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $sale->plansSales->first()->plan->name,
             'client'           => $sale->customer->name,
@@ -48,8 +48,8 @@ class TransactionResource extends JsonResource
             'shopify_order'    => $sale->shopify_order ?? null,
             'is_chargeback_recovered'    => $sale->is_chargeback_recovered,
             'observation'      => $sale->observation,
-            'cupom_code'       => $sale->cupom_code ?? null,
-            'has_order_bump'   => $sale->has_order_bump,
+            'cupom_code'       => 'teste15', // $sale->cupom_code ?? null,
+            'has_order_bump'   => 1, //$sale->has_order_bump,
             'has_contestation' => $sale->contestations->count() ? true : false,
         ];
         $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
@@ -69,7 +69,7 @@ class TransactionResource extends JsonResource
         } else {
             $data['user_sale_type'] = 'affiliate';
         }
-
+        $data['cashback_value'] = 'R$ 10,34';
         if (!empty($sale->affiliate_id)) {
             $affiliate         = Affiliate::withTrashed()->find($sale->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
