@@ -12,6 +12,6 @@ class MeteoricSupport extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
-        return $user->attendance_average_response_time > 0 && $user->attendance_average_response_time <= 3;
+        return $user->attendance_average_response_time >= 0 && $user->attendance_average_response_time <= 12;
     }
 }
