@@ -161,7 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    verifyAchievements();
+                    setTimeout(verifyAchievements, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -418,7 +418,7 @@ $(document).ready(function () {
         });
     }
 
-    window.showConfetti = function (element) {
+    function showConfetti() {
         let startY = 605 / window.innerHeight;
         let count = 200;
 
@@ -498,7 +498,6 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -549,9 +548,13 @@ $(document).ready(function () {
 
                         $('#modal-achievement-container').append(modal)
 
+
+                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
+                            $('body').addClass('blurred');
+                        });
+
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
-                            $('body').addClass('blurred');
                             showConfetti(`#modal-achievement-data-${index}`);
                         });
 
@@ -577,7 +580,6 @@ $(document).ready(function () {
                                     'Accept': 'application/json',
                                 },
                                 error: function error(response) {
-                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                     $(`#modal-achievement-data-${index}`).modal('hide')
                                 },
