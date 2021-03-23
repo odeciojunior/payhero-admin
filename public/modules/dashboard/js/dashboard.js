@@ -461,6 +461,36 @@ $(document).ready(function () {
         });
     }
 
+    // function showConfett() {
+    //
+    //     let velocity = window.innerWidth * 4 / 100;
+    //
+    //     let end = Date.now() + velocity * 20;
+    //
+    //     let common = {
+    //         particleCount: 5,
+    //         spread: velocity,
+    //         zIndex: 1700,
+    //         startVelocity: velocity,
+    //     };
+    //
+    //     (function frame() {
+    //         confetti({
+    //             ...common,
+    //             angle: 60,
+    //             origin: {x: 0},
+    //         });
+    //         confetti({
+    //             ...common,
+    //             angle: 120,
+    //             origin: {x: 1},
+    //         });
+    //         if (Date.now() < end) {
+    //             requestAnimationFrame(frame);
+    //         }
+    //     }());
+    // }
+
     $('#modal-achievement').on('shown.bs.modal', function () {
         $('body').addClass('blurred');
         showConfetti();
