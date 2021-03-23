@@ -39,6 +39,7 @@ class SaleContestation extends Model
         'reason',
         'observation',
         'is_contested',
+        'file_user_completed',
         'expiration_date',
         'created_at',
         'updated_at',

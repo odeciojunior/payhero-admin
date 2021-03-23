@@ -267,7 +267,10 @@ $(document).ready(function () {
                         dados += `<td class='copy_link'>
                                     <div class="d-flex justify-content-center align-items-center" >
                                         <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? 'pointer' : 'cursor-default'}' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${statusObject[value.sale_status]}</span>
-                                        ${value.sale_has_valid_tracking ? '<i class="material-icons font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido">local_shipping</i>' : value.sale_only_digital_products ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>' : '<i class="material-icons font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado">local_shipping</i>'}
+                                        ${value.sale_has_valid_tracking ? '' +
+                            '<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products ?
+                            '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>' :
+                            '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
                                         ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ''}
                                     </div>
                                 </td>`;
@@ -275,15 +278,15 @@ $(document).ready(function () {
                         dados += `<td><span class='badge badge-danger'> Vazio</span></td>`;
                     }
                     dados += `
-                                    <td>${value.file_date}<br>
-                                    <small class="text-muted"> ${value.has_expired ? 'Expirado em ' : 'Expira em '} ${value.expiration}</small>
+                                    <td>${value.expiration_user}
                                     </td>
                                     <td>${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
                                     <td>
-                                       <a  role='button' class='contetation_file pointer ${value.has_expired ? 'd-none' : ''} ' style="margin-right:5px" contestation='${value.id}'>
-                                       <span class="o-download-cloud-1"></span>
-                                        </a>
+                                        ${value.is_file_user_completed ? '<span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span>' :
+                    '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
+                                       '<span class="o-upload-to-cloud-1"></span>'+
+                                        '</a>' }
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
                                             <span class="o-eye-1"></span>
                                         </a>
@@ -345,31 +348,6 @@ $(document).ready(function () {
             }
         });
     }
-
-    $(document).on('change', '.check-status', function () {
-        if ($(this).is(':checked')) {
-            $(this).val(1);
-        } else {
-            $(this).val(3);
-        }
-        $.ajax({
-            method: "POST",
-            url: '/contestations/update-is-contested',
-            data: {
-                is_contested: $(this).val(),
-                contestation_id: $(this).data('contestation'),
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response, textStatus, request) {
-                alertCustom('success', response.message);
-            }
-        });
-    });
 
     function getTotalValues() {
         loadOnAny('.total-number', false, {

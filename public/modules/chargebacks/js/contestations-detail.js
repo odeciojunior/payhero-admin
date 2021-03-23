@@ -29,6 +29,12 @@ $(() => {
                 $("#liberation").html(response.data.sale_release_date)
                 $("#request_date").html(response.data.request_date)
                 $("#reason").html(response.data.reason)
+                $("#status-file").prop("checked", response.data.is_file_user_completed)
+                if(response.data.is_file_user_completed){
+                    $("#check-status-text").html(' Concluído').addClass("text-success")
+                }else{
+                    $("#check-status-text").html(' Não concluído').removeClass("text-success")
+                }
 
                 $('#latest_files').html("");
 
@@ -125,8 +131,6 @@ $(() => {
 
     });
 
-
-
     $(document).on("click", "button.btn-remove-file" , function(e) {
         e.preventDefault();
         $(this).prop("disabled", true);
@@ -153,6 +157,37 @@ $(() => {
         });
 
     });
+
+    $(document).on('change', '.check-status', function () {
+        let file_is_completed = true;
+        if ($(this).is(':checked')) {
+            file_is_completed = true;
+            $("#check-status-text").html(' Concluído').addClass("text-success")
+        } else {
+            file_is_completed = false;
+            $("#check-status-text").html(' Não concluído').removeClass("text-success")
+        }
+
+        $.ajax({
+            method: "POST",
+            url: '/contestations/update-is-file-completed',
+            data: {
+                file_is_completed: file_is_completed,
+                contestation_id: contestation,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                alertCustom('success', response.message);
+                location.reload();
+            }
+        });
+    });
+
 
     getProjects();
     function getProjects() {

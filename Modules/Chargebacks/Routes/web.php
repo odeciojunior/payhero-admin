@@ -20,7 +20,6 @@ Route::middleware(['web', 'auth', 'role:account_owner|admin'])->prefix('contesta
 
     Route::post('/set-observation/{id}', 'ContestationsController@setValueObservation')->name('contestations.setvalueobservation');
     Route::get('/get-observation/{id}', 'ContestationsController@getObservation')->name('contestations.getobservation');
-    Route::post('/update-is-contested', 'ContestationsController@updateIsContested')->name('users.updateiscontested');
     Route::get('/generation-dispute/{id}', 'ContestationsController@generateDispute')->name('contestations.generateDispute');
     Route::post('/send-contestation', 'ContestationsController@sendContestation')->name('contestations.sendContestation');
 
@@ -28,6 +27,9 @@ Route::middleware(['web', 'auth', 'role:account_owner|admin'])->prefix('contesta
     Route::post('/send-files', 'ContestationsController@sendContestationFiles')->name('contestations.sendContestationFiles');
 
     Route::get('/{contestationfile}/removefile', 'ContestationsController@removeContestationFiles')->name('contestations.removeContestationFiles');
+
+    Route::post('/update-is-file-completed', 'ContestationsController@updateIsFileCompleted')->name('users.updateIsFileCompleted');
+
 
 });
 

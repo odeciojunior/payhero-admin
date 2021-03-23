@@ -38,11 +38,16 @@ class ContestationResource extends JsonResource
             ['project_id', $this->sale->project_id],
         ])->first();
 
+        $has_expired =  \Carbon\Carbon::parse($this->expiration_date)->lessThan(\Carbon\Carbon::now());
         $descriptionBlackList = (New SaleService())->returnBlacklistBySale($this->sale);
         $result_decode = json_decode($this->data, true);
 
+        $end_user_date = (Carbon::parse($this->expiration_date));
+        $deadline_in_days =  $end_user_date->diffInDays(Carbon::now());
+
+
         return [
-            'id' => Hashids::encode($this->id),
+            'id' => Hashids::encode($this->id) ,
             'transaction_id' => $sale_encode,
             'sale_code' => '#' . $sale_encode,
             'company' => $userProject->company->fantasy_name ??  '',
@@ -65,15 +70,17 @@ class ContestationResource extends JsonResource
             'adjustment_date' => $this->sale->end_date ? with(new Carbon($this->sale->end_date))->format('d/m/Y') : '',
             'request_date' => $this->request_date ? with(new Carbon($this->request_date))->format('d/m/Y') : '',
             'expiration' => $this->expiration_date ? with(new Carbon($this->expiration_date))->format('d/m/Y') : '',
-            'has_expired' => $this->expiration_date  ? \Carbon\Carbon::parse($this->expiration_date)->lessThan(\Carbon\Carbon::now()) : false,
-            'expiration_user' => $this->expiration_date ? ((Carbon::parse($this->expiration_date))->subDay(3))->format('d/m/Y') : '',
-            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? $result_decode['Codigo do Motivo de Chargeback'] . ' - ' . FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback'], $result_decode['Motivo do Chargeback']) : '',
+            'has_expired' => $has_expired,
+            'expiration_user' => !$has_expired ? 'Expira em '. $deadline_in_days . ' dias' : 'Expirado',
+            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback'], $result_decode['Motivo do Chargeback']) : '',
             'observation' =>  $this->observation ?? '',
             'is_contested' =>  $this->is_contested ?? '',
             'amount' => isset($this->sale->original_total_paid_value) ? 'R$ ' . number_format(intval($this->sale->original_total_paid_value) / 100, 2, ',', '.') :
                 ''
             ,
-            'files' => $this->files ?  SaleContestationFileResource::collection($this->files) : ''
+            'files' => $this->files ?  SaleContestationFileResource::collection($this->files) : '',
+            'has_files' => $this->files->count() ? true:false,
+            'is_file_user_completed' => $this->file_user_completed,
 
         ];
     }

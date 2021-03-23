@@ -47,6 +47,15 @@
             .badge.badge-success {
                 background-color: #5EE2A1;
             }
+
+            #check-status-text-icon {
+                background-color: #5EE2A1;
+                color: white;
+                font-size: 12px;
+                padding: 5px;
+                border-radius: 50px;
+                margin-top: -12px;
+            }
         </style>
     @endpush
 
@@ -224,7 +233,7 @@
                                 <td class="table-title" style="min-width: 200px;">Empresa</td>
                                 <td class="table-title">Compra</td>
                                 <td class="table-title" style="min-width: 150px;">Status</td>
-                                <td class="table-title" style="min-width: 170px;">Data</td>
+                                <td class="table-title" style="min-width: 170px;">Prazo para recurso</td>
                                 <td class="table-title">Motivo</td>
                                 {{--                            <td class="table-title">Valor</td>--}}
                                 <td class="table-title" style="min-width: 100px;"></td>

@@ -162,12 +162,10 @@ class ContestationsController extends Controller
         }
     }
 
-    public function updateIsContested(Request $request)
+    public function updateIsFileCompleted(Request $request)
     {
         $data = $request->all();
-
         $data['contestation_id'] = current(Hashids::decode($data['contestation_id']));
-
         if (empty($data['contestation_id'])) {
             return response()->json(
                 [
@@ -190,7 +188,7 @@ class ContestationsController extends Controller
 
         $contestation->update(
             [
-                'is_contested' => $data['is_contested'],
+                'file_user_completed' => $data['file_is_completed'] == true ? 1 : 0,
             ]
         );
 
