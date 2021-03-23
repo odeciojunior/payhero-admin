@@ -221,4 +221,13 @@ class ChargebackService
 
         return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;
     }
+
+    public function getChargebackTax($totalChargebacks, $totalApprovedSales)
+    {
+        if ($totalApprovedSales == 0)
+            return '0,00%';
+
+        $totalChargebackTax = $totalChargebacks > 0 ? number_format(($totalChargebacks * 100) / $totalApprovedSales, 2, ',', '.') . '%' : '0,00%';
+        return $totalChargebackTax;
+    }
 }
