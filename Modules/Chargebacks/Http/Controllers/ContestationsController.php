@@ -65,7 +65,6 @@ class ContestationsController extends Controller
             $totalContestationValue = $contestationService->getTotalValueChargebacks($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
             $totalContestations = $contestationService->getTotalChargebacks($requestValidated);
-
             $totalChargebackValue = $chargebackService->getTotalValueChargebacks($requestValidated);
             $totalSalesApprovedChargeback = $chargebackService->getTotalApprovedSales($requestValidated);
             $totalChargebacks = $chargebackService->getTotalChargebacks($requestValidated);

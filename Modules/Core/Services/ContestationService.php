@@ -162,14 +162,24 @@ class ContestationService
 
         $totalSaleApproved = Sale::where('gateway_id', 15)
             ->where('payment_method', 1)
-            ->whereIn('status', [1, 4, 7, 24]);
+            ->whereIn('status', [1, 4, 7, 24])
+            ->where('sales.owner_id', \Auth::id());
 
         if ($filters['date_type'] == 'transaction_date') {
             $totalSaleApproved->whereBetween(
                 'sales.start_date',
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             );
-        } else {
+        }else if ($filters['date_type'] == 'expiration_date') {
+
+            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
+                $query->whereBetween(
+                    'sale_contestations.expiration_date',
+                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+                );
+            });
+
+        }else {
 
             $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
                 $query->whereBetween(
