@@ -423,7 +423,6 @@ $(document).ready(function () {
         setTimeout(() => {
             let referenceElement = document.querySelector(element)
             let startY = (referenceElement.offsetHeight + referenceElement.getBoundingClientRect().y) / window.innerHeight;
-            console.log('entrei')
             let count = 200;
 
             let defaults = {
