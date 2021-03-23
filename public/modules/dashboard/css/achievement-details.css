@@ -1,3 +1,7 @@
+.achievement-details-style {
+    top: 20vh
+}
+
 .achievement-details-style .modal-content {
     background-color: #06223e;
     background-image: url("/modules/global/adminremark/assets/images/pattern-sirius.svg");
@@ -22,6 +26,8 @@
 
     opacity: 1;
     order: unset;
+
+    cursor: pointer;
 }
 
 .achievement-details-style .close span{
@@ -47,14 +53,16 @@
 
 .achievement-details-style #icon {
     position: relative;
-    top: 30px;
+    top: 40px;
     z-index: 1;
 
-    width: 140px
+    height: 160px
 }
 
 .achievement-details-style #description {
     font: normal normal bold 16px Muli;
+
+    margin-bottom: 0.5rem
 }
 
 .achievement-details-style #name {
@@ -68,13 +76,11 @@
     font: normal normal normal 14px/18px Muli;
     color: #919191;
 
-    margin-bottom: 2rem;
 }
 
 .achievement-details-style #reward-title {
     font: normal normal normal 16px/20px Muli;
 }
-
 
 .achievement-details-style #reward .material-icons {
     background-color: #5EE2A1;
@@ -87,12 +93,17 @@
     border-radius: 50px;
 }
 
+.achievement-details-style #reward {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
 .achievement-details-style #reward-data {
     color: #5E5E5E;
     font: normal normal bold 14px/11px Muli;
 }
 
-.achievement-details-style #reward-check {
+.achievement-details-style [id*=reward-check-data-] {
     position: relative;
     top: 35px;
 
@@ -107,6 +118,7 @@
 body.blurred {
     overflow: hidden !important;
 }
+
 body.blurred .site-navbar,
 body.blurred .site-menubar,
 body.blurred .page {

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -23,10 +24,10 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Performance\UserLevel;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
+use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -651,9 +652,9 @@ class DashboardApiController extends Controller
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function getAchievement(): JsonResponse
+    public function getAchievements()
     {
         try {
             $user = auth()->user();
@@ -667,46 +668,21 @@ class DashboardApiController extends Controller
                 );
             }
 
-            $results = DashboardNotification::where([
-                    'user_id' => $user->id,
-                    'read_at' => null,
-                ])
-                ->get([
-                    'id',
-                    'subject_id',
-                    'subject_type'
-                ]);
+            $dashboardNotifications = DashboardNotification::where([
+                                                                      'user_id' => $user->id,
+                                                                      'read_at' => null,
+                                                                  ])->get([
+                                                                      'id',
+                                                                      'subject_id',
+                                                                      'subject_type'
+                                                                  ]);
 
-            $data = [];
-            foreach ($results as $key => $result) {
-                if ($result->subject_type == UpdateUserLevel::class) {
-                    $data[$key] = (new UserLevel())->getLevelData($result->subject_id);
-                    $data[$key]['achievement'] = \hashids()->encode($result->id);
-                    $data[$key]['type'] = 1;
-                    $data[$key]['benefits'] = $user->benefits->where(
-                        [
-                            'enabled' => 1,
-                            'level' => $user->level
-                        ]
-                    )
-                        ->toArray();
-                    continue;
-                }
+            if (!empty($dashboardNotifications))
+                return DashboardAchievementsResource::collection($dashboardNotifications);
 
-                if ($result->subject_type == UpdateUserAchievements::class) {
-                    $data[$key] = Achievement::find($result->subject_id)->toArray();
-                    $data[$key]['achievement'] = \hashids()->encode($result->id);
-                    $data[$key]['benefits'] = 0;
-                    continue;
-                }
-            }
-
-            return \response()->json(
-                [
-                    'data' => $data
-                ],
-                Response::HTTP_OK
-            );
+            return \response()->json([
+                                         'message' => 'Usuário não tem novas conquistas',
+                                     ]);
         } catch (Exception $exception) {
             report($exception);
 
@@ -723,7 +699,7 @@ class DashboardApiController extends Controller
      * @param $achievement
      * @return JsonResponse
      */
-    public function updateAchievement($achievement): JsonResponse
+    public function updateAchievements($achievement): JsonResponse
     {
         try {
             $idAchievement = \hashids()->decode($achievement);
@@ -737,7 +713,7 @@ class DashboardApiController extends Controller
                 );
             }
 
-//            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
+            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
 
             return \response()->json(
                 [
