@@ -528,9 +528,6 @@ $(document).ready(function () {
                                 <div id="achievement-details" class="modal-dialog modal-simple achievement-details-style">
                                     <div class="modal-content">
                                         <div class="modal-header flex-wrap">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-target="#modal-achievement-data-${index}">
-                                                <span aria-hidden="true" class="material-icons">close</span>
-                                            </button>
                                             <div class="w-p100">
                                                 <img id="icon" src="${data.icon}" alt="Image">
                                             </div>
