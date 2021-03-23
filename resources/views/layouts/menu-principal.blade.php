@@ -160,16 +160,16 @@
                         </a>
                     </li>
 
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+{{--                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))--}}
 
-                        <li class="site-menu-item">
-                            <a href="{{ route('contestations.index') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Contestações</span>
-                            </a>
-                        </li>
+{{--                        <li class="site-menu-item">--}}
+{{--                            <a href="{{ route('contestations.index') }}">--}}
+{{--                                <span class="bg-menu"></span>--}}
+{{--                                <span class="site-menu-title">Contestações</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
-                    @endif
+{{--                    @endif--}}
                 </ul>
             </li>
         @endif
