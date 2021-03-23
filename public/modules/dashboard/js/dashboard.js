@@ -161,7 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    verifyAchievements();
+                    setTimeout(verifyAchievements, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -418,48 +418,44 @@ $(document).ready(function () {
         });
     }
 
-    function showConfetti(element) {
+    function showConfetti() {
+        let startY = 605 / window.innerHeight;
+        let count = 200;
 
-        setTimeout(() => {
-            let referenceElement = document.querySelector(element)
-            let startY = (referenceElement.offsetHeight + referenceElement.getBoundingClientRect().y) / window.innerHeight;
-            let count = 200;
-
-            let defaults = {
-                origin: {y: startY},
-                startVelocity: 60,
-                zIndex: 1700,
-            };
-            let fire = function (particleRatio, opts) {
-                confetti({
-                    ...defaults,
-                    ...opts,
-                    particleCount: Math.floor(count * particleRatio)
-                });
-            }
-            fire(0.25, {
-                spread: 26,
+        let defaults = {
+            origin: {y: startY},
+            startVelocity: 60,
+            zIndex: 1700,
+        };
+        let fire = function (particleRatio, opts) {
+            confetti({
+                ...defaults,
+                ...opts,
+                particleCount: Math.floor(count * particleRatio)
             });
-            fire(0.2, {
-                spread: 60,
-            });
-            fire(0.35, {
-                spread: 100,
-                decay: 0.91,
-                scalar: 0.8,
-                startVelocity: 20
-            });
-            fire(0.1, {
-                spread: 120,
-                decay: 0.92,
-                scalar: 1.2,
-                startVelocity: 40
-            });
-            fire(0.1, {
-                spread: 120,
-                startVelocity: 40
-            });
-        }, 501)
+        }
+        fire(0.25, {
+            spread: 26,
+        });
+        fire(0.2, {
+            spread: 60,
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8,
+            startVelocity: 20
+        });
+        fire(0.1, {
+            spread: 120,
+            decay: 0.92,
+            scalar: 1.2,
+            startVelocity: 40
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 40
+        });
     }
 
     // function showConfetti() {
@@ -502,7 +498,6 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -553,9 +548,13 @@ $(document).ready(function () {
 
                         $('#modal-achievement-container').append(modal)
 
+
+                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
+                            $('body').addClass('blurred');
+                        });
+
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
-                            $('body').addClass('blurred');
                             showConfetti(`#modal-achievement-data-${index}`);
                         });
 
@@ -581,7 +580,6 @@ $(document).ready(function () {
                                     'Accept': 'application/json',
                                 },
                                 error: function error(response) {
-                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                     $(`#modal-achievement-data-${index}`).modal('hide')
                                 },
