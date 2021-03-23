@@ -111,6 +111,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('14:30');
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('18:30');
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('22:30');
+
+        /** Achievements */
+        $schedule->command('achievements:update')->dailyAt('09:00');
+        $schedule->command('achievements:update')->dailyAt('21:00');
     }
 
     /**
