@@ -343,6 +343,6 @@ class Sale extends Model
         $saleIsChargeback = $this->status == 4;
         $saleIsDigitalProduct = empty($this->delivery_id);
 
-        return !$saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
+        return $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
 }
