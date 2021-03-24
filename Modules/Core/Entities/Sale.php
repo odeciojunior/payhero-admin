@@ -77,6 +77,24 @@ class Sale extends Model
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
 
     /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+    /**
      * @var string
      */
     protected $presenter = SalePresenter::class;
@@ -139,24 +157,6 @@ class Sale extends Model
         'has_order_bump',
         'observation',
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo
