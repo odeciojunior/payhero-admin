@@ -336,4 +336,13 @@ class Sale extends Model
 
         return Hashids::connection('sale_id')->encode($this->id);
     }
+
+    public function getValidTrackingForRedis(): bool
+    {
+
+        $saleIsChargeback = $this->status == 4;
+        $saleIsDigitalProduct = empty($this->delivery_id);
+
+        return $saleIsChargeback || $saleIsDigitalProduct ? true : $this->has_valid_tracking;
+    }
 }
