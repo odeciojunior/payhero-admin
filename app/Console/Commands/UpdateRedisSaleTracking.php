@@ -22,7 +22,7 @@ class UpdateRedisSaleTracking extends Command
     {
         try {
 
-            Sale::where('gateway_id', 15)->whereIn('id', [940366, 939436, 939387])->chunk(
+            Sale::where('gateway_id', 15)->chunk(
                 1000,
                 function ($sales) {
                     foreach ($sales as $sale) {
