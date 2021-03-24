@@ -41,7 +41,6 @@ class VerifyTransfersGetnet extends Command
 
     public function handle()
     {
-
         $companyModel = new Company();
         $transactionModel = new Transaction();
 
@@ -119,9 +118,5 @@ class VerifyTransfersGetnet extends Command
                 report($e);
             }
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

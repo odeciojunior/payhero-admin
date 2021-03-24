@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\Core\Entities\Tasks;
+use Modules\Core\Interfaces\TaskCheck;
 
 /**
  * @property integer $id
@@ -15,7 +16,7 @@ use Modules\Core\Entities\Tasks;
  * @property string $created_at
  * @property string $updated_at
  */
-class Task extends Model
+class Task extends Model implements TaskCheck
 {
     const TASK_APPROVED_DOCS      = 1;
     const TASK_CREATE_FIRST_STORE = 2;
@@ -64,5 +65,17 @@ class Task extends Model
             'task_id',
             'user_id'
         );
+    }
+
+
+    public function userCompletedTask(User $user): bool
+    {
+        try {
+            $taskSubclass = Task::TASKS_CLASS[$this->id];
+            return (new $taskSubclass)->userCompletedTask($user);
+        } catch (\Exception $e) {
+            report($e);
+            return false;
+        }
     }
 }

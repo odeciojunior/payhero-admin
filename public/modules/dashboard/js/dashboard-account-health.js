@@ -309,7 +309,7 @@ $(document).ready(function () {
                                         <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
                                 <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.total_sales_chargeback} <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( (data.total_sales_chargeback*100)/data.total_sales_approved ).toFixed(2)}%</span> </span>
+                                        <span class="account-health-note">${data.total_sales_chargeback} <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> </span>
                                         <span class="account-health-note-description">Chargebacks</span>
                                 </div>
                             </div>

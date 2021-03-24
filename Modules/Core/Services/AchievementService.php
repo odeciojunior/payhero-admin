@@ -36,7 +36,6 @@ class AchievementService
             $user->achievements()->attach($achievement);
             $user->update();
             event(new NotifyUserAchievementEvent($user, $achievement));
-            //TODO: notification here
             return true;
         } catch (\Exception $e) {
             report($e);
@@ -46,10 +45,8 @@ class AchievementService
 
     public function getCurrentUserAchievements(User $user): array
     {
-        $achievements = (new Achievement())->select('id', 'name', 'description', 'icon', 'storytelling')
+        return Achievement::select('id', 'name', 'description', 'icon', 'storytelling')
             ->selectRaw('EXISTS(SELECT user_id FROM achievement_user WHERE user_id = ' . $user->id . ' AND achievement_id = achievements.id) AS active')
             ->get([$user->id])->toArray();
-
-        return $achievements;
     }
 }

@@ -9,29 +9,24 @@ use Modules\Core\Entities\User;
 
 class AttendanceService
 {
-    public function getCurrentUnsolvedTicketsRate(User $user, Carbon $startDate, Carbon $endDate): ?float
+    public function getTicketsPerApprovedSaleRate(User $user, Carbon $startDate, Carbon $endDate): float
     {
-        return 0;
-    }
+        $saleService = new SaleService();
+        $approvedSalesCount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
-    public function getTicketsPerSaleRate(User $user, Carbon $startDate, Carbon $endDate): ?float
-    {
-        return 0;
-    }
+        $ticketsCount = Ticket::join('sales', 'sales.id', 'tickets.sale_id')
+            ->where('sales.owner_id', $user->id)
+            ->whereNotNull('subject_enum')
+            ->where('ticket_category_enum', Ticket::CATEGORY_COMPLAINT)
+            ->whereBetween(
+                'sales.start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->count();
 
-    public function getComplainTicketsPerApprovedSaleRate(User $user, Carbon $startDate, Carbon $endDate): ?float
-    {
-        return 0;
-    }
+        if (!$approvedSalesCount) return 0;
 
-    public function getUnsolvedTicketsRate(User $user, Carbon $startDate, Carbon $endDate): ?float
-    {
-        return 0;
-    }
-
-    public function getSolvedTicketsRate(User $user, Carbon $startDate, Carbon $endDate): ?float
-    {
-        return 0;
+        return round($ticketsCount / $approvedSalesCount * 100, 2);
     }
 
     public function getComplaintTicketsInPeriod(User $user, Carbon $startDate, Carbon $endDate)

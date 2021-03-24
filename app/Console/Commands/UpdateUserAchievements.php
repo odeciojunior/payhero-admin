@@ -43,7 +43,6 @@ class UpdateUserAchievements extends Command
         $now = now();
         $users = User::with('achievements')
             ->whereRaw('id = account_owner_id')
-            ->whereNull('deleted_at')
             ->get();
 
         foreach ($users as $user) {

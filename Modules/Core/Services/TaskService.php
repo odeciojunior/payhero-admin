@@ -16,7 +16,8 @@ class TaskService
 
     public function checkUserCompletedTasks(User $user)
     {
-        foreach ($this->tasks as $task) {
+        foreach (Task::TASKS_CLASS as $id => $taskClass) {
+            $task = $taskClass::find($id);
             $this->checkCompletedTask($user, $task);
         }
     }
@@ -28,8 +29,6 @@ class TaskService
             return true;
         }
 
-        $taskClass = Task::TASKS_CLASS[$task->id];
-        $task = $taskClass::find($task->id);
         if ($task->userCompletedTask($user)) {
             return $this->setCompletedTask($user, $task);
         }
@@ -52,7 +51,10 @@ class TaskService
 
     public function getCurrentUserTasks(User $user): array
     {
-        $tasks = (new Task)->select('id', 'name', 'level', 'priority')->where('level', $user->level)->orderBy('priority')->get();
+        $tasks = (new Task)->select('id', 'name', 'level', 'priority')
+            ->where('level', $user->level)
+            ->orderBy('priority')
+            ->get();
         $userTasks = $user->tasks();
         $completedTasks = [];
         $uncompletedTasks = [];

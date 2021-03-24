@@ -96,6 +96,24 @@ class Sale extends Model
     const STATUS_SYSTEM_ERROR = 99;
 
     /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+    /**
      * @var string
      */
     protected $presenter = SalePresenter::class;
@@ -158,24 +176,6 @@ class Sale extends Model
         'has_order_bump',
         'observation',
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo
@@ -337,6 +337,11 @@ class Sale extends Model
         return $this->hasMany(SaleContestation::class);
     }
 
+    public function getnetChargebacks(): HasMany
+    {
+        return $this->hasMany(GetnetChargeback::class);
+    }
+
     /**
      * @return HasMany
      */
@@ -356,5 +361,14 @@ class Sale extends Model
     public function cashback()
     {
         return $this->hasOne(Cashback::class);
+    }
+
+    public function getValidTrackingForRedis(): int
+    {
+
+        $saleIsChargeback = $this->status == 4;
+        $saleIsDigitalProduct = empty($this->delivery_id);
+
+        return $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
 }
