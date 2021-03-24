@@ -183,7 +183,7 @@ class ContestationService
 
             $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
                 $query->whereBetween(
-                    'sale_contestations.created_at',
+                    'sale_contestations.request_date',
                     [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
                 );
             });
