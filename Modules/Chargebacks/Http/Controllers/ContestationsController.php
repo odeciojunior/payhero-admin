@@ -20,7 +20,6 @@ use Modules\Core\Services\ContestationService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-//use Modules\Core\Entities\GetnetChargeback;
 
 class ContestationsController extends Controller
 {
