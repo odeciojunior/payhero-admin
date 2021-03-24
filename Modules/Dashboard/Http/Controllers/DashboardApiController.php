@@ -2,8 +2,6 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
-use App\Console\Commands\UpdateUserAchievements;
-use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -12,10 +10,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DashboardNotification;
-use Modules\Core\Entities\Log;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -23,8 +19,10 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
+use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\ReportService;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
@@ -117,13 +115,13 @@ class DashboardApiController extends Controller
 
             $blockedBalance = $companyService->getBlockedBalance($company);
             $pendingBalance = $companyService->getPendingBalance(
-                $company,
-                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-            ) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+                    $company,
+                    CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+                ) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
             $availableBalance = $companyService->getAvailableBalance(
-                $company
-            ) - $blockedBalance;
+                    $company
+                ) - $blockedBalance;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
             $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [
@@ -178,9 +176,9 @@ class DashboardApiController extends Controller
                     $companyArray[] = [
                         'id_code'      => Hashids::encode($company->id),
                         'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : Str::limit(
-                            $company->fantasy_name,
-                            20
-                        ) ?? '',
+                                $company->fantasy_name,
+                                20
+                            ) ?? '',
                         'type'         => $company->company_type,
                     ];
                 }
@@ -325,10 +323,10 @@ class DashboardApiController extends Controller
 
             return array(
                 'level'            => $user->level,
-                'account_score'    =>  $user->account_score > 1 ?  round($user->account_score, 1) : $user->account_score,
-                'chargeback_score' =>  $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
-                'attendance_score' =>  $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
-                'tracking_score'   => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
+                'account_score'    => $user->account_score > 1 ? round($user->account_score, 1) : $user->account_score,
+                'chargeback_score' => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
+                'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                'tracking_score'   => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
             );
         } catch (Exception $e) {
             report($e);
@@ -382,72 +380,28 @@ class DashboardApiController extends Controller
             }
 
             $companyModel = new Company();
-            $saleModel = new Sale();
             $companyId = current(Hashids::decode($companyHash));
             $company = $companyModel->find($companyId);
             $user = $company->user;
-            $userId = auth()->user()->account_owner_id;
 
             if (empty($company)) {
                 return [];
             }
 
-            //Chargeback
-            //-$startDate = now()->startOfDay()->subDays(140);
-            //-$endDate = now()->endOfDay()->subDays(20);
+            $startDate = now()->startOfDay()->subDays(140);
+            $endDate = now()->endOfDay()->subDays(20);
 
+            $chargebackService = new ChargebackService();
+            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate, $endDate)->count();
 
-//            $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-//
-//            $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
-//                $q->whereBetween(
-//                    'start_date',
-//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-//                );
-//            })->where('user_id', $userId);
-//
-//            $chargebacksAmount = $getnetChargebacks->count();
-//
-//            $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-//                ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-//                ->whereIn('status', [
-//                    Sale::STATUS_APPROVED,
-//                    Sale::STATUS_CHARGEBACK,
-//                    Sale::STATUS_REFUNDED,
-//                    Sale::STATUS_IN_DISPUTE
-//                ])->whereBetween(
-//                    'start_date',
-//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-//                )->where('owner_id', $user->id);
-//
-//            $approvedSalesAmount = $approvedSales->count();
-
-
-            $chargebackData = $saleModel->selectRaw(
-                "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
-                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
-            )
-                ->where('payment_method', 1)
-                ->where('owner_id', $userId)
-                ->whereHas(
-                    'transactions',
-                    function ($query) use ($companyId) {
-                        $query->where('company_id', $companyId);
-                    }
-                )
-                ->first();
-
-            $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
-            $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
+            $saleService = new SaleService();
+            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
             return [
-                'chargeback_score'       => $user->chargeback_score > 1 ?  round($user->chargeback_score, 1) : $user->chargeback_score,
+                'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
-                'total_sales_approved'   => $totalSalesApproved ?? 0,
-                'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
-                //'total_sales_approved'   => $approvedSalesAmount ?? 0,
-                //'total_sales_chargeback' => $chargebacksAmount ?? 0,
-
+                'total_sales_approved'   => $totalApprovedSales ?? 0,
+                'total_sales_chargeback' => $totalChargeback ?? 0,
             ];
         } catch (Exception $e) {
             report($e);
@@ -527,7 +481,7 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'attendance_score' => $user->attendance_score > 1 ?  round($user->attendance_score, 1) : $user->attendance_score,
+                'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -630,7 +584,7 @@ class DashboardApiController extends Controller
 
 
             return [
-                'tracking_score'     => $user->tracking_score > 1 ?  round($user->tracking_score, 1) : $user->tracking_score,
+                'tracking_score'     => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
                 'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
@@ -669,20 +623,20 @@ class DashboardApiController extends Controller
             }
 
             $dashboardNotifications = DashboardNotification::where([
-                                                                      'user_id' => $user->id,
-                                                                      'read_at' => null,
-                                                                  ])->get([
-                                                                      'id',
-                                                                      'subject_id',
-                                                                      'subject_type'
-                                                                  ]);
+                'user_id' => $user->id,
+                'read_at' => null,
+            ])->get([
+                'id',
+                'subject_id',
+                'subject_type'
+            ]);
 
             if (!empty($dashboardNotifications))
                 return DashboardAchievementsResource::collection($dashboardNotifications);
 
             return \response()->json([
-                                         'message' => 'Usuário não tem novas conquistas',
-                                     ]);
+                'message' => 'Usuário não tem novas conquistas',
+            ]);
         } catch (Exception $exception) {
             report($exception);
 
