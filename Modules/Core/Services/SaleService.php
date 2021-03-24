@@ -289,7 +289,8 @@ class SaleService
 
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+        $userTransaction = $sale->transactions->where('invitation_id', null)
+            ->whereIn('company_id', $userCompanies)
             ->first();
 
         //calcule total
@@ -318,11 +319,11 @@ class SaleService
 
         if (!empty($transactionConvertax)) {
             $convertaxValue = 'R$ ' . substr_replace(
-                    $transactionConvertax->value,
-                    ',',
-                    strlen($transactionConvertax->value) - 2,
-                    0
-                );
+                $transactionConvertax->value,
+                ',',
+                strlen($transactionConvertax->value) - 2,
+                0
+            );
         } else {
             $convertaxValue = '0,00';
         }
@@ -568,10 +569,8 @@ class SaleService
                 $company = $companyModel->find($refundTransaction->company_id);
 
                 if (!is_null($company)) {
-                    $subsellerId = CompanyService::getSubsellerId($company);
-
                     $getnetBackOffice = new GetnetBackOfficeService();
-                    $getnetBackOffice->setStatementSubSellerId($subsellerId)
+                    $getnetBackOffice->setStatementSubSellerId(CompanyService::getSubsellerId($company))
                         ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'));
 
                     $gatewaySale = $getnetBackOffice->getStatement();

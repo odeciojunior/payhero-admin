@@ -236,9 +236,7 @@ class SalesApiController extends Controller
         try {
             $companyService = new CompanyService();
 
-            $sale = Sale::with('customer')
-                ->where('id', hashids_decode($saleId, 'sale_id'))
-                ->first();
+            $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
 
             if (
                 in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
