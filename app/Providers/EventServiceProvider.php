@@ -109,9 +109,11 @@ class EventServiceProvider extends ServiceProvider
         \Modules\Core\Events\WithdrawalsExportedEvent::class => [
             \Modules\Core\Listeners\NotifyWithdrawalsExportedListener::class,
         ],
-        \Modules\Core\Events\NotifyUserLevelUpdateEvent::class => [
-            \Modules\Core\Listeners\NotifyUserLevelUpdateCreateListener::class,
-//            \Modules\Core\Listeners\NotifyUserLevelUpdateSendEmailListener::class
+        \Modules\Core\Events\NotifyUserLevelEvent::class => [
+            \Modules\Core\Listeners\NotifyUserLevelSendEmailListener::class
+        ],
+        \Modules\Core\Events\NotifyUserAchievementEvent::class => [
+            \Modules\Core\Listeners\NotifyUserAchievementSendEmailListener::class
         ]
     ];
 

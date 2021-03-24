@@ -511,7 +511,7 @@ $(document).ready(function () {
                                 <div id="benefits">
                                     <div id="benefits-title">Aqui está sua recompensa:</div>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <span class="material-icons">done</span> <span id="benefits-data">Cashback de 0,5%</span>
+                                        <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
                                     </div>
                                 </div>
                             `

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
-use Modules\Core\Events\NotifyUserLevelUpdateEvent;
+use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Services\BenefitsService;
 
 class UpdateUserLevel extends Command
@@ -87,13 +87,17 @@ class UpdateUserLevel extends Command
                             ->where('enabled', 0)
                             ->where('level', $level);
                     }
+
                     foreach ($benefits as $benefit) {
                         $benefit->enabled = 1;
                         $benefit->save();
                     }
 
                     BenefitsService::updateUserCashback($user);
-                    event(new NotifyUserLevelUpdateEvent(User::find($user->id), $user->level));
+
+                    if ($user->level > 1) {
+                        event(new NotifyUserLevelEvent(User::find($user->id), $user->level));
+                    }
                 }
             }
         }

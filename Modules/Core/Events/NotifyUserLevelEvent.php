@@ -2,35 +2,31 @@
 
 namespace Modules\Core\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\User;
 
-class NotifyUserLevelUpdateEvent
+class NotifyUserLevelEvent
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
     public User $user;
-    public $achievement;
+    public int $level;
 
     /**
      * Create a new event instance.
      *
      * @param User $user
-     * @param int|Achievement $achievement
+     * @param int $level
      */
-    public function __construct(User $user, $achievement)
+    public function __construct(User $user, int $level)
     {
         $this->user = $user;
-        $this->achievement = $achievement;
+        $this->level = $level;
     }
 
     /**

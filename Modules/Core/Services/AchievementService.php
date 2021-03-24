@@ -4,7 +4,7 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\User;
-use Modules\Core\Events\NotifyUserLevelUpdateEvent;
+use Modules\Core\Events\NotifyUserAchievementEvent;
 
 class AchievementService
 {
@@ -24,7 +24,6 @@ class AchievementService
         }
 
         if ($achievement->userAchieved($user)) {
-            event(new NotifyUserLevelUpdateEvent($user, $achievement));
             return $this->setUserAchievement($user, $achievement);
         }
 
@@ -36,6 +35,7 @@ class AchievementService
         try {
             $user->achievements()->attach($achievement);
             $user->update();
+            event(new NotifyUserAchievementEvent($user, $achievement));
             //TODO: notification here
             return true;
         } catch (\Exception $e) {
