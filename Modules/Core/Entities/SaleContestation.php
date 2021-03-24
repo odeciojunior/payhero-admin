@@ -39,6 +39,7 @@ class SaleContestation extends Model
         'reason',
         'observation',
         'is_contested',
+        'file_user_completed',
         'expiration_date',
         'created_at',
         'updated_at',
@@ -51,5 +52,10 @@ class SaleContestation extends Model
     public function sale()
     {
         return $this->belongsTo(Sale::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(SaleContestationFile::class, 'contestation_sale_id');
     }
 }

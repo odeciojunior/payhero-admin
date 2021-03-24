@@ -15,6 +15,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\SaleWhiteBlackListResult;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
@@ -1486,5 +1487,25 @@ class SaleService
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             )
             ->where('owner_id', $user->id);
+    }
+
+    public function returnBlacklistBySale(Sale $sale): array
+    {
+
+        try {
+            $descriptionBlackList = [];
+            if ($sale->status == 10) {
+                $saleBlackList = SaleWhiteBlackListResult::where('sale_id', $sale->id)->first();
+                if (!empty($saleBlackList)) {
+                    if ($saleBlackList->blacklist) {
+                        $descriptionBlackListJson = json_decode($saleBlackList->whiteblacklist_json);
+                        $descriptionBlackList[] = $descriptionBlackListJson->blackList;
+                    }
+                }
+            }
+            return $descriptionBlackList;
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

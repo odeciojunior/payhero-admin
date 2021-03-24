@@ -337,6 +337,11 @@ class Sale extends Model
         return $this->hasMany(SaleContestation::class);
     }
 
+    public function getnetChargebacks(): HasMany
+    {
+        return $this->hasMany(GetnetChargeback::class);
+    }
+
     /**
      * @return HasMany
      */
