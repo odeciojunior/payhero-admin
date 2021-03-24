@@ -10,7 +10,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/contestations/' + contestation,
+            url: '/api/contestations/' + contestation + '/contestation',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -170,13 +170,14 @@ $(() => {
 
         $.ajax({
             method: "POST",
-            url: '/contestations/update-is-file-completed',
+            url: '/api/contestations/update-is-file-completed',
             data: {
                 file_is_completed: file_is_completed,
                 contestation_id: contestation,
             },
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 errorAjaxResponse(response);
