@@ -68,7 +68,7 @@ class ContestationsApiController extends Controller
 
             $totalContestationValue = $contestationService->getTotalValueContestations($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
-            $totalContestations = $contestationService->getTotalChargebacks($requestValidated);
+            $totalContestations = $contestationService->getTotalContestations($requestValidated);
             $totalChargebackValue = $chargebackService->getTotalValueChargebacks($requestValidated);
             $totalSalesApprovedChargeback = $chargebackService->getTotalApprovedSales($requestValidated);
             $totalChargebacks = $chargebackService->getTotalChargebacks($requestValidated);

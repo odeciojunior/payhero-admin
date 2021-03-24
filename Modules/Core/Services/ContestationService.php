@@ -154,10 +154,10 @@ class ContestationService
 
     }
 
-    public function getTotalChargebacks($filters)
+    public function getTotalContestations($filters)
     {
-        $getnetChargebacks = $this->getQuery($filters);
 
+        $getnetChargebacks = $this->getQuery($filters);
         return $getnetChargebacks->count();
     }
 
