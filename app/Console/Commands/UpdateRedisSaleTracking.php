@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -21,23 +20,22 @@ class UpdateRedisSaleTracking extends Command
 
     public function handle()
     {
-        try{
-            $sales = Sale::where('gateway_id', 15)->chunk(
+        try {
+
+            Sale::where('gateway_id', 15)->chunk(
                 1000,
                 function ($sales) {
                     foreach ($sales as $sale) {
-                        $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
+                        $this->info(' - ' . $sale->id . ' :: Database: ' . $sale->has_valid_tracking . ' | getValidTrackingForRedis: ' . $sale->getValidTrackingForRedis());
                         Redis::connection('redis-statement')->set(
-                            "sale:has:tracking:{$sale->id}",
-                            $sale->status == 4 ? true : $sale->has_valid_tracking
+                            "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()
                         );
                     }
                 }
             );
 
             return 0;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             report($e);
         }
     }
