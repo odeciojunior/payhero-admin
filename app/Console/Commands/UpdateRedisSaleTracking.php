@@ -28,8 +28,7 @@ class UpdateRedisSaleTracking extends Command
                     foreach ($sales as $sale) {
                         $this->info(' - ' . $sale->id . ' :: ' . $sale->has_valid_tracking);
                         Redis::connection('redis-statement')->set(
-                            "sale:has:tracking:{$sale->id}",
-                            $sale->status == 4 ? true : $sale->has_valid_tracking
+                            "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()
                         );
                     }
                 }
