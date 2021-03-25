@@ -14,22 +14,6 @@
 Route::middleware(['web', 'auth', 'role:account_owner|admin'])->prefix('contestations')->group(function() {
 
     Route::get('/', 'ContestationsController@index')->name('contestations.index');
-    Route::get('/getcontestations', 'ContestationsController@getContestations')->name('contestations.getchargebacks');
-    Route::get('/gettotalvalues', 'ContestationsController@getTotalValues')->name('contestations.gettotalvalues');
-    Route::get('/{contestation_id}', 'ContestationsController@show')->name('contestations.show');
-
-    Route::post('/set-observation/{id}', 'ContestationsController@setValueObservation')->name('contestations.setvalueobservation');
-    Route::get('/get-observation/{id}', 'ContestationsController@getObservation')->name('contestations.getobservation');
-    Route::get('/generation-dispute/{id}', 'ContestationsController@generateDispute')->name('contestations.generateDispute');
-    Route::post('/send-contestation', 'ContestationsController@sendContestation')->name('contestations.sendContestation');
-
-    Route::get('/get-contestation-files/{salecontestation}', 'ContestationsController@getContestationFiles')->name('contestations.getContestationFiles');
-    Route::post('/send-files', 'ContestationsController@sendContestationFiles')->name('contestations.sendContestationFiles');
-
-    Route::get('/{contestationfile}/removefile', 'ContestationsController@removeContestationFiles')->name('contestations.removeContestationFiles');
-
-    Route::post('/update-is-file-completed', 'ContestationsController@updateIsFileCompleted')->name('users.updateIsFileCompleted');
-
 
 });
 
