@@ -13,26 +13,31 @@ use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
 use Modules\Sales\Http\Controllers\SalesController;
 use PDF;
+use Psy\Util\Str;
 use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ContestationService
 {
 
-    public function getTotalValueChargebacks($filters)
+    public function getTotalValueContestations($filters)
     {
 
-        $qty_total_paid_value = $this->getQuery($filters)->sum('total_paid_value');
-        return number_format($qty_total_paid_value, 2, ',', '.');
+        $qty_total_paid_value = $this->getQuery($filters)->sum('transactions.value');
+        return trim(str_replace("R$", "", FoxUtils::formatMoney($qty_total_paid_value / 100)));
+
     }
 
     function getQuery($filters)
     {
 
-        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'users.name as user_name', 'sales.total_paid_value')
+        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'sales.total_paid_value')
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
             ->leftJoin('users', 'users.id', '=', 'sales.owner_id')
-            //  ->leftJoin('transactions', 'sales.id', '=', 'transactions.sale_id')
+             ->join('transactions', function ($query) {
+                  $query->on('sales.id', '=', 'transactions.sale_id')
+                 ->where('transactions.type', '=', 2);
+             })
 //                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
             ->where('sales.owner_id', \Auth::id());
@@ -149,10 +154,10 @@ class ContestationService
 
     }
 
-    public function getTotalChargebacks($filters)
+    public function getTotalContestations($filters)
     {
-        $getnetChargebacks = $this->getQuery($filters);
 
+        $getnetChargebacks = $this->getQuery($filters);
         return $getnetChargebacks->count();
     }
 

@@ -40,7 +40,6 @@ $(document).ready(function () {
     atualizar();
     getTotalValues();
 
-
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         atualizar();
@@ -71,7 +70,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -106,7 +106,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -141,7 +142,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -186,7 +188,7 @@ $(document).ready(function () {
                 'Próximos 30 dias': [moment(), moment().add(29, 'days')],
                 'Este mês': [moment().startOf('month'), moment().endOf('month')],
                 'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+                'Vitalício': [moment('2018-01-01 00:00:00'), moment().add(29, 'days')]
             }
         }, function (start, end) {
             startDate = start.format('YYYY-MM-DD');
@@ -228,16 +230,17 @@ $(document).ready(function () {
         loadOnTable('#chargebacks-table-data', '#chargebacks-table');
 
         if (link == null) {
-            link = '/contestations/getcontestations?' + getFilters();
+            link = '/api/contestations/getcontestations?' + getFilters();
         } else {
-            link = '/contestations/getcontestations' + link + '&' + getFilters();
+            link = '/api/contestations/getcontestations' + link + '&' + getFilters();
 
         }
         $.ajax({
             method: "GET",
             url: link,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -318,12 +321,13 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: "contestations/send-contestation",
+                            url: "api/contestations/send-contestation",
                             processData: false,
                             contentType: false,
                             data: files,
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             error: function (response) {
                                 errorAjaxResponse(response);
@@ -364,12 +368,13 @@ $(document).ready(function () {
             }
         });
 
-        let link = '/contestations/gettotalvalues?' + getFilters()
+        let link = '/api/contestations/gettotalvalues?' + getFilters()
         $.ajax({
             method: "GET",
             url: link,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 loadOnAny('.total-number', true);
@@ -397,9 +402,10 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "GET",
-                url: "contestations/" + ckargeback,
+                url: "api/contestations/" + ckargeback,
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function (response) {
                     loadOnAny('#modal-details .modal-body', true);

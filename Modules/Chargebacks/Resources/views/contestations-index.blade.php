@@ -178,9 +178,9 @@
                 <div class="row justify-content-center">
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
-                                <h5 class="gray font-size-16">N° de contestações</h5>
-                                <h4 class="number"><span class="font-size-30 bold" id="total-contestation"></span><span
+                            <div class="card-body ">
+                                <h5 class="gray font-size-16 ">N° de contestações</h5>
+                                <h4 class="total-number"><span class="font-size-30 bold " id="total-contestation"></span><span
                                         id="total-contestation-tax"></span></h4>
 
                             </div>
@@ -191,7 +191,7 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Resultantes em chargeback</h5>
-                                <h4 class="number"><span class="font-size-30 bold" id="total-chargeback-tax-val"></span>
+                                <h4 class="total-number"><span class="font-size-30 bold " id="total-chargeback-tax-val"></span>
                                     <span id="total-chargeback-tax"></span></h4>
 
                             </div>
@@ -202,7 +202,7 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Total em R$</h5>
-                                <h4 class="number" style="">R$ <span class="font-size-30 bold"
+                                <h4 class="total-number" style="">R$ <span class="font-size-30 bold"
                                                                      id="total-contestation-value"></span></h4>
                             </div>
                             <div class="s-border-right yellow"></div>
