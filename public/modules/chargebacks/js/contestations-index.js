@@ -157,11 +157,11 @@ $(document).ready(function () {
 
     function datePicker() {
         //DatePicker
-        let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-        let endDate = moment().format('YYYY-MM-DD');
+        let startDate = moment('2018-01-01 00:00:00');
+        let endDate = moment().add(29, 'days').format('YYYY-MM-DD');
         $('#date_range').daterangepicker({
-            startDate:moment(),
-            endDate:  moment().add(30, 'days'),
+            startDate:moment('2018-01-01 00:00:00'),
+            endDate:  moment().add(29, 'days'),
             opens: 'center',
             maxDate: moment().add(3, 'month'),
             alwaysShowCalendar: true,

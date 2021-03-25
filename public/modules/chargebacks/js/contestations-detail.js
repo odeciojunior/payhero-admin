@@ -165,10 +165,10 @@ $(() => {
     $(document).on('change', '.check-status', function () {
         let file_is_completed = true;
         if ($(this).is(':checked')) {
-            file_is_completed = true;
+            file_is_completed = 1;
             $("#check-status-text").html(' Concluído').addClass("text-success")
         } else {
-            file_is_completed = false;
+            file_is_completed = 2;
             $("#check-status-text").html(' Não concluído').removeClass("text-success")
         }
 

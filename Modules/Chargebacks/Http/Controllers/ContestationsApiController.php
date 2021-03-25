@@ -115,11 +115,8 @@ class ContestationsApiController extends Controller
             );
         }
 
-        $contestation->update(
-            [
-                'file_user_completed' => $data['file_is_completed'] == true ? 1 : 0,
-            ]
-        );
+        $contestation->file_user_completed = $data['file_is_completed'] == 1;
+        $contestation->save();
 
         $contestationModel = new SaleContestation();
         activity()->on($contestationModel)->tap(

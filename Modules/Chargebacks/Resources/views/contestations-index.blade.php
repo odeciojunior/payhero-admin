@@ -118,7 +118,7 @@
                                     <select name='is_expired' id="is_expired" class="form-control select-pad">
                                         <option value="0">Ambos</option>
                                         <option value="1">Expirado</option>
-                                        <option value="2">Não expirado</option>
+                                        <option value="2" selected>Não expirado</option>
                                     </select>
                                 </div>
 
