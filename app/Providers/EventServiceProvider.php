@@ -113,7 +113,7 @@ class EventServiceProvider extends ServiceProvider
 //            \Modules\Core\Listeners\NotifyUserLevelSendEmailListener::class
         ],
         \Modules\Core\Events\NotifyUserAchievementEvent::class => [
-            \Modules\Core\Listeners\NotifyUserAchievementSendEmailListener::class
+//            \Modules\Core\Listeners\NotifyUserAchievementSendEmailListener::class
         ]
     ];
 

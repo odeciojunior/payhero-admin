@@ -42,14 +42,13 @@ class NotifyUserAchievementSendEmailListener
         $sendgrindService = new SendgridService();
 
         $data = $event->achievement->toArray();
-        $data['type'] = false;
 
         $sendgrindService->sendEmail(
             'noreply@cloudfox.net',
             'cloudfox',
             $event->user->email,
             $event->user->name,
-            'd-ee2628cce4c64ef5bbcafe3594fee27b',
+            'd-31354085bb7e441597f76fdb6e94d182',
             $data
         );
     }
