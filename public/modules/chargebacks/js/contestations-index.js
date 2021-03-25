@@ -288,8 +288,8 @@ $(document).ready(function () {
 <!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
                                     <td>
                                         ${value.is_file_user_completed ? '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span></a>' :
-                    '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
-                                       '<span class="o-upload-to-cloud-1"></span>'+
+                    '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : (value.has_files ? "text-success" : "")) +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
+                                       '<span class="o-upload-to-cloud-1  ' + (value.has_files ? "text-success" : "") +  '" id="upload-file_'+ value.id+' " ></span>'+
                                         '</a>' }
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
                                             <span class="o-eye-1"></span>

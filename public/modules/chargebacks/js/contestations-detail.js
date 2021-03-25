@@ -84,7 +84,9 @@ $(() => {
         var url = $("#sendfilesform").attr('action');
         formData.append('contestation', contestation);
         formData.append('type', $("#type").val());
-        $("#multiplefiles").empty()
+
+        $('input[type="file"]').empty()
+        $('#filename').empty('')
 
         $.ajax({
             type: "POST",
@@ -126,6 +128,7 @@ $(() => {
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $('#update-contestation-observation').prop("disabled", false);
+                alertCustom('success', 'Enviado com sucesso');
             }
         });
 
@@ -153,6 +156,7 @@ $(() => {
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $(this).prop("disabled", false);
+                alertCustom('success', 'Removido com sucesso');
             }
         });
 
@@ -184,7 +188,6 @@ $(() => {
             },
             success: function success(response, textStatus, request) {
                 alertCustom('success', response.message);
-                location.reload();
             }
         });
     });
@@ -219,4 +222,22 @@ $(() => {
             }
         });
     }
+
+
+    var fileInput = document.querySelector('input[type=file]');
+    var filenameContainer = document.querySelector('#filename');
+    var dropzone = document.querySelector('div');
+
+    fileInput.addEventListener('change', function() {
+        filenameContainer.innerText = fileInput.value.split('\\').pop();
+    });
+
+    fileInput.addEventListener('dragenter', function() {
+        dropzone.classList.add('dragover');
+    });
+
+    fileInput.addEventListener('dragleave', function() {
+        dropzone.classList.remove('dragover');
+    });
+
 });
