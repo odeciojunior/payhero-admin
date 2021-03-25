@@ -212,6 +212,7 @@ $(document).ready(function () {
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             status: $("#status").val() ?? '',
             is_contested: $("#is_contested").val() ?? '',
+            is_expired: $("#is_expired").val() ?? '',
         }
         if (urlParams) {
             let params = "";
@@ -268,7 +269,7 @@ $(document).ready(function () {
 
                     if (value.sale_status in statusObject) {
                         dados += `<td class='copy_link'>
-                                    <div class="d-flex justify-content-center align-items-center" >
+                                    <div class="d-flex justify-content-left align-items-center" >
                                         <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? 'pointer' : 'cursor-default'}' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${statusObject[value.sale_status]}</span>
                                         ${value.sale_has_valid_tracking ? '' +
                             '<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products ?
@@ -286,7 +287,7 @@ $(document).ready(function () {
                                     <td>${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
                                     <td>
-                                        ${value.is_file_user_completed ? '<span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span>' :
+                                        ${value.is_file_user_completed ? '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span></a>' :
                     '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
                                        '<span class="o-upload-to-cloud-1"></span>'+
                                         '</a>' }
