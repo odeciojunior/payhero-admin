@@ -110,7 +110,7 @@ class EventServiceProvider extends ServiceProvider
             \Modules\Core\Listeners\NotifyWithdrawalsExportedListener::class,
         ],
         \Modules\Core\Events\NotifyUserLevelEvent::class => [
-            \Modules\Core\Listeners\NotifyUserLevelSendEmailListener::class
+//            \Modules\Core\Listeners\NotifyUserLevelSendEmailListener::class
         ],
         \Modules\Core\Events\NotifyUserAchievementEvent::class => [
             \Modules\Core\Listeners\NotifyUserAchievementSendEmailListener::class
