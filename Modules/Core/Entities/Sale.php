@@ -184,6 +184,7 @@ class Sale extends Model
         'has_valid_tracking',
         'has_order_bump',
         'observation',
+        'original_total_paid_value'
     ];
 
     public function checkout(): BelongsTo
