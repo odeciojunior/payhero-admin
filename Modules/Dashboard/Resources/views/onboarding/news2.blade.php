@@ -17,24 +17,27 @@
                     <div id="sub-title-onboarding-2">Agora você faz parte da tripulação <span style="color: #2E85EC">Sirius.</span></div>
                     <div id="description-onboarding-2">Você já deve ter percebido que o Sirius tem passado por diversas melhorias. Além de um novo visual, hoje queremos te apresentar algumas ferramentas e funcionalidades que acabaram de chegar por aqui.</div>
 
-                    <div class="row">
-                        <img class="col-3 icon-onboarding-2" alt="Image"
-                             src="{{asset('modules/global/img/svg/bank-notes.svg')}}">
+                    <div class="row align-items-center">
+                        <div class="col icon-onboarding-2 text-center">
+                            <img alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg')}}">
+                        </div>
                         <span class="col-10">
                             São 6 níveis que sobem de acordo com o faturamento total de seus projetos.
                         </span>
                     </div>
 
-                    <div class="row">
-                        <img class="col-3 icon-onboarding-2" alt="Image"
-                             src="{{asset('modules/global/img/svg/money-box.svg')}}">
+                    <div class="row align-items-center">
+                        <div class="col icon-onboarding-2 text-center">
+                            <img alt="Image" src="{{asset('modules/global/img/svg/money-box.svg')}}">
+                        </div>
                         <span class="col-10">
                             A cada nível alcançado, Sirius libera novos benefícios para sua conta.
                         </span>
                     </div>
-                    <div class="row">
-                        <img class="col-3 icon-onboarding-2" alt="Image"
-                         src="{{asset('modules/global/img/svg/medal.svg')}}">
+                    <div class="row align-items-center">
+                        <div class="col icon-onboarding-2 text-center">
+                            <img alt="Image" src="{{asset('modules/global/img/svg/medal.svg')}}">
+                        </div>
                         <span class="col-10">
                             Receba insígnias para cada nova conquista alcançada!
                         </span>

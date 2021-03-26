@@ -1,3 +1,7 @@
+.modal-onboarding {
+    max-width: 80vw
+}
+
 .modal-onboarding .modal-content{
     border-radius: 16px;
 }
@@ -55,8 +59,10 @@
 }
 
 .icon-onboarding-2 {
-    height: 50px;
+    height: 70px;
     background: #D7EFEC;
 
-    padding: 10px;
+    padding: 17px;
+    margin-bottom: 1rem;
+    border-radius: 100%;
 }
