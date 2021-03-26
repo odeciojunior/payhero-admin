@@ -29,7 +29,7 @@ class ChargebackService
                 ]
             )->where('user_id', \Auth::id());
 
-        if(request()->has('from_contestation') && request('date_type') == 'expiration_date') {
+        if(request()->has('from_contestation') || request('date_type') == 'expiration_date') {
 
             $getnetChargebacks->when(request('date_type'), function ($query, $search) {
 
