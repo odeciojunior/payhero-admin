@@ -13,26 +13,31 @@ use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
 use Modules\Sales\Http\Controllers\SalesController;
 use PDF;
+use Psy\Util\Str;
 use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ContestationService
 {
 
-    public function getTotalValueChargebacks($filters)
+    public function getTotalValueContestations($filters)
     {
 
-        $qty_total_paid_value = $this->getQuery($filters)->sum('total_paid_value');
-        return number_format($qty_total_paid_value, 2, ',', '.');
+        $qty_total_paid_value = $this->getQuery($filters)->sum('transactions.value');
+        return trim(str_replace("R$", "", FoxUtils::formatMoney($qty_total_paid_value / 100)));
+
     }
 
     function getQuery($filters)
     {
 
-        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'users.name as user_name', 'sales.total_paid_value')
+        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'sales.total_paid_value')
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
             ->leftJoin('users', 'users.id', '=', 'sales.owner_id')
-            //  ->leftJoin('transactions', 'sales.id', '=', 'transactions.sale_id')
+             ->join('transactions', function ($query) {
+                  $query->on('sales.id', '=', 'transactions.sale_id')
+                 ->where('transactions.type', '=', 2);
+             })
 //                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
             ->where('sales.owner_id', \Auth::id());
@@ -87,6 +92,17 @@ class ContestationService
 
         $contestations->when(request('is_contested'), function ($query, $val) {
             if($val == 1){
+                return $query->where('sale_contestations.file_user_completed', 1);
+            }
+
+            if($val == 2){
+                return $query->where('sale_contestations.file_user_completed', 0);
+            }
+
+        });
+
+        $contestations->when(request('is_expired'), function ($query, $val) {
+            if($val == 1){
                 return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
             }
 
@@ -95,6 +111,8 @@ class ContestationService
             }
 
         });
+
+
 
         $contestations->when(request('order_by_expiration_date'), function ($query, $search) {
             return $query->orderBy('expiration_date', 'asc');
@@ -149,10 +167,10 @@ class ContestationService
 
     }
 
-    public function getTotalChargebacks($filters)
+    public function getTotalContestations($filters)
     {
-        $getnetChargebacks = $this->getQuery($filters);
 
+        $getnetChargebacks = $this->getQuery($filters);
         return $getnetChargebacks->count();
     }
 
@@ -165,29 +183,34 @@ class ContestationService
             ->whereIn('status', [1, 4, 7, 24])
             ->where('sales.owner_id', \Auth::id());
 
-        if ($filters['date_type'] == 'transaction_date') {
-            $totalSaleApproved->whereBetween(
-                'sales.start_date',
-                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-            );
-        }else if ($filters['date_type'] == 'expiration_date') {
+//        if ($filters['date_type'] == 'transaction_date') {
+//            $totalSaleApproved->whereBetween(
+//                'sales.start_date',
+//                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+//            );
+//        }else if ($filters['date_type'] == 'expiration_date') {
+//
+//            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
+//                $query->whereBetween(
+//                    'sale_contestations.expiration_date',
+//                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+//                );
+//            });
+//
+//        }else {
+//
+//            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
+//                $query->whereBetween(
+//                    'sale_contestations.request_date',
+//                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+//                );
+//            });
+//        }
 
-            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
-                $query->whereBetween(
-                    'sale_contestations.expiration_date',
-                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-                );
-            });
-
-        }else {
-
-            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
-                $query->whereBetween(
-                    'sale_contestations.created_at',
-                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-                );
-            });
-        }
+        $totalSaleApproved->whereBetween(
+            'sales.start_date',
+            [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+        );
 
         if (!empty($filters['transaction'])) {
             preg_match_all('/[0-9A-Za-z]+/', $filters['transaction'], $matches);

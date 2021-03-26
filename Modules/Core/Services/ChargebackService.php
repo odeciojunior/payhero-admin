@@ -29,17 +29,13 @@ class ChargebackService
                 ]
             )->where('user_id', \Auth::id());
 
-        if(request()->has('from_contestation')) {
+        if(request()->has('from_contestation') && request('date_type') == 'expiration_date') {
 
             $getnetChargebacks->when(request('date_type'), function ($query, $search) {
 
                 return $query->whereHas(
                     'sale.contestations',
                     function ($query) use ($search) {
-
-                        if($search == 'expiration_date') {
-                            $search = 'expiration_date';
-                        }
 
                         $dateRange = FoxUtils::validateDateRange(request('date_range'));
 

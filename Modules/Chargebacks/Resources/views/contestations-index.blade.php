@@ -56,6 +56,9 @@
                 border-radius: 50px;
                 margin-top: -12px;
             }
+            .table thead > tr > td {
+                padding: 15px 12px !important;
+            }
         </style>
     @endpush
 
@@ -110,14 +113,25 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-12 col-md">
-                                    <label for="is_contested" class='mb-10'>Contestado</label>
+                                    <label for="is_expired" class='mb-10'>Expiração</label>
+                                    <br>
+                                    <select name='is_expired' id="is_expired" class="form-control select-pad">
+                                        <option value="0">Ambos</option>
+                                        <option value="1">Expirado</option>
+                                        <option value="2" selected>Não expirado</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-12 col-md">
+                                    <label for="is_contested" class='mb-10'>Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="form-control select-pad">
                                         <option value="0">Ambos</option>
-                                        <option value="1">Sim</option>
-                                        <option value="2">Não</option>
+                                        <option value="1">Concluído</option>
+                                        <option value="2">Não concluído</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-12 col-md">
                                     <label for="status">Status</label>
                                     <select name='sale_status' id="status" class="form-control select-pad">
@@ -178,9 +192,9 @@
                 <div class="row justify-content-center">
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
-                                <h5 class="gray font-size-16">N° de contestações</h5>
-                                <h4 class="number"><span class="font-size-30 bold" id="total-contestation"></span><span
+                            <div class="card-body ">
+                                <h5 class="gray font-size-16 ">N° de contestações</h5>
+                                <h4 class="total-number"><span class="font-size-30 bold " id="total-contestation"></span><span
                                         id="total-contestation-tax"></span></h4>
 
                             </div>
@@ -191,7 +205,7 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Resultantes em chargeback</h5>
-                                <h4 class="number"><span class="font-size-30 bold" id="total-chargeback-tax-val"></span>
+                                <h4 class="total-number"><span class="font-size-30 bold " id="total-chargeback-tax-val"></span>
                                     <span id="total-chargeback-tax"></span></h4>
 
                             </div>
@@ -202,7 +216,7 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Total em R$</h5>
-                                <h4 class="number" style="">R$ <span class="font-size-30 bold"
+                                <h4 class="total-number" style="">R$ <span class="font-size-30 bold"
                                                                      id="total-contestation-value"></span></h4>
                             </div>
                             <div class="s-border-right yellow"></div>
@@ -228,9 +242,9 @@
                         <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
-                            <tr>
+                            <tr class="">
                                 <td class="table-title">Transação</td>
-                                <td class="table-title" style="min-width: 200px;">Empresa</td>
+                                <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
                                 <td class="table-title">Compra</td>
                                 <td class="table-title" style="min-width: 150px;">Status</td>
                                 <td class="table-title" style="min-width: 170px;">Prazo para recurso</td>

@@ -10,7 +10,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/contestations/' + contestation,
+            url: '/api/contestations/' + contestation + '/contestation',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -84,7 +84,9 @@ $(() => {
         var url = $("#sendfilesform").attr('action');
         formData.append('contestation', contestation);
         formData.append('type', $("#type").val());
-        $("#multiplefiles").empty()
+
+        $('input[type="file"]').empty()
+        $('#filename').empty('')
 
         $.ajax({
             type: "POST",
@@ -126,6 +128,7 @@ $(() => {
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $('#update-contestation-observation').prop("disabled", false);
+                alertCustom('success', 'Enviado com sucesso');
             }
         });
 
@@ -153,6 +156,7 @@ $(() => {
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $(this).prop("disabled", false);
+                alertCustom('success', 'Removido com sucesso');
             }
         });
 
@@ -161,29 +165,29 @@ $(() => {
     $(document).on('change', '.check-status', function () {
         let file_is_completed = true;
         if ($(this).is(':checked')) {
-            file_is_completed = true;
+            file_is_completed = 1;
             $("#check-status-text").html(' Concluído').addClass("text-success")
         } else {
-            file_is_completed = false;
+            file_is_completed = 2;
             $("#check-status-text").html(' Não concluído').removeClass("text-success")
         }
 
         $.ajax({
             method: "POST",
-            url: '/contestations/update-is-file-completed',
+            url: '/api/contestations/update-is-file-completed',
             data: {
                 file_is_completed: file_is_completed,
                 contestation_id: contestation,
             },
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response, textStatus, request) {
                 alertCustom('success', response.message);
-                location.reload();
             }
         });
     });
@@ -218,4 +222,22 @@ $(() => {
             }
         });
     }
+
+
+    var fileInput = document.querySelector('input[type=file]');
+    var filenameContainer = document.querySelector('#filename');
+    var dropzone = document.querySelector('div');
+
+    fileInput.addEventListener('change', function() {
+        filenameContainer.innerText = fileInput.value.split('\\').pop();
+    });
+
+    fileInput.addEventListener('dragenter', function() {
+        dropzone.classList.add('dragover');
+    });
+
+    fileInput.addEventListener('dragleave', function() {
+        dropzone.classList.remove('dragover');
+    });
+
 });

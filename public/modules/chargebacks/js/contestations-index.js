@@ -40,7 +40,6 @@ $(document).ready(function () {
     atualizar();
     getTotalValues();
 
-
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         atualizar();
@@ -71,7 +70,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -106,7 +106,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -141,7 +142,8 @@ $(document).ready(function () {
             delay: 300,
             dataType: 'json',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processResults: function (res) {
                 return {
@@ -155,11 +157,11 @@ $(document).ready(function () {
 
     function datePicker() {
         //DatePicker
-        let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-        let endDate = moment().format('YYYY-MM-DD');
+        let startDate = moment('2018-01-01 00:00:00');
+        let endDate = moment().add(29, 'days').format('YYYY-MM-DD');
         $('#date_range').daterangepicker({
-            startDate:moment(),
-            endDate:  moment().add(30, 'days'),
+            startDate:moment('2018-01-01 00:00:00'),
+            endDate:  moment().add(29, 'days'),
             opens: 'center',
             maxDate: moment().add(3, 'month'),
             alwaysShowCalendar: true,
@@ -186,7 +188,7 @@ $(document).ready(function () {
                 'Próximos 30 dias': [moment(), moment().add(29, 'days')],
                 'Este mês': [moment().startOf('month'), moment().endOf('month')],
                 'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+                'Vitalício': [moment('2018-01-01 00:00:00'), moment().add(29, 'days')]
             }
         }, function (start, end) {
             startDate = start.format('YYYY-MM-DD');
@@ -210,6 +212,7 @@ $(document).ready(function () {
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             status: $("#status").val() ?? '',
             is_contested: $("#is_contested").val() ?? '',
+            is_expired: $("#is_expired").val() ?? '',
         }
         if (urlParams) {
             let params = "";
@@ -228,16 +231,17 @@ $(document).ready(function () {
         loadOnTable('#chargebacks-table-data', '#chargebacks-table');
 
         if (link == null) {
-            link = '/contestations/getcontestations?' + getFilters();
+            link = '/api/contestations/getcontestations?' + getFilters();
         } else {
-            link = '/contestations/getcontestations' + link + '&' + getFilters();
+            link = '/api/contestations/getcontestations' + link + '&' + getFilters();
 
         }
         $.ajax({
             method: "GET",
             url: link,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -265,7 +269,7 @@ $(document).ready(function () {
 
                     if (value.sale_status in statusObject) {
                         dados += `<td class='copy_link'>
-                                    <div class="d-flex justify-content-center align-items-center" >
+                                    <div class="d-flex justify-content-left align-items-center" >
                                         <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? 'pointer' : 'cursor-default'}' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${statusObject[value.sale_status]}</span>
                                         ${value.sale_has_valid_tracking ? '' +
                             '<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products ?
@@ -283,9 +287,9 @@ $(document).ready(function () {
                                     <td>${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>-->
                                     <td>
-                                        ${value.is_file_user_completed ? '<span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span>' :
-                    '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
-                                       '<span class="o-upload-to-cloud-1"></span>'+
+                                        ${value.is_file_user_completed ? '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : "") +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span></a>' :
+                    '<a  role="button" class="contetation_file pointer  ' + (value.has_expired ? "disabled" : (value.has_files ? "text-success" : "")) +  '" title="'+(value.has_expired ? "Prazo para recurso encerrado" : "Enviar arquivo")+'"   style="margin-right:5px" contestation="'+ value.id +'">' +
+                                       '<span class="o-upload-to-cloud-1  ' + (value.has_files ? "text-success" : "") +  '" id="upload-file_'+ value.id+' " ></span>'+
                                         '</a>' }
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
                                             <span class="o-eye-1"></span>
@@ -318,12 +322,13 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: "contestations/send-contestation",
+                            url: "api/contestations/send-contestation",
                             processData: false,
                             contentType: false,
                             data: files,
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             error: function (response) {
                                 errorAjaxResponse(response);
@@ -364,12 +369,13 @@ $(document).ready(function () {
             }
         });
 
-        let link = '/contestations/gettotalvalues?' + getFilters()
+        let link = '/api/contestations/gettotalvalues?' + getFilters()
         $.ajax({
             method: "GET",
             url: link,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 loadOnAny('.total-number', true);
@@ -397,9 +403,10 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "GET",
-                url: "contestations/" + ckargeback,
+                url: "api/contestations/" + ckargeback,
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function (response) {
                     loadOnAny('#modal-details .modal-body', true);

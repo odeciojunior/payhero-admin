@@ -105,6 +105,24 @@ class Sale extends Model
     public const STATUS_SYSTEM_ERROR = 99;
 
     /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+    /**
      * @var string
      */
     protected $presenter = SalePresenter::class;
@@ -167,24 +185,6 @@ class Sale extends Model
         'has_order_bump',
         'observation',
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
     public function checkout(): BelongsTo
     {
@@ -302,5 +302,14 @@ class Sale extends Model
     public function getHashIdAttribute()
     {
         return Hashids::connection('sale_id')->encode($this->id);
+    }
+
+    public function getValidTrackingForRedis(): int
+    {
+
+        $saleIsChargeback = $this->status == 4;
+        $saleIsDigitalProduct = empty($this->delivery_id);
+
+        return $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
 }

@@ -71,8 +71,8 @@ class ContestationResource extends JsonResource
             'request_date' => $this->request_date ? with(new Carbon($this->request_date))->format('d/m/Y') : '',
             'expiration' => $this->expiration_date ? with(new Carbon($this->expiration_date))->format('d/m/Y') : '',
             'has_expired' => $has_expired,
-            'expiration_user' => !$has_expired ? 'Expira em '. $deadline_in_days . ' dias' : 'Expirado',
-            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback'], $result_decode['Motivo do Chargeback']) : '',
+            'expiration_user' => !$has_expired ? ($deadline_in_days == 0 ? "Expira hoje" : 'Expira em '. $deadline_in_days . ' dias') : 'Expirado',
+            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback']) : FoxUtils::getnetReasonByCode($this->reason),
             'observation' =>  $this->observation ?? '',
             'is_contested' =>  $this->is_contested ?? '',
             'amount' => isset($this->sale->original_total_paid_value) ? 'R$ ' . number_format(intval($this->sale->original_total_paid_value) / 100, 2, ',', '.') :
