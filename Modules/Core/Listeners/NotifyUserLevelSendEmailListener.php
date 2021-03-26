@@ -40,19 +40,19 @@ class NotifyUserLevelSendEmailListener
             ]
         );
         
-        $sendgrindService = new SendgridService();
-
-        $benefits = $event->user->benefits->last()->toArray();
-        $data = (new UserLevel())->getLevelData($event->user->level);
-        $data['benefits'] = $benefits['description'];
-
-        $sendgrindService->sendEmail(
-            'noreply@cloudfox.net',
-            'cloudfox',
-            $event->user->email,
-            $event->user->name,
-            'd-ee2628cce4c64ef5bbcafe3594fee27b',
-            $data
-        );
+//        $sendgrindService = new SendgridService();
+//
+//        $benefits = $event->user->benefits->last()->toArray();
+//        $data = (new UserLevel())->getLevelData($event->user->level);
+//        $data['benefits'] = $benefits['description'];
+//
+//        $sendgrindService->sendEmail(
+//            'noreply@cloudfox.net',
+//            'cloudfox',
+//            $event->user->email,
+//            $event->user->name,
+//            'd-ee2628cce4c64ef5bbcafe3594fee27b',
+//            $data
+//        );
     }
 }
