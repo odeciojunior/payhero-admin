@@ -1,0 +1,62 @@
+.modal-onboarding .modal-content{
+    border-radius: 16px;
+}
+
+.modal-onboarding #header-onboarding-1 {
+    background-color: #F3F7FD;
+
+    border-radius: 16px 16px 50% 50%;
+    margin-bottom: 2rem;
+}
+
+.modal-onboarding .modal-header img {
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.modal-onboarding #title-onboarding-1 {
+    color: #2E85EC;
+    font: normal normal bold 30px/32px Muli;
+}
+
+.modal-onboarding #description-onboarding-1 {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+
+    color: #919191;
+    font: normal normal normal 17px/21px Muli;
+}
+
+.modal-onboarding .btn {
+    padding: 10px 40px;
+
+    font: normal normal bold 17px/21px Muli;
+}
+
+#title-onboarding-2 {
+    color: #002F67;
+    font: normal normal 900 12px/12px Muli;
+
+    margin-bottom: 1rem;
+}
+
+#sub-title-onboarding-2 {
+    color: #002F67;
+    font: normal normal bold 30px/30px Muli;
+
+    margin-bottom: 2rem;
+}
+
+#description-onboarding-2 {
+    color: #919191;
+    font: normal normal normal 16px/20px Muli;
+
+    margin-bottom: 2rem;
+}
+
+.icon-onboarding-2 {
+    height: 50px;
+    background: #D7EFEC;
+
+    padding: 10px;
+}

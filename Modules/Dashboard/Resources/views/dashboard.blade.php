@@ -11,8 +11,8 @@
     @endpush
 
     @include('dashboard::achievement-details')
+{{--    @include('dashboard::onboarding.news1')--}}
     <div class="page dashboard">
-
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-8 mb-15">
