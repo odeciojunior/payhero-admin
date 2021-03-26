@@ -16,7 +16,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SaleWhiteBlackListResult;
-use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
@@ -289,7 +288,8 @@ class SaleService
 
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+        $userTransaction = $sale->transactions->where('invitation_id', null)
+            ->whereIn('company_id', $userCompanies)
             ->first();
 
         //calcule total
@@ -423,8 +423,10 @@ class SaleService
             'refund_value' => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
             'value_anticipable' => '0,00',
             'total_paid_value' => number_format($sale->total_paid_value, 2, ',', '.'),
-            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
-            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
+            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first(
+            )->refund_observation : null,
+            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first(
+                )->user_id,
             'company_name' => $companyName,
         ];
     }
@@ -501,199 +503,110 @@ class SaleService
         return $productsSale;
     }
 
-    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [], $refundObservation): bool
+    private function checkPendingDebt($sale, $company, $transactionRefundAmount)
+    {
+        $getnetBackOffice = new GetnetBackOfficeService();
+        $getnetBackOffice->setStatementSubSellerId(CompanyService::getSubsellerId($company))
+            ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'));
+
+        $gatewaySale = $getnetBackOffice->getStatement();
+
+        $gatewaySale = json_decode($gatewaySale);
+
+        if (isset($gatewaySale->list_transactions)) {
+            foreach ($gatewaySale->list_transactions as $item) {
+                if (
+                    isset($item->summary)
+                    && isset($item->details)
+                    && is_array($item->details)
+                    && count($item->details) == 1
+                ) {
+                    $summary = $item->summary;
+                    $details = $item->details[0];
+
+                    $transactionStatusCode = $summary->transaction_status_code;
+                    $hasOrderId = empty($summary->order_id) ? false : true;
+                    $isTransactionCredit = $details->transaction_sign == '+';
+
+                    $refundObservation = 'Estorno da venda: ' . hashids_encode($sale->id, 'sale_id');
+
+                    if (
+                        !is_null($details->subseller_rate_confirm_date) &&
+                        $hasOrderId &&
+                        $isTransactionCredit &&
+                        $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO
+                    ) {
+                        PendingDebt::create(
+                            [
+                                'company_id' => $company->id,
+                                'sale_id' => $sale->id,
+                                'type' => PendingDebt::REVERSED,
+                                'request_date' => Carbon::now(),
+                                'reason' => $refundObservation,
+                                'value' => $transactionRefundAmount,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
     {
         try {
-            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
             DB::beginTransaction();
-            $saleModel = new Sale();
             $responseGateway = $response->response ?? [];
             $statusGateway = $response->status_gateway ?? '';
-
-            if (!empty($partialValues)) {
-                $status = 'partial_refunded';
-                $newTotalPaidValue = $partialValues['total_value_with_interest'];
-            } else {
-                $status = 'refunded';
-                $newTotalPaidValue = $totalPaidValue - $refundAmount;
-            }
-
-            $newTotalPaidValue = substr_replace($newTotalPaidValue, '.', strlen($newTotalPaidValue) - 2, 0);
-            $updateData = array_filter(
-                [
-                    'total_paid_value' => ($newTotalPaidValue ?? 0),
-                    'status' => $saleModel->present()->getStatus($status),
-                    'gateway_status' => $statusGateway,
-                    'interest_total_value' => $partialValues['interest_value'] ?? null,
-                    'refund_value' => $sale->refund_value + $refundAmount,
-                    'installment_tax_value' => $partialValues['installment_free_tax_value'] ?? null,
-                ]
-            );
 
             SaleRefundHistory::create(
                 [
                     'sale_id' => $sale->id,
-                    'refunded_amount' => (!empty($partialValues)) ? $partialValues['value_to_refund'] : $refundAmount,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
                     'date_refunded' => Carbon::now(),
                     'gateway_response' => json_encode($responseGateway),
-                    'refund_value' => $refundAmount,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
                     'refund_observation' => $refundObservation,
                     'user_id' => auth()->user()->account_owner_id,
                 ]
             );
 
-            if ($status == 'refunded') {
-                $checkRecalc = $this->recalcSaleRefund($sale, $refundAmount);
-            } else {
-                if ($status == 'partial_refunded') {
-                    $checkRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
-                }
-            }
-
-
-            if ($checkRecalc) {
-                $checkUpdate = $sale->update($updateData);
-                if ($checkUpdate) {
-                    DB::commit();
-                    SaleLog::create(
-                        [
-                            'sale_id' => $sale->id,
-                            'status' => $status,
-                            'status_enum' => $sale->status,
-                        ]
-                    );
-                    try {
-                        $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                        if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
-                            $shopifyService = new ShopifyService(
-                                $shopifyIntegration->url_store,
-                                $shopifyIntegration->token, false
-                            );
-
-                            $shopifyService->refundOrder($sale);
-                            $shopifyService->saveSaleShopifyRequest();
-                        }
-                    } catch (Exception $ex) {
-                        report($ex);
-                    }
-                }
-
-                return true;
-            }
-            DB::rollBack();
-
-            return false;
-        } catch (Exception $ex) {
-            DB::rollBack();
-            throw $ex;
-        }
-    }
-
-    public function recalcSaleRefund($sale, $refundAmount): bool
-    {
-        try {
-            $companyModel = new Company();
-            $transferModel = new Transfer();
-            $transactionModel = new Transaction();
-
-            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
-
-            if ($totalPaidValue > 0) {
-                $percentRefund = (int)round((($refundAmount / $totalPaidValue) * 100));
-            } else {
-                $percentRefund = 100;
-            }
-
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
-                //calcula valor que deve ser estornado da transação
-                $transactionValue = (int)$refundTransaction->value;
-                $transactionRefundAmount = (int)round(($transactionValue * ($percentRefund / 100)));
-                /**
-                 * calcula novo valor da transação
-                 * todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
-                 * $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
-                 * Caso transaction ja esteja como transfered, criar transfer de saida
-                 */
-                $company = $companyModel->find($refundTransaction->company_id);
-                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
-                    $transferModel->create(
-                        [
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $company->user_id,
-                            'value' => $transactionRefundAmount,
-                            'type' => 'out',
-                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                            'reason' => 'refunded',
-                            'company_id' => $company->id,
-                        ]
-                    );
+                $transactionRefundAmount = (int)$refundTransaction->value;
 
-                    $company->update(
-                        [
-                            'balance' => $company->balance -= $transactionRefundAmount,
-                        ]
-                    );
+                $company = Company::find($refundTransaction->company_id);
+                if (!is_null($company)) {
+                    $this->checkPendingDebt($sale, $company, $transactionRefundAmount);
                 }
 
-                if ($this->saleIsGetnet($sale) && !is_null($company)) {
-                    $subsellerId = CompanyService::getSubsellerId($company);
-
-                    $getnetBackOffice = new GetnetBackOfficeService();
-                    $getnetBackOffice->setStatementSubSellerId($subsellerId)
-                        ->setStatementSaleHashId(Hashids::connection('sale_id')->encode($sale->id));
-
-                    $gatewaySale = $getnetBackOffice->getStatement();
-
-                    $gatewaySale = json_decode($gatewaySale);
-
-                    if (isset($gatewaySale->list_transactions)) {
-                        foreach ($gatewaySale->list_transactions as $item) {
-                            if (isset($item->summary)
-                                && isset($item->details)
-                                && is_array($item->details)
-                                && count($item->details) == 1
-                            ) {
-                                $summary = $item->summary;
-                                $details = $item->details[0];
-
-                                $transactionStatusCode = $summary->transaction_status_code;
-                                $hasOrderId = empty($summary->order_id) ? false : true;
-                                $isTransactionCredit = $details->transaction_sign == '+';
-
-                                $refundObservation = 'Estorno da venda: ' . Hashids::connection('sale_id')->encode($sale->id);
-
-                                if (!is_null($details->subseller_rate_confirm_date)
-                                    && $hasOrderId
-                                    && $isTransactionCredit
-                                    && $transactionStatusCode == GetNetStatementService::TRANSACTION_STATUS_CODE_APROVADO
-                                ) {
-                                    PendingDebt::create(
-                                        [
-                                            'company_id' => $company->id,
-                                            'sale_id' => $sale->id,
-                                            'type' => PendingDebt::REVERSED,
-                                            'request_date' => Carbon::now(),
-                                            'reason' => $refundObservation,
-                                            'value' => $transactionRefundAmount,
-                                        ]
-                                    );
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-                if ($transactionRefundAmount == $transactionValue) {
-                    $refundTransaction->status = 'refunded';
-                    $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
-                }
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
                 $refundTransaction->save();
             }
 
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded' ,
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
             return true;
         } catch (Exception $ex) {
+            DB::rollBack();
             throw $ex;
         }
     }
@@ -705,65 +618,6 @@ class SaleService
         }
 
         return false;
-    }
-
-    public function recalcSaleRefundPartial($sale, $partialValues)
-    {
-        try {
-            $companyModel = new Company();
-            $transferModel = new Transfer();
-
-            $refundTransactions = $sale->transactions;
-
-            // criar tranfer de saida e apagar transacoes
-            foreach ($refundTransactions as $refundTransaction) {
-                $company = $companyModel->find($refundTransaction->company_id);
-                if ($refundTransaction->status == 'transfered' && !$this->saleIsGetnet($sale)) {
-                    $transferModel->create(
-                        [
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $company->user_id,
-                            'value' => $refundTransaction->value,
-                            'type' => 'out',
-                            'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                            'reason' => 'refunded',
-                            'company_id' => $company->id,
-                        ]
-                    );
-
-                    $company->update(
-                        [
-                            'balance' => $company->balance -= $refundTransaction->value,
-                        ]
-                    );
-                }
-            }
-
-            // recriar transacoes com splitPayment
-            $totalValue = $partialValues['total_value_with_interest'];
-            $cloudfoxValue = $partialValues['cloudfox_value'];
-            $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
-
-            SplitPaymentPartialRefundService::perform(
-                $sale,
-                $totalValue,
-                $cloudfoxValue,
-                $installmentFreeTaxValue,
-                $refundTransactions
-            );
-
-            foreach ($refundTransactions as $refundTransaction) {
-                $refundTransaction->delete();
-            }
-
-            // verify transfers
-            $transfersService = new TransfersService();
-            $transfersService->verifyTransactions($sale->id);
-
-            return true;
-        } catch (Exception $ex) {
-            throw $ex;
-        }
     }
 
     public function refund($transactionId, $refundObservation = null)
@@ -896,7 +750,6 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
-
         if (in_array($sale->gateway_id, [14, 15])) {
             $this->refundBilletNewFinances($sale);
         } else {
@@ -958,7 +811,6 @@ class SaleService
 
     public function refundBilletNewFinances(Sale $sale)
     {
-
         $transactionModel = new Transaction();
 
         $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
@@ -967,11 +819,12 @@ class SaleService
         $getnetService = new GetnetBackOfficeService();
 
         foreach ($sale->transactions as $transaction) {
-
-            $transaction->update([
-                'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
-                'status' => 'billet_refunded',
-            ]);
+            $transaction->update(
+                [
+                    'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
+                    'status' => 'billet_refunded',
+                ]
+            );
 
             if (empty($transaction->company_id)) {
                 continue;
@@ -987,9 +840,11 @@ class SaleService
             }
 
             if (!$transaction->is_waiting_withdrawal && empty($transaction->withdrawal_id)) {
-                $transaction->update([
-                    'is_waiting_withdrawal' => true
-                ]);
+                $transaction->update(
+                    [
+                        'is_waiting_withdrawal' => true
+                    ]
+                );
             }
 
             PendingDebt::create(
@@ -1028,7 +883,11 @@ class SaleService
             $ajdustmentResponse = json_decode($response);
 
             if (!is_null($ajdustmentResponse->msg_Erro)) {
-                report(new Exception('Erro ao gerar um débito pendente no estorno de boleto da venda ' . $sale->id . ' - ' . $ajdustmentResponse->msg_Erro));
+                report(
+                    new Exception(
+                        'Erro ao gerar um débito pendente no estorno de boleto da venda ' . $sale->id . ' - ' . $ajdustmentResponse->msg_Erro
+                    )
+                );
             }
         }
     }
@@ -1080,7 +939,6 @@ class SaleService
                 ]
             );
         }
-
     }
 
     public function getValuesPartialRefund($sale, $refundValue)
@@ -1139,24 +997,6 @@ class SaleService
             'interest_value' => $interestValue,
             'value_to_refund' => $totalPaidValue - $newTotalvalue,
         ];
-    }
-
-    public function updateInterestTotalValue($sale)
-    {
-        $shopifyDiscount = (!is_null($sale->shopify_discount)) ? intval(
-            preg_replace(
-                "/[^0-9]/",
-                "",
-                $sale->shopify_discount
-            )
-        ) : 0;
-        $subTotal = intval(strval($sale->sub_total * 100));
-        $shipmentValue = intval(strval($sale->shipment_value * 100));
-        $automaticDiscount = intval($sale->automatic_discount);
-        $totalPaidValue = intval(strval($sale->total_paid_value * 100));
-        $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
-        $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
-        $sale->update(['interest_total_value' => $interesetTotalValue]);
     }
 
     public function getResumeBlocked($filters)
@@ -1226,9 +1066,12 @@ class SaleService
             )
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereHas('blockReasonSale', function ($blocked) use ($blockReasonSaleModel) {
-                    $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
-                });
+                ->whereHas(
+                    'blockReasonSale',
+                    function ($blocked) use ($blockReasonSaleModel) {
+                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    }
+                );
 
             if (empty($filters["invite"])) {
                 $transactions->whereNull('invitation_id');
@@ -1473,7 +1316,6 @@ class SaleService
 
     public function returnBlacklistBySale(Sale $sale): array
     {
-
         try {
             $descriptionBlackList = [];
             if ($sale->status == 10) {
@@ -1490,4 +1332,5 @@ class SaleService
             report($e);
         }
     }
+
 }

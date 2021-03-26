@@ -3,28 +3,43 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use DateTime;
+use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
- * @property integer $id
+ * Modules\Core\Entities\SaleRefundHistory
+ *
+ * @property int $id
  * @property int $sale_id
+ * @property int|null $user_id
  * @property int $refunded_amount
- * @property DateTime $date_refunded
- * @property string $gateway_response
- * @property string $created_at
- * @property string $deleted_at
- * @property string $updated_at
- * @property Sale $sale
+ * @property string $date_refunded
+ * @property mixed $gateway_response
+ * @property int $refund_value
+ * @property string|null $refund_observation
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read string $id_code
+ * @property-read Sale $sale
+ * @mixin \Eloquent
  */
 class SaleRefundHistory extends Model
 {
-    use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -68,10 +83,8 @@ class SaleRefundHistory extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @return BelongsTo
-     */
-    public function sale()
+
+    public function sale(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Sale');
     }
