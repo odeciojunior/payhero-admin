@@ -39,7 +39,7 @@ class UpdateSales extends Migration
             ->whereDoesntHave(
                 'saleLogs',
                 function ($query) {
-                    $query->where('status_enum', 4);
+                    $query->where('status_enum', Sale::STATUS_REFUNDED);
                 }
             )
             ->chunkById(
