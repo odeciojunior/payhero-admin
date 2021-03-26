@@ -588,7 +588,10 @@ class CompanyService
             $transaction->company,
             CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
         );
-        $totalBalance = $pendingBalance + $availableBalance;
+
+        $pendingDebt = $this->getPendingDebtBalance($transaction->company);
+
+        $totalBalance = $pendingBalance + $availableBalance - $pendingDebt;
 
         if ($totalBalance - foxutils()->onlyNumbers($sale->total_paid_value) < 0) {
             return false;

@@ -104,9 +104,11 @@ class ShopifyService
 
         $this->credential = new PublicAppCredential($token);
         $this->client = new Client(
-            $this->credential, $urlStore, [
-                                 'metaCacheDir' => $cache // Metadata cache dir, required
-                             ]
+            $this->credential,
+            $urlStore,
+            [
+                'metaCacheDir' => $cache // Metadata cache dir, required
+            ]
         );
 
         if ($getThemes) {

@@ -134,7 +134,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale): array
+    public function cancelPaymentCheckout($sale): array
     {
         try {
             $idEncoded = hashids_encode($sale->id, 'sale_id');

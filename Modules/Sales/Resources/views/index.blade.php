@@ -138,18 +138,6 @@
                                             <option value="2">Boleto</option>
                                         </select>
                                     </div>
-                                    {{--                        <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">--}}
-                                    {{--                            <div class="mr-10 d-flex flex-column">--}}
-                                    {{--                                <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>--}}
-                                    {{--                                <label class="switch m-0">--}}
-                                    {{--                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>--}}
-                                    {{--                                    <span class="slider round"></span>--}}
-                                    {{--                                </label>--}}
-                                    {{--                            </div>--}}
-                                    {{--                            <button id="bt_filtro" class="btn btn-primary col">--}}
-                                    {{--                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
-                                    {{--                            </button>--}}
-                                    {{--                        </div>--}}
                                     <div class="col-sm-12 col-md d-flex align-items-center flex-wrap mt-15">
                                         <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                             <label class="switch mr-2">
@@ -294,12 +282,6 @@
                     @include('sales::details')
                 <!-- End Modal -->
                 </div>
-                {{--        <div class="content-error text-center" style="display:none">--}}
-                {{--            <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">--}}
-                {{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
-                {{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
-                {{--            <a href="/projects" class="btn btn-primary">Meus Projetos</a>--}}
-                {{--        </div>--}}
             </div>
         {{-- Quando não tem projeto cadastrado  --}}
             @include('projects::empty')
@@ -435,7 +417,6 @@
                     <strong class="font-size-14">Valor a ser estornado:
                         <label id="refundBilletAmount"></label>
                     </strong>
-                    {{--                        R$ <input type="text" name="refundBilletAmount" id="refundBilletAmount" style="width: 200px;" maxlength="9">--}}
                 </div>
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">

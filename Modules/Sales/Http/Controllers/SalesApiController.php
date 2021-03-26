@@ -149,11 +149,9 @@ class SalesApiController extends Controller
     public function refund(Request $request, $saleId)
     {
         try {
-            $saleModel = new Sale();
-
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
 
-            $sale = $saleModel->find($saleIdDecoded);
+            $sale = Sale::find($saleIdDecoded);
 
             if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
                 return response()->json(
@@ -162,7 +160,7 @@ class SalesApiController extends Controller
                 );
             }
 
-            activity()->on($saleModel)->tap(
+            activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
                     $activity->subject_id = $saleIdDecoded;
@@ -175,24 +173,13 @@ class SalesApiController extends Controller
 
             $refundObservation = $request->input('refund_observation') ?? null;
 
-            if (is_null($sale->interest_total_value)) {
-                (new SaleService())->updateInterestTotalValue($sale);
-            }
-
-            $result = (new CheckoutService())->cancelPayment($sale);
+            $result = (new CheckoutService())->cancelPaymentCheckout($sale);
 
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
 
-            $saleUpdate = (new SaleService())->updateSaleRefunded($sale, $result['response'], $refundObservation);
-
-            if (!$saleUpdate) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Venda Estornada, mas não atualizada na plataforma.',
-                ];
-            }
+            (new SaleService())->cancel($sale, $result['response'], $refundObservation);
 
             if (!empty($sale->shopify_order)) {
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
@@ -206,20 +193,6 @@ class SalesApiController extends Controller
                     $shopifyService->saveSaleShopifyRequest();
                 }
             }
-
-
-            activity()->on($saleModel)->tap(
-                function (Activity $activity) use ($saleIdDecoded) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = $saleIdDecoded;
-                }
-            )->log('Estorno transação: #' . $saleId);
-
-            $sale->update(
-                [
-                    'date_refunded' => Carbon::now(),
-                ]
-            );
 
             event(new SaleRefundedEvent($sale));
 
