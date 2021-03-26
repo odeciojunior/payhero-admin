@@ -42,11 +42,9 @@ class ContestationsApiController extends Controller
     {
 
         try {
-
             $contestationService = new ContestationService();
             $request->request->add(['from_contestation' => true]);
             $getnetChargebacks = $contestationService->getQuery($request->all());
-
 
             return ContestationResource::collection($getnetChargebacks->paginate(10));
 
@@ -65,13 +63,13 @@ class ContestationsApiController extends Controller
 
             $contestationService = new ContestationService();
             $chargebackService = new ChargebackService();
-
             $totalContestationValue = $contestationService->getTotalValueContestations($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
             $totalContestations = $contestationService->getTotalContestations($requestValidated);
             $totalChargebackValue = $chargebackService->getTotalValueChargebacks($requestValidated);
             $totalSalesApprovedChargeback = $chargebackService->getTotalApprovedSales($requestValidated);
             $totalChargebacks = $chargebackService->getTotalChargebacks($requestValidated);
+
 
             return response()->json([
                 'total_contestation' => $totalContestations,

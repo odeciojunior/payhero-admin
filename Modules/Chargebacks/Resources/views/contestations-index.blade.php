@@ -84,6 +84,16 @@
                                 <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
                             </div>
 
+                            <div class="col-sm-12 col-md">
+                                <label for="is_expired" class='mb-10'>Expiração</label>
+                                <br>
+                                <select name='is_expired' id="is_expired" class="form-control select-pad">
+                                    <option value="0">Ambos</option>
+                                    <option value="1">Expirado</option>
+                                    <option value="2" selected>Não expirado</option>
+                                </select>
+                            </div>
+
 
                             <div class="col-sm-12 col-md">
                                 <label for="date_type">Data</label>
@@ -110,15 +120,6 @@
                                     <select name="project" id="project" class="form-control select-pad"
                                             style='width:100%;' data-plugin="select2">
                                         <option value="">Todos projetos</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 col-md">
-                                    <label for="is_expired" class='mb-10'>Expiração</label>
-                                    <br>
-                                    <select name='is_expired' id="is_expired" class="form-control select-pad">
-                                        <option value="0">Ambos</option>
-                                        <option value="1">Expirado</option>
-                                        <option value="2" selected>Não expirado</option>
                                     </select>
                                 </div>
 

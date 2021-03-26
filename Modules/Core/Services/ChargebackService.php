@@ -49,6 +49,29 @@ class ChargebackService
 
             });
 
+            if(request()->has('from_contestation')) {
+
+                $getnetChargebacks->when(request('is_expired'), function ($query, $search) {
+
+                    return $query->whereHas(
+                        'sale.contestations',
+                        function ($query) use ($search) {
+
+                            if($search == 1){
+                                return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
+                            }
+
+                            if($search == 2){
+                                return $query->whereDate('sale_contestations.expiration_date', '>', date('Y-m-d'));
+                            }
+
+                        }
+                    );
+
+                });
+
+            }
+
         }else{
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
