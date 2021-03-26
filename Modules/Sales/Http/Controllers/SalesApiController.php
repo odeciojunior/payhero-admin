@@ -2,7 +2,6 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,10 +13,8 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
-use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
