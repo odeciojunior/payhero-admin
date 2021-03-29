@@ -22,16 +22,41 @@ class ChargebackService
                 'sale.plansSales',
                 'sale.plansSales.plan',
                 'sale.plansSales.plan.project',
+                'sale.customer',
+                'sale.contestations',
                 'company',
             ]
-        );
+        )->where('user_id', \Auth::id());
 
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        if (request()->has('from_contestation') && request('date_type') == 'expiration_date') {
 
-        $getnetChargebacks->whereBetween(
-            $filters['date_type'],
-            [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-        );
+            $getnetChargebacks->when(request('date_type'), function ($query, $search) {
+
+                return $query->whereHas(
+                    'sale.contestations',
+                    function ($query) use ($search) {
+
+                        $dateRange = FoxUtils::validateDateRange(request('date_range'));
+
+                        $query->whereBetween(
+                            $search,
+                            [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+                        );
+
+                    }
+                );
+
+            });
+
+        } else {
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $getnetChargebacks->whereBetween(
+                $filters['date_type'],
+                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
+            );
+
+        }
 
         if (!empty($filters['transaction'])) {
             preg_match_all('/[0-9A-Za-z]+/', $filters['transaction'], $matches);
@@ -64,10 +89,6 @@ class ChargebackService
             $getnetChargebacks->where('project_id', $projectId);
         }
 
-        if (!empty($filters['user'])) {
-            $userId = current(Hashids::decode($filters['user']));
-            $getnetChargebacks->where('user_id', $userId);
-        }
 
         if (!empty($filters['customer'])) {
 
@@ -113,9 +134,8 @@ class ChargebackService
     public function getTotalApprovedSales($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
 
-        $totalSaleApproved = Sale::whereIn('gateway_id', $gatewayIds)
+        $totalSaleApproved = Sale::where('gateway_id', 15)
             ->where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24]);
 
@@ -139,7 +159,7 @@ class ChargebackService
                 function ($item) {
                     return is_numeric($item)
                         ? $item
-                        : current(Hashids::connection('id')->decode($item));
+                        : current(Hashids::connection('sale_id')->decode($item));
                 },
                 current($matches)
             );
@@ -189,21 +209,7 @@ class ChargebackService
 
     public function getChargebackRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-        $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-            ->whereIn('status', [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )->where(function ($query) use ($user) {
-                $query->where('owner_id', $user->id)
-                    ->orWhere('affiliate_id', $user->id);
-            });
+        $approvedSales = (new SaleService)->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
         if ($approvedSales->count() < 50) {
             return 1.2;
@@ -221,4 +227,25 @@ class ChargebackService
 
         return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;
     }
+
+    public function getTotalChargebacksInPeriod(User $user, Carbon $startDate, Carbon $endDate)
+    {
+        return GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
+            $q->whereBetween(
+                'start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            );
+        })->where('user_id', $user->id)
+            ->get();
+    }
+
+    public function getChargebackTax($totalChargebacks, $totalApprovedSales)
+    {
+        if ($totalApprovedSales == 0)
+            return '0,00%';
+
+        $totalChargebackTax = $totalChargebacks > 0 ? number_format(($totalChargebacks * 100) / $totalApprovedSales, 2, ',', '.') . '%' : '0,00%';
+        return $totalChargebackTax;
+    }
+
 }

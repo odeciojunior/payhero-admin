@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\GetnetChargeback;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
@@ -288,7 +287,7 @@ class TrackingService
             }
 
             if (!empty($tracking)) {
-                if($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
+                if ($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
@@ -506,50 +505,44 @@ class TrackingService
     public function getUninformedTrackingCodeRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
         $saleService = new SaleService();
+        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if ($approvedSalesAmount < 20) {
+            return 7; //7% means score 6
+        }
+
         $untrackedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)
             ->doesntHave('tracking')
             ->count();
-
-        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
-
-        if (!$approvedSalesAmount) {
-            return 0;
-        }
 
         return round(($untrackedSalesAmount * 100 / $approvedSalesAmount), 2);
     }
 
     public function getTrackingCodeProblemRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $salesModel = new Sale();
-        $salesWithTrackingCodeProblemsAmount = $salesModel->select(
-            DB::raw('sum(transactions.value) / 100 as total'),
-            DB::raw('count(distinct transactions.sale_id) as sales')
-        )->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->where('sales.owner_id', $user->id)
-            ->where('sales.status', $salesModel->present()->getStatus('approved'))
-            ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereNull('transactions.invitation_id')
-            //->whereIn('transactions.company_id', $userCompanies)
-            ->where(function ($query) {
-                $query->whereHas('tracking', function ($trackingsQuery) {
-                    $trackingPresenter = (new Tracking)->present();
-                    $status = [
-                        $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
-                        $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
-                        $trackingPresenter->getSystemStatusEnum('duplicated'),
-                    ];
-                    $trackingsQuery->whereIn('system_status_enum', $status);
-                });
-            })->count();
+        $salesWithTrackingCodeProblemsAmount = Sale::where(function ($query) {
+            $query->whereHas('tracking', function ($trackingsQuery) {
+                $status = [
+                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                    Tracking::SYSTEM_STATUS_DUPLICATED
+                ];
+                $trackingsQuery->whereIn('system_status_enum', $status);
+            });
+        })->where(function ($q) use ($user) {
+            $q->where('owner_id', $user->id)
+                ->orWhere('affiliate_id', $user->id);
+        })->count();
+
+        if ($salesWithTrackingCodeProblemsAmount < 20) {
+            return 2; //2% means score 6
+        }
 
         $saleService = new SaleService();
         $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
-        if (!$approvedSalesAmount) {
-            return 0;
-        }
+        if (!$approvedSalesAmount) return 0;
 
         return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
     }

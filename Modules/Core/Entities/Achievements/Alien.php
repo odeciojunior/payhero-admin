@@ -25,22 +25,22 @@ class Alien extends Achievement implements AchievementCheck
                 ]);
         })->count();
 
-        $recoveredCheckouts = User::join('sales', function ($query) {
-            $query->on('owner_id', '=', 'users.id')
-                ->where('payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
-                ->whereIn('sales.status', [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_IN_DISPUTE
-                ]);
-        })->join('checkouts', function ($query) {
-            $query->on('checkouts.id', '=', 'sales.checkout_id')
-                ->where('payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
-                ->whereIn('checkouts.status_enum', [
-                    Checkout::STATUS_RECOVERED
-                ]);
-        })->where('owner_id', $user->id)->count();
+        $recoveredCheckouts = Sale::where('payment_method', '=', Sale::PAYMENT_TYPE_BANK_SLIP)
+            ->whereIn('sales.status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])->join('checkouts', function ($query) {
+                $query->on('checkouts.id', '=', 'sales.checkout_id')
+                    ->whereRaw('payment_method = ' . Sale::PAYMENT_TYPE_BANK_SLIP)
+                    ->whereIn('checkouts.status_enum', [
+                        Checkout::STATUS_RECOVERED
+                    ]);
+            })->where(function ($query) use ($user) {
+                $query->where('sales.owner_id', $user->id)
+                    ->orWhere('sales.affiliate_id', $user->id);
+            })->count();
 
         if (!$recoveredCheckouts || !$totalCheckouts) return false;
 

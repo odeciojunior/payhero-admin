@@ -266,6 +266,14 @@ class User extends Authenticable
     /**
      * @return HasMany
      */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return HasMany
+     */
     public function shopifyIntegrations()
     {
         return $this->hasMany(ShopifyIntegration::class);

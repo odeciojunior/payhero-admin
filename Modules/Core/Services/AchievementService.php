@@ -4,7 +4,7 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Achievement;
 use Modules\Core\Entities\User;
-use Modules\Core\Events\NotifyUserLevelUpdateEvent;
+use Modules\Core\Events\NotifyUserAchievementEvent;
 
 class AchievementService
 {
@@ -24,7 +24,6 @@ class AchievementService
         }
 
         if ($achievement->userAchieved($user)) {
-            event(new NotifyUserLevelUpdateEvent($user, $achievement));
             return $this->setUserAchievement($user, $achievement);
         }
 
@@ -36,7 +35,7 @@ class AchievementService
         try {
             $user->achievements()->attach($achievement);
             $user->update();
-            //TODO: notification here
+            event(new NotifyUserAchievementEvent($user, $achievement));
             return true;
         } catch (\Exception $e) {
             report($e);
@@ -46,10 +45,8 @@ class AchievementService
 
     public function getCurrentUserAchievements(User $user): array
     {
-        $achievements = (new Achievement())->select('id', 'name', 'description', 'icon', 'storytelling')
+        return Achievement::select('id', 'name', 'description', 'icon', 'storytelling')
             ->selectRaw('EXISTS(SELECT user_id FROM achievement_user WHERE user_id = ' . $user->id . ' AND achievement_id = achievements.id) AS active')
             ->get([$user->id])->toArray();
-
-        return $achievements;
     }
 }

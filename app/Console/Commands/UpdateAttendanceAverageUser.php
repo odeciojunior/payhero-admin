@@ -50,11 +50,13 @@ class UpdateAttendanceAverageUser extends Command
                 ->whereHas('messages', function ($message) {
                     $message->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
                 })
-                ->groupBy('sales.owner_id');
+                ->groupBy('sales.owner_id')
+                ->orderBy('sales.owner_id');
 
             foreach ($tickets->cursor() as $ticket) {
+                $this->line($ticket->owner_id . ' -- ' . round($ticket->average_response_time) . "h");
                 User::find($ticket->owner_id)
-                    ->update(['attendance_average_response_time' => $ticket->average_response_time]);
+                    ->update(['attendance_average_response_time' => round($ticket->average_response_time)]);
             }
 
         } catch (\Exception $e) {
