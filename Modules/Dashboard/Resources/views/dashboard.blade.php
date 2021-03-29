@@ -12,9 +12,11 @@
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=3') }}">
     @endpush
 
-    @include('dashboard::achievement-details')
-{{--    @include('dashboard::onboarding.news2')--}}
     <div class="page dashboard">
+        @include('dashboard::achievement-details')
+        {{--    @include('dashboard::onboarding.presentation')--}}
+        @include('dashboard::onboarding.gamification')
+        @include('dashboard::onboarding.account-health')
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-8 mb-15">
