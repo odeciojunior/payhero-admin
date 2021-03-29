@@ -313,10 +313,6 @@ $(document).ready(function () {
                                         <span class="account-health-note-description">Chargebacks</span>
                                 </div>
                             </div>
-<!--                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>-->
-<!--                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >-->
-<!--                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>-->
-<!--                            </div>-->
                             <div class="sirius-account-loading"></div>
                         </div>
                 `;
