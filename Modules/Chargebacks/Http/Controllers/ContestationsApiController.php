@@ -153,6 +153,28 @@ class ContestationsApiController extends Controller
 
             $files = $request->allFiles();
             $data = $request->all();
+
+            $validator = \Validator::make(
+                $data, [
+                'files' => 'required|array',
+                'files.*' => 'required|mimes:jpg,jpeg,png,bmp,pdf|max:12000'
+            ],[
+                    'files.*.required' => 'Arquivo obrigatório',
+                    'files.*.mimes' => 'Apenas imagens ou pdf',
+                    'files.*.max' => 'Desculpe! Máximo permitido é 12MB',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(
+                    [
+                        'message' => 'Error no envio do arquivo',
+                        'errors' => $validator->getMessageBag()->toArray()
+                    ],
+                    403
+                );
+            }
+
             $contestationService = new ContestationService();
             $files_paths = $contestationService->sendContestationFiles($files);
             $saleContestation = SaleContestation::find(current(Hashids::decode($data['contestation'])));

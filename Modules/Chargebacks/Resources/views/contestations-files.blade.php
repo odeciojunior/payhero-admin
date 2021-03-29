@@ -137,7 +137,7 @@
                         <div class="row mt-10 mb-0">
                             <div class="col-12 text-left">
                                 <input type="hidden" value="" name="contestation" id="contestation">
-                                <button id="update-contestation-observation" contestation="" type="submit"
+                                <button id="btn-send-file" contestation="" type="submit"
                                         class="btn btn-primary">Enviar arquivo
                                 </button>
                             </div>

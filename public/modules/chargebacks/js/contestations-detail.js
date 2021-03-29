@@ -70,7 +70,7 @@ $(() => {
     $("#sendfilesform").on('submit', function(e){
         e.preventDefault();
 
-        $('#update-contestation-observation').prop("disabled", true);
+        $('#btn-send-file').prop("disabled", true);
         loadOnAny('#latest_files');
 
         var formData = new FormData($('#sendfilesform')[0]);
@@ -124,11 +124,10 @@ $(() => {
                 });
 
             },error: function(response) {
-                console.log(response)
+                alertCustom('error', 'Erro ao enviar o arquivo, permitido apenas imagens e pdf com o limite de 12MB');
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
-                $('#update-contestation-observation').prop("disabled", false);
-                alertCustom('success', 'Enviado com sucesso');
+                $('#btn-send-file').prop("disabled", false);
             }
         });
 
