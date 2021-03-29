@@ -604,4 +604,11 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click((element) => {
+        console.log(element.target.id)
+    })
+    $('#onboarding-finish').click(() => {
+
+    })
 });
