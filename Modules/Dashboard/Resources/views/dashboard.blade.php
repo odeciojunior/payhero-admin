@@ -14,7 +14,7 @@
 
     <div class="page dashboard">
         @include('dashboard::achievement-details')
-        {{--    @include('dashboard::onboarding.presentation')--}}
+        @include('dashboard::onboarding.presentation')
         @include('dashboard::onboarding.gamification')
         @include('dashboard::onboarding.account-health')
         <div style="display: none" class="page-header container">
