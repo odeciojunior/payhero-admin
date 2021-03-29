@@ -142,23 +142,19 @@ $(document).ready(function () {
                     </ol>
                 </div>
                 <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
-                    <div class="d-flex flex-row justify-content-start align-items-start align-self-start">
-                        <div class=" text-center px-0 d-flex justify-content-center mr-20">
-                            <div id="level-icon">
-                                <img src="${currentLevel.icon}" alt="${currentLevel.name}">
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-center align-self-center">
-                            <div id="level" class="level mb-1">${currentLevel.name}</div>
-                            <div id="level-description" class="level-description">${currentLevel.description}</div>
-                        </div>
+
+                    <div class="level-icon-container">
+                      <img src="${currentLevel.icon}" alt="${currentLevel.name}">
+                      <div>
+                        <strong>${currentLevel.name}</strong>
+                        <p>
+                          ${currentLevel.description}
+                        </p>
+                      </div>
                     </div>
-                    <div id="achievements" class="mt-10 d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch ">
-                        <div id="achievements-item-1" class=" mb-10 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                        </div>
-                        <div id="achievements-item-2" class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
-                        </div>
+                    <div id="achievements">
                     </div>
+
                     <div id="tasks">
                         <div class="d-flex flex-column justify-content-start align-items-start">
                         </div>
@@ -182,7 +178,7 @@ $(document).ready(function () {
 
         $('.sirius-performance > .card').append(item);
 
-        updateAchievements(data.achievements);
+        UpdateAchievements(data.achievements);
 
         updateTasks(data.level, data.tasks);
 
@@ -191,22 +187,19 @@ $(document).ready(function () {
         nextPerformance(data);
     }
 
-    function updateAchievements(achievements) {
+    function UpdateAchievements(achievements) {
 
         if (!isEmpty(achievements)) {
-            let achievementsLength = achievements.length / 2;
 
             $.each(achievements, function (index, value) {
 
-                let item = ` <div  class="achievements-item ${value.active ? '' : 'not-active'} " >
-                             <img src="${value.icon}">
+                let item = `
+                                <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}">
+                                    <img src="${value.icon}">
+                                </div>
 
-                         </div>`;
-                if (index < achievementsLength) {
-                    $('#achievements > #achievements-item-1').append(item);
-                } else {
-                    $('#achievements > #achievements-item-2').append(item);
-                }
+                            `;
+                $('#achievements').append(item);
             });
         }
     }
@@ -274,11 +267,6 @@ $(document).ready(function () {
         loadingOnAccountsHealth('.sirius-performance > .card');
         let currentLevel = levelInfo[data.level];
 
-        //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
-        //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.description);
-
-
         let item = `
                 <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
                     <div class="mr-auto">
@@ -295,21 +283,21 @@ $(document).ready(function () {
                 <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start">
                     <div id="card-level-description" >
                         <div class="p-15 d-flex flex-column flex-nowrap justify-content-start align-items-stretch align-self-stretch ">
-                            <div class="d-flex flex-row justify-content-between align-items-center">
-                                <div class="">
+                            <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
+                                <div class="col-12 col-sm-auto col-md-auto col-lg-auto col-xl-auto p-0 d-flex flex-row flex-nowrap justify-content-start align-items-center">
                                     <span id="level-full" class="level mr-5">${currentLevel.name}</span>
                                     <span id="level-current">ATUAL</span>
                                 </div>
 
-                                <div class="">
+                                <div id="billed-message-container" class="col-12 col-sm-auto col-md-auto col-lg-auto col-xl-auto p-0">
                                     <span id="billed-message" class="ml-0">R$${currentLevel.messageStart} - R$${currentLevel.messageStop}</span>
                                 </div>
                             </div>
-                            <p id="level-message" class="level-description">${currentLevel.storytelling}</p>
+                            <p id="level-message" class="level-description mt-10">${currentLevel.storytelling}</p>
                         </div>
                     </div>
 
-                    <div id="levels" class="mt-15 d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
+                    <div id="levels">
                     </div>
 
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
@@ -342,10 +330,11 @@ $(document).ready(function () {
                 $("#level-current").show();
             }
 
-            let item = ` <div id="level-item-${index}" class="level-item ${data.level == index ? 'active' : ''}" data-level="${index}" data-level-current="${data.level}">
-                             <img src="${value.icon}">
+            let item = ` <div id="level-item-${index}" class="col-2  level-item ${data.level == index ? 'active' : ''}" data-level="${index}" data-level-current="${data.level}">
+                           <img src="${value.icon}">
+                       </div>
 
-                         </div>`;
+                    `;
             $('#levels').append(item);
         });
 
@@ -496,12 +485,12 @@ $(document).ready(function () {
         let item = '';
 
         $.each(achievements, function (index, value) {
-
-            item += ` <div class="achievements-list d-flex flex-row justify-content-start align-items-start align-self-start">
-                            <div class="achievements-list-icon mr-20 ${value.active ? '' : 'not-active'} d-flex justify-content-center ">
+            // d-flex flex-row justify-content-start align-items-start align-self-start
+            item += ` <div class="achievements-list ">
+                            <div class="achievements-list-icon  pr-0 pl-0 ${value.active ? '' : 'not-active'} ">
                                 <img src="${value.icon}" alt="${value.name}">
                             </div>
-                            <div class="d-flex flex-column justify-content-center align-self-center">
+                            <div class="ml-10 p-0 d-flex flex-column justify-content-center align-self-center">
                                 <div class="achievements-list-name level mb-1">${value.name}</div>
                                 <div class="achievements-list-description level-description">${value.description}</div>
                             </div>

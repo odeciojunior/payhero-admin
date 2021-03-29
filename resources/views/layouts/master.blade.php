@@ -81,6 +81,7 @@
     <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
+{{--<body class="animsition site-navbar-small dashboard">--}}
 
 {{-- loading --}}
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
