@@ -72,7 +72,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-            <div class="page-content container">
+            <div class="page-content container" style="margin-bottom:100px;">
                 <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
@@ -261,20 +261,18 @@
                     </div>
 
                 </div>
-                <ul id="pagination" class="pagination-sm mb-5" style="margin-top:10px;position:relative;float:right">
+                <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
+                <div style="margin-top:100px; width:100%; float:left;">&nbsp;</div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
-
-                <br>
 
         </div>
         {{-- Quando não tem projeto cadastrado  --}}
         @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
     </div>
-
     @push('scripts')
         <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
