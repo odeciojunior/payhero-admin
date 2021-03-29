@@ -4,12 +4,12 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=150') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=151') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=2') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=02') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=3') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=3') }}">
     @endpush
 
     @include('dashboard::achievement-details')
