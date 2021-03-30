@@ -33,8 +33,8 @@ $(document).ready(function () {
 
         let haveData = 0;
 
-        chartData.value_data.forEach(function(elem, index){
-            if(elem) haveData += parseInt(elem)
+        chartData.value_data.forEach(function (elem, index) {
+            if (elem) haveData += parseInt(elem)
         });
 
         if (haveData > 0) {
@@ -161,6 +161,8 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
+                    verifyOnboarding()
+                    setTimeout(verifyAchievements, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -232,7 +234,6 @@ $(document).ready(function () {
             }
         });
     }
-
 
 
     // function updateTrackings(trackings) {
@@ -408,13 +409,258 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
 
                     getDataDashboard();
-
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
 
                 loadingOnScreenRemove();
+            }
+        });
+    }
+
+    function showConfetti() {
+        let startY = 605 / window.innerHeight;
+        let count = 200;
+
+        let defaults = {
+            origin: {y: startY},
+            startVelocity: 60,
+            zIndex: 1700,
+        };
+        let fire = function (particleRatio, opts) {
+            confetti({
+                ...defaults,
+                ...opts,
+                particleCount: Math.floor(count * particleRatio)
+            });
+        }
+        fire(0.25, {
+            spread: 26,
+        });
+        fire(0.2, {
+            spread: 60,
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8,
+            startVelocity: 20
+        });
+        fire(0.1, {
+            spread: 120,
+            decay: 0.92,
+            scalar: 1.2,
+            startVelocity: 40
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 40
+        });
+    }
+
+    // function showConfetti() {
+    //
+    //     let velocity = window.innerWidth * 4 / 100;
+    //
+    //     let end = Date.now() + velocity * 20;
+    //
+    //     let common = {
+    //         particleCount: 5,
+    //         spread: velocity,
+    //         zIndex: 1700,
+    //         startVelocity: velocity,
+    //     };
+    //
+    //     (function frame() {
+    //         confetti({
+    //             ...common,
+    //             angle: 60,
+    //             origin: {x: 0},
+    //         });
+    //         confetti({
+    //             ...common,
+    //             angle: 120,
+    //             origin: {x: 1},
+    //         });
+    //         if (Date.now() < end) {
+    //             requestAnimationFrame(frame);
+    //         }
+    //     }());
+    // }
+
+    function verifyAchievements() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-achievements',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+
+                if (!isEmpty(response.data)) {
+                    response.data.forEach((data, index) => {
+                        let modal_is_level_type = ''
+
+                        if (data.type === 1 && !isEmpty(data.benefits)) {
+                            modal_is_level_type = `
+                                <div id="benefits">
+                                    <div id="benefits-title">Aqui está sua recompensa:</div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
+                                    </div>
+                                </div>
+                            `
+                        }
+
+                        let modal = `
+                            <div id="modal-achievement-data-${index}" class="modal fade modal-fade-in-scale-up show">
+                                <div id="achievement-details" class="modal-dialog modal-simple achievement-details-style">
+                                    <div class="modal-content">
+                                        <div class="modal-header flex-wrap">
+                                            <div class="w-p100">
+                                                <img id="icon" src="${data.icon}" alt="Image">
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div id="description">${data.description}<strong id="description-level"></strong></div>
+                                            <div id="name">${data.name}</div>
+                                            <div id="storytelling">${data.storytelling}</div>
+
+                                            ${modal_is_level_type}
+
+                                            <div id="reward-check-data-${index}"
+                                                class="btn btn-primary"
+                                                 data-dismiss="modal"
+                                                 aria-label="close"
+                                                 data-target="#modal-achievement"
+                                                 data-achievement="${data.achievement}">Ok, legal!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        $('#modal-achievement-container').append(modal)
+
+
+                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
+                            $('body').addClass('blurred');
+                        });
+
+                        $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
+                            $(`#modal-achievement-data-${index}`).unbind( "click" );
+                            showConfetti(`#modal-achievement-data-${index}`);
+                        });
+
+                        $(`#modal-achievement-data-${index}`).on('hidden.bs.modal', function () {
+                            $('body').removeClass('blurred');
+
+                            setTimeout(() => {
+                                let totalAchievement = ($('[id*=modal-achievement-data-]').length) - 1
+
+                                $(`#modal-achievement-data-${totalAchievement}`).modal('show')
+                            }, 500)
+                        });
+
+                        $(`#reward-check-data-${index}`).click(() => {
+                            let achievement = $(`#reward-check-data-${index}`).data('achievement')
+
+                            $.ajax({
+                                method: "PUT",
+                                url: '/api/dashboard/update-achievements/' + achievement,
+                                dataType: "json",
+                                headers: {
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
+                                },
+                                error: function error(response) {
+                                    errorAjaxResponse(response);
+                                    $(`#modal-achievement-data-${index}`).modal('hide')
+                                },
+                                success: function success() {
+                                    $(`#modal-achievement-data-${index}`).modal('hide')
+                                }
+                            });
+
+                            $(`#modal-achievement-data-${index}`).modal('hide')
+                            setTimeout(() => {
+                                $(`#modal-achievement-data-${index}`).remove()
+                            }, 500)
+                        })
+                    })
+
+                    let lastData = response.data.length;
+
+                    if (lastData > 0) {
+                        $(`[id*=modal-achievement-data-]:last`).modal('show')
+                    }
+                }
+            }
+        });
+    }
+
+    function verifyOnboarding() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-onboarding',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: function success(response) {
+
+                if (response.read === false) {
+                    $('#modal-onboarding')
+                        .on('shown.bs.modal', function () {
+                            $(`#modal-onboarding`).unbind( "click" );
+                        })
+                        .modal('show');
+
+                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click((element) => {
+                        switch(element.target.id) {
+                            case "onboarding-next-presentation":
+                                $('#modal-presentation').fadeOut();
+                                $('#modal-gamification').removeClass('d-none').fadeIn();
+                                break;
+
+                            case "onboarding-next-gamification":
+                                $('#modal-gamification').fadeOut();
+                                $('#modal-account-health').removeClass('d-none').fadeIn();
+                                break;
+
+                            case "onboarding-next-account-health":
+                                $('#modal-account-health').fadeOut();
+                                $('#modal-news-summary').removeClass('d-none').fadeIn();
+                                break;
+                        }
+                    })
+
+                    $('#onboarding-finish').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-onboarding').modal('hide')
+                            }
+                        });
+                    });
+                }
             }
         });
     }

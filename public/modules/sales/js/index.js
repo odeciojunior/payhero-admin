@@ -160,10 +160,10 @@ $(document).ready(function () {
     $(document).on('click', '.boleto-pending', function () {
 
         if(verifyAccountFrozen() == false) {
- 
+
             let saleId = $(this).attr('sale');
             $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
- 
+
             $('#modal_regerar_boleto').modal('show');
         }
     });
@@ -305,26 +305,48 @@ $(document).ready(function () {
 
                         let cupomCode = '';
                         if (!isEmpty(value.cupom_code) || (value.cupom_code === null && false) || (value.cupom_code === '' && false)) {
-                            cupomCode = `<a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
+                            cupomCode = `
+                                    <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
+                                        role="button" style='margin-left: 5px;' >
+                                            <img width="20px" src="/modules/global/img/coupon.svg" title="Cupom">
+                                    </a>`
+                        }
+
+                        let upsell = '';
+                        if (value.upsell) {
+                            upsell = `
+                                    <a data-toggle="tooltip" title="Upsell"
+                                        role="button" style='margin-left: 5px;' >
+                                            <img width="20px" src="/modules/global/img/upsell.svg" title="Upsell">
+                                    </a>`
+                        }
+
+                        let has_order_bump = '';
+                        if (value.has_order_bump) {
+                            has_order_bump = `
+                                            <a data-toggle="tooltip" title="Order Bump"
                                                 role="button" style='margin-left: 5px;' >
-                                                    <span style="color: #707070; font-size: 18px;" class="o-discount-1"></span>
+                                                    <img width="20px" src="/modules/global/img/order-bump.svg" title="Order Bump">
                                             </a>`
                         }
 
                         let cashback = '';
                         if (value.cashback_value != '0.00') {
-                            cashback = `<a data-toggle="tooltip" title="Valor cashback: ${value.cashback_value}"
-                                                role="button" style='margin-left: 5px;' >
-                                                    <span style="color: #707070; font-size: 18px;" class="o-reload-1"></span>
-                                            </a>`
+
+                            cashback = `
+                                        <b style="color: #5EE2A1;">${value.total_paid}</b> <br>
+                                        <a class="d-flex flex-row flex-nowrap justify-content-center align-items-center">
+                                                    <span style="color: #5EE2A1; font-size: 18px; -webkit-text-stroke: 1.45px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
+                                                    <span class="text-muted font-size-10" style='margin-left: 5px;'> ${value.cashback_value} </span>
+                                            </a> `;
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
-                                    <td class='display-sm-none display-m-none display-lg-none text-center'>
-                                        ${value.sale_code}
-                                        ${value.upsell ? '<div class="text-muted font-size-10"> (Upsell) </div>' : ''}
-                                        ${value.has_order_bump ? '<div class="text-muted font-size-10"> (Order Bump) </div>' : ''}
-                                        ${/* TODO: remover quando o layout for ajustado */ value.cashback_value !== '0.00' ? `<div class="text-muted font-size-10">Cashback:<br><b class="text-success">${value.cashback_value}</b><div>` : ''}
+                                    <td class=' text-center'>
+                                        ${value.sale_code} <br>
+                                        ${upsell}
+                                        ${has_order_bump}
+                                        ${cupomCode}
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
@@ -341,9 +363,8 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap;'><b>${value.total_paid}</b> <br>
-                                        ${cupomCode}
-                                        ${cashback}
+                                    <td style='white-space: nowrap;'>
+                                        ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
                                     </td>
                                     <td style="text-align: center">
                                         ${observation}

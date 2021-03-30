@@ -14,7 +14,7 @@ class UpdateAttendanceAverageUser extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update-attendance-average-user';
+    protected $signature = 'account-health:user:update-average-response-time';
 
     /**
      * The console command description.
@@ -41,26 +41,28 @@ class UpdateAttendanceAverageUser extends Command
     public function handle()
     {
         try {
-            
-            $ticketMesageModel = new TicketMessage;
 
             $tickets = Ticket::join('sales', 'sales.id', 'tickets.sale_id')
-            ->selectRaw('
+                ->selectRaw('
                 (SUM(tickets.average_response_time) / COUNT(tickets.id)) as average_response_time,
                 sales.owner_id'
-            )
-            ->whereHas('messages', function($message) use ($ticketMesageModel) {
-                $message->where('type_enum', $ticketMesageModel->present()->getType('from_admin'));
-            })
-            ->groupBy('sales.owner_id');
+                )
+                ->whereHas('messages', function ($message) {
+                    $message->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
+                })
+                ->groupBy('sales.owner_id')
+                ->orderBy('sales.owner_id');
 
             foreach ($tickets->cursor() as $ticket) {
+                $this->line($ticket->owner_id . ' -- ' . round($ticket->average_response_time) . "h");
                 User::find($ticket->owner_id)
-                    ->update(['attendance_average_response_time' => $ticket->average_response_time]);
+                    ->update(['attendance_average_response_time' => round($ticket->average_response_time)]);
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             report($e);
         }
+
+        return 0;
     }
 }

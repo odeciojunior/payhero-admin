@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Services\BenefitsService;
 
 class UpdateUserLevel extends Command
@@ -67,24 +68,40 @@ class UpdateUserLevel extends Command
             if (!empty($user)) {
                 $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
 
+                $previousLevel = $user->level;
+
                 $user->update([
-                    'level' => $level,
                     'total_commission_value' => $transaction->value,
+                    'level' => $level
                 ]);
 
-                $this->warn("Nível: {$level}");
+                if ($previousLevel != $level) {
+                    $this->info("Nível {$previousLevel} -> {$level}");
+                    //TODO: remove after running the first time in production
+                    if ($previousLevel == 0) {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', '<=', $level);
+                    } else {
+                        $benefits = $user->benefits
+                            ->where('enabled', 0)
+                            ->where('level', $level);
+                    }
 
-                $benefits = $user->benefits
-                    ->where('enabled', 0)
-                    ->where('level', '<=', $level);
-                foreach ($benefits as $benefit) {
-                    $benefit->enabled = 1;
-                    $benefit->save();
+                    foreach ($benefits as $benefit) {
+                        $benefit->enabled = 1;
+                        $benefit->save();
+                    }
 
-                    $this->line('Benefício ' . __('definitions.benefit.' . $benefit->name) . ' ativado!');
+                    BenefitsService::updateUserCashback($user);
+
+                    if ($user->level > 1) {
+                        event(new NotifyUserLevelEvent(User::find($user->id), $user->level));
+                    }
                 }
-                BenefitsService::updateUserCashback($user);
             }
         }
+
+        return 0;
     }
 }

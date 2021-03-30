@@ -2,14 +2,18 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Console\Commands\UpdateUserAchievements;
+use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\DashboardNotification;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -17,10 +21,14 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
+use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ReportService;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
+use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -318,17 +326,16 @@ class DashboardApiController extends Controller
 
             return array(
                 'level'            => $user->level,
-                'account_score'    => round($user->account_score, 1),
-                'chargeback_score' => round($user->chargeback_score, 1),
-                'attendance_score' => round($user->attendance_score, 1),
-                'tracking_score'   => round($user->tracking_score, 1)
+                'account_score'    => $user->account_score > 1 ? round($user->account_score, 1) : $user->account_score,
+                'chargeback_score' => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
+                'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                'tracking_score'   => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
             );
         } catch (Exception $e) {
             report($e);
 
             return [];
         }
-
     }
 
     public function getAccountChargeback(Request $request): JsonResponse
@@ -376,74 +383,29 @@ class DashboardApiController extends Controller
             }
 
             $companyModel = new Company();
-            $saleModel = new Sale();
             $companyId = current(Hashids::decode($companyHash));
             $company = $companyModel->find($companyId);
             $user = $company->user;
-            $userId = auth()->user()->account_owner_id;
 
             if (empty($company)) {
                 return [];
             }
 
-            //Chargeback
-            //-$startDate = now()->startOfDay()->subDays(140);
-            //-$endDate = now()->endOfDay()->subDays(20);
+            $startDate = now()->startOfDay()->subDays(140);
+            $endDate = now()->endOfDay()->subDays(20);
 
+            $chargebackService = new ChargebackService();
+            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate, $endDate)->count();
 
-//            $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
-//
-//            $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
-//                $q->whereBetween(
-//                    'start_date',
-//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-//                );
-//            })->where('user_id', $userId);
-//
-//            $chargebacksAmount = $getnetChargebacks->count();
-//
-//            $approvedSales = Sale::whereIn('gateway_id', $gatewayIds)
-//                ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-//                ->whereIn('status', [
-//                    Sale::STATUS_APPROVED,
-//                    Sale::STATUS_CHARGEBACK,
-//                    Sale::STATUS_REFUNDED,
-//                    Sale::STATUS_IN_DISPUTE
-//                ])->whereBetween(
-//                    'start_date',
-//                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-//                )->where('owner_id', $user->id);
-//
-//            $approvedSalesAmount = $approvedSales->count();
-
-
-            $chargebackData = $saleModel->selectRaw(
-                "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
-                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
-            )
-                ->where('payment_method', 1)
-                ->where('owner_id', $userId)
-                ->whereHas(
-                    'transactions',
-                    function ($query) use ($companyId) {
-                        $query->where('company_id', $companyId);
-                    }
-                )
-                ->first();
-
-            $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
-            $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
+            $saleService = new SaleService();
+            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate)->count();
 
             return [
-                'chargeback_score'       => $user->chargeback_score,
+                'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
                 'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
-                'total_sales_approved'   => $totalSalesApproved ?? 0,
-                'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
-                //'total_sales_approved'   => $approvedSalesAmount ?? 0,
-                //'total_sales_chargeback' => $chargebacksAmount ?? 0,
-
+                'total_sales_approved'   => $totalApprovedSales ?? 0,
+                'total_sales_chargeback' => $totalChargeback ?? 0,
             ];
-
         } catch (Exception $e) {
             report($e);
 
@@ -522,7 +484,7 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'attendance_score' => $user->attendance_score,
+                'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -611,7 +573,7 @@ class DashboardApiController extends Controller
                 ->leftJoin('products as p', 'p.id', '=', 'pps.product_id')
                 ->where('s.owner_id', $userId)
                 ->where('s.status', $saleModel->present()->getStatus('approved'))
-                ->where('p.type_enum', (new Product)->present()->getType('physical'))
+                ->where('p.type_enum', (new Product())->present()->getType('physical'))
                 ->first();
 
             $trackingsInfo->unknown_percentage = $trackingsInfo->total ? number_format(
@@ -625,14 +587,14 @@ class DashboardApiController extends Controller
 
 
             return [
-                'tracking_score'     => $user->tracking_score,
+                'tracking_score'     => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
                 'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
                 'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
-                'trackings'          => $trackingsInfo,
+                //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
             report($e);
@@ -644,6 +606,130 @@ class DashboardApiController extends Controller
     function getCashbackReceivedValue()
     {
         return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
-        //return FoxUtils::formatMoney(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value'));
+    }
+
+    /**
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function getAchievements()
+    {
+        try {
+            $user = auth()->user();
+
+            if (!($user->id == $user->account_owner_id)) {
+                return \response()->json(
+                    [
+                        'message' => 'Usuário não é o dono da conta'
+                    ],
+                    Response::HTTP_UNAUTHORIZED
+                );
+            }
+
+            $dashboardNotifications = DashboardNotification::where([
+                'user_id' => $user->id,
+                'read_at' => null,
+            ])
+            ->whereIn('subject_type', [UpdateUserLevel::class, UpdateUserAchievements::class])
+            ->get([
+                'id',
+                'subject_id',
+                'subject_type'
+            ]);
+
+            if (!empty($dashboardNotifications))
+                return DashboardAchievementsResource::collection($dashboardNotifications);
+
+            return \response()->json([
+                'message' => 'Usuário não tem novas conquistas',
+            ]);
+        } catch (Exception $exception) {
+            report($exception);
+
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    /**
+     * @param $achievement
+     * @return JsonResponse
+     */
+    public function updateAchievements($achievement): JsonResponse
+    {
+        try {
+            $idAchievement = \hashids()->decode($achievement);
+
+            if (!DashboardNotification::find($idAchievement)) {
+                return \response()->json(
+                    [
+                        'message' => 'Conquista não encontrada !'
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            DashboardNotification::where('id', $idAchievement)->update(['read_at' => Carbon::now()]);
+
+            return \response()->json(
+                [
+                    'message' => 'Conquista atualizada !'
+                ],
+                Response::HTTP_OK
+            );
+        } catch (Exception $exception) {
+            report($exception);
+
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao atualizar a conquista'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    public function verifyOnboarding()
+    {
+        $user = auth()->user();
+        $userName = FoxUtils::splitName($user->name);
+        $notfication = DashboardNotification::firstOrCreate([
+            'user_id' => $user->id,
+            'subject_id' => 1,
+            'subject_type' => DashboardApiController::class . '/verifyOnboarding'
+                                                           ]);
+
+        if (!empty($notfication->read_at)) {
+            return \response()->json([
+                'message' => 'Onboarding já lido',
+                'read' => true
+                                     ],
+                                     Response::HTTP_OK);
+        }
+
+        return \response()->json([
+                                     'message' => 'Onboarding não lido',
+                                     'read' => false,
+                                     'onboarding' => \hashids()->encode($notfication->id),
+                                     'name' => $userName[0]
+                                 ],
+                                 Response::HTTP_OK);
+
+    }
+
+    public function updateOnboarding($onboarding) {
+        $onboardingId = \hashids()->decode($onboarding);
+
+        DashboardNotification::where('id', $onboardingId)->update(['read_at' => Carbon::now()]);
+
+        return \response()->json(
+            [
+                'message' => 'Onboarding atualizado !'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

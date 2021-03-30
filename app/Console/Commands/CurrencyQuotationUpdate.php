@@ -32,8 +32,6 @@ class CurrencyQuotationUpdate extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
             $currencyQuotationService = new CurrencyQuotationService();
 
@@ -41,9 +39,5 @@ class CurrencyQuotationUpdate extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

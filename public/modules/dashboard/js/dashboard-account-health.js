@@ -4,32 +4,32 @@ $(document).ready(function () {
         0: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua situação para evitar bloqueios.'
         },
         1: {
             textColor: 'text-color-red',
             bgColor: 'bg-color-red',
-            description: '<span class="text-color-red">Alerta:</span> regularize sua <br>situação para evitar bloqueios.'
+            description: '<span class="text-color-red">Alerta:</span> regularize sua situação para evitar bloqueios.'
         },
         2: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua conta está muito baixa.'
         },
         3: {
             textColor: 'text-color-orange',
             bgColor: 'bg-color-orange',
-            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua <br>conta está muito baixa.'
+            description: '<span class="text-color-orange">Atenção:</span> a saúde da sua conta está muito baixa.'
         },
         4: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. Fique de olho!'
         },
         5: {
             textColor: 'text-color-yellow',
             bgColor: 'bg-color-yellow',
-            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. <br>Fique de olho!'
+            description: 'Seu desempenho é <span class="text-color-yellow">regular</span>. Fique de olho!'
         },
         6: {
             textColor: 'text-color-green',
@@ -44,17 +44,17 @@ $(document).ready(function () {
         8: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         9: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
         10: {
             textColor: 'text-color-dark-green',
             bgColor: 'bg-color-dark-green',
-            description: 'A saúde da sua conta está <br><span class="text-color-dark-green">excelente</span>. Parabéns!'
+            description: 'A saúde da sua conta está <span class="text-color-dark-green">excelente</span>. Parabéns!'
         },
     }
 
@@ -104,6 +104,7 @@ $(document).ready(function () {
             },
             success: function success(data) {
 
+
                 if (!data.account_score) {
                     //alert(data.account_score);
                     updateEmptyScore();
@@ -137,7 +138,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-chargebacks" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.chargeback_score >= 1 ? data.chargeback_score : 0}</span>
+                                            <span class="account-health-note">${data.chargeback_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Chargebacks</span>
                                     </div>
@@ -145,7 +146,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-attendance" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.attendance_score >= 1 ? data.attendance_score : 0}</span>
+                                            <span class="account-health-note">${data.attendance_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Atendimento</span>
                                     </div>
@@ -153,7 +154,7 @@ $(document).ready(function () {
                                     <div class="d-flex flex-column flex-nowrap justify-content-center align-items-stretch align-self-stretch">
                                         <div id="account-health-note-tracking" class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
                                             <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
-                                            <span class="account-health-note">${data.tracking_score >= 1 ? data.tracking_score : 0}</span>
+                                            <span class="account-health-note">${data.tracking_score ?? 0}</span>
                                         </div>
                                         <span class="account-health-note-description">Cod. Rastreio</span>
                                     </div>
@@ -162,12 +163,13 @@ $(document).ready(function () {
                             </div>
                     `;
 
-                    //<span id="account-health-chart-gauge" class="mr-15"><img src="/modules/global/adminremark/assets/images/temp.png"></span>
                     $('.sirius-account > .card').append(item);
 
                     nextCard();
                     updateGauge(data.account_score);
                 }
+
+                $(".page.dashboard .sirius-account .sirius-account-health").css({'height': ' 225px'});
             }
         });
     }
@@ -307,14 +309,10 @@ $(document).ready(function () {
                                         <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
                                 <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.total_sales_chargeback}</span>
+                                        <span class="account-health-note">${data.total_sales_chargeback} <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> </span>
                                         <span class="account-health-note-description">Chargebacks</span>
                                 </div>
                             </div>
-<!--                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>-->
-<!--                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >-->
-<!--                                <a href="" class="tips-chargeback">Dicas para reduzir a taxa de chargebacks <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>-->
-<!--                            </div>-->
                             <div class="sirius-account-loading"></div>
                         </div>
                 `;
@@ -366,29 +364,31 @@ $(document).ready(function () {
                                 <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
                                 <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
                             </div>
-                            <div id="card-notes" class="mt-30 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
-                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.open || 0}</span>
-                                        <span class="account-health-note-description">Abertos</span>
+
+
+
+                            <div class="mt-10 p-0 d-flex flex-row flex-wrap" style="height: 100%; width: 100%;">
+                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                    <span class="account-health-note">${data.open || 0}</span>
+                                    <span class="account-health-note-description">Abertos</span>
                                 </div>
-                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.closed || 0}</span>
-                                        <span class="account-health-note-description">Resolvidos</span>
+                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                    <span class="account-health-note">${data.closed || 0}</span>
+                                    <span class="account-health-note-description">Resolvidos</span>
                                 </div>
-                                <div class="d-flex mr-20 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.mediation || 0}</span>
-                                        <span class="account-health-note-description">Mediação</span>
+                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                    <span class="account-health-note">${data.mediation || 0}</span>
+                                    <span class="account-health-note-description">Mediação</span>
                                 </div>
-                                <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.total}</span>
-                                        <span class="account-health-note-description">Total</span>
+                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                    <span class="account-health-note">${data.total}</span>
+                                    <span class="account-health-note-description">Total</span>
                                 </div>
                             </div>
-<!--                            <div class="hr-horizontal mt-30 d-flex justify-content-start align-items-start align-self-start"></div>-->
-<!--                            <div class="mt-15 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >-->
-<!--                                <a href="" class="tips-chargeback">Dicas para melhorar seu atendimento <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>-->
-<!--                            </div>-->
                             <div class="sirius-account-loading"></div>
+
+
+
                         </div>
                 `;
 

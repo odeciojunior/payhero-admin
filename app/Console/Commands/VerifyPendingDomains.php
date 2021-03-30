@@ -47,15 +47,10 @@ class VerifyPendingDomains extends Command
 
     public function handle()
     {
-        $start = now();
         try {
             $this->getDomainService()->verifyPendingDomains();
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

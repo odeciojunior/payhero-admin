@@ -566,7 +566,84 @@ class FoxUtils
         elseif ( $dateDiff->i < 1 ) {
             $return = 'Há um minuto';
         }
-       
+
         return $return;
+    }
+
+    public static function getnetReasonByCode($code)
+    {
+        switch($code) {
+            case '4837':
+            case '74':
+            case '103':
+            case '104':
+            case '4540':
+            case '4755':
+                return 'Portador não reconhece a transação';
+            case '4840':
+            case '57':
+                return 'Múltiplas transações fraudulentas';
+            case '4860':
+            case '75':
+            case '136':
+            case '137':
+            case '85':
+            case '4513':
+                return 'Cancelamento / crédito não processado';
+            case '4855':
+            case '79':
+            case '131':
+            case '30':
+            case '4554':
+                return 'Mercadoria / serviços não prestados';
+            case '4841':
+            case '132':
+            case '41':
+            case '4544':
+                return 'Cancelamento de transações recorrentes';
+            case '133':
+            case '134':
+            case '53':
+            case '4553':
+                return 'Mercadoria falsificada / defeituosa ou não conforme com o descrito';
+            case '4853':
+            case '135':
+                return 'Desacordo comercial (no geral)';
+            case '4859':
+                return 'Valor adicional cobrado por um serviço prestado ou NO SHOW';
+            case '4834':
+            case '73':
+            case '1261':
+            case '82':
+            case '4512':
+                return 'Duplicidade da transação';
+            case '4831':
+            case '1262':
+            case '86':
+            case '4515':
+                return 'Pagamentos por outros meios';
+            case '123':
+            case '4530':
+                return 'Moeda incorreta';
+            case '124':
+            case '4507':
+            case '4523':
+                return 'Valor da transação ou número de conta incorreta ou inexistente';
+            case '4527':
+                return 'Falta de impressão';
+            case '4534':
+                return 'Múltiplos comprovantes';
+            case '80':
+            case '4753':
+                return 'Erro / divergência de processamento';
+            case '125':
+            case '77':
+                return 'Valor incorreto';
+            case '4850':
+                return 'Transação fraudulenta/sem autorização';
+            default:
+                return isset($reason) ? str_replace("?", "Ã", $reason) : '';
+
+        }
     }
 }

@@ -13,7 +13,7 @@ class PopulateUserBenefits extends Migration
      */
     public function up()
     {
-        DB::raw('INSERT INTO user_benefits (user_id, benefit_id, created_at)
+        DB::statement('INSERT INTO user_benefits (user_id, benefit_id, created_at)
                        SELECT DISTINCT users.id, benefits.id, now() FROM users, benefits
                        WHERE NOT EXISTS(SELECT * FROM user_benefits WHERE user_id = users.id AND benefits.id = benefit_id)');
     }

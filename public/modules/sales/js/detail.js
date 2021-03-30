@@ -288,7 +288,7 @@ $(() => {
         } else {
             $('#sale-observation').addClass('collapse');
         }
-            $('#observation').val(sale.observation);
+        $('#observation').val(sale.observation);
 
         //Status
         let status = $('.modal-body #status');
@@ -492,9 +492,9 @@ $(() => {
 
         if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8 || sale.status == 24) && sale.userPermissionRefunded) {
 
-            if(sale.has_contestation){
+            if (sale.has_contestation) {
                 $('#div_refund_transaction').html('<button disabled class="btn btn-danger btn-sm">Estorno desabilitado, venda está em disputa</button>');
-            }else{
+            } else {
                 $('#div_refund_transaction').html('<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
             }
 
@@ -502,8 +502,10 @@ $(() => {
             $('#div_refund_transaction').html('');
         }
 
-        if(sale.status == 7){
+        if (sale.status == 7) {
             $('#div_refund_receipt').html(`<a class="btn btn-sm btn-primary" target="_blank" href="/sales/${sale.id}/refundreceipt">Comprovante de estorno</a>`);
+        }else{
+            $('#div_refund_receipt').html('');
         }
 
         if (sale.status == 2 || sale.status == 1) {
@@ -541,7 +543,7 @@ $(() => {
         } else {
             $('#div_delivery').css('display', 'none');
         }
-        if(verifyAccountFrozen() == true) {
+        if (verifyAccountFrozen() == true) {
             $('.btn-edit-client').hide();
             $('#update-sale-observation').hide();
             $('#saleReSendEmail').hide();
@@ -984,5 +986,12 @@ $(() => {
             });
         }
     }
+
+   /* $('#').on('submit', function (e) {
+        // validation code here
+        if (!valid) {
+            e.preventDefault();
+        }
+    });*/
 
 });

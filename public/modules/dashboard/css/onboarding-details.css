@@ -1,0 +1,132 @@
+.modal-onboarding {
+    width: 80vw;
+    max-width: 960px;
+}
+
+.modal-onboarding .modal-content {
+    border-radius: 16px;
+}
+
+.modal-onboarding #header-onboarding-1 {
+    background-color: #F3F7FD;
+
+    border-radius: 16px 16px 50% 50%;
+    margin-bottom: 2rem;
+}
+
+.modal-onboarding .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-onboarding .modal-header img {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.modal-onboarding .modal-content .pages {
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-onboarding .modal-content .pages > span {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background: #E5E5E5;
+    border-radius: 50%;
+}
+
+.modal-onboarding .modal-content .pages > span.active {
+    background: #2E85EC;
+}
+
+.modal-onboarding #title-onboarding-1 {
+    color: #2E85EC;
+    font: normal normal bold 30px Muli;
+}
+
+.modal-onboarding #description-onboarding-1 {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+
+    color: #919191;
+    font: normal normal normal 17px Muli;
+}
+
+.modal-onboarding .btn {
+    padding: 10px 40px;
+
+    font: normal normal bold 17px Muli;
+}
+
+#title-onboarding-2 {
+    color: #002F67;
+    font: normal normal 900 12px Muli;
+
+    margin-bottom: 1rem;
+}
+
+#sub-title-onboarding-2 {
+    color: #002F67;
+    font: normal normal bold 30px Muli;
+
+    margin-bottom: 2rem;
+}
+
+#description-onboarding-2 {
+    color: #919191;
+    font: normal normal normal 16px Muli;
+
+    margin-bottom: 2rem;
+}
+
+.icon-onboarding-2 {
+    height: 75px;
+    width: 75px;
+    background: #D7EFEC;
+
+    padding: 17px;
+    margin-bottom: 1rem;
+    border-radius: 100%;
+}
+
+.summary-title-primary {
+    color: #002F67;
+    font: normal normal bold 30px Muli;
+}
+
+.summary-title {
+    color: #2E85EC;
+    font: normal normal 900 14px Muli;
+}
+
+.summary-description {
+    color: #919191;
+    font: normal normal normal 16px Muli;
+}
+
+.summary-new {
+    background-color: #2E85EC;
+    border-radius: 14px;
+    padding: 2px 5px;
+
+    font: normal normal 900 9px Muli;
+    color: #FFFFFF;
+}
+
+.summary-soon {
+    background-color: #DBDBDB;
+    border-radius: 14px;
+    padding: 2px 5px;
+
+    font: normal normal 900 9px Muli;
+    color: #FFFFFF;
+}
+
+@media (max-width: 767px) {
+    .modal-onboarding {
+        width: 100%;
+    }
+}

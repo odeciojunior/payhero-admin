@@ -37,8 +37,6 @@ class ValidateLastDomains extends Command
 
     public function handle()
     {
-        $start = now();
-
         $domainModel = new Domain();
         $sendgridService = new SendgridService();
 
@@ -66,9 +64,5 @@ class ValidateLastDomains extends Command
 
             $count++;
         }
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

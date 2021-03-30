@@ -3,45 +3,23 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Achievement;
-use Modules\Core\Entities\Achievements;
 use Modules\Core\Entities\User;
+use Modules\Core\Events\NotifyUserAchievementEvent;
 
 class AchievementService
 {
-    const ACHIEVEMENTS_CLASS = [
-        Achievement::ACHIEVEMENT_SPEED_OF_LIGHT         => Achievements\SpeedOfLight::class,
-        Achievement::ACHIEVEMENT_METEORIC_SUPPORT       => Achievements\MeteoricSupport::class,
-        Achievement::ACHIEVEMENT_COLONIZER              => Achievements\Colonizer::class,
-        Achievement::ACHIEVEMENT_SKY_SELLER             => Achievements\SkySeller::class,
-        Achievement::ACHIEVEMENT_STAR_DUST              => Achievements\StarDust::class,
-        Achievement::ACHIEVEMENT_FALLING_STAR           => Achievements\FallingStar::class,
-        Achievement::ACHIEVEMENT_STAR_WARS              => Achievements\StarWars::class,
-        Achievement::ACHIEVEMENT_ALIEN                  => Achievements\Alien::class,
-        Achievement::ACHIEVEMENT_HITCHHIKER_OF_GALAXIES => Achievements\HitchhikerOfGalaxies::class,
-        Achievement::ACHIEVEMENT_CAPITALIST_ORBIT       => Achievements\CapitalistOrbit::class,
-        Achievement::ACHIEVEMENT_MOONSTRUCK             => Achievements\Moonstruck::class,
-        Achievement::ACHIEVEMENT_INFINITY_AND_BEYOND    => Achievements\InfinityAndBeyond::class,
-    ];
-
-    private $achivements;
-
-    public function __construct()
-    {
-        $this->achivements = Achievement::all();
-    }
-
     public function checkUserAchievements(User $user)
     {
-        foreach (self::ACHIEVEMENTS_CLASS as $achievementClass) {
-            $achievement = $achievementClass::find($achievementClass::ACHIEVEMENT_ID);
+        foreach (Achievement::ACHIEVEMENTS_CLASS as $id => $achievementClass) {
+            $achievement = $achievementClass::find($id);
             $this->checkAchievement($user, $achievement);
         }
     }
 
     public function checkAchievement(User $user, Achievement $achievement): bool
     {
-        $userAchievement = $user->achievements->where('id', $achievement::ACHIEVEMENT_ID)->first();
-        if ($userAchievement) {
+        $hasAchievement = $user->achievements->contains('id', $achievement->id);
+        if ($hasAchievement) {
             return true;
         }
 
@@ -57,7 +35,7 @@ class AchievementService
         try {
             $user->achievements()->attach($achievement);
             $user->update();
-            //TODO: notification here
+            event(new NotifyUserAchievementEvent($user, $achievement));
             return true;
         } catch (\Exception $e) {
             report($e);
@@ -67,10 +45,8 @@ class AchievementService
 
     public function getCurrentUserAchievements(User $user): array
     {
-        $achievements = (new Achievement())->select('id', 'name', 'description', 'icon', 'storytelling')
+        return Achievement::select('id', 'name', 'description', 'icon', 'storytelling')
             ->selectRaw('EXISTS(SELECT user_id FROM achievement_user WHERE user_id = ' . $user->id . ' AND achievement_id = achievements.id) AS active')
             ->get([$user->id])->toArray();
-
-        return $achievements;
     }
 }

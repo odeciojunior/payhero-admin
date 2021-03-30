@@ -3,49 +3,64 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
+use Laracasts\Presenter\PresentableTrait;
+use Laravel\Passport\HasApiTokens;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Presenters\UserPresenter;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\CausesActivity;
-use App\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
-use Laracasts\Presenter\PresentableTrait;
-use Laravel\Passport\HasApiTokens;
 
 /**
- * @property integer $id
+ * Modules\Core\Entities\User
+ *
+ * @property int $id
  * @property string $name
  * @property string $email
+ * @property int $email_verified
+ * @property int $status
  * @property string $password
- * @property string $remember_token
- * @property string $cellphone
- * @property string $document
- * @property string $zip_code
- * @property string $country
- * @property string $state
- * @property string $city
- * @property string $neighborhood
- * @property string $street
- * @property string $number
- * @property string $complement
- * @property string $photo
- * @property string $date_birth
- * @property boolean $address_document_status
- * @property boolean $personal_document_status
+ * @property string|null $remember_token
+ * @property string|null $cellphone
+ * @property int $cellphone_verified
+ * @property string|null $document
+ * @property string|null $zip_code
+ * @property string|null $country
+ * @property string|null $state
+ * @property string|null $city
+ * @property string|null $neighborhood
+ * @property string|null $street
+ * @property string|null $number
+ * @property string|null $complement
+ * @property string|null $photo
+ * @property string|null $date_birth
+ * @property int $address_document_status
+ * @property int $personal_document_status
+ * @property string|null $last_login
+ * @property int $invites_amount
+ * @property int|null $account_owner_id
+ * @property int $deleted_project_filter
+ * @property mixed|null $id_wall_result
+ * @property string|null $sex
+ * @property string|null $mother_name
+ * @property int $has_sale_before_getnet
+ * @property int $onboarding
+ * @property string|null $observation
+ * @property int $account_is_approved
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @mixin \Eloquent
  * @property string $transaction_rate
- * @property boolean $account_is_approved
- * @property string $id_wall_result
- * @property string $sex
- * @property string $mother_name
- * @property boolean $has_sale_before_getnet
  * @property integer $chargeback_rate
  * @property integer $account_score
  * @property integer $chargeback_score
@@ -55,10 +70,6 @@ use Laravel\Passport\HasApiTokens;
  * @property integer $level
  * @property integer $total_commission_value
  * @property integer $attendance_average_response_time
- * @property string $updated_at
- * @property string $created_at
- * @property string $deleted_at
- * @property integer $invites_amount
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -266,6 +277,14 @@ class User extends Authenticable
     /**
      * @return HasMany
      */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return HasMany
+     */
     public function shopifyIntegrations()
     {
         return $this->hasMany(ShopifyIntegration::class);
@@ -285,6 +304,14 @@ class User extends Authenticable
     public function userDocuments()
     {
         return $this->hasMany(UserDocument::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function userShoppings()
+    {
+        return $this->hasMany(UserShopping::class, 'client');
     }
 
     /**

@@ -37,8 +37,6 @@ class DeleteTemporaryFiles extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
             $sDrive = Storage::disk('s3_documents');
             $files = $sDrive->allFiles('uploads/register/user');
@@ -58,8 +56,5 @@ class DeleteTemporaryFiles extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

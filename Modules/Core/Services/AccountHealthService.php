@@ -27,14 +27,17 @@ class AccountHealthService
         $this->attendanceService = new AttendanceService();
     }
 
-    public function userHasMinimumSalesAmount(User $user)
+    public function userHasMinimumSalesAmount(User $user): bool
     {
         $approvedSales = Sale::whereIn('status', [
             Sale::STATUS_APPROVED,
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
             Sale::STATUS_IN_DISPUTE
-        ])->where('owner_id', $user->id);
+        ])->where(function ($query) use ($user) {
+            $query->where('owner_id', $user->id)
+                ->orWhere('affiliate_id', $user->id);
+        });
 
         $approvedSalesAmount = $approvedSales->count();
         $minimumSalesToEvaluate = 100;
@@ -57,9 +60,22 @@ class AccountHealthService
         /** Complaint Tickets Score */
         $ticketsScore = $this->getTicketsScore($user);
 
+        /** Tickets per Approved Sale Score */
+        $ticketsPerApprovedSaleScore = $this->getTicketsPerApprovedSaleScore($user);
+
         /** Attendance Score */
-        $attendanceScore = ($responseTimeScore + $ticketsScore) / 2;
+        $attendanceScore = ($responseTimeScore + $ticketsScore + $ticketsPerApprovedSaleScore) / 3;
         return round($attendanceScore, 1);
+    }
+
+    public function getTicketsPerApprovedSaleScore(User $user): float
+    {
+        $startDate = now()->startOfDay()->subDays(41);
+        $endDate = now()->endOfDay()->subDay();
+        $rate = $this->attendanceService->getTicketsPerApprovedSaleRate($user, $startDate, $endDate);
+        $maxScore = 10;
+        $score = round($maxScore - $rate, 2);
+        return $score > 0 ? $score : 0;
     }
 
     private function getTicketsScore(User $user): float
@@ -70,7 +86,11 @@ class AccountHealthService
         $totalComplaintTickets = count($complaintTickets);
         $totalScore = 0;
 
-        if(!$totalComplaintTickets) return 10;
+        if (!$totalComplaintTickets) {
+            return 10;
+        } else if ($totalComplaintTickets <= 20) {
+            return 6;
+        }
 
         foreach ($complaintTickets as $ticket) {
             $totalScore += $this->getTicketScore($ticket);
@@ -78,7 +98,7 @@ class AccountHealthService
         return round($totalScore / $totalComplaintTickets, 1);
     }
 
-    public function getTicketScore(Ticket $ticket): int
+    private function getTicketScore(Ticket $ticket): int
     {
         $scores = [
             //Delivered Items
@@ -201,8 +221,6 @@ class AccountHealthService
 
             return true;
         } catch (\Exception $e) {
-            echo $e->getTraceAsString();
-            dd($e->getMessage());
             report($e);
             return false;
         }

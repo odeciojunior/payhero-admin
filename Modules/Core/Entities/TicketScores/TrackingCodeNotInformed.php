@@ -17,6 +17,6 @@ class TrackingCodeNotInformed implements TicketScore
             return 7;
         }
 
-        return 0;
+        return 4;
     }
 }

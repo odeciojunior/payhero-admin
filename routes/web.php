@@ -81,7 +81,6 @@ Route::group(
         Route::get('/fausto', 'TesteController@faustoFunction');
         Route::get('/rmcharacter', 'TesteController@removeSpecialCharacter');
         Route::get('/trackingcode', 'TesteController@trackingCodeFunction');
-        Route::get('/wilson', 'WilsonController@wilsonFunction');
         Route::get('/documentstatus', 'TesteController@documentStatus');
         Route::get('/test-job-with-database', 'TesteController@testJobWithDatabase');
     }

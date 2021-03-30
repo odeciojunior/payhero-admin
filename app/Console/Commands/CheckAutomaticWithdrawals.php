@@ -39,8 +39,6 @@ class CheckAutomaticWithdrawals extends Command
 
     public function handle()
     {
-        $start = now();
-
         $service = new WithdrawalService();
         $withdrawalSettingsModel = new WithdrawalSettings();
         $withdrawalsSettings = $withdrawalSettingsModel->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
@@ -92,9 +90,6 @@ class CheckAutomaticWithdrawals extends Command
         }
 
         settings()->group('withdrawal_request')->set('withdrawal_request', true);
-
-        $end = now();
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
 
         return 0;
     }

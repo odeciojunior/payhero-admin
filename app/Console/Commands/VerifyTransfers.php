@@ -35,13 +35,7 @@ class VerifyTransfers extends Command
 
     public function handle()
     {
-        $start = now();
-
         $transfersService = new TransfersService();
         $transfersService->verifyTransactions();
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

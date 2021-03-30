@@ -32,8 +32,6 @@ class VerifyInviteExpired extends Command
 
     public function handle()
     {
-        $start = now();
-
         try {
 
             $invitationModel = new Invitation();
@@ -45,8 +43,5 @@ class VerifyInviteExpired extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        $end = now();
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }
