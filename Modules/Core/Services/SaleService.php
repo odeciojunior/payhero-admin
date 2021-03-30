@@ -39,7 +39,7 @@ class SaleService
         return $transactions->paginate(10);
     }
 
-    public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
+    public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0, $withCashback = false)
     {
         try {
             $companyModel = new Company();
@@ -76,8 +76,11 @@ class SaleService
             $transactions = $transactionModel->with($relationsArray)
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id')
-                ->where('type', '<>', $transactionModel->present()->getType('cashback'));
+                ->whereNull('invitation_id');
+
+            if(!$withCashback) {
+                $transactions->where('type', '<>', $transactionModel->present()->getType('cashback'));
+            }
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -231,7 +234,7 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions = $this->getSalesQueryBuilder($filters);
+        $transactions = $this->getSalesQueryBuilder($filters, false, null, true);
         $transactionStatus = implode(
             ',',
             [
@@ -1205,10 +1208,8 @@ class SaleService
     public function getSalesBlockedBalance($filters)
     {
         try {
-            $companyModel = new Company();
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $salesModel = new Sale();
             $blockReasonSaleModel = new BlockReasonSale();
 
             $transactions = $transactionModel->with(
@@ -1331,24 +1332,10 @@ class SaleService
 
     public function getSalesPendingBalance($filters)
     {
-        $companyModel = new Company();
         $customerModel = new Customer();
         $transactionModel = new Transaction();
-        $userId = auth()->user()->account_owner_id;
 
         try {
-            $userCompanies = $companyModel->where('user_id', $userId)
-                ->pluck('id')
-                ->toArray();
-
-            // Filtro Company
-            if (!empty($filters["company"])) {
-                $companyId = Hashids::decode($filters["company"]);
-                $userCompanies = $companyModel->where('user_id', $userId)->where('id', $companyId)
-                    ->pluck('id')
-                    ->toArray();
-            }
-
             $relationsArray = [
                 'sale',
                 'sale.project',
@@ -1356,7 +1343,7 @@ class SaleService
             ];
 
             $transactions = $transactionModel->with($relationsArray)
-                ->whereIn('company_id', $userCompanies)
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where(
                     'transactions.status_enum',
@@ -1364,6 +1351,12 @@ class SaleService
                     $transactionModel->present()->getStatusEnum('paid')
                 )
                 ->whereNull('invitation_id');
+
+            // Filtro Company
+            if (!empty($filters["company"])) {
+                $companyId = Hashids::decode($filters["company"]);
+                $transactions->where('company_id', $companyId);
+            }
 
             if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
                 $transactions->whereIn('transactions.gateway_id', [14, 15])

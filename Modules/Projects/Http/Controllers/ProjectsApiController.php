@@ -495,8 +495,6 @@ class ProjectsApiController extends Controller
                     }
                 ])->first();
 
-            $companies = Company::where('user_id', auth()->user()->id)->pluck('id');
-
             $project->chargeback_count = $saleModel->where('project_id', $project->id)
                                              ->where('status', $saleModel->present()->getStatus('charge_back'))
                                              ->count();
@@ -511,7 +509,7 @@ class ProjectsApiController extends Controller
                                            ->where('status', $saleModel->present()->getStatus('approved'))
                                            ->count();
 
-            $project->approved_sales_value = Transaction::whereIn('company_id', $companies)
+            $project->approved_sales_value = Transaction::where('user_id', auth()->user->account_owner_id)
                                                         ->whereHas('sale', function ($query) use ($saleModel, $project) {
                                                             $query->where('status', $saleModel->present()->getStatus('approved'));
                                                             $query->where('project_id', $project->id);
