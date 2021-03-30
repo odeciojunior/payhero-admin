@@ -70,7 +70,7 @@ $(() => {
     $("#sendfilesform").on('submit', function(e){
         e.preventDefault();
 
-        $('#update-contestation-observation').prop("disabled", true);
+        $('#btn-send-file').prop("disabled", true);
         loadOnAny('#latest_files');
 
         var formData = new FormData($('#sendfilesform')[0]);
@@ -84,7 +84,9 @@ $(() => {
         var url = $("#sendfilesform").attr('action');
         formData.append('contestation', contestation);
         formData.append('type', $("#type").val());
-        $("#multiplefiles").empty()
+
+        $('input[type="file"]').empty()
+        $('#filename').empty('')
 
         $.ajax({
             type: "POST",
@@ -122,10 +124,10 @@ $(() => {
                 });
 
             },error: function(response) {
-                console.log(response)
+                alertCustom('error', 'Erro ao enviar o arquivo, permitido apenas imagens e pdf com o limite de 12MB');
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
-                $('#update-contestation-observation').prop("disabled", false);
+                $('#btn-send-file').prop("disabled", false);
             }
         });
 
@@ -153,6 +155,7 @@ $(() => {
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $(this).prop("disabled", false);
+                alertCustom('success', 'Removido com sucesso');
             }
         });
 
@@ -161,10 +164,10 @@ $(() => {
     $(document).on('change', '.check-status', function () {
         let file_is_completed = true;
         if ($(this).is(':checked')) {
-            file_is_completed = true;
+            file_is_completed = 1;
             $("#check-status-text").html(' Concluído').addClass("text-success")
         } else {
-            file_is_completed = false;
+            file_is_completed = 2;
             $("#check-status-text").html(' Não concluído').removeClass("text-success")
         }
 
@@ -184,7 +187,6 @@ $(() => {
             },
             success: function success(response, textStatus, request) {
                 alertCustom('success', response.message);
-                location.reload();
             }
         });
     });
@@ -219,4 +221,22 @@ $(() => {
             }
         });
     }
+
+
+    var fileInput = document.querySelector('input[type=file]');
+    var filenameContainer = document.querySelector('#filename');
+    var dropzone = document.querySelector('div');
+
+    fileInput.addEventListener('change', function() {
+        filenameContainer.innerText = fileInput.value.split('\\').pop();
+    });
+
+    fileInput.addEventListener('dragenter', function() {
+        dropzone.classList.add('dragover');
+    });
+
+    fileInput.addEventListener('dragleave', function() {
+        dropzone.classList.remove('dragover');
+    });
+
 });

@@ -28,7 +28,7 @@ class ChargebackService
             ]
         )->where('user_id', \Auth::id());
 
-        if (request()->has('from_contestation') && request('date_type') == 'expiration_date') {
+        if(request()->has('from_contestation') || request('date_type') == 'expiration_date') {
 
             $getnetChargebacks->when(request('date_type'), function ($query, $search) {
 
@@ -48,7 +48,30 @@ class ChargebackService
 
             });
 
-        } else {
+            if(request()->has('from_contestation')) {
+
+                $getnetChargebacks->when(request('is_expired'), function ($query, $search) {
+
+                    return $query->whereHas(
+                        'sale.contestations',
+                        function ($query) use ($search) {
+
+                            if($search == 1){
+                                return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
+                            }
+
+                            if($search == 2){
+                                return $query->whereDate('sale_contestations.expiration_date', '>', date('Y-m-d'));
+                            }
+
+                        }
+                    );
+
+                });
+
+            }
+
+        }else{
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $getnetChargebacks->whereBetween(
@@ -144,7 +167,8 @@ class ChargebackService
                 'start_date',
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             );
-        } else {
+        }
+        else {
             $totalSaleApproved->whereHas('getnetChargebacks', function ($query) use ($dateRange) {
                 $query->whereBetween(
                     'adjustment_date',

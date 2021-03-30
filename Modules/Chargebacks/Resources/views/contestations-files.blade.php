@@ -1,5 +1,36 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+
+    <style>
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            opacity: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .input-div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3788ea;
+            border: 3px solid #4792ec;
+            border-radius: 10px;
+        }
+
+        .input-div label {
+            text-align:center;
+            padding:20px 0;
+            color:white
+        }
+
+        .input-div.dragover {
+            background-color: #aaa;
+        }
+
+    </style>
 @endpush
 <div class="modal fade example-modal-lg" id="modal_contestation_files" aria-hidden="true"
      aria-labelledby="exampleModalTitle"
@@ -74,15 +105,40 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="pdf">Enviar os arquivos</label>
-                            <input type="file" name="files[]" id="multiplefiles"
-                                   class="form-control" multiple/>
+
+{{--                            <div class="col-sm-6 col-xl-3 text-right mt-20">--}}
+{{--                                <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">--}}
+{{--                                    <input type="file" id="test">--}}
+{{--                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">--}}
+{{--                                    Aplicar filtros--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+
+{{--                            <label for="pdf">Enviar os arquivos</label>--}}
+{{--                            <input type="file" name="files[]" id="multiplefiles"--}}
+{{--                                   class="form-control" multiple/>--}}
+                            <div class="row mt-10 mb-0">
+                                <div class="col-8 text-left text-white">
+                                    <div class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="padding:0">
+                                        <label for="test" class="text-white">
+                                            <span class="o-upload-to-cloud-1 text-white mt-1"></span>
+                                            Clique ou arraste um arquivo
+                                            <input type="file" name="files[]" id="multiplefiles" multiple>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-left text-black-50">
+                                    <p id="filename"></p>
+                                </div>
+
+                            </div>
+
                         </div>
                         <div class="row mt-10 mb-0">
                             <div class="col-12 text-left">
                                 <input type="hidden" value="" name="contestation" id="contestation">
-                                <button id="update-contestation-observation" contestation="" type="submit"
-                                        class="btn btn-primary">Enviar
+                                <button id="btn-send-file" contestation="" type="submit"
+                                        class="btn btn-primary">Enviar arquivo
                                 </button>
                             </div>
                         </div>

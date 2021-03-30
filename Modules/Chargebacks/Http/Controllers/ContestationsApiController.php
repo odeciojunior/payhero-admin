@@ -42,11 +42,9 @@ class ContestationsApiController extends Controller
     {
 
         try {
-
             $contestationService = new ContestationService();
             $request->request->add(['from_contestation' => true]);
             $getnetChargebacks = $contestationService->getQuery($request->all());
-
 
             return ContestationResource::collection($getnetChargebacks->paginate(10));
 
@@ -65,13 +63,13 @@ class ContestationsApiController extends Controller
 
             $contestationService = new ContestationService();
             $chargebackService = new ChargebackService();
-
             $totalContestationValue = $contestationService->getTotalValueContestations($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
             $totalContestations = $contestationService->getTotalContestations($requestValidated);
             $totalChargebackValue = $chargebackService->getTotalValueChargebacks($requestValidated);
             $totalSalesApprovedChargeback = $chargebackService->getTotalApprovedSales($requestValidated);
             $totalChargebacks = $chargebackService->getTotalChargebacks($requestValidated);
+
 
             return response()->json([
                 'total_contestation' => $totalContestations,
@@ -115,11 +113,8 @@ class ContestationsApiController extends Controller
             );
         }
 
-        $contestation->update(
-            [
-                'file_user_completed' => $data['file_is_completed'] == true ? 1 : 0,
-            ]
-        );
+        $contestation->file_user_completed = $data['file_is_completed'] == 1;
+        $contestation->save();
 
         $contestationModel = new SaleContestation();
         activity()->on($contestationModel)->tap(
@@ -158,6 +153,28 @@ class ContestationsApiController extends Controller
 
             $files = $request->allFiles();
             $data = $request->all();
+
+            $validator = \Validator::make(
+                $data, [
+                'files' => 'required|array',
+                'files.*' => 'required|mimes:jpg,jpeg,png,bmp,pdf|max:12000'
+            ],[
+                    'files.*.required' => 'Arquivo obrigatório',
+                    'files.*.mimes' => 'Apenas imagens ou pdf',
+                    'files.*.max' => 'Desculpe! Máximo permitido é 12MB',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(
+                    [
+                        'message' => 'Error no envio do arquivo',
+                        'errors' => $validator->getMessageBag()->toArray()
+                    ],
+                    403
+                );
+            }
+
             $contestationService = new ContestationService();
             $files_paths = $contestationService->sendContestationFiles($files);
             $saleContestation = SaleContestation::find(current(Hashids::decode($data['contestation'])));

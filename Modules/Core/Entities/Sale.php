@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
+use Barryvdh\LaravelIdeHelper\Eloquent;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,8 @@ use Modules\Core\Presenters\SalePresenter;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
+ * Modules\Core\Entities\Sale
+ *
  * @property integer $id
  * @property int $owner_id
  * @property integer $affiliate_id
@@ -71,10 +74,35 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property Tracking $tracking
  * @property Collection $upsells
  * @method SalePresenter present()
+ * @mixin Eloquent
  */
 class Sale extends Model
 {
-    use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
+    public const GETNET_SANDBOX_ID = 14;
+    public const GETNET_PRODUCTION_ID = 15;
+
+    public const CREDIT_CARD_PAYMENT = 1;
+    public const BOLETO_PAYMENT = 2;
+
+    public const STATUS_APPROVED = 1;
+    public const STATUS_PENDING = 2;
+    public const STATUS_REFUSED = 3;
+    public const STATUS_CHARGE_BACK = 4;
+    public const STATUS_CANCELED = 5;
+    public const STATUS_IN_PROCESS = 6;
+    public const STATUS_REFUNDED = 7;
+    public const STATUS_PARTIAL_REFUNDED = 8;
+    public const STATUS_BLACK_LIST = 10;
+    public const STATUS_IN_REVIEW = 20;
+    public const STATUS_CANCELED_ANTIFRAUD = 21;
+    public const STATUS_IN_DISPUTE = 24;
+    public const STATUS_IN_REVIEW_QUESTION = 30;
+    public const STATUS_SYSTEM_ERROR = 99;
 
     const PAYMENT_TYPE_CREDIT_CARD = 1;
     const PAYMENT_TYPE_BANK_SLIP = 2;
@@ -175,164 +203,105 @@ class Sale extends Model
         'has_valid_tracking',
         'has_order_bump',
         'observation',
+        'original_total_paid_value'
     ];
 
-    /**
-     * @return BelongsTo
-     */
-    public function checkout()
+    public function checkout(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Checkout');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Project', 'project_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function shipping()
+    public function shipping(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Shipping');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function affiliate()
+    public function affiliate(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function delivery()
+    public function delivery(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Delivery');
     }
 
-    /**
-     * @return hasMany
-     */
-    public function saleRefundHistory()
+    public function saleRefundHistory(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\SaleRefundHistory');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\User', 'owner_id');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function plansSales()
+    public function plansSales(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\PlanSale');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function notazzInvoices()
+    public function notazzInvoices(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function productsPlansSale()
+    public function productsPlansSale(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function gateway()
+    public function gateway(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Gateway');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function tracking()
+    public function tracking(): HasMany
     {
         return $this->hasMany(Tracking::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function saleWhiteBlackListResult()
+    public function saleWhiteBlackListResult(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\SaleWhiteBlackListResult');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function saleLogs()
+    public function saleLogs(): HasMany
     {
         return $this->hasMany(SaleLog::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function tickets()
+    public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function upsells()
+    public function upsells(): HasMany
     {
         return $this->hasMany(Sale::class, 'upsell_id');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function saleGatewayRequests()
+    public function saleGatewayRequests(): HasMany
     {
         return $this->hasMany(SaleGatewayRequest::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function contestations()
+    public function contestations(): HasMany
     {
         return $this->hasMany(SaleContestation::class);
     }
@@ -345,14 +314,13 @@ class Sale extends Model
     /**
      * @return HasMany
      */
-    public function blockReasonsSale()
+    public function blockReasonsSale(): HasMany
     {
         return $this->hasMany(BlockReasonSale::class);
     }
 
     public function getHashIdAttribute()
     {
-
         return Hashids::connection('sale_id')->encode($this->id);
     }
     /**
