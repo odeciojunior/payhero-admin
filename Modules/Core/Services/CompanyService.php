@@ -459,7 +459,7 @@ class CompanyService
     public function getBlockedBalance(Company $company, $liquidationType = null)
     {
         $blockedBalance = Transaction::where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_TRANSFERED)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
             ->whereHas(
                 'blockReasonSale',
                 function ($query) {
@@ -488,7 +488,7 @@ class CompanyService
     {
         $blockedBalance = Transaction::whereNotNull('invitation_id')
             ->where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_TRANSFERED)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
             ->whereHas(
                 'blockReasonSale',
                 function ($query) {
