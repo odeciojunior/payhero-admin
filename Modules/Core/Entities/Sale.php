@@ -92,7 +92,7 @@ class Sale extends Model
     public const STATUS_APPROVED = 1;
     public const STATUS_PENDING = 2;
     public const STATUS_REFUSED = 3;
-    public const STATUS_CHARGE_BACK = 4;
+    public const STATUS_CHARGEBACK = 4;
     public const STATUS_CANCELED = 5;
     public const STATUS_IN_PROCESS = 6;
     public const STATUS_REFUNDED = 7;
@@ -100,6 +100,7 @@ class Sale extends Model
     public const STATUS_BLACK_LIST = 10;
     public const STATUS_IN_REVIEW = 20;
     public const STATUS_CANCELED_ANTIFRAUD = 21;
+    public const STATUS_BILLET_REFUNDED = 22;
     public const STATUS_IN_DISPUTE = 24;
     public const STATUS_IN_REVIEW_QUESTION = 30;
     public const STATUS_SYSTEM_ERROR = 99;
@@ -107,21 +108,6 @@ class Sale extends Model
     const PAYMENT_TYPE_CREDIT_CARD = 1;
     const PAYMENT_TYPE_BANK_SLIP = 2;
     const PAYMENT_TYPE_DEBIT = 3;
-
-    const STATUS_APPROVED = 1;
-    const STATUS_PENDING = 2;
-    const STATUS_REFUSED = 3;
-    const STATUS_CHARGEBACK = 4;
-    const STATUS_CANCELED = 5;
-    const STATUS_IN_PROCESS = 6;
-    const STATUS_REFUNDED = 7;
-    const STATUS_PARTIAL_REFUNDED = 8;
-    const STATUS_BLACK_LIST = 10;
-    const STATUS_IN_REVIEW = 20;
-    const STATUS_CANCELED_ANTIFRAUD = 21;
-    const STATUS_BILLET_REFUNDED = 22;
-    const STATUS_IN_DISPUTE = 24;
-    const STATUS_SYSTEM_ERROR = 99;
 
     /**
      * @var bool
@@ -323,6 +309,7 @@ class Sale extends Model
     {
         return Hashids::connection('sale_id')->encode($this->id);
     }
+
     /**
      * @return BelongsTo
      */
