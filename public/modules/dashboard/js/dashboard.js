@@ -161,6 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
+                    verifyOnboarding()
                     setTimeout(verifyAchievements, 1000);
                 } else {
                     $(".content-error").show();
@@ -573,7 +574,7 @@ $(document).ready(function () {
 
                             $.ajax({
                                 method: "PUT",
-                                url: '/api/dashboard/verify-achievements/' + achievement,
+                                url: '/api/dashboard/update-achievements/' + achievement,
                                 dataType: "json",
                                 headers: {
                                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -605,10 +606,62 @@ $(document).ready(function () {
         });
     }
 
-    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click((element) => {
-        console.log(element.target.id)
-    })
-    $('#onboarding-finish').click(() => {
+    function verifyOnboarding() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-onboarding',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: function success(response) {
 
-    })
+                if (response.read === false) {
+                    $('#modal-onboarding')
+                        .on('shown.bs.modal', function () {
+                            $(`#modal-onboarding`).unbind( "click" );
+                        })
+                        .modal('show');
+
+                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click((element) => {
+                        switch(element.target.id) {
+                            case "onboarding-next-presentation":
+                                $('#modal-presentation').fadeOut();
+                                $('#modal-gamification').removeClass('d-none').fadeIn();
+                                break;
+
+                            case "onboarding-next-gamification":
+                                $('#modal-gamification').fadeOut();
+                                $('#modal-account-health').removeClass('d-none').fadeIn();
+                                break;
+
+                            case "onboarding-next-account-health":
+                                $('#modal-account-health').fadeOut();
+                                $('#modal-news-summary').removeClass('d-none').fadeIn();
+                                break;
+                        }
+                    })
+
+                    $('#onboarding-finish').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-onboarding').modal('hide')
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    }
 });
