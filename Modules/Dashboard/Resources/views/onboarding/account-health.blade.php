@@ -16,7 +16,7 @@
     <div class="modal-body">
         <div class="row">
 
-            <div class="col-12 col-sm-7 order-sm-1">
+            <div class="col-12 col-sm-7 order-sm-1 mb-sm-5 mb-0">
                 <div id="title-onboarding-2" class="text-sm-left text-center">MAIS TRANSPARÊNCIA E CONTROLE</div>
                 <div id="sub-title-onboarding-2" class="text-center text-sm-left">
                     Como anda a <span style="color: #2E85EC">saúde da sua conta?</span>
