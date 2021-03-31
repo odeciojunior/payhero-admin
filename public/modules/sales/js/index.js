@@ -334,11 +334,8 @@ $(document).ready(function () {
                         if (value.cashback_value != '0.00') {
 
                             cashback = `
-                                        <b style="color: #5EE2A1;">${value.total_paid}</b> <br>
-                                        <a class="d-flex flex-row flex-nowrap justify-content-center align-items-center">
-                                                    <span style="color: #5EE2A1; font-size: 18px; -webkit-text-stroke: 1.45px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
-                                                    <span class="text-muted font-size-10" style='margin-left: 5px;'> ${value.cashback_value} </span>
-                                            </a> `;
+                                        <span style="color: #5EE2A1; font-size: 18px; -webkit-text-stroke: 1.45px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
+                                        <b style="color: #5EE2A1;">${value.total_paid}</b>`;
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
@@ -363,7 +360,7 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap;'>
+                                    <td style='white-space: nowrap;' class="text-right">
                                         ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
                                     </td>
                                     <td style="text-align: center">

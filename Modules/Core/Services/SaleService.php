@@ -32,7 +32,7 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SaleService
 {
-    public function getPaginetedSales($filters)
+    public function getPaginatedSales($filters)
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
@@ -335,6 +335,7 @@ class SaleService
 
         //valor do produtor
         $value = $userTransaction->value;
+        $value += $sale->cashback->value ?? 0;
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         //valor do afiliado
