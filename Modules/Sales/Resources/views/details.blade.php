@@ -140,6 +140,14 @@
                         </div>
                         <div class='col-lg-6 text-right div-value-anticipated' style='display:none;'>
                         </div>
+
+                        <div class='col-lg-8'>
+                            <span id="cashback-label" class="text-muted ft-12 d-none">Cashback</span>
+                        </div>
+                        <div class='col-lg-4 text-right'>
+                            <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
+                        </div>
+
                         <div class='col-lg-6 div-main-comission'>
                         </div>
                         <div class='col-lg-6 text-right div-main-comission-value'>

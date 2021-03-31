@@ -46,7 +46,7 @@ class SalesApiController extends Controller
 
             $data = $request->all();
 
-            $sales = $saleService->getPaginetedSales($data);
+            $sales = $saleService->getPaginatedSales($data);
 
             return TransactionResource::collection($sales);
         } catch (Exception $e) {

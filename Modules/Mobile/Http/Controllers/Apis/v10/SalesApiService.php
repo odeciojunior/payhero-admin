@@ -40,7 +40,7 @@ class SalesApiService
         try {
             $saleService = new SaleService();
             $data        = $request->all();
-            $sales       = $saleService->getPaginetedSales($data);
+            $sales       = $saleService->getPaginatedSales($data);
             TransactionResource::collection($sales);
 
             return response()->json(compact('sales'), 200);
