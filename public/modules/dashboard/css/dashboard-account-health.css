@@ -300,6 +300,15 @@
     white-space: nowrap;
 }
 
+.account-health-note-description-tracking {
+    font-size: 11px;
+    color: #A5A5A5;
+    text-align: left;
+    letter-spacing: 0px;
+    opacity: 1;
+    white-space: nowrap;
+}
+
 .account-tax {
     margin-left: 5px;
     font-size: 16px;
@@ -405,6 +414,12 @@
     font-size: 11px !important;
 }
 
+@media (max-width: 1200px) {
+    .account-health-note-description-tracking {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 480px) {
     .empty-score > div:nth-of-type(2) > div > span  {
         font-size: 12px;
@@ -416,6 +431,13 @@
 
     .account-health-note-description {
         font-size: 12px;
+    }
+
+    .account-health-note-description-tracking {
+        width: calc(100% - 10px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
