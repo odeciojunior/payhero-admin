@@ -22,37 +22,39 @@
                 ainda mais prática e eficiente.
             </div>
 
-            <div class="row no-gutters align-items-center my-3">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2">
-                        <img alt="Image" src="{{asset('modules/global/img/onboarding/statistic.svg')}}">
+            <div class="d-flex flex-wrap align-items-center h-p75">
+                <div class="row no-gutters align-items-center mb-15">
+                    <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2">
+                            <img alt="Image" src="{{asset('modules/global/img/onboarding/statistic.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
+                                    O Saúde da Conta <b>já está disponível</b> em contas com mais de 100 vendas aprovadas.
+                                </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                            O Saúde da Conta <b>já está disponível</b> em contas com mais de 100 vendas aprovadas.
-                        </span>
-            </div>
 
-            <div class="row no-gutters align-items-center my-3">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2">
-                        <img alt="Image" src="{{asset('modules/global/img/onboarding/pay.svg')}}">
+                <div class="row no-gutters align-items-center mb-15">
+                    <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2">
+                            <img alt="Image" src="{{asset('modules/global/img/onboarding/pay.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
+                                    Serão avaliadas três métricas: <b>Chargebacks, Atendimentos e Códigos de Rastreio.</b>
+                                </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                            Serão avaliadas três métricas: <b>Chargebacks, Atendimentos e Códigos de Rastreio.</b>
-                        </span>
-            </div>
 
-            <div class="row no-gutters align-items-center my-3">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2">
-                        <img alt="Image" src="{{asset('modules/global/img/onboarding/arrow-right-down.svg')}}">
+                <div class="row no-gutters align-items-center mb-15">
+                    <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2">
+                            <img alt="Image" src="{{asset('modules/global/img/onboarding/arrow-right-down.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
+                                    Usuários com <b>pontuação baixa</b> poderão sofrer <b>sanções e bloqueios</b> na plataforma.
+                                </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                            Usuários com <b>pontuação baixa</b> poderão sofrer <b>sanções e bloqueios</b> na plataforma.
-                        </span>
             </div>
         </div>
 
