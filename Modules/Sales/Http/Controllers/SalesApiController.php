@@ -204,11 +204,9 @@ class SalesApiController extends Controller
     public function refundBillet(Request $request, $saleId): JsonResponse
     {
         try {
-            $companyService = new CompanyService();
-
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
 
-            if (!$companyService->hasBalanceToRefund($sale)) {
+            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
