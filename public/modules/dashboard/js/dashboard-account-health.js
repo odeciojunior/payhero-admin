@@ -462,19 +462,19 @@ $(document).ready(function () {
                             <div class="mt-10 p-0 d-flex flex-row flex-wrap" style="height: 100%; width: 100%;">
                                 <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.average_post_time} dia${data.average_post_time === 1 ? '' : 's'}</span>
-                                    <span class="account-health-note-description font-size-11">Tempo médio de postagem</span>
+                                    <span class="account-health-note-description account-health-note-description-tracking">Tempo médio de postagem</span>
                                 </div>
                                 <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.problem} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
-                                    <span class="account-health-note-description font-size-11">Códigos com problema</span>
+                                    <span class="account-health-note-description account-health-note-description-tracking">Códigos com problema</span>
                                 </div>
                                 <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.unknown} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
-                                    <span class="account-health-note-description font-size-11">Códigos não informados</span>
+                                    <span class="account-health-note-description account-health-note-description-tracking">Códigos não informados</span>
                                 </div>
                                 <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.tracking_today}</span>
-                                    <span class="account-health-note-description font-size-11">Códigos informados hoje</span>
+                                    <span class="account-health-note-description account-health-note-description-tracking">Códigos informados hoje</span>
                                 </div>
                             </div>
                             <div class="sirius-account-loading"></div>

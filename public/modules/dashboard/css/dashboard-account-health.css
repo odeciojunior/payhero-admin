@@ -417,6 +417,13 @@
     .account-health-note-description {
         font-size: 12px;
     }
+
+    .account-health-note-description-tracking {
+        width: calc(100% - 10px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 @media (max-width: 300px) {
