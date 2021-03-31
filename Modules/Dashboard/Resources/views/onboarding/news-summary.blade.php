@@ -1,7 +1,3 @@
-@push('css')
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=01') }}">
-@endpush
-
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
         <img id="icon" src="{{asset('/modules/global/adminremark/assets/images/siriusM.svg')}}" width="40"
