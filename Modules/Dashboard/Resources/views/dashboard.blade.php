@@ -4,12 +4,12 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=152') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=153') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=04') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=6') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=6') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=7') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=8') }}">
     @endpush
 
     <div class="page dashboard">
