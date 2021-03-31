@@ -509,7 +509,7 @@ class ProjectsApiController extends Controller
                                            ->where('status', $saleModel->present()->getStatus('approved'))
                                            ->count();
 
-            $project->approved_sales_value = Transaction::where('user_id', auth()->user->account_owner_id)
+            $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
                                                         ->whereHas('sale', function ($query) use ($saleModel, $project) {
                                                             $query->where('status', $saleModel->present()->getStatus('approved'));
                                                             $query->where('project_id', $project->id);
