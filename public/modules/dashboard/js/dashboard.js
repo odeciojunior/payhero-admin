@@ -518,7 +518,7 @@ $(document).ready(function () {
 
                         if (data.type === 1 && !isEmpty(data.benefits)) {
                             modal_is_level_type = `
-                                <div id="description">${data.description}</div>
+                                <div id="description">Você chegou ao <strong>${data.description}</strong></div>
                                 <div id="name">${data.name}</div>
                                 <div id="storytelling">${data.storytelling}</div>
 
@@ -564,7 +564,7 @@ $(document).ready(function () {
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             // $('body').addClass('blurred');
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
-                            showConfetti(`#modal-achievement-data-${index}`);
+                            showConfetti();
                         });
 
                         $(`#modal-achievement-data-${index}`).on('hidden.bs.modal', function () {
