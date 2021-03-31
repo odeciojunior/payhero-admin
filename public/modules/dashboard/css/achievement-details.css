@@ -132,3 +132,9 @@ body.blurred .page {
     transition: all .5s ease-in-out;
 }
 
+@media (max-width: 767px) {
+    .achievement-details-style {
+        top: unset;
+    }
+}
+

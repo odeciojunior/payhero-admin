@@ -161,8 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    verifyOnboarding()
-                    setTimeout(verifyAchievements, 1000);
+                    setTimeout(verifyOnboarding, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -549,12 +548,8 @@ $(document).ready(function () {
 
                         $('#modal-achievement-container').append(modal)
 
-
-                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
-                            $('body').addClass('blurred');
-                        });
-
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
+                            // $('body').addClass('blurred');
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
                             showConfetti(`#modal-achievement-data-${index}`);
                         });
@@ -618,29 +613,26 @@ $(document).ready(function () {
             success: function success(response) {
 
                 if (response.read === false) {
-                    $('#modal-onboarding')
-                        .on('shown.bs.modal', function () {
-                            $(`#modal-onboarding`).unbind( "click" );
-                        })
-                        .modal('show');
+                    $('#modal-content-onboarding').slick({
+                        infinite: false,
+                        arrows: false,
+                        adaptiveHeight: true
+                    })
 
-                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click((element) => {
-                        switch(element.target.id) {
-                            case "onboarding-next-presentation":
-                                $('#modal-presentation').fadeOut();
-                                $('#modal-gamification').removeClass('d-none').fadeIn();
-                                break;
+                    $('#modal-content-onboarding').slick("slickPrev")
 
-                            case "onboarding-next-gamification":
-                                $('#modal-gamification').fadeOut();
-                                $('#modal-account-health').removeClass('d-none').fadeIn();
-                                break;
 
-                            case "onboarding-next-account-health":
-                                $('#modal-account-health').fadeOut();
-                                $('#modal-news-summary').removeClass('d-none').fadeIn();
-                                break;
-                        }
+                    setTimeout(() => {
+                        $('#modal-onboarding')
+                            .on('shown.bs.modal', function () {
+                                $('#user-name').html(response.name)
+                                $(`#modal-onboarding`).unbind( "click" );
+                            })
+                            .modal('show');
+                    },300)
+                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
+
+                        $('#modal-content-onboarding').slick("slickNext")
                     })
 
                     $('#onboarding-finish').click(() => {
@@ -657,9 +649,12 @@ $(document).ready(function () {
                             },
                             success: function success() {
                                 $('#modal-onboarding').modal('hide')
+                                verifyAchievements()
                             }
                         });
                     });
+                } else {
+                    verifyAchievements()
                 }
             }
         });

@@ -695,7 +695,8 @@ class DashboardApiController extends Controller
     public function verifyOnboarding()
     {
         $user = auth()->user();
-        $userName = FoxUtils::splitName($user->name);
+        $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
+
         $notfication = DashboardNotification::firstOrCreate([
             'user_id' => $user->id,
             'subject_id' => 1,
@@ -714,7 +715,7 @@ class DashboardApiController extends Controller
                                      'message' => 'Onboarding não lido',
                                      'read' => false,
                                      'onboarding' => \hashids()->encode($notfication->id),
-                                     'name' => $userName[0]
+                                     'name' => $userName
                                  ],
                                  Response::HTTP_OK);
 
