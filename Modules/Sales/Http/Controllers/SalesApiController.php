@@ -208,17 +208,7 @@ class SalesApiController extends Controller
 
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
 
-            if (
-                in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
-                && !$companyService->hasBalanceToRefund($sale)
-            ) {
-                return response()->json(
-                    [
-                        'message' => 'Saldo insuficiente para realizar o estorno'
-                    ],
-                    Response::HTTP_BAD_REQUEST
-                );
-            } elseif (!$companyService->hasBalanceManualToRefund($sale)) {
+            if (!$companyService->hasBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
