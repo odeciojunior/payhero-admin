@@ -2,6 +2,8 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Console\Commands\UpdateUserAchievements;
+use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,6 +23,7 @@ use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
@@ -627,7 +630,9 @@ class DashboardApiController extends Controller
             $dashboardNotifications = DashboardNotification::where([
                 'user_id' => $user->id,
                 'read_at' => null,
-            ])->get([
+            ])
+            ->whereIn('subject_type', [UpdateUserLevel::class, UpdateUserAchievements::class])
+            ->get([
                 'id',
                 'subject_id',
                 'subject_type'
@@ -687,5 +692,47 @@ class DashboardApiController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    public function verifyOnboarding()
+    {
+        $user = auth()->user();
+        $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
+
+        $notfication = DashboardNotification::firstOrCreate([
+            'user_id' => $user->id,
+            'subject_id' => 1,
+            'subject_type' => DashboardApiController::class . '/verifyOnboarding'
+                                                           ]);
+
+        if (!empty($notfication->read_at)) {
+            return \response()->json([
+                'message' => 'Onboarding já lido',
+                'read' => true
+                                     ],
+                                     Response::HTTP_OK);
+        }
+
+        return \response()->json([
+                                     'message' => 'Onboarding não lido',
+                                     'read' => false,
+                                     'onboarding' => \hashids()->encode($notfication->id),
+                                     'name' => $userName
+                                 ],
+                                 Response::HTTP_OK);
+
+    }
+
+    public function updateOnboarding($onboarding) {
+        $onboardingId = \hashids()->decode($onboarding);
+
+        DashboardNotification::where('id', $onboardingId)->update(['read_at' => Carbon::now()]);
+
+        return \response()->json(
+            [
+                'message' => 'Onboarding atualizado !'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

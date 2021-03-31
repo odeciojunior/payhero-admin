@@ -161,7 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    setTimeout(verifyAchievements, 1000);
+                    setTimeout(verifyOnboarding, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -548,12 +548,8 @@ $(document).ready(function () {
 
                         $('#modal-achievement-container').append(modal)
 
-
-                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
-                            $('body').addClass('blurred');
-                        });
-
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
+                            // $('body').addClass('blurred');
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
                             showConfetti(`#modal-achievement-data-${index}`);
                         });
@@ -573,7 +569,7 @@ $(document).ready(function () {
 
                             $.ajax({
                                 method: "PUT",
-                                url: '/api/dashboard/verify-achievements/' + achievement,
+                                url: '/api/dashboard/update-achievements/' + achievement,
                                 dataType: "json",
                                 headers: {
                                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -600,6 +596,65 @@ $(document).ready(function () {
                     if (lastData > 0) {
                         $(`[id*=modal-achievement-data-]:last`).modal('show')
                     }
+                }
+            }
+        });
+    }
+
+    function verifyOnboarding() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-onboarding',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: function success(response) {
+
+                if (response.read === false) {
+                    $('#modal-content-onboarding').slick({
+                        infinite: false,
+                        arrows: false,
+                        adaptiveHeight: true
+                    })
+
+                    $('#modal-content-onboarding').slick("slickPrev")
+
+
+                    setTimeout(() => {
+                        $('#modal-onboarding')
+                            .on('shown.bs.modal', function () {
+                                $('#user-name').html(response.name)
+                                $(`#modal-onboarding`).unbind( "click" );
+                            })
+                            .modal('show');
+                    },300)
+                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
+
+                        $('#modal-content-onboarding').slick("slickNext")
+                    })
+
+                    $('#onboarding-finish').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-onboarding').modal('hide')
+                                verifyAchievements()
+                            }
+                        });
+                    });
+                } else {
+                    verifyAchievements()
                 }
             }
         });

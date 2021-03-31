@@ -70,7 +70,7 @@
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
-            Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
+            Sentry.init({dsn: '{{ getenv('SENTRY_LARAVEL_DSN') }}'});
         </script>
     @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>

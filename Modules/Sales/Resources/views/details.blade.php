@@ -102,12 +102,6 @@
                         <div class="col-lg-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
-                        {{--                        <div class="col-lg-6 mb-10">--}}
-                        {{--                            <span class="text-muted ft-12 total-paid-title"> Total com juros</span>--}}
-                        {{--                        </div>--}}
-                        {{--                        <div class="col-lg-6 text-right mb-10">--}}
-                        {{--                            <span id="total-paid-value" class="text-muted ft-12"></span>--}}
-                        {{--                        </div>--}}
                     </div>
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div id="cambio-label" class='col-8' style="display:none">
@@ -134,17 +128,10 @@
                         <div id="convertax-value" class='col-lg-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        {{--                        <div class='col-lg-6 div-producer-comission'>--}}
-                        {{--                            --}}{{--                            <h4 class='table-title'>Comissão: </h4>--}}
-                        {{--                        </div>--}}
-                        {{--                        <div class='col-lg-6 text-right div-producer-comission-value'>--}}
-                        {{--                            --}}{{--                            <h4 id="comission-value" class='table-title'></h4>--}}
-                        {{--                        </div>--}}
                         <div class='col-lg-6 div-user-type-comission' style='display:none;'>
                             <h4 class='table-title'>Comissão do afiliado: </h4>
                         </div>
                         <div class='col-lg-6 text-right div-user-type-comission-value' style='display:none;'>
-                            {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
                         </div>
                         <div class='col-lg-6 div-anticipated' style='display:none;'>
                             <span id="anticipated-label" class='text-muted ft-12'>
@@ -152,13 +139,10 @@
                             </span>
                         </div>
                         <div class='col-lg-6 text-right div-value-anticipated' style='display:none;'>
-                            {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
                         </div>
                         <div class='col-lg-6 div-main-comission'>
-                            {{--                            <h4 class='table-title'>Comissão: </h4>--}}
                         </div>
                         <div class='col-lg-6 text-right div-main-comission-value'>
-                            {{--                            <h4 id="comission-value" class='table-title'></h4>--}}
                         </div>
                     </div>
                 </div>
@@ -272,7 +256,6 @@
                                     <th>Rastreio</th>
                                     <th>Status</th>
                                     <th>Postagem</th>
-                                    {{-- <th>Ações</th> --}}
                                 </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>

@@ -56,6 +56,7 @@
     "require-dev": {
         "ext-curl": "*",
         "barryvdh/laravel-debugbar": "^3.2",
+        "barryvdh/laravel-ide-helper": "^2.8.2",
         "beyondcode/laravel-query-detector": "^1.4",
         "facade/ignition": "^2.0",
         "filp/whoops": "~2.0",
