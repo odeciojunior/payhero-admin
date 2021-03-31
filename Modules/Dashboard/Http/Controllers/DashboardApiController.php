@@ -24,6 +24,7 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
+use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
@@ -482,6 +483,7 @@ class DashboardApiController extends Controller
 
             return [
                 'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                'attendance_average_response_time' =>$user->attendance_average_response_time,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -582,15 +584,15 @@ class DashboardApiController extends Controller
                 2
             ) : '0.00';
 
-
             return [
                 'tracking_score'     => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
-                'oldest_sale'        => $trackingsInfo->oldest_sale,
+                //'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
                 'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
+                'tracking_today'     => TrackingService::getTrackingToday($user)->count(),
                 //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {

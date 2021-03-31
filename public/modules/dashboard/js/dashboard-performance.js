@@ -197,7 +197,6 @@ $(document).ready(function () {
                                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}">
                                     <img src="${value.icon}">
                                 </div>
-
                             `;
                 $('#achievements').append(item);
             });
@@ -247,7 +246,7 @@ $(document).ready(function () {
         $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
         if (percentage > 13) {
             $('#progress-bar > span').text(`${Math.trunc(percentage)}%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 9}%`, 'color': '#FFFFFF'});
+            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 13}%`, 'color': '#FFFFFF'});
         } else {
             $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)}%`);
             $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3}%`, 'color': '#2E85EC'});
@@ -299,15 +298,18 @@ $(document).ready(function () {
 
                     <div id="levels">
                     </div>
-
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
                         <span class="mb-10 title-performance">Benefícios ativos</span>
-                        <div id="benefits-active-container">
-                            <div class="d-flex flex-column flex-nowrap justify-content-start ">
-                            </div>
+                        <div id="benefits-active-container" class="benefits-empty">
+                            <img src="/modules/global/adminremark/assets/images/empty-benefits.png" alt="Não há benefício">
+                            <div>
+                                <strong class="benefits-name">Você ainda não tem nenhum benefício ativo em sua conta.</strong>
+                                <p class="benefits-description">
+                                  Suba de nível para mudar isso :)
+                                </p>
+                              </div>
                         </div>
                     </div>
-
                     <div id="benefits-next-container" class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
                         <span class="mb-10 title-performance">Seus próximos benefícios</span>
                         <div id="benefits-container">
@@ -358,47 +360,25 @@ $(document).ready(function () {
     }
 
     function updateBenefits(level, benefits) {
-        $('#benefits-active-container > div').html('');
-
-        //const elementBenefitsActiveContainer = $('#benefits-active-container');
-        //elementBenefitsActiveContainer.html('');
-
-
+        const elementBenefitsActiveContainer = $('#benefits-active-container');
 
         $('#benefits-container').html('');
 
         if (!isEmpty(benefits.active)) {
-
+            elementBenefitsActiveContainer.html('').removeClass('benefits-empty').append('<div class="d-flex flex-column flex-nowrap justify-content-start"></div>');
             $.each(benefits.active, function (index, value) {
 
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
                                  <span class="benefits-button ${value.enabled ? 'benefits-button-checked' : 'benefits-button-blocked'} d-flex justify-content-around align-items-center">${value.enabled? 'Ativo' : 'Inativo'}</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
-                $('#benefits-active-container').append(item);
+                elementBenefitsActiveContainer.append(item);
             });
 
             if (benefits.active.length > 2) {
                 $('#benefits-active-container').asScrollable();
             }
 
-        } else {
-
-            $('#benefits-active-container').html(`
-                                                        <div class="d-flex justify-content-start align-items-center align-self-start">
-                                                            <div id="benefits-empty-image" class=" text-center px-0 d-flex justify-content-center mr-20">
-                                                                <img src="/modules/global/adminremark/assets/images/empty-benefits.png" alt="">
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center align-self-center">
-                                                                <div class="benefits-name mb-1">
-                                                                    Você ainda não tem nenhum benefício ativo em sua conta.
-                                                                </div>
-                                                                <div class="benefits-description">
-                                                                    Suba de nível para mudar isso :)
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    `);
         }
 
         if (!isEmpty(benefits.next)) {

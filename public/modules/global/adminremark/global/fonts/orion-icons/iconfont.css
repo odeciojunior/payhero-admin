@@ -46,6 +46,7 @@
 .o-checkmark-1::before,
 .o-checkout-cart-1::before,
 .o-clear-shopping-cart-1::before,
+.o-clock-1::before,
 .o-clouds-1::before,
 .o-cloudy-fog-1::before,
 .o-cogwheel-1::before,
@@ -132,6 +133,7 @@
 .o-checkmark-1::before { content: "\f9f8"; }
 .o-checkout-cart-1::before { content: "\f9e0"; }
 .o-clear-shopping-cart-1::before { content: "\fa0c"; }
+.o-clock-1::before { content: "\fa16"; }
 .o-clouds-1::before { content: "\f9f9"; }
 .o-cloudy-fog-1::before { content: "\f9fa"; }
 .o-cogwheel-1::before { content: "\f9e1"; }
@@ -183,3 +185,4 @@
 .o-upload-to-cloud-2::before { content: "\fa13"; }
 .o-whatsapp-1::before { content: "\f9db"; }
 
+  

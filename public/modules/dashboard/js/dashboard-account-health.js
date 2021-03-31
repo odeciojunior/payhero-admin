@@ -130,7 +130,7 @@ $(document).ready(function () {
                                     <canvas id="account-health-chart-gauge" class="mr-15"></canvas>
                                     <div class="mt-15 d-flex flex-column justify-content-center align-self-center">
                                         <span id="account-health-note"><span class="${scoreInfo[Math.floor(data.account_score)].textColor}">${data.account_score >= 1 ? data.account_score : 0}</span>/10</span>
-                                        <p id="account-health-description">${scoreInfo[Math.floor(data.account_score)].description}</p>
+                                        <p id="account-health-description" class="account-health-description">${scoreInfo[Math.floor(data.account_score)].description}</p>
                                     </div>
                                 </div>
                                 <div class="hr-horizontal mt-5 d-flex justify-content-center align-items-center align-self-center"></div>
@@ -299,19 +299,37 @@ $(document).ready(function () {
                                 </ol>
                         </div>
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
-                            <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
-                                <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
-                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor}">${data.chargeback_score}</span>
+
+                            <div class="d-flex flex-row flex-nowrap" style="width: 100%;">
+                                <div class="col-6 p-0 d-flex flex-row justify-content-start align-items-center align-self-start" >
+                                    <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
+                                    <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor}">${data.chargeback_score}</span>
+                                </div>
+                                <div class="col-6 p-0" >
+                                    <div class="d-flex flex-row flex-nowrap justify-content-between">
+                                        <span class="font-size-12 gray-600">Últimos 140 dias</span>
+                                        <span class="font-size-12 gray-600">20 dias</span>
+                                    </div>
+                                    <img class="col-12 p-0" src="/modules/global/img/timeline-chargeback.svg" style="max-width: 100%;height: 15px;">
+                                </div>
                             </div>
-                            <div id="card-notes" class="mt-30 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
-                                <div class="d-flex mr-60 flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.total_sales_approved}</span>
-                                        <span class="account-health-note-description">Vendas no cartão</span>
+
+                            <div class="mt-10 d-flex flex-row flex-nowrap" style="width: 100%;">
+                                <div class="col-6 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                    <span class="account-health-note">${data.total_sales_approved}</span>
+                                    <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
-                                <div class="d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                        <span class="account-health-note">${data.total_sales_chargeback} <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> </span>
-                                        <span class="account-health-note-description">Chargebacks</span>
+                                <div class="col-6 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                    <span class="account-health-note">${data.total_sales_chargeback}
+                                        <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
+                                    </span>
+                                    <span class="account-health-note-description">Chargebacks</span>
                                 </div>
+                            </div>
+
+                            <div class="hr-horizontal mt-25 d-flex justify-content-start align-items-start align-self-start"></div>
+                            <div class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <a href="./contestations" class="tips-chargeback">Acesse o painel de Contestações <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
                             </div>
                             <div class="sirius-account-loading"></div>
                         </div>
@@ -360,40 +378,43 @@ $(document).ready(function () {
                                 </ol>
                         </div>
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-attendance">
-                            <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
-                                <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
-                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
+                            <div class="d-flex flex-row flex-nowrap" style="width: 100%;">
+                                <div class="col-6 p-0 d-flex flex-row justify-content-start align-items-center align-self-start" >
+                                    <span class="mr-10 ${scoreInfo[Math.floor(data.attendance_score)].bgColor} account-health-note-circle"></span>
+                                    <span class="account-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
+                                </div>
+                                <div class="col-6 pr-0 pl-0 d-flex flex-row flex-nowrap justify-content-start align-items-center align-self-center font-size-12 gray-600">
+                                    <span class="o-clock-1 mr-5" data-toggle="tooltip" data-original-title="Tempo médio de resposta" style="font-size: 18px;line-height: 18px;-webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);"></span> ${data.attendance_average_response_time} hora${data.attendance_average_response_time === 1 ? '' : 's'}
+                                </div>
                             </div>
-
-
-
                             <div class="mt-10 p-0 d-flex flex-row flex-wrap" style="height: 100%; width: 100%;">
-                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.open || 0}</span>
                                     <span class="account-health-note-description">Abertos</span>
                                 </div>
-                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.closed || 0}</span>
                                     <span class="account-health-note-description">Resolvidos</span>
                                 </div>
-                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.mediation || 0}</span>
                                     <span class="account-health-note-description">Mediação</span>
                                 </div>
-                                <div class="col-6 col-sm-3 col-md-3 col-lg-3 col-xl-3 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.total}</span>
                                     <span class="account-health-note-description">Total</span>
                                 </div>
                             </div>
                             <div class="sirius-account-loading"></div>
-
-
-
                         </div>
                 `;
 
                 $('.sirius-account > .card').append(item);
                 nextCard();
+
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                });
             }
         });
     }
@@ -436,24 +457,24 @@ $(document).ready(function () {
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-tracking">
                             <div id="" class="d-flex flex-row justify-content-start align-items-center align-self-start">
                                 <span class="mr-10 ${scoreInfo[Math.floor(data.tracking_score)].bgColor} account-health-note-circle"></span>
-                                <span class="account-chargeback-tax ${scoreInfo[Math.floor(data.tracking_score)].textColor}">${data.tracking_score}</span>
+                                <span class="account-tax ${scoreInfo[Math.floor(data.tracking_score)].textColor}">${data.tracking_score}</span>
                             </div>
-                            <div class="mt-10 row" style="height: 100%">
-                                <div class="col-6 pr-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                            <div class="mt-10 p-0 d-flex flex-row flex-wrap" style="height: 100%; width: 100%;">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.average_post_time} dia${data.average_post_time === 1 ? '' : 's'}</span>
-                                    <span class="account-health-note-description font-size-12">Tempo médio de postagem</span>
+                                    <span class="account-health-note-description font-size-11">Tempo médio de postagem</span>
                                 </div>
-                                <div class="col-6 pr-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
-                                    <span class="account-health-note">${data.oldest_sale} dia${data.oldest_sale === 1 ? '' : 's'}</span>
-                                    <span class="account-health-note-description font-size-12">Venda mais antiga s/c</span>
-                                </div>
-                                <div class="col-6 pr-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.problem} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
-                                    <span class="account-health-note-description font-size-12">Códigos com problema</span>
+                                    <span class="account-health-note-description font-size-11">Códigos com problema</span>
                                 </div>
-                                <div class="col-6 pr-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
                                     <span class="account-health-note">${data.unknown} <small class="account-health-note-description font-size-14">(${data.problem_percentage}%)</small></span>
-                                    <span class="account-health-note-description font-size-12">Códigos não informados</span>
+                                    <span class="account-health-note-description font-size-11">Códigos não informados</span>
+                                </div>
+                                <div class="col-6 pr-0 pl-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start">
+                                    <span class="account-health-note">${data.tracking_today}</span>
+                                    <span class="account-health-note-description font-size-11">Códigos informados hoje</span>
                                 </div>
                             </div>
                             <div class="sirius-account-loading"></div>
