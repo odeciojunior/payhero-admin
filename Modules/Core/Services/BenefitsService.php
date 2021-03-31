@@ -64,11 +64,11 @@ class BenefitsService
         } else {
             if ($cashback1) {
                 $cashback1->enabled = 0;
-                $cashback1->save;
+                $cashback1->save();
             }
             if ($cashback2) {
                 $cashback2->enabled = 0;
-                $cashback2->save;
+                $cashback2->save();
             }
             $user->installment_cashback = 0;
             $user->save();
