@@ -64,22 +64,20 @@
 #title-onboarding-2 {
     color: #002F67;
     font: normal normal 900 12px Muli;
-
-    margin-bottom: 1rem;
 }
 
 #sub-title-onboarding-2 {
     color: #002F67;
     font: normal normal bold 30px Muli;
 
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 #description-onboarding-2 {
     color: #919191;
     font: normal normal normal 16px Muli;
 
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .icon-onboarding-2 {
@@ -88,7 +86,6 @@
     background: #D7EFEC;
 
     padding: 17px;
-    margin-bottom: 1rem;
     border-radius: 100%;
 }
 
@@ -133,6 +130,14 @@
     padding-left: 5px;
 
     font: normal normal bold 20px/25px Muli;
+}
+
+#modal-content-onboarding .slick-list {
+    min-height: 480px;
+}
+
+#modal-content-onboarding .img-fluid {
+    width: 90%
 }
 
 @media (max-width: 767px) {

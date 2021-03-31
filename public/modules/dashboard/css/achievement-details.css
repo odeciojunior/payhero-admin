@@ -132,10 +132,6 @@ body.blurred .page {
     transition: all .5s ease-in-out;
 }
 
-#modal-onboarding .modal-content {
-    min-height: 480px;
-}
-
 @media (max-width: 767px) {
     .achievement-details-style {
         top: unset;
