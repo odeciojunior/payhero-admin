@@ -77,8 +77,10 @@
                             Contestação realizada em <strong id="request_date"></strong><br>
                             Razão: <span id="reason"></span>
                         </div>
-
                         <br>
+                        <p class="text-warning"><i class="fa fa-info-circle"></i> Permitido no máximo 10 arquivos por contestação</p>
+
+
                         {{--                <p>--}}
                         {{--                    Para evitar chargeback, sugerimos que você envie estes arquivos antes do prazo de expiração:--}}
                         {{--                </p>--}}
@@ -147,11 +149,10 @@
 
 
                         </form>
-
                         <hr>
-
                         <p>Últimos arquivos enviados</p>
                         <hr>
+
                         <div class="table-responsive">
                             <table class="table table-bordered" style="width:100%">
                                 <thead style="width:100%">

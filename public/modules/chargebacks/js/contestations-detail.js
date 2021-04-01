@@ -37,6 +37,13 @@ $(() => {
                 }
 
                 $('#latest_files').html("");
+                let qty = response.data.files.length
+                if(qty > 3) {
+                    $("#sendfilesform").hide()
+                }else{
+                    $("#sendfilesform").show()
+                }
+
 
                 $.each(response.data.files, function (index, value) {
 
@@ -103,6 +110,13 @@ $(() => {
 
                 $('#latest_files').html('');
 
+                let qty = response.data.length
+                if(qty > 3) {
+                    $("#sendfilesform").hide()
+                }else{
+                    $("#sendfilesform").show()
+                }
+
                 $.each(response.data, function (index, value) {
                     let data = `<tr id="${value.id}">
                         <td>
@@ -124,7 +138,7 @@ $(() => {
                 });
 
             },error: function(response) {
-                alertCustom('error', 'Erro ao enviar o arquivo, permitido apenas imagens e pdf com o limite de 12MB');
+                alertCustom('error', 'Erro ao enviar o arquivo, permitido apenas imagens com o limite máximo de 12MB');
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $('#btn-send-file').prop("disabled", false);
@@ -150,8 +164,16 @@ $(() => {
             },
             success: function (data) {
                 $("#"+contestationfile).remove()
+                let qty = $('#latest_files tr').length;
+
+                if(qty > 3) {
+                    $("#sendfilesform").hide()
+                }else{
+                    $("#sendfilesform").show()
+                }
+
             },error: function(response) {
-                console.log(response)
+                alertCustom('error', 'Erro ao remover');
             },complete: function(data) {
                 loadOnAny('#latest_files', true);
                 $(this).prop("disabled", false);
