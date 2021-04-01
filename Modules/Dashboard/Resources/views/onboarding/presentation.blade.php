@@ -2,7 +2,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=03') }}">
 @endpush
 
 <div id="modal-onboarding" class="modal fade modal-fade-in-scale-up show">
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="modal-body text-center">
-                            <div id="title-onboarding-1">Temos novidades pra você, <span id="user-name"></span></div>
+                            <div id="title-onboarding-1">Temos novidades para você, <span id="user-name"></span></div>
                             <div id="description-onboarding-1">Você já deve ter percebido que o Sirius tem passado por diversas melhorias. Além de um novo visual, hoje queremos te apresentar algumas ferramentas e funcionalidades que acabaram de chegar por aqui.</div>
                             <div id="onboarding-next-presentation" class="btn btn-primary">Vamos lá!</div>
                         </div>

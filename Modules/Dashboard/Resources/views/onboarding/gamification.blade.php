@@ -11,46 +11,48 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-12 col-sm-6 order-sm-1">
-            <div id="title-onboarding-2">UM GAME FEITO PRA GENTE GRANDE</div>
+        <div class="col-12 col-lg-6 order-lg-1">
+            <div id="title-onboarding-2">UM GAME FEITO PARA GENTE GRANDE</div>
             <div id="sub-title-onboarding-2">Agora você faz parte da tripulação <span style="color: #2E85EC">Sirius.</span></div>
-            <div id="description-onboarding-2">Você já deve ter percebido que o Sirius tem passado por diversas melhorias. Além de um novo visual, hoje queremos te apresentar algumas ferramentas e funcionalidades que acabaram de chegar por aqui.</div>
+            <div id="description-onboarding-2">Cashback? Suporte VIP? Taxas menores? Temos! Fature alto, suba níveis e ganhe benefícios por isso!</div>
 
-            <div class="row no-gutters align-items-center mb-15">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2 text-center">
-                        <img alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg')}}">
+            <div class="row">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2 text-center">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
+                            São 6 níveis que sobem de acordo com o faturamento total de seus projetos.
+                        </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                        São 6 níveis que sobem de acordo com o faturamento total de seus projetos.
-                    </span>
-            </div>
 
-            <div class="row no-gutters align-items-center mb-15">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2 text-center">
-                        <img alt="Image" src="{{asset('modules/global/img/svg/money-box.svg')}}">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2 text-center">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/money-box.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
+                            A cada nível alcançado, Sirius libera novos benefícios para sua conta.
+                        </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                        A cada nível alcançado, Sirius libera novos benefícios para sua conta.
-                    </span>
-            </div>
-            <div class="row no-gutters align-items-center mb-15">
-                <div class="col-12 col-sm-2 text-center text-sm-left d-flex justify-content-center">
-                    <div class="icon-onboarding-2 text-center">
-                        <img alt="Image" src="{{asset('modules/global/img/svg/medal.svg')}}">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
+                        <div class="icon-onboarding-2 text-center">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/medal.svg')}}">
+                        </div>
                     </div>
+                    <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
+                            Receba insígnias para cada nova conquista alcançada!
+                        </span>
                 </div>
-                <span class="col-12 col-sm-10 text-center text-sm-left pl-sm-2">
-                        Receba insígnias para cada nova conquista alcançada!
-                    </span>
             </div>
         </div>
 
-        <div class="col-12 col-sm-5 order-sm-0 d-flex justify-content-center">
-            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/performance@2x.png')}}">
+        <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center">
+            <img id="img-onboarding" class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/performance@2x.png')}}">
         </div>
     </div>
 </div>
