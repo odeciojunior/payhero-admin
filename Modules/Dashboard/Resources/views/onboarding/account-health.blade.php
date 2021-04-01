@@ -27,7 +27,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/statistic.svg')}}">
+                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/statistic.svg?v=01')}}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -38,7 +38,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/pay.svg')}}">
+                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/pay.svg?v=01')}}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -49,7 +49,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/arrow-right-down.svg')}}">
+                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/arrow-right-down.svg?v=01')}}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">

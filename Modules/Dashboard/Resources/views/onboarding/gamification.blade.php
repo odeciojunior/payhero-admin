@@ -20,7 +20,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg')}}">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg?v=01')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -31,7 +31,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/money-box.svg')}}">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/money-box.svg?v=01')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -41,10 +41,10 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/medal.svg')}}">
+                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/medal.svg?v=01')}}">
                         </div>
                     </div>
-                    <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
+                    <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2 mb-md-15 mb-lg-0 h-md-p100 h-lg-auto">
                             Receba insígnias para cada nova conquista alcançada!
                         </span>
                 </div>

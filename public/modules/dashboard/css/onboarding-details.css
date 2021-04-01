@@ -154,8 +154,8 @@
     }
 
     .icon-onboarding-2 {
-        height: calc(75px - 10%);
-        width: calc(75px - 10%);
+        height: calc(75px - 5%);
+        width: calc(75px - 5%);
     }
 }
 
