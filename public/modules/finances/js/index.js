@@ -200,7 +200,22 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-        loadOnAnyEllipsis('.price', false, balanceLoader);
+        loadOnAnyEllipsis('.price', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto',
+                    margin: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
+            }
+        });
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
         $.ajax({
@@ -217,23 +232,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAnyEllipsis('.price', false, {
-                    styles: {
-                        container: {
-                            minHeight: '30px',
-                            width: '30px',
-                            height: 'auto',
-                            margin: 'auto'
-                        },
-                        loader: {
-                            width: '30px',
-                            height: '30px',
-                            borderWidth: '6px',
-                            fontSize: '20px'
-                        },
-                    }
-                })
-
+                loadOnAnyEllipsis('.price', true);
                 $('.saldoPendente').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="pending-balance">0,00</span> </strong>');
                 $('.saldoDisponivel').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>');
                 $('.saltoTotal').html('<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>');
@@ -263,7 +262,6 @@ $(document).ready(function () {
                 });
 
                 updateWithdrawalsTable();
-                loadOnAnyEllipsis('.price', true);
             }
         });
 
