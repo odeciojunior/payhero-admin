@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DashboardNotification;
 use Modules\Core\Entities\Product;
@@ -23,7 +24,6 @@ use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
@@ -607,7 +607,7 @@ class DashboardApiController extends Controller
 
     function getCashbackReceivedValue()
     {
-        return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
+        return number_format(intval(Cashback::where('user_id', auth()->user()->account_owner_id)->sum('value')) / 100, 2, ',', '.');
     }
 
     /**
