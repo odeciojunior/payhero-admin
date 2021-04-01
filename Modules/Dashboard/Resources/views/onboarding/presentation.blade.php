@@ -7,6 +7,7 @@
 
 <div id="modal-onboarding" class="modal fade modal-fade-in-scale-up show">
     <div class="modal-dialog modal-simple modal-onboarding">
+        <div id="loader-onboarding"></div>
             <div class="modal-content">
                 <div id="modal-content-onboarding">
                     <div id="modal-presentation">

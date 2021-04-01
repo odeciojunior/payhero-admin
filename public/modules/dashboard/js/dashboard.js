@@ -626,26 +626,38 @@ $(document).ready(function () {
             success: function success(response) {
 
                 if (response.read === false) {
-                    $('#modal-content-onboarding').slick({
+                    loadingOnChart('#loader-onboarding')
+                    let modalOnboarding = $('#modal-content-onboarding')
+
+                    modalOnboarding.slick({
+                        slidesToShow: 1,
+                        mobileFirst: true,
                         infinite: false,
                         arrows: false,
                         adaptiveHeight: true
                     })
 
-                    $('#modal-content-onboarding').slick("slickPrev")
+                    $(window).on('resize', () => {
+                        loadingOnChart('#loader-onboarding')
+                        modalOnboarding.slick("refresh")
+
+                        setTimeout(() => {
+                            loadingOnChartRemove('#loader-onboarding')
+                        },1000)
+                    })
 
 
+                    $('#modal-onboarding').on('shown.bs.modal', function () {
+                            modalOnboarding.slick("refresh")
+                            $('#user-name').html(response.name)
+                            $(`#modal-onboarding`).unbind( "click" );
+                        })
+                        .modal('show');
                     setTimeout(() => {
-                        $('#modal-onboarding')
-                            .on('shown.bs.modal', function () {
-                                $('#user-name').html(response.name)
-                                $(`#modal-onboarding`).unbind( "click" );
-                            })
-                            .modal('show');
-                    },300)
+                        loadingOnChartRemove('#loader-onboarding')
+                    },1000)
                     $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
-
-                        $('#modal-content-onboarding').slick("slickNext")
+                        modalOnboarding.slick("slickNext")
                     })
 
                     $('#onboarding-finish').click(() => {
