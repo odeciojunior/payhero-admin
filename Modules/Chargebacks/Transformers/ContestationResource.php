@@ -40,7 +40,7 @@ class ContestationResource extends JsonResource
 
         $expiration_date = (Carbon::parse($this->expiration_date)->subDay(2));
 
-        $has_expired =  $expiration_date->lessThan(\Carbon\Carbon::now());
+        $has_expired =  $expiration_date->lessThanOrEqualTo(\Carbon\Carbon::now());
         $descriptionBlackList = (New SaleService())->returnBlacklistBySale($this->sale);
         $result_decode = json_decode($this->data, true);
 
