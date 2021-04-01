@@ -505,9 +505,23 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     response.data.forEach((data, index) => {
                         let modal_is_level_type = ''
+                        let modal_is_achievement_type = ''
+
+                        if (data.type === 0) {
+                            modal_is_achievement_type = `
+                                    <div id="title-achievement">Você alcançou uma nova <strong>conquista!</strong></div>
+                                    <div id="name-title">${data.name}</div>
+                                    <div id="description-achievement">${data.description}</div>
+                                    <div id="storytelling">${data.storytelling}</div>
+                            `
+                        }
 
                         if (data.type === 1 && !isEmpty(data.benefits)) {
                             modal_is_level_type = `
+                                <div id="description">Você chegou ao <strong>${data.description}</strong></div>
+                                <div id="name">${data.name}</div>
+                                <div id="storytelling">${data.storytelling}</div>
+
                                 <div id="benefits">
                                     <div id="benefits-title">Aqui está sua recompensa:</div>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -528,9 +542,8 @@ $(document).ready(function () {
                                         </div>
                                         <div class="modal-body">
 
-                                            <div id="description">${data.description}<strong id="description-level"></strong></div>
-                                            <div id="name">${data.name}</div>
-                                            <div id="storytelling">${data.storytelling}</div>
+                                            ${modal_is_achievement_type}
+                                            
 
                                             ${modal_is_level_type}
 
@@ -551,7 +564,7 @@ $(document).ready(function () {
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             // $('body').addClass('blurred');
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
-                            showConfetti(`#modal-achievement-data-${index}`);
+                            showConfetti();
                         });
 
                         $(`#modal-achievement-data-${index}`).on('hidden.bs.modal', function () {

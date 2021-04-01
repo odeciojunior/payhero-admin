@@ -1,5 +1,5 @@
 .achievement-details-style {
-    top: 96px
+    top: 10vh
 }
 
 .achievement-details-style .modal-content {
@@ -65,11 +65,32 @@
     margin-bottom: 0.5rem
 }
 
+.achievement-details-style #description-achievement {
+    color: #ABABAB;
+
+    font: normal normal normal 12px Muli;
+    text-transform: uppercase;
+}
+
+.achievement-details-style #description-achievement:after {
+    content: "";
+    width: 50%;
+    display: block;
+
+    margin: 1rem auto;
+    border-bottom: 1px solid #E5E5E5;
+}
+
 .achievement-details-style #name {
     font: normal normal bold 25px Muli;
     color: #2E85EC;
 
     margin-bottom: 2rem
+}
+
+.achievement-details-style #name-title {
+    font: normal normal bold 25px Muli;
+    color: #2E85EC;
 }
 
 .achievement-details-style #storytelling {
@@ -130,6 +151,11 @@ body.blurred .page {
     -ms-filter: blur(2px);
     filter: blur(2px);
     transition: all .5s ease-in-out;
+}
+
+#title-achievement {
+    color: #707070;
+    font: normal normal normal 16px Muli
 }
 
 @media (max-width: 767px) {

@@ -42,9 +42,7 @@ class NotifyUserLevelSendEmailListener
         
 //        $sendgrindService = new SendgridService();
 //
-//        $benefits = $event->user->benefits->where('enabled', true)->last()->toArray();
 //        $data = (new UserLevel())->getLevelData($event->user->level);
-//        $data['benefits'] = $benefits['description'];
 //
 //        $sendgrindService->sendEmail(
 //            'noreply@cloudfox.net',
