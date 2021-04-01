@@ -126,8 +126,7 @@ class TransfersApiController
                 return response()->json($result->errors, 400);
             }
 
-            $data = (new GetNetStatementService())->performWebStatement($result, $filters);
-
+            $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
             return response()->json($data);
 
         } catch (Exception $exception) {

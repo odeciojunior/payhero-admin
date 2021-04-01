@@ -38,12 +38,13 @@ class ContestationResource extends JsonResource
             ['project_id', $this->sale->project_id],
         ])->first();
 
-        $has_expired =  \Carbon\Carbon::parse($this->expiration_date)->lessThan(\Carbon\Carbon::now());
+        $expiration_date = (Carbon::parse($this->expiration_date)->subDay(2));
+
+        $has_expired =  $expiration_date->lessThanOrEqualTo(\Carbon\Carbon::now());
         $descriptionBlackList = (New SaleService())->returnBlacklistBySale($this->sale);
         $result_decode = json_decode($this->data, true);
 
-        $end_user_date = (Carbon::parse($this->expiration_date));
-        $deadline_in_days =  $end_user_date->diffInDays(Carbon::now());
+        $deadline_in_days =  $expiration_date->diffInDays(Carbon::now());
 
 
         return [
@@ -69,7 +70,7 @@ class ContestationResource extends JsonResource
             'file_date' => $this->file_date ? with(new Carbon($this->file_date))->format('d/m/Y') : '',
             'adjustment_date' => $this->sale->end_date ? with(new Carbon($this->sale->end_date))->format('d/m/Y') : '',
             'request_date' => $this->request_date ? with(new Carbon($this->request_date))->format('d/m/Y') : '',
-            'expiration' => $this->expiration_date ? with(new Carbon($this->expiration_date))->format('d/m/Y') : '',
+            'expiration' => $expiration_date ? $expiration_date->format('d/m/Y') : '',
             'has_expired' => $has_expired,
             'expiration_user' => !$has_expired ? ($deadline_in_days == 0 ? "Expira hoje" : 'Expira em '. $deadline_in_days . ' dias') : 'Expirado',
             'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback']) : FoxUtils::getnetReasonByCode($this->reason),
