@@ -59,7 +59,7 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=07') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=08') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
@@ -70,7 +70,7 @@
     @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
-            Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
+            Sentry.init({dsn: '{{ getenv('SENTRY_LARAVEL_DSN') }}'});
         </script>
     @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -81,6 +81,7 @@
     <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
+{{--<body class="animsition site-navbar-small dashboard">--}}
 
 {{-- loading --}}
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>

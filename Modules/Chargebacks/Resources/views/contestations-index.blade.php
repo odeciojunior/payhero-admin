@@ -56,6 +56,9 @@
                 border-radius: 50px;
                 margin-top: -12px;
             }
+            .table thead > tr > td {
+                padding: 15px 12px !important;
+            }
         </style>
     @endpush
 
@@ -69,7 +72,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-            <div class="page-content container">
+            <div class="page-content container" style="margin-bottom:100px;">
                 <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
@@ -79,6 +82,16 @@
                             <div class="col-sm-12 col-md">
                                 <label for="transaction">Transação</label>
                                 <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                            </div>
+
+                            <div class="col-sm-12 col-md">
+                                <label for="is_expired" class='mb-10'>Expiração</label>
+                                <br>
+                                <select name='is_expired' id="is_expired" class="form-control select-pad">
+                                    <option value="0">Ambos</option>
+                                    <option value="1">Expirado</option>
+                                    <option value="2" selected>Não expirado</option>
+                                </select>
                             </div>
 
 
@@ -109,15 +122,17 @@
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-12 col-md">
-                                    <label for="is_contested" class='mb-10'>Contestado</label>
+                                    <label for="is_contested" class='mb-10'>Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="form-control select-pad">
                                         <option value="0">Ambos</option>
-                                        <option value="1">Sim</option>
-                                        <option value="2">Não</option>
+                                        <option value="1">Concluído</option>
+                                        <option value="2">Não concluído</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-12 col-md">
                                     <label for="status">Status</label>
                                     <select name='sale_status' id="status" class="form-control select-pad">
@@ -228,9 +243,9 @@
                         <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
-                            <tr>
+                            <tr class="">
                                 <td class="table-title">Transação</td>
-                                <td class="table-title" style="min-width: 200px;">Empresa</td>
+                                <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
                                 <td class="table-title">Compra</td>
                                 <td class="table-title" style="min-width: 150px;">Status</td>
                                 <td class="table-title" style="min-width: 170px;">Prazo para recurso</td>
@@ -246,20 +261,18 @@
                     </div>
 
                 </div>
-                <ul id="pagination" class="pagination-sm mb-5" style="margin-top:10px;position:relative;float:right">
+                <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
+                <div style="margin-top:100px; width:100%; float:left;">&nbsp;</div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
-
-                <br>
 
         </div>
         {{-- Quando não tem projeto cadastrado  --}}
         @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
     </div>
-
     @push('scripts')
         <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>

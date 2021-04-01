@@ -164,46 +164,6 @@ class UserService
         }
     }
 
-    public function unfilledFields(User $user): array
-    {
-        $arrayFields = [];
-
-        if (empty($user->document)) {
-            $arrayFields[] = 'document';
-        }
-        if (empty($user->zip_code)) {
-            $arrayFields[] = 'zip_code';
-        }
-        if (empty($user->country)) {
-            $arrayFields[] = 'country';
-        }
-        if (empty($user->state)) {
-            $arrayFields[] = 'state';
-        }
-        if (empty($user->city)) {
-            $arrayFields[] = 'city';
-        }
-        if (empty($user->neighborhood)) {
-            $arrayFields[] = 'neighborhood';
-        }
-        if (empty($user->street)) {
-            $arrayFields[] = 'street';
-        }
-        if (empty($user->number)) {
-            $arrayFields[] = 'number';
-        }
-        if (empty($user->date_birth)) {
-            $arrayFields[] = 'date_birth';
-        }
-        if (empty($user->sex)) {
-            $arrayFields[] = 'sex';
-        }
-        if (empty($user->mother_name)) {
-            $arrayFields[] = 'mother_name';
-        }
-        return $arrayFields;
-    }
-
     public function verifyIsValidCPF($cpf): bool
     {
         $cpf = preg_replace('/[^0-9]/is', '', $cpf);

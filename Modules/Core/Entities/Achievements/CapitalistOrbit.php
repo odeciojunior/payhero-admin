@@ -13,7 +13,7 @@ class CapitalistOrbit extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
-        $totalTransferedWithdrawals = Withdrawal::where('status', Withdrawal::STATUS_TRANSFERED)
+        $totalTransferedWithdrawals = Withdrawal::where('status', Withdrawal::STATUS_TRANSFERRED)
             ->whereIn('company_id', $user->companies()->pluck('id'))->count();
 
         return $totalTransferedWithdrawals >= 50;

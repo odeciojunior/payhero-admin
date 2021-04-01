@@ -29,12 +29,13 @@ use App\Traits\LogsActivity;
  */
 class Gateway extends Model
 {
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
 
-    use PresentableTrait, SoftDeletes, LogsActivity;
+    public const GETNET_SANDBOX_ID = 14;
+    public const GETNET_PRODUCTION_ID = 15;
+
     /**
      * @var string
      */

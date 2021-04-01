@@ -4,15 +4,17 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=150') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=153') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=01') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=7') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=8') }}">
     @endpush
 
-    @include('dashboard::achievement-details')
     <div class="page dashboard">
-
+        @include('dashboard::achievement-details')
+        @include('dashboard::onboarding.presentation')
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-8 mb-15">
@@ -35,7 +37,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
                     <div class="row">
-                        <div class="col-12 col-sm-6">
+                        <div class="col-12 col-sm-12 col-md-6">
                             <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -52,7 +54,7 @@
                                 <div class="s-border-right purple"></div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6">
+                        <div class="col-12 col-sm-12 col-md-6">
                             <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -69,7 +71,7 @@
                                 <div class="s-border-right yellow"></div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6">
+                        <div class="col-12 col-sm-12 col-md-6">
                             <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -86,7 +88,7 @@
                                 <div class="s-border-right green"></div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6">
+                        <div class="col-12 col-sm-12 col-md-6">
                             <div class="card card-shadow bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -125,14 +127,14 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
-                        <div class="col-12  d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-performance">
+                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
 
                             <div class="card pb-15 card-shadow bg-white w-full performance-card">
 
                             </div>
                         </div>
 
-                        <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-cashback">
+                        <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-1 sirius-cashback">
                             <div class="card card-shadow bg-white w-full d-none">
                                 <div
                                     class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
@@ -154,8 +156,8 @@
                             </div>
                         </div>
 
-                        <div class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-1 order-sm-0 sirius-account">
-                            <div class="card card-shadow bg-white w-full h-full sirius-account-health">
+                        <div class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
+                            <div class="card card-shadow bg-white w-full sirius-account-health">
 
                             </div>
                         </div>

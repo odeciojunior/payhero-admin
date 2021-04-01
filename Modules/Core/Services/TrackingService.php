@@ -546,4 +546,14 @@ class TrackingService
 
         return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
     }
+
+    public static  function  getTrackingToday(User $user) {
+        return Tracking::join('sales', 'sales.id', '=', 'trackings.sale_id')
+            ->whereBetween(
+                'trackings.created_at',
+                [now()->format('Y-m-d') . ' 00:00:00', now()->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('sales.owner_id', $user->id)
+            ->get();
+    }
 }

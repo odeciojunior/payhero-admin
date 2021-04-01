@@ -3,26 +3,24 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use LogicException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\BlockReasonSale;
-use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Transaction;
-use Illuminate\Support\Facades\DB;
-use LogicException;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
 /**
- * Class CompaniesService
+ * Class CompanyService
  * @package Modules\Core\Services
  */
 class CompanyService
 {
-
-    const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
-    const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
+    public const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
+    public const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
 
     public function getCompaniesUser($paginate = false)
     {
@@ -33,9 +31,9 @@ class CompanyService
 
             if ($paginate) {
                 return CompanyResource::collection($companies->orderBy('order_priority')->paginate(10));
-            } else {
-                return CompaniesSelectResource::collection($companies->orderBy('order_priority')->get());
             }
+
+            return CompaniesSelectResource::collection($companies->orderBy('order_priority')->get());
         } catch (Exception $e) {
             report($e);
 
@@ -43,53 +41,55 @@ class CompanyService
         }
     }
 
-    public function isDocumentValidated(int $companyId)
+    public function isDocumentValidated(int $companyId): bool
     {
         $companyModel = new Company();
         $company = $companyModel->find($companyId);
-        $companyPresenter = $companyModel->present();
-        if (!empty($company)) {
-            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
-                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
-                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
-                    return true;
-                }
-            } else {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved')) {
-                    return true;
-                }
-            }
+
+        if (empty($company)) {
+            return false;
+        }
+
+        if (
+            $company->company_type == Company::JURIDICAL_PERSON &&
+            $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
+            $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
+            $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED
+        ) {
+            return true;
+        } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+            return true;
         }
 
         return false;
     }
 
-    public function haveAnyDocumentPending()
+    public function haveAnyDocumentPending(): bool
     {
-        $companyModel = new Company();
-        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
-        $companyPresenter = $companyModel->present();
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
 
         foreach ($companies as $company) {
-            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
-                if (($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
-                        $company->bank_document_status == $companyPresenter->getBankDocumentStatus('analyzing')) &&
-                    ($company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
-                        $company->address_document_status == $companyPresenter->getAddressDocumentStatus(
-                            'analyzing'
-                        )) &&
-                    ($company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved') ||
-                        $company->contract_document_status == $companyPresenter->getContractDocumentStatus(
-                            'analyzing'
-                        ))) {
-                    return false;
-                }
-            } else {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
-                    $company->bank_document_status == $companyPresenter->getBankDocumentStatus('analyzing')) {
-                    return false;
-                }
+            if (
+                $company->company_type == Company::JURIDICAL_PERSON &&
+                (
+                    $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                    $company->bank_document_status == Company::DOCUMENT_STATUS_ANALYZING
+                ) &&
+                (
+                    $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                    $company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING
+                ) &&
+                (
+                    $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                    $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING
+                )
+            ) {
+                return false;
+            } elseif (
+                $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                $company->bank_document_status == Company::DOCUMENT_STATUS_ANALYZING
+            ) {
+                return false;
             }
         }
 
@@ -108,7 +108,7 @@ class CompanyService
                     $dataDocument = [
                         'date' => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
-                            'definitions.enum.company_document_type.'.$companyPresenter->getDocumentType(
+                            'definitions.enum.company_document_type.' . $companyPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
@@ -123,39 +123,38 @@ class CompanyService
         return $refusedDocuments;
     }
 
-    public function verifyCnpj($cnpj)
+    public function verifyCnpj($cnpj): bool
     {
-        $companyModel = new Company();
-        $companyPresenter = $companyModel->present();
-        $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
-        $company = $companyModel->where(
+        $company = Company::where(
             [
-                ['document', $cnpj],
-                ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
-                ['address_document_status', $companyPresenter->getAddressDocumentStatus('approved')],
-                ['contract_document_status', $companyPresenter->getContractDocumentStatus('approved')],
+                ['document', foxutils()->onlyNumbers($cnpj)],
+                ['bank_document_status', Company::DOCUMENT_STATUS_APPROVED],
+                ['address_document_status', Company::DOCUMENT_STATUS_APPROVED],
+                ['contract_document_status', Company::DOCUMENT_STATUS_APPROVED],
             ]
         )->first();
+
         if (!empty($company)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    public function getChangesUpdateBankData($company)
+    public function getChangesUpdateBankData($company): bool
     {
         $companyChanges = $company->getChanges();
 
-        if ((!empty($companyChanges['bank']) || array_key_exists('bank', $companyChanges))
-            || (!empty($companyChanges['agency']) || array_key_exists('agency', $companyChanges))
-            || (!empty($companyChanges['account']) || array_key_exists('account', $companyChanges))
-            || (!empty($companyChanges['agency_digit']) || array_key_exists('agency_digit', $companyChanges))
-            || (!empty($companyChanges['account_digit']) || array_key_exists('account_digit', $companyChanges))
+        if (
+            (!empty($companyChanges['bank']) || array_key_exists('bank', $companyChanges)) ||
+            (!empty($companyChanges['agency']) || array_key_exists('agency', $companyChanges)) ||
+            (!empty($companyChanges['account']) || array_key_exists('account', $companyChanges)) ||
+            (!empty($companyChanges['agency_digit']) || array_key_exists('agency_digit', $companyChanges)) ||
+            (!empty($companyChanges['account_digit']) || array_key_exists('account_digit', $companyChanges))
         ) {
             $company->update(
                 [
-                    'bank_document_status' => $company->present()->getStatus('pending'),
+                    'bank_document_status' => Company::DOCUMENT_STATUS_PENDING,
                 ]
             );
 
@@ -167,10 +166,8 @@ class CompanyService
 
     public function getChangesUpdateCNPJ($company, $documentType)
     {
-        $companyChanges = $company->getChanges();
-
         if (!empty($documentType) && $documentType != $company->document) {
-            $company->contract_document_status = $company->presenter()->getStatus('pending');
+            $company->contract_document_status = Company::STATUS_PENDING;
         }
     }
 
@@ -208,7 +205,7 @@ class CompanyService
     {
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/'.$cnpj);
+            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/' . $cnpj);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
@@ -220,10 +217,6 @@ class CompanyService
         }
     }
 
-    /**
-     * @param $cnpj
-     * @return false|mixed
-     */
     public function getCompanyByIdwallCNPJ($cnpj)
     {
         try {
@@ -250,21 +243,18 @@ class CompanyService
 
     public function companyDocumentRefused()
     {
-        $companyModel = new Company();
-        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
-        $companyPresenter = $companyModel->present();
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
 
         foreach ($companies as $company) {
-            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused') ||
-                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('refused') ||
-                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('refused')) {
-                    return $company;
-                }
-            } else {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('refused')) {
-                    return $company;
-                }
+            if (
+                $company->company_type == Company::JURIDICAL_PERSON &&
+                $company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED &&
+                $company->address_document_status == Company::DOCUMENT_STATUS_REFUSED &&
+                $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED
+            ) {
+                return $company;
+            } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED) {
+                return $company;
             }
         }
 
@@ -273,21 +263,19 @@ class CompanyService
 
     public function companyDocumentApproved()
     {
-        $companyModel = new Company();
-        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
-        $companyPresenter = $companyModel->present();
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
 
         foreach ($companies as $company) {
-            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
-                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
-                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+            if ($company->company_type == Company::JURIDICAL_PERSON) {
+                if (
+                    $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                    $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED ||
+                    $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED
+                ) {
                     return $company;
                 }
-            } else {
-                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved')) {
-                    return $company;
-                }
+            } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+                return $company;
             }
         }
 
@@ -296,19 +284,22 @@ class CompanyService
 
     public function getPendingBalance(Company $company, ?int $liquidationType = null)
     {
-        $transactionModel = new Transaction();
+        $pendingBalance = Transaction::where('company_id', $company->id)
+            ->where('status_enum', Transaction::STATUS_PAID);
 
-        $pendingBalance = $transactionModel->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'));
-
-        if(!empty($liquidationType)) {
-            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn('gateway_id', [14, 15])
+        if (!empty($liquidationType)) {
+            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                )
                     ->where('is_waiting_withdrawal', 0)
                     ->whereNull('withdrawal_id');
-            }
-            elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereNotIn('gateway_id', [14, 15]);
+            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $pendingBalance = $pendingBalance->whereNotIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                );
             }
         }
 
@@ -317,100 +308,36 @@ class CompanyService
 
     public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
     {
-        if($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+        if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
             return $company->balance;
-        } elseif($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        } elseif ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $company->transactions()
-                           ->whereIn('gateway_id', [14, 15])
-                           ->where('is_waiting_withdrawal', 1)
-                           ->whereNull('withdrawal_id')
-                           ->sum('value');
-        } elseif(empty($liquidationType)) {
+                ->whereIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                )
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->sum('value');
+        } elseif (empty($liquidationType)) {
             $transactionsValue = $company->transactions()
-                                        ->whereIn('gateway_id', [14, 15])
-                                        ->where('is_waiting_withdrawal', 1)
-                                        ->whereNull('withdrawal_id')
-                                        ->sum('value');
+                ->whereIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                )
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->sum('value');
 
             return $transactionsValue + $company->balance;
         }
 
         throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-
-    }
-
-    public function hasCompanyValid()
-    {
-        $user = auth()->user();
-//        $companyModel = new Company();
-//        $companyPresenter = $companyModel->present();
-//
-//        $existJuridicalCompany = $companyModel->where([
-//                                                     ['user_id', auth()->user()->account_owner_id],
-//                                                     ['company_type', $companyPresenter->getCompanyType('juridical person')],
-//                                                     ['active_flag', true],
-//                                                     ['capture_transaction_enabled', true],
-//                                                     ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
-//                                                     ['address_document_status', $companyPresenter->getAddressDocumentStatus('approved')],
-//                                                     ['contract_document_status', $companyPresenter->getContractDocumentStatus('approved')],
-//                                                 ])->exists();
-//
-//        $existPhysicalCompany = $companyModel->where([
-//                                                    ['user_id', auth()->user()->account_owner_id],
-//                                                    ['company_type', $companyPresenter->getCompanyType('physical person')],
-//                                                    ['active_flag', true],
-//                                                    ['capture_transaction_enabled', true],
-//                                                    ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
-//                                                ])->exists();
-
-        return $user->account_is_approved;
-    }
-    public function verifyFieldsEmptyBraspag(Company $company)
-    {
-        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
-            // informações basicas
-            if (empty($company->zip_code)) {
-                return true;
-            }
-            if (empty($company->street)) {
-                return true;
-            }
-            if (empty($company->neighborhood)) {
-                return true;
-            }
-            if (empty($company->state)) {
-                return true;
-            }
-            if (empty($company->city)) {
-                return true;
-            }
-            if (empty($company->country)) {
-                return true;
-            }
-        }
-
-        if (empty($company->fantasy_name)) {
-            return true;
-        }
-        if (empty($company->document)) {
-            return true;
-        }
-        if (empty($company->bank)) {
-            return true;
-        }
-        if (empty($company->agency)) {
-            return true;
-        }
-        if (empty($company->account)) {
-            return true;
-        }
-        return false;
     }
 
     public function verifyFieldsEmpty(Company $company): bool
     {
-        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
-            // informações basicas
+        if ($company->company_type == Company::JURIDICAL_PERSON) {
             if (empty($company->zip_code)) {
                 return true;
             }
@@ -453,9 +380,11 @@ class CompanyService
     {
         try {
             if (empty($company->user->cellphone) || empty($company->user->email)) {
-                $company->update([
-                    'get_net_status' => $company->present()->getStatusGetnet('pending'),
-                ]);
+                $company->update(
+                    [
+                        'get_net_status' => Company::GETNET_STATUS_PENDING,
+                    ]
+                );
                 return;
             }
 
@@ -471,9 +400,11 @@ class CompanyService
     {
         try {
             if ((new UserService())->verifyFieldsEmpty($company->user)) {
-                $company->update([
-                    'get_net_status' => $company->present()->getStatusGetnet('pending'),
-                ]);
+                $company->update(
+                    [
+                        'get_net_status' => Company::GETNET_STATUS_PENDING,
+                    ]
+                );
                 return;
             }
 
@@ -488,9 +419,11 @@ class CompanyService
     private function updateToReviewStatusGetnet($company, $result)
     {
         if (empty($result) || empty(json_decode($result)->subseller_id)) {
-            $company->update([
-                'get_net_status' => $company->present()->getStatusGetnet('error'),
-            ]);
+            $company->update(
+                [
+                    'get_net_status' => Company::GETNET_STATUS_ERROR,
+                ]
+            );
 
             return;
         }
@@ -498,19 +431,19 @@ class CompanyService
         $company->update(
             [
                 'subseller_getnet_id' => json_decode($result)->subseller_id,
-                'get_net_status' => $company->present()->getStatusGetnet('review'),
+                'get_net_status' => Company::GETNET_STATUS_REVIEW,
             ]
         );
     }
 
-    public function updateCompanyGetnet(Company $company)
+    public function updateCompanyGetnet(Company $company): array
     {
         $getnetService = new GetnetBackOfficeService();
-        $userService = new UserService();
         $user = $company->user;
 
-        if ($company->present()->getCompanyType($company->company_type) == 'physical person'
-            && (!$userService->verifyFieldsEmpty($user))
+        if (
+            $company->company_type == Company::PHYSICAL_PERSON
+            && (!(new UserService())->verifyFieldsEmpty($user))
         ) {
             $getnetService->updatePfCompany($company);
         } elseif (!empty($user->cellphone) && !empty($user->email)) {
@@ -523,81 +456,28 @@ class CompanyService
         ];
     }
 
-    public function unfilledFields(Company $company)
-    {
-        $arrayFields = [];
-        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
-            // informações basicas
-            if (empty($company->zip_code)) {
-                $arrayFields[] = 'zip_code';
-            }
-            if (empty($company->street)) {
-                $arrayFields[] = 'street';
-            }
-            if (empty($company->neighborhood)) {
-                $arrayFields[] = 'neighborhood';
-            }
-            if (empty($company->state)) {
-                $arrayFields[] = 'state';
-            }
-            if (empty($company->city)) {
-                $arrayFields[] = 'city';
-            }
-            if (empty($company->country)) {
-                $arrayFields[] = 'country';
-            }
-            // informações complementares
-            if (empty($company->extra_document)) {
-                $arrayFields[] = 'extra_document';
-            }
-            if (empty($company->document_issue_date)) {
-                $arrayFields[] = 'document_issue_date';
-            }
-            if (empty($company->document_issuer)) {
-                $arrayFields[] = 'document_issuer';
-            }
-            if (empty($company->document_issuer_state)) {
-                $arrayFields[] = 'document_issuer_state';
-            }
-        } else {
-            if (empty($company->fantasy_name)) {
-                $arrayFields[] = 'fantasy_name';
-            }
-            if (empty($company->document)) {
-                $arrayFields[] = 'document';
-            }
-            if (empty($company->bank)) {
-                $arrayFields[] = 'bank';
-            }
-            if (empty($company->agency)) {
-                $arrayFields[] = 'agency';
-            }
-            if (empty($company->account)) {
-                $arrayFields[] = 'account';
-            }
-        }
-
-        return $arrayFields;
-    }
-
     public function getBlockedBalance(Company $company, $liquidationType = null)
     {
-        $salesModel = new Sale();
-        $transactiosModel = new Transaction();
-        $blockReasonSaleModel = new BlockReasonSale();
+        $blockedBalance = Transaction::where('company_id', $company->id)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->whereHas(
+                'blockReasonSale',
+                function ($query) {
+                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                }
+            );
 
-        $blockedBalance = $transactiosModel
-            ->where('company_id', $company->id)
-            ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
-            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
-                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
-            });
-
-        if(!empty($liquidationType)) {
-            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
-            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+        if (!empty($liquidationType)) {
+            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                );
+            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                $blockedBalance = $blockedBalance->whereNotIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                );
             }
         }
 
@@ -606,22 +486,20 @@ class CompanyService
 
     public function getBlockedBalanceInvites(Company $company, $liquidationType = null)
     {
-        $salesModel = new Sale();
-        $transactiosModel = new Transaction();
-        $blockReasonSaleModel = new BlockReasonSale();
-
-        $blockedBalance = $transactiosModel
-            ->whereNotNull('invitation_id')
+        $blockedBalance = Transaction::whereNotNull('invitation_id')
             ->where('company_id', $company->id)
-            ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
-            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
-                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
-            });
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->whereHas(
+                'blockReasonSale',
+                function ($query) {
+                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                }
+            );
 
-        if(!empty($liquidationType)) {
-            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        if (!empty($liquidationType)) {
+            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
                 $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
-            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
             }
         }
@@ -631,21 +509,20 @@ class CompanyService
 
     public function getBlockedBalancePending(Company $company, $liquidationType = null)
     {
-        $salesModel = new Sale();
-        $transactiosModel = new Transaction();
-        $blockReasonSaleModel = new BlockReasonSale();
-
-        $blockedBalance = $transactiosModel->whereNull('invitation_id')
+        $blockedBalance = Transaction::whereNull('invitation_id')
             ->where('company_id', $company->id)
-            ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
-            ->whereHas('blockReasonSale', function ($query) use ($blockReasonSaleModel) {
-                $query->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
-            });
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->whereHas(
+                'blockReasonSale',
+                function ($query) {
+                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                }
+            );
 
-        if(!empty($liquidationType)) {
-            if($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+        if (!empty($liquidationType)) {
+            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
                 $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
-            } elseif($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
             }
         }
@@ -653,8 +530,9 @@ class CompanyService
         return $blockedBalance->sum('value');
     }
 
-    public function getPendingDebtBalance(Company $company){
-        return (new PendingDebt())->where('company_id', $company->id)
+    public function getPendingDebtBalance(Company $company)
+    {
+        return PendingDebt::where('company_id', $company->id)
             ->doesntHave('withdrawals')
             ->whereNull('confirm_date')
             ->sum("value");
@@ -663,17 +541,24 @@ class CompanyService
     public function updateCaptureTransactionEnabled(Company $company): void
     {
         try {
-            if ($company->get_net_status == (new Company())->present()->getStatusGetnet('approved')) {
-                $company->update([
-                    'capture_transaction_enabled' => true
-                ]);
-                if ($this->isDocumentValidated($company->id) && (new UserService())->isDocumentValidated($company->user->id)) {
+            if ($company->get_net_status == Company::GETNET_STATUS_APPROVED) {
+                $company->update(
+                    [
+                        'capture_transaction_enabled' => true
+                    ]
+                );
+                if (
+                    $this->isDocumentValidated($company->id)
+                    && (new UserService())->isDocumentValidated($company->user->id)
+                ) {
                     event(new UpdateCompanyGetnetEvent($company));
                 }
             } else {
-                $company->update([
-                    'capture_transaction_enabled' => false
-                ]);
+                $company->update(
+                    [
+                        'capture_transaction_enabled' => false
+                    ]
+                );
             }
         } catch (Exception $e) {
             report($e);
@@ -687,5 +572,54 @@ class CompanyService
         }
 
         return $company->subseller_getnet_homolog_id;
+    }
+
+    public function hasBalanceToRefund($sale): bool
+    {
+        $transaction = Transaction::where('sale_id', $sale->id)
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->first();
+
+        $pendingBalance = $this->getPendingBalance(
+            $transaction->company,
+            CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+        );
+        $availableBalance = $this->getAvailableBalance(
+            $transaction->company,
+            CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
+        );
+
+        $pendingDebt = $this->getPendingDebtBalance($transaction->company);
+
+        $totalBalance = $pendingBalance + $availableBalance - $pendingDebt;
+
+        if ($totalBalance - foxutils()->onlyNumbers($sale->total_paid_value) < 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function hasBalanceManualToRefund($sale): bool
+    {
+        $transaction = Transaction::where('sale_id', $sale->id)
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->first();
+
+        $pendingBalance = $this->getPendingBalance(
+            $transaction->company,
+            CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE
+        );
+        $availableBalance = $this->getAvailableBalance(
+            $transaction->company,
+            CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE
+        );
+        $totalBalance = $pendingBalance + $availableBalance;
+
+        if ($totalBalance - foxutils()->onlyNumbers($sale->total_paid_value) < 0) {
+            return false;
+        }
+
+        return true;
     }
 }

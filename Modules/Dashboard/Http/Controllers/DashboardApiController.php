@@ -2,6 +2,8 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Console\Commands\UpdateUserAchievements;
+use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,9 +23,11 @@ use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
+use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
@@ -482,6 +486,7 @@ class DashboardApiController extends Controller
 
             return [
                 'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                'attendance_average_response_time' =>$user->attendance_average_response_time,
                 'total'            => $tickets->total,
                 'open'             => $tickets->open,
                 'closed'           => $tickets->closed,
@@ -582,15 +587,15 @@ class DashboardApiController extends Controller
                 2
             ) : '0.00';
 
-
             return [
                 'tracking_score'     => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
                 'average_post_time'  => $trackingsInfo->average_post_time,
-                'oldest_sale'        => $trackingsInfo->oldest_sale,
+                //'oldest_sale'        => $trackingsInfo->oldest_sale,
                 'problem'            => $trackingsInfo->problem,
                 'problem_percentage' => $trackingsInfo->problem_percentage,
                 'unknown'            => $trackingsInfo->unknown,
                 'unknown_percentage' => $trackingsInfo->unknown_percentage,
+                'tracking_today'     => TrackingService::getTrackingToday($user)->count(),
                 //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
@@ -625,7 +630,9 @@ class DashboardApiController extends Controller
             $dashboardNotifications = DashboardNotification::where([
                 'user_id' => $user->id,
                 'read_at' => null,
-            ])->get([
+            ])
+            ->whereIn('subject_type', [UpdateUserLevel::class, UpdateUserAchievements::class])
+            ->get([
                 'id',
                 'subject_id',
                 'subject_type'
@@ -685,5 +692,47 @@ class DashboardApiController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    public function verifyOnboarding()
+    {
+        $user = auth()->user();
+        $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
+
+        $notfication = DashboardNotification::firstOrCreate([
+            'user_id' => $user->id,
+            'subject_id' => 1,
+            'subject_type' => DashboardApiController::class . '/verifyOnboarding'
+                                                           ]);
+
+        if (!empty($notfication->read_at)) {
+            return \response()->json([
+                'message' => 'Onboarding já lido',
+                'read' => true
+                                     ],
+                                     Response::HTTP_OK);
+        }
+
+        return \response()->json([
+                                     'message' => 'Onboarding não lido',
+                                     'read' => false,
+                                     'onboarding' => \hashids()->encode($notfication->id),
+                                     'name' => $userName
+                                 ],
+                                 Response::HTTP_OK);
+
+    }
+
+    public function updateOnboarding($onboarding) {
+        $onboardingId = \hashids()->decode($onboarding);
+
+        DashboardNotification::where('id', $onboardingId)->update(['read_at' => Carbon::now()]);
+
+        return \response()->json(
+            [
+                'message' => 'Onboarding atualizado !'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

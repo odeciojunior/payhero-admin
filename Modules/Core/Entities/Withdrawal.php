@@ -34,7 +34,7 @@ class Withdrawal extends Model
 
     const STATUS_PENDING = 1;
     const STATUS_APPROVED = 2;
-    const STATUS_TRANSFERED = 3;
+    const STATUS_TRANSFERRED = 3;
     const STATUS_REFUSED = 4;
     const STATUS_IN_REVIEW = 5;
     const STATUS_PROCESSING = 6;

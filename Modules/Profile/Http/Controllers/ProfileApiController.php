@@ -624,18 +624,15 @@ class ProfileApiController
                         )
                     ) {
                         $link = "/personal-info#documents";
-//                        $link = "/company-detail/${companyCode}/edit?type=1";
                     } else {
                         $link = "/companies/company-detail/${companyCode}#documents";
-//                        $link = "/company-detail/${companyCode}/edit?type=2&tab=documents";
                     }
                 } else {
                     $userValid = $userService->isDocumentValidated();
                     if (!$userValid) {
                         $analyzing = true;
                     } else {
-                        $companyValid = $companyService->hasCompanyValid();
-                        if (!$companyValid) {
+                        if (!auth()->user()->account_is_approved) {
                             $analyzing = true;
                         }
                     }

@@ -161,7 +161,7 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    setTimeout(verifyAchievements, 1000);
+                    setTimeout(verifyOnboarding, 1000);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -505,9 +505,23 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     response.data.forEach((data, index) => {
                         let modal_is_level_type = ''
+                        let modal_is_achievement_type = ''
+
+                        if (data.type === 0) {
+                            modal_is_achievement_type = `
+                                    <div id="title-achievement">Você alcançou uma nova <strong>conquista!</strong></div>
+                                    <div id="name-title">${data.name}</div>
+                                    <div id="description-achievement">${data.description}</div>
+                                    <div id="storytelling">${data.storytelling}</div>
+                            `
+                        }
 
                         if (data.type === 1 && !isEmpty(data.benefits)) {
                             modal_is_level_type = `
+                                <div id="description">Você chegou ao <strong>${data.description}</strong></div>
+                                <div id="name">${data.name}</div>
+                                <div id="storytelling">${data.storytelling}</div>
+
                                 <div id="benefits">
                                     <div id="benefits-title">Aqui está sua recompensa:</div>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -528,9 +542,8 @@ $(document).ready(function () {
                                         </div>
                                         <div class="modal-body">
 
-                                            <div id="description">${data.description}<strong id="description-level"></strong></div>
-                                            <div id="name">${data.name}</div>
-                                            <div id="storytelling">${data.storytelling}</div>
+                                            ${modal_is_achievement_type}
+                                            
 
                                             ${modal_is_level_type}
 
@@ -548,14 +561,10 @@ $(document).ready(function () {
 
                         $('#modal-achievement-container').append(modal)
 
-
-                        $(`#modal-achievement-data-${index}`).on('show.bs.modal', function () {
-                            $('body').addClass('blurred');
-                        });
-
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
+                            // $('body').addClass('blurred');
                             $(`#modal-achievement-data-${index}`).unbind( "click" );
-                            showConfetti(`#modal-achievement-data-${index}`);
+                            showConfetti();
                         });
 
                         $(`#modal-achievement-data-${index}`).on('hidden.bs.modal', function () {
@@ -573,7 +582,7 @@ $(document).ready(function () {
 
                             $.ajax({
                                 method: "PUT",
-                                url: '/api/dashboard/verify-achievements/' + achievement,
+                                url: '/api/dashboard/update-achievements/' + achievement,
                                 dataType: "json",
                                 headers: {
                                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -600,6 +609,65 @@ $(document).ready(function () {
                     if (lastData > 0) {
                         $(`[id*=modal-achievement-data-]:last`).modal('show')
                     }
+                }
+            }
+        });
+    }
+
+    function verifyOnboarding() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-onboarding',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: function success(response) {
+
+                if (response.read === false) {
+                    $('#modal-content-onboarding').slick({
+                        infinite: false,
+                        arrows: false,
+                        adaptiveHeight: true
+                    })
+
+                    $('#modal-content-onboarding').slick("slickPrev")
+
+
+                    setTimeout(() => {
+                        $('#modal-onboarding')
+                            .on('shown.bs.modal', function () {
+                                $('#user-name').html(response.name)
+                                $(`#modal-onboarding`).unbind( "click" );
+                            })
+                            .modal('show');
+                    },300)
+                    $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
+
+                        $('#modal-content-onboarding').slick("slickNext")
+                    })
+
+                    $('#onboarding-finish').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-onboarding').modal('hide')
+                                verifyAchievements()
+                            }
+                        });
+                    });
+                } else {
+                    verifyAchievements()
                 }
             }
         });

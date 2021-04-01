@@ -22,7 +22,12 @@ use Modules\Core\Presenters\BlockReasonSalePresenter;
  */
 class BlockReasonSale extends Model
 {
-    use LogsActivity, PresentableTrait;
+    use LogsActivity;
+    use PresentableTrait;
+
+    public const STATUS_BLOCKED = 1;
+    public const STATUS_UNLOCKED = 2;
+
     /**
      * @var string
      */

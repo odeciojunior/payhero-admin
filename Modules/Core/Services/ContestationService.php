@@ -92,6 +92,17 @@ class ContestationService
 
         $contestations->when(request('is_contested'), function ($query, $val) {
             if($val == 1){
+                return $query->where('sale_contestations.file_user_completed', 1);
+            }
+
+            if($val == 2){
+                return $query->where('sale_contestations.file_user_completed', 0);
+            }
+
+        });
+
+        $contestations->when(request('is_expired'), function ($query, $val) {
+            if($val == 1){
                 return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
             }
 
@@ -100,6 +111,8 @@ class ContestationService
             }
 
         });
+
+
 
         $contestations->when(request('order_by_expiration_date'), function ($query, $search) {
             return $query->orderBy('expiration_date', 'asc');
