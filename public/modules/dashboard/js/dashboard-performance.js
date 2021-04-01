@@ -69,7 +69,6 @@ $(document).ready(function () {
         }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
-            //setTimeout(function(){ loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading'); }, 500);
             loadingOnAccountsHealth('.sirius-performance > .card');
             let card = $(this).data('slide-to');
             switch (card) {
@@ -91,7 +90,6 @@ $(document).ready(function () {
     window.updatePerformance = function () {
 
         loadingOnAccountsHealth('.sirius-performance > .card');
-        //$('#achievements .achievements-item').addClass('opacity-3');
 
         $.ajax({
             method: "GET",
@@ -111,11 +109,9 @@ $(document).ready(function () {
             success: function success(data) {
 
                 updatePerformanceCard1(data);
-                if ((data.level > 1) && (data.money_cashback !== '0,00')) {
+                if (data.money_cashback !== '0,00') {
                     updateCashback(data.money_cashback)
                 }
-                //nextPerformance(data);
-                //updatePerformanceCard2(data);
 
             }
         });
@@ -123,10 +119,6 @@ $(document).ready(function () {
 
     function updatePerformanceCard1(data) {
         let currentLevel = levelInfo[data.level];
-        //$("#level-icon").html('').html(`<img src="${currentLevel.icon}" alt="">`);
-        //$("#level").text('').text(currentLevel.name);
-        //$("#level-description").text('').text(currentLevel.description);
-
 
         let item = `
                 <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
