@@ -269,7 +269,7 @@ $(document).ready(function () {
 
                     if (value.sale_status in statusObject) {
                         dados += `<td class='copy_link'>
-                                    <div class="d-flex justify-content-left align-items-center" >
+                                    <div class="d-flex justify-content-center align-items-center text-center" >
                                         <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? 'pointer' : 'cursor-default'}' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${statusObject[value.sale_status]}</span>
                                         ${value.sale_has_valid_tracking ? '' +
                             '<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products ?
@@ -502,5 +502,6 @@ $(document).ready(function () {
         }
     });
 
+    $("#pagination").css({marginBottom:'100px'});
 
 });

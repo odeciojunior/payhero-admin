@@ -36,7 +36,7 @@
      aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-        <div id='modal-contestationFiles' class="modal-content p-20 " style="width: 500px;">
+        <div id='modal-contestationFiles' class="modal-content p-20 " style="min-width: 300px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
                     <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestação</h4>
@@ -54,9 +54,9 @@
                 </div>
 
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-span-12">
+            <div class="modal-body row">
+
+                    <div class="col-lg-12 col-sm-8 col-md-8">
 
                         <div style="padding:0px 10px;" class="switch-holder row mb-10" title='Ativar/Desativar'>
                             <label class="switch" style="margin-right:10px">
@@ -123,7 +123,7 @@
                                     <div class="col-8 text-left text-white">
                                         <div class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="padding:0">
                                             <label for="test" class="text-white text-left ">
-                                                <span class="o-upload-to-cloud-1  text-white"></span>
+                                                <span class="o-upload-to-cloud-1 mt-2 text-white"></span>
                                                 Selecionar o arquivo
                                                 <input type="file" name="files[]" id="multiplefiles" multiple>
                                             </label>
@@ -167,7 +167,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
+
             </div>
         </div>
         <div class="clearfix"></div>
