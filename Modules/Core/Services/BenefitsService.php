@@ -53,23 +53,34 @@ class BenefitsService
     {
         $benefits = $user->benefits;
         $activeBenefits = $benefits->where('enabled', 1);
+        $disabledBenefits = $benefits->where('level', '<=', $user->level)
+            ->where('enabled', 0);
         $nextBenefits = $benefits->where('level', $user->level + 1)
             ->where('enabled', 0);
 
-        $disabledBenefits = $benefits->where('level', '<=', $user->level)
-            ->where('enabled', 0)
-            ->reject(function ($item) use ($activeBenefits) {
-                return $activeBenefits->where('name', 'cashback_2')->count()
-                    && $item->name == 'cashback_1'
-                    && $item->enabled == 0;
-            });
-
         $result = $activeBenefits->merge($disabledBenefits);
+        $hasCashback1 = !!$result->where('name', 'cashback_1')
+            ->where('enabled', 1)
+            ->count();
+        $hasCashback2 = !!$result->where('name', 'cashback_2')
+            ->where('enabled', 1)
+            ->count();
+        $result = $result->reject(function ($item) use ($hasCashback1, $hasCashback2) {
+            if ($hasCashback1 || $hasCashback2) {
+                if ($item->name === 'cashback_1' && $hasCashback2) {
+                    return true;
+                }
+                if ($item->name === 'cashback_2' && $hasCashback1) {
+                    return true;
+                }
+            } else if ($item->name === 'cashback_2') {
+                return true;
+            }
+            return false;
+        });
 
         return [
             'active' => new BenefitCollection($result),
-            //'active' => new BenefitCollection($activeBenefits),
-            //'disabled' => new BenefitCollection($disabledBenefits),
             'next' => new BenefitCollection($nextBenefits),
         ];
     }
