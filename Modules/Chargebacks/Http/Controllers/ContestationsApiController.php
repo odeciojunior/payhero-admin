@@ -157,10 +157,10 @@ class ContestationsApiController extends Controller
             $validator = \Validator::make(
                 $data, [
                 'files' => 'required|array',
-                'files.*' => 'required|mimes:jpg,jpeg,png,bmp,pdf|max:12000'
+                'files.*' => 'required|mimes:jpg,jpeg,png,bmp|max:12000'
             ],[
                     'files.*.required' => 'Arquivo obrigatório',
-                    'files.*.mimes' => 'Apenas imagens ou pdf',
+                    'files.*.mimes' => 'Apenas arquivo de imagens',
                     'files.*.max' => 'Desculpe! Máximo permitido é 12MB',
                 ]
             );
