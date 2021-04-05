@@ -41,7 +41,11 @@ class NotifyUserAchievementSendEmailListener
 
 //        $sendgrindService = new SendgridService();
 //
-//        $data = $event->achievement->toArray();
+//        $data = $event->user->benefits->where('enabled', true)->where('level', $event->user->level)->toArray();
+//
+//        $benefitsDescription = array_column($data, 'description');
+//
+//        $data['benefits'] = $this->arrayToString($benefitsDescription);
 //
 //        $sendgrindService->sendEmail(
 //            'noreply@cloudfox.net',
@@ -51,5 +55,14 @@ class NotifyUserAchievementSendEmailListener
 //            'd-31354085bb7e441597f76fdb6e94d182',
 //            $data
 //        );
+    }
+
+    public function arrayToString($array)
+    {
+        $lastItem = array_pop($array);
+        $text = implode(', ', $array);
+        $text .= ' e '.$lastItem;
+
+        return $text;
     }
 }
