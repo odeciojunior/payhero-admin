@@ -317,25 +317,9 @@ class SaleService
         $total -= $sale->automatic_discount;
         $total -= $sale->refund_value;
 
-        //calcule fees
-        $transactionConvertax = $sale->transactions
-            ->where('company_id', 29)
-            ->first();
-
-        if (!empty($transactionConvertax)) {
-            $convertaxValue = 'R$ ' . substr_replace(
-                    $transactionConvertax->value,
-                    ',',
-                    strlen($transactionConvertax->value) - 2,
-                    0
-                );
-        } else {
-            $convertaxValue = '0,00';
-        }
-
         //valor do produtor
         $value = $userTransaction->value;
-        $value += $sale->cashback->value ?? 0;
+        $cashbackValue = $sale->cashback->value ?? 0;
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         //valor do afiliado
@@ -352,6 +336,7 @@ class SaleService
 
         $taxa = 0;
         $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
+        $totalToCalcTaxReal += $cashbackValue;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
             $taxaReal = $totalToCalcTaxReal
                 - preg_replace('/[^0-9]/', '', $comission)
@@ -420,7 +405,6 @@ class SaleService
             'discount'                 => number_format(intval($discount) / 100, 2, ',', '.'),
             'automatic_discount'       => number_format(intval($sale->automatic_discount) / 100, 2, ',', '.'),
             'comission'                => $comission,
-            'convertax_value'          => $convertaxValue,
             'taxa'                     => number_format($taxa / 100, 2, ',', '.'),
             'taxaReal'                 => $taxaReal,
             'release_date'             => $userTransaction->release_date != null ? $userTransaction->release_date->format(
