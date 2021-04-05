@@ -39,9 +39,17 @@ class TaskService
     public static function setCompletedTask(User $user, Task $task): bool
     {
         try {
+            /**
+             * Task ids less than 5 (Task::TASK_FIRST_1000_REVENUE) will be filled as completed when
+             * another task with id greater than its is completed
+             */
+            for ($id = $task->id <= Task::TASK_FIRST_1000_REVENUE ? $task->id : 0; $id > 0; $id--) {
+                if (!$user->tasks->contains('id', $id)) {
+                    $user->tasks()->attach(Task::find($id));
+                }
+            }
             $user->tasks()->attach($task);
             $user->update();
-            //TODO: notification here
             return true;
         } catch (\Exception $e) {
             report($e);
