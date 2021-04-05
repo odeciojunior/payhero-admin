@@ -144,6 +144,10 @@
     width: 90%
 }
 
+.slick-slide {
+    outline: none;
+}
+
 @media (max-width: 991px) {
     #modal-content-onboarding #img-onboarding.img-fluid {
         width: 50%
