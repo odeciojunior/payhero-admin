@@ -30,7 +30,7 @@ class DashboardAchievementsResource extends JsonResource
             $data = (new UserLevel())->getLevelData($this->subject_id);
             $benefits = $user->benefits->where('enabled', true)->where('level', $this->subject_id)->toArray();
             $data['benefits'] = null;
-            if (!isEmpty($benefits)) {
+            if (!empty($benefits)) {
                 $benefitsDescription = array_column($benefits, 'description');
                 $data['benefits'] = $this->arrayToString($benefitsDescription);
             }
