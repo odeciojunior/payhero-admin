@@ -398,13 +398,13 @@ $(() => {
         if (sale.value_anticipable != '0,00') {
 
             $(".div-anticipated").show();
-            $(".div-value-anticipated").html('').append(`<span id="taxareal-value" class='text-muted ft-12'>R$ ${sale.value_anticipable}</span>`).show();
+            $(".div-value-anticipated").html('').append(`<span class='text-muted ft-12'>R$ ${sale.value_anticipable}</span>`).show();
         }
 
         // valor cashback
         if (sale.has_cashback) {
             $("#cashback-label").removeClass('d-none');
-            $("#cashback-value").removeClass('d-none').html('').append(`<span id="taxareal-value" class='ft-12' style="color: #5EE2A1;">R$ ${(sale.cashback_value / 100).toFixed(2)}</span>`).show();
+            $("#cashback-value").removeClass('d-none').html('').append(`<span class='ft-12' style="color: #5EE2A1;">R$ ${(sale.cashback_value / 100).toFixed(2)}</span>`).show();
         } else {
             $("#cashback-label").addClass('d-none')
             $("#cashback-value").addClass('d-none').html('')
