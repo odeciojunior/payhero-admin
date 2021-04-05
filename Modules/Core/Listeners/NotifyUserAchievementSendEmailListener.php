@@ -41,11 +41,13 @@ class NotifyUserAchievementSendEmailListener
 
 //        $sendgrindService = new SendgridService();
 //
-//        $data = $event->user->benefits->where('enabled', true)->where('level', $event->user->level)->toArray();
+//        $benefits = $event->user->benefits->where('enabled', true)->where('level', $event->user->level)->toArray();
 //
-//        $benefitsDescription = array_column($data, 'description');
-//
-//        $data['benefits'] = $this->arrayToString($benefitsDescription);
+//        $data['benefits'] = null;
+//        if (!isEmpty($benefits)) {
+//            $benefitsDescription = array_column($benefits, 'description');
+//            $data['benefits'] = $this->arrayToString($benefitsDescription);
+//        }
 //
 //        $sendgrindService->sendEmail(
 //            'noreply@cloudfox.net',
