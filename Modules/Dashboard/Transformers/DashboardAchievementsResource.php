@@ -30,6 +30,7 @@ class DashboardAchievementsResource extends JsonResource
             $data = (new UserLevel())->getLevelData($this->subject_id);
             $benefits = $user->benefits->where('enabled', true)->where('level', $this->subject_id)->toArray();
             $data['benefits'] = null;
+
             if (!empty($benefits)) {
                 $benefitsDescription = array_column($benefits, 'description');
                 $data['benefits'] = $this->arrayToString($benefitsDescription);
@@ -65,10 +66,14 @@ class DashboardAchievementsResource extends JsonResource
 
     public function arrayToString($array)
     {
-        $lastItem = array_pop($array);
-        $text = implode(', ', $array);
-        $text .= ' e '.$lastItem;
+        if (count($array) > 1) {
+            $lastItem = array_pop($array);
+            $text = implode(', ', $array);
+            $text .= ' e '.$lastItem;
 
-        return $text;
+            return $text;
+        }
+
+        return current($array);
     }
 }
