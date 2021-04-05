@@ -23,7 +23,7 @@
             </div>
 
             <div class="row">
-                <div class="d-flex flex-wrap align-items-center h-p75">
+                <div class="d-flex flex-wrap align-items-md-baseline align-items-lg-center h-p75">
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">

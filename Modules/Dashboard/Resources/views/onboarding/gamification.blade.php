@@ -17,14 +17,14 @@
             <div id="description-onboarding-2">Cashback? Suporte VIP? Taxas menores? Temos! Fature alto, suba níveis e ganhe benefícios por isso!</div>
 
             <div class="row">
-                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-md-baseline align-items-lg-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
                             <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg?v=01')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                            São 6 níveis que sobem de acordo com o faturamento total de seus projetos.
+                            São <strong>6 níveis</strong> que sobem de acordo com o faturamento total de seus projetos.
                         </span>
                 </div>
 
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                            A cada nível alcançado, Sirius libera novos benefícios para sua conta.
+                            A cada nível alcançado, <strong>Sirius libera novos benefícios</strong> para sua conta.
                         </span>
                 </div>
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2 mb-md-15 mb-lg-0 h-md-p100 h-lg-auto">
-                            Receba insígnias para cada nova conquista alcançada!
+                            Receba insígnias para cada nova <strong>conquista</strong> alcançada!
                         </span>
                 </div>
             </div>
