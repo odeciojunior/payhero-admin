@@ -42,6 +42,7 @@ class NotifyUserLevelSendEmailListener
         
 //        $sendgrindService = new SendgridService();
 //
+//        $data = (new UserLevel())->getLevelData($event->user->level);
 //        $benefits = $event->user->benefits->where('enabled', true)->where('level', $event->user->level)->toArray();
 //
 //        $data['benefits'] = null;
