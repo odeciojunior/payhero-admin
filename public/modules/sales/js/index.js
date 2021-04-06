@@ -330,19 +330,25 @@ $(document).ready(function () {
                         }
 
                         let cashback = '';
+                        let cashbackIcon = '';
                         if (value.cashback_value != '0.00') {
 
-                            cashback = `
-                                        <span style="color: #5EE2A1; font-size: 18px; -webkit-text-stroke: 1.45px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
-                                        <b style="color: #5EE2A1;">${value.total_paid}</b>`;
+                            cashbackIcon = `<a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
+                                                <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
+                                            </a>`;
+
+                            cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class=' text-center'>
                                         ${value.sale_code} <br>
-                                        ${upsell}
-                                        ${has_order_bump}
-                                        ${cupomCode}
+                                        <div class="d-flex flex-row align-items-center justify-content-center">
+                                            ${cashbackIcon}
+                                            ${upsell}
+                                            ${has_order_bump}
+                                            ${cupomCode}
+                                        </div>
                                     </td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''} <br> <small>${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
