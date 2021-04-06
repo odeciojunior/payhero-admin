@@ -516,19 +516,22 @@ $(document).ready(function () {
                             `
                         }
 
-                        if (data.type === 1 && !isEmpty(data.benefits)) {
+                        if (data.type === 1) {
                             modal_is_level_type = `
                                 <div id="description">Você chegou ao <strong>${data.description}</strong></div>
                                 <div id="name">${data.name}</div>
                                 <div id="storytelling">${data.storytelling}</div>
-
-                                <div id="benefits">
-                                    <div id="benefits-title">Aqui está sua recompensa:</div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
-                                    </div>
-                                </div>
                             `
+
+                                if( !isEmpty(data.benefits) ) {
+                                    modal_is_level_type += `
+                                    <div id="benefits">
+                                        <div id="benefits-title">Aqui está sua recompensa:</div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
+                                        </div>
+                                    </div>`
+                                }
                         }
 
                         let modal = `
