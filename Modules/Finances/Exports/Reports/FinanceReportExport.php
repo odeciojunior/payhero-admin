@@ -68,7 +68,7 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
                '',
                '',
                'Saldo no período:',
-               'R$ ' . is_string($totalInPeriod) ? $totalInPeriod : number_format($totalInPeriod, 2, ',', '.')
+               'R$ ' . $totalInPeriod
            ];
         }
 
