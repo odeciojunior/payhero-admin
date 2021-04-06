@@ -25,7 +25,7 @@ class PopulateBenefitsTable extends Migration
         Benefit::firstOrCreate([
             'name' => 'get_faster',
             'level' => 2,
-            'description' => 'Receba a sua comissão mais rápido, sem a necessidade de avalição na solicitação de saque',
+            'description' => 'Receba a sua comissão mais rápido, sem a necessidade de avaliação na solicitação de saque',
         ]);
 
         Benefit::firstOrCreate([
