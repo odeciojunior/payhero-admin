@@ -63,13 +63,6 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=54') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     @stack('css')
-
-    @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
-        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
-        <script>
-            Sentry.init({dsn: '{{ getenv('SENTRY_LARAVEL_DSN') }}'});
-        </script>
-    @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
