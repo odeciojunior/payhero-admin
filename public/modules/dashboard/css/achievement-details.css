@@ -164,3 +164,9 @@ body.blurred .page {
     }
 }
 
+@media (min-width: 1200px) {
+    .achievement-details-style {
+        top: 15vh;
+    }
+}
+
