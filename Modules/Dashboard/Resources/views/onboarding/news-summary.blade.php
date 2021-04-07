@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="modal-footer justify-content-center">
+    <div class="modal-footer justify-content-center pt-md-20 pt-lg-45">
         <div id="onboarding-finish" class="btn btn-primary">Finalizar</div>
     </div>
 </div>
