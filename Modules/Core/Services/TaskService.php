@@ -48,7 +48,9 @@ class TaskService
                     $user->tasks()->attach(Task::find($id));
                 }
             }
-            $user->tasks()->attach($task);
+            if (!$user->tasks->contains('id', $task->id)) {
+                $user->tasks()->attach($task);
+            }
             $user->update();
             return true;
         } catch (\Exception $e) {
