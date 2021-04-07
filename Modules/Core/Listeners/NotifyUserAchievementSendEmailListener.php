@@ -39,16 +39,16 @@ class NotifyUserAchievementSendEmailListener
             ]
         );
 
-//        $sendgrindService = new SendgridService();
-//        $data = $event->achievement->toArray();
-//
-//        $sendgrindService->sendEmail(
-//            'noreply@cloudfox.net',
-//            'cloudfox',
-//            $event->user->email,
-//            $event->user->name,
-//            'd-31354085bb7e441597f76fdb6e94d182',
-//            $data
-//        );
+        $sendgrindService = new SendgridService();
+        $data = $event->achievement->toArray();
+
+        $sendgrindService->sendEmail(
+            'noreply@cloudfox.net',
+            'cloudfox',
+            $event->user->email,
+            $event->user->name,
+            'd-31354085bb7e441597f76fdb6e94d182',
+            $data
+        );
     }
 }
