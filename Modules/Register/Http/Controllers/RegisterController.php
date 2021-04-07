@@ -45,7 +45,7 @@ class RegisterController extends Controller
                 }
             )->log('Fez login na conta do usuário ' . $user->name);
 
-//            if (FoxUtils::isProduction()) {
+            if (FoxUtils::isProduction()) {
                 Cookie::queue(
                     Cookie::make(
                         'isManagerUser',
@@ -53,7 +53,7 @@ class RegisterController extends Controller
                         time() + 60 * 60 * 24 * 1,
                     )
                 );
-//            }
+            }
 
             if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
                 return response()->redirectTo('/dashboard');
