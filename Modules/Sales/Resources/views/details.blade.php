@@ -72,10 +72,10 @@
                         <div id="iof-value" class="col-lg-6 text-right" style="display:none">
                             <span class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div id="discount-title" class="col-lg-6" style="display: none;">
                             <span class="text-muted ft-12"> Desconto</span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div id="discount-data" class="col-lg-6 text-right" style="display: none;">
                             <span id="desconto-value" class="text-muted ft-12"></span>
                         </div>
                         <div class="col-lg-6 cupom-info">

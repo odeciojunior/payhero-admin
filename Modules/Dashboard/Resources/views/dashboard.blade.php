@@ -139,7 +139,7 @@
                                 <div
                                     class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
                                     <div class="font-size-14 gray-600 mr-auto">
-                                        <span class="ml-0">Cashback recebido</span>
+                                        <span class="ml-0">Cashback total recebido</span>
                                     </div>
                                     <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                                     </ol>

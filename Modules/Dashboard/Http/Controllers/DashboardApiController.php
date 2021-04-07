@@ -30,6 +30,7 @@ use Modules\Core\Services\TaskService;
 use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
+use MongoDB\Driver\Session;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -696,6 +697,14 @@ class DashboardApiController extends Controller
 
     public function verifyOnboarding()
     {
+        if (\Illuminate\Support\Facades\Session::get('isManagerUser')) {
+            return \response()->json([
+                                         'message' => 'Onboarding já lido',
+                                         'read' => true
+                                     ],
+                                     Response::HTTP_OK);
+        }
+
         $user = auth()->user();
         $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
 
