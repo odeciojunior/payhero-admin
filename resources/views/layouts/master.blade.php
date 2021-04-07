@@ -59,20 +59,13 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=08') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=12') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')
-
-    @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
-        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
-        <script>
-            Sentry.init({dsn: '{{ getenv('SENTRY_LARAVEL_DSN') }}'});
-        </script>
-    @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>

@@ -2,11 +2,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=06') }}">
 @endpush
 
 <div id="modal-onboarding" class="modal fade modal-fade-in-scale-up show">
     <div class="modal-dialog modal-simple modal-onboarding">
+        <div id="loader-onboarding"></div>
             <div class="modal-content">
                 <div id="modal-content-onboarding">
                     <div id="modal-presentation">

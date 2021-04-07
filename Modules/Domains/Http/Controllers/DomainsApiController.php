@@ -163,6 +163,8 @@ class DomainsApiController extends Controller
                 ]
             );
 
+            TaskService::setCompletedTask($project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
+
             if (empty($domainCreated)) {
                 DB::rollBack();
 

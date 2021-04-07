@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DashboardNotification;
 use Modules\Core\Entities\Product;
@@ -23,13 +24,13 @@ use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
+use MongoDB\Driver\Session;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -288,12 +289,10 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
         }
     }
 
@@ -433,12 +432,7 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return [];
         }
     }
 
@@ -523,12 +517,7 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return [];
         }
     }
 
@@ -634,18 +623,13 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return [];
         }
     }
 
     function getCashbackReceivedValue()
     {
-        return number_format(intval(Transaction::where('user_id', auth()->user()->account_owner_id)->where('type', 8)->sum('value')) / 100, 2, ',', '.');
+        return number_format(intval(Cashback::where('user_id', auth()->user()->account_owner_id)->sum('value')) / 100, 2, ',', '.');
     }
 
     /**
@@ -735,19 +719,27 @@ class DashboardApiController extends Controller
     public function verifyOnboarding()
     {
         try {
+            if (\Illuminate\Support\Facades\Session::get('isManagerUser')) {
+                return \response()->json([
+                                             'message' => 'Onboarding já lido',
+                                             'read' => true
+                                         ],
+                                         Response::HTTP_OK);
+            }
+
             $user = auth()->user();
             $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
 
             $notfication = DashboardNotification::firstOrCreate([
-                'user_id' => $user->id,
-                'subject_id' => 1,
-                'subject_type' => DashboardApiController::class . '/verifyOnboarding'
-                                                               ]);
+                                                                    'user_id' => $user->id,
+                                                                    'subject_id' => 1,
+                                                                    'subject_type' => DashboardApiController::class . '/verifyOnboarding'
+                                                                ]);
 
             if (!empty($notfication->read_at)) {
                 return \response()->json([
-                    'message' => 'Onboarding já lido',
-                    'read' => true
+                                             'message' => 'Onboarding já lido',
+                                             'read' => true
                                          ],
                                          Response::HTTP_OK);
             }

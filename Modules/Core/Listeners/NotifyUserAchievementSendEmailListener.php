@@ -40,7 +40,6 @@ class NotifyUserAchievementSendEmailListener
         );
 
 //        $sendgrindService = new SendgridService();
-//
 //        $data = $event->achievement->toArray();
 //
 //        $sendgrindService->sendEmail(

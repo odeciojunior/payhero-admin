@@ -516,19 +516,22 @@ $(document).ready(function () {
                             `
                         }
 
-                        if (data.type === 1 && !isEmpty(data.benefits)) {
+                        if (data.type === 1) {
                             modal_is_level_type = `
                                 <div id="description">Você chegou ao <strong>${data.description}</strong></div>
                                 <div id="name">${data.name}</div>
                                 <div id="storytelling">${data.storytelling}</div>
-
-                                <div id="benefits">
-                                    <div id="benefits-title">Aqui está sua recompensa:</div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
-                                    </div>
-                                </div>
                             `
+
+                                if( !isEmpty(data.benefits) ) {
+                                    modal_is_level_type += `
+                                    <div id="benefits">
+                                        <div id="benefits-title">Aqui está sua recompensa:</div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
+                                        </div>
+                                    </div>`
+                                }
                         }
 
                         let modal = `
@@ -626,26 +629,38 @@ $(document).ready(function () {
             success: function success(response) {
 
                 if (response.read === false) {
-                    $('#modal-content-onboarding').slick({
+                    loadingOnChart('#loader-onboarding')
+                    let modalOnboarding = $('#modal-content-onboarding')
+
+                    modalOnboarding.slick({
+                        slidesToShow: 1,
+                        mobileFirst: true,
                         infinite: false,
                         arrows: false,
                         adaptiveHeight: true
                     })
 
-                    $('#modal-content-onboarding').slick("slickPrev")
+                    $(window).on('resize', () => {
+                        loadingOnChart('#loader-onboarding')
+                        modalOnboarding.slick("refresh")
+
+                        setTimeout(() => {
+                            loadingOnChartRemove('#loader-onboarding')
+                        },1000)
+                    })
 
 
+                    $('#modal-onboarding').on('shown.bs.modal', function () {
+                            modalOnboarding.slick("refresh")
+                            $('#user-name').html(response.name)
+                            $(`#modal-onboarding`).unbind( "click" );
+                        })
+                        .modal('show');
                     setTimeout(() => {
-                        $('#modal-onboarding')
-                            .on('shown.bs.modal', function () {
-                                $('#user-name').html(response.name)
-                                $(`#modal-onboarding`).unbind( "click" );
-                            })
-                            .modal('show');
-                    },300)
+                        loadingOnChartRemove('#loader-onboarding')
+                    },1000)
                     $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
-
-                        $('#modal-content-onboarding').slick("slickNext")
+                        modalOnboarding.slick("slickNext")
                     })
 
                     $('#onboarding-finish').click(() => {

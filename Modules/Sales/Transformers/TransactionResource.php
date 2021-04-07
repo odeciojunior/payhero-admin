@@ -66,8 +66,7 @@ class TransactionResource extends JsonResource
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {
                 $data['cashback_value'] = 'R$ ' . substr_replace(@$sale->cashback->value, ',', strlen(@$sale->cashback->value) - 2, 0);
-                $totalPlusCashback = (int)$this->value + (int)$sale->cashback->value;
-                $data['total_paid'] = FoxUtils::formatMoney($totalPlusCashback / 100);
+                $data['total_paid'] = FoxUtils::formatMoney($this->value / 100);
             }
         } else {
             $data['user_sale_type'] = 'affiliate';

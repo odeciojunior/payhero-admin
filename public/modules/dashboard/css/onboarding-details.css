@@ -141,12 +141,16 @@
 }
 
 #modal-content-onboarding .img-fluid {
-    width: 90%
+    width: 300px
+}
+
+.slick-slide {
+    outline: none;
 }
 
 @media (max-width: 991px) {
     #modal-content-onboarding #img-onboarding.img-fluid {
-        width: 50%
+        width: 250px
     }
 
     #modal-content-onboarding .slick-list {
@@ -154,8 +158,8 @@
     }
 
     .icon-onboarding-2 {
-        height: calc(75px - 10%);
-        width: calc(75px - 10%);
+        height: 70px;
+        width: 70px;
     }
 }
 
@@ -165,11 +169,17 @@
     }
 
     .icon-onboarding-2 {
-        height: calc(75px - 5%);
-        width: calc(75px - 5%);
+        height: 65px;
+        width: 65px;
     }
 
     #modal-content-onboarding .slick-list {
         min-height: 600px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-onboarding {
+        top: 15vh
     }
 }
