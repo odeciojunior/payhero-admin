@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -44,9 +45,15 @@ class RegisterController extends Controller
                 }
             )->log('Fez login na conta do usuário ' . $user->name);
 
-            if (FoxUtils::isProduction()) {
-                Session::put('isManagerUser', true);
-            }
+//            if (FoxUtils::isProduction()) {
+                Cookie::queue(
+                    Cookie::make(
+                        'isManagerUser',
+                        true,
+                        time() + 60 * 60 * 24 * 1,
+                    )
+                );
+//            }
 
             if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
                 return response()->redirectTo('/dashboard');

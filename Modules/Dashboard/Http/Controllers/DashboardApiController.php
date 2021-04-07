@@ -638,6 +638,14 @@ class DashboardApiController extends Controller
     public function getAchievements()
     {
         try {
+            if (!empty(request()->cookie('isManagerUser'))) {
+                return \response()->json([
+                                             'message' => 'Onboarding já lido',
+                                             'read' => true
+                                         ],
+                                         Response::HTTP_OK);
+            }
+
             $user = auth()->user();
 
             if (!($user->id == $user->account_owner_id)) {
@@ -719,7 +727,7 @@ class DashboardApiController extends Controller
     public function verifyOnboarding()
     {
         try {
-            if (\Illuminate\Support\Facades\Session::get('isManagerUser')) {
+            if (!empty(request()->cookie('isManagerUser'))) {
                 return \response()->json([
                                              'message' => 'Onboarding já lido',
                                              'read' => true
