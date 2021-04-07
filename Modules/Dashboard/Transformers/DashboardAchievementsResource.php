@@ -28,7 +28,7 @@ class DashboardAchievementsResource extends JsonResource
         if ($this->subject_type == UpdateUserLevel::class) {
             $user = auth()->user();
             $data = (new UserLevel())->getLevelData($this->subject_id);
-            $benefits = $user->benefits->where('enabled', true)->where('level', $this->subject_id)->toArray();
+            $benefits = $user->benefits->where('enabled', true)->toArray();
             $data['benefits'] = null;
 
             if (!empty($benefits)) {
