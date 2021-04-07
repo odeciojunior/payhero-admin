@@ -145,7 +145,7 @@
                                     </ol>
                                 </div>
                                 <div class="card-body pt-0 mt-15 mb-5 d-flex flex-column justify-content-start align-items-start ">
-                                    <div class=" flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                                    <div class="pt-5 pb-5 flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                                         <div id="cashback-container" class="d-flex flex-row justify-content-start align-items-center align-self-start">
                                             <span class="cashback-container-icon">R$</span>
                                             <span id="cashback-container-money"></span>
