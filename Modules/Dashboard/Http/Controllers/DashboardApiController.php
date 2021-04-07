@@ -697,7 +697,7 @@ class DashboardApiController extends Controller
 
     public function verifyOnboarding()
     {
-        if (Session::get('isManagerUser')) {
+        if (\Illuminate\Support\Facades\Session::get('isManagerUser')) {
             return \response()->json([
                                          'message' => 'Onboarding já lido',
                                          'read' => true
