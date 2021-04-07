@@ -315,9 +315,6 @@ $(document).ready(function () {
         `;
 
         $('.sirius-performance > .card').append(item);
-        // $("#level-full").text('').text(`${currentLevel.name}`);
-        // $("#level-message").text('').text(currentLevel.storytelling);
-        // $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
 
         $.each(levelInfo, function (index, value) {
             if (data.level == index) {
@@ -457,7 +454,6 @@ $(document).ready(function () {
         let item = '';
 
         $.each(achievements, function (index, value) {
-            // d-flex flex-row justify-content-start align-items-start align-self-start
             item += ` <div class="achievements-list ">
                             <div class="achievements-list-icon  pr-0 pl-0 ${value.active ? '' : 'not-active'} ">
                                 <img src="${value.icon}" alt="${value.name}">

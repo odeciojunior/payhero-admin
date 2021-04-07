@@ -26,7 +26,7 @@
             <div class="summary-description">Uma nova área para cuidar de perto as contestações e chargebacks.</div>
         </div>
         <div class="col-12 col-lg-6 my-15">
-            <div class="summary-title">ATENDIMENTO</div>
+            <div class="summary-title">ATENDIMENTO <span class="summary-badge new">NOVO</span></div>
             <div class="summary-description">Nova classificação de atendimentos. Melhorias gerais no SAC das lojas.</div>
         </div>
 
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="modal-footer justify-content-center">
+    <div class="modal-footer justify-content-center pt-md-20 pt-lg-45">
         <div id="onboarding-finish" class="btn btn-primary">Finalizar</div>
     </div>
 </div>

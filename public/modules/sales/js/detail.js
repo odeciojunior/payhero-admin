@@ -356,7 +356,11 @@ $(() => {
             $("#taxa-installment-value").show();
         }
 
-        $("#desconto-value").html("R$ " + sale.discount);
+        if (parseFloat(sale.discount) > 0) {
+           $('#discount-title').show()
+           $('#discount-data').show()
+           $("#desconto-value").html("R$ " + sale.discount);
+        }
         if (!!sale.cupom_code) {
             $("#cupom-code").html(sale.cupom_code);
             $(".cupom-info").show();

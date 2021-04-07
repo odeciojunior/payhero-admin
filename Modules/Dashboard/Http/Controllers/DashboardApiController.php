@@ -30,6 +30,7 @@ use Modules\Core\Services\TaskService;
 use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
+use MongoDB\Driver\Session;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -210,14 +211,26 @@ class DashboardApiController extends Controller
 
     public function getChartData(Request $request)
     {
-        $data = \request()->all();
-        $companyId = current(Hashids::decode($data['company']));
+        try {
+            $data = \request()->all();
+            $companyId = current(Hashids::decode($data['company']));
 
-        $reportService = new ReportService();
+            $reportService = new ReportService();
 
-        $data = $reportService->getDashboardChartData($companyId);
+            $data = $reportService->getDashboardChartData($companyId);
 
-        return response()->json($data, Response::HTTP_OK);
+            return response()->json($data, Response::HTTP_OK);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+            [
+            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ],
+            400
+            );
+        }
     }
 
     public function getPerformance(Request $request): JsonResponse
@@ -258,20 +271,29 @@ class DashboardApiController extends Controller
 
     private function getDataPerformance($companyHash): array
     {
-        $company = Company::find(current(Hashids::decode($companyHash)));
-        $user = $company->user;
-        $taskService = new TaskService();
-        $benefitService = new BenefitsService();
-        $achievementService = new AchievementService();
+        try {
+            $company = Company::find(current(Hashids::decode($companyHash)));
+            $user = $company->user;
+            $taskService = new TaskService();
+            $benefitService = new BenefitsService();
+            $achievementService = new AchievementService();
 
-        return [
-            'level'          => $user->level,
-            'achievements'   => $achievementService->getCurrentUserAchievements($user),
-            'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
-            'billed'         => $user->total_commission_value,
-            'money_cashback' => $this->getCashbackReceivedValue(),
-            'benefits'       => $benefitService->getUserBenefits($user),
-        ];
+            return [
+                'level'          => $user->level,
+                'achievements'   => $achievementService->getCurrentUserAchievements($user),
+                'tasks'          => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
+                'billed'         => $user->total_commission_value,
+                'money_cashback' => $this->getCashbackReceivedValue(),
+                'benefits'       => $benefitService->getUserBenefits($user),
+            ];
+        } catch (Exception $e) {
+            report($e);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return [];
+        }
     }
 
     public function getAccountHealth(Request $request): JsonResponse
@@ -696,43 +718,75 @@ class DashboardApiController extends Controller
 
     public function verifyOnboarding()
     {
-        $user = auth()->user();
-        $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
+        try {
+            if (\Illuminate\Support\Facades\Session::get('isManagerUser')) {
+                return \response()->json([
+                                             'message' => 'Onboarding já lido',
+                                             'read' => true
+                                         ],
+                                         Response::HTTP_OK);
+            }
 
-        $notfication = DashboardNotification::firstOrCreate([
-            'user_id' => $user->id,
-            'subject_id' => 1,
-            'subject_type' => DashboardApiController::class . '/verifyOnboarding'
-                                                           ]);
+            $user = auth()->user();
+            $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
 
-        if (!empty($notfication->read_at)) {
+            $notfication = DashboardNotification::firstOrCreate([
+                                                                    'user_id' => $user->id,
+                                                                    'subject_id' => 1,
+                                                                    'subject_type' => DashboardApiController::class . '/verifyOnboarding'
+                                                                ]);
+
+            if (!empty($notfication->read_at)) {
+                return \response()->json([
+                                             'message' => 'Onboarding já lido',
+                                             'read' => true
+                                         ],
+                                         Response::HTTP_OK);
+            }
+
             return \response()->json([
-                'message' => 'Onboarding já lido',
-                'read' => true
+                                         'message' => 'Onboarding não lido',
+                                         'read' => false,
+                                         'onboarding' => \hashids()->encode($notfication->id),
+                                         'name' => $userName
                                      ],
                                      Response::HTTP_OK);
-        }
 
-        return \response()->json([
-                                     'message' => 'Onboarding não lido',
-                                     'read' => false,
-                                     'onboarding' => \hashids()->encode($notfication->id),
-                                     'name' => $userName
-                                 ],
-                                 Response::HTTP_OK);
+        } catch (Exception $exception) {
+            report($exception);
+
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao verificar o onboarding'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
     }
 
     public function updateOnboarding($onboarding) {
-        $onboardingId = \hashids()->decode($onboarding);
+        try {
+            $onboardingId = \hashids()->decode($onboarding);
 
-        DashboardNotification::where('id', $onboardingId)->update(['read_at' => Carbon::now()]);
+            DashboardNotification::where('id', $onboardingId)->update(['read_at' => Carbon::now()]);
 
-        return \response()->json(
-            [
-                'message' => 'Onboarding atualizado !'
-            ],
-            Response::HTTP_OK
-        );
+            return \response()->json(
+                [
+                    'message' => 'Onboarding atualizado !'
+                ],
+                Response::HTTP_OK
+            );
+
+        } catch (Exception $exception) {
+            report($exception);
+
+            return \response()->json(
+                [
+                    'message' => 'Ocorreu um erro no update do  onboarding'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }
