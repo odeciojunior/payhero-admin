@@ -32,6 +32,7 @@ class ContestationService
     {
 
         $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'sales.total_paid_value')
+            ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
             ->leftJoin('users', 'users.id', '=', 'sales.owner_id')
              ->join('transactions', function ($query) {
@@ -102,18 +103,16 @@ class ContestationService
         });
 
         $contestations->when(request('is_expired'), function ($query, $val) {
+            $date = Carbon::now()->addDay(2);
             if($val == 1){
-                return $query->whereDate('sale_contestations.expiration_date', '<=', date('Y-m-d'));
+                return $query->whereDate('sale_contestations.expiration_date', '<=', $date);
             }
-
             if($val == 2){
-                return $query->whereDate('sale_contestations.expiration_date', '>', date('Y-m-d'));
+                return $query->whereDate('sale_contestations.expiration_date', '>', $date);
             }
-
         });
 
-
-
+        $contestations = $contestations->orderBy('custom_expired', 'desc');
         $contestations->when(request('order_by_expiration_date'), function ($query, $search) {
             return $query->orderBy('expiration_date', 'asc');
         });

@@ -2,6 +2,7 @@
 
 namespace Modules\Chargebacks\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -45,10 +46,10 @@ class ContestationsApiController extends Controller
             $contestationService = new ContestationService();
             $request->request->add(['from_contestation' => true]);
             $getnetChargebacks = $contestationService->getQuery($request->all());
-
             return ContestationResource::collection($getnetChargebacks->paginate(10));
 
         } catch (Exception $e) {
+            dd($e->getMessage());
             report($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
