@@ -59,6 +59,20 @@ class NotifyUserLevelSendEmailListener
             'd-ee2628cce4c64ef5bbcafe3594fee27b',
             $data
         );
+
+        if ($event->level == 3) {
+            $userName = [
+                "nome" => ucfirst(strtolower(current(explode(' ', $event->user->name))))
+            ];
+            $sendgrindService->sendEmail(
+                'noreply@cloudfox.net',
+                'cloudfox',
+                $event->user->email,
+                $event->user->name,
+                'd-a24d8da16e114bf295fc6bd40fdff9a7',
+                $userName
+            );
+        }
     }
 
     public function arrayToString($array)
