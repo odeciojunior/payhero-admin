@@ -4,12 +4,12 @@
 
   @font-face {
   font-family: "sirius-font";
-  src: url("./sirius-font.eot");
-  src: url("./sirius-font.eot?#iefix") format("embedded-opentype"),
-       url("./sirius-font.woff2") format("woff2"),
-       url("./sirius-font.woff") format("woff"),
-       url("./sirius-font.ttf") format("truetype"),
-       url("./sirius-font.svg#sirius-font") format("svg");
+  src: url("./sirius-font.eot?v=4");
+  src: url("./sirius-font.eot?v=4#iefix") format("embedded-opentype"),
+       url("./sirius-font.woff2?v=4") format("woff2"),
+       url("./sirius-font.woff?v=4") format("woff"),
+       url("./sirius-font.ttf?v=4") format("truetype"),
+       url("./sirius-font.svg?v=4#sirius-font") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "sirius-font";
-    src: url("./sirius-font.svg#sirius-font") format("svg");
+    src: url("./sirius-font.svg?v=4#sirius-font") format("svg");
   }
 }
 
@@ -185,4 +185,3 @@
 .o-upload-to-cloud-2::before { content: "\fa13"; }
 .o-whatsapp-1::before { content: "\f9db"; }
 
-  

@@ -177,6 +177,10 @@ $(document).ready(function () {
         updateProgressBar(data.billed, currentLevel);
 
         nextPerformance(data);
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
     }
 
     function UpdateAchievements(achievements) {
@@ -186,7 +190,8 @@ $(document).ready(function () {
             $.each(achievements, function (index, value) {
 
                 let item = `
-                                <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}">
+                                <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}"
+                                    data-toggle="tooltip" title="${value.description}" >
                                     <img src="${value.icon}">
                                 </div>
                             `;
@@ -244,9 +249,6 @@ $(document).ready(function () {
             $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3}%`, 'color': '#2E85EC'});
         }
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        });
     }
 
     function updateCashback(money) {
