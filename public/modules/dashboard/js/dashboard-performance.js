@@ -191,7 +191,7 @@ $(document).ready(function () {
 
                 let item = `
                                 <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}"
-                                    data-toggle="tooltip" title="${value.description}" >
+                                    data-toggle="tooltip" title="${value.name}" >
                                     <img src="${value.icon}">
                                 </div>
                             `;
