@@ -49,7 +49,6 @@ class ContestationsApiController extends Controller
             return ContestationResource::collection($getnetChargebacks->paginate(10));
 
         } catch (Exception $e) {
-            dd($e->getMessage());
             report($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
