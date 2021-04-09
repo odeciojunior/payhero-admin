@@ -38,42 +38,6 @@ $(function () {
         $(':checkbox').val(0);
     }
 
-
-    $("#select-platform").change(function () {
-        const value = $(this).val();
-        $("#outbrain-info, #google-analytics-info, #api-facebook, .purchase-event-name-div, #div-facebook-token-api, #input-code-pixel").hide();
-
-        $("#input-code-pixel").html('');
-        switch (value) {
-            case "facebook":
-                $("#api-facebook").show();
-                $("#code-pixel").attr("placeholder", '52342343245553');
-                break;
-            case "google_adwords":
-                $("#input-code-pixel").html('AW-').show();
-                $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
-                break;
-            case "google_analytics":
-                $("#google-analytics-info").show();
-                $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
-                break;
-            case "google_analytics_four":
-                $("#google-analytics-info").show();
-                $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
-                break;
-            case "taboola":
-                $("#code-pixel").attr("placeholder", '1010100');
-                $(".purchase-event-name-div").show();
-                break;
-            case "outbrain":
-                $(".purchase-event-name-div").show();
-                $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
-                break;
-            default:
-                $("#code-pixel").attr("placeholder", 'Código');
-        }
-    });
-
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
@@ -375,7 +339,6 @@ $(function () {
                 $("#modal_add_produto").hide();
                 $(".loading").css("visibility", "hidden");
                 errorAjaxResponse(response);
-
             }, success: function success(response) {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
