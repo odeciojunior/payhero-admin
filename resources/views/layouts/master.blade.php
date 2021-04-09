@@ -28,7 +28,7 @@
 
 <!-- access token used for api ajax requests -->
     <meta name="access-token"
-          content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
+          content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png?v=1') }}">
@@ -59,7 +59,7 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=12') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=14') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
