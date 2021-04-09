@@ -370,23 +370,13 @@ $(function () {
             processData: false,
             contentType: false,
             cache: false,
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
+            error: function (response) {
                 loadingOnScreenRemove();
                 $("#modal_add_produto").hide();
                 $(".loading").css("visibility", "hidden");
                 errorAjaxResponse(response);
 
-            }), success: function success(response) {
+            }, success: function success(response) {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
                 if (response.success) {
@@ -644,20 +634,51 @@ $(function () {
         $("#modal-create-pixel").modal('show');
     });
 
-    function openModalCreatePixel() {
-        $("#configure-new-pixel").hide();
-        $("#select-platform-pixel").show();
-    }
 
+    // Create Pixel
+
+    function changePlaceholderInput(value) {
+        const codeInput = $("#code-pixel");
+        $("#input-code-pixel").html('').hide();
+
+        switch (value) {
+            case "facebook":
+                codeInput.attr("placeholder", '52342343245553');
+                break;
+            case "google_adwords":
+                $("#input-code-pixel").html('AW-').show();
+                codeInput.attr("placeholder", '8981445741-4/AN7162ASNSG');
+                break;
+            case "google_analytics":
+                codeInput.attr("placeholder", 'UA-8984567741-3');
+                break;
+            case "google_analytics_four":
+                codeInput.attr("placeholder", 'G-KZSV4LMBAC');
+                break;
+            case "taboola":
+                codeInput.attr("placeholder", '1010100');
+                break;
+            case "outbrain":
+                codeInput.attr("placeholder", '00de2748d47f2asdl39877mash');
+                break;
+            default:
+                codeInput.attr("placeholder", 'Código');
+        }
+    }
 
     $("img.logo-pixels").on('click', function () {
         const platform = $(this).data('value');
 
         $(".img-logo").attr('src', this.src);
 
-        $("#select-facebook-integration, #div-facebook-token-api").hide();
+        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+
+        changePlaceholderInput(platform);
+
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
+        } else if (['taboola', 'outbrain'].includes(platform)) {
+            $(".purchase-event-name-div").show();
         }
 
         $("input[type=radio]").change(function () {
@@ -672,10 +693,12 @@ $(function () {
         $("#configure-new-pixel").show();
     });
 
-
     $("img.img-selected").on('click', function () {
         openModalCreatePixel();
     });
 
-
+    function openModalCreatePixel() {
+        $("#configure-new-pixel").hide();
+        $("#select-platform-pixel").show();
+    }
 });

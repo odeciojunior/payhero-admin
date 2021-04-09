@@ -126,6 +126,19 @@
                                         >
                                     </div>
 
+                                    {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
+                                    <div class="form-group col-6 purchase-event-name-div" style="display:none;">
+                                        <label for="purchase-event-name" class="form-control-label">
+                                            Nome Evento Conversão
+                                        </label>
+                                        <input name="purchase-event-name"
+                                               type="text"
+                                               id='purchase-event-name'
+                                               class="form-control pixel-code"
+                                               placeholder="Purchase"
+                                               maxlength='255'>
+                                    </div>
+
                                     {{-- INPUT DESCRIPTION--}}
                                     <div class="form-group col-12">
                                         <label for="name" class="font-text">Descrição</label>
