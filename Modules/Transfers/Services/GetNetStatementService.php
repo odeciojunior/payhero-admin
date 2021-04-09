@@ -50,7 +50,7 @@ class GetNetStatementService
     protected float $totalChargeback = 0;
     protected float $totalReversed = 0;
 
-    public function performWebStatement(stdClass $data, array $filters = [])
+    public function performWebStatement(stdClass $data, array $filters = [], $limit = false)
     {
 
         $this->filters = $filters;
@@ -76,10 +76,10 @@ class GetNetStatementService
         }
 
         $this->preparesDatabasePendingDebtsWithSaleSearch();
-        //$this->preparesNodeChargeback();
+        $items = collect($this->statementItems)->sortByDesc('sequence')->values();
 
         return [
-            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
+            'items' => !$limit ? $items->all() : $items->take($limit),
             'totalInPeriod' => number_format($this->totalInPeriod, 2),
             'totalAdjustment' => $this->totalAdjustment,
             'totalChargeback' => $this->totalChargeback,

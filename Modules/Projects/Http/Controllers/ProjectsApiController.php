@@ -17,17 +17,18 @@ use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
+use Modules\Core\Services\TaskService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
@@ -205,6 +206,8 @@ class ProjectsApiController extends Controller
 
             $projectNotificationService->createProjectNotificationDefault($project->id);
             $projectService->createUpsellConfig($project->id);
+
+            TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             return response()->json(['message' => 'Projeto salvo com sucesso']);
         } catch (Exception $e) {
@@ -492,8 +495,6 @@ class ProjectsApiController extends Controller
                     }
                 ])->first();
 
-            $companies = Company::where('user_id', auth()->user()->id)->pluck('id');
-
             $project->chargeback_count = $saleModel->where('project_id', $project->id)
                                              ->where('status', $saleModel->present()->getStatus('charge_back'))
                                              ->count();
@@ -508,7 +509,7 @@ class ProjectsApiController extends Controller
                                            ->where('status', $saleModel->present()->getStatus('approved'))
                                            ->count();
 
-            $project->approved_sales_value = Transaction::whereIn('company_id', $companies)
+            $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
                                                         ->whereHas('sale', function ($query) use ($saleModel, $project) {
                                                             $query->where('status', $saleModel->present()->getStatus('approved'));
                                                             $query->where('project_id', $project->id);

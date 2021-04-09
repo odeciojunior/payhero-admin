@@ -3,63 +3,88 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
+use Laracasts\Presenter\PresentableTrait;
+use Laravel\Passport\HasApiTokens;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Presenters\UserPresenter;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\CausesActivity;
-use App\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
-use Laracasts\Presenter\PresentableTrait;
-use Laravel\Passport\HasApiTokens;
 
 /**
+ * Modules\Core\Entities\User
+ *
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property int $email_verified
+ * @property int $status
  * @property string $password
- * @property string $remember_token
- * @property string $cellphone
- * @property string $document
- * @property string $zip_code
- * @property string $country
- * @property string $state
- * @property string $city
- * @property string $neighborhood
- * @property string $street
- * @property string $number
- * @property string $complement
- * @property string $photo
- * @property string $date_birth
- * @property bool $address_document_status
- * @property bool $personal_document_status
- * @property string $transaction_rate
- * @property bool $account_is_approved
- * @property json $id_wall_result
- * @property string $sex
- * @property string $mother_name
- * @property boolean $has_sale_before_getnet
- * @property string $updated_at
- * @property string $created_at
- * @property string $deleted_at
+ * @property string|null $remember_token
+ * @property string|null $cellphone
+ * @property int $cellphone_verified
+ * @property string|null $document
+ * @property string|null $zip_code
+ * @property string|null $country
+ * @property string|null $state
+ * @property string|null $city
+ * @property string|null $neighborhood
+ * @property string|null $street
+ * @property string|null $number
+ * @property string|null $complement
+ * @property string|null $photo
+ * @property string|null $date_birth
+ * @property int $address_document_status
+ * @property int $personal_document_status
+ * @property string|null $last_login
  * @property int $invites_amount
- * @property AffiliateRequest[] $affiliateRequests
- * @property Affiliate[] $affiliates
- * @property Company[] $companies
- * @property ConvertaxIntegration[] $convertaxIntegrations
- * @property HotzappIntegration[] $hotzappIntegrations
- * @property Invitation[] $invitations
- * @property NotazzIntegration[] $notazzIntegrations
- * @property Product[] $products
- * @property Sale[] $sales
- * @property ShopifyIntegration[] $shopifyIntegrations
- * @property Transfer[] $transfers
- * @property UserDocument[] $userDocuments
+ * @property int|null $account_owner_id
+ * @property int $deleted_project_filter
+ * @property mixed|null $id_wall_result
+ * @property string|null $sex
+ * @property string|null $mother_name
+ * @property int $has_sale_before_getnet
+ * @property int $onboarding
+ * @property string|null $observation
+ * @property int $account_is_approved
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @mixin \Eloquent
+ * @property string $transaction_rate
+ * @property integer $chargeback_rate
+ * @property integer $account_score
+ * @property integer $chargeback_score
+ * @property integer $attendance_score
+ * @property integer $tracking_score
+ * @property integer $installment_cashback
+ * @property integer $level
+ * @property integer $total_commission_value
+ * @property integer $attendance_average_response_time
+ * @property Collection $affiliateRequests
+ * @property Collection $affiliates
+ * @property Collection $companies
+ * @property Collection $convertaxIntegrations
+ * @property Collection $hotzappIntegrations
+ * @property Collection $invitations
+ * @property Collection $notazzIntegrations
+ * @property Collection $products
+ * @property Collection $sales
+ * @property Collection $shopifyIntegrations
+ * @property Collection $transfers
+ * @property Collection $userDocuments
+ * @property Collection $achievements
+ * @property Collection $tasks
+ * @property Collection $benefits
  * @method UserPresenter present()
  */
 class User extends Authenticable
@@ -115,6 +140,15 @@ class User extends Authenticable
         'mother_name',
         'has_sale_before_getnet',
         'account_is_approved',
+        'chargeback_rate',
+        'account_score',
+        'chargeback_score',
+        'attendance_score',
+        'tracking_score',
+        'attendance_average_response_time',
+        'installment_cashback',
+        'level',
+        'total_commission_value',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -144,17 +178,17 @@ class User extends Authenticable
     protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
 
     /**
-     * @param  Activity  $activity
-     * @param  string  $eventName
+     * @param Activity $activity
+     * @param string $eventName
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Usuário '.$this->name.' foi deletedo.';
+            $activity->description = 'Usuário ' . $this->name . ' foi deletado.';
         } elseif ($eventName == 'updated') {
-            $activity->description = 'Usuário '.$this->name.' foi atualizado.';
+            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
         } elseif ($eventName == 'created') {
-            $activity->description = 'Usuário '.$this->name.' foi criado.';
+            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
         } else {
             $activity->description = $eventName;
         }
@@ -165,7 +199,7 @@ class User extends Authenticable
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('Modules\Core\Entities\AffiliateRequest');
+        return $this->hasMany(AffiliateRequest::class);
     }
 
     /**
@@ -173,7 +207,7 @@ class User extends Authenticable
      */
     public function affiliates()
     {
-        return $this->hasMany('Modules\Core\Entities\Affiliate');
+        return $this->hasMany(Affiliate::class);
     }
 
     /**
@@ -181,7 +215,7 @@ class User extends Authenticable
      */
     public function companies()
     {
-        return $this->hasMany('Modules\Core\Entities\Company');
+        return $this->hasMany(Company::class);
     }
 
     /**
@@ -189,7 +223,7 @@ class User extends Authenticable
      */
     public function convertaxIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ConvertaxIntegration');
+        return $this->hasMany(ConvertaxIntegration::class);
     }
 
     /**
@@ -197,7 +231,7 @@ class User extends Authenticable
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
+        return $this->hasMany(HotzappIntegration::class);
     }
 
     /**
@@ -205,7 +239,7 @@ class User extends Authenticable
      */
     public function invitations()
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation', 'user_invited');
+        return $this->hasMany(Invitation::class, 'user_invited');
     }
 
     /**
@@ -213,7 +247,7 @@ class User extends Authenticable
      */
     public function invites()
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation', 'invite');
+        return $this->hasMany(Invitation::class, 'invite');
     }
 
     /**
@@ -221,7 +255,7 @@ class User extends Authenticable
      */
     public function notazzIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\NotazzIntegration');
+        return $this->hasMany(NotazzIntegration::class);
     }
 
     /**
@@ -229,7 +263,7 @@ class User extends Authenticable
      */
     public function products()
     {
-        return $this->hasMany('Modules\Core\Entities\Product');
+        return $this->hasMany(Product::class);
     }
 
     /**
@@ -237,7 +271,15 @@ class User extends Authenticable
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale', 'owner_id');
+        return $this->hasMany(Sale::class, 'owner_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     /**
@@ -245,15 +287,7 @@ class User extends Authenticable
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ShopifyIntegration');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function smsMessages()
-    {
-        return $this->hasMany('Modules\Core\Entities\SmsMessage', 'user');
+        return $this->hasMany(ShopifyIntegration::class);
     }
 
     /**
@@ -261,7 +295,7 @@ class User extends Authenticable
      */
     public function transfers()
     {
-        return $this->hasMany('Modules\Core\Entities\Transfer');
+        return $this->hasMany(Transfer::class);
     }
 
     /**
@@ -269,7 +303,7 @@ class User extends Authenticable
      */
     public function userDocuments()
     {
-        return $this->hasMany('Modules\Core\Entities\UserDocument');
+        return $this->hasMany(UserDocument::class);
     }
 
     /**
@@ -277,7 +311,7 @@ class User extends Authenticable
      */
     public function userShoppings()
     {
-        return $this->hasMany('Modules\Core\Entities\UserShopping', 'client');
+        return $this->hasMany(UserShopping::class, 'client');
     }
 
     /**
@@ -285,7 +319,7 @@ class User extends Authenticable
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UserProject');
+        return $this->hasMany(UserProject::class);
     }
 
     /**
@@ -293,11 +327,11 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany('Modules\Core\Entities\Projects', 'users_projects', 'user_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'users_projects', 'user_id', 'project_id');
     }
 
     /**
-     * @param  string  $token
+     * @param string $token
      */
     public function sendPasswordResetNotification($token)
     {
@@ -317,7 +351,7 @@ class User extends Authenticable
      */
     public function userDevices()
     {
-        return $this->hasMany('Modules\Core\Entities\UserDevice');
+        return $this->hasMany(UserDevice::class);
     }
 
     /**
@@ -325,7 +359,37 @@ class User extends Authenticable
      */
     public function userTerms()
     {
-        return $this->hasMany('Modules\Core\Entities\UserTerms');
+        return $this->hasMany(UserTerms::class);
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tasks()
+    {
+        return $this->belongsToMany(
+            Task::class,
+            'tasks_users',
+            'user_id',
+            'task_id'
+        );
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function benefits()
+    {
+        return $this->hasMany(UserBenefit::class)
+            ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
+            ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+    }
 }

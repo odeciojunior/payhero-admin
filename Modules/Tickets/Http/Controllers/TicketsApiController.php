@@ -10,6 +10,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Events\TicketMessageEvent;
+use Modules\Core\Services\AttendanceService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Tickets\Transformers\TicketMessageResource;
 use Modules\Tickets\Transformers\TicketResource;
@@ -127,15 +128,15 @@ class TicketsApiController extends Controller
 
                 if (!empty($data['message'])) {
 
-                    if(strlen($data['message']) < 10) {
+                    if (strlen($data['message']) < 10) {
                         return response()->json(['message' => 'A mensagem informada é muito curta!'], 400);
                     }
 
                     $messageEmail = explode(' ', $data['message']);
                     foreach ($messageEmail as $key => $value) {
                         $position = stripos($value, '@');
-                        if($position !== false) {
-                            if(FoxUtils::validateEmail($value)) {
+                        if ($position !== false) {
+                            if (FoxUtils::validateEmail($value)) {
                                 return response()->json(['message' => 'Não é permitido enviar email na mensagem'], 400);
                             }
                         }
@@ -155,14 +156,19 @@ class TicketsApiController extends Controller
                     // }
 
                     $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticket->id)
-                        ->where('type_enum', $ticketMessageModel->present()->getType('from_admin'))
+                        ->where('type_enum', TicketMessage::TYPE_FROM_ADMIN)
                         ->latest('id')
                         ->first();
+
                     $message = $ticketMessageModel->create([
                         'ticket_id' => $ticket->id,
-                        'message' => $data['message'],
-                        'type_enum' => $ticketMessageModel->present()->getType('from_admin'),
+                        'message'   => $data['message'],
+                        'type_enum' => TicketMessage::TYPE_FROM_ADMIN,
                     ]);
+
+                    $attendanceService = new AttendanceService();
+                    $averageResponseTime = $attendanceService->getTicketAverageResponseTime($ticket);
+                    $ticket->update(['average_response_time' => $averageResponseTime]);
 
                     event(new TicketMessageEvent($message, $lastAdminMessage));
 
@@ -171,12 +177,11 @@ class TicketsApiController extends Controller
                     return response()->json(['message' => 'Dados inválidos'], 400);
                 }
             } else {
-                return response()->json(['message' => 'Chamado não encontrado'], 400);
+                return response()->json(['message' => 'Chamado não encontrado'], 404);
             }
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(['message' => 'Erro ao enviar mensagem'], 400);
+            return response()->json(['message' => 'Erro ao enviar mensagem'], 500);
         }
     }
 
@@ -202,10 +207,10 @@ class TicketsApiController extends Controller
             $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 
             return response()->json([
-                'total_ticket_open' => $ticket->openCount,
+                'total_ticket_open'      => $ticket->openCount,
                 'total_ticket_mediation' => $ticket->mediationCount,
-                'total_ticket_closed' => $ticket->closedCount,
-                'total_ticket' => $totalCount,
+                'total_ticket_closed'    => $ticket->closedCount,
+                'total_ticket'           => $totalCount,
 
             ]);
         } catch (Exception $e) {
@@ -223,7 +228,7 @@ class TicketsApiController extends Controller
 
             $filename = pathinfo($attachment->file, PATHINFO_BASENAME);
             $expiration = now()->addMinutes(config('session.lifetime'));
-            $url = Storage::disk('s3_documents')->temporaryUrl('uploads/private/tickets/attachments/'. $filename, $expiration);
+            $url = Storage::disk('s3_documents')->temporaryUrl('uploads/private/tickets/attachments/' . $filename, $expiration);
 
             return redirect($url);
 

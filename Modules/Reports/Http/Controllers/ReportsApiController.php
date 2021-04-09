@@ -225,12 +225,10 @@ class ReportsApiController extends Controller
     public function getSalesByOrigin(Request $request)
     {
         try {
-            $companyModel = new Company();
             $saleModel = new Sale();
             $affiliateModel = new Affiliate();
 
             $userId = auth()->user()->account_owner_id;
-            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
                 $affiliate = $affiliateModel->where([
@@ -239,9 +237,9 @@ class ReportsApiController extends Controller
                 ])->first();
                 $orders = $saleModel
                     ->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
-                    ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
+                    ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
-                        $join->whereIn('transaction.company_id', $userCompanies);
+                        $join->where('transaction.user_id', $userId);
                     })
                     ->leftJoin('checkouts as checkout', function ($join) {
                         $join->on('checkout.id', '=', 'sales.checkout_id');
@@ -533,7 +531,7 @@ class ReportsApiController extends Controller
                         DB::raw('(SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) -
                                                                             SUM(CASE WHEN transactions.status_enum = 12 AND sales.payment_method IN(1,3) THEN anticipated_transactions.value ELSE 0 END)) AS valueCard'),
                     ])->where('company_id', $companyId)
-                    ->whereIn('transactions.type', collect([2, 3, 4, 5]))
+                    ->whereIn('transactions.type', collect([2, 3, 4, 5, 8]))
                     ->whereIn('transactions.status_enum', collect([
                         $transactionModel->present()
                             ->getStatusEnum('paid'),

@@ -51,7 +51,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $gateway_release_money_days
  * @property string $document_issue_date
  * @property string $document_issuer
- * @property string document_issuer_state
+ * @property string $document_issuer_state
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -76,6 +76,26 @@ class Company extends Model
     use PaginatableTrait;
     use PresentableTrait;
     use SoftDeletes;
+
+    public const PHYSICAL_PERSON = 1;
+    public const JURIDICAL_PERSON = 2;
+
+    public const STATUS_PENDING = 1;
+    public const STATUS_ANALYZING = 2;
+    public const STATUS_APPROVED = 3;
+    public const STATUS_REFUSED = 4;
+
+    public const DOCUMENT_STATUS_PENDING = 1;
+    public const DOCUMENT_STATUS_ANALYZING = 2;
+    public const DOCUMENT_STATUS_APPROVED = 3;
+    public const DOCUMENT_STATUS_REFUSED = 4;
+
+    public const GETNET_STATUS_APPROVED = 1;
+    public const GETNET_STATUS_REVIEW = 2;
+    public const GETNET_STATUS_REPROVED = 3;
+    public const GETNET_STATUS_APPROVED_GETNET = 4;
+    public const GETNET_STATUS_ERROR = 5;
+    public const GETNET_STATUS_PENDING = 6;
 
     protected $presenter = CompanyPresenter::class;
     /**
@@ -127,7 +147,7 @@ class Company extends Model
         'created_at',
         'updated_at',
         'id_wall_result',
-        'block_checkout'
+        'block_checkout',
     ];
     /**
      * @var bool

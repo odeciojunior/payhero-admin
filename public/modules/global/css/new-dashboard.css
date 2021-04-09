@@ -1,5 +1,5 @@
 body {
-    font-family: 'Muli', sans-serif !important;
+    font: 400 16px 'Muli', sans-serif !important;
 }
 
 .page.dashboard .card-desc {
@@ -72,7 +72,7 @@ body {
     display: block;
     z-index: 2;
     height: 20px;
-    background-color: #2E85EC;
+    background-color: var(--color-blue);
     border-radius: 16px 0px;
     width: 90px;
     position: relative;
@@ -85,7 +85,7 @@ body {
 }
 
 .page.dashboard .card .card-bottom.blue {
-    background-color: #2E85EC;
+    background-color: var(--color-blue);
 }
 
 .page.dashboard .card .card-bottom.orange {
@@ -103,7 +103,7 @@ body {
 /*bottom*/
 
 .page.dashboard .bg-blue {
-    background-color: #2E85EC
+    background-color: var(--color-blue)
 }
 
 .page.dashboard .card-text {
@@ -125,7 +125,7 @@ body {
     width: 100% !important;;
 }
 
-.page.dashboard .card-chargeback .text-money {
+.page.dashboard .performance-card .text-money {
     font-size: 18px !important;
 }
 
@@ -142,15 +142,13 @@ body {
 }
 
 .page.dashboard .stats-card {
-    height: 200px;
+    /*height: 200px;*/
+    height: 170px;
 }
 
 .page.dashboard .chart-card {
     height: 370px;
-}
-
-.page.dashboard .chargeback-card {
-    height: 500px;
+    /*height: 400px;*/
 }
 
 .page.dashboard .sirius-card {
@@ -354,4 +352,154 @@ body {
     .text-money {
         font-size: 20px;
     }
+}
+
+#company-select > div > div {
+    width: 100%;
+}
+#company {
+    border-radius: 8px;
+}
+
+
+
+.cashback-container-icon {
+    font-size: 19px;
+    font-weight: 300;
+    color: #6fe5ab;
+    margin-right: 10px;
+    -webkit-text-stroke: 0.3px rgba(111, 229, 171, 1);
+}
+
+.cashback-container-icon:hover {
+    color: #6FE5AB;
+}
+
+#cashback-container-money {
+    margin-right: 10px;
+    font-family: Muli;
+    font-size: 32px;
+    color: #6FE5AB;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.82;
+    letter-spacing: 1px;
+    display: block;
+}
+
+
+
+/*CSS Account Health */
+
+@media(max-width: 1080px) {
+    html {
+        font-size: 93.75%;
+    }
+}
+
+@media(max-width: 720px) {
+    html {
+        font-size: 87.5%;
+    }
+}
+
+
+body, input, textarea, button {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.mt-15 {
+    margin-top: 15px;  /*0.94rem;*/
+}
+
+
+.mb-10 {
+    margin-bottom: 10px;  /*0.63rem;*/
+}
+
+
+/*.page.dashboard .performance-card .card-header, .page.dashboard .sirius-account .card-header {*/
+/*    font-size: 14px; !*0.88rem;*!*/
+/*    line-height: 0.88rem;*/
+/*}*/
+
+.page.dashboard .performance-card .title-performance, .page.dashboard .sirius-account .title-performance {
+    text-align: left;
+    font-size: 14px; /*0.88rem;*/
+    letter-spacing: 0px;
+    color: #959595;
+}
+
+.page.dashboard .card-indicators {
+    z-index: 15;
+    list-style: none;
+}
+.page.dashboard .card-indicators > li {
+    width: 11px;
+    height: 11px;
+    background: #EDEDED 0% 0% no-repeat padding-box;
+    border-radius: 100%;
+    margin-left: 5px;
+}
+
+.page.dashboard .card-indicators > li.active {
+    background: var(--color-blue) 0% 0% no-repeat padding-box;
+}
+
+.page.dashboard .card-indicators > i {
+    width:20px;
+    font-size: 20px;
+    line-height: 14px;
+    color: #C8C8C8;
+    margin-left: 5px;
+    cursor: not-allowed;
+    background: #FCFCFC 0% 0% no-repeat padding-box;
+    border-radius: 100%;
+    text-align: center;
+}
+
+.page.dashboard .card-indicators > i:hover {
+    color: #C8C8C8;
+}
+
+.page.dashboard .card-indicators > i.active {
+    color: #000000;
+    cursor: pointer;
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+}
+
+.page.dashboard .card-indicators > i.active:hover {
+    color: #000000;
+
+}
+
+.page.dashboard .card-indicators > i.control-prev::before {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.page.dashboard .card-indicators > i.control-next::before {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+.page.dashboard .hr-horizontal {
+    min-height: 1px;
+    height: 1px;
+    width: 100%;
+    background-color: #DBDBDB;
+
+}
+
+.page.dashboard .hr-vertical {
+    height: 100%;
+    min-width: 1px;
+    width: 1px;
+    background-color: #DBDBDB;
 }

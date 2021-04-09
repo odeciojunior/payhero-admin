@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Product;
@@ -13,6 +14,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use stdClass;
@@ -141,9 +143,9 @@ class TrackingService
 
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
-                        'tracking_status' => $status,
-                        'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
-                        'event' => $event,
+                        'tracking_status'      => $status,
+                        'created_at'           => Carbon::parse($log->Date)->format('d/m/Y'),
+                        'event'                => $event,
                     ]);
                 }
             }
@@ -246,17 +248,17 @@ class TrackingService
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
             $commonAttributes = [
-                'sale_id' => $productPlanSale->sale_id,
-                'product_id' => $productPlanSale->product_id,
+                'sale_id'              => $productPlanSale->sale_id,
+                'product_id'           => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
-                'amount' => $productPlanSale->amount,
-                'delivery_id' => $productPlanSale->sale->delivery->id,
+                'amount'               => $productPlanSale->amount,
+                'delivery_id'          => $productPlanSale->sale->delivery->id,
             ];
 
             $newAttributes = [
-                'tracking_code' => $trackingCode,
+                'tracking_code'        => $trackingCode,
                 'tracking_status_enum' => $statusEnum,
-                'system_status_enum' => $systemStatusEnum,
+                'system_status_enum'   => $systemStatusEnum,
             ];
 
             $tracking = Tracking::where($commonAttributes)
@@ -285,7 +287,7 @@ class TrackingService
             }
 
             if (!empty($tracking)) {
-                if($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
+                if ($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
@@ -474,5 +476,84 @@ class TrackingService
             ->first();
 
         return $productPlanSales->toArray();
+    }
+
+    public function getAveragePostingTimeInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+
+        $approvedSalesWithTrackingCode = Tracking::select(DB::raw('ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime'))
+            ->join('sales', 'sales.id', '=', 'trackings.sale_id')
+            ->whereIn('sales.gateway_id', $gatewayIds)
+            ->where('sales.payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+            ->whereIn('sales.status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])
+            ->whereBetween(
+                'sales.start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('sales.owner_id', $user->id)
+            ->get();
+
+        return $approvedSalesWithTrackingCode->toArray()[0]['averagePostingTime'] ?? null;
+    }
+
+    public function getUninformedTrackingCodeRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $saleService = new SaleService();
+        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if ($approvedSalesAmount < 20) {
+            return 7; //7% means score 6
+        }
+
+        $untrackedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)
+            ->doesntHave('tracking')
+            ->count();
+
+        return round(($untrackedSalesAmount * 100 / $approvedSalesAmount), 2);
+    }
+
+    public function getTrackingCodeProblemRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
+    {
+        $salesWithTrackingCodeProblemsAmount = Sale::where(function ($query) {
+            $query->whereHas('tracking', function ($trackingsQuery) {
+                $status = [
+                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                    Tracking::SYSTEM_STATUS_DUPLICATED
+                ];
+                $trackingsQuery->whereIn('system_status_enum', $status);
+            });
+        })->where(function ($q) use ($user) {
+            $q->where('owner_id', $user->id)
+                ->orWhere('affiliate_id', $user->id);
+        })->count();
+
+        if ($salesWithTrackingCodeProblemsAmount < 20) {
+            return 2; //2% means score 6
+        }
+
+        $saleService = new SaleService();
+        $approvedSalesAmount = $saleService->getApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+
+        if (!$approvedSalesAmount) return 0;
+
+        return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
+    }
+
+    public static  function  getTrackingToday(User $user) {
+        return Tracking::join('sales', 'sales.id', '=', 'trackings.sale_id')
+            ->whereBetween(
+                'trackings.created_at',
+                [now()->format('Y-m-d') . ' 00:00:00', now()->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where('sales.owner_id', $user->id)
+            ->get();
     }
 }

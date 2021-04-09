@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42.143" height="37.112" viewBox="-3.5 5.5 28.9 12">
+    <defs>
+        <style>
+            .a{fill:none;stroke:#002f67;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-width:1.5px;}
+        </style>
+    </defs>
+    <g transform="translate(1.06 1.06)">
+        <path class="a" d="M39.433,40.768,20,20" transform="translate(-20 -20)"/>
+        <path class="a" d="M41.808,26V41.808H26" transform="translate(-22.375 -21.039)"/>
+    </g>
+</svg>

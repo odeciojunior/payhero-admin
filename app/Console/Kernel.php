@@ -94,8 +94,27 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
+        /** Account health */
+        $schedule->command('account-health:user:update-average-response-time')->dailyAt('02:00');
+        $schedule->command('command:update-user-level')->dailyAt('11:15');
+        $schedule->command('account-health:update')->dailyAt('09:00');
+        $schedule->command('account-health:update')->dailyAt('22:00');
+
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
+        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
+
+        /** Tasks */
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('06:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('10:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('14:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('18:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('22:30');
+
+        /** Achievements */
+        $schedule->command('achievements:update')->dailyAt('09:00');
+        $schedule->command('achievements:update')->dailyAt('21:00');
     }
 
     /**

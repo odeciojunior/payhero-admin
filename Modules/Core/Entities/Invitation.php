@@ -31,6 +31,11 @@ use Spatie\Activitylog\Models\Activity;
 class Invitation extends Model
 {
     use SoftDeletes, PresentableTrait, LogsActivity;
+
+    const INVITATION_ACCEPTED = 1;
+    const INVITATION_PENDING = 2;
+    const INVITATION_EXPIRED = 3;
+
     /**
      * @var string
      */

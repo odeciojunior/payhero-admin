@@ -23,7 +23,7 @@ class CompanyServiceBraspag
             $user = $company->user;
 
             if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-                && (!$this->userService->verifyFieldsEmptyBraspag($user))
+                /*&& (!$this->userService->verifyFieldsEmptyBraspag($user))*/
             ) {
                 $result = $this->braspagService->createPfCompany($company);
             } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')

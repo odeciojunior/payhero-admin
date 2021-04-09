@@ -9,10 +9,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\FoxUtils;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -41,6 +44,16 @@ class RegisterController extends Controller
                     $activity->causer_id = $managerIdDecode;
                 }
             )->log('Fez login na conta do usuário ' . $user->name);
+
+            if (FoxUtils::isProduction()) {
+                Cookie::queue(
+                    Cookie::make(
+                        'isManagerUser',
+                        true,
+                        time() + 60 * 60 * 24 * 1,
+                    )
+                );
+            }
 
             if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
                 return response()->redirectTo('/dashboard');

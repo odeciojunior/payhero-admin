@@ -30,13 +30,7 @@ class VerifyAbandonedCarts2 extends Command
     
     public function handle()
     {
-        $start = now();
-
         $cartRecoveryService = new CartRecoveryService();
         $cartRecoveryService->verifyAbandonedCarts2();
-
-        $end = now();
-
-        report(new CommandMonitorTimeException("command {$this->signature} começou as {$start} e terminou as {$end}"));
     }
 }

@@ -44,6 +44,10 @@ use Spatie\Activitylog\Models\Activity;
 class Product extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
+
+    const TYPE_PHYSICAL = 1;
+    const TYPE_DIGITAL = 2;
+
     /**
      * @var array
      */
