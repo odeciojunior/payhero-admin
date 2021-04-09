@@ -2,6 +2,21 @@
     .tooltip-inner {
         background: #f5f7f8;
     }
+
+    .logo-pixels:hover {
+        padding: 5px;
+        border-radius: 50px;
+        border: 2px solid #2DA6F6;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -ms-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .font-text {
+        font: normal normal normal 16px Muli;
+    }
 </style>
 
 <div class='row no-gutters mb-10'>
@@ -51,25 +66,7 @@
 <!-- Create -->
 <div id="modal-create-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10">
-            <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="col-12 modal-title text-center" id="modal-title" style="color:#787878">Novo pixel</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal"
-                   aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a>
-            </div>
-            <div style='min-height: 100px'>
-                <div>
-                    <h4 class="col-12 modal-title text-center" style="color:#787878">Selecione a plataforma</h4>
-                    <div class="row">
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
+        @include('pixels::create')
     </div>
 </div>
 

@@ -49,13 +49,13 @@ $(function () {
             $(".purchase-event-name-div").show();
         }
 
-        $("input[type=radio]").change(function () {
+        /*$("input[type=radio]").change(function () {
             if (this.value === 'api') {
                 $("#div-facebook-token-api").show()
             } else {
                 $("#div-facebook-token-api").hide()
             }
-        });
+        });*/
     });
 
     $("#select-platform").change(function () {
@@ -657,4 +657,36 @@ $(function () {
             planSelect.val('all').trigger("change");
         }
     });
+
+
+    $("img.logo-pixels").on('click', function () {
+        const imgSrc = this.src;
+        const platform = $(this).data('value');
+
+        $(".img-logo").attr('src', imgSrc);
+
+        $("#select-facebook-integration, #div-facebook-token-api").hide();
+        if (platform === 'facebook') {
+            $("#select-facebook-integration, #div-facebook-token-api").show();
+        }
+
+        $("input[type=radio]").change(function () {
+            if (this.value === 'api') {
+                $("#facebook-token-api").attr('readonly', false)
+            } else {
+                $("#facebook-token-api").attr('readonly', true)
+            }
+        });
+
+        $("#select-platform-pixel").hide();
+        $("#configure-new-pixel").show();
+    });
+
+
+    $("img.img-selected").on('click', function () {
+        $("#configure-new-pixel").hide();
+        $("#select-platform-pixel").show();
+    });
+
+
 });
