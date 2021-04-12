@@ -13,7 +13,7 @@
             <h1 class="page-title" style="min-height: 28px">
                 <a class="gray" href="/projects">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    <span class="title">Meus projetos</span>
+                    Meus projetos
                 </a>
             </h1>
         </div>
