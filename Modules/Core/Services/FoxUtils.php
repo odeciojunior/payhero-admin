@@ -574,6 +574,9 @@ class FoxUtils
     {
         switch($code) {
             case '4837':
+            case '4863':
+            case '81':
+            case '83':
             case '74':
             case '103':
             case '104':
