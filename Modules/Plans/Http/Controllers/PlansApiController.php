@@ -183,11 +183,6 @@ class PlansApiController extends Controller
         }
     }
 
-    /**
-     * @param $projectID
-     * @param $id
-     * @return JsonResponse|PlansDetailsResource
-     */
     public function show($projectID, $id)
     {
         try {
@@ -305,8 +300,11 @@ class PlansApiController extends Controller
 
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
-
-                            $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+                            if (empty($requestData['product_cost'][$keyProduct]) || $requestData['product_cost'][$keyProduct] == '0.00'){
+                                $requestData['product_cost'][$keyProduct] = 0;
+                            }else{
+                                $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+                            }
 
                             $productPlan->create([
                                                      'product_id'         => $requestData['products'][$keyProduct],

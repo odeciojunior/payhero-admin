@@ -110,10 +110,26 @@ function loadingOnChart(target) {
     )
 }
 
+function loadingOnAccountsHealth(target) {
+    $(target).fadeIn().append(
+        `<div style="z-index: 100; border-radius: 16px;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
+            <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/adminremark/assets/images/siriusM.svg"
+                 class="img-responsive"/>
+        </div>`
+    )
+}
+
 function loadingOnChartRemove(target) {
     $(target).fadeOut(function () {
         $(target).html('');
     });
+}
+
+function loadingOnAccountsHealthRemove(target) {
+    //$(target).fadeOut(function () {
+    //    $(target).html('');
+    //});
+    $(target).remove();
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {

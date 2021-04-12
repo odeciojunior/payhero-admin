@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
@@ -48,11 +49,6 @@ class UpdateListsFoxActiveCampaign extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         try {
@@ -85,8 +81,8 @@ class UpdateListsFoxActiveCampaign extends Command
     private function listUsers100k($listId)
     {
         try {
-            
-            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified', 
+
+            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified',
                                DB::raw('(SELECT SUM(total_paid_value) FROM sales WHERE sales.owner_id = users.id AND status = 1 AND created_at > NOW() - INTERVAL 30 DAY ) as total_value')
                     )
                     ->havingRaw('(SELECT SUM(total_paid_value) FROM sales WHERE sales.owner_id = users.id AND status = 1 AND created_at > NOW() - INTERVAL 30 DAY ) > 100000')
@@ -99,11 +95,11 @@ class UpdateListsFoxActiveCampaign extends Command
         }
 
     }
- 
+
     private function listActives($listId)
     {
         try {
-            
+
             $users = User::whereHas('sales', function($query) {
                 $query->whereDate('created_at', '>', Carbon::now()->subdays(7)->todateTimeString());
             })->get();
@@ -118,7 +114,7 @@ class UpdateListsFoxActiveCampaign extends Command
     private function listNoSales($listId)
     {
         try {
-            
+
             $userPresenter = (new User)->present();
             $companyPresenter = (new Company)->present();
             $users = User::doesntHave('sales')->with('roles')->whereHas('roles', function($query) {
@@ -205,7 +201,7 @@ class UpdateListsFoxActiveCampaign extends Command
             //     $query->where('balance', '<', 0);
             // })->get();
 
-            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified', 
+            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified',
                     DB::raw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id) as balance')
                 )->havingRaw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id ) < 0')
                 ->get();
@@ -221,7 +217,7 @@ class UpdateListsFoxActiveCampaign extends Command
     {
         try {
 
-            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified', 
+            $users = User::select('id','name', 'email', 'cellphone', 'cellphone_verified', 'email_verified',
                 DB::raw('
                     ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) / 
                     (SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 1 )) as tax_chergeback')
@@ -248,7 +244,7 @@ class UpdateListsFoxActiveCampaign extends Command
             $total    = !empty($contacts['meta']['total']) ? (int)$contacts['meta']['total'] : 0;
             $pages = ($total > 0) ? ceil($total/100) : 0;
 
-            for ($i=0; $i < $pages; $i++) { 
+            for ($i=0; $i < $pages; $i++) {
 
                 $contacts = $activeCampaignService->getContactsByList($listId, 100, ($i*100));
                 $contacts = json_decode($contacts, true);

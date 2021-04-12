@@ -18,10 +18,9 @@
 <div class="page-holder">
 
     <div class="content-error d-flex text-center">
-        <img style="width:100px; margin-bottom: 20px;" src="{!! asset('modules/global/img/tools.svg') !!}">
+        <img style="width: 100px;filter: brightness(0);" src="/modules/global/adminremark/assets/images/siriusM.svg" alt="CloudFox">
         <h1 class="big">Voltaremos em breve!</h1>
         <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção no momento e voltaremos em breve.</p>
-        <p><img style="width:100px; filter: brightness(0);" src="http://dev.cloudfox.com.br/modules/global/adminremark/assets/images/logo-oficial.svg" alt="CloudFox"></p>
     </div>
 
 </div>
@@ -56,8 +55,7 @@
         justify-content: center;
         flex-direction: column;
         text-align: center;
-}
+    }
 </style>
 
 </html>
-

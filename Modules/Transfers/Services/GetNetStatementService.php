@@ -50,7 +50,7 @@ class GetNetStatementService
     protected float $totalChargeback = 0;
     protected float $totalReversed = 0;
 
-    public function performWebStatement(stdClass $data, array $filters = [])
+    public function performWebStatement(stdClass $data, array $filters = [], $limit = false)
     {
 
         $this->filters = $filters;
@@ -76,11 +76,11 @@ class GetNetStatementService
         }
 
         $this->preparesDatabasePendingDebtsWithSaleSearch();
-        //$this->preparesNodeChargeback();
+        $items = collect($this->statementItems)->sortByDesc('sequence')->values();
 
         return [
-            'items' => collect($this->statementItems)->sortByDesc('sequence')->values()->all(),
-            'totalInPeriod' => $this->totalInPeriod,
+            'items' => !$limit ? $items->all() : $items->take($limit),
+            'totalInPeriod' => number_format($this->totalInPeriod, 2),
             'totalAdjustment' => $this->totalAdjustment,
             'totalChargeback' => $this->totalChargeback,
             'totalReversed' => $this->totalReversed,
@@ -466,9 +466,11 @@ class GetNetStatementService
 
         if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
 
+            // Em 18/03/2021: Se carregarmos os REVERSED mostraremos um valor negativo.
+            // Ex: kZ7k7VNZ logado na conta de VITOR MONTEIRO DA SILVA
             $saleId = $this->filters['sale_id'];
             $pendingDebts = PendingDebt::whereSaleId($saleId)
-                ->whereIn('type', ['ADJUSTMENT', 'REVERSED'])
+                ->whereIn('type', ['ADJUSTMENT'])
                 ->whereCompanyId($companyId)
                 ->get();
 
@@ -516,7 +518,7 @@ class GetNetStatementService
 
                 $type = StatementItem::TYPE_ADJUSTMENT;
                 $details->setStatus('Ajuste de débito')
-                    ->setDescription($pendingDebt->reason)
+                    ->setDescription($pendingDebt->reason ?? '')
                     ->setType(Details::STATUS_ADJUSTMENT_DEBIT);
             } else {
 

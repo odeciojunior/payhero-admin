@@ -26,20 +26,16 @@ class PostBackTrackingmoreController extends Controller
             $data = $request->all();
 
             $trackingService = new TrackingService();
-            $trackingmoreService = new TrackingmoreService();
             $trackingModel = new Tracking();
 
             $trackingCode = $data['data']['tracking_number'] ?? '';
-            $trackingStatus = $trackingmoreService->parseStatus($data['data']['status'] ?? '');
 
             $trackings = $trackingModel->with('productPlanSale')
                 ->where('tracking_code', $trackingCode)
                 ->get();
 
             foreach ($trackings as $tracking) {
-                if ($tracking->tracking_status_enum != $trackingStatus) {
-                    $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale, false, false);
-                }
+                $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale, false, false);
             }
 
             return response()->json(['message' => 'Postback received!']);

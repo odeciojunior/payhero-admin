@@ -5,7 +5,7 @@
         <div class="panel" data-plugin="matchHeight">
             <div style="width: 100%">
                 <div class="row">
-                    <div class="form-group col-xl-12 mt-4">
+                    <div class="form-group col-12 mt-4">
                         <label for="name">Descrição</label>
                         <input value="" name="name" type="text" class="input-pad pixel-description"
                                placeholder="Descrição"
@@ -31,42 +31,64 @@
                         </select>
                     </div>
                 </div>
-                <label for="code">Código</label>
-                <div class="input-group mb-3">
-                    <div class='input-group-prepend'>
-                        <span class='input-group-text' id='input-code-pixel-edit'
-                              style='background:#f3f3f3;display:none'></span>
-                    </div>
-                    <input value="" name="code" id='code-pixel' type="text" class="form-control pixel-code"
-                           placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel-edit">
+
+                {{-- INPUT RADIO FACEBOOK-API --}}
+                <div class="form-group col-md-6 row" id="api-facebook" style="display:none;">
+                    <label class="col-md-5 form-check-label">
+                        <input type="radio" id="default-api-facebook" name="api-facebook" value="default"
+                               class="col-md-2 api-facebook-check form-check-input" checked>
+                        Padrão
+                    </label>
+                    <label class="col-md-5 form-check-label">
+                        <input type="radio" id="api-facebook" name="api-facebook" value="api"
+                               class="col-md-2 api-facebook-check form-check-input">
+                        API
+                    </label>
                 </div>
-                <div class="row" id="meta-tag-facebook" style="display:none;">
-                    <div class="form-group col-12 my-20">
-                        <a class="facebook-meta-tag-tooltip" data-html="true" data-toggle="tooltip" title="<img src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/meta-tag-facebook' />">
-                            <i class="ml-2 icon wb-info-circle"  aria-hidden="true"></i>
-                        </a>
-                        <label for="code_meta_tag_facebook">Meta-tag verificação do facebook</label>
-                        <input name="code_meta_tag_facebook" type="text" id='code_meta_tag_facebook' class="form-control pixel-code-meta-tag-facebook"
-                               placeholder="pi89g6zc6ci1wywhdekrw7hy1c1jc7" maxlength='255' aria-describedby="input-code-pixel">
+
+                <div class="form-row">
+                    {{-- INPUT RADIO FACEBOOK-API --}}
+                    <div class="form-group col-md-9">
+                        <label for="code-pixel" class="form-control-label">Código</label>
+                        <div class="input-group">
+                            <span class='input-group-text' id='input-code-pixel-edit'
+                                  style='background:#f3f3f3;display:none'></span>
+                            <input value="" name="code" id='code-pixel' type="text" class="form-control pixel-code"
+                                   placeholder="52342343245553" maxlength='100'
+                                   aria-describedby="input-code-pixel-edit">
+                        </div>
+                    </div>
+
+                    {{-- INPUT PERCENTAGE BOLETO VALUE --}}
+                    <div class="form-group col-md-3 div-percentage-value-boleto">
+                        <label for="percentage-value" class="form-control-label">% Valor Boleto</label>
+                        <input type="text" class="form-control" name="value_percentage_purchase_boleto"
+                               id="percentage-value" placeholder="100" maxlength="3">
                     </div>
                 </div>
+
+                {{-- INPUT TOKEN FACEBOOK --}}
+                <div class="form-group" id="div-facebook-token-api" style="display:none;">
+                    <label for="facebook-token-api">Token Acesso API Conversões</label>
+                    <input name="facebook-token-api" type="text" id='facebook-token-api'
+                           class="form-control pixel-code"
+                           placeholder="Token" maxlength='255'>
+                </div>
+
                 {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
-                <div class="row purchase-event-name-div" style="display:none;">
-                    <div class="form-group col-12 my-20">
-                        <label for="purchase-event-name">Nome Evento Conversão </label>
-                        <input name="purchase-event-name" type="text"
-                               class="form-control pixel-code purchase-event-name"
-                               placeholder="Purchase" maxlength='255' aria-describedby="purchase-event-name">
-                    </div>
+                <div class="form-group purchase-event-name-div" style="display:none;">
+                    <label for="purchase-event-name" class="form-control-label">Nome Evento Conversão </label>
+                    <input name="purchase-event-name" type="text"
+                           class="form-control pixel-code purchase-event-name"
+                           placeholder="Purchase" maxlength='255' aria-describedby="purchase-event-name">
                 </div>
-                {{-- END INPUT NAME PURCHASE EVENT TABOOLA --}}
-                <div class="row">
-                    <div class='form-group col-12'>
-                        <label for="edit_pixel_plans">Executar no(s) plano(s)</label>
-                        <select name="edit_pixel_plans[]" id="edit_pixel_plans"
-                                class="apply_plans js-states form-control"
-                                style='width:100%' data-plugin="select2" multiple='multiple'> </select>
-                    </div>
+
+                {{-- SELECT PLANS APPLY TO PIXEL --}}
+                <div class='form-group'>
+                    <label for="edit_pixel_plans" class="form-control-label">Executar no(s) plano(s)</label>
+                    <select name="edit_pixel_plans[]" id="edit_pixel_plans"
+                            class="apply_plans js-states form-control"
+                            style='width:100%' data-plugin="select2" multiple='multiple'> </select>
                 </div>
             </div>
             <div class='mb-1'>

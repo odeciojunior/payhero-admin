@@ -16,6 +16,7 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\CompanyService;
@@ -24,6 +25,7 @@ use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
@@ -289,6 +291,7 @@ class ShopifyApiController extends Controller
             $projectService->createUpsellConfig($projectCreated->id);
 
             event(new ShopifyIntegrationEvent($shopifyIntegrationCreated, auth()->user()->account_owner_id));
+            TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             return response()->json(
                 [

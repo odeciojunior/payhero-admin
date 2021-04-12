@@ -16,10 +16,10 @@
             <img id="logoSirius" class="navbar-brand-logo d-none" src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}">
             <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}"> </span> -->
         </div>
-        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
-            <span class="sr-only">Toggle Search</span>
-            <i class="icon wb-search" aria-hidden="true"></i>
-        </button>
+{{--        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">--}}
+{{--            <span class="sr-only">Toggle Search</span>--}}
+{{--            <i class="icon wb-search" aria-hidden="true"></i>--}}
+{{--        </button>--}}
     </div>
     <div class="navbar-container container-fluid">
         <input type='hidden' id='user'
@@ -59,15 +59,17 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                        data-animation="scale-up" role="button">
-                <span class="avatar avatar-online">
-                  <img class='img-user-menu-principal'
-                       src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
-                       onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
-                       alt="">
-                  <i></i>
-                </span>
+
+                        <span class="avatar avatar-online">
+                          <img class='img-user-menu-principal'
+                               src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
+                               onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
+                               alt="">
+                          <i></i>
+                        </span>
+
                     </a>
-                    <div class="dropdown-menu" role="menu">
+                    <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
                         <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value="" role="menuitem">
                             <!-- <i class="material-icons align-middle"> settings </i> Configurações -->
                             <img  height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}" />
@@ -87,18 +89,18 @@
                 </li>
             </ul>
         </div>
-        <div class="collapse navbar-search-overlap" id="site-navbar-search">
-            <form role="search">
-                <div class="form-group">
-                    <div class="input-search">
-                        <i class="input-search-icon wb-search" aria-hidden="true"></i>
-                        <input type="text" class="form-control" name="site-search" placeholder="Search">
-                        <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"
-                                data-toggle="collapse" aria-label="Close"></button>
-                    </div>
-                </div>
-            </form>
-        </div>
+{{--        <div class="collapse navbar-search-overlap" id="site-navbar-search">--}}
+{{--            <form role="search">--}}
+{{--                <div class="form-group">--}}
+{{--                    <div class="input-search">--}}
+{{--                        <i class="input-search-icon wb-search" aria-hidden="true"></i>--}}
+{{--                        <input type="text" class="form-control" name="site-search" placeholder="Search">--}}
+{{--                        <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"--}}
+{{--                                data-toggle="collapse" aria-label="Close"></button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </form>--}}
+{{--        </div>--}}
         <!-- End Site Navbar Seach -->
     </div>
 </nav>
@@ -159,6 +161,15 @@
                             <span class="site-menu-title">Rastreamentos</span>
                         </a>
                     </li>
+
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                        <li class="site-menu-item">
+                            <a href="{{ route('contestations.index') }}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Contestações</span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -224,11 +235,12 @@
                                 <span class="site-menu-title">Extrato (antigo)</span>
                             </a>
                         </li>
+
                     </ul>
                 </li>
             @endif
         @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
                     <span class="bg-menu">
@@ -238,69 +250,77 @@
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
-                    <li class="site-menu-item has-sub">
-                        <a href="{!! route('reports.index') !!}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Vendas</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="{{ route('reports.checkouts') }}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Acessos</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="{{ route('reports.coupons') }}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Cupons de desconto</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="{{ route('reports.pending') }}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Saldo pendente</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                        <li class="site-menu-item has-sub">
+                            <a href="{!! route('reports.index') !!}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Vendas</span>
+                            </a>
+                        </li>
+                        <li class="site-menu-item">
+                            <a href="{{ route('reports.checkouts') }}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Acessos</span>
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="site-menu-item">
-                        <a href="{{ route('reports.blockedbalance') }}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Saldo bloqueado</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+                        <li class="site-menu-item">
+                            <a href="{{ route('reports.coupons') }}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Cupons de desconto</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                        <li class="site-menu-item">
+                            <a href="{{ route('reports.pending') }}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Saldo pendente</span>
+                            </a>
+                        </li>
+
+                        <li class="site-menu-item">
+                            <a href="{{ route('reports.blockedbalance') }}">
+                                <span class="bg-menu"></span>
+                                <span class="site-menu-title">Saldo bloqueado</span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub">
-                <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
-                    <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
-                    </span>
-                    <span class="site-menu-title mb-5">Afiliados</span>
-                </a>
-            </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub">
-                <a href="{{ route('apps') }}" id='apps-link'>
-                    <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
-                    </span>
-                    <span class="site-menu-title">Aplicativos</span>
-                </a>
-            </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner'))
-            <li class="site-menu-item has-sub">
-                <a href="{{ route('invitations.index') }}">
-                    <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
-                    </span>
-                    <span class="site-menu-title">Convites</span>
-                </a>
-            </li>
-        @endif
-    </ul>
+@if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+<li class="site-menu-item has-sub">
+<a href="{{ route('projectaffiliates') }}" id="affiliates-link">
+    <span class="bg-menu">
+        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+    </span>
+    <span class="site-menu-title mb-5">Afiliados</span>
+</a>
+</li>
+@endif
+@if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+<li class="site-menu-item has-sub">
+<a href="{{ route('apps') }}" id='apps-link'>
+    <span class="bg-menu">
+        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+    </span>
+    <span class="site-menu-title">Aplicativos</span>
+</a>
+</li>
+@endif
+@if(auth()->user()->hasRole('account_owner'))
+<li class="site-menu-item has-sub">
+<a href="{{ route('invitations.index') }}">
+    <span class="bg-menu">
+        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
+    </span>
+    <span class="site-menu-title">Convites</span>
+</a>
+</li>
+@endif
+</ul>
 </div>

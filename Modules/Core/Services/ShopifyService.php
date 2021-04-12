@@ -104,9 +104,11 @@ class ShopifyService
 
         $this->credential = new PublicAppCredential($token);
         $this->client = new Client(
-            $this->credential, $urlStore, [
-                                 'metaCacheDir' => $cache // Metadata cache dir, required
-                             ]
+            $this->credential,
+            $urlStore,
+            [
+                'metaCacheDir' => $cache // Metadata cache dir, required
+            ]
         );
 
         if ($getThemes) {
@@ -2152,8 +2154,11 @@ class ShopifyService
 
             foreach ($products as $product) {
                 foreach ($product->getVariants() as $variant) {
-                    $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                    break;
+                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))){
+                        $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                        break;
+                    }
+
                 }
 
                 return [

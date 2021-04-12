@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -31,10 +32,6 @@ class ShopifyReorderSales extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
     public function handle()
     {
         //Dia anterior

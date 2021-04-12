@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\CartRecoveryService;
 
@@ -26,11 +27,7 @@ class VerifyAbandonedCarts2 extends Command
     {
         parent::__construct();
     }
-
-    /**
-     * Execute the console command.
-     * @return mixed
-     */
+    
     public function handle()
     {
         $cartRecoveryService = new CartRecoveryService();

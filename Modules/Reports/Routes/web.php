@@ -22,7 +22,7 @@ Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/projections', 'ReportsController@projections')->name('reports.projections')->middleware('role:account_owner|admin');
     Route::get('/pending', 'ReportsController@pending')->name('reports.pending')->middleware('role:account_owner|admin');
 
-    Route::get('/coupons', 'ReportsController@coupons')->name('reports.coupons')->middleware('role:account_owner|admin');
+    Route::get('/coupons', 'ReportsController@coupons')->name('reports.coupons')->middleware('role:account_owner|admin|attendance');
 
     Route::get('/blockedbalance', 'ReportsController@blockedbalance')->name('reports.blockedbalance')->middleware('role:account_owner|admin');
 });

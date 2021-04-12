@@ -116,7 +116,7 @@
                                 </span>
                             </div>
                             <input name="contact" value="" type="text" class="input-pad form-control" id="contact"
-                                   placeholder="Contato" maxlength='40' aria-describedby="addon-contact">
+                                   placeholder="Contato" maxlength='144' aria-describedby="addon-contact">
                         </div>
                         <span id='contact-error' class='text-danger'></span>
                         <small id="message_not_verified_contact" style='color:red; display:none;'>Email não verificado,

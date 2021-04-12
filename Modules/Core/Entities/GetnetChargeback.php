@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $adjustment_amount
  * @property float $chargeback_amount
  * @property mixed $body
+ * @property integer $tax
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -33,7 +34,7 @@ class GetnetChargeback extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'amount', 'body', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['sale_id', 'company_id', 'project_id', 'user_id', 'transaction_date', 'installment_date', 'adjustment_date', 'amount', 'body', 'tax', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return BelongsTo

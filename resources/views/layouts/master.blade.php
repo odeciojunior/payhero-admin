@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html class="no-js">
 <head>
     <title>Sirius</title>
     <meta charset="utf-8">
@@ -28,7 +28,7 @@
 
 <!-- access token used for api ajax requests -->
     <meta name="access-token"
-          content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
+          content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png?v=1') }}">
@@ -36,6 +36,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png?v=1') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=04') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2545') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
@@ -44,6 +45,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
+
 {{--    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
@@ -57,19 +59,13 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=06') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=14') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=65') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=54') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')
-
-    @if(env('APP_ENV', 'production') == 'production' && getenv('APP_DEBUG') === 'false')
-        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
-        <script>
-            Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
-        </script>
-    @endif
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
@@ -109,8 +105,8 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>--}}
+{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>--}}
 {{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
@@ -128,10 +124,14 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=552') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=560') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
+
+
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=1') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=1') }}"></script>
 
 
 @stack('scripts')
