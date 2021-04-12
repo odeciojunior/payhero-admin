@@ -155,7 +155,7 @@ $(() => {
 
             }, success: function (response) {
                 alertCustom('success', response.message);
-                updateConfiguracoes();
+                show();
                 loadingOnScreenRemove();
             }
         });
