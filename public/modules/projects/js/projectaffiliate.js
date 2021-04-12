@@ -47,7 +47,7 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
-                $('.page-title, .title-pad').text(project.name);
+                $('.page-title .title, .title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Afiliado em ' + project.affiliate_date);
                 if (project.visibility === 'public') {

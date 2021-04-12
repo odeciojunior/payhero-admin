@@ -9,11 +9,11 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="" class="page-header container">
             <h1 class="page-title" style="min-height: 28px">
                 <a class="gray" href="/projects">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Meus projetos
+                    <span class="title">Meus projetos</span>
                 </a>
             </h1>
         </div>
@@ -108,7 +108,7 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=s0')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s0')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s01')}}"></script>
         <script src="{{asset('modules/affiliates/js/links.js?v=s04')}}"></script>
     @endpush
 @endsection
