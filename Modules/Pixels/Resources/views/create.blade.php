@@ -19,39 +19,39 @@
                         <img src="{{asset('pixel/analytics.png')}}" class="rounded-circle img-fluid logo-pixels"
                              data-value="google_analytics"
                              alt="logo analytics">
-                        <div class="" style="font: normal normal normal 11px Muli">Google Analytics</div>
+                        <div class="" style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
                     <div class="col-lg-2 col-6">
                         <img src="{{asset('pixel/old-analytics.png')}}"
                              class="rounded-circle img-fluid  logo-pixels"
                              data-value="google_analytics_four"
                              alt="logo analytics four">
-                        <div style="font: normal normal normal 11px Muli">Google Analytics 4</div>
+                        <div style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-2 col-6">
                         <img src="{{asset('pixel/google-ads.png')}}"
                              class="rounded-circle img-fluid  logo-pixels"
                              data-value="google_adwords"
                              alt="logo google adwords">
-                        <div style="font: normal normal normal 11px Muli">Google Adwords</div>
+                        <div style="font: normal normal normal 11px Muli;">Google Adwords</div>
                     </div>
                     <div class="col-lg-2 col-6">
                         <img src="{{asset('pixel/facebook.png')}}" class="rounded-circle img-fluid  logo-pixels"
                              data-value="facebook"
                              alt="logo facebook">
-                        <div style="font: normal normal normal 11px Muli">Facebook</div>
+                        <div style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-2 col-6">
                         <img src="{{asset('pixel/outbrain.png')}}" class="rounded-circle img-fluid  logo-pixels"
                              data-value="outbrain"
                              alt="logo outbrain">
-                        <div style="font: normal normal normal 11px Muli">Outbrain</div>
+                        <div style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-2 col-6">
                         <img src="{{asset('pixel/taboola.png')}}" class="rounded-circle img-fluid logo-pixels"
                              data-value="taboola"
                              alt="logo taboola">
-                        <div style="font: normal normal normal 11px Muli">Taboola</div>
+                        <div style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                 </div>
             </div>
@@ -64,29 +64,30 @@
 
 <div style="display: none;" id="configure-new-pixel">
     <div class="modal-content p-10 s-border-radius">
-        <div class="modal-header simple-border-bottom mb-10">
-            <div class="col-2">
-                <img src="" class="img-logo img-fluid img-selected" alt="image selected">
+        <div class="modal-header simple-border-bottom mb-10 align-items-center">
+            <div class="col-2" data-toggle="tooltip" data-placement="top" title="Clique para alterar o pixel">
+                <img src="" class="img-logo img-fluid img-selected pointer" alt="image selected">
             </div>
-            <div class="col-7">
+            <div class="col-7"
+                 style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
                 <h4 class="col-12 modal-title text-center" id="modal-title"
                     style="color:#787878; font: normal normal bold 22px Muli;">
                     Cadastrar pixel
                 </h4>
             </div>
             <div class="col-3">
-                <div class="switch-holder">
+                <div class="switch-holder d-flex align-items-center">
                     <label class='switch'>
                         <input type="checkbox" value="" name='status'
                                class='check pixel-status' checked>
                         <span class='slider round'></span>
                     </label>
-                    <label for="boleto" style="font: normal normal bold 16px Muli;color: #41DC8F;">Ativo</label>
+                    <label for="boleto" style="font: normal normal bold 16px Muli;color: #41DC8F;margin-bottom: 0;">Ativo</label>
                 </div>
             </div>
 
             <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal"
-               aria-label="Close">
+               aria-label="Close" style="position: absolute;right: 45px;top: 25px;">
                 <i class="material-icons md-16">close</i>
             </a>
         </div>

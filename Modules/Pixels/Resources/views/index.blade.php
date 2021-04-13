@@ -7,11 +7,21 @@
         padding: 5px;
         border-radius: 50px;
         border: 2px solid #2DA6F6;
+    }
+
+    .logo-pixels {
         -webkit-transition: all 0.3s;
         -moz-transition: all 0.3s;
         -ms-transition: all 0.3s;
         -o-transition: all 0.3s;
         transition: all 0.3s;
+    }
+
+    .slider::before {
+        height: 19px;
+        width: 19px;
+        left: -5px;
+        top: -3px;
     }
 
     .font-text {
