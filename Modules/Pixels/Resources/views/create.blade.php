@@ -238,7 +238,8 @@
         <div class="col-12 row">
             <div class="col-4"></div>
             <div class="col-4 text-center">
-                <button type="button" class="btn btn-success" id="btn-store-pixel">Salvar</button>
+                <button type="button" class="btn btn-success" id="btn-store-pixel"
+                style="padding: 15px 50px;">Confirmar</button>
             </div>
             <div class="col-4"></div>
         </div>
