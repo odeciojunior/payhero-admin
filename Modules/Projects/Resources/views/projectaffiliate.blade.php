@@ -47,7 +47,7 @@
                                     </div>
                                     <div class='col-md-6'>
                                         <h5 class=""><strong> Dias para liberar dinheiro </strong></h5>
-                                        <p class="card-text sm">Cartão de débito: <span id='show-debit-release'></span></p>
+                                        <p class="card-text sm">Boleto: <span id='show-billet-release'></span></p>
 
                                         <h5 class=""><strong> Duração do cookie </strong></h5>
                                         <p id="show-cookie-duration" class="card-text sm"></p>

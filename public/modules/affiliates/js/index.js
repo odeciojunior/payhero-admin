@@ -23,6 +23,9 @@ $(document).ready(function () {
             success: (response) => {
                 loadOnAny('.page-content', true);
                 $('.page-content').show();
+
+                console.log(response.data);
+
                 if (response.data.status_url_affiliates) {
                     $('.div-project').show();
                     $('.project-header').html(`Afiliação no projeto ${response.data.name}`);
@@ -70,8 +73,9 @@ $(document).ready(function () {
                     }
                     let dataRelease = '<strong>Dias para liberar dinheiro<br>';
                     dataRelease += `Boleto: <span class='green-gradient'>${response.data.billet_release_days} dias</span><br>`;
-                    dataRelease += `Cartão de débito: <span class='green-gradient'>${response.data.debit_release_days} dias</span>`;
+                    //dataRelease += `Cartão de débito: <span class='green-gradient'>${response.data.debit_release_days} dias</span>`;
                     dataRelease += '</strong>';
+
                     $('.release_days').html(dataRelease);
                 } else {
                     swal({
@@ -146,7 +150,7 @@ $(document).ready(function () {
             error: (response) => {
                 $('#modal_store_affiliate').modal('hide');
                 loadingOnScreenRemove();
-                // errorAjaxResponse(response);
+                errorAjaxResponse(response);
             },
             success: (response) => {
                 $('#modal_store_affiliate').modal('hide');
