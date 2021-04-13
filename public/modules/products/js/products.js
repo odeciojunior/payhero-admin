@@ -83,10 +83,12 @@ $(document).ready(function () {
                     if (response.data.product.type_enum == 1) {
                         $('#physical').attr('checked', true);
                         $('#div_digital_product_upload').css('visibility', 'hidden');
+                        $('#nav-logistic-tab').css('visibility', 'visible');
                         $('#digital_product_url').dropify();
                     } else {
                         $('#digital').attr('checked', true);
                         $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#nav-logistic-tab').css('visibility', 'hidden');
                         $('#digital_product_url').dropify({
                             messages: {
                                 'default': 'Arraste e solte ou clique para adicionar um arquivo',
@@ -343,6 +345,7 @@ $(document).ready(function () {
 
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
+        $('#nav-logistic-tab').css('visibility', 'visible');
         $('.div-expiration-time').hide();
         $('#url_expiration_time').val('');
     });
@@ -367,12 +370,14 @@ $(document).ready(function () {
                         $('#physical').click();
                     } else {
                         $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#nav-logistic-tab').css('visibility', 'hidden');
                         $('.div-expiration-time').show();
                     }
                 },
             });
         } else {
             $('#div_digital_product_upload').css('visibility', 'visible');
+            $('#nav-logistic-tab').css('visibility', 'hidden');
             $('.div-expiration-time').show();
         }
     });

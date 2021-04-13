@@ -190,12 +190,14 @@ $(document).ready(function () {
 
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
+        $("#nav-logistic-tab").css('visibility', 'visible');
         $('.div-expiration-time').hide();
         $('#url_expiration_time').val('');
     });
 
     $("#digital").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'visible');
+        $("#nav-logistic-tab").css('visibility', 'hidden');
         $('.div-expiration-time').show();
         $('#url_expiration_time').val('24');
     });
