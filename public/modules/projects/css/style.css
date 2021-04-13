@@ -240,7 +240,7 @@
 #products {
     height: 300px;
 
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 
     padding: 10px;
