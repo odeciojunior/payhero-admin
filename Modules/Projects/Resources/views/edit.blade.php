@@ -355,6 +355,19 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class='form-group col-md-6 offset-md-6 col-sm-12'>
+                                <label for="pix">Pix no checkout</label>
+                                <select name='pix' class='form-control select-pad' id="pix">
+                                    <option value='1'>Sim</option>
+                                    <option value='0'>Não</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
+                                    com pix no checkout
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="default_currency">Tipo de checkout</label>
                                 <select name='checkout_type' class='form-control select-pad' id="checkout_type">
@@ -391,6 +404,14 @@
                                        placeholder='URL' maxlength='60'>
                                 <span id='boleto_redirect-error' class='text-danger'></span>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+                                <label for='pix_redirect'>Pix (Redirecionamento página obrigado)</label>
+                                <input id='pix_redirect' name='pix_redirect' value='' class='input-pad' type='text'
+                                       placeholder='URL' maxlength='60'>
+                                <span id='pix_redirect-error' class='text-danger'></span>
+                            </div>
                             <p class="info mt-5 col-12" style="font-size: 10px;">
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o
                                 seu cliente para paginas de obrigado propias, informe a
@@ -413,6 +434,18 @@
                                 <label for="billet_discount">Desconto automático em boletos (%)</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-pad" id="billet_discount"
+                                           maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <label for="pix_discount">Desconto automático em pixs (%)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-pad" id="pix_discount"
                                            maxlength='3'>
                                     <div class="input-group-append bg-light">
                                         <span class="input-group-text">%</span>

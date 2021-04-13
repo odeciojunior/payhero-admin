@@ -40,6 +40,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property boolean $boleto
  * @property string $boleto_redirect
  * @property string $card_redirect
+ * @property string $pix_redirect
  * @property string $analyzing_redirect
  * @property string $support_phone
  * @property bool $countdown_timer_flag

@@ -295,6 +295,7 @@ $(() => {
         $('#boleto_due_days').val(project.boleto_due_days);
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
+        $('#update-project #pix_redirect').val(project.pix_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
         termsaffiliates.setData(project.terms_affiliates ?? ' ');
 
@@ -365,6 +366,7 @@ $(() => {
         $("#checkout_type").val(project.checkout_type);
         $("#credit_card_discount").val(project.credit_card_discount);
         $("#billet_discount").val(project.billet_discount);
+        $("#pix_discount").val(project.pix_discount);
 
         // Verificação de email de contato
         if (project.contact_verified) {
@@ -713,10 +715,12 @@ $(() => {
         formData.append('status_url_affiliates', statusUrlAffiliates);
         let discountCard = $('#credit_card_discount').val().replace('%', '');
         let discountBillet = $('#billet_discount').val().replace('%', '');
+        let discountPix = $('#pix_discount').val().replace('%', '');
         discountBillet = (discountBillet == '') ? 0 : discountBillet;
         discountCard = (discountCard == '') ? 0 : discountCard;
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
+        formData.append('pix_discount', discountPix);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
 
