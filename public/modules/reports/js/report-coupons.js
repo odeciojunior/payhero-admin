@@ -19,7 +19,7 @@ $(document).ready(function () {
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
     $('#date_range').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
+        startDate: moment('2018-01-01 00:00:00'),
         endDate: moment(),
         opens: 'center',
         maxDate: moment().endOf("day"),
