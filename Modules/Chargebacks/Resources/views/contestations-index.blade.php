@@ -264,7 +264,6 @@
                 <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
-                <div style="margin-top:100px; width:100%; float:left;">&nbsp;</div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
 

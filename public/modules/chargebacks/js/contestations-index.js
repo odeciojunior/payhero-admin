@@ -439,6 +439,10 @@ $(document).ready(function () {
 
         $("#pagination").html("");
 
+        if (response.meta.total <= response.meta.per_page) {
+            return;
+        }
+
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);

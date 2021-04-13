@@ -295,6 +295,7 @@ $(() => {
 
                 if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='6' style='height: 70px;vertical-align: middle'> Nenhum rastreamento encontrado</td></tr>");
+                    $('#pagination-trackings').html("");
                 } else {
                     $.each(response.data, function (index, tracking) {
 
