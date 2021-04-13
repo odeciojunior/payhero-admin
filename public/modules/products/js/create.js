@@ -191,6 +191,7 @@ $(document).ready(function () {
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
         $("#nav-logistic-tab").css('visibility', 'visible');
+        $("#div_digital_product_upload").addClass('d-none');
         $('.div-expiration-time').hide();
         $('#url_expiration_time').val('');
     });
@@ -198,6 +199,7 @@ $(document).ready(function () {
     $("#digital").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'visible');
         $("#nav-logistic-tab").css('visibility', 'hidden');
+        $("#div_digital_product_upload").removeClass('d-none')
         $('.div-expiration-time').show();
         $('#url_expiration_time').val('24');
     });
