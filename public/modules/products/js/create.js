@@ -188,6 +188,7 @@ $(document).ready(function () {
 
     $('#url_expiration_time').mask('0#');
 
+    $("#div_digital_product_upload").addClass('d-none');
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
         $("#nav-logistic-tab").css('visibility', 'visible');

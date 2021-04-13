@@ -47,7 +47,7 @@
                                             <br> Dimensões ideais: 300 x 300 pixels.
                                         </p>
                                     </div>
-                                    <div class="d-none" id="div_digital_product_upload" style="visibility:hidden; width:300px;">
+                                    <div class="" id="div_digital_product_upload" style="visibility:hidden; width:300px;">
                                         <label for="digital_product_url">Produto digital</label>
                                         <input type="file" id="digital_product_url" name="digital_product_url" data-height="300" data-max-width="300">
                                         <p class="info mt-5" style="font-size:10px;">
