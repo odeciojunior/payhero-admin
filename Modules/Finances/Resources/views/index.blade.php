@@ -221,7 +221,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-content card shadow" id="nav-tabContent">
                                 <div class='container col-sm-12 mt-20  d-md-none'>
                                     <div class='row'>
                                         <div class="col-12 col-sm-6 pl-0 pl-xs-0">
@@ -293,12 +293,12 @@
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
                                 </div>
                             </div>
+                            <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
+                                style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
+                                {{--js carrega...--}}
+                            </ul>
                         </div>
                         {{--EXTRATO--}}
                         <div
@@ -491,27 +491,31 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <table id="statementTable"
-                                   class="table table-condensed unify table-striped"
-                                   style="margin-bottom: 3.143rem !important;">
-                                <thead>
-                                <tr>
-                                    <th scope="col" class="headCenter">Razão</th>
-                                    <th scope="col" class="headCenter">Data prevista
-                                        <i style="font-weight: normal"
-                                           class="o-question-help-1 ml-5 font-size-14"
-                                           data-toggle="tooltip"
-                                           title=""
-                                           data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                    </th>
-                                    <th scope="col" class="headCenter">Status</th>
-                                    <th scope="col" class="headCenter">Valor</th>
-                                </tr>
-                                </thead>
-                                <tbody id="table-statement-body"
-                                       class="custom-t-body table-statement-body-class">
-                                </tbody>
-                            </table>
+                            <div class="card shadow">
+                                <table id="statementTable"
+                                    class="table table-condensed unify table-striped"
+                                    style="margin-bottom: 3.143rem !important;">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="headCenter">Razão</th>
+                                        <th scope="col" class="headCenter">Data prevista
+                                            <i style="font-weight: normal"
+                                            class="o-question-help-1 ml-5 font-size-14"
+                                            data-toggle="tooltip"
+                                            title=""
+                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
+                                        </th>
+                                        <th scope="col" class="headCenter">Status</th>
+                                        <th scope="col" class="headCenter">Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table-statement-body"
+                                        class="custom-t-body table-statement-body-class"
+                                        style="height: 150px;">
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
                                  style="margin-top: 10px;margin-bottom:100px; position:relative;">
