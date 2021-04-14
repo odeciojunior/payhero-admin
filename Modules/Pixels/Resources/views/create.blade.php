@@ -67,6 +67,7 @@
         <div class="modal-header simple-border-bottom mb-10 align-items-center">
             <div class="col-2" data-toggle="tooltip" data-placement="top" title="Clique para alterar o pixel">
                 <img src="" class="img-logo img-fluid img-selected pointer" alt="image selected">
+                <input type="hidden" name="platform" id="platform" value="">
             </div>
             <div class="col-7"
                  style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
