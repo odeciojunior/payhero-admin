@@ -230,7 +230,7 @@
                             </a>
                         </li>
                         <li class="site-menu-item">
-                            <a href="{{ route('old-finances') }}">
+                            <a href="#">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Extrato (antigo)</span>
                             </a>
