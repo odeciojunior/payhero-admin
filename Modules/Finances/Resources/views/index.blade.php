@@ -434,7 +434,7 @@
                                                             style="height: 40px;width: 75%;">
                                                         <img style="height: 12px; margin-right: 4px"
                                                              src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                        Filtros
+                                                        filtros
                                                     </button>
                                                 </div>
                                             </div>
@@ -459,7 +459,7 @@
                                                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                                 <img style="height: 12px; margin-right: 4px"
                                                                      src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                                Filtros
+                                                                filtros
                                                             </button>
                                                         </div>
                                                     </div>

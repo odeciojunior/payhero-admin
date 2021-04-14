@@ -570,6 +570,21 @@ $(() => {
             },
         });
     });
+
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
+        }
+    });
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             index();

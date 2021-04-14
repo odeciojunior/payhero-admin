@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex align-items-center pt-md-20 pt-10">
                                         <button id="bt_filtro" class="btn btn-primary col">
-                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
                                         </button>
                                     </div>
                                 </div>

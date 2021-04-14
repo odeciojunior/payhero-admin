@@ -196,32 +196,47 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="status_commission">Status da comissão</label>
-                            <select name='status_commission' id="status_commission" class="form-control select-pad">
-                                <option value="">Todos</option>
-                                <option value="transfered">Transferido</option>
-                                <option value="pending">Pendente</option>
-                                <option value="blocked">Não transferido por falta de rastreio</option>
-                            </select>
+                    <div class="row collapse" id="bt_collapse">
+                        <div class="d-flex flex-wrap">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="status_commission">Status da comissão</label>
+                                <select name='status_commission' id="status_commission" class="form-control select-pad">
+                                    <option value="">Todos</option>
+                                    <option value="transfered">Transferido</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="blocked">Não transferido por falta de rastreio</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="date_updated">Data de aprovação venda</label>
+                                <input name='date_updated' id="date_updated" class="select-pad"
+                                    placeholder="Clique para editar..." readonly>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
+                                <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
+                                <label class="switch">
+                                    <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_updated">Data de aprovação venda</label>
-                            <input name='date_updated' id="date_updated" class="select-pad"
-                                   placeholder="Clique para editar..." readonly>
+                    </div>
+                    <div class="row" style="height: 30px">
+                        <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                 data-toggle="collapse"
+                                 data-target="#bt_collapse"
+                                 aria-expanded="false"
+                                 aria-controls="bt_collapse">
+                                <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <span id="text-filtro">Filtros avançados</span>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
-                            <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
-                            <label class="switch">
-                                <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
+                        <div class="col-sm-6 col-xl-3 text-right mt-20">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                Aplicar filtros
+                            </div>
                         </div>
                     </div>
                 </div>

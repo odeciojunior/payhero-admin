@@ -50,7 +50,7 @@
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label> </label>
                                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
                                             </button>
                                         </div>
                                         <div class="col-2">

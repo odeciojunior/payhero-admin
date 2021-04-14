@@ -59,7 +59,6 @@
             <div class="page-content container">
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
-
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
@@ -82,26 +81,39 @@
                             <label for='date-range-sales-recovery'>Filtrar Data</label>
                             <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad' placeholder='Clique para editar...' readonly>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="client-name">Nome do Cliente</label>
-                            <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="client-cpf">CPF do Cliente</label>
-                            <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
-                        </div>
-                        <div class='col-3'></div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right">
-                            <label></label>
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top:7px">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
+                    </div>
+                    <div class="row collapse" id="bt_collapse">
+                        <div class="d-flex flex-wrap">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="client-name">Nome do Cliente</label>
+                                <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="client-cpf">CPF do Cliente</label>
+                                <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-15">
-                        <div class='col-xl-3'></div>
+                    <div class="row" style="height: 30px">
+                        <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                 data-toggle="collapse"
+                                 data-target="#bt_collapse"
+                                 aria-expanded="false"
+                                 aria-controls="bt_collapse">
+                                <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <span id="text-filtro">Filtros avançados</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-3 text-right mt-20">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                Aplicar filtros
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="fixhalf"></div>
                 <!-- Aviso de Exportação -->
                 <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
                     <div class="d-flex">
