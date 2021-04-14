@@ -70,7 +70,7 @@ $(() => {
                 }
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
-                $('#show-billet-release').text(project.billet_release_days > 1 ? project.billet_release_days + ' dias' : project.billet_release_days + 'dia');
+                $('#show-billet-release').text(project.billet_release_days + ' dias');
                 loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {

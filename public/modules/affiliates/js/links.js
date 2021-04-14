@@ -232,7 +232,7 @@ $(function () {
                 } else {
                     $("#data-table-link").html('');
 
-                    if (response.data[0].document_status == 'approved') {
+                    if (response.data[0].document_status == 'approved' && response.data[0].domain !== '') {
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';

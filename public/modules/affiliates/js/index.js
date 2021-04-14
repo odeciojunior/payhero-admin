@@ -71,12 +71,9 @@ $(document).ready(function () {
                     if (response.data.support_phone != '') {
                         $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
                     }
-                    let dataRelease = '<strong>Dias para liberar dinheiro<br>';
-                    dataRelease += `Boleto: <span class='green-gradient'>${response.data.billet_release_days} dias</span><br>`;
-                    //dataRelease += `Cartão de débito: <span class='green-gradient'>${response.data.debit_release_days} dias</span>`;
-                    dataRelease += '</strong>';
+                    
 
-                    $('.release_days').html(dataRelease);
+                    $('.release_days').html(`<strong>Dias para liberar dinheiro: <span class='green-gradient'>${response.data.billet_release_days}</span> dias</strong>`);
                 } else {
                     swal({
                         title: 'Esse projeto não está disponível para afiliação',
