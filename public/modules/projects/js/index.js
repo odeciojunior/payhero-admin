@@ -19,6 +19,11 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
+                if(verifyAccountFrozen()) {
+                    $('#btn-config').css({"visibility":"hidden"});
+                } else {
+                    $('#btn-config').css({"visibility":"visible"});
+                }
                 if (response.data.length) {
                     $.each(response.data, (key, project) => {
                         if(verifyAccountFrozen()) {
@@ -75,14 +80,10 @@ $(() => {
                 } else {
                     $('#data-table-projects').hide();
                     $('.content-error').show();
+                    $('#btn-config').css({"visibility":"hidden"});
                 }
 
                 loadingOnScreenRemove();
-                if(verifyAccountFrozen()) {
-                    $('#btn-config').css({"visibility":"hidden"});
-                } else {
-                    $('#btn-config').css({"visibility":"visible"});
-                }
             }
         });
     }
