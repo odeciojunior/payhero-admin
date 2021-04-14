@@ -70,6 +70,8 @@ use Spatie\Activitylog\Models\Activity;
 class Project extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DESABLE = 2;
 
     /**
      * @var bool
