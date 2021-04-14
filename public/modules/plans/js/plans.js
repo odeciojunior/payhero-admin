@@ -228,7 +228,7 @@ $(function () {
 
             }),
             success: function success(response) {
-
+                $('#pagination-plans').html('');
                 if (isEmpty(response.data)) {
                     $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-plans').addClass('table-striped');
