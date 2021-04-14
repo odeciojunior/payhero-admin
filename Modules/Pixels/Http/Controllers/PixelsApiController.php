@@ -3,6 +3,7 @@
 namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -63,16 +64,13 @@ class PixelsApiController extends Controller
     public function store(PixelStoreRequest $request, $projectId): JsonResponse
     {
         try {
-            $pixelModel = new Pixel();
-            $projectModel = new Project();
-
             $validator = $request->validated();
 
             if (!$validator || !isset($projectId)) {
                 return response()->json('Parametros inválidos', 400);
             }
 
-            $validator['project_id'] = current(Hashids::decode($projectId));
+            $validator['project_id'] = hashids_decode($projectId);
 
             $affiliateId = 0;
             if (!empty($validator['affiliate_id'])) {
@@ -82,7 +80,7 @@ class PixelsApiController extends Controller
                 $validator['affiliate_id'] = null;
             }
 
-            $project = $projectModel->find($validator['project_id']);
+            $project = Project::find($validator['project_id']);
 
             if (!Gate::allows('edit', [$project, $affiliateId])) {
                 return response()->json(['message' => 'Sem permissão para salvar pixels'], 403);
@@ -125,7 +123,7 @@ class PixelsApiController extends Controller
                 $validator['value_percentage_purchase_boleto'] = 100;
             }
 
-            $pixel = $pixelModel->create(
+            $pixel = Pixel::create(
                 [
                     'project_id' => $validator['project_id'],
                     'name' => $validator['name'],

@@ -630,11 +630,13 @@ $(function () {
     }
 
     $("img.logo-pixels").on('click', function () {
+        $("#platform").val('');
         const platform = $(this).data('value');
-
+        $("#platform").val(platform);
         $(".img-logo").attr('src', this.src);
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+
 
         changePlaceholderInput(platform);
 
