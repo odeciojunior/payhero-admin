@@ -36,9 +36,14 @@ class VerifyFrozenAccountApi
             '/api/old_finances/export',
             '/api/transfers/account-statement-data/export',
             '/api/logout',
-            'api/projects/updateorder',
-            'api/tracking/import',
+            '/api/projects/updateorder',
+            '/api/tracking/import',
+            '/api/sales/export',
         ];
+        
+        if ($request->route('transaction_id')) {
+            array_push($excepts,'/api/sales/newordershopify/'.$request->route('transaction_id'));
+        }
 
         if(strtoupper($request->method()) == 'GET') {
             return true;
