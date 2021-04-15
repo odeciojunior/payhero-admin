@@ -15,7 +15,7 @@ class PixelStoreRequest extends FormRequest
             'code' => 'required',
             'api-facebook' => 'nullable|string',
             'facebook-token-api' => 'nullable|string',
-            'purchase_event_name' => 'nullable|max:255',
+            'purchase-event-name' => 'nullable|max:255',
             'add_pixel_plans' => 'required|array',
             'checkout' => 'nullable',
             'purchase_card' => 'nullable',

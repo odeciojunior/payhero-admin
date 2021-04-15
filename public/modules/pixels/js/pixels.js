@@ -298,9 +298,10 @@ $(function () {
         return true;
     }
 
-    //criar novo pixel
-    $("#modal-create-pixel .btn-save").on('click', function () {
+    //Create new Pixel
+    $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
+        formData.append('status', $("#modal-create-pixel .pixel-status").val());
 
         if (!validateDataPixelForm({
             'name': formData.get('name'),
@@ -315,11 +316,9 @@ $(function () {
             return false;
         }
 
-        formData.set('value_percentage_purchase_boleto', parseInt(formData.get('value_percentage_purchase_boleto')));
-        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
-        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
-        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
-        formData.append('purchase_event_name', $("#modal-create-pixel #purchase-event-name").val());
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
 
         loadingOnScreen();
         $.ajax({
@@ -343,9 +342,9 @@ $(function () {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
                 if (response.success) {
+                    $("#modal-create-pixel").modal('hide');
                     alertCustom("success", response.message);
                     atualizarPixel();
-                    clearFields();
                 } else {
                     alertCustom("error", response.message);
                 }
@@ -353,7 +352,7 @@ $(function () {
         });
     });
 
-    //atualizar pixel
+    //Update Pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         if (!validateDataPixelForm({
             'name': $("#modal-edit-pixel .pixel-description").val(),
@@ -406,7 +405,7 @@ $(function () {
         });
     });
 
-    // deletar pixel
+    // Delete Pixel
     $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
         loadingOnScreen();
         const pixel = $(this).attr('pixel');
@@ -442,6 +441,7 @@ $(function () {
         });
     });
 
+    // Index Pixel
     function atualizarPixel() {
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         currentPage = link;
@@ -466,58 +466,32 @@ $(function () {
                 $("#data-table-pixel").html(response.message);
             },
             success: function success(response) {
-                $("#data-table-pixel").html('');
+                $("#data-table-pixel, #pagination-pixels").html('');
+
                 if (response.data == '') {
-                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-pixel').addClass('table-striped');
-
-                } else {
-                    $('#count-pixels').html(response.meta.total)
-                    $.each(response.data, function (index, value) {
-                        const data = `<tr>
-                                    <td>${value.name}</td>
-                                    <td>${value.code}</td>
-                                    <td>${formatPlatform[value.platform_enum]}</td>
-                                    <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
-                                    <td style='text-align:center'>
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
-                                    </td>
-                                </tr>`;
-                        $("#data-table-pixel").append(data);
-                        $('#table-pixel').addClass('table-striped');
-                    });
-
+                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    return;
                 }
-                pagination(response, 'pixels', atualizarPixel);
 
-                $("#select-platform").change(function () {
-                    const value = $(this).val();
-                    $("#input-code-pixel").html('').hide();
-
-                    $("#google-analytics-info, #api-facebook, .purchase-event-name-div").hide();
-
-                    if (value === 'facebook') {
-                        $("#api-facebook").show();
-                        $("#code-pixel").attr("placeholder", '52342343245553');
-                    } else if (value === 'google_adwords') {
-                        $("#input-code-pixel").html('AW-').show();
-                        $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
-                    } else if (value === 'google_analytics') {
-                        $("#code-pixel").attr("placeholder", 'UA-8984567741-3');
-                    } else if (value === 'google_analytics_four') {
-                        $("#code-pixel").attr("placeholder", 'G-KZSV4LMBAC');
-                    } else if (value === 'taboola') {
-                        $(".purchase-event-name-div").show();
-                        $("#code-pixel").attr("placeholder", '1010100');
-                    } else if (value === 'outbrain') {
-                        $(".purchase-event-name-div").show();
-                        $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
-                    } else {
-                        $("#code-pixel").attr("placeholder", 'Código');
-                    }
+                $.each(response.data, function (index, value) {
+                    $("#data-table-pixel").append(`
+                        <tr>
+                            <td>${value.name}</td>
+                            <td>${value.code}</td>
+                            <td>${formatPlatform[value.platform_enum]}</td>
+                            <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
+                            <td style='text-align:center'>
+                                <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                            </td>
+                        </tr>
+                    `);
+                    $('#table-pixel').addClass('table-striped');
                 });
+
+                pagination(response, 'pixels', atualizarPixel);
             }
         });
     }
@@ -592,13 +566,11 @@ $(function () {
         }
     });
 
+    // Create Pixel
     $("#add-pixel").on('click', function () {
         openModalCreatePixel();
         $("#modal-create-pixel").modal('show');
     });
-
-
-    // Create Pixel
 
     function changePlaceholderInput(value) {
         const codeInput = $("#code-pixel");
@@ -630,13 +602,11 @@ $(function () {
     }
 
     $("img.logo-pixels").on('click', function () {
-        $("#platform").val('');
         const platform = $(this).data('value');
-        $("#platform").val(platform);
+        $("#platform").val('').val(platform);
         $(".img-logo").attr('src', this.src);
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
-
 
         changePlaceholderInput(platform);
 

@@ -105,13 +105,13 @@ class PixelsApiController extends Controller
             $isApi = false;
 
             if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
-                $validator['purchase_event_name'] = null;
+                $validator['purchase-event-name'] = null;
             }
 
-            if ($validator['platform'] == 'taboola' && empty($validator['purchase_event_name'])) {
-                $validator['purchase_event_name'] = 'make_purchase';
-            } elseif ($validator['platform'] == 'outbrain' && empty($validator['purchase_event_name'])) {
-                $validator['purchase_event_name'] = 'Purchase';
+            if ($validator['platform'] == 'taboola' && empty($validator['purchase-event-name'])) {
+                $validator['purchase-event-name'] = 'make_purchase';
+            } elseif ($validator['platform'] == 'outbrain' && empty($validator['purchase-event-name'])) {
+                $validator['purchase-event-name'] = 'Purchase';
             } elseif ($validator['platform'] == 'facebook') {
                 if (!empty($validator['api-facebook']) && $validator['api-facebook'] == 'api') {
                     $facebookToken = $validator['facebook-token-api'];
@@ -136,7 +136,7 @@ class PixelsApiController extends Controller
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
-                    'purchase_event_name' => $validator['purchase_event_name'],
+                    'purchase_event_name' => $validator['purchase-event-name'],
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
                     'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto']
