@@ -125,6 +125,10 @@ class PixelsApiController extends Controller
                 $validator['value_percentage_purchase_boleto'] = 100;
             }
 
+            if (empty($validator['value_percentage_purchase_pix'])) {
+                $validator['value_percentage_purchase_pix'] = 100;
+            }
+
             $pixel = $pixelModel->create(
                 [
                     'project_id' => $validator['project_id'],
@@ -135,13 +139,15 @@ class PixelsApiController extends Controller
                     'checkout' => $validator['checkout'],
                     'purchase_boleto' => $validator['purchase_boleto'],
                     'purchase_card' => $validator['purchase_card'],
+                    'purchase_pix' => $validator['purchase_pix'],
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
                     'purchase_event_name' => $validator['purchase_event_name'],
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
-                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
+                    'value_percentage_purchase_pix' => $validator['value_percentage_purchase_pix']
                 ]
             );
 
@@ -235,11 +241,12 @@ class PixelsApiController extends Controller
                     'apply_on_plans' => $applyPlanEncoded,
                     'checkout' => $validated['checkout'],
                     'purchase_boleto' => $validated['purchase_boleto'],
-                    'purchase_card' => $validated['purchase_card'],
+                    'purchase_pix' => $validated['purchase_pix'],
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
                     'is_api' => $validated['is_api'],
-                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
+                    'value_percentage_purchase_pix' => $validated['value_percentage_purchase_pix']
                 ]
             );
             if ($pixelUpdated) {

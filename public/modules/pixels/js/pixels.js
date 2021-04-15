@@ -229,7 +229,8 @@ $(function () {
         $('#modal-edit-pixel .pixel-id').val(pixel.id_code);
         $('#modal-edit-pixel .pixel-description').val(pixel.name);
         $('#modal-edit-pixel .pixel-code').val(pixel.code);
-        $('#modal-edit-pixel #percentage-value').val(pixel.value_percentage_purchase_boleto);
+        $('#modal-edit-pixel #percentage-value-boleto').val(pixel.value_percentage_purchase_boleto);
+        $('#modal-edit-pixel #percentage-value-pix').val(pixel.value_percentage_purchase_pix);
 
         if (pixel.platform == 'facebook') {
             $("#modal-edit-pixel #facebook-token-api").val('');
@@ -278,6 +279,11 @@ $(function () {
             $('#modal-edit-pixel .pixel-purchase-boleto').val(1).prop('checked', true);
         } else {
             $('#modal-edit-pixel .pixel-purchase-boleto').val(0).prop('checked', false);
+        }
+        if (pixel.purchase_pix == '1') {
+            $('#modal-edit-pixel .pixel-purchase-pix').val(1).prop('checked', true);
+        } else {
+            $('#modal-edit-pixel .pixel-purchase-pix').val(0).prop('checked', false);
         }
 
         $("#modal-edit-pixel .apply_plans").html('');
@@ -374,6 +380,7 @@ $(function () {
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
+        formData.append('purchase_pix', $("#modal-create-pixel .pixel-purchase-pix").val());
         formData.append('purchase_event_name', $("#modal-create-pixel #purchase-event-name").val());
 
         loadingOnScreen();
@@ -426,7 +433,8 @@ $(function () {
             'platform': $("#modal-edit-pixel .pixel-platform").val(),
             'is_api': $("#modal-edit-pixel input[type=radio]:checked").val(),
             'code': $("#modal-edit-pixel .pixel-code").val(),
-            'value_percentage_purchase_boleto': $("#modal-edit-pixel #percentage-value").val(),
+            'value_percentage_purchase_boleto': $("#modal-edit-pixel #percentage-value-boleto").val(),
+            'value_percentage_purchase_pix': $("#modal-edit-pixel #percentage-value-pix").val(),
             'facebook_token_api': $("#modal-edit-pixel #facebook-token-api").val(),
             'purchase_event_name': $("#modal-edit-pixel .purchase-event-name").val(),
             'plans_apply': $("#modal-edit-pixel .apply_plans").val()
@@ -453,11 +461,13 @@ $(function () {
                 checkout: $("#modal-edit-pixel .pixel-checkout").val(),
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
                 purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val(),
+                purchase_pix: $("#modal-edit-pixel .pixel-purchase-pix").val(),
                 edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val(),
                 purchase_event_name: $("#modal-edit-pixel .purchase-event-name").val(),
                 is_api: $("#modal-edit-pixel input[type=radio]:checked").val(),
                 facebook_token_api: $("#modal-edit-pixel #facebook-token-api").val(),
-                value_percentage_purchase_boleto: $("#modal-edit-pixel #percentage-value").val(),
+                value_percentage_purchase_boleto: $("#modal-edit-pixel #percentage-value-boleto").val(),
+                value_percentage_purchase_pix: $("#modal-edit-pixel #percentage-value-pix").val(),
             },
             error: function (response) {
                 loadingOnScreenRemove();

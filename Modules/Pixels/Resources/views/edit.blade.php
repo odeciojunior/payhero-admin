@@ -48,7 +48,7 @@
 
                 <div class="form-row">
                     {{-- INPUT RADIO FACEBOOK-API --}}
-                    <div class="form-group col-md-9">
+                    <div class="form-group col-12 col-md-6">
                         <label for="code-pixel" class="form-control-label">Código</label>
                         <div class="input-group">
                             <span class='input-group-text' id='input-code-pixel-edit'
@@ -60,10 +60,17 @@
                     </div>
 
                     {{-- INPUT PERCENTAGE BOLETO VALUE --}}
-                    <div class="form-group col-md-3 div-percentage-value-boleto">
-                        <label for="percentage-value" class="form-control-label">% Valor Boleto</label>
+                    <div class="form-group col-6 col-md-3 div-percentage-value-boleto">
+                        <label for="percentage-value-boleto" class="form-control-label">% Valor Boleto</label>
                         <input type="text" class="form-control" name="value_percentage_purchase_boleto"
-                               id="percentage-value" placeholder="100" maxlength="3">
+                               id="percentage-value-boleto" placeholder="100" maxlength="3">
+                    </div>
+
+                    {{-- INPUT PERCENTAGE PIX VALUE --}}
+                    <div class="form-group col-6 col-md-3 div-percentage-value-pix">
+                        <label for="percentage-value-pix" class="form-control-label">% Valor Pix</label>
+                        <input type="text" class="form-control" name="value_percentage_purchase_pix"
+                               id="percentage-value-pix" placeholder="100" maxlength='3'>
                     </div>
                 </div>
 
@@ -95,7 +102,7 @@
                 <label>Rodar Pixel:</label>
             </div>
             <div class="row justify-content-center">
-                <div class="col-md-3">
+                <div class="col-6 col-md-auto">
                     <div class="switch-holder">
                         <label for="Checkout" class="mb-10">Checkout:</label>
                         <br>
@@ -105,7 +112,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-6 col-md-auto">
                     <div class="switch-holder">
                         <label for="cartao">Purchase (cartão):</label>
                         <br>
@@ -115,7 +122,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-6 col-md-auto">
                     <div class="switch-holder">
                         <label for="boleto">Purchase (boleto):</label>
                         <br>
@@ -125,6 +132,17 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-6 col-md-auto">
+                    <div class="switch-holder">
+                        <label for="pix">Purchase (pix):</label>
+                        <br>
+                        <label class='switch'>
+                            <input type="checkbox" name='purchase_pix' class='check pixel-purchase-pix'>
+                            <span class='slider round'></span>
+                        </label>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
