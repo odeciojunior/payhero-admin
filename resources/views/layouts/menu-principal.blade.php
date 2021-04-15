@@ -236,7 +236,7 @@
                             </a>
                         </li>
                         <li class="site-menu-item">
-                            <a href="#">
+                            <a href="{{ route('old-finances') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Extrato (antigo)</span>
                             </a>
