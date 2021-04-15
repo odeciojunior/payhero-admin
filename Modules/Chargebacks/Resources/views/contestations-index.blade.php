@@ -105,9 +105,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md">
-                                <label for="date_type">&nbsp;</label>
-                                <input name='date_range' id="date_range" class="select-pad"
+                                <div class="form-group form-icons">
+                                    <label for="date_type">&nbsp;</label>
+                                    <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="select-pad pr-30"
                                        placeholder="Clique para editar..." readonly style="">
+                                </div>
                             </div>
 
 

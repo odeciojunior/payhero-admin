@@ -70,9 +70,11 @@
                                     </div>
                                     <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="date_range">‏‏‎ ‎</label>
-                                        <input name='date_range' id="date_range" class="select-pad"
-                                               placeholder="Clique para editar..." readonly>
+                                        <div class="form-group form-icons">
+                                            <label for="date_range"> </label>
+                                            <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                            <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly >
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-md-15">

@@ -28,10 +28,18 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <div class="row align-items-center">
-                                <span class="o-agenda-1"></span>
-                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" style="width: 85%" value="" readonly>
+                        <div class="form-group form-icons mb-1">
+                            <div class="row align-items-center">
+                                <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 pr-30 ml-5" 
+                                value="" readonly>
+                            </div>
                         </div>
+                        {{-- <div class="row align-items-center">
+                            <span class="o-agenda-1"></span>
+                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" 
+                            style="width: 85%" value="" readonly>
+                        </div> --}}
                     </div>
                 </div>
 

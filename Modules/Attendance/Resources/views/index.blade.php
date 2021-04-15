@@ -51,9 +51,10 @@
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
-                                    <div class='form-group'>
-                                        <label>Data</label>
-                                        <input name='date_range' id="date_range" class="form-control bg-white"
+                                    <div class="form-group form-icons">
+                                        <label for="date_range">Data</label>
+                                        <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                        <input name='date_range' id="date_range" class="form-control bg-white pr-30"
                                                placeholder="Clique para editar..." readonly>
                                     </div>
                                 </div>

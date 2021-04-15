@@ -207,9 +207,11 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_updated">Data de aprovação venda</label>
-                            <input name='date_updated' id="date_updated" class="select-pad"
-                                   placeholder="Clique para editar..." readonly>
+                            <div class="form-group form-icons">
+                                <label for="date_updated">Data de aprovação venda</label>
+                                <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                <input name='date_updated' id="date_updated" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
+                            </div>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
                             <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
