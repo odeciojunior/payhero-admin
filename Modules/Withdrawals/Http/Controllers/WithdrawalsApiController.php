@@ -159,6 +159,9 @@ class WithdrawalsApiController
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
 
+            $lower_value = 0;
+            $bigger_value = 0;
+
             $transactionsSum->chunk(
                 2000,
                 function ($transactions) use (
@@ -169,14 +172,8 @@ class WithdrawalsApiController
                         $currentValue += $transaction->value;
 
                         if ($currentValue >= $withdrawalValueRequested) {
-                            return response()->json(
-                                [
-                                    'data' => [
-                                        'lower_value' => $currentValue - $transaction->value,
-                                        'bigger_value' => $currentValue
-                                    ]
-                                ]
-                            )->send();
+                            $lower_value = $currentValue - $transaction->value;
+                            $bigger_value = $currentValue;
                         }
                     }
                 }
@@ -185,8 +182,8 @@ class WithdrawalsApiController
             return response()->json(
                 [
                     'data' => [
-                        'lower_value' => 0,
-                        'bigger_value' => 0
+                        'lower_value' => $lower_value,
+                        'bigger_value' => $bigger_value
                     ]
                 ]
             );

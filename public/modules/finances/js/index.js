@@ -300,7 +300,8 @@ $(document).ready(function () {
         $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
         $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             const availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
-            const toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
+            const toTransferText = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
+
             const availableBalance = parseInt(availableBalanceText);
             const toTransfer = parseFloat(toTransferText);
 
@@ -427,7 +428,7 @@ $(document).ready(function () {
             }
 
             const currentBalance = $('.available-balance').data('value').replace(',', '').replace('.', '');
-            const withdrawal = $('#custom-input-addon').val().replace(',', '').replace('.', '');
+            const withdrawal = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
 
             const debitValue = $(".debit-balance").data('value');
 

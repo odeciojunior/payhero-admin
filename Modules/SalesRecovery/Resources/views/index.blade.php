@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad"> </select>
+                            <select name='select_project' id="project" class="form-control select-pad"></select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="plan">Plano</label>
