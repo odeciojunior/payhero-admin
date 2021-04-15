@@ -2154,8 +2154,11 @@ class ShopifyService
 
             foreach ($products as $product) {
                 foreach ($product->getVariants() as $variant) {
-                    $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                    break;
+                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))){
+                        $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                        break;
+                    }
+
                 }
 
                 return [
