@@ -35,7 +35,29 @@
                         <div class="tab-content">
                             <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">
                                 <div class="fixhalf"></div>
-                                <div class="card shadow " style="min-height: 300px">
+                                <div class="card card-body shadow " style="min-height: 300px">
+                                    <div class="row mb-15">                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="type-products">Projeto</label>
+                                                <select class="form-control" id='project-affiliate' data-name="projects">
+                                                    <option value="0">Meus projetos</option>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Nome do afiliado</label>
+                                                <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                            </div>
+                                        </div>                
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
+                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full">
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
                                     <table class='table text-left table-striped unify table-affiliate' style='width:100%'>
                                         <thead>
                                             <tr>
@@ -58,9 +80,31 @@
                                     {{-- js carrega... --}}
                                 </ul>
                             </div>
+
                             <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
                                 <div class="fixhalf"></div>
-                                <div class="card shadow " style="min-height: 300px">
+                                <div class="card card-body shadow " style="min-height: 300px">
+                                    <div class="row mb-15">                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="type-products">Projeto</label>
+                                                <select class="form-control" id='project-affiliate-request'>
+                                                    <option value="0">Meus projetos</option>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Nome do afiliado</label>
+                                                <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                            </div>
+                                        </div>                
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
+                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full">
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
+                                            </button>
+                                        </div>
+                                    </div>
                                     <table class="table table-striped table-affiliate-request">
                                         <thead>
                                             <tr>
