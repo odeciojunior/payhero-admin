@@ -143,27 +143,29 @@
 
                 <!-- Tabela -->
                 <div class="fixhalf"></div>
-                <div class="card shadow " style="min-height: 300px">
-                    <div class="page-invoice-table table-responsive">
-                        <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                            <thead>
-                            <tr>
-                                <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                <td class="table-title">Projeto</td>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Forma</td>
-                                <td class="table-title">Status</td>
-                                <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title display-sm-none">Pagamento</td>
-                                <td class="table-title">Comissão</td>
-                                <td class="table-title">Motivo bloqueio</td>
-                            </tr>
-                            </thead>
-                            <tbody id="dados_tabela">
-                            {{-- js carrega... --}}
-                            </tbody>
-                        </table>
+                <div class="col-lg-12 pb-5">
+                    <div class="card shadow mb-15" style="min-height: 300px">
+                        <div class="page-invoice-table table-responsive">
+                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                                <thead>
+                                <tr>
+                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
+                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Descrição</td>
+                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
+                                    <td class="table-title">Forma</td>
+                                    <td class="table-title">Status</td>
+                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none">Pagamento</td>
+                                    <td class="table-title">Comissão</td>
+                                    <td class="table-title">Motivo bloqueio</td>
+                                </tr>
+                                </thead>
+                                <tbody id="dados_tabela">
+                                {{-- js carrega... --}}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
