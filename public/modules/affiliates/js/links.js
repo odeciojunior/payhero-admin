@@ -223,8 +223,7 @@ $(function () {
                 errorAjaxResponse(response);
 
             }),
-            success: function success(response) {
-
+            success: function success(response) {                
                 if (isEmpty(response.data)) {
                     $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-links').addClass('table-striped');
@@ -233,7 +232,7 @@ $(function () {
                     $("#data-table-link").html('');
 
                     if (response.data[0].document_status == 'approved') {
-                        if (response.data[0].domain !== '') {
+                        if (response.data[0].status == 3) {
                             $.each(response.data, function (index, value) {
                                 data = '';
                                 data += '<tr>';
