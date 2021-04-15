@@ -235,10 +235,9 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close"
-                       id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
