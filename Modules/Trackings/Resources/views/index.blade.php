@@ -196,9 +196,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row collapse" id="bt_collapse">
-                        <div class="d-flex flex-wrap">
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    <div class="collapse" id="bt_collapse">
+                        <div class="row pt-15">
+                            <div class="col-sm-6 col-md-4">
                                 <label for="status_commission">Status da comissão</label>
                                 <select name='status_commission' id="status_commission" class="form-control select-pad">
                                     <option value="">Todos</option>
@@ -207,12 +207,12 @@
                                     <option value="blocked">Não transferido por falta de rastreio</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <div class="col-sm-6 col-md-4">
                                 <label for="date_updated">Data de aprovação venda</label>
                                 <input name='date_updated' id="date_updated" class="select-pad"
                                     placeholder="Clique para editar..." readonly>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 col-md-4 d-flex flex-column justify-content-center">
                                 <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
                                 <label class="switch">
                                     <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>

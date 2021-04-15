@@ -48,54 +48,63 @@
                                                placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
                                 </div>
-                                <div class="row mt-md-15">
-                                    <div class="col-sm-6 col-md">
-                                        <label for="forma">Forma de pagamento</label>
-                                        <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                            <option value="">Boleto e cartão de crédito</option>
-                                            <option value="1">Cartão de crédito</option>
-                                            <option value="2">Boleto</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="sale_code">Transação</label>
-                                        <input type="text" id="sale_code" placeholder="transação">
-                                    </div>
-                                    <div class="col-sm-6 col-md">
-                                        <label for="date_type">Data</label>
-                                        <select name='date_type' id="date_type" class="form-control select-pad">
-                                            <option value="start_date">Data do pedido</option>
-                                            <option value="end_date">Data do pagamento</option>
-                                        </select>
-                                    </div>
-                                    <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="date_range">‏‏‎ ‎</label>
-                                        <input name='date_range' id="date_range" class="select-pad"
-                                               placeholder="Clique para editar..." readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-md-15">
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <div id="select-statement-div" style="display:none;">
-                                            <label for="type_statement">Tipo Extrato</label>
-                                            <select name='select_type_statement'
-                                                    id="type_statement"
-                                                    class="form-control select-pad"
-                                            >
-                                                <option value="manual_liquidation" selected>Extrato Antigo</option>
-                                                <option value="automatic_liquidation">Extrato Novo</option>
+                                <div class="row collapse pt-20" id="bt_collapse">
+                                    <div class="d-flex flex-wrap">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="forma">Forma de pagamento</label>
+                                            <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                                <option value="">Boleto e cartão de crédito</option>
+                                                <option value="1">Cartão de crédito</option>
+                                                <option value="2">Boleto</option>
                                             </select>
                                         </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="sale_code">Transação</label>
+                                            <input type="text" id="sale_code" placeholder="transação">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="date_type">Data</label>
+                                            <select name='date_type' id="date_type" class="form-control select-pad">
+                                                <option value="start_date">Data do pedido</option>
+                                                <option value="end_date">Data do pagamento</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="date_range">‏‏‎ ‎</label>
+                                            <input name='date_range' id="date_range" class="select-pad"
+                                            placeholder="Clique para editar..." readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 pt-20">
+                                            <div id="select-statement-div" style="display:none;">
+                                                <label for="type_statement">Tipo Extrato</label>
+                                                <select name='select_type_statement'
+                                                id="type_statement"
+                                                class="form-control select-pad"
+                                                >
+                                                    <option value="manual_liquidation" selected>Extrato Antigo</option>
+                                                    <option value="automatic_liquidation">Extrato Novo</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                </div>
+                                <div class="row" style="height: 30px">
+                                    <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                        <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                             data-toggle="collapse"
+                                             data-target="#bt_collapse"
+                                             aria-expanded="false"
+                                             aria-controls="bt_collapse">
+                                            <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                            <span id="text-filtro">Filtros avançados</span>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex align-items-center pt-md-20 pt-10">
-                                        <button id="bt_filtro" class="btn btn-primary col">
-                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
-                                        </button>
+                                    <div class="col-sm-6 col-xl-3 text-right mt-20">
+                                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                            Aplicar filtros
+                                        </div>
                                     </div>
                                 </div>
                             </div>

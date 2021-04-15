@@ -401,53 +401,45 @@
                                                                class="select-pad" placeholder="Transação">
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_3">
-                                                    <div class="input-holder form-group">
-                                                        <label for="statement_status_select">Status</label>
-                                                        <select class="form-control select-pad" name="status"
-                                                                id="statement_status_select">
-                                                            <option value="ALL">Todos</option>
-                                                            <option value="WAITING_FOR_VALID_POST">
-                                                                Aguardando postagem válida
-                                                            </option>
-                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação
-                                                            </option>
-                                                            <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
-                                                            <option value="WAITING_RELEASE">Aguardando liberação
-                                                            </option>
-                                                            <option value="PAID">Liquidado</option>
-                                                            <option value="REVERSED">Estornado</option>
-                                                            <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                            <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
-                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
-                                                        </select>
+                                            </div>
+                                            <div class="collapse" id="bt_collapse">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="input-holder form-group">
+                                                            <label for="statement_status_select">Status</label>
+                                                            <select class="form-control select-pad" name="status"
+                                                                    id="statement_status_select">
+                                                                <option value="ALL">Todos</option>
+                                                                <option value="WAITING_FOR_VALID_POST">
+                                                                    Aguardando postagem válida
+                                                                </option>
+                                                                <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                                </option>
+                                                                <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
+                                                                <option value="WAITING_RELEASE">Aguardando liberação
+                                                                </option>
+                                                                <option value="PAID">Liquidado</option>
+                                                                <option value="REVERSED">Estornado</option>
+                                                                <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
+                                                                <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                                <option value="PENDING_DEBIT">Débitos pendentes</option>
+                                                            </select>
+                                                        </div>
+                                                        <input name="withdrawal_id" id="withdrawal_id" type="hidden"
+                                                            class="select-pad" placeholder="Id do Saque">
                                                     </div>
-                                                    <input name="withdrawal_id" id="withdrawal_id" type="hidden"
-                                                           class="select-pad" placeholder="Id do Saque">
-                                                </div>
-
-                                                <div class="mt-30 col-md-4 d-none d-md-block">
-                                                    <button id="bt_filtro_statement"
-                                                            class="btn btn-primary w-p90"
-                                                            style="height: 40px;width: 75%;">
-                                                        <img style="height: 12px; margin-right: 4px"
-                                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                        filtros
-                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="row d-md-none">
+                                            <div class="row">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
                                                         <div class="col-6 pr-0">
                                                             <div
                                                                 class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                 data-toggle="collapse"
-                                                                data-target=".bt-collapse"
+                                                                data-target="#bt_collapse"
                                                                 aria-expanded="false"
-                                                                aria-controls="bt_collapse_1 bt_collapse_2 bt_collapse_3">
+                                                                aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
                                                                      src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                                                 <span id="text-filtro">Filtros avançados</span>

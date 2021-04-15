@@ -1,9 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
+
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v=05') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545?v=01') }}">
     @endpush
+
     <div class="page">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Atendimento</h1>
@@ -50,41 +53,58 @@
                                                placeholder='CPF do cliente'>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
-                                    <div class='form-group'>
-                                        <label>Data</label>
-                                        <input name='date_range' id="date_range" class="form-control bg-white"
-                                               placeholder="Clique para editar..." readonly>
+                            </div>
+                            <div class="collapse" id="bt_collapse">
+                                <div class="row">
+                                    <div class='col-12 col-md-3 col-lg-3'>
+                                        <div class='form-group'>
+                                            <label>Data</label>
+                                            <input name='date_range' id="date_range" class="form-control bg-white"
+                                                placeholder="Clique para editar..." readonly>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-md-3 col-lg-3'>
+                                        <div class='form-group'>
+                                            <label>Código do chamado</label>
+                                            <input id='ticker-code-filter' class='form-control' type='text'
+                                                placeholder='Código do chamado'>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-md-3 col-lg-3'>
+                                        <div class='form-group'>
+                                            <label>Respostas</label>
+                                            <select id='answered' class='form-control'>
+                                                <option value="">Todos</option>
+                                                <option value="last-answer-admin">Última resposta minha</option>
+                                                <option value="last-answer-customer">Última resposta do cliente</option>
+                                                <option value="not-answered">Não respondidos</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
-                                    <div class='form-group'>
-                                        <label>Código do chamado</label>
-                                        <input id='ticker-code-filter' class='form-control' type='text'
-                                               placeholder='Código do chamado'>
+                            </div>
+                            <div class="row" style="height: 30px">
+                                <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                    <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                         data-toggle="collapse"
+                                         data-target="#bt_collapse"
+                                         aria-expanded="false"
+                                         aria-controls="bt_collapse">
+                                        <img id="icon-filtro" style="margin-right: 4px" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                        <span id="text-filtro">Filtros avançados</span>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
-                                    <div class='form-group'>
-                                        <label>Respostas</label>
-                                        <select id='answered' class='form-control'>
-                                            <option value="">Todos</option>
-                                            <option value="last-answer-admin">Última resposta minha</option>
-                                            <option value="last-answer-customer">Última resposta do cliente</option>
-                                            <option value="not-answered">Não respondidos</option>
-                                        </select>
+                                <div class="col-sm-6 col-xl-3 text-right mt-20">
+                                    <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                        Aplicar filtros
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-3 col-lg-3 mt-25">
-                                    <button id="btn-filter" class="btn btn-primary w-full">
-                                        <img style="height: 12px; margin-right: 4px"
-                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="fixhalf"></div>
                 <div class='row'>
                     <div class="col-6 col-lg-3">
                         <div class="card card-shadow bg-white card-left orange">
@@ -245,6 +265,7 @@
     <!-- Modal detalhes do ticket -->
     @push('scripts')
         <script src='{{asset('/modules/tickets/js/index.js?v=' . random_int(100, 10000))}}'></script>
+        <script src='{{asset('/modules/attendance/js/index.js?v=' . random_int(100, 10000))}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

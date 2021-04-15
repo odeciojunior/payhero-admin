@@ -82,8 +82,8 @@
                             <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad' placeholder='Clique para editar...' readonly>
                         </div>
                     </div>
-                    <div class="row collapse" id="bt_collapse">
-                        <div class="d-flex flex-wrap">
+                    <div class="collapse" id="bt_collapse">
+                        <div class="row pt-15">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="client-name">Nome do Cliente</label>
                                 <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">

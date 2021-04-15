@@ -105,8 +105,8 @@
                                     <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
-                            <div class="row collapse" id="bt_collapse">
-                                <div class="d-flex flex-wrap">
+                            <div class="collapse" id="bt_collapse">
+                                <div class="row">
                                     <div class="col-sm-12 col-md">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
@@ -250,7 +250,7 @@
                             </div>
 
                         </div>
-                @endif
+                    @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
                     <div class="card shadow " style="min-height: 300px">
