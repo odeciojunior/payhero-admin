@@ -180,9 +180,15 @@ $(() => {
             }
         })
     });
-
-    $(document).on('click', '.destroy-order-bump', function () {
+    // load delete modal
+    $(document).on('click', '.destroy-order-bump', function (event) {
         let id = $(this).data('id');
+        $('#modal-delete-order-bump .btn-delete').attr('order-bump-id', id);
+        $("#modal-delete-order-bump").modal('show');
+    });
+    $(document).on('click', '#modal-delete-order-bump .btn-delete', function () {
+        // let id = $(this).data('id');
+        let id = $('#modal-delete-order-bump .btn-delete').attr('order-bump-id');
         $.ajax({
             method: 'POST',
             url: '/api/orderbump/' + id,
