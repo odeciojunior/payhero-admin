@@ -224,9 +224,6 @@ $(function () {
 
             }),
             success: function success(response) {    
-
-                console.log(response.data);
-                
                 if (isEmpty(response.data)) {
                     $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-links').addClass('table-striped');
