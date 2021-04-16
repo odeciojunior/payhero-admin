@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
         // transfer money from transactions for user companies
-        $schedule->command('verify:transfers')->dailyAt('05:00');
+//        $schedule->command('verify:transfers')->dailyAt('05:00');
 
         // transfer money from transactions for user companies on getnet
         $schedule->command('verify:transfersgetnet')->dailyAt('11:00');
