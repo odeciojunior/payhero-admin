@@ -168,10 +168,12 @@
                         </div>
                     </div>
                 </div>
-                <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination"
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination"
                     style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                    {{-- js carrega... --}}
-                </ul>
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
             </div>
         </div>
         {{-- Quando não tem projeto cadastrado  --}}

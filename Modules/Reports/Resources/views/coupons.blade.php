@@ -49,8 +49,8 @@
                                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly >
                                         </div>
                                     </div>
-                                    <div class="row collapse" id="bt_collapse">
-
+                                    <div class="collapse" id="bt_collapse">
+                                        <div class="row"></div>
                                     </div>
                                     <div class="row" style="height: 30px">
                                         {{-- <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
@@ -92,9 +92,11 @@
                                     </table>
                                 </div>
                             </div>
-                            <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
-                                {{-- js carrega... --}}
-                            </ul>
+                            <div class="row d-flex justify-content-center justify-content-md-end">
+                                <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
+                                    {{-- js carrega... --}}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

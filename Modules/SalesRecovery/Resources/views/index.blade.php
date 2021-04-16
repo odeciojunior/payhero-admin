@@ -71,7 +71,7 @@
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad"> </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 pt-15">
                             <label for="plan">Plano</label>
                             <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
                                 <option value="">Todos planos</option>
@@ -306,12 +306,10 @@
                     </div>
                     <!-- End Modal -->
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                            {{-- js carrega... --}}
-                        </ul>
-                    </div>
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                        {{-- js carrega... --}}
+                    </ul>
                 </div>
             </div>
         </div>

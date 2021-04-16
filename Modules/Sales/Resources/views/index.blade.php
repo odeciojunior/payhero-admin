@@ -275,9 +275,11 @@
                             </table>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                        {{-- js carrega... --}}
-                    </ul>
+                    <div class="row d-flex justify-content-center justify-content-md-end">
+                        <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                            {{-- js carrega... --}}
+                        </ul>
+                    </div>
                 <!-- Modal detalhes da venda-->
                     @include('sales::details')
                 <!-- End Modal -->

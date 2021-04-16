@@ -295,10 +295,12 @@
                                     </table>
                                 </div>
                             </div>
-                            <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
-                                {{--js carrega...--}}
-                            </ul>
+                            <div class="row d-flex justify-content-center justify-content-md-end">
+                                <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
+                                    style="margin-top: 10px;margin-bottom:100px;position:relative">
+                                    {{--js carrega...--}}
+                                </ul>
+                            </div>
                         </div>
                         {{--EXTRATO--}}
                         <div

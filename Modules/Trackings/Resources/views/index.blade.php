@@ -179,11 +179,11 @@
                             <label for="sale">Venda</label>
                             <input name='sale' id="sale" class="input-pad" placeholder="Digite o código da venda">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 pt-15">
                             <label for="tracking_code">Código de rastreio</label>
                             <input name='tracking_code' id="tracking_code" class="input-pad" placeholder="Digite o código">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 pt-15">
                             <label for="status">Status</label>
                             <select name='status' id="status" class="form-control select-pad">
                                 <option value="">Todos</option>
@@ -349,10 +349,12 @@
                         </table>
                     </div>
                 </div>
-                <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
                     style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                    {{-- js carrega... --}}
-                </ul>
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 <!-- Modal detalhes da venda-->
                 @include('sales::details')
                 <!-- End Modal -->

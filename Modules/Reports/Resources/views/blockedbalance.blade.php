@@ -84,8 +84,8 @@
                                 <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                             </div>
                         </div>
-                        <div class="row collapse" id="bt_collapse">
-                            <div class="d-flex flex-wrap mt-15">
+                        <div class="collapse" id="bt_collapse">
+                            <div class="row mt-15">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="comprador">Nome do cliente</label>
                                     <input name='client' id="comprador" class="input-pad" placeholder="cliente">
@@ -177,9 +177,11 @@
                         </table>
                     </div>
                 </div>
-                <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                    {{-- js carrega... --}}
-                </ul>
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
             </div>
         </div>
         {{-- Quando não tem projeto cadastrado  --}}

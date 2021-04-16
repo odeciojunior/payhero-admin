@@ -47,9 +47,11 @@
         </div>
     </div>
 </div>
-<ul id="pagination-plans" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
-    {{-- js pagination carrega --}}
-</ul>
+<div class="row d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-plans" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
+        {{-- js pagination carrega --}}
+    </ul>
+</div>
 <!-- Modal padrão para adicionar Adicionar e Editar -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_plan" role="dialog" tabindex="-1">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">

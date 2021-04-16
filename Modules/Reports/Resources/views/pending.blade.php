@@ -31,25 +31,24 @@
                                             <option value="0">Todas as empresas</option>
                                         </select>
                                     </div>
-
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Projeto</label>
                                         <select name='select_project' id="project" class="form-control select-pad">
                                             <option value="0">Todas os projetos</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-8 col-md">
+                                    <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                                     </div>
-                                    <div class="col-sm-8 col-md">
+                                    <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad"
                                                placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
                                 </div>
-                                <div class="row collapse pt-20" id="bt_collapse">
-                                    <div class="d-flex flex-wrap">
+                                <div class="collapse pt-20" id="bt_collapse">
+                                    <div class="row">
                                         <div class="col-sm-6 col-md-3">
                                             <label for="forma">Forma de pagamento</label>
                                             <select name='select_payment_method' id="forma" class="form-control select-pad">
@@ -165,10 +164,12 @@
                                 </table>
                             </div>
                         </div>
-                        <ul id="pagination-pending" class="pagination-sm margin-chat-pagination"
+                        <div class="row d-flex justify-content-center justify-content-md-end">
+                            <ul id="pagination-pending" class="pagination-sm margin-chat-pagination"
                             style="position:relative;float:right">
-                            {{-- js carrega... --}}
-                        </ul>
+                                {{-- js carrega... --}}
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- Modal detalhes da venda-->

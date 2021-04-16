@@ -112,9 +112,9 @@
 
 
                         </div>
-                        <div class="row collapse" id="bt_collapse">
+                        <div class="collapse" id="bt_collapse">
 
-                            <div class="d-flex flex-wrap" style="width:100%">
+                            <div class="row" style="width:100%">
                                 <div class="col-sm-12 col-md">
                                     <label for="project">Projeto</label>
                                     <select name="project" id="project" class="form-control select-pad"
@@ -261,9 +261,11 @@
                     </div>
 
                 </div>
-                <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
-                    {{-- js carrega... --}}
-                </ul>
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
 

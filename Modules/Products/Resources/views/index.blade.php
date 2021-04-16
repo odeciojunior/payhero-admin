@@ -60,7 +60,9 @@
             <div class="page-content container">
                 <div id='data-table-products' class='row'>
                 </div>
-                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px;"></div>
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px;"></div>
+                </div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
                         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
