@@ -223,7 +223,10 @@ $(function () {
                 errorAjaxResponse(response);
 
             }),
-            success: function success(response) {                
+            success: function success(response) {    
+
+                console.log(response.data);
+                
                 if (isEmpty(response.data)) {
                     $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-links').addClass('table-striped');
@@ -233,44 +236,49 @@ $(function () {
 
                     if (response.data[0].document_status == 'approved') {
                         if (response.data[0].status == 3) {
-                            $.each(response.data, function (index, value) {
-                                data = '';
-                                data += '<tr>';
-                                data += '<td class="display-sm-none display-m-none" title="Copiar Link" link="' + value.link + '">';
-                                // if (value.plan_name == null) {
-                                //     data += limitLink(value.link, 50) + ' <br><small>' + value.project_name + '</small> </td>';
-                                // } else {
-                                //     data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
-                                // }
-                                data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
-
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
-
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
-                                if (value.price != '' && value.commission != '') {
-                                    data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';
-                                } else {
-                                    data += '<td class="text-center" ></td>';
-                                }
-                                data += '<td style="text-align:center">';
-                                data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
-
-                                if (value.plan_name == '' && value.link != null) {
-                                    data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-edit-1"></span></a>';
-                                    data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-bin-1"></span></a>';
-                                } else {
-                                    data += '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
-                                    data += '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
-                                }
-                                data += '</td>';
-                                data += '</tr>';
-                                $("#data-table-link").append(data);
+                            if (response.data[0].status_affiliate == 2) {
+                                $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Sua afiliação ao projeto foi desativada</td></tr>");
                                 $('#table-links').addClass('table-striped');
-                                $('.domain-project-link').html(value.domain);
-                            });
-
-                            pagination(response, 'links', index);
+                            } else {
+                                $.each(response.data, function (index, value) {
+                                    data = '';
+                                    data += '<tr>';
+                                    data += '<td class="display-sm-none display-m-none" title="Copiar Link" link="' + value.link + '">';
+                                    // if (value.plan_name == null) {
+                                    //     data += limitLink(value.link, 50) + ' <br><small>' + value.project_name + '</small> </td>';
+                                    // } else {
+                                    //     data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
+                                    // }
+                                    data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
+    
+                                    data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
+    
+                                    data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
+                                    data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
+                                    if (value.price != '' && value.commission != '') {
+                                        data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';
+                                    } else {
+                                        data += '<td class="text-center" ></td>';
+                                    }
+                                    data += '<td style="text-align:center">';
+                                    data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
+    
+                                    if (value.plan_name == '' && value.link != null) {
+                                        data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-edit-1"></span></a>';
+                                        data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-bin-1"></span></a>';
+                                    } else {
+                                        data += '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
+                                        data += '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
+                                    }
+                                    data += '</td>';
+                                    data += '</tr>';
+                                    $("#data-table-link").append(data);
+                                    $('#table-links').addClass('table-striped');
+                                    $('.domain-project-link').html(value.domain);
+                                });
+    
+                                pagination(response, 'links', index);
+                            }
                         } else {
                             $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Domínio não configurado</td></tr>");
                             $('#table-links').addClass('table-striped');
