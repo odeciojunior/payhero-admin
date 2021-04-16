@@ -395,7 +395,6 @@ class SaleService
         }
         $companyName = $userTransaction->company->fantasy_name;
 
-//        dd($totalTax);
         //add details to sale
         $sale->details = (object)[
             'transaction_rate'         => FoxUtils::formatMoney($transactionRate / 100),

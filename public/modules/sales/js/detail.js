@@ -356,7 +356,7 @@ $(() => {
             $("#taxa-installment-value").show();
         }
 
-        if (parseFloat(sale.discount) > 0) {
+        if (parseFloat(sale.discount.replace(/[^\d]/g, "")) > 0) {
            $('#discount-title').show()
            $('#discount-data').show()
            $("#desconto-value").html(sale.discount);
@@ -369,13 +369,19 @@ $(() => {
         }
         $('.text-discount').html('');
         $("#automatic-discount-value").html('');
-        if (sale.automatic_discount !== '0,00') {
+
+        if (parseInt(sale.automatic_discount.replace(/[^\d]/g, "")) > 0) {
             if (sale.payment_method == 2) {
                 $('.text-discount').html('Desconto automático boleto');
             } else {
                 $('.text-discount').html('Desconto automático cartão');
             }
+            $(".automatic-discount-value").show();
+            $(".text-discount").show();
             $("#automatic-discount-value").html(sale.automatic_discount);
+        } else {
+            $(".automatic-discount-value").hide();
+            $(".text-discount").hide();
         }
         $("#total-value").html(sale.total);
 
