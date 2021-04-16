@@ -72,7 +72,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-            <div class="page-content container" style="margin-bottom:100px;">
+            <div class="page-content container">
                 <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
@@ -261,8 +261,8 @@
                     </div>
 
                 </div>
-                <div class="row d-flex justify-content-center justify-content-md-end">
-                    <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
+                <div class="row d-flex justify-content-center justify-content-md-end pb-35">
+                    <ul id="pagination" class="pagination-sm mb-0" style="margin-top:10px; position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

@@ -275,8 +275,8 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row d-flex justify-content-center justify-content-md-end">
-                        <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    <div class="row d-flex justify-content-center justify-content-md-end pb-20">
+                        <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;">
                             {{-- js carrega... --}}
                         </ul>
                     </div>

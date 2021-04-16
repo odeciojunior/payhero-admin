@@ -295,9 +295,9 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="row d-flex justify-content-center justify-content-md-end">
+                            <div class="row d-flex justify-content-center justify-content-md-end pb-20">
                                 <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                    style="margin-top: 10px;margin-bottom:100px;position:relative">
+                                    style="margin-top: 10px;position:relative">
                                     {{--js carrega...--}}
                                 </ul>
                             </div>
@@ -510,9 +510,11 @@
                                 </table>
                             </div>
 
-                            <div id="pagination-statement"
+                            <div class="row d-flex justify-content-center justify-content-md-end pb-20">
+                                <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top: 10px;margin-bottom:100px; position:relative;">
+                                 style="margin-top: 10px;position:relative;">
+                                </div>
                             </div>
                         </div>
 
