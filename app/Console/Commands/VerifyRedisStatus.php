@@ -8,7 +8,7 @@ use Predis\Client;
 use Illuminate\Console\Command;
 use Modules\Core\Services\SmsService;
 
-class verifyRedisStatus extends Command
+class VerifyRedisStatus extends Command
 {
     /**
      * The name and signature of the console command.
