@@ -119,13 +119,11 @@
 
                             <div class="d-flex flex-wrap" style="width:100%">
                                 <div class="col-sm-12 col-md">
-                                    <label for="project">Projeto</label>
-                                    <select name="project" id="project" class="form-control select-pad"
-                                            style='width:100%;' data-plugin="select2">
+                                    <label for="project">Projeto</label><br>
+                                    <select name='project' id="project" class="form-control select-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
-
                                 <div class="col-sm-12 col-md">
                                     <label for="is_contested" class='mb-10'>Concluído</label>
                                     <br>
