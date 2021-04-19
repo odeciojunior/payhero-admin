@@ -1116,7 +1116,6 @@ $(() => {
             infinite: false,
             speed: 300,
             slidesToShow: 7,
-            slidesToScroll: 1,
             variableWidth: true,
             nextArrow: false,
             prevArrow: false,
