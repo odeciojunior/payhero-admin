@@ -97,6 +97,8 @@ class Company extends Model
     public const GETNET_STATUS_ERROR = 5;
     public const GETNET_STATUS_PENDING = 6;
 
+    public const GATEWAY_TAX = 6.9;
+
     protected $presenter = CompanyPresenter::class;
     /**
      * The accessors to append to the model's array form.
