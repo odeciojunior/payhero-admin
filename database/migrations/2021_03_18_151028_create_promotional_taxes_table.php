@@ -20,6 +20,7 @@ class CreatePromotionalTaxesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->date('expiration');
             $table->string('tax');
+            $table->string('old_tax')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
