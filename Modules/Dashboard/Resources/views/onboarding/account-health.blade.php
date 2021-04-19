@@ -53,8 +53,8 @@
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                                        Usuários com <b>pontuação baixa</b> poderão sofrer <b>sanções e bloqueios</b> na plataforma.
-                                    </span>
+                            Evite <b>restrições</b> em sua conta ao mantê-la sempre com uma <b> boa pontuação </b>.
+                        </span>
                     </div>
                 </div>
             </div>

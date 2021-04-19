@@ -52,7 +52,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property mixed|null $id_wall_result
  * @property string|null $sex
  * @property string|null $mother_name
- * @property int $has_sale_before_getnet
+ * @property bool $has_sale_before_getnet
+ * @property bool $show_old_finances
  * @property int $onboarding
  * @property string|null $observation
  * @property int $account_is_approved
@@ -61,15 +62,15 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $deleted_at
  * @mixin \Eloquent
  * @property string $transaction_rate
- * @property integer $chargeback_rate
- * @property integer $account_score
- * @property integer $chargeback_score
- * @property integer $attendance_score
- * @property integer $tracking_score
- * @property integer $installment_cashback
- * @property integer $level
- * @property integer $total_commission_value
- * @property integer $attendance_average_response_time
+ * @property int $chargeback_rate
+ * @property int $account_score
+ * @property int $chargeback_score
+ * @property int $attendance_score
+ * @property int $tracking_score
+ * @property int $installment_cashback
+ * @property int $level
+ * @property int $total_commission_value
+ * @property int $attendance_average_response_time
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -149,6 +150,7 @@ class User extends Authenticable
         'installment_cashback',
         'level',
         'total_commission_value',
+        'show_old_finances',
         'created_at',
         'updated_at',
         'deleted_at',

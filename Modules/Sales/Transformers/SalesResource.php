@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -49,7 +50,7 @@ class SalesResource extends JsonResource
             'boleto_digitable_line'    => $this->boleto_digitable_line,
             'boleto_due_date'          => $this->boleto_due_date,
             'attempts'                 => $this->attempts,
-            'shipment_value'           => $this->shipment_value,
+            'shipment_value'           => FoxUtils::formatMoney(FoxUtils::onlyNumbers($this->shipment_value) / 100),
             'cupom_code'               => $this->cupom_code,
             //invoices
             'invoices'                 => $this->details->invoices ?? null,
@@ -64,6 +65,8 @@ class SalesResource extends JsonResource
             'convertax_value'          => $this->details->convertax_value ?? null,
             'taxa'                     => $this->details->taxa ?? null,
             'taxaReal'                 => $this->details->taxaReal ?? null,
+            'taxaDiscount'             => $this->details->taxaDiscount ?? null,
+            'totalTax'                 => $this->details->totalTax ?? null,
             'installment_tax_value'    => $this->present()->getInstallmentValue,
             'release_date'             => $this->details->release_date,
             'affiliate_comission'      => $this->details->affiliate_comission,
@@ -81,7 +84,7 @@ class SalesResource extends JsonResource
             'company_name'             => $this->details->company_name,
             'has_order_bump'           => $this->has_order_bump,
             'has_contestation'         => $this->contestations->count() ? true : false,
-            'cashback_value'           => $this->cashback->value ?? '',
+            'cashback_value'           => isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0 ,
             'has_cashback'             => $this->cashback->value ?? false
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
