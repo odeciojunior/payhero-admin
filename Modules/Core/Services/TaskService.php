@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\User;
 
@@ -43,15 +44,20 @@ class TaskService
              * Task ids less than 5 (Task::TASK_FIRST_1000_REVENUE) will be filled as completed when
              * another task with id greater than its is completed
              */
+            $user->load('tasks');
             for ($id = $task->id <= Task::TASK_FIRST_1000_REVENUE ? $task->id : 0; $id > 0; $id--) {
-                if (!$user->tasks->contains('id', $id)) {
+                if (!$user->tasks->contains($id)) {
                     $user->tasks()->attach(Task::find($id));
                 }
             }
-            if (!$user->tasks->contains('id', $task->id)) {
-                $user->tasks()->attach($task);
-            }
             $user->update();
+
+            //Necessary tasks reloading
+            $user->load('tasks');
+            if (!$user->tasks->contains($task)) {
+                $user->tasks()->attach($task);
+                $user->update();
+            }
             return true;
         } catch (\Exception $e) {
             report($e);

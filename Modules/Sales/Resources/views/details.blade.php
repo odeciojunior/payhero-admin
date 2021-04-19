@@ -122,6 +122,65 @@
                         <div class='col-lg-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
+                        <div style="color: #2E85EC" class='col-lg-12 pointer mt-5'
+                             data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
+                            <small data-toggle="tooltip" data-placement="top" title="Clique para obter mais detalhes">Taxa detalhada</small>
+                        </div>
+
+                        <div class='col-lg-12 collapse mb-5'  id="taxas-detail">
+                            <table class="table table-bordered mx-5 border-0">
+                                <tbody>
+                                    <tr>
+                                        <td><div id="tax-subtotal" class="ft-12"></div></td>
+                                        <td><div id="tax-subtotal-value" style="color: black !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-cashback" class="ft-12"></div></td>
+                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-value-total" class="ft-12"></div></td>
+                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-percentage" class="ft-12"></div></td>
+                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-fixed" class="ft-12"></div></td>
+                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-total" class="ft-12"></div></td>
+                                        <td><div id="tax-total-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-comission" class="ft-12"></div></td>
+                                        <td><div id="tax-comission-value" style="color: black !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+                                </tbody>
+
+{{--                                <div id="tax-subtotal" class="col-6 ft-12"></div><div id="tax-subtotal-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-cashback" class="col-6 ft-12"></div><div id="tax-cashback-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-total" class="col-6 ft-12"></div><div id="tax-total-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-percentage" class="col-6 ft-12"></div><div id="tax-percentage-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-fixed" class="col-6 ft-12"></div><div id="tax-fixed-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-comission" class="col-6 ft-12"></div><div id="tax-comission-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+                            </table>
+                        </div>
                         <div class='col-lg-8'>
                             <span id="taxas-installment-free-label" style='display:none;' class='text-muted ft-12'>Taxa de parcelamento</span>
                         </div>

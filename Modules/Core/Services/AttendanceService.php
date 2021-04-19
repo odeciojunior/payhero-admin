@@ -73,9 +73,16 @@ class AttendanceService
         }
 
         /** If the last message is from customer, it indicates that seller didn't answer yet,
-         * so this interaction is virtually calculated by current datetime, keeping our customer/seller answer pairs */
+         * so this interaction is virtually conditioned by Ticket status, keeping our customer/seller answer pairs */
         if ($replies[array_key_last($replies)]['type'] == TicketMessage::TYPE_FROM_CUSTOMER) {
-            $replies[] = ['type' => TicketMessage::TYPE_FROM_ADMIN, 'date' => now()];
+            if ($ticket->ticket_status_enum == Ticket::STATUS_OPEN) {
+                $responseDate = now();
+            } else if ($ticket->ticket_status_enum == Ticket::STATUS_CLOSED) {
+                $responseDate = $replies[array_key_last($replies)]['date'];
+            } else if ($ticket->ticket_status_enum == Ticket::STATUS_MEDIATION) {
+                $responseDate = Carbon::parse($replies[array_key_last($replies)]['date'])->addDays(7);
+            }
+            $replies[] = ['type' => TicketMessage::TYPE_FROM_ADMIN, 'date' => $responseDate];
         }
 
         $totalEllapsedTime = 0;
