@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'role:account_owner|admin'],
+        'middleware' => ['auth:api', 'role:account_owner|admin|attendance'],
         'prefix' => 'contestations'
     ],
     function() {

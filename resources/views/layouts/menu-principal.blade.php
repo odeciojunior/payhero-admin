@@ -168,7 +168,7 @@
                         </a>
                     </li>
 
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
                         <li class="site-menu-item">
                             <a href="{{ route('contestations.index') }}">
                                 <span class="bg-menu"></span>
