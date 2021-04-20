@@ -91,9 +91,9 @@
             <div class="modal-dialog  modal-dialog-centered  modal-simple">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir_affiliate">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div id="modal_excluir_body_affiliate" class="modal-body text-center p-20">
                         <div class="d-flex justify-content-center">
@@ -121,9 +121,9 @@
                 <div class="modal-content p-10">
                     <div class="modal-header simple-border-bottom mb-10">
                         <h4 class="modal-title" id="modal-title">Editar afiliado</h4>
-                        <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div class="modal-body" style='min-height: 100px'>
                         @include('affiliates::edit')
@@ -146,9 +146,9 @@
                 <div class="modal-content p-10">
                     <div class="modal-header simple-border-bottom mb-10">
                         <h4 class="modal-title" id="modal-title">Visualizar afiliado</h4>
-                        <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div class="modal-body" style='min-height: 100px'>
                         @include('affiliates::show')
