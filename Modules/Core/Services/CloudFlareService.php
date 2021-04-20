@@ -434,64 +434,64 @@ class CloudFlareService
             );
 
             $this->getSendgridService()->deleteZone($newZone->name);
-            $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
-
-            foreach ($sendgridResponse->dns as $responseDns) {
-                if ($responseDns->type == 'mx') {
-                    $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
-                    $this->getDomainRecordModel()->create(
-                        [
-                            'domain_id' => $domainModelId,
-                            'cloudflare_record_id' => $recordId,
-                            'type' => 'MX',
-                            'name' => $responseDns->host,
-                            'content' => $responseDns->data,
-                            'system_flag' => 1,
-                        ]
-                    );
-                } else {
-                    $recordId = $this->addRecord(
-                        strtoupper($responseDns->type),
-                        $responseDns->host,
-                        $responseDns->data,
-                        0,
-                        false
-                    );
-                    $this->getDomainRecordModel()->create(
-                        [
-                            'domain_id' => $domainModelId,
-                            'cloudflare_record_id' => $recordId,
-                            'type' => strtoupper($responseDns->type),
-                            'name' => $responseDns->host,
-                            'content' => $responseDns->data,
-                            'system_flag' => 1,
-                        ]
-                    );
-                }
-            }
-
-            $this->getSendgridService()->deleteLinkBrand($newZone->name);
-            $linkBrandResponse = $this->getSendgridService()->createLinkBrand($newZone->name);
-
-            foreach ($linkBrandResponse->dns as $responseDns) {
-                $recordId = $this->addRecord(
-                    strtoupper($responseDns->type),
-                    $responseDns->host,
-                    $responseDns->data,
-                    0,
-                    false
-                );
-                $this->getDomainRecordModel()->create(
-                    [
-                        'domain_id' => $domainModelId,
-                        'cloudflare_record_id' => $recordId,
-                        'type' => strtoupper($responseDns->type),
-                        'name' => $responseDns->host,
-                        'content' => $responseDns->data,
-                        'system_flag' => 1,
-                    ]
-                );
-            }
+//            $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
+//
+//            foreach ($sendgridResponse->dns as $responseDns) {
+//                if ($responseDns->type == 'mx') {
+//                    $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
+//                    $this->getDomainRecordModel()->create(
+//                        [
+//                            'domain_id' => $domainModelId,
+//                            'cloudflare_record_id' => $recordId,
+//                            'type' => 'MX',
+//                            'name' => $responseDns->host,
+//                            'content' => $responseDns->data,
+//                            'system_flag' => 1,
+//                        ]
+//                    );
+//                } else {
+//                    $recordId = $this->addRecord(
+//                        strtoupper($responseDns->type),
+//                        $responseDns->host,
+//                        $responseDns->data,
+//                        0,
+//                        false
+//                    );
+//                    $this->getDomainRecordModel()->create(
+//                        [
+//                            'domain_id' => $domainModelId,
+//                            'cloudflare_record_id' => $recordId,
+//                            'type' => strtoupper($responseDns->type),
+//                            'name' => $responseDns->host,
+//                            'content' => $responseDns->data,
+//                            'system_flag' => 1,
+//                        ]
+//                    );
+//                }
+//            }
+//
+//            $this->getSendgridService()->deleteLinkBrand($newZone->name);
+//            $linkBrandResponse = $this->getSendgridService()->createLinkBrand($newZone->name);
+//
+//            foreach ($linkBrandResponse->dns as $responseDns) {
+//                $recordId = $this->addRecord(
+//                    strtoupper($responseDns->type),
+//                    $responseDns->host,
+//                    $responseDns->data,
+//                    0,
+//                    false
+//                );
+//                $this->getDomainRecordModel()->create(
+//                    [
+//                        'domain_id' => $domainModelId,
+//                        'cloudflare_record_id' => $recordId,
+//                        'type' => strtoupper($responseDns->type),
+//                        'name' => $responseDns->host,
+//                        'content' => $responseDns->data,
+//                        'system_flag' => 1,
+//                    ]
+//                );
+//            }
 
             return true;
         } else {
