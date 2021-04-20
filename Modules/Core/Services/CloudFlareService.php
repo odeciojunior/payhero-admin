@@ -594,9 +594,9 @@ class CloudFlareService
             );
 
             $this->getSendgridService()->deleteZone($newZone->name);
-            $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
+            /* $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
 
-            foreach ($sendgridResponse->dns as $responseDns) {
+           foreach ($sendgridResponse->dns as $responseDns) {
                 if ($responseDns->type == 'mx') {
                     $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
                     $this->getDomainRecordModel()->create(
@@ -655,7 +655,7 @@ class CloudFlareService
                 }
             } else {
                 return false;
-            }
+            }*/
 
             return true;
         } else {
