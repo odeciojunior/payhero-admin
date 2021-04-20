@@ -71,7 +71,7 @@
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad"> </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 pt-15">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="plan">Plano</label>
                             <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
                                 <option value="">Todos planos</option>
