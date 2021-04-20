@@ -44,6 +44,9 @@ class VerifyFrozenAccountApi
         if ($request->route('transaction_id')) {
             array_push($excepts,'/api/sales/newordershopify/'.$request->route('transaction_id'));
         }
+        if ($request->route('achievement')) {
+            array_push($excepts,'/api/dashboard/update-achievements/'.$request->route('achievement'));
+        }
 
         if(strtoupper($request->method()) == 'GET') {
             return true;
