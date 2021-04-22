@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
 @endpush
 @section('content')
@@ -9,7 +9,12 @@
             <div style="display: none" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
-                        <h1 class="page-title">Integrações com HotZapp</h1>
+                        <h1 class="page-title my-10" style="min-height: 28px">
+                            <a class="gray" href="/apps">
+                                <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                                Aplicativos
+                            </a>
+                        </h1>
                     </div>
                     <div class="col text-right" id="integration-actions" style="display:none">
                         <a id='btn-add-integration' class="btn btn-floating btn-primary"
