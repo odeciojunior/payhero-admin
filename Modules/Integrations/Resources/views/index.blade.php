@@ -23,7 +23,7 @@
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a class="gray" href="/apps">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Aplicativos
+                    Integrações
                 </a>
             </h1>
             <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>

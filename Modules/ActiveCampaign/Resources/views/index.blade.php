@@ -22,7 +22,7 @@
                         <h1 class="page-title my-10" style="min-height: 28px">
                             <a class="gray" href="/apps">
                                 <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                                Aplicativos
+                                Integrações com ActiveCampaign
                             </a>
                         </h1>
                     </div>
