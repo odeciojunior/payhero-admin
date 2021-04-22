@@ -53,17 +53,17 @@
                                         <div class="row"></div>
                                     </div>
                                     <div class="row" style="height: 30px">
-                                        {{-- <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                        {{-- <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                 data-toggle="collapse"
                                                 data-target="#bt_collapse"
                                                 aria-expanded="false"
                                                 aria-controls="bt_collapse">
-                                                <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                                 <span id="text-filtro">Filtros avançados</span>
                                             </div>
                                         </div> --}}
-                                        <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-9">
+                                        <div class="col-6 col-xl-3 mt-20 offset-xl-9">
                                             <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                 <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                                 Aplicar filtros
