@@ -11,7 +11,7 @@
 |
 */
 
-Route::middleware(['web', 'auth', 'role:account_owner|admin'])->prefix('contestations')->group(function() {
+Route::middleware(['web', 'auth', 'role:attendance|account_owner|admin'])->prefix('contestations')->group(function() {
 
     Route::get('/', 'ContestationsController@index')->name('contestations.index');
 

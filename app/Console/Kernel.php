@@ -100,6 +100,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('account-health:update')->dailyAt('09:00');
         $schedule->command('account-health:update')->dailyAt('22:00');
 
+        /** Benefits: needs to be run after account-health:updates  */
+        $schedule->command('user:benefits:update')->dailyAt('09:30');
+        $schedule->command('user:benefits:update')->dailyAt('22:30');
+
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
         $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
