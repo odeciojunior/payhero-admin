@@ -171,9 +171,9 @@
             <div class="modal-content p-10">
                 <div class="modal-header simple-border-bottom mb-10">
                     <h4 class="modal-title" id="modal-title-ticket">Detalhes do Chamado </h4>
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal-body-content" class="modal-body" style='min-height: 100px'>
                     <div class="card card-shadow card-top card-ticket-color">
