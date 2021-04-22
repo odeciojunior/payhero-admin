@@ -30,7 +30,6 @@ class ContestationService
 
     function getQuery($filters)
     {
-
         $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'sales.total_paid_value')
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
@@ -41,7 +40,7 @@ class ContestationService
              })
 //                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-            ->where('sales.owner_id', \Auth::id());
+            ->where('sales.owner_id', \Auth::user()->account_owner_id);
 
 
         //Data da compra = transaction_date, Data do chargeback =  adjustment_date
@@ -180,7 +179,7 @@ class ContestationService
         $totalSaleApproved = Sale::where('gateway_id', 15)
             ->where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24])
-            ->where('sales.owner_id', \Auth::id());
+            ->where('sales.owner_id', \Auth::user()->account_owner_id);
 
 //        if ($filters['date_type'] == 'transaction_date') {
 //            $totalSaleApproved->whereBetween(
