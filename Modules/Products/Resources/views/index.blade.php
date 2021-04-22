@@ -7,7 +7,7 @@
 @section('content')
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container pb-0">
             <div class="row align-items-center mb-30" style="min-height:4rem">
                 <div class="col-lg-6">
@@ -60,8 +60,8 @@
             <div class="page-content container">
                 <div id='data-table-products' class='row'>
                 </div>
-                <div class="row d-flex justify-content-center justify-content-md-end">
-                    <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px;"></div>
+                <div class="row justify-content-center justify-content-md-end">
+                    <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
                 </div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')

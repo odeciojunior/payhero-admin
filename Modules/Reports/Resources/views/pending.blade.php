@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
     @endpush
 
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row">
                 <div class="col-8">
@@ -164,8 +164,8 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center justify-content-md-end">
-                            <ul id="pagination-pending" class="pagination-sm margin-chat-pagination"
+                        <div class="row justify-content-center justify-content-md-end">
+                            <ul id="pagination-pending" class="pl-5 pr-md-15 mb-20"
                             style="position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>

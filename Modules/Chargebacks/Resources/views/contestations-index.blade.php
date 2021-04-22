@@ -63,7 +63,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
@@ -261,8 +261,8 @@
                     </div>
 
                 </div>
-                <div class="row d-flex justify-content-center justify-content-md-end pb-35">
-                    <ul id="pagination" class="pagination-sm mb-0" style="margin-top:10px; position:relative;float:right">
+                <div class="row justify-content-center justify-content-md-end mb-25">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-10" style="margin-top:10px; position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

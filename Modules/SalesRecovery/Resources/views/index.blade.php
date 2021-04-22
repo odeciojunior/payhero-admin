@@ -34,7 +34,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
@@ -306,8 +306,8 @@
                     </div>
                     <!-- End Modal -->
                 </div>
-                <div class="row d-flex justify-content-center justify-content-md-end">
-                    <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination-salesRecovery" class="pl-5 pr-md-15 pb-20" style="margin-top:10px;position:relative;float:right;">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
