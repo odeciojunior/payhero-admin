@@ -46,8 +46,8 @@ class GenericCommand extends Command
         $newZone = $newZone[0];
         $this->cloudflareService->setZone($newZone->name);
 
-        $this->cloudflareService->getSendgridService()->deleteZone($domain->name);
-        $sendgridResponse = $this->cloudflareService->getSendgridService()->addZone($domain->name);
+        $this->cloudflareService->getSendgridService()->deleteZone($newZone->name);
+        $sendgridResponse = $this->cloudflareService->getSendgridService()->addZone($newZone->name);
 
         foreach ($sendgridResponse->dns as $responseDns) {
             if ($responseDns->type == "mx") {
@@ -154,7 +154,7 @@ class GenericCommand extends Command
         $newZone = $newZone[0];
         $this->cloudflareService->setZone($newZone->name);
 
-        $this->cloudflareService->getSendgridService()->deleteZone($newZone->nome);
+        $this->cloudflareService->getSendgridService()->deleteZone($newZone->name);
         $sendgridResponse = $this->cloudflareService->getSendgridService()->addZone($newZone->name);
 
         foreach ($sendgridResponse->dns as $responseDns) {
