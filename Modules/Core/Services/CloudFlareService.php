@@ -81,7 +81,7 @@ class CloudFlareService
     /**
      * @return Application|mixed|SendgridService
      */
-    private function getSendgridService()
+    public function getSendgridService()
     {
         if (!$this->sendgridService) {
             $this->sendgridService = app(SendgridService::class);
