@@ -405,7 +405,8 @@ select, .select-pad {
     .s-table.table-finance-transfers {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: "sale sale status"
-                             "date-start date-end value";
+                             "date-start date-end value"
+                             "codigo codigo codigo";
     }
 
     table.unify tr {

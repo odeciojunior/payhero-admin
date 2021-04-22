@@ -275,7 +275,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row d-flex justify-content-center justify-content-md-end pb-20">
+                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-20">
                         <ul id="pagination-sales" class="pl-10" style="margin-top:10px;position:relative;float:right;">
                             {{-- js carrega... --}}
                         </ul>

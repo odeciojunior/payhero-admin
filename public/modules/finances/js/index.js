@@ -768,18 +768,18 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                            <td class="text-xs-left text-md-left">#${data.id}</td>
-                            <td class="text-xs-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
-                            <td class="text-xs-right text-md-left" style="grid-area: status" class="shipping-status">
+                            <td class="text-center" style="grid-area: codigo">#${data.id}</td>
+                            <td class="text-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
+                            <td class="text-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
+                            <td class="text-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
+                            <td class="text-right text-sm-right" style="grid-area: status" class="shipping-status">
                                 <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
                             </td>
-                            <td class="text-xs-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong>
+                            <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong>
                         `;
 
                         if (data.debt_pending_value != null && data.debt_pending_value != 'R$ 0,00') {
-                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small></a>`;
+                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}</small></a>`;
                         }
                         tableData += `
                             </td>
