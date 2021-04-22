@@ -43,7 +43,7 @@ class GenericCommand extends Command
         if (empty($newZone)) {
             return true;
         }
-
+        $this->cloudflareService->setZone($newZone->name);
         $newZone = $newZone[0];
 
         $this->cloudflareService->getSendgridService()->deleteZone($domain->name);
@@ -150,6 +150,7 @@ class GenericCommand extends Command
         if (empty($newZone)) {
             return false;
         }
+        $this->cloudflareService->setZone($newZone->name);
 
         $newZone = $newZone[0];
 
