@@ -18,7 +18,7 @@
 <div class="page-holder">
 
     <div class="content-error d-flex text-center">
-        <img style="width: 100px;filter: brightness(0);" src="/modules/global/adminremark/assets/images/siriusM.svg" alt="CloudFox">
+        <img style="width: 100px;filter: brightness(0);" src="/modules/global/img/logos/2021/svg/icon-sirius.svg" alt="CloudFox">
         <h1 class="big">Voltaremos em breve!</h1>
         <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção no momento e voltaremos em breve.</p>
     </div>
