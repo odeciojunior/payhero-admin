@@ -13,10 +13,10 @@
         </button>
         <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
             <img id="logoIconSirius" class="navbar-brand-logo"
-                 src="{{ asset('modules/global/adminremark/assets/images/siriusM.svg') }}">
-            <img id="logoSirius" class="navbar-brand-logo d-none"
-                 src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}">
-        <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ asset('modules/global/adminremark/assets/images/sirius.svg') }}"> </span> -->
+                 src="{{ asset('/modules/global/img/logos/2021/svg/icon-sirius.svg') }}">
+            <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius"
+                 src="{{ asset('/modules/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
+        <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ asset('/modules/global/img/logos/2021/svg/sirius-logo.svg') }}"> </span> -->
         </div>
         {{--        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">--}}
         {{--            <span class="sr-only">Toggle Search</span>--}}
