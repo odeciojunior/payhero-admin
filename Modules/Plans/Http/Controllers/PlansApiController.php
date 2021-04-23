@@ -66,8 +66,8 @@ class PlansApiController extends Controller
                             $plans = $plans->where(
                                 function ($query) use ($request) {
                                     $query->where('name', 'like', '%' . $request->input('plan') . '%')
-                                    ->orWhere('price', 'like', '%'. str_replace(array('R','$', ' ',','), array('','','','.'),$request->input('plan')). '%')
-                                    ->orWhere('description', $request->input('plan'));
+                                    ->orWhere('price', 'like', '%'. str_replace(array('R', '$', ' ', '.', ','), array('', '', '', '', '.'),$request->input('plan')). '%')
+                                    ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
                                 }
                             );
                         }

@@ -31,13 +31,13 @@ class CheckoutApiController extends Controller
     {
         try {
             $requestValidate = $request->validate([
-                                                      'project'         => 'required|string',
-                                                      'status'          => 'required',
-                                                      'date_range'      => 'required',
-                                                      'client'          => 'nullable|string',
-                                                      'client_document' => 'nullable|string',
-                                                      'plan'            => 'nullable|string',
-                                                  ]);
+                'project'         => 'nullable|string',
+                'status'          => 'required',
+                'date_range'      => 'required',
+                'client'          => 'nullable|string',
+                'client_document' => 'nullable|string',
+                'plan'            => 'nullable|string',
+            ]);
 
             $checkoutService = new CheckoutService();
 
@@ -75,8 +75,8 @@ class CheckoutApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
         }
     }
 

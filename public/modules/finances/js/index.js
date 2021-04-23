@@ -299,7 +299,7 @@ $(document).ready(function () {
         // Fazer saque
         $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
         $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
-            const availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
+            const availableBalanceText = $('.available-balance').html().replace(/,/g, '').replace(/\./g, '');
             const toTransferText = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
 
             const availableBalance = parseInt(availableBalanceText);
@@ -376,11 +376,9 @@ $(document).ready(function () {
 
         function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
             let valueLowerIsNegative = 2;
-
             if (debitValue != undefined) {
                 valueLowerIsNegative = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
             }
-
             return valueLowerIsNegative < 1
                 || dataWithdrawal.lower_value == 0
                 || dataWithdrawal.bigger_value == withdrawal
@@ -390,7 +388,6 @@ $(document).ready(function () {
 
         function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
             const biggerValue = formatMoney(dataWithdrawal.bigger_value);
-
             const lowerValue = formatMoney(dataWithdrawal.lower_value);
 
             if (singleValue) {
@@ -402,8 +399,6 @@ $(document).ready(function () {
                     </div>
                 `;
             }
-
-
             return `
                 <div class="">
                     <div class="row justify-content-center">
@@ -418,7 +413,6 @@ $(document).ready(function () {
                     </div>
                 </div>
             `;
-
         }
 
         function manipulateModalWithdrawal(dataWithdrawal) {
@@ -427,12 +421,12 @@ $(document).ready(function () {
                 'bigger_value': dataWithdrawal.bigger_value
             }
 
-            const currentBalance = $('.available-balance').data('value').replace(',', '').replace('.', '');
-            const withdrawal = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
-
-            const debitValue = $(".debit-balance").data('value');
+            const currentBalance = $('.available-balance').data('value').replace(/,/g, '').replace(/\./g, '');  // SALDO DISPONIVEL
+            const withdrawal = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');             // SAQUE DESEJADO
+            const debitValue = $(".debit-balance").data('value').replace(/,/g, '').replace(/\./g, '');          // DIVIDA ATUAL
 
             const singleValue = modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
+            console.log(withdrawal);
 
             let withdrawRequestValid = false;
             let totalBalanceNegative = false;
@@ -440,9 +434,18 @@ $(document).ready(function () {
             $("#modal-body-withdrawal, #modal-withdraw-footer").html('');
 
             if (debitValue != undefined) {
-                let biggerValueIsZero = dataWithdrawal.bigger_value - removeFormatNumbers(debitValue);
-                let lowerValueIsZero = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
-                let debitVerify = removeFormatNumbers(currentBalance) - removeFormatNumbers(debitValue);
+
+                console.log(dataWithdrawal);
+
+                console.log(removeFormatNumbers(debitValue));
+
+
+                let biggerValueIsZero = dataWithdrawal.bigger_value - removeFormatNumbers(debitValue);          // 0 - 400302 = -400302
+
+                let lowerValueIsZero = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);            // 0 - 400302 = -400302
+
+                let debitVerify = removeFormatNumbers(currentBalance) - removeFormatNumbers(debitValue);        // 32.964,60 - 400302 = 28.961,58
+
 
                 if (debitVerify < 1) {
                     totalBalanceNegative = true;
@@ -500,7 +503,6 @@ $(document).ready(function () {
 
                     let result = currentBalance - removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
-
                     $('#modal-withdraw-footer').html(`
                         <hr>
                         <div class="col-md-12 text-center">
@@ -513,7 +515,10 @@ $(document).ready(function () {
                             </button>
                         </div>
                     `);
+
                 } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) { // DOIS VALORES DO SAQUE SÃO MENORES QUE O VALOR DO DEBITO PENDENTE
+                    console.log("CAIU AQUI : "+biggerValueIsZero,lowerValueIsZero);        // -400302    -400302
+
                     withdrawRequestValid = true;
                     $("#modal-body-withdrawal").html('');
                     $("#text-description-debit-pending").html("");
@@ -588,9 +593,10 @@ $(document).ready(function () {
                 }
             }
 
-
             if (withdrawRequestValid === false && totalBalanceNegative === false) {
                 const htmlModal = optionsValuesWithdrawal(singleValue, dataWithdrawal);
+
+                console.log("PAROU POR AQUI : " + withdrawRequestValid, totalBalanceNegative);
 
                 $("#modal-body-withdrawal, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending").html('');
                 $("#modal-withdrawal-title").html('').html('Confirmar Saque');
@@ -706,7 +712,7 @@ $(document).ready(function () {
         }
 
         function removeFormatNumbers(number) {
-            return number.replace(',', '').replace('.', '');
+            return number.replace(/,/g,'').replace(/\./g,'');
         }
 
         function manipulateModalSuccessWithdrawal() {
