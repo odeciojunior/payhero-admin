@@ -100,7 +100,7 @@ class DomainsApiController extends Controller
             $requestData = $request->validated();
 
             $projectId = $requestData['project_id'] ?? null;
-            $projectId = current(Hashids::decode($projectId));
+            $projectId = hashids_decode($projectId);
 
             if (empty($projectId)) {
                 DB::rollBack();
@@ -145,7 +145,6 @@ class DomainsApiController extends Controller
 
                 return response()->json(['message' => 'Domínios já cadastrado.'], 400);
             }
-
 
             if (!empty($cloudFlareService->getZones($requestData['name']))) {
                 DB::rollBack();
@@ -211,14 +210,21 @@ class DomainsApiController extends Controller
                 }
             }
 
-            return response()->json([
-                'message' => 'Domínio cadastrado com sucesso',
-                'data' => [
-                    'id_code' => Hashids::encode($domainCreated->id),
-                    'zones' => $newNameServers
+            return response()->json(
+                [
+                    'message' => 'Domínio cadastrado com sucesso',
+                    'data' => [
+                        'id_code' => Hashids::encode($domainCreated->id),
+                        'zones' => $newNameServers
+                    ],
                 ],
-            ], 200);
+                200
+            );
         } catch (Exception $e) {
+            if (!empty($domainCreated)) {
+                (new CloudFlareService())->removeDomain($domainCreated);
+            }
+
             DB::rollBack();
 
             $message = CloudflareErrorsService::formatErrorException($e);
@@ -445,7 +451,10 @@ class DomainsApiController extends Controller
                                 try {
                                     if (!empty($domain->project->shopifyIntegrations)) {
                                         $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
-                                        TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
+                                        TaskService::setCompletedTask(
+                                            $domain->project->users->first(),
+                                            Task::find(Task::TASK_DOMAIN_APPROVED)
+                                        );
 
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
                                             try {
@@ -472,7 +481,9 @@ class DomainsApiController extends Controller
                                                 foreach ($shopify::templateKeyNames as $template) {
                                                     $templateKeyName = $template;
                                                     $htmlCart = $shopify->getTemplateHtml($template);
-                                                    if ($htmlCart) break;
+                                                    if ($htmlCart) {
+                                                        break;
+                                                    }
                                                 }
                                                 try {
                                                     if ($htmlCart) {
@@ -483,7 +494,6 @@ class DomainsApiController extends Controller
                                                                 200
                                                             );
                                                         } else {
-
                                                             $shopify->setThemeByRole('main');
                                                             $htmlCart = $shopify->getTemplateHtml(
                                                                 $templateKeyName
@@ -506,7 +516,9 @@ class DomainsApiController extends Controller
                                                             );
 
                                                             //inserir o javascript para o trackeamento (src, utm)
-                                                            $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                                            $htmlBody = $shopify->getTemplateHtml(
+                                                                'layout/theme.liquid'
+                                                            );
                                                             if ($htmlBody) {
                                                                 //template do layout
                                                                 $shopifyIntegration->update(
@@ -594,7 +606,10 @@ class DomainsApiController extends Controller
                             } else {
                                 // não e integracao shopify, validar dominio
                                 $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
-                                TaskService::setCompletedTask($domain->project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
+                                TaskService::setCompletedTask(
+                                    $domain->project->users->first(),
+                                    Task::find(Task::TASK_DOMAIN_APPROVED)
+                                );
 
                                 return response()->json(['message' => 'Dominio revalidado com sucesso!']);
                             }
@@ -635,13 +650,7 @@ class DomainsApiController extends Controller
         }
     }
 
-    /**
-     * @param $project
-     * @param $domain
-     * @return JsonResponse
-     */
-    public
-    function show($project, $domain)
+    public function show($project, $domain)
     {
         try {
             $domainModel = new Domain();

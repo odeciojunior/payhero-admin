@@ -39,7 +39,7 @@ class SendgridService
     {
         //faz a requisição como sub-usuário
         if (!empty($impersonateSubuser)) {
-            return new SendGrid(getenv('SENDGRID_API_KEY'), ['impersonateSubuser' => 'cloudfox2']);
+            return new SendGrid(getenv('SENDGRID_API_KEY'));
         } else {
             return $this->sendgrid;
         }
