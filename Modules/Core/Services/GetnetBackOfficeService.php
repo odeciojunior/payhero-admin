@@ -2,19 +2,12 @@
 
 namespace Modules\Core\Services;
 
-use App\Jobs\GetnetGetDiscountsJob;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use LogicException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
-use Modules\Transfers\Getnet\Details;
-use Modules\Transfers\Getnet\StatementItem;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -28,103 +21,12 @@ class GetnetBackOfficeService extends GetnetService
     public const STATEMENT_DATE_SCHEDULE = 'schedule';
     public const STATEMENT_DATE_TRANSACTION = 'transaction';
     public const STATEMENT_DATE_LIQUIDATION = 'liquidation';
-
-    private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
     public string $postFieldsAccessToken, $authorizationToken;
     protected ?string $sellerId, $statementSubSellerId = null;
     protected Carbon $statementStartDate, $statementEndDate;
     protected ?string $statementDateField, $statementSaleHashId = '';
     protected int $saleId = 0;
-
-    /**
-     * @return string|null
-     */
-    public function getStatementSubSellerId(): ?string
-    {
-        return $this->statementSubSellerId;
-    }
-
-    /**
-     * @param string|null $statementSubSellerId
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementSubSellerId(?string $statementSubSellerId): GetnetBackOfficeService
-    {
-        $this->statementSubSellerId = $statementSubSellerId;
-        return $this;
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getStatementStartDate(): ?Carbon
-    {
-        return $this->statementStartDate ?? null;
-    }
-
-    /**
-     * @param Carbon $statementStartDate
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementStartDate(Carbon $statementStartDate): GetnetBackOfficeService
-    {
-        $this->statementStartDate = $statementStartDate;
-        return $this;
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getStatementEndDate(): ?Carbon
-    {
-        return $this->statementEndDate ?? null;
-    }
-
-    /**
-     * @param Carbon $statementEndDate
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementEndDate(Carbon $statementEndDate): GetnetBackOfficeService
-    {
-        $this->statementEndDate = $statementEndDate;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getStatementDateField(): ?string
-    {
-        return $this->statementDateField ?? null;
-    }
-
-    /**
-     * @param string|null $statementDateField
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementDateField(?string $statementDateField): GetnetBackOfficeService
-    {
-        $this->statementDateField = $statementDateField;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getStatementSaleHashId(): ?string
-    {
-        return $this->statementSaleHashId ?? null;
-    }
-
-    /**
-     * @param string|null $statementSaleHashId
-     * @return GetnetBackOfficeService
-     */
-    public function setStatementSaleHashId(?string $statementSaleHashId): GetnetBackOfficeService
-    {
-        $this->statementSaleHashId = $statementSaleHashId;
-        return $this;
-    }
+    private string $urlCredentialAccessToken = 'credenciamento/auth/oauth/v2/token';
 
     public function __construct()
     {
@@ -158,13 +60,43 @@ class GetnetBackOfficeService extends GetnetService
         }
     }
 
-    public function getMerchantId()
+    public function setSellerId()
     {
         if (FoxUtils::isProduction()) {
-            return env('GET_NET_MERCHANT_ID_PRODUCTION');
+            $this->sellerId = getenv('GET_NET_SELLER_ID_PRODUCTION');
+        } else {
+            $this->sellerId = getenv('GET_NET_SELLER_ID_SANDBOX');
         }
+    }
 
-        return env('GET_NET_MERCHANT_ID_SANDBOX');
+    /**
+     * @param string|null $statementSubSellerId
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementSubSellerId(?string $statementSubSellerId): GetnetBackOfficeService
+    {
+        $this->statementSubSellerId = $statementSubSellerId;
+        return $this;
+    }
+
+    /**
+     * @param Carbon $statementEndDate
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementEndDate(Carbon $statementEndDate): GetnetBackOfficeService
+    {
+        $this->statementEndDate = $statementEndDate;
+        return $this;
+    }
+
+    /**
+     * @param string|null $statementSaleHashId
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementSaleHashId(?string $statementSaleHashId): GetnetBackOfficeService
+    {
+        $this->statementSaleHashId = $statementSaleHashId;
+        return $this;
     }
 
     public function getAuthorizationHeader()
@@ -173,15 +105,6 @@ class GetnetBackOfficeService extends GetnetService
             'authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/json',
         ];
-    }
-
-    public function setSellerId()
-    {
-        if (FoxUtils::isProduction()) {
-            $this->sellerId = getenv('GET_NET_SELLER_ID_PRODUCTION');
-        } else {
-            $this->sellerId = getenv('GET_NET_SELLER_ID_SANDBOX');
-        }
     }
 
     /**
@@ -243,11 +166,80 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'GET', null, null, false);
     }
 
+    /**
+     * @return string|null
+     */
+    public function getStatementDateField(): ?string
+    {
+        return $this->statementDateField ?? null;
+    }
+
+    /**
+     * @param string|null $statementDateField
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementDateField(?string $statementDateField): GetnetBackOfficeService
+    {
+        $this->statementDateField = $statementDateField;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatementSaleHashId(): ?string
+    {
+        return $this->statementSaleHashId ?? null;
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function getStatementStartDate(): ?Carbon
+    {
+        return $this->statementStartDate ?? null;
+    }
+
+    /**
+     * @param Carbon $statementStartDate
+     * @return GetnetBackOfficeService
+     */
+    public function setStatementStartDate(Carbon $statementStartDate): GetnetBackOfficeService
+    {
+        $this->statementStartDate = $statementStartDate;
+        return $this;
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function getStatementEndDate(): ?Carbon
+    {
+        return $this->statementEndDate ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatementSubSellerId(): ?string
+    {
+        return $this->statementSubSellerId;
+    }
+
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
         $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
 
         return $this->sendCurl($url, 'GET', null, $companyId);
+    }
+
+    public function getMerchantId()
+    {
+        if (FoxUtils::isProduction()) {
+            return env('GET_NET_MERCHANT_ID_PRODUCTION');
+        }
+
+        return env('GET_NET_MERCHANT_ID_SANDBOX');
     }
 
     public function checkAvailablePaymentPlansPf()
@@ -358,38 +350,6 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         return $this->sendCurl($url, 'GET');
-    }
-
-    public static function dispatchGetnetGetDiscountsJob()
-    {
-
-        $companies = Auth::user()->companies;
-
-        foreach ($companies as $company) {
-
-            if ($company->get_net_status == 1) {
-
-                $lastVerification = Redis::connection('redis-statement')->get("getDiscounts:lastVerification:" . $company->id);
-
-                $timeLimit = 120;
-                $now = date('YmdHi');
-
-                if (!$lastVerification || ($now - $lastVerification > $timeLimit)) {
-
-                    Log::info(json_encode([
-                        'method' => __METHOD__,
-                        'user_id' => auth()->id() ?? null,
-                        'company_id' => $company->id,
-                        'action' => 'GetnetGetDiscountsJob::dispatch()',
-                        'lastVerification' => $lastVerification,
-                        'date' => $now,
-                    ]));
-
-                    GetnetGetDiscountsJob::dispatch($company);
-                }
-            }
-        }
-
     }
 
     /**
