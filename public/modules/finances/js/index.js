@@ -759,7 +759,7 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='7' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }

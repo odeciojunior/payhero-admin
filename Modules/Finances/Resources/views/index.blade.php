@@ -77,7 +77,7 @@
             <div class="card-show-content-finances" style="display:none">
                 {{-- TABS --}}
                 <div id="tabs-view">
-                    <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-content" id="nav-tabContent" style="min-height: 300px">
                         {{-- TRANSFERENCIAS --}}
                         <div class="tab-pane active"
                              id="nav-transfers"
@@ -221,7 +221,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content card shadow" id="nav-tabContent">
+                            <div class="tab-content card shadow hidden-md-up" id="nav-tabContent">
                                 <div class='container col-sm-12 mt-20  d-md-none'>
                                     <div class='row'>
                                         <div class="col-12 col-sm-6 pl-0 pl-xs-0">
@@ -262,11 +262,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
-                                    Histórico de transferências
-                                </h4>
+                                </div>                                
+                            </div>
+                            <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
+                                Histórico de transferências
+                            </h4>
+                            <div class="card shadow" style="min-height: 300px">
 
                                 <!-- Transferências -->
                                 <div class="tab-pane active"
@@ -485,7 +486,7 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <div class="card shadow">
+                            <div class="card shadow" style="min-height: 300px;">
                                 <table id="statementTable"
                                     class="table table-condensed unify table-striped"
                                     style="margin-bottom: 3.143rem !important;">
@@ -504,8 +505,7 @@
                                     </tr>
                                     </thead>
                                     <tbody id="table-statement-body"
-                                        class="custom-t-body table-statement-body-class"
-                                        style="height: 150px;">
+                                        class="custom-t-body table-statement-body-class">
                                     </tbody>
                                 </table>
                             </div>
