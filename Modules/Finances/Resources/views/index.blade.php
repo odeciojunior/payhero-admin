@@ -297,8 +297,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center justify-content-md-end pr-md-15">
-                                <ul id="pagination-withdrawals" class="pl-10"
-                                    style="margin-top: 10px;position:relative">
+                                <ul id="pagination-withdrawals" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
                                     {{--js carrega...--}}
                                 </ul>
                             </div>

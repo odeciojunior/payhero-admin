@@ -276,7 +276,7 @@
                         </div>
                     </div>
                     <div class="row justify-content-center justify-content-md-end pr-md-15 pb-20">
-                        <ul id="pagination-sales" class="pl-10" style="margin-top:10px;position:relative;float:right;">
+                        <ul id="pagination-sales" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
                             {{-- js carrega... --}}
                         </ul>
                     </div>
