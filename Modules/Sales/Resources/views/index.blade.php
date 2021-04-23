@@ -253,20 +253,20 @@
                 @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
-                    <div class="card shadow " style="min-height: 300px">
+                    <div class="card shadow p-0 pb-10" style="min-height: 300px">
                         <div class="page-invoice-table table-responsive">
                             <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                                 <thead>
                                 <tr>
-                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Descrição</td>
-                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                    <td class="table-title">Forma</td>
-                                    <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
-                                    <td class="table-title display-sm-none">Pagamento</td>
-                                    <td class="table-title">Comissão</td>
-                                    <td class="table-title" width="80px;"> &nbsp;</td>
+                                    <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
+                                    <th class="table-title">Descrição</th>
+                                    <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
+                                    <th class="table-title">Forma</th>
+                                    <th class="table-title">Status</th>
+                                    <th class="table-title display-sm-none display-m-none">Iniciada em</th>
+                                    <th class="table-title display-sm-none">Pagamento</th>
+                                    <th class="table-title">Comissão</th>
+                                    <th class="table-title" width="80px;"> &nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody id="dados_tabela">
