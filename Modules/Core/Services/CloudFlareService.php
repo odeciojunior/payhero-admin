@@ -956,4 +956,17 @@ class CloudFlareService
             return false;
         }
     }
+
+    public function removeDomain($domain)
+    {
+        foreach ($domain->domainsRecords as $domainsRecord) {
+            $this->deleteRecord($domainsRecord->cloudflare_record_id);
+        }
+
+        $this->getSendgridService()->deleteZone($domain->name);
+
+        $this->getSendgridService()->deleteLinkBrand($domain->name);
+
+        $this->deleteZone($domain->name);
+    }
 }

@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Entities;
 
-use Laracasts\Presenter\PresentableTrait;
-use Spatie\Activitylog\Models\Activity;
-use App\Traits\LogsActivity;
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DomainPresenter;
 use Modules\Domains\Transformers\DomainResource;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class Domain
@@ -86,30 +86,28 @@ class Domain extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Domínio ' . $this->name . ' foi deletedo.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Domínio ' . $this->name . ' foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Domínio ' . $this->name . ' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = "Domínio {$this->name} foi deletedo.";
+                break;
+            case 'updated':
+                $activity->description = "Domínio {$this->name} foi atualizado.";
+                break;
+            case 'created':
+                $activity->description = "Domínio {$this->name} foi criado.";
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo(Project::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function domainsRecords()
+    public function domainsRecords(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\DomainRecord');
+        return $this->hasMany(DomainRecord::class);
     }
 }
