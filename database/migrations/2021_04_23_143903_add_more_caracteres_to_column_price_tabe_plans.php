@@ -16,7 +16,7 @@ class AddMoreCaracteresToColumnPriceTabePlans extends Migration
         Schema::table(
             'plans',
             function (Blueprint $table) {
-                $table->decimal('price', 15, 2)->change();
+                $table->decimal('price', 30, 2)->change();
             }
         );
     }
