@@ -40,8 +40,8 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control" id='project-affiliate' data-name="projects">
-                                                    <option value="0">Meus projetos</option>
+                                                <select class="form-control" id="project-affiliate" data-name="projects">
+                                                    <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
                                         </div>                                        
@@ -53,7 +53,7 @@
                                         </div>                
                                         <div class="col-lg-2 col-md-6" style="margin-top: 30px">
                                             <button id="btn-filter-affiliates" class="btn btn-primary w-full">
-                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
@@ -88,8 +88,8 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control" id='project-affiliate-request'>
-                                                    <option value="0">Meus projetos</option>
+                                                <select class="form-control" id="project-affiliate-request" data-name="projects">
+                                                    <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
                                         </div>                                        
@@ -101,7 +101,7 @@
                                         </div>                
                                         <div class="col-lg-2 col-md-6" style="margin-top: 30px">
                                             <button id="btn-filter-affiliates-request" class="btn btn-primary w-full">
-                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
