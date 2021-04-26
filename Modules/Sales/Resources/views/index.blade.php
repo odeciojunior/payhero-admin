@@ -253,26 +253,28 @@
                 @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
-                    <div class="card shadow p-0 pb-10" style="min-height: 300px">
-                        <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                                <thead>
-                                <tr>
-                                    <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
-                                    <th class="table-title">Descrição</th>
-                                    <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
-                                    <th class="table-title">Forma</th>
-                                    <th class="table-title">Status</th>
-                                    <th class="table-title display-sm-none display-m-none">Iniciada em</th>
-                                    <th class="table-title display-sm-none">Pagamento</th>
-                                    <th class="table-title">Comissão</th>
-                                    <th class="table-title" width="80px;"> &nbsp;</th>
-                                </tr>
-                                </thead>
-                                <tbody id="dados_tabela">
-                                {{-- js carrega... --}}
-                                </tbody>
-                            </table>
+                    <div class="col-lg-12 p-0 pb-10">
+                        <div class="card shadow" style="min-height: 300px">
+                            <div class="page-invoice-table table-responsive">
+                                <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
+                                        <th class="table-title">Descrição</th>
+                                        <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
+                                        <th class="table-title">Forma</th>
+                                        <th class="table-title">Status</th>
+                                        <th class="table-title display-sm-none display-m-none">Iniciada em</th>
+                                        <th class="table-title display-sm-none">Pagamento</th>
+                                        <th class="table-title">Comissão</th>
+                                        <th class="table-title" width="80px;"> &nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="dados_tabela">
+                                    {{-- js carrega... --}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
