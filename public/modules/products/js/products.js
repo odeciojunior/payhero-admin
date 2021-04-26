@@ -275,7 +275,11 @@ $(document).ready(function () {
     });
 
     $("#next_step").on("click", function () {
-        $("#nav-logistic-tab").click();
+        if ($("#nav-logistic-tab").css('visibility') == "visible") {
+            $("#nav-logistic-tab").click();
+        } else {
+            $("#nav-logistic-tab").submit();
+        }
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
