@@ -959,6 +959,7 @@ class CloudFlareService
 
     public function removeDomain($domain)
     {
+        $domain->load('domainsRecords');
         foreach ($domain->domainsRecords as $domainsRecord) {
             $this->deleteRecord($domainsRecord->cloudflare_record_id);
         }

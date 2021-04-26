@@ -4,7 +4,7 @@ $(function () {
 
     $.ajax({
         method: "GET",
-        url: "/api/projects/?select=true",
+        url: '/api/projects?select=true',
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
