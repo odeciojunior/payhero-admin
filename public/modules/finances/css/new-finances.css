@@ -400,7 +400,7 @@ select, .select-pad {
 }
 
 /*MOBILE SM*/
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .s-table {
         padding: 20px !important;
 
