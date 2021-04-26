@@ -237,7 +237,7 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>');
                 $('.saltoTotal').html('<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>');
                 $('.saldoBloqueado').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>');
-                //$('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
+                $('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
 
 
                 // Saldo bloqueado
@@ -759,7 +759,7 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='7' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' colspan='7' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -783,7 +783,7 @@ $(document).ready(function () {
                         }
                         tableData += `
                             </td>
-                                <td class="d-none d-md-block">
+                                <td class="d-none d-lg-block">
                                     <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
                                         <span class='o-eye-1'></span>
                                     </a>

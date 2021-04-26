@@ -176,7 +176,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='container col-sm-12 mt-20 d-none d-md-block'>
+                                    <div class='container col-sm-12 mt-20 d-none d-lg-block'>
                                         <div class='row'>
                                             <div class="col-sm-3 card">
                                                 <div class="card-body">
@@ -221,8 +221,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content card shadow hidden-md-up" id="nav-tabContent">
-                                <div class='container col-sm-12 mt-20  d-md-none'>
+                            <div class="tab-content card shadow hidden-lg-up" id="nav-tabContent">
+                                <div class='container col-sm-12 mt-20  d-lg-none'>
                                     <div class='row'>
                                         <div class="col-12 col-sm-6 pl-0 pl-xs-0">
                                             <div class="card card-body mb-10">
