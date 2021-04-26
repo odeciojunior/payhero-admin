@@ -112,6 +112,7 @@ class ShopifyService
         );
 
         if ($getThemes) {
+            sleep(2);
             $this->getAllThemes();
         }
     }
