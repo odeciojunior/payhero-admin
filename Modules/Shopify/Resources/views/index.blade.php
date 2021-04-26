@@ -2,6 +2,11 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/shopify/css/index.css?') }}">
+    <style>
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+    </style>
 @endpush
 
 @section('content')

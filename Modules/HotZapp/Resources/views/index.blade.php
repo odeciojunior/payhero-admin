@@ -2,6 +2,11 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+    <style>
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+    </style>
 @endpush
 @section('content')
     <div id='project-content'>

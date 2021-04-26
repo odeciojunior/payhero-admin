@@ -10,7 +10,9 @@
         .o-arrow-right-1::before {
             transform: rotate(180deg);
         }
-
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
      </style>
 @endpush
 @section('content')
