@@ -275,8 +275,7 @@
                                      role="tabpanel"
                                      aria-labelledby="nav-home-tab">
                                     <table id='withdrawalsTable'
-                                           class="table table-striped table-condensed unify"
-                                           style="margin-bottom: 3.143rem !important">
+                                           class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
                                             <th scope="col">Código Saque</th>
@@ -487,8 +486,7 @@
 
                             <div class="card shadow" style="min-height: 300px;">
                                 <table id="statementTable"
-                                    class="table table-condensed unify table-striped"
-                                    style="margin-bottom: 3.143rem !important;">
+                                    class="table table-condensed unify table-striped">
                                     <thead>
                                     <tr>
                                         <th scope="col" class="headCenter">Razão</th>
