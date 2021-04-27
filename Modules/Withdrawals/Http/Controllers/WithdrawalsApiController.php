@@ -166,13 +166,10 @@ class WithdrawalsApiController
                 2000,
                 function ($transactions) use (
                     &$currentValue,
-                    &$withdrawalValueRequested,
-                    &$lower_value,
-                    &$bigger_value
+                    &$withdrawalValueRequested
                 ) {
                     foreach ($transactions as $transaction) {
                         $currentValue += $transaction->value;
-
                         if ($currentValue >= $withdrawalValueRequested) {
                             return response()->json([
                                 'data' => [
