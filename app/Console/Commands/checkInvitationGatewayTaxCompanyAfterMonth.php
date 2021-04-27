@@ -43,18 +43,18 @@ class checkInvitationGatewayTaxCompanyAfterMonth extends Command
      */
     public function handle()
     {
-        $companies = Company::where('gateway_tax' , 3.9)->get();
-
-        foreach ($companies as $company) {
-            if(Carbon::now()->gt(Carbon::parse($company->created_at)->addMonth())) {
-                $company->update(
-                    [
-                        'gateway_tax' => Company::GATEWAY_TAX
-                    ]
-                );
-            }
-        }
-
-        return 0;
+//        $companies = Company::where('gateway_tax' , 3.9)->get();
+//
+//        foreach ($companies as $company) {
+//            if(Carbon::now()->gt(Carbon::parse($company->created_at)->addMonth())) {
+//                $company->update(
+//                    [
+//                        'gateway_tax' => Company::GATEWAY_TAX
+//                    ]
+//                );
+//            }
+//        }
+//
+//        return 0;
     }
 }
