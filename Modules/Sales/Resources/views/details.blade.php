@@ -54,58 +54,58 @@
                     <div id="table-product">
                     </div>
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-                        <div class="col-lg-6 align-items-center">
+                        <div class="col-sm-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 text-right">
                             <span class="text-muted ft-12" id="subtotal-value"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6">
                             <span class="text-muted ft-12"> Frete </span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 text-right">
                             <span id="shipment-value" class="text-muted ft-12"></span>
                         </div>
-                        <div id="iof-label" class="col-lg-6" style="display:none">
+                        <div id="iof-label" class="col-sm-6" style="display:none">
                             <span class="text-muted ft-12"> IOF </span>
                         </div>
-                        <div id="iof-value" class="col-lg-6 text-right" style="display:none">
+                        <div id="iof-value" class="col-sm-6 text-right" style="display:none">
                             <span class="text-muted ft-12"></span>
                         </div>
-                        <div id="discount-title" class="col-lg-6" style="display: none;">
-                            <span class="text-muted ft-12"> Desconto</span>
+                        <div id="discount-title" class="col-sm-6" style="display: none;">
+                            <span class="text-muted ft-12"> Desconto do cupom</span>
                         </div>
-                        <div id="discount-data" class="col-lg-6 text-right" style="display: none;">
+                        <div id="discount-data" class="col-sm-6 text-right" style="display: none;">
                             <span id="desconto-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6 cupom-info">
+                        <div class="col-sm-6 cupom-info">
                             <span class="text-muted ft-12"> Cupom Utilizado</span>
                         </div>
-                        <div class="col-lg-6 text-right cupom-info">
+                        <div class="col-sm-6 text-right cupom-info">
                             <span id="cupom-code" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6">
                             <span class="text-muted ft-12 text-discount"></span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 text-right">
                             <span id="automatic-discount-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6">
                             <span class="text-muted ft-12 text-partial-refund"> Estorno parcial</span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 text-right">
                             <span id="partial-refund-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6">
                             <h4 class="table-title"> Total </h4>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
-                        <div class='col-lg-8'>
+                        <div class='col-sm-8'>
                             <span id="cashback-label" class="text-muted ft-12 d-none">Cashback</span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 text-right'>
                             <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
                         </div>
                     </div>
@@ -116,13 +116,13 @@
                         <div id="cambio-value" class='col-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-8'>
+                        <div class='col-sm-8'>
                             <span id="taxas-label" class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
-                        <div style="color: #2E85EC" class='col-lg-12 pointer mt-5'
+                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5'
                              data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
                             <small data-toggle="tooltip" data-placement="top" title="Clique para obter mais detalhes">Taxa detalhada</small>
                         </div>
@@ -181,28 +181,28 @@
 {{--                                <div id="tax-comission" class="col-6 ft-12"></div><div id="tax-comission-value" class=" text-right text-muted ft-12 col-6"></div>--}}
                             </table>
                         </div>
-                        <div class='col-lg-8'>
+                        <div class='col-sm-8'>
                             <span id="taxas-installment-free-label" style='display:none;' class='text-muted ft-12'>Taxa de parcelamento</span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 text-right'>
                             <span id="taxa-installment-value" style='display:none;' class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-6 div-user-type-comission' style='display:none;'>
+                        <div class='col-sm-6 div-user-type-comission' style='display:none;'>
                             <h4 class='table-title'>Comissão do afiliado: </h4>
                         </div>
-                        <div class='col-lg-6 text-right div-user-type-comission-value' style='display:none;'>
+                        <div class='col-sm-6 text-right div-user-type-comission-value' style='display:none;'>
                         </div>
-                        <div class='col-lg-6 div-anticipated' style='display:none;'>
+                        <div class='col-sm-6 div-anticipated' style='display:none;'>
                             <span id="anticipated-label" class='text-muted ft-12'>
                                 Valor Antecipado:
                             </span>
                         </div>
-                        <div class='col-lg-6 text-right div-value-anticipated' style='display:none;'>
+                        <div class='col-sm-6 text-right div-value-anticipated' style='display:none;'>
                         </div>
 
-                        <div class='col-lg-6 div-main-comission'>
+                        <div class='col-sm-6 div-main-comission'>
                         </div>
-                        <div class='col-lg-6 text-right div-main-comission-value'>
+                        <div class='col-sm-6 text-right div-main-comission-value'>
                         </div>
                     </div>
                 </div>
