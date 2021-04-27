@@ -182,7 +182,11 @@ $(document).ready(function () {
     $('.money').mask('#.###,#0', {reverse: true});
 
     $("#next_step").on("click", function () {
-        $("#nav-logistic-tab").click();
+        if ($("#nav-logistic-tab").css('visibility') == "visible") {
+            $("#nav-logistic-tab").click();
+        } else {
+            $("#nav-logistic-tab").submit();
+        }
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
