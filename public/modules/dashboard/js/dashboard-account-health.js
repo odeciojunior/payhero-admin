@@ -384,7 +384,7 @@ $(document).ready(function () {
                                     <span class="account-tax ${scoreInfo[Math.floor(data.attendance_score)].textColor}">${data.attendance_score}</span>
                                 </div>
                                 <div class="col-6 pr-0 pl-0 d-flex flex-row flex-nowrap justify-content-start align-items-center align-self-center font-size-12 gray-600">
-                                    <span class="o-clock-1 mr-5" data-toggle="tooltip" data-original-title="Tempo médio de resposta" style="font-size: 18px;line-height: 18px;-webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);"></span> ${data.attendance_average_response_time} hora${data.attendance_average_response_time === 1 ? '' : 's'}
+                                    <span class="o-clock-1 mr-5" data-toggle="tooltip" data-original-title="Tempo médio de resposta" style="font-size: 18px;line-height: 18px;-webkit-text-stroke: 1.45px rgba(0, 0, 0, 0.1);"></span> ${data.attendance_average_response_time || 0} hora${data.attendance_average_response_time === 1 ? '' : 's'}
                                 </div>
                             </div>
                             <div class="mt-10 p-0 d-flex flex-row flex-wrap" style="height: 100%; width: 100%;">
