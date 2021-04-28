@@ -586,3 +586,11 @@ select, .select-pad {
 .card.bg-light .input-group > input {
     border-color: #8693b8
 }
+
+#withdrawalsTable tr:last-of-type td:first-child {
+    border-bottom-left-radius: 16px !important;
+}
+
+#withdrawalsTable tr:last-of-type td:last-child {
+    border-bottom-right-radius: 16px !important;
+}

@@ -341,7 +341,8 @@ $(document).ready(function () {
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
-                                    <td class=' text-center'>
+                                    <td class='text-center'>
+                                        <br class="d-sm-none"/>
                                         ${value.sale_code} <br>
                                         <div class="d-flex flex-row align-items-center justify-content-center">
                                             ${cashbackIcon}
@@ -365,7 +366,7 @@ $(document).ready(function () {
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap;' class="text-right">
+                                    <td style='white-space: nowrap;' class="text-sm-right">
                                         ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
                                     </td>
                                     <td style="text-align: center">

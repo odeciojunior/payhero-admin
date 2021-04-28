@@ -1,6 +1,11 @@
 .table-warning-roll {
     color: #EB6707 !important;
     background-color: #FDE2CE !important;
+    padding: 0 !important;
+}
+
+.table-warning-roll td {
+    border-radius: 0 !important;
 }
 
 .table-responsive {
@@ -8,13 +13,13 @@
     overflow-y: hidden;
 }
 
-.detail-input{
+.detail-input {
     padding: 3px 6px;
     flex: 1;
     margin: 2px 0;
 }
 
-.fake-label{
+.fake-label {
     border: 0;
     padding: 0 !important;
     margin: 0 !important;

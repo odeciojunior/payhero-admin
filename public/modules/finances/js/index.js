@@ -1222,8 +1222,6 @@ $(document).ready(function () {
     $('#pagination-statement').click(function () {
         setTimeout(function () {
             $('.s-table:visible').attr('style', 'display: !')
-            $('.table tr:visible:last > td:first').addClass('teste-1')
-            $('.table tr:visible:last > td:last').addClass('teste-2')
         }, 100);
     });
 });
