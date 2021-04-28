@@ -112,7 +112,7 @@ class ShopifyService
         );
 
         if ($getThemes) {
-            sleep(2);
+            sleep(1);
             $this->getAllThemes();
         }
     }
@@ -1147,7 +1147,7 @@ class ShopifyService
 
             if ($pagination->hasNext()) {
                 $nextPageInfo = $pagination->getNextPageInfo();
-                sleep(2);
+                sleep(1);
                 $storeProducts = $pagination->current($nextPageInfo);
             } else {
                 $nextPagination = false;
