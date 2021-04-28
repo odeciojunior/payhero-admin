@@ -55,6 +55,7 @@
                                             <option value="">Boleto e cartão de crédito</option>
                                             <option value="1">Cartão de crédito</option>
                                             <option value="2">Boleto</option>
+                                            <option value="4">PIX</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
