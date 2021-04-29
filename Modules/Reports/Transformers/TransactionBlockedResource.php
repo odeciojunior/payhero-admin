@@ -16,10 +16,12 @@ class TransactionBlockedResource extends JsonResource
 
         if (!empty($sale->flag)) {
             $flag = $sale->flag;
-        } else if ($sale->payment_method == 1 && empty($sale->flag)) {
+        } elseif ($sale->payment_method == 1 && empty($sale->flag)) {
             $flag = 'generico';
-        } else if ($sale->payment_method == 3 && empty($sale->flag)) {
+        } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
             $flag = 'debito';
+        } elseif ($sale->payment_method == 4 && empty($sale->flag)) {
+            $flag = 'pix';
         } else {
             $flag = 'boleto';
         }

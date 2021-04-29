@@ -21,9 +21,12 @@ class TransactionResource extends JsonResource
             $flag = 'generico';
         } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
             $flag = 'debito';
+        } elseif ($sale->payment_method == 4 && empty($sale->flag)) {
+            $flag = 'pix';
         } else {
             $flag = 'boleto';
         }
+
 
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),

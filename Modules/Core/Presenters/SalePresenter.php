@@ -193,6 +193,8 @@ class SalePresenter extends Presenter
                     return 'boleto';
                 case 3:
                     return 'debito';
+                case 4:
+                    return 'PIX';
             }
 
             return null;
@@ -204,6 +206,8 @@ class SalePresenter extends Presenter
                     return 2;
                 case 'debito':
                     return 3;
+                case 'PIX':
+                    return 4;
             }
 
             return null;
