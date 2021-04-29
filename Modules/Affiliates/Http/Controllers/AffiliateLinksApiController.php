@@ -11,7 +11,6 @@ use Modules\Affiliates\Transformers\AffiliateLinkResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Domain;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AffiliateLinksApiController extends Controller
@@ -42,7 +41,7 @@ class AffiliateLinksApiController extends Controller
 
             return AffiliateLinkResource::collection($links->paginate(5));
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
 
