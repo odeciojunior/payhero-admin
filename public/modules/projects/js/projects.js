@@ -764,7 +764,11 @@ $(() => {
         event.preventDefault();
 
         $("#modal-change-shopify-integration-title").html('Sincronizar template');
-        $("#modal-change-shopify-integration-text").html('Seu você alterar o tema da sua loja, para o checkout continuar funcionando apenas sincronize o template novamente');
+        $("#modal-change-shopify-integration-text").html(`
+            Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações 
+            feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja. 
+            Em caso de dúvidas, entre em contato com o suporte pelo chat.
+        `);
 
         $("#bt-modal-change-shopify-integration").unbind('click');
         $("#bt-modal-change-shopify-integration").on('click', function () {
