@@ -83,7 +83,7 @@ $(document).ready(function () {
                             <div class="card shadow card-edit" project="${
                                 data.id
                             }">
-                                <img class="card-img-top img-fluid w-full" src="${
+                                <img class="card-img-top img-fluid w-full"  onerror="this.src = '/modules/global/img/produto.png'" src="${
                                     !data.project_photo
                                         ? "/modules/global/img/produto.png"
                                         : data.project_photo
