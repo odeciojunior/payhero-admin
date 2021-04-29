@@ -4,22 +4,22 @@ $(() => {
     let termsaffiliates;
 
     ClassicEditor
-        .create( document.querySelector( '#termsaffiliates' ), {
+        .create(document.querySelector('#termsaffiliates'), {
             language: 'pt-br',
             uiColor: '#F1F4F5',
             toolbar: [
                 'heading', '|',
-                'bold', 'italic','|',
+                'bold', 'italic', '|',
                 'link', '|',
                 'undo', 'redo'
             ]
         })
-        .then( newEditor => {
+        .then(newEditor => {
             termsaffiliates = newEditor;
         })
-        .catch( error => {
-            console.error( error );
-        } );
+        .catch(error => {
+            console.error(error);
+        });
 
 
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
@@ -419,39 +419,39 @@ $(() => {
         let is_checked_checkout_notification_config = !!(project.checkout_notification_config_toogle)
 
         $('[name=checkout_notification_config_toogle]').prop('checked', is_checked_checkout_notification_config)
-        if(is_checked_checkout_notification_config){
+        if (is_checked_checkout_notification_config) {
             $('.checkout_notification_config').removeClass('d-none')
         }
 
-        $('[name=checkout_notification_config_time]').val((project.checkout_notification_config_time || 30 ))
+        $('[name=checkout_notification_config_time]').val((project.checkout_notification_config_time || 30))
         $('[name=checkout_notification_mobile]').val((project.checkout_notification_config_mobile || 1))
-       // $('[name=checkout_notification_config_messages]').val((project.checkout_notification_config_message || [] ))
+        // $('[name=checkout_notification_config_messages]').val((project.checkout_notification_config_message || [] ))
 
-        if(project.checkout_notification_config_messages){
+        if (project.checkout_notification_config_messages) {
 
             let config_nessages_keys = Object.keys(project.checkout_notification_config_messages);
 
             config_nessages_keys.map((id) => {
-                $('input[name="checkout_notification_config_messages['+id+']"]').prop("checked", true)
+                $('input[name="checkout_notification_config_messages[' + id + ']"]').prop("checked", true)
             });
 
         }
 
-        if(project.checkout_notification_config_messages_min_value){
+        if (project.checkout_notification_config_messages_min_value) {
 
             let obj = project.checkout_notification_config_messages_min_value
             Object.keys(obj).forEach(key => {
-                $('input[name="checkout_notification_config_messages_min_value['+key+']"]').val(obj[key])
+                $('input[name="checkout_notification_config_messages_min_value[' + key + ']"]').val(obj[key])
             });
 
         }
 
         $('[name=finalizing_purchase_config_toogle]').prop('checked', is_checked_finalizing_purchase_config)
-        if(is_checked_finalizing_purchase_config){
+        if (is_checked_finalizing_purchase_config) {
             $('.finalizing_purchase_config').removeClass('d-none')
         }
         $('[name=finalizing_purchase_config_text]').val((project.finalizing_purchase_config_text || 'Outras {visitantes} pessoas estão finalizando a compra neste momento.'))
-        $('[name=finalizing_purchase_config_min_value]').val((project.finalizing_purchase_config_min_value|| 10))
+        $('[name=finalizing_purchase_config_min_value]').val((project.finalizing_purchase_config_min_value || 10))
 
         if (project.countdown_timer_flag) {
             $('.countdown-config').show('fast', 'linear')
@@ -969,12 +969,62 @@ $(() => {
     });
 
     $('#skiptocart-input').on('change', function () {
-
         let input = $(this);
-        input.attr('disabled', true).parent()
-            .parent()
-            .css('opacity', '.5');
+        let messageTitle = '';
+        let messageDescription = '';
+        [messageTitle, messageDescription] = messagesSwalSkipToCart(input);
 
+        swal({
+            title: messageTitle,
+            text: messageDescription,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085D6',
+            cancelButtonColor: '#DD3333',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Confirmar'
+        }).then(function (data) {
+            if (data.value) {
+                switchSkipToCartOpacity(input, '.5', true);
+                ajaxUpdateSkipToCart(input);
+            } else {
+                changeSwitchSkipToCart(input);
+            }
+        }).catch(function (reason) {
+            alertCustom('error', 'Ocorreu um erro, tente novamente mais tarde!');
+        });
+    });
+
+    function switchSkipToCartOpacity(input, value, disabled) {
+        input.attr('disabled', disabled)
+            .parent()
+            .parent()
+            .css('opacity', value);
+    }
+
+    function messagesSwalSkipToCart(input) {
+        if (input.is(":checked")) {
+            return [
+                'Deseja habilitar o skip to cart?',
+                'Habilitando o skip to cart o template é atualizado podendo ocorrer erros, em caso de dúvidas, entre em contato com o suporte pelo chat antes de atualizar..'
+            ];
+        } else {
+            return [
+                'Deseja desabilitar o skip to cart?',
+                'Desabilitando o skip to cart o template é atualizado podendo ocorrer erros, em caso de dúvidas, entre em contato com o suporte pelo chat antes de atualizar..'
+            ];
+        }
+    }
+
+    function changeSwitchSkipToCart(input) {
+        if (input.is(":checked")) {
+            input.prop("checked", '')
+        } else {
+            input.prop("checked", 'checked')
+        }
+    }
+
+    function ajaxUpdateSkipToCart(input) {
         $.ajax({
             method: 'POST',
             url: '/api/apps/shopify/skiptocart',
@@ -989,18 +1039,15 @@ $(() => {
             },
             error: function (response) {
                 errorAjaxResponse(response);
-                input.attr('disabled', false).parent()
-                    .parent()
-                    .css('opacity', '1');
+                changeSwitchSkipToCart(input);
+                switchSkipToCartOpacity(input, '1', false);
             },
             success: function (response) {
                 alertCustom('success', response.message);
-                input.attr('disabled', false).parent()
-                    .parent()
-                    .css('opacity', '1');
+                switchSkipToCartOpacity(input, '1', false);
             }
         });
-    });
+    }
 
     $("#bt-shopify-sync-trackings").on("click", function () {
 
@@ -1049,7 +1096,7 @@ $(() => {
         statusUrlAffiliatesColor()
     })
 
-    $('#countdown_timer_flag').off().on('click', function (){
+    $('#countdown_timer_flag').off().on('click', function () {
         let checked = $('[name=countdown_timer_flag]').prop('checked');
         if (checked) {
             $('.countdown-config').show('fast', 'linear')
@@ -1102,25 +1149,25 @@ $(() => {
     })
 
     // $('#slick-tabs').change(() => {
-        $('#slick-tabs').slick({
-            infinite: false,
-            speed: 300,
-            slidesToShow: 7,
-            slidesToScroll: 1,
-            variableWidth: true,
-            nextArrow: false,
-            prevArrow: false,
+    $('#slick-tabs').slick({
+        infinite: false,
+        speed: 300,
+        slidesToShow: 7,
+        slidesToScroll: 1,
+        variableWidth: true,
+        nextArrow: false,
+        prevArrow: false,
 
-            responsive: [
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                    }
-                },
-            ]
-        });
+        responsive: [
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+        ]
+    });
     // })
 
     let firstCategory = [

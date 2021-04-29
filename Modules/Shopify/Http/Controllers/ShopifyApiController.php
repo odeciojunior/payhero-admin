@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Company;
@@ -197,10 +198,12 @@ class ShopifyApiController extends Controller
                     'installments_amount' => '12',
                     'installments_interest_free' => '1',
                     'checkout_type' => 2, // checkout de 1 passo
-                    'notazz_configs' => json_encode([
-                        'cost_currency_type' => 1,
-                        'update_cost_shopify' => 1
-                    ])
+                    'notazz_configs' => json_encode(
+                        [
+                            'cost_currency_type' => 1,
+                            'update_cost_shopify' => 1
+                        ]
+                    )
                 ]
             );
 
@@ -210,15 +213,15 @@ class ShopifyApiController extends Controller
 
             $shippingCreated = $shippingModel->create(
                 [
-                    'project_id'         => $projectCreated->id,
-                    'name'               => 'Frete gratis',
-                    'information'        => 'de 15 até 30 dias',
-                    'value'              => '0,00',
-                    'type'               => 'static',
-                    'type_enum'          => $shippingModel->present()->getTypeEnum('static'),
-                    'status'             => '1',
-                    'pre_selected'       => '1',
-                    'apply_on_plans'     => '["all"]',
+                    'project_id' => $projectCreated->id,
+                    'name' => 'Frete gratis',
+                    'information' => 'de 15 até 30 dias',
+                    'value' => '0,00',
+                    'type' => 'static',
+                    'type_enum' => $shippingModel->present()->getTypeEnum('static'),
+                    'status' => '1',
+                    'pre_selected' => '1',
+                    'apply_on_plans' => '["all"]',
                     'not_apply_on_plans' => '[]'
                 ]
             );
@@ -444,10 +447,12 @@ class ShopifyApiController extends Controller
 
                                 $htmlCart = null;
                                 $templateKeyName = null;
-                                foreach ($shopify::templateKeyNames as $template){
+                                foreach ($shopify::templateKeyNames as $template) {
                                     $templateKeyName = $template;
                                     $htmlCart = $shopify->getTemplateHtml($template);
-                                    if($htmlCart) break;
+                                    if ($htmlCart) {
+                                        break;
+                                    }
                                 }
 
                                 if ($htmlCart) {
@@ -691,10 +696,12 @@ class ShopifyApiController extends Controller
 
                     $htmlCart = null;
                     $templateKeyName = null;
-                    foreach ($shopify::templateKeyNames as $template){
+                    foreach ($shopify::templateKeyNames as $template) {
                         $templateKeyName = $template;
                         $htmlCart = $shopify->getTemplateHtml($template);
-                        if($htmlCart) break;
+                        if ($htmlCart) {
+                            break;
+                        }
                     }
 
                     if ($htmlCart) {
@@ -972,72 +979,66 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function setSkipToCart(Request $request)
+    public function setSkipToCart(Request $request): JsonResponse
     {
-        $data = $request->all();
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
+        try {
+            if (!foxutils()->isProduction()) {
+                return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
+            }
 
-        if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
-            $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->with(['domains'])->find($projectId);
+            $data = $request->all();
 
-            if ($projectId) {
-                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
-
-                try {
-                    if (FoxUtils::isProduction()) {
-                        $shopify = new ShopifyService($integration->url_store, $integration->token);
-
-                        $shopify->setSkipToCart(boolval($data['skip_to_cart']));
-
-                        $shopify->setThemeByRole('main');
-
-                        $htmlCart = null;
-                        $templateKeyName = null;
-                        foreach ($shopify::templateKeyNames as $template){
-                            $templateKeyName = $template;
-                            $htmlCart = $shopify->getTemplateHtml($template);
-                            if($htmlCart) break;
-                        }
-
-                        $domain = $project->domains->first();
-                        $domainName = $domain ? $domain->name : null;
-
-                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
-
-                        $integration->skip_to_cart = boolval($data['skip_to_cart']);
-                        $integration->save();
-
-                        activity()->on($projectModel)->tap(
-                            function (Activity $activity) use ($projectId) {
-                                $activity->log_name = 'updated';
-                                $activity->subject_id = current(Hashids::decode($projectId));
-                            }
-                        )->log('Skip to cart atualizado no projeto ' . $project->name);
-
-                        return response()->json(['message' => 'Skip to cart atualizado no projeto']);
-                    } else {
-                        return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
-                    }
-                } catch (Exception $e) {
-                    if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404])) {
-                        return response()->json(
-                            ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
-                            400
-                        );
-                    }
-                    report($e);
-
-                    return response()->json(
-                        ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
-                        400
-                    );
-                }
-            } else {
+            if (empty($data['project_id']) || !isset($data['skip_to_cart'])) {
                 return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
             }
-        } else {
+
+            $project = Project::with(['domains', 'shopifyIntegrations'])->find(hashids_decode($data['project_id']));
+
+            $integration = $project->shopifyIntegrations->first();
+
+            $shopify = new ShopifyService($integration->url_store, $integration->token);
+
+            $shopify->setSkipToCart(boolval($data['skip_to_cart']));
+
+            $shopify->setThemeByRole('main');
+
+            $htmlCart = null;
+            $templateKeyName = null;
+            foreach ($shopify::templateKeyNames as $template) {
+                $templateKeyName = $template;
+                $htmlCart = $shopify->getTemplateHtml($template);
+                if ($htmlCart) {
+                    break;
+                }
+            }
+
+            $domain = $project->domains->where('status', Domain::STATUS_APPROVED)->first();
+            $domainName = $domain ? $domain->name : null;
+
+            DB::beginTransaction();
+
+            $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
+            $integration->update(
+                [
+                    'skip_to_cart' => boolval($data['skip_to_cart'])
+                ]
+            );
+
+            activity()->on((new Project()))->tap(
+                function (Activity $activity) use ($project) {
+                    $activity->log_name = 'updated';
+                    $activity->subject_id = $project->id;
+                }
+            )->log('Skip to cart atualizado no projeto ' . $project->name);
+
+            DB::commit();
+            return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            if (!method_exists($e, 'getCode') || !in_array($e->getCode(), [401, 402, 403, 404])) {
+                report($e);
+            }
+
             return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
         }
     }

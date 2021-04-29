@@ -36,12 +36,17 @@ class Domain extends Model
     use PresentableTrait;
     use SoftDeletes;
 
+    public const STATUS_PENDING = 1;
+    public const STATUS_ANALYZING = 2;
+    public const STATUS_APPROVED = 3;
+    public const STATUS_REFUSED = 4;
+
     /**
      * @var string
      */
     protected $presenter = DomainPresenter::class;
     /**
-     * @var array
+     * @var array]
      */
     protected $dates = [
         'created_at',
