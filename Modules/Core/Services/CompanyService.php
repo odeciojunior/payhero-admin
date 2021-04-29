@@ -291,7 +291,7 @@ class CompanyService
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
                 $pendingBalance = $pendingBalance->whereIn(
                     'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
                 )
                     ->where('is_waiting_withdrawal', 0)
                     ->whereNull('withdrawal_id');
