@@ -11,6 +11,7 @@ use Modules\Affiliates\Transformers\AffiliateLinkResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Domain;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AffiliateLinksApiController extends Controller
@@ -26,20 +27,22 @@ class AffiliateLinksApiController extends Controller
             $userId    = auth()->user()->account_owner_id;
 
             $links = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
-                $q->where('user_id', $userId)
-                  ->where('project_id', $projectId);
-            })
-                                  ->with('affiliate.project.domains', 'plan');
+                $q->where('user_id', $userId)->where('project_id', $projectId);
+            })->with('affiliate.project.domains', 'plan');
+            
             if (!empty($request->input('plan'))) {
                 $links = $links->whereHas('plan', function($q2) use ($request) {
                     $q2->where('name', 'like', '%' . $request->input('plan') . '%');
                 });
             }
 
+            $links = $links->whereHas('affiliate.project.domains', function($query) {
+                $query->where('status', 3);
+            });
+
             return AffiliateLinkResource::collection($links->paginate(5));
         } catch (Exception $e) {
-
-            return response()->json(['message' => 'Ocorreu um erro'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
