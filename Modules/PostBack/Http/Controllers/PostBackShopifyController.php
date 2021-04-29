@@ -3,6 +3,7 @@
 namespace Modules\PostBack\Http\Controllers;
 
 use App\Jobs\ProcessShopifyPostbackJob;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -82,97 +83,108 @@ class PostBackShopifyController extends Controller
      */
     public function postBackListener(Request $request)
     {
-        $postBackLogModel = new PostbackLog();
-        $projectModel = new Project();
-        $userProjectModel = new UserProject();
-        $shopifyIntegrationModel = new ShopifyIntegration();
-
-        $requestData = $request->all();
-
-        $postBackLogModel->create(
-            [
-                'origin' => 3,
-                'data' => json_encode($requestData),
-                'description' => 'shopify',
-            ]
-        );
-
-        $projectId = current(Hashids::decode($request->project_id));
-
-        if (empty($projectId)) {
-            return response()->json(
-                [
-                    'message' => 'Projeto não encontrado',
-                ],
-                200
-            );
-        }
-        //hash ok
-        $project = $projectModel->find($projectId);
-
-        if (empty($project)) {
-            return response()->json(
-                [
-                    'message' => 'error',
-                ],
-                200
-            );
-        }
-
-        $userProject = $userProjectModel->with('user')->where(
-            [
-                ['project_id', $project->id],
-                ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
-            ]
-        )->first();
-
-        if (empty($userProject->user)) {
-            return response()->json(
-                [
-                    'message' => 'Usuario não encontrado',
-                ],
-                200
-            );
-        }
-
         try {
-            $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
+            $postBackLogModel = new PostbackLog();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
-            if (empty($shopIntegration)) {
+            $requestData = $request->all();
+
+            $postBackLogModel->create(
+                [
+                    'origin' => 3,
+                    'data' => json_encode($requestData),
+                    'description' => 'shopify',
+                ]
+            );
+
+            $projectId = current(Hashids::decode($request->project_id));
+
+            if (empty($projectId)) {
                 return response()->json(
                     [
-                        'message' => 'Integração não encontrada',
+                        'message' => 'Projeto não encontrado',
+                    ],
+                    200
+                );
+            }
+            //hash ok
+            $project = $projectModel->find($projectId);
+
+            if (empty($project)) {
+                return response()->json(
+                    [
+                        'message' => 'error',
                     ],
                     200
                 );
             }
 
-            $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
-        } catch (\Exception $e) {
+            $userProject = $userProjectModel->with('user')->where(
+                [
+                    ['project_id', $project->id],
+                    ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
+                ]
+            )->first();
+
+            if (empty($userProject->user)) {
+                return response()->json(
+                    [
+                        'message' => 'Usuario não encontrado',
+                    ],
+                    200
+                );
+            }
+
+            try {
+                $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
+
+                if (empty($shopIntegration)) {
+                    return response()->json(
+                        [
+                            'message' => 'Integração não encontrada',
+                        ],
+                        200
+                    );
+                }
+
+                $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
+            } catch (\Exception $e) {
+                return response()->json(
+                    [
+                        'message' => 'Dados do shopify inválidos, revise os dados informados',
+                    ],
+                    200
+                );
+            }
+
+            if (!empty($requestData['variants']) && count($requestData['variants']) > 0) {
+                $variant = current($requestData['variants']);
+            }
+
+            if (empty($variant['product_id'])) {
+                $variant['product_id'] = $requestData['id'];
+            }
+
+            $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
+
             return response()->json(
                 [
-                    'message' => 'Dados do shopify inválidos, revise os dados informados',
+                    'message' => 'success',
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'success',
                 ],
                 200
             );
         }
-
-        if (!empty($requestData['variants']) && count($requestData['variants']) > 0) {
-            $variant = current($requestData['variants']);
-        }
-
-        if (empty($variant['product_id'])) {
-            $variant['product_id'] = $requestData['id'];
-        }
-
-        $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
-
-        return response()->json(
-            [
-                'message' => 'success',
-            ],
-            200
-        );
     }
 }
 
