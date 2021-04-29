@@ -24,6 +24,7 @@
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <select id='select_projects' class="form-control select-pad">
+                            <option value="all">Todos projetos</option>
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
