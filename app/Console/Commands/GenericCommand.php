@@ -14,17 +14,9 @@ class GenericCommand extends Command
     public function handle()
     {
         foreach(Company::all() as $company) {
-            $company->update(['subseller_getnet_id' => '700051332', '$subseller_getnet_homolog_id' => '700051332']);
+            $company->update(['subseller_getnet_id' => '700051332', 'subseller_getnet_homolog_id' => '700051332']);
             $this->line("id: " . $company->id);
         }
-
-//        $user = User::find(30);
-//        $user->update([
-//            'name' => 'Meu nome',
-//            'email' => 'teste@email.com',
-//            'password' => bcrypt('password'),
-//        ]);
-//        $this->line("id: " . $user->id);
 
         dd('feitoo');
     }
