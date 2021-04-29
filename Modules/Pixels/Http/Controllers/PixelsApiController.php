@@ -3,7 +3,6 @@
 namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -25,13 +24,10 @@ class PixelsApiController extends Controller
     {
         try {
             if (empty($projectId)) {
-                return response()->json(['message' => 'Erro ao listar dados de pixels'], 400);
+                return response()->json(['message' => __('controller.error.generic')], 400);
             }
 
-            $pixelModel = new Pixel();
-            $projectModel = new Project();
-
-            $project = $projectModel->find(current(Hashids::decode($projectId)));
+            $project = Project::find(hashids_decode($projectId));
 
             $affiliate = Affiliate::where('project_id', $project->id)
                 ->where('user_id', auth()->user()->account_owner_id)
@@ -39,21 +35,22 @@ class PixelsApiController extends Controller
 
             $affiliateId = $affiliate->id ?? null;
 
-            activity()->on($pixelModel)->tap(
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => __('controller.pixel.index.permission')], 403);
+            }
+
+            activity()->on((new Pixel()))->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 }
-            )->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
+            )->log(__('controller.pixel.log.visualization') . ' ' . $project->name);
 
-            if (Gate::allows('edit', [$project, $affiliateId])) {
-                $pixels = $pixelModel->where('project_id', $project->id)
-                    ->where('affiliate_id', $affiliateId)
-                    ->orderBy('id', 'DESC');
 
-                return PixelsResource::collection($pixels->paginate(5));
-            }
+            $pixels = Pixel::where('project_id', $project->id)
+                ->where('affiliate_id', $affiliateId)
+                ->orderBy('id', 'DESC');
 
-            return response()->json(['message' => 'Sem permissão para listar pixels'], 403);
+            return PixelsResource::collection($pixels->paginate(5));
         } catch (Exception $e) {
             report($e);
 
@@ -67,97 +64,81 @@ class PixelsApiController extends Controller
             $validator = $request->validated();
 
             if (!$validator || !isset($projectId)) {
-                return response()->json('Parametros inválidos', 400);
+                return response()->json(['message' => __('controller.error.generic')], 400);
             }
 
-            $validator['project_id'] = hashids_decode($projectId);
-
-            $affiliateId = 0;
             if (!empty($validator['affiliate_id'])) {
-                $affiliateId = current(Hashids::decode($validator['affiliate_id']));
-                $validator['affiliate_id'] = $affiliateId;
+                $validator['affiliate_id'] = hashids_decode($validator['affiliate_id']);
+                $affiliateId = hashids_decode($validator['affiliate_id']);
             } else {
+                $affiliateId = 0;
                 $validator['affiliate_id'] = null;
             }
 
-            $project = Project::find($validator['project_id']);
+            $project = Project::find(hashids_decode($projectId));
 
             if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => 'Sem permissão para salvar pixels'], 403);
+                return response()->json(['message' => __('controller.pixel.create.permission')], 403);
             }
+
+            $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($validator['add_pixel_plans']));
 
             if ($validator['platform'] == 'google_adwords') {
                 $validator['code'] = str_replace(['AW-'], '', $validator['code']);
             }
 
-            $applyPlanArray = [];
-            if (in_array('all', $validator['add_pixel_plans'])) {
-                $applyPlanArray[] = 'all';
-            } else {
-                foreach ($validator['add_pixel_plans'] as $key => $value) {
-                    $applyPlanArray[] = current(Hashids::decode($value));
-                }
-            }
-
-            $applyPlanEncoded = json_encode($applyPlanArray);
-
-            $facebookToken = null;
-            $isApi = false;
-
             if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
                 $validator['purchase-event-name'] = null;
             }
 
-            if ($validator['platform'] == 'taboola' && empty($validator['purchase-event-name'])) {
-                $validator['purchase-event-name'] = 'make_purchase';
-            } elseif ($validator['platform'] == 'outbrain' && empty($validator['purchase-event-name'])) {
-                $validator['purchase-event-name'] = 'Purchase';
-            } elseif ($validator['platform'] == 'facebook') {
-                if (!empty($validator['api-facebook']) && $validator['api-facebook'] == 'api') {
-                    $facebookToken = $validator['facebook-token-api'];
-                    $isApi = true;
-                }
+            if (in_array($validator['platform'], ['taboola', 'outbrain']) && empty($validator['purchase-event-name'])) {
+                $validator['purchase-event-name'] = $validator['platform'] == 'taboola' ? 'make_purchase' : 'Purchase';
             }
 
-            if (empty($validator['value_percentage_purchase_boleto'])) {
-                $validator['value_percentage_purchase_boleto'] = 100;
+            $facebookToken = null;
+            $isApi = false;
+            if ($validator['platform'] == 'facebook' && !empty($validator['api-facebook']) && $validator['api-facebook'] == 'api') {
+                $facebookToken = $validator['facebook-token-api'];
+                $isApi = true;
             }
 
-            $pixel = Pixel::create(
+            Pixel::create(
                 [
-                    'project_id' => $validator['project_id'],
+                    'project_id' => $project->id,
                     'name' => $validator['name'],
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
-                    'status' => $validator['status'],
-                    'checkout' => $validator['checkout'],
-                    'purchase_boleto' => $validator['purchase_boleto'],
-                    'purchase_card' => $validator['purchase_card'],
+                    'status' => isset($validator['status']),
+                    'checkout' => isset($validator['checkout']),
+                    'purchase_boleto' => isset($validator['purchase_boleto']),
+                    'purchase_card' => isset($validator['purchase_card']),
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
                     'purchase_event_name' => $validator['purchase-event-name'],
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
-                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => empty($validator['value_percentage_purchase_boleto']) ? 100 : $validator['value_percentage_purchase_boleto']
                 ]
             );
 
-            if ($pixel) {
-                return response()->json(
-                    [
-                        'message' => 'Pixel Configurado com sucesso!',
-                        'success' => true
-                    ],
-                    200
-                );
-            }
-
-            return response()->json('Erro ao criar pixel', 400);
+            return response()->json(
+                [
+                    'message' => 'Pixel ' . __('controller.success.create'),
+                    'success' => true
+                ],
+                200
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json('Erro ao criar pixel', 400);
+            return response()->json(
+                [
+                    'message' => __('controller.error.create') . ' Pixel',
+                    'success' => false
+                ],
+                400
+            );
         }
     }
 

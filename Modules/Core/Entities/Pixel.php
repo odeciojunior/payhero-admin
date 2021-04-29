@@ -34,6 +34,17 @@ class Pixel extends Model
     use PresentableTrait;
     use SoftDeletes;
 
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 0;
+
+    public const FACEBOOK_PLATFORM = 'facebook';
+    public const GOOGLE_ADWORDS_PLATFORM = 'google_adwords';
+    public const GOOGLE_ANALYTICS_PLATFORM = 'google_analytics';
+    public const GOOGLE_ANALYTICS_FOUR_PLATFORM = 'google_analytics_four';
+    public const TABOOLA_PLATFORM = 'taboola';
+    public const OUTBRAIN_PLATFORM = 'outbrain';
+    public const PINTEREST_PLATFORM = 'pinterest';
+
     /**
      * @var string
      */

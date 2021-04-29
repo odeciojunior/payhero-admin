@@ -9,7 +9,8 @@ const formatPlatform = {
     3: 'Google Analytics',
     4: 'Google Analytics 4.0',
     5: 'Taboola',
-    6: 'Outbrain'
+    6: 'Outbrain',
+    7: 'pinterest'
 }
 
 $(function () {
@@ -24,18 +25,82 @@ $(function () {
         $(this).off();
     });
 
-    $('.check').on('click', function () {
-        if ($(this).is(':checked')) {
-            $(this).val(1);
-        } else {
-            $(this).val(0);
+    function isChecked(input) {
+        if (input) {
+            if (input.is(':checked')) {
+                input.attr('checked', '');
+            } else {
+                input.attr('checked', 'checked');
+            }
         }
-    });
 
-    if ($(':checkbox').is(':checked')) {
-        $(':checkbox').val(1);
-    } else {
-        $(':checkbox').val(0);
+    }
+
+    $('.check').on('click', function () {
+        isChecked($(this));
+    });
+    isChecked($(':checkbox'));
+
+    // Index Pixel
+    function atualizarPixel() {
+        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        currentPage = link;
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/pixels';
+        } else {
+            link = '/api/project/' + projectId + '/pixels' + link;
+        }
+
+        loadOnTable('#data-table-pixel', '#table-pixel');
+        $("#pagination-pixels").html('');
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#data-table-pixel").html(response.message);
+            },
+            success: function success(response) {
+                $("#data-table-pixel, #pagination-pixels").html('');
+
+                if (response.data == '') {
+                    $('#table-pixel').addClass('table-striped');
+                    $("#data-table-pixel").html(`
+                        <tr class="text-center">
+                            <td colspan="8" style="height: 70px; vertical-align: middle;">
+                                Nenhum registro encontrado
+                            </td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                $.each(response.data, function (index, value) {
+                    $("#data-table-pixel").append(`
+                        <tr>
+                            <td>${value.name}</td>
+                            <td>${value.code}</td>
+                            <td>${value.platform_enum}</td>
+                            <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
+                            <td style='text-align:center'>
+                                <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                            </td>
+                        </tr>
+                    `);
+                    $('#table-pixel').addClass('table-striped');
+                });
+
+                pagination(response, 'pixels', atualizarPixel);
+            }
+        });
     }
 
     // carregar modal de detalhes
@@ -245,112 +310,6 @@ $(function () {
         $("#modal-delete-pixel").modal('show');
     });
 
-    function validateDataPixelForm(formData) {
-        if (formData.name.length > 100) {
-            alertCustom('error', 'O campo Descrição permite apenas 100 caracteres')
-            return false;
-        }
-
-        if (formData.name.length < 1) {
-            alertCustom('error', 'O campo Descrição é obrigatório')
-            return false;
-        }
-
-        if (formData.code.length < 1) {
-            alertCustom('error', 'O campo Código é obrigatório')
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto.length > 3) {
-            alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto.length < 1) {
-            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
-            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
-            alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
-            return false;
-        }
-
-        if (formData.platform == 'facebook' && formData.is_api == 'api' && formData.facebook_token_api.length < 1) {
-            alertCustom('error', 'O campo Token Acesso API de Conversões é obrigatório');
-            return false;
-        }
-
-        if (['taboola', 'outbrain'].includes(formData.platform) && formData.purchase_event_name.length < 1) {
-            alertCustom('error', 'O campo Nome evento de conversão é obrigatório');
-            return false;
-        }
-
-        if (formData.plans_apply == null) {
-            alertCustom('error', 'É obrigatório selecionar um ou mais planos');
-            return false;
-        }
-
-        return true;
-    }
-
-    //Create new Pixel
-    $("#modal-create-pixel #btn-store-pixel").on('click', function () {
-        const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
-        formData.append('status', $("#modal-create-pixel .pixel-status").val());
-
-        if (!validateDataPixelForm({
-            'name': formData.get('name'),
-            'platform': formData.get('platform'),
-            'is_api': formData.get('api-facebook'),
-            'code': formData.get('code'),
-            'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
-            'facebook_token_api': formData.get('facebook-token-api'),
-            'purchase_event_name': formData.get('purchase-event-name'),
-            'plans_apply': formData.get('add_pixel_plans[]')
-        })) {
-            return false;
-        }
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: "/api/project/" + projectId + "/pixels",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (response) {
-                loadingOnScreenRemove();
-                $("#modal_add_produto").hide();
-                $(".loading").css("visibility", "hidden");
-                errorAjaxResponse(response);
-            }, success: function success(response) {
-                loadingOnScreenRemove();
-                $(".loading").css("visibility", "hidden");
-                if (response.success) {
-                    $("#modal-create-pixel").modal('hide');
-                    alertCustom("success", response.message);
-                    atualizarPixel();
-                } else {
-                    alertCustom("error", response.message);
-                }
-            }
-        });
-    });
 
     //Update Pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
@@ -441,66 +400,182 @@ $(function () {
         });
     });
 
-    // Index Pixel
-    function atualizarPixel() {
-        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-        currentPage = link;
 
-        if (link == null) {
-            link = '/api/project/' + projectId + '/pixels';
-        } else {
-            link = '/api/project/' + projectId + '/pixels' + link;
+    // Open Modal New Pixel
+    $("#add-pixel").on('click', function () {
+        openModalCreatePixel();
+        $("#modal-create-pixel").modal('show');
+    });
+
+    function changePlaceholderInput(value) {
+        const platform = $("#code-pixel");
+        const inputCodePixel = $("#input-code-pixel");
+        inputCodePixel.html('').hide();
+
+        switch (value) {
+            case "facebook":
+                platform.attr("placeholder", '52342343245553');
+                break;
+            case "google_adwords":
+                inputCodePixel.html('AW-').show();
+                platform.attr("placeholder", '8981445741-4/AN7162ASNSG');
+                break;
+            case "google_analytics":
+                platform.attr("placeholder", 'UA-8984567741-3');
+                break;
+            case "google_analytics_four":
+                platform.attr("placeholder", 'G-KZSV4LMBAC');
+                break;
+            case "taboola":
+                platform.attr("placeholder", '1010100');
+                break;
+            case "outbrain":
+                platform.attr("placeholder", '00de2748d47f2asdl39877mash');
+                break;
+            default:
+                platform.attr("placeholder", 'Código');
+        }
+    }
+
+    $("img.logo-pixels").on('click', function () {
+        const platform = $(this).data('value');
+        $("#platform").val('').val(platform);
+        $(".img-logo").attr('src', this.src);
+
+        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+
+        changePlaceholderInput(platform);
+
+        if (platform === 'facebook') {
+            $("#select-facebook-integration, #div-facebook-token-api").show();
+        } else if (['taboola', 'outbrain'].includes(platform)) {
+            $(".purchase-event-name-div").show();
         }
 
-        loadOnTable('#data-table-pixel', '#table-pixel');
+        $("input[type=radio]").change(function () {
+            if (this.value === 'api') {
+                $("#facebook-token-api").attr('readonly', false)
+            } else {
+                $("#facebook-token-api").attr('readonly', true)
+            }
+        });
 
+        $("#select-platform-pixel").hide();
+        $("#configure-new-pixel").show();
+    });
+
+    $("img.img-selected").on('click', function () {
+        openModalCreatePixel();
+    });
+
+    function openModalCreatePixel() {
+        $("#configure-new-pixel").hide();
+        $("#select-platform-pixel").show();
+    }
+
+    function validateDataPixelForm(formData) {
+        if (formData.name.length > 100) {
+            alertCustom('error', 'O campo Descrição permite apenas 100 caracteres')
+            return false;
+        }
+
+        if (formData.name.length < 1) {
+            alertCustom('error', 'O campo Descrição é obrigatório')
+            return false;
+        }
+
+        if (formData.code.length < 1) {
+            alertCustom('error', 'O campo Código é obrigatório')
+            return false;
+        }
+
+        if (formData.value_percentage_purchase_boleto.length > 3) {
+            alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
+            return false;
+        }
+
+        if (formData.value_percentage_purchase_boleto.length < 1) {
+            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
+            return false;
+        }
+        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
+            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
+            return false;
+        }
+
+        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
+            alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
+            return false;
+        }
+
+        if (formData.platform === 'facebook' && formData.is_api === 'api' && formData.facebook_token_api.length < 1) {
+            alertCustom('error', 'O campo Token Acesso API de Conversões é obrigatório');
+            return false;
+        }
+
+        if (['taboola', 'outbrain'].includes(formData.platform) && formData.purchase_event_name.length < 1) {
+            alertCustom('error', 'O campo Nome evento de conversão é obrigatório');
+            return false;
+        }
+
+        if (formData.plans_apply == null) {
+            alertCustom('error', 'É obrigatório selecionar um ou mais planos');
+            return false;
+        }
+
+        return true;
+    }
+
+    //Save Create new Pixel
+    $("#modal-create-pixel #btn-store-pixel").on('click', function () {
+        const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
+        formData.append('status', $("#modal-create-pixel .pixel-status").val());
+
+        if (!validateDataPixelForm({
+            'name': formData.get('name'),
+            'platform': formData.get('platform'),
+            'is_api': formData.get('api-facebook'),
+            'code': formData.get('code'),
+            'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
+            'facebook_token_api': formData.get('facebook-token-api'),
+            'purchase_event_name': formData.get('purchase-event-name'),
+            'plans_apply': formData.get('add_pixel_plans[]')
+        })) {
+            return false;
+        }
+
+        loadingOnScreen();
         $.ajax({
-            method: "GET",
-            url: link,
+            method: "POST",
+            url: "/api/project/" + projectId + "/pixels",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
-                $("#data-table-pixel").html(response.message);
-            },
-            success: function success(response) {
-                $("#data-table-pixel, #pagination-pixels").html('');
-
-                if (response.data == '') {
-                    $('#table-pixel').addClass('table-striped');
-                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
-                    return;
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                if (response.success) {
+                    $("#modal-create-pixel").modal('hide');
+                    alertCustom("success", response.message);
+                    atualizarPixel();
+                } else {
+                    alertCustom("error", response.message);
                 }
-
-                $.each(response.data, function (index, value) {
-                    $("#data-table-pixel").append(`
-                        <tr>
-                            <td>${value.name}</td>
-                            <td>${value.code}</td>
-                            <td>${formatPlatform[value.platform_enum]}</td>
-                            <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
-                            <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
-                            </td>
-                        </tr>
-                    `);
-                    $('#table-pixel').addClass('table-striped');
-                });
-
-                pagination(response, 'pixels', atualizarPixel);
             }
         });
-    }
+    });
 
-    function clearFields() {
-        $('.pixel-description').val('');
-        $('.pixel-code').val('');
-    }
-
+    // Select Plans
     $('#add_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-create-pixel')}));
     $('#edit_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-edit-pixel')}));
 
@@ -565,75 +640,4 @@ $(function () {
             planSelect.val('all').trigger("change");
         }
     });
-
-    // Create Pixel
-    $("#add-pixel").on('click', function () {
-        openModalCreatePixel();
-        $("#modal-create-pixel").modal('show');
-    });
-
-    function changePlaceholderInput(value) {
-        const codeInput = $("#code-pixel");
-        $("#input-code-pixel").html('').hide();
-
-        switch (value) {
-            case "facebook":
-                codeInput.attr("placeholder", '52342343245553');
-                break;
-            case "google_adwords":
-                $("#input-code-pixel").html('AW-').show();
-                codeInput.attr("placeholder", '8981445741-4/AN7162ASNSG');
-                break;
-            case "google_analytics":
-                codeInput.attr("placeholder", 'UA-8984567741-3');
-                break;
-            case "google_analytics_four":
-                codeInput.attr("placeholder", 'G-KZSV4LMBAC');
-                break;
-            case "taboola":
-                codeInput.attr("placeholder", '1010100');
-                break;
-            case "outbrain":
-                codeInput.attr("placeholder", '00de2748d47f2asdl39877mash');
-                break;
-            default:
-                codeInput.attr("placeholder", 'Código');
-        }
-    }
-
-    $("img.logo-pixels").on('click', function () {
-        const platform = $(this).data('value');
-        $("#platform").val('').val(platform);
-        $(".img-logo").attr('src', this.src);
-
-        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
-
-        changePlaceholderInput(platform);
-
-        if (platform === 'facebook') {
-            $("#select-facebook-integration, #div-facebook-token-api").show();
-        } else if (['taboola', 'outbrain'].includes(platform)) {
-            $(".purchase-event-name-div").show();
-        }
-
-        $("input[type=radio]").change(function () {
-            if (this.value === 'api') {
-                $("#facebook-token-api").attr('readonly', false)
-            } else {
-                $("#facebook-token-api").attr('readonly', true)
-            }
-        });
-
-        $("#select-platform-pixel").hide();
-        $("#configure-new-pixel").show();
-    });
-
-    $("img.img-selected").on('click', function () {
-        openModalCreatePixel();
-    });
-
-    function openModalCreatePixel() {
-        $("#configure-new-pixel").hide();
-        $("#select-platform-pixel").show();
-    }
 });
