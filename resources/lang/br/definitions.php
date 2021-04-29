@@ -44,6 +44,15 @@ return [
                 "active"   => "Ativo",
                 "disabled" => "Desativado",
             ],
+            "platform" => [
+                'facebook' => 'Facebook',
+                'google_adwords' => 'Google Adwords',
+                'google_analytics' => 'Google Analytics',
+                'google_analytics_four' => 'Google Analytics 4',
+                'taboola' => 'Taboola',
+                'outbrain' => 'Outbrain',
+                'pinterest' => 'Pinterest',
+            ],
         ],
         "domain"                   => [
             "status" => [
