@@ -507,11 +507,8 @@
                                 </table>
                             </div>
 
-                            <div class="row d-flex justify-content-center justify-content-md-end pb-20">
-                                <div id="pagination-statement"
-                                 class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top: 10px;position:relative;">
-                                </div>
+                            <div class="row justify-content-center justify-content-md-end pr-md-15">
+                                <ul id="pagination-statement" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10"></ul>
                             </div>
                         </div>
 

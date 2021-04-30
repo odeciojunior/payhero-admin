@@ -242,7 +242,7 @@
 
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0"
                                style="width:100%;">
                             <thead>
                             <tr class="">
@@ -263,8 +263,8 @@
                     </div>
 
                 </div>
-                <div class="row justify-content-center justify-content-md-end mb-25">
-                    <ul id="pagination" class="pl-5 pr-md-15 mb-10" style="margin-top:10px; position:relative;float:right">
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-25">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

@@ -105,6 +105,7 @@ $(document).ready(function () {
                     });
                 }
                 $('.table-affiliate').addClass('table-striped');
+                $('.table-affiliate').addClass('mb-0');
                 pagination(response, 'affiliates', getAffiliates);
 
                 $('.delete-affiliate').on('click', function (event) {
@@ -286,6 +287,7 @@ $(document).ready(function () {
                     });
                 }
                 $('.table-affiliate-request').addClass('table-striped');
+                $('.table-affiliate-request').addClass('mb-0');
                 pagination(response, 'affiliates-request', getAffiliatesRequest);
 
                 $(".evaluate-affiliate").on('click', function () {
