@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/projects/css/index.css') }}">
         <style>
             .card{
-                min-height:436.833px;
+                min-height:403px;
             }
             .card-title{
                 min-height:56px;
