@@ -38,11 +38,11 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyService
 {
-    const templateKeyNames = [
+    public const templateKeyNames = [
         'sections/cart-template.liquid',
         'templates/cart.liquid',
     ];
-    const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
+    public const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
     /**
      * @var string
      */
@@ -1139,7 +1139,7 @@ class ShopifyService
         while ($nextPagination) {
             foreach ($storeProducts as $shopifyProduct) {
                 try {
-                    ImportShopifyProduct::dispatch($project, $userId,$shopifyProduct->getId());
+                    ImportShopifyProduct::dispatch($project, $userId, $shopifyProduct->getId());
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -2156,11 +2156,10 @@ class ShopifyService
 
             foreach ($products as $product) {
                 foreach ($product->getVariants() as $variant) {
-                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))){
+                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))) {
                         $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
                         break;
                     }
-
                 }
 
                 return [

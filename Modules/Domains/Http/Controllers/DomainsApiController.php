@@ -14,6 +14,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\CloudflareErrorsService;
 use Modules\Core\Services\CloudFlareService;
@@ -420,228 +421,178 @@ class DomainsApiController extends Controller
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function recheckOnly($project, $domain)
+    public function recheckOnly($project, $domain): JsonResponse
     {
         try {
-            $domainModel = new Domain();
             $cloudFlareService = new CloudFlareService();
 
-            $domainId = current(Hashids::decode($domain));
-            if (!empty($domainId)) {
-                // hashid ok
-                $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
-                    ->find($domainId);
+            $domain = Domain::with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
+                ->find(hashids_decode($domain));
 
-                activity()->on($domainModel)->tap(
-                    function (Activity $activity) use ($domainId) {
-                        $activity->log_name = 'visualization';
-                        $activity->subject_id = $domainId;
-                    }
-                )->log('Verificação domínio: ' . $domain->name);
-                if (!empty($domain)) {
-                    if (Gate::allows('edit', [$domain->project])) {
-                        if ($cloudFlareService->checkHtmlMetadata(
-                            'https://checkout.' . $domain->name,
-                            'checkout-cloudfox',
-                            '1'
-                        )) {
-                            if (!empty($domain->project->shopify_id)) {
-                                // se for shopify, fazer check
+            if (empty($domain)) {
+                return response()->json(['message' => 'Domínio não encontrado'], 404);
+            }
 
-                                try {
-                                    if (!empty($domain->project->shopifyIntegrations)) {
-                                        $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
-                                        TaskService::setCompletedTask(
-                                            $domain->project->users->first(),
-                                            Task::find(Task::TASK_DOMAIN_APPROVED)
-                                        );
+            if (!Gate::allows('edit', [$domain->project])) {
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para validar domínio',
+                    ],
+                    403
+                );
+            }
 
-                                        foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                            try {
-                                                $shopify = new ShopifyService(
-                                                    $shopifyIntegration->url_store,
-                                                    $shopifyIntegration->token,
-                                                    false
-                                                );
-                                                $shopify->setThemeByRole('main');
-                                            } catch (Exception $e) {
-                                                report($e);
-
-                                                return response()->json(
-                                                    [
-                                                        'message' => 'Ocorreu um erro, irregularidade na loja shopify',
-                                                    ],
-                                                    400
-                                                );
-                                            }
-
-                                            if (empty($shopifyIntegration->layout_theme_html)) {
-                                                $htmlCart = null;
-                                                $templateKeyName = null;
-                                                foreach ($shopify::templateKeyNames as $template) {
-                                                    $templateKeyName = $template;
-                                                    $htmlCart = $shopify->getTemplateHtml($template);
-                                                    if ($htmlCart) {
-                                                        break;
-                                                    }
-                                                }
-                                                try {
-                                                    if ($htmlCart) {
-                                                        //template normal
-                                                        if ($shopify->checkCartTemplate($htmlCart)) {
-                                                            return response()->json(
-                                                                ['message' => 'Domínio validado com sucesso'],
-                                                                200
-                                                            );
-                                                        } else {
-                                                            $shopify->setThemeByRole('main');
-                                                            $htmlCart = $shopify->getTemplateHtml(
-                                                                $templateKeyName
-                                                            );
-
-                                                            $shopifyIntegration->update(
-                                                                [
-                                                                    'theme_type' => $shopifyIntegration->present()
-                                                                        ->getThemeType('basic_theme'),
-                                                                    'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => $templateKeyName,
-                                                                    'theme_html' => $htmlCart,
-                                                                ]
-                                                            );
-
-                                                            $shopify->updateTemplateHtml(
-                                                                $templateKeyName,
-                                                                $htmlCart,
-                                                                $domain->name
-                                                            );
-
-                                                            //inserir o javascript para o trackeamento (src, utm)
-                                                            $htmlBody = $shopify->getTemplateHtml(
-                                                                'layout/theme.liquid'
-                                                            );
-                                                            if ($htmlBody) {
-                                                                //template do layout
-                                                                $shopifyIntegration->update(
-                                                                    [
-                                                                        'layout_theme_html' => $htmlBody,
-                                                                    ]
-                                                                );
-
-                                                                $shopify->insertUtmTracking(
-                                                                    'layout/theme.liquid',
-                                                                    $htmlBody
-                                                                );
-                                                            }
-                                                        }
-                                                    } else {
-                                                        //template ajax
-                                                        $htmlCart = $shopify->getTemplateHtml(
-                                                            $shopify::templateAjaxKeyName
-                                                        );
-
-                                                        $shopifyIntegration->update(
-                                                            [
-                                                                'theme_type' => $shopifyIntegration->present()
-                                                                    ->getThemeType('ajax_theme'),
-                                                                'theme_name' => $shopify->getThemeName(),
-                                                                'theme_file' => $shopify::templateAjaxKeyName,
-                                                                'theme_html' => $htmlCart,
-                                                            ]
-                                                        );
-
-                                                        $shopify->updateTemplateHtml(
-                                                            $templateKeyName,
-                                                            $htmlCart,
-                                                            $domain->name,
-                                                            true
-                                                        );
-                                                    }
-                                                } catch (Exception $e) {
-                                                    report($e);
-
-                                                    $domain->update(
-                                                        [
-                                                            'status' => $domainModel->present()
-                                                                ->getStatus('pending'),
-                                                        ]
-                                                    );
-
-                                                    return response()->json(
-                                                        ['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'],
-                                                        400
-                                                    );
-                                                }
-
-                                                return response()->json(
-                                                    ['message' => 'Domínio validado com sucesso'],
-                                                    200
-                                                );
-                                            } else {
-                                                return response()->json(
-                                                    [
-                                                        'message' => 'Ocorreu um problema ao revalidar o domínio',
-                                                    ],
-                                                    400
-                                                );
-                                            }
-                                        }
-                                    } else {
-                                        // integração nao encontrada
-                                        $domain->update(
-                                            [
-                                                'status' => $domainModel->present()->getStatus('pending'),
-                                            ]
-                                        );
-
-                                        return response()->json(
-                                            [
-                                                'message' => 'Não foi possivel revalidar o domínio, integração do shopify não encontrada',
-                                            ],
-                                            400
-                                        );
-                                    }
-                                } catch
-                                (Exception $e) {
-                                }
-                            } else {
-                                // não e integracao shopify, validar dominio
-                                $domain->update(['status' => $domainModel->present()->getStatus('approved')]);
-                                TaskService::setCompletedTask(
-                                    $domain->project->users->first(),
-                                    Task::find(Task::TASK_DOMAIN_APPROVED)
-                                );
-
-                                return response()->json(['message' => 'Dominio revalidado com sucesso!']);
-                            }
-                        } else {
-                            $domain->update(
-                                [
-                                    'status' => $domainModel->present()->getStatus('pending'),
-                                ]
-                            );
-
-                            return response()->json(
-                                [
-                                    'message' => 'A verificação falhou, atualização de nameservers pendentes',
-                                ],
-                                400
-                            );
-                        }
-                    } else {
-                        return response()->json(
-                            [
-                                'message' => 'Sem permissão para validar domínio',
-                            ],
-                            403
-                        );
-                    }
-                } else {
-                    //dominio nao existe
-                    return response()->json(['message' => 'Domínio não encontrado'], 404);
+            activity()->on((new Domain()))->tap(
+                function (Activity $activity) use ($domain) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = $domain->id;
                 }
-            } else {
-                // hash invalida
-                return response()->json(['message' => 'Não foi possivel revalidar o dominio'], 400);
+            )->log('Verificação domínio: ' . $domain->name);
+
+            if (!$cloudFlareService->checkHtmlMetadata(
+                'https://checkout.' . $domain->name,
+                'checkout-cloudfox',
+                '1'
+            )) {
+                $domain->update(['status' => Domain::STATUS_PENDING]);
+
+                return response()->json(
+                    [
+                        'message' => 'A verificação falhou, atualização de nameservers pendentes',
+                    ],
+                    400
+                );
+            }
+
+
+            if (empty($domain->project->shopify_id)) {
+                $domain->update(['status' => Domain::STATUS_APPROVED]);
+                TaskService::setCompletedTask(
+                    $domain->project->users->first(),
+                    Task::find(Task::TASK_DOMAIN_APPROVED)
+                );
+
+                return response()->json(['message' => 'Dominio revalidado com sucesso!']);
+            }
+
+            if (empty($domain->project->shopifyIntegrations)) {
+                $domain->update(['status' => Domain::STATUS_PENDING]);
+
+                return response()->json(
+                    [
+                        'message' => 'Não foi possivel revalidar o domínio, integração do shopify não encontrada',
+                    ],
+                    400
+                );
+            }
+
+
+            $domain->update(['status' => Domain::STATUS_APPROVED]);
+            TaskService::setCompletedTask(
+                $domain->project->users->first(),
+                Task::find(Task::TASK_DOMAIN_APPROVED)
+            );
+
+            $shopifyIntegration = $domain->project->shopifyIntegrations->first();
+
+            try {
+                $shopify = new ShopifyService(
+                    $shopifyIntegration->url_store,
+                    $shopifyIntegration->token,
+                    false
+                );
+                $shopify->setThemeByRole('main');
+            } catch (Exception $e) {
+                report($e);
+
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, irregularidade na loja shopify',
+                    ],
+                    400
+                );
+            }
+
+            if (!empty($shopifyIntegration->layout_theme_html)) {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um problema ao revalidar o domínio',
+                    ],
+                    400
+                );
+            }
+
+            $htmlCart = null;
+            $templateKeyName = null;
+            foreach ($shopify::templateKeyNames as $template) {
+                $templateKeyName = $template;
+                $htmlCart = $shopify->getTemplateHtml($template);
+                if ($htmlCart) {
+                    break;
+                }
+            }
+
+            try {
+                if ($htmlCart) {
+                    //template normal
+                    if ($shopify->checkCartTemplate($htmlCart)) {
+                        return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+                    }
+
+                    $shopify->setThemeByRole('main');
+                    $htmlCart = $shopify->getTemplateHtml($templateKeyName);
+
+                    $shopifyIntegration->update(
+                        [
+                            'theme_type' => ShopifyIntegration::SHOPIFY_BASIC_THEME,
+                            'theme_name' => $shopify->getThemeName(),
+                            'theme_file' => $templateKeyName,
+                            'theme_html' => $htmlCart,
+                        ]
+                    );
+
+                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name);
+
+                    //Insert Tracking (src, utm)
+                    $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                    if ($htmlBody) {
+                        $shopifyIntegration->update(['layout_theme_html' => $htmlBody]);
+                        $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                    }
+
+                    return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+                }
+
+                //template ajax
+                $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
+
+                $shopifyIntegration->update(
+                    [
+                        'theme_type' => ShopifyIntegration::SHOPIFY_AJAX_THEME,
+                        'theme_name' => $shopify->getThemeName(),
+                        'theme_file' => $shopify::templateAjaxKeyName,
+                        'theme_html' => $htmlCart,
+                    ]
+                );
+
+                $shopify->updateTemplateHtml(
+                    $templateKeyName,
+                    $htmlCart,
+                    $domain->name,
+                    true
+                );
+                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+            } catch (Exception $e) {
+                report($e);
+
+                $domain->update(['status' => Domain::STATUS_PENDING]);
+
+                return response()->json(
+                    [
+                        'message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
