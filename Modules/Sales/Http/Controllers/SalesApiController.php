@@ -278,7 +278,9 @@ class SalesApiController extends Controller
     {
         try {
             $saleModel = new Sale();
-            $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
+            $sale = explode(" ", $request->input('sale'));
+
+            $saleId = current(Hashids::connection('sale_id')->decode($sale[0]));
             $sale = $saleModel->with(['customer', 'project'])->find($saleId);
 
             if (empty($sale)) {

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +12,10 @@ use Modules\Core\Services\ShopifyService;
 
 class ImportShopifyProduct implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private $project;
     private $productId;
@@ -26,10 +30,14 @@ class ImportShopifyProduct implements ShouldQueue
 
     public function handle()
     {
-        $integration = $this->project->shopifyIntegrations->first();
+        try {
+            $integration = $this->project->shopifyIntegrations->first();
 
-        $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+            $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
-        $shopifyService->importShopifyProduct($this->project->id, $this->userId, $this->productId);
+            $shopifyService->importShopifyProduct($this->project->id, $this->userId, $this->productId);
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

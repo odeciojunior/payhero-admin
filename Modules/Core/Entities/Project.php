@@ -220,7 +220,7 @@ class Project extends Model
     /**
      * @return HasMany
      */
-    public function domains()
+    public function domains(): HasMany
     {
         return $this->hasMany(Domain::class);
     }
