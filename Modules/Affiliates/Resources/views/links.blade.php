@@ -8,9 +8,9 @@
                     </span>
                 </div>
             <div class='col-md-6'>
-                <div id="add-link" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-create-link">
+                <div class="d-flex align-items-center justify-content-end">
                     <span class="link-button-dependent red"> Adicionar Link </span>
-                    <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+                    <a id="add-link"  data-toggle="modal" data-target="#modal-create-link" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>

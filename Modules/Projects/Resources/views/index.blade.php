@@ -7,6 +7,9 @@
             .card{
                 min-height:436.833px;
             }
+            .card-title{
+                min-height:56px;
+            }
         </style>
     @endpush
     <!-- Page -->
