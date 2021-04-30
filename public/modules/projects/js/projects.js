@@ -1162,8 +1162,7 @@ $(() => {
         }
     })
 
-    // $('#slick-tabs').change(() => {
-<<<<<<< HEAD
+    
         $('#slick-tabs').slick({
             infinite: false,
             speed: 300,
@@ -1182,28 +1181,6 @@ $(() => {
                 },
             ]
         });
-=======
-    $('#slick-tabs').slick({
-        infinite: false,
-        speed: 300,
-        slidesToShow: 7,
-        slidesToScroll: 1,
-        variableWidth: true,
-        nextArrow: false,
-        prevArrow: false,
-
-        responsive: [
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                }
-            },
-        ]
-    });
->>>>>>> master
-    // })
 
     let firstCategory = [
         "tab-domains",
