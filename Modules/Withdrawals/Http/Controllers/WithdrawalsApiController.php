@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -154,7 +155,7 @@ class WithdrawalsApiController
             $currentValue = 0;
 
             $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
+                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
