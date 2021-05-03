@@ -419,7 +419,7 @@ class PlansApiController extends Controller
                         DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
                         ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
 
-                    $uniqueProduct = boolval($data['unique_product'] ?? 1);
+                    $uniqueProduct = boolval($data['unique_product'] ?? 0);
                     if ($uniqueProduct) {
                         $plans->withCount('productsPlans as products_count')
                             ->groupBy('products_count')
