@@ -66,14 +66,15 @@ class OrderBumpApiController extends Controller
                 $rule->apply_on_plans = collect()->push((object)[
                     'id' => 'all',
                     'name' => 'Qualquer plano',
-                    'variants' => null,
+                    'description' => '',
+                    'variants' => 0,
                 ]);
             } else {
-                $rule->apply_on_plans = $plansModel->select('id', 'name', $rawVariants)
+                $rule->apply_on_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
                     ->whereIn('id', $rule->apply_on_plans)
                     ->get();
             }
-            $rule->offer_plans = $plansModel->select('id', 'name', $rawVariants)
+            $rule->offer_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
                 ->whereIn('id', $rule->offer_plans)
                 ->get();
 
