@@ -101,7 +101,11 @@
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md">
-                                <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
+                                <div class="form-group form-icons">
+                                    <label for="date_range" >Data</label>
+                                    <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly >
+                                </div>
                             </div>
                             <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
                                 <button id="bt_filtro" class="btn btn-primary col">
@@ -139,27 +143,29 @@
 
                 <!-- Tabela -->
                 <div class="fixhalf"></div>
-                <div class="card shadow " style="min-height: 300px">
-                    <div class="page-invoice-table table-responsive">
-                        <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                            <thead>
-                            <tr>
-                                <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                <td class="table-title">Projeto</td>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Forma</td>
-                                <td class="table-title">Status</td>
-                                <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title display-sm-none">Pagamento</td>
-                                <td class="table-title">Comissão</td>
-                                <td class="table-title">Motivo bloqueio</td>
-                            </tr>
-                            </thead>
-                            <tbody id="dados_tabela">
-                            {{-- js carrega... --}}
-                            </tbody>
-                        </table>
+                <div class="col-lg-12 p-0 pb-10">
+                    <div class="card shadow" style="min-height: 300px">
+                        <div class="page-invoice-table table-responsive">
+                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                                <thead>
+                                <tr>
+                                    <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
+                                    <th class="table-title">Projeto</th>
+                                    <th class="table-title">Descrição</th>
+                                    <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
+                                    <th class="table-title">Forma</th>
+                                    <th class="table-title">Status</th>
+                                    <th class="table-title display-sm-none display-m-none">Data</th>
+                                    <th class="table-title display-sm-none">Pagamento</th>
+                                    <th class="table-title">Comissão</th>
+                                    <th class="table-title">Motivo bloqueio</th>
+                                </tr>
+                                </thead>
+                                <tbody id="dados_tabela">
+                                {{-- js carrega... --}}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">

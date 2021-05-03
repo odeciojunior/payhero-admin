@@ -105,9 +105,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md">
-                                <label for="date_type">&nbsp;</label>
-                                <input name='date_range' id="date_range" class="select-pad"
+                                <div class="form-group form-icons">
+                                    <label for="date_type">&nbsp;</label>
+                                    <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="select-pad pr-30"
                                        placeholder="Clique para editar..." readonly style="">
+                                </div>
                             </div>
 
 
@@ -116,13 +119,11 @@
 
                             <div class="d-flex flex-wrap" style="width:100%">
                                 <div class="col-sm-12 col-md">
-                                    <label for="project">Projeto</label>
-                                    <select name="project" id="project" class="form-control select-pad"
-                                            style='width:100%;' data-plugin="select2">
+                                    <label for="project">Projeto</label><br>
+                                    <select name='project' id="project" class="form-control select-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
-
                                 <div class="col-sm-12 col-md">
                                     <label for="is_contested" class='mb-10'>Concluído</label>
                                     <br>

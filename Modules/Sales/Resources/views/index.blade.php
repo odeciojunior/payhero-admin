@@ -57,7 +57,7 @@
                         <div class="col-6 text-right">
                             <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                                 <div class="p-2 d-flex justify-content-end align-items-center">
-                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                    <span class="o-download-cloud-1 mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
                                         <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
@@ -253,26 +253,28 @@
                 @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
-                    <div class="card shadow " style="min-height: 300px">
-                        <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                                <thead>
-                                <tr>
-                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Descrição</td>
-                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                    <td class="table-title">Forma</td>
-                                    <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
-                                    <td class="table-title display-sm-none">Pagamento</td>
-                                    <td class="table-title">Comissão</td>
-                                    <td class="table-title" width="80px;"> &nbsp;</td>
-                                </tr>
-                                </thead>
-                                <tbody id="dados_tabela">
-                                {{-- js carrega... --}}
-                                </tbody>
-                            </table>
+                    <div class="col-lg-12 p-0 pb-10">
+                        <div class="card shadow" style="min-height: 300px">
+                            <div class="page-invoice-table table-responsive">
+                                <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
+                                        <th class="table-title">Descrição</th>
+                                        <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
+                                        <th class="table-title">Forma</th>
+                                        <th class="table-title">Status</th>
+                                        <th class="table-title display-sm-none display-m-none">Iniciada em</th>
+                                        <th class="table-title display-sm-none">Pagamento</th>
+                                        <th class="table-title">Comissão</th>
+                                        <th class="table-title" width="80px;"> &nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="dados_tabela">
+                                    {{-- js carrega... --}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">

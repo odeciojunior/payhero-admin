@@ -1,7 +1,6 @@
 var exportFormat = null;
 
 $(document).ready(function () {
-
     getProjects();
 
     $("#bt_filtro").on("click", function (event) {
@@ -10,64 +9,91 @@ $(document).ready(function () {
     });
 
     $("#bt_get_csv").on("click", function () {
-        $('#modal-export-sale').modal('show');
-        exportFormat = 'csv';
+        $("#modal-export-sale").modal("show");
+        exportFormat = "csv";
     });
 
     $("#bt_get_xls").on("click", function () {
-        $('#modal-export-sale').modal('show');
-        exportFormat = 'xls';
+        $("#modal-export-sale").modal("show");
+        exportFormat = "xls";
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
-        var email = $('#email_export').val();
+        var regexEmail = new RegExp(
+            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
+        );
+        var email = $("#email_export").val();
 
-        if (email == '' || !regexEmail.test(email)) {
-            alertCustom('error', 'Preencha o email corretamente');
+        if (email == "" || !regexEmail.test(email)) {
+            alertCustom("error", "Preencha o email corretamente");
             return false;
         } else {
             salesExport(exportFormat);
-            $('#modal-export-sale').modal('hide');
+            $("#modal-export-sale").modal("hide");
         }
     });
 
-    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    let endDate = moment().format('YYYY-MM-DD');
-    $("#date-range-sales-recovery").daterangepicker({
-        startDate: moment().subtract(30, 'days'),
-        endDate: moment(),
-        opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+    let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    $("#date-range-sales-recovery").daterangepicker(
+        {
+            startDate: moment().subtract(30, "days"),
+            endDate: moment(),
+            opens: "center",
+            maxDate: moment().endOf("day"),
+            alwaysShowCalendar: true,
+            showCustomRangeLabel: "Customizado",
+            autoUpdateInput: true,
+            locale: {
+                locale: "pt-br",
+                format: "DD/MM/YYYY",
+                applyLabel: "Aplicar",
+                cancelLabel: "Limpar",
+                fromLabel: "De",
+                toLabel: "Até",
+                customRangeLabel: "Customizado",
+                weekLabel: "W",
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro",
+                ],
+                firstDay: 0,
+            },
+            ranges: {
+                Hoje: [moment(), moment()],
+                Ontem: [
+                    moment().subtract(1, "days"),
+                    moment().subtract(1, "days"),
+                ],
+                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+                "Este mês": [
+                    moment().startOf("month"),
+                    moment().endOf("month"),
+                ],
+                "Mês passado": [
+                    moment().subtract(1, "month").startOf("month"),
+                    moment().subtract(1, "month").endOf("month"),
+                ],
+                Vitalício: [moment("2018-01-01 00:00:00"), moment()],
+            },
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+        function (start, end) {
+            startDate = start.format("YYYY-MM-DD");
+            endDate = end.format("YYYY-MM-DD");
         }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
+    );
 
     /**
      * Busca os projetos para montar o select
@@ -80,11 +106,11 @@ $(document).ready(function () {
             url: "/api/projects?select=true",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function (response) {
-                console.log('entrei erro')
+                console.log("entrei erro");
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -92,25 +118,26 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    $("#export-excel").show()
+                    $("#export-excel").show();
 
                     $.each(response.data, function (i, project) {
-                        $("#project").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
+                        $("#project").append(
+                            $("<option>", {
+                                value: project.id,
+                                text: project.name,
+                            })
+                        );
                     });
 
                     updateSalesRecovery();
-
                 } else {
-                    $("#export-excel").hide()
+                    $("#export-excel").hide();
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
 
                 loadingOnScreenRemove();
-            }
+            },
         });
     }
 
@@ -119,11 +146,29 @@ $(document).ready(function () {
      * @param link
      */
     function urlDataFormatted(link) {
-        let url = '';
+        let url = "";
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
+            url = `?project=${$("#project option:selected").val()}&status=${$(
+                "#type_recovery option:selected"
+            ).val()}&date_range=${$(
+                "#date-range-sales-recovery"
+            ).val()}&client=${$(
+                "#client-name"
+            ).val()}&date_type=created_at&client_document=${$(
+                "#client-cpf"
+            ).val()}&plan=${$("#plan").val()}`;
         } else {
-            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
+            url = `${link}&project=${$(
+                "#project option:selected"
+            ).val()}&status=${$(
+                "#type_recovery option:selected"
+            ).val()}&date_range=${$(
+                "#date-range-sales-recovery"
+            ).val()}&client=${$(
+                "#client-name"
+            ).val()}&date_type=created_at&client_document=${$(
+                "#client-cpf"
+            ).val()}&plan=${$("#plan").val()}`;
         }
 
         if ($("#type_recovery option:selected").val() == 1) {
@@ -134,7 +179,6 @@ $(document).ready(function () {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
-
         }
     }
 
@@ -143,8 +187,7 @@ $(document).ready(function () {
      * @param link
      */
     function updateSalesRecovery(link = null) {
-
-        loadOnTable('#table_data', '#carrinhoAbandonado');
+        loadOnTable("#table_data", "#carrinhoAbandonado");
 
         // Formata a url
         link = urlDataFormatted(link);
@@ -154,92 +197,110 @@ $(document).ready(function () {
             url: link,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                $("#table_data").html("");
+                $("#carrinhoAbandonado").addClass("table-striped");
 
-                $('#table_data').html('');
-                $('#carrinhoAbandonado').addClass('table-striped');
-
-                if (response.data == '' && $('#type_recovery').val() == 1) {
+                if (response.data == "" && $("#type_recovery").val() == 1) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado encontrado</td></tr>");
-                } else if (response.data == '' && $('#type_recovery').val() == 5) {
+                    $("#table_data").html(
+                        "<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado encontrado</td></tr>"
+                    );
+                } else if (
+                    response.data == "" &&
+                    $("#type_recovery").val() == 5
+                ) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>");
-                } else if (response.data == '' && $('#type_recovery').val() == 3) {
+                    $("#table_data").html(
+                        "<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>"
+                    );
+                } else if (
+                    response.data == "" &&
+                    $("#type_recovery").val() == 3
+                ) {
                     $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado encontrado</td></tr>");
+                    $("#table_data").html(
+                        "<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado encontrado</td></tr>"
+                    );
                 } else {
-
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
-                    pagination(response, 'salesRecovery', updateSalesRecovery);
+                    pagination(response, "salesRecovery", updateSalesRecovery);
 
                     $(".copy_link").on("click", function () {
                         var temp = $("<input>");
                         $("body").append(temp);
-                        temp.val($(this).attr('link')).select();
+                        temp.val($(this).attr("link")).select();
                         document.execCommand("copy");
                         temp.remove();
-                        alertCustom('success', 'Link copiado!');
+                        alertCustom("success", "Link copiado!");
                     });
 
-                    if ($("#type_recovery").val() == '5') {
-                        if(verifyAccountFrozen() == false) {
+                    if ($("#type_recovery").val() == "5") {
+                        if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this).css('cursor', 'pointer').text('Regerar');
+                                    $(this)
+                                        .css("cursor", "pointer")
+                                        .text("Regerar");
                                     $(this).css("background", "#545B62");
-                                }, function () {
-                                    var status = $(this).attr('status');
+                                },
+                                function () {
+                                    var status = $(this).attr("status");
                                     $(this).removeAttr("style");
                                     $(this).text(status);
                                 }
                             );
                         }
 
-                        $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                        $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+                        $("#date").val(
+                            moment(new Date())
+                                .add(3, "days")
+                                .format("YYYY-MM-DD")
+                        );
+                        $("#date").attr(
+                            "min",
+                            moment(new Date()).format("YYYY-MM-DD")
+                        );
 
-                        $('.sale_status').on('click', function () {
-                            if(verifyAccountFrozen() == false) {
-                                $('#saleId').val('');
-                                let saleId = $(this).attr('sale_id');
-                                $('#saleId').val(saleId);
-                                $('#modal_regerar_boleto').modal('show');
+                        $(".sale_status").on("click", function () {
+                            if (verifyAccountFrozen() == false) {
+                                $("#saleId").val("");
+                                let saleId = $(this).attr("sale_id");
+                                $("#saleId").val(saleId);
+                                $("#modal_regerar_boleto").modal("show");
 
-                                $('#bt_send').unbind('click');
-                                $('#bt_send').on('click', function () {
+                                $("#bt_send").unbind("click");
+                                $("#bt_send").on("click", function () {
                                     loadingOnScreen();
 
                                     regenerateBoleto(saleId);
-
                                 });
                             }
                         });
                     }
-                    $('.details-cart-recovery').unbind('click');
-                    $('.details-cart-recovery').on('click', function () {
-
-                        ajaxDetails($(this).data('venda'));
-
+                    $(".details-cart-recovery").unbind("click");
+                    $(".details-cart-recovery").on("click", function () {
+                        ajaxDetails($(this).data("venda"));
                     });
 
-                    $('.estornar_venda').unbind('click');
-                    $('.estornar_venda').on('click', function () {
+                    $(".estornar_venda").unbind("click");
+                    $(".estornar_venda").on("click", function () {
+                        id_venda = $(this).attr("venda");
 
-                        id_venda = $(this).attr('venda');
-
-                        $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
-                        $('#modal_estornar_body').html('');
+                        $("#modal_estornar_titulo").html(
+                            "Estornar venda #" + id_venda + " ?"
+                        );
+                        $("#modal_estornar_body").html("");
                     });
                 }
-            }
+            },
         });
     }
 
@@ -252,14 +313,14 @@ $(document).ready(function () {
             url: "/api/recovery/regenerateboleto",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: {
                 saleId: saleId,
-                date: $('#date').val(),
+                date: $("#date").val(),
                 discountType: $("#discount_type").val(),
-                discountValue: $("#discount_value").val()
+                discountValue: $("#discount_value").val(),
             },
             error: function error(response) {
                 loadingOnScreenRemove();
@@ -268,8 +329,8 @@ $(document).ready(function () {
             success: function success() {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
-                window.location = '/sales';
-            }
+                window.location = "/sales";
+            },
         });
     }
 
@@ -278,13 +339,13 @@ $(document).ready(function () {
      * @param response
      */
     function createHTMLTable(response) {
-        let html = '';
+        let html = "";
         $.each(response.data, function (index, value) {
-            if (value.type === 'cart_refundend') {
+            if (value.type === "cart_refundend") {
                 html += createHtmlOthers(value);
-            } else if (value.type === 'expired') {
+            } else if (value.type === "expired") {
                 html += createHtmlOthers(value);
-            } else if (typeof value.sale_code === 'undefined') {
+            } else if (typeof value.sale_code === "undefined") {
                 html += createHtmlCartAbandoned(value);
             } else {
                 html += createHtmlOthers(value);
@@ -299,23 +360,55 @@ $(document).ready(function () {
      * @param value
      */
     function createHtmlCartAbandoned(value) {
-
-        let data = '';
-        data += '<tr>';
-        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
+        let data = "";
+        data += "<tr>";
+        data +=
+            "<td class='display-sm-none display-m-none display-lg-none'>" +
+            value.date +
+            "</td>";
         data += "<td>" + value.project + "</td>";
-        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
-        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.status_translate] + "' status='" + value.status_translate + "' sale_id='" + value.id + "'>" + value.status_translate + "</span></td>";
+        data +=
+            "<td class='display-sm-none display-m-none'>" +
+            value.client +
+            "</td>";
+        data +=
+            "<td>" +
+            value.email_status +
+            " " +
+            setSend(value.email_status) +
+            "</td>";
+        data +=
+            "<td>" +
+            value.sms_status +
+            " " +
+            setSend(value.sms_status) +
+            "</td>";
+        data +=
+            "<td><span class='sale_status badge badge-" +
+            statusRecovery[value.status_translate] +
+            "' status='" +
+            value.status_translate +
+            "' sale_id='" +
+            value.id +
+            "'>" +
+            value.status_translate +
+            "</span></td>";
         data += "<td>" + value.value + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><span class='o-eye-1'></span></button></td>";
+        data +=
+            "<td class='display-sm-none' align='center'> <a href='" +
+            value.whatsapp_link +
+            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
+        data +=
+            "<td style='padding:0 !important;' class='display-sm-none text-right' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
+            value.link +
+            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+        data +=
+            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
+            value.id +
+            "' ><span class='o-eye-1'></span></button></td>";
         data += "</tr>";
 
         return data;
-
     }
 
     /**
@@ -324,51 +417,77 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-
-        let data = '';
-        data += '<tr>';
-        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.start_date + "</td>";
+        let data = "";
+        data += "<tr>";
+        data +=
+            "<td class='display-sm-none display-m-none display-lg-none'>" +
+            value.start_date +
+            "</td>";
         data += "<td>" + value.project + "</td>";
-        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
-        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id_default + "'>" + value.recovery_status + "</span></td>";
+        data +=
+            "<td class='display-sm-none display-m-none'>" +
+            value.client +
+            "</td>";
+        data +=
+            "<td>" +
+            value.email_status +
+            " " +
+            setSend(value.email_status) +
+            "</td>";
+        data +=
+            "<td>" +
+            value.sms_status +
+            " " +
+            setSend(value.sms_status) +
+            "</td>";
+        data +=
+            "<td><span class='sale_status badge badge-" +
+            statusRecovery[value.recovery_status] +
+            "' sale_id='" +
+            value.id_default +
+            "'>" +
+            value.recovery_status +
+            "</span></td>";
         data += "<td>" + value.total_paid + "</td>";
-        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id_default + "' ><span class='o-eye-1'></span></button></td>";
+        data +=
+            "<td class='display-sm-none' align='center'> <a href='" +
+            value.whatsapp_link +
+            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
+        data +=
+            "<td class='display-sm-none text-right' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
+            value.link +
+            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+        data +=
+            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
+            value.id_default +
+            "' ><span class='o-eye-1'></span></button></td>";
         data += "</tr>";
 
         return data;
-
     }
 
-// ajax modal details
+    // ajax modal details
     function ajaxDetails(sale) {
         $.ajax({
             method: "POST",
-            url: '/api/recovery/details',
-            data: {checkout: sale},
+            url: "/api/recovery/details",
+            data: { checkout: sale },
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
             },
             success: function success(response) {
-                $("#table-product").html('');
+                $("#table-product").html("");
 
                 if (!isEmpty(response.data)) {
-
-                    createHtmlDetails(response.data)
+                    createHtmlDetails(response.data);
                 } else {
-
                 }
-
-            }
+            },
         });
     }
 
@@ -379,31 +498,42 @@ $(document).ready(function () {
     function createHtmlDetails(data) {
         clearFields();
 
-        $('#modal-title').html('Detalhes ' + '<br><hr>');
-        $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
-        $("#status-checkout").addClass('badge-' + statusRecovery[data.status]).html(data.status);
+        $("#modal-title").html("Detalhes " + "<br><hr>");
+        $("#date-as-hours").html(
+            `${data.checkout.date} às ${data.checkout.hours}`
+        );
+        $("#status-checkout")
+            .addClass("badge-" + statusRecovery[data.status])
+            .html(data.status);
 
         /**
          * Produtos
          */
-        let div = '';
-        let photo = 'public/modules/global/img/produto.png';
+        let div = "";
+        let photo = "public/modules/global/img/produto.png";
         $.each(data.products, function (index, value) {
             if (!isEmpty(value.photo)) {
                 photo = value.photo;
             }
 
-            div += '<div class="row align-items-baseline justify-content-between mb-15">' +
+            div +=
+                '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img src='" + value.photo + "' width='50px' style='border-radius: 6px;'>" +
-                '</div>' +
+                "<img src='" +
+                value.photo +
+                "' width='50px' style='border-radius: 6px;'>" +
+                "</div>" +
                 '<div class="col-lg-5">' +
-                '<h4 class="table-title">' + value.name + '</h4>\n' +
-                '</div>' +
+                '<h4 class="table-title">' +
+                value.name +
+                "</h4>\n" +
+                "</div>" +
                 '<div class="col-lg-3 text-right">' +
-                '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
-                '</div>' +
-                '</div>';
+                '<p class="sm-text text-muted">' +
+                value.amount +
+                "x</p>" +
+                "</div>" +
+                "</div>";
 
             $("#table-product").html(div);
         });
@@ -415,28 +545,40 @@ $(document).ready(function () {
         /**
          * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
          */
-        $("#client-name-details").html('Nome: ' + data.client.name);
-        $("#client-telephone").html('Telefone: ' + data.client.telephone);
-        $("#client-whatsapp").attr('href', data.client.whatsapp_link);
-        $("#client-email").html('E-mail: ' + data.client.email);
-        $("#client-document").html('CPF: ' + data.client.document);
-        $("#client-street").html('Endereço: ' + data.delivery.street);
-        $("#client-zip-code").html('CEP: ' + data.delivery.zip_code);
-        $("#client-city-state").html('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
-        $("#sale-motive").html('Motivo: ' + data.client.error);
+        $("#client-name-details").html("Nome: " + data.client.name);
+        $("#client-telephone").html("Telefone: " + data.client.telephone);
+        $("#client-whatsapp").attr("href", data.client.whatsapp_link);
+        $("#client-email").html("E-mail: " + data.client.email);
+        $("#client-document").html("CPF: " + data.client.document);
+        $("#client-street").html("Endereço: " + data.delivery.street);
+        $("#client-zip-code").html("CEP: " + data.delivery.zip_code);
+        $("#client-city-state").html(
+            "Cidade: " + data.delivery.city + "/" + data.delivery.state
+        );
+        $("#sale-motive").html("Motivo: " + data.client.error);
 
-        if (data.method == 'boletoCartao' && (data.delivery.street == '' && data.delivery.zip_code == '' && data.delivery.city == '' && data.delivery.state == '')) {
-            $('#div_delivery').hide();
+        if (
+            data.method == "boletoCartao" &&
+            data.delivery.street == "" &&
+            data.delivery.zip_code == "" &&
+            data.delivery.city == "" &&
+            data.delivery.state == ""
+        ) {
+            $("#div_delivery").hide();
         } else {
-            $('#div_delivery').show();
+            $("#div_delivery").show();
         }
         if (!isEmpty(data.link)) {
-            $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + data.link + '" title="Copiar link"><span class="o-copy-1"></span> </a> ');
+            $("#link-sale").html(
+                'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
+                    data.link +
+                    '" title="Copiar link"><span class="o-copy-1"></span> </a> '
+            );
         } else {
-            $("#link-sale").html('Link: ' + data.link);
+            $("#link-sale").html("Link: " + data.link);
         }
 
-        $("#checkout-ip").html('IP: ' + data.checkout.ip);
+        $("#checkout-ip").html("IP: " + data.checkout.ip);
 
         $("#checkout-is-mobile").html(data.checkout.is_mobile);
         /**
@@ -446,31 +588,41 @@ $(document).ready(function () {
         /**
          * Dados do checkout - UTM
          */
-        $("#checkout-operational-system").html('Sistema: ' + data.checkout.operational_system);
-        $("#checkout-browser").html('Navegador: ' + data.checkout.browser);
-        $("#checkout-src").html('SRC: ' + data.checkout.src);
-        $("#checkout-utm-source").html('UTM Source: ' + data.checkout.utm_source);
-        $("#checkout-utm-medium").html('UTM Medium: ' + data.checkout.utm_medium);
-        $("#checkout-utm-campaign").html('UTM Campaign: ' + data.checkout.utm_campaign);
-        $("#checkout-utm-term").html('UTM Term: ' + data.checkout.utm_term);
-        $("#checkout-utm-content").html('UTM Content: ' + data.checkout.utm_content);
+        $("#checkout-operational-system").html(
+            "Sistema: " + data.checkout.operational_system
+        );
+        $("#checkout-browser").html("Navegador: " + data.checkout.browser);
+        $("#checkout-src").html("SRC: " + data.checkout.src);
+        $("#checkout-utm-source").html(
+            "UTM Source: " + data.checkout.utm_source
+        );
+        $("#checkout-utm-medium").html(
+            "UTM Medium: " + data.checkout.utm_medium
+        );
+        $("#checkout-utm-campaign").html(
+            "UTM Campaign: " + data.checkout.utm_campaign
+        );
+        $("#checkout-utm-term").html("UTM Term: " + data.checkout.utm_term);
+        $("#checkout-utm-content").html(
+            "UTM Content: " + data.checkout.utm_content
+        );
         /**
          * Fim dados do checkout
          */
 
-        $('#modal_detalhes').modal('show');
+        $("#modal_detalhes").modal("show");
 
         $(".copy_link").on("click", function () {
             var temp = $("<input>");
             $("#nav-tabContent").append(temp);
-            temp.val($(this).attr('link')).select();
+            temp.val($(this).attr("link")).select();
             document.execCommand("copy");
             temp.remove();
-            alertCustom('success', 'Link copiado!');
+            alertCustom("success", "Link copiado!");
         });
     }
 
-    $('#discount_value').mask('00%', {reverse: true});
+    $("#discount_value").mask("00%", { reverse: true });
 
     $("#apply_discount").on("click", function () {
         if ($("#div_discount").is(":visible")) {
@@ -479,12 +631,14 @@ $(document).ready(function () {
         } else {
             $("#div_discount").show();
 
-            $("#discount_type").on('change', function () {
-                if ($("#discount_type").val() == 'value') {
-                    $("#discount_value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
+            $("#discount_type").on("change", function () {
+                if ($("#discount_type").val() == "value") {
+                    $("#discount_value")
+                        .mask("#.###,#0", { reverse: true })
+                        .removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
-                    $('#discount_value').mask('00%', {reverse: true});
+                    $("#discount_value").mask("00%", { reverse: true });
                     $("#label_discount_value").html("Valor (ex: 20%)");
                 }
             });
@@ -496,45 +650,44 @@ $(document).ready(function () {
      * @type {{Recuperado: string, Recusado: string, "Não recuperado": string, Expirado: string}}
      */
     var statusRecovery = {
-        'Recuperado': 'success',
-        'Não recuperado': 'danger',
-        'Recusado': 'danger',
-        'Expirado': 'danger',
-
+        Recuperado: "success",
+        "Não recuperado": "danger",
+        Recusado: "danger",
+        Expirado: "danger",
     };
 
     var statusRecoverySale = {
-        "Cancelado": 'danger',
-        "Recusado": 'danger',
-    }
+        Cancelado: "danger",
+        Recusado: "danger",
+    };
     /**
      * @param sendNumber
      * @returns {string}
      */
     function setSend(sendNumber) {
         if (sendNumber === 1) {
-            return 'enviado';
+            return "enviado";
         } else if (sendNumber > 1) {
-            return 'enviados';
+            return "enviados";
         } else {
-            return '';
+            return "";
         }
     }
     function getFilters(urlParams = false) {
         let data = {
-            'project': $("#project option:selected").val(),
-            'status': $("#type_recovery option:selected").val(),
-            'date_range': $("#date-range-sales-recovery").val(),
-            'client': $("#client-name").val(),
-            'client_document': $("#client-cpf").val(),
-            'plan': $("#plan").val(),
-            'date_type': 'created_at',
+            project: $("#project option:selected").val(),
+            status: $("#type_recovery option:selected").val(),
+            date_range: $("#date-range-sales-recovery").val(),
+            client: $("#client-name").val(),
+            client_document: $("#client-cpf").val(),
+            plan: $("#plan").val(),
+            date_type: "created_at",
         };
 
         if (urlParams) {
             let params = "";
             for (let param in data) {
-                params += '&' + param + '=' + data[param];
+                params += "&" + param + "=" + data[param];
             }
             return encodeURI(params);
         } else {
@@ -543,45 +696,43 @@ $(document).ready(function () {
     }
     // Download do relatorio
     function salesExport(fileFormat) {
-
         let data = getFilters();
-        data['format'] = fileFormat;
-        data['email'] = $('#email_export').val();
+        data["format"] = fileFormat;
+        data["email"] = $("#email_export").val();
         $.ajax({
             method: "POST",
-            url: '/api/recovery/export',
+            url: "/api/recovery/export",
             data: data,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: response => {
-                $('#export-email').text(response.email);
-                $('#alert-export').show()
-                    .shake();
-            }
+            success: (response) => {
+                $("#export-email").text(response.email);
+                $("#alert-export").show().shake();
+            },
         });
     }
     //Search plan
-    $('#plan').select2({
-        placeholder: 'Nome do plano',
+    $("#plan").select2({
+        placeholder: "Nome do plano",
         // multiple: true,
         allowClear: true,
         language: {
             noResults: function () {
-                return 'Nenhum plano encontrado';
+                return "Nenhum plano encontrado";
             },
             searching: function () {
-                return 'Procurando...';
+                return "Procurando...";
             },
         },
         ajax: {
             data: function (params) {
                 return {
-                    list: 'plan',
+                    list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
                 };
@@ -589,27 +740,34 @@ $(document).ready(function () {
             method: "GET",
             url: "/api/sales/user-plans",
             delay: 300,
-            dataType: 'json',
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processResults: function (res) {
                 return {
                     results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
-                    })
+                        return {
+                            id: obj.id,
+                            text:
+                                obj.name +
+                                (obj.description
+                                    ? " - " + obj.description
+                                    : ""),
+                        };
+                    }),
                 };
             },
-        }
+        },
     });
     function clearFields() {
-        $("#status-checkout").removeClass('badge-success badge-danger');
-        $("#client-whatsapp").attr('href', '');
+        $("#status-checkout").removeClass("badge-success badge-danger");
+        $("#client-whatsapp").attr("href", "");
         $(".clear-fields").empty();
         // $("#date-as-hours, #table-product, #total-value, #client-name-details, #client-telephone, #client-email, #client-document, #client-street, #client-zip-code, #client-city-state, #sale-motive, #link-sale, #checkout-ip, #checkout-is-mobile, #checkout-operational-system, #checkout-browser, #checkout-src, #checkout-utm-source, #checkout-utm-medium, #checkout-utm-campaign, #checkout-utm-term, #checkout-utm-content").html('');
     }
-    $(document).on('keypress', function (e) {
+    $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
             updateSalesRecovery();
         }

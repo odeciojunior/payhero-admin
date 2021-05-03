@@ -3,6 +3,11 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545?v=01') }}">
+        <style>
+            .card-left{
+                border-right:0 !important;
+            }
+        </style>
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
@@ -51,9 +56,10 @@
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
-                                    <div class='form-group'>
-                                        <label>Data</label>
-                                        <input name='date_range' id="date_range" class="form-control bg-white"
+                                    <div class="form-group form-icons">
+                                        <label for="date_range">Data</label>
+                                        <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                        <input name='date_range' id="date_range" class="form-control bg-white pr-30"
                                                placeholder="Clique para editar..." readonly>
                                     </div>
                                 </div>
@@ -165,9 +171,9 @@
             <div class="modal-content p-10">
                 <div class="modal-header simple-border-bottom mb-10">
                     <h4 class="modal-title" id="modal-title-ticket">Detalhes do Chamado </h4>
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal-body-content" class="modal-body" style='min-height: 100px'>
                     <div class="card card-shadow card-top card-ticket-color">
