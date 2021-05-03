@@ -66,10 +66,10 @@ $(() => {
             success: resp => {
                 let rule = resp.data;
                 let applyOnPlans = rule.apply_on_plans
-                    .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
+                    .map(plan => plan.name + (plan.variants ? ` - ${plan.variants} variantes` : ''))
                     .join(' / ');
                 let offerPlans = rule.offer_plans
-                    .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
+                    .map(plan => plan.name + (plan.variants ? ` - ${plan.variants} variantes` : ''))
                     .join(' / ');
                 $('#order-bump-show-table .order-bump-description').html(rule.description);
                 $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
@@ -104,7 +104,8 @@ $(() => {
                 applyOnPlansInput.html('');
                 for (let plan of rule.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    applyOnPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    (plan.variants ? ` - ${plan.variants} variantes` : '')
+                    applyOnPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.variants ? ` - ${plan.variants} variantes` : '')}</option>`);
                 }
                 applyOnPlansInput.val(applyOnPlans);
 
@@ -112,7 +113,7 @@ $(() => {
                 let offerPlans = [];
                 for (let plan of rule.offer_plans) {
                     offerPlans.push(plan.id);
-                    offerPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    offerPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.variants ? ` - ${plan.variants} variantes` : '')}</option>`);
                 }
                 offerPlansInput.val(offerPlans);
 
@@ -231,7 +232,7 @@ $(() => {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
-                    variants: 0,
+                    unique_product: 1,
                     page: params.page || 1
                 };
             },
