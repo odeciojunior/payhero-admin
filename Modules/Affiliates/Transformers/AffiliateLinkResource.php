@@ -46,10 +46,12 @@ class AffiliateLinkResource extends JsonResource
             'project_name'    => $this->affiliate->project->name ?? null,
             'link_plan'       => $linkPlan,
             'link_affiliate'  => $linkAffiliate,
+            'status_affiliate'=> $this->affiliate->status_enum ?? '',
             'domain'          => $this->affiliate->project->domains[0]->name ?? '',
             'price'           => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '',
             'commission'      => $this->plan ? 'R$ ' . number_format((preg_replace("/[^0-9]/", "", $this->plan->price) / 100) * $this->affiliate->percentage / 100, 2, ',', '.') : '',
             'document_status' => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            'status'          => $this->affiliate->project->domains[0]->status ?? 0,
         ];
     }
 }

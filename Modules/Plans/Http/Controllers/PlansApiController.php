@@ -123,6 +123,7 @@ class PlansApiController extends Controller
 
                         $plan = $planModel->create($requestData);
                         if (!empty($plan)) {
+
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
@@ -132,22 +133,22 @@ class PlansApiController extends Controller
                                 }
 
                                 $productPlan->create([
-                                                         'product_id'         => $requestData['products'][$keyProduct],
-                                                         'plan_id'            => $plan->id,
-                                                         'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
-                                                         'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
-                                                         'currency_type_enum' => $productPlan->present()
-                                                                                             ->getCurrency($requestData['currency'][$keyProduct]),
-                                                     ]);
+                                                        'product_id'         => $requestData['products'][$keyProduct],
+                                                        'plan_id'            => $plan->id,
+                                                        'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                        'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                                        'currency_type_enum' => $productPlan->present()->getCurrency($requestData['currency'][$keyProduct]),
+                                                    ]);
                             }
+
                             if (count($project->affiliates) > 0) {
+
                                 foreach ($project->affiliates as $affiliate) {
                                     $affiliateHash = Hashids::connection('affiliate')->encode($affiliate->id);
                                     $affiliateLinkModel->create([
                                                                     'affiliate_id'  => $affiliate->id,
                                                                     'plan_id'       => $plan->id,
-                                                                    'parameter'     => $affiliateHash . Hashids::connection('affiliate')
-                                                                                                               ->encode($plan->id),
+                                                                    'parameter'     => $affiliateHash . Hashids::connection('affiliate')->encode($plan->id),
                                                                     'clicks_amount' => 0,
                                                                     'link'          => $planService->getCheckoutLink($plan),
                                                                 ]);
@@ -174,7 +175,7 @@ class PlansApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro tentar salvar Plano (PlansController - store)');
+            Log::warning('Erro ao tentar salvar Plano (PlansController - store)');
             report($e);
 
             return response()->json([

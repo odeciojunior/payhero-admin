@@ -237,7 +237,7 @@ $(function () {
                     $("#data-table-plan").html('');
                     $('#count-plans').html(response.meta.total);
 
-                    if (response.data[0].document_status == 'approved') {
+                    if (response.data[0].document_status == 'approved') {                   
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';

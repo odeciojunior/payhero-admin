@@ -8,6 +8,7 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Project;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\PlanService;
 
@@ -29,6 +30,8 @@ class AffiliateService
             $planModel          = new Plan();
             $planService        = new PlanService();
             $plans              = $planModel->where('project_id', $projectId)->get();
+            $projectModel       = new Project();
+            $project            = $projectModel->find($projectId);
             $projectHash        = Hashids::connection('affiliate')->encode($projectId);
             $affiliateHash      = Hashids::connection('affiliate')->encode($affiliateId);
 
@@ -48,7 +51,7 @@ class AffiliateService
                 'plan_id'       => null,
                 'parameter'     => $affiliateHash . $projectHash,
                 'clicks_amount' => 0,
-                'link'              => 'https://' . $plans->first()->project->domains->first()->name . '/',
+                'link'          =>  count($project->domains) > 0 ? 'https://' . $project->domains->first()->name . '/' : '',
             ]);
 
             return true;
