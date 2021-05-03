@@ -232,6 +232,7 @@ $(() => {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
+                    unique_product:  $(this).attr('id').includes('offer') ? 1 : 0,
                     page: params.page || 1
                 };
             },
@@ -264,8 +265,6 @@ $(() => {
             },
         }
     }
-    $('#store-apply-on-plans-order-bump').select2({dropdownParent: $('#modal-store-order-bump'), ...select2Configs});
-    $('#store-offer-plans-order-bump').select2({dropdownParent: $('#modal-store-order-bump'), unique_product: 1, ...select2Configs});
-    $('#update-apply-on-plans-order-bump').select2({dropdownParent: $('#modal-update-order-bump'), ...select2Configs});
-    $('#update-offer-plans-order-bump').select2({dropdownParent: $('#modal-update-order-bump'), unique_product: 1, ...select2Configs});
+    $('#store-apply-on-plans-order-bump, #store-offer-plans-order-bump').select2({dropdownParent: $('#modal-store-order-bump'), ...select2Configs});
+    $('#update-apply-on-plans-order-bump, #update-offer-plans-order-bump').select2({dropdownParent: $('#modal-update-order-bump'), ...select2Configs});
 });
