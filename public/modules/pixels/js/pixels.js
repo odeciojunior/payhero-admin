@@ -13,6 +13,16 @@ const formatPlatform = {
     7: 'pinterest'
 }
 
+const srcPlatforms = {
+    'google_analytics': 'modules/global/img/pixel/analytics.png',
+    'google_analytics_four': 'modules/global/img/pixel/old-analytics.png',
+    'google_adwords': 'modules/global/img/pixel/google-ads.png',
+    'facebook': 'modules/global/img/pixel/facebook.png',
+    'outbrain': 'modules/global/img/pixel/outbrain.png',
+    'taboola': 'modules/global/img/pixel/taboola.png',
+    'pinterest': 'modules/global/img/pixel/pinterest.png',
+}
+
 $(function () {
     let currentPage;
 
@@ -25,23 +35,25 @@ $(function () {
         $(this).off();
     });
 
-    function isChecked(input) {
-        if (input) {
+    function isChecked(input, pixelAttribute = null) {
+        if (pixelAttribute != null) {
+            if (pixelAttribute == '1' || pixelAttribute == 'true') {
+                input.prop('checked', true);
+            } else {
+                input.prop('checked', false);
+            }
+        } else {
             if (input.is(':checked')) {
-                input.attr('checked', '');
+                input.attr('checked', false);
             } else {
                 input.attr('checked', 'checked');
             }
         }
-
     }
 
-    $('.check').on('click', function () {
-        isChecked($(this));
-    });
-    isChecked($(':checkbox'));
-
-    // Index Pixel
+    /**
+     * LIST PIXEL
+     */
     function atualizarPixel() {
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         currentPage = link;
@@ -103,7 +115,11 @@ $(function () {
         });
     }
 
-    // carregar modal de detalhes
+    /**
+     * SHOW PIXEL
+     */
+
+    // Show Pixel
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
         $.ajax({
@@ -123,6 +139,7 @@ $(function () {
         });
     });
 
+    // Rendere Modal Show Pixel
     function renderDetailPixel(pixel) {
         $('#modal-detail-pixel .pixel-description').html(pixel.name);
         $('#modal-detail-pixel .pixel-code').html(pixel.code);
@@ -133,15 +150,75 @@ $(function () {
         $('#modal-detail-pixel').modal('show');
     }
 
-    $("#modal-edit-pixel input[type=radio]").change(function () {
-        if (this.value === 'api') {
-            $("#modal-edit-pixel #div-facebook-token-api").show()
-        } else {
-            $("#modal-edit-pixel #div-facebook-token-api").hide()
-        }
-    });
-    // carregar modal de edicao
+    /**
+     * Edit Pixel
+     */
     $(document).on('click', '.edit-pixel', function () {
+        $("#edit_pixel_plans").val(null).trigger('change');
+
+        $.ajax({
+            method: "GET",
+            url: `/api/project/${projectId}/pixels/${$(this).attr('pixel')}/edit`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                const pixel = response.data;
+                console.log(pixel);
+                renderModalPixelEdit(pixel);
+
+                openEditModal();
+            }
+        });
+    });
+
+    function openEditModal() {
+        $("#modal-edit-pixel").modal('show');
+    }
+
+    function renderModalPixelEdit(pixel) {
+        openModalEditPixel();
+
+        // $(".img-edit-selected").attr('src', srcPlatforms[pixel.platform]);
+
+        $(".description-edit").val(pixel.name);
+        $(".code-edit").val(pixel.code);
+        $(".percentage-value-edit").val(pixel.value_percentage_purchase_boleto);
+
+        // plans
+        const plansInput = $(".apply_plans");
+        plansInput.val(null).trigger('change');
+        plansInput.html('');
+        let applyOnPlans = [];
+        for (let plan of pixel.apply_on_plans) {
+            applyOnPlans.push(plan.id);
+            plansInput.append(`
+                <option value="${plan.id}">
+                    ${plan.name + (plan.description ? ' - ' + plan.description : '')}
+                </option>
+            `);
+        }
+        plansInput.val(applyOnPlans);
+
+        // Run Pixel
+        isChecked($(".status-edit"), pixel.status);
+        isChecked($(".checkout-edit"), pixel.checkout);
+        isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
+        isChecked($(".purchase-card-edit"), pixel.purchase_card);
+    }
+
+    function openModalEditPixel() {
+        $("#select-platform-pixel").hide();
+        $("#configure-new-pixel").show();
+    }
+
+
+    // carregar modal de edicao
+    /*$(document).on('click', '.asdasdedit-pixel', function () {
         $("#edit_pixel_plans").val(null).trigger('change');
 
         $.ajax({
@@ -174,7 +251,6 @@ $(function () {
                         $("#modal-edit-pixel#div-facebook-token-api").hide()
                     }
                 });
-
 
                 // troca o placeholder dos inputs
                 $("#modal-edit-pixel #select-platform").change(function () {
@@ -233,6 +309,14 @@ $(function () {
                 }
             }
         });
+    });*/
+
+    $("#modal-edit-pixel input[type=radio]").change(function () {
+        if (this.value === 'api') {
+            $("#modal-edit-pixel #div-facebook-token-api").show()
+        } else {
+            $("#modal-edit-pixel #div-facebook-token-api").hide()
+        }
     });
 
     function renderEditPixel(pixel) {
@@ -303,14 +387,6 @@ $(function () {
 
     }
 
-    //carregar modal delecao
-    $(document).on('click', '.delete-pixel', function (event) {
-        const pixel = $(this).attr('pixel');
-        $("#modal-delete-pixel .btn-delete").attr("pixel", pixel);
-        $("#modal-delete-pixel").modal('show');
-    });
-
-
     //Update Pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         if (!validateDataPixelForm({
@@ -364,6 +440,16 @@ $(function () {
         });
     });
 
+    /**
+     * DELETE PIXEL
+     */
+
+    // Open Modal Destroy Pixel
+    $(document).on('click', '.delete-pixel', function (event) {
+        $("#modal-delete-pixel .btn-delete").attr("pixel", $(this).attr('pixel'));
+        $("#modal-delete-pixel").modal('show');
+    });
+
     // Delete Pixel
     $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
         loadingOnScreen();
@@ -400,6 +486,9 @@ $(function () {
         });
     });
 
+    /**
+     * CREATE NEW PIXEL
+     */
 
     // Open Modal New Pixel
     $("#add-pixel").on('click', function () {
@@ -407,33 +496,41 @@ $(function () {
         $("#modal-create-pixel").modal('show');
     });
 
-    function changePlaceholderInput(value) {
-        const platform = $("#code-pixel");
-        const inputCodePixel = $("#input-code-pixel");
-        inputCodePixel.html('').hide();
+    // change pixel platform
+    $("img.img-selected").on('click', function () {
+        openModalCreatePixel();
+    });
+
+    function openModalCreatePixel() {
+        $("#configure-new-pixel").hide();
+        $("#select-platform-pixel").show();
+    }
+
+    function changePlaceholderInput(value, inputPlatform, inputAW) {
+        inputAW.html('').hide();
 
         switch (value) {
             case "facebook":
-                platform.attr("placeholder", '52342343245553');
+                inputPlatform.attr("placeholder", '52342343245553');
                 break;
             case "google_adwords":
-                inputCodePixel.html('AW-').show();
-                platform.attr("placeholder", '8981445741-4/AN7162ASNSG');
+                inputAW.html('AW-').show();
+                inputPlatform.attr("placeholder", '8981445741-4/AN7162ASNSG');
                 break;
             case "google_analytics":
-                platform.attr("placeholder", 'UA-8984567741-3');
+                inputPlatform.attr("placeholder", 'UA-8984567741-3');
                 break;
             case "google_analytics_four":
-                platform.attr("placeholder", 'G-KZSV4LMBAC');
+                inputPlatform.attr("placeholder", 'G-KZSV4LMBAC');
                 break;
             case "taboola":
-                platform.attr("placeholder", '1010100');
+                inputPlatform.attr("placeholder", '1010100');
                 break;
             case "outbrain":
-                platform.attr("placeholder", '00de2748d47f2asdl39877mash');
+                inputPlatform.attr("placeholder", '00de2748d47f2asdl39877mash');
                 break;
             default:
-                platform.attr("placeholder", 'Código');
+                inputPlatform.attr("placeholder", 'Código');
         }
     }
 
@@ -444,7 +541,7 @@ $(function () {
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
 
-        changePlaceholderInput(platform);
+        changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"));
 
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
@@ -463,15 +560,6 @@ $(function () {
         $("#select-platform-pixel").hide();
         $("#configure-new-pixel").show();
     });
-
-    $("img.img-selected").on('click', function () {
-        openModalCreatePixel();
-    });
-
-    function openModalCreatePixel() {
-        $("#configure-new-pixel").hide();
-        $("#select-platform-pixel").show();
-    }
 
     function validateDataPixelForm(formData) {
         if (formData.name.length > 100) {
@@ -529,7 +617,11 @@ $(function () {
     //Save Create new Pixel
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
-        formData.append('status', $("#modal-create-pixel .pixel-status").val());
+
+        formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
+        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").is(':checked'));
+        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").is(':checked'));
+        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").is(':checked'));
 
         if (!validateDataPixelForm({
             'name': formData.get('name'),
@@ -559,11 +651,9 @@ $(function () {
             cache: false,
             error: function (response) {
                 loadingOnScreenRemove();
-                $(".loading").css("visibility", "hidden");
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 loadingOnScreenRemove();
-                $(".loading").css("visibility", "hidden");
                 if (response.success) {
                     $("#modal-create-pixel").modal('hide');
                     alertCustom("success", response.message);
@@ -577,7 +667,7 @@ $(function () {
 
     // Select Plans
     $('#add_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-create-pixel')}));
-    $('#edit_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-edit-pixel')}));
+    $('.edit-plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-edit-pixel')}));
 
     function selectPlan() {
         return {
@@ -634,7 +724,7 @@ $(function () {
         }
     }
 
-    $("#add_pixel_plans, #edit_pixel_plans").on('select2:select', function () {
+    $("#add_pixel_plans, .edit-plans").on('select2:select', function () {
         const planSelect = $(this);
         if ((planSelect.val().length > 1 && planSelect.val().includes('all')) || (planSelect.val().includes('all') && planSelect.val() != 'all')) {
             planSelect.val('all').trigger("change");

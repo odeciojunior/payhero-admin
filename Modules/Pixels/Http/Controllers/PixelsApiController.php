@@ -36,14 +36,14 @@ class PixelsApiController extends Controller
             $affiliateId = $affiliate->id ?? null;
 
             if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => __('controller.pixel.index.permission')], 403);
+                return response()->json(['message' => __('controller.pixel.permission.index')], 403);
             }
 
             activity()->on((new Pixel()))->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 }
-            )->log(__('controller.pixel.log.visualization') . ' ' . $project->name);
+            )->log(__('controller.pixel.log.visualization.index') . ' ' . $project->name);
 
 
             $pixels = Pixel::where('project_id', $project->id)
@@ -54,7 +54,7 @@ class PixelsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao listar dados de pixels'], 400);
+            return response()->json(['message' => __('controller.error.generic')], 400);
         }
     }
 
@@ -108,10 +108,10 @@ class PixelsApiController extends Controller
                     'name' => $validator['name'],
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
-                    'status' => isset($validator['status']),
-                    'checkout' => isset($validator['checkout']),
-                    'purchase_boleto' => isset($validator['purchase_boleto']),
-                    'purchase_card' => isset($validator['purchase_card']),
+                    'status' => $validator['status'] == "true",
+                    'checkout' => $validator['checkout'] == "true",
+                    'purchase_boleto' => $validator['purchase_boleto'] == "true",
+                    'purchase_card' => $validator['purchase_card'] == "true",
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
@@ -134,7 +134,7 @@ class PixelsApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => __('controller.error.create') . ' Pixel',
+                    'message' => __('controller.error.generic'),
                     'success' => false
                 ],
                 400
@@ -142,7 +142,76 @@ class PixelsApiController extends Controller
         }
     }
 
-    public function update(PixelUpdateRequest $request, $projectId, $id)
+    public function edit($projectId, $id)
+    {
+        try {
+            if (empty($projectId) || empty($id)) {
+                return response()->json(__('controller.error.generic'), 400);
+            }
+
+            $pixel = Pixel::find(hashids_decode($id));
+
+            if (empty($pixel)) {
+                return response()->json(__('controller.error.generic'), 400);
+            }
+
+            $project = Project::find(hashids_decode($projectId));
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => __('controller.pixel.permission.edit')], 403);
+            }
+
+            activity()->on((new Pixel()))->tap(
+                function (Activity $activity) use ($pixel) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = $pixel->id;
+                }
+            )->log(__('controller.pixel.log.visualization.edit ') . $pixel->name);
+
+            $applyPlanArray = [];
+            $planModel = new Plan();
+
+            if (!empty($pixel->apply_on_plans)) {
+                $applyPlanDecoded = json_decode($pixel->apply_on_plans);
+                if (in_array('all', $applyPlanDecoded)) {
+                    $applyPlanArray[] = [
+                        'id' => 'all',
+                        'name' => 'Todos os Planos',
+                        'description' => '',
+                    ];
+                } else {
+                    foreach ($applyPlanDecoded as $key => $value) {
+                        $plan = $planModel->select(
+                            'plans.*',
+                            DB::raw(
+                                '(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'
+                            )
+                        )->find($value);
+                        if (!empty($plan)) {
+                            $applyPlanArray[] = [
+                                'id' => Hashids::encode($plan->id),
+                                'name' => $plan->name,
+                                'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $pixel->apply_on_plans = $applyPlanArray;
+
+            $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
+            return new PixelEditResource($pixel);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(__('controller.error.generic'), 400);
+        }
+    }
+
+    public function update(PixelUpdateRequest $request, $projectId, $id): JsonResponse
     {
         try {
             if (empty($id) || empty($projectId)) {
@@ -306,75 +375,4 @@ class PixelsApiController extends Controller
         }
     }
 
-    public function edit($projectId, $id)
-    {
-        try {
-            if (empty($projectId) || empty($id)) {
-                return response()->json('Erro ao buscar pixel', 400);
-            }
-
-            $pixelModel = new Pixel();
-            $projectModel = new Project();
-
-            $pixel = $pixelModel->find(current(Hashids::decode($id)));
-
-            if (empty($pixel)) {
-                return response()->json('Erro ao buscar pixel', 400);
-            }
-
-            $project = $projectModel->find(current(Hashids::decode($projectId)));
-            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
-
-            if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
-            }
-
-            activity()->on($pixelModel)->tap(
-                function (Activity $activity) use ($id) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                }
-            )->log('Visualizou tela editar pixel: ' . $pixel->name);
-
-            $applyPlanArray = [];
-            $planModel = new Plan();
-
-            if (!empty($pixel->apply_on_plans)) {
-                $applyPlanDecoded = json_decode($pixel->apply_on_plans);
-                if (in_array('all', $applyPlanDecoded)) {
-                    $applyPlanArray[] = [
-                        'id' => 'all',
-                        'name' => 'Todos os Planos',
-                        'description' => '',
-                    ];
-                } else {
-                    foreach ($applyPlanDecoded as $key => $value) {
-                        $plan = $planModel->select(
-                            'plans.*',
-                            DB::raw(
-                                '(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'
-                            )
-                        )->find($value);
-                        if (!empty($plan)) {
-                            $applyPlanArray[] = [
-                                'id' => Hashids::encode($plan->id),
-                                'name' => $plan->name,
-                                'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
-                            ];
-                        }
-                    }
-                }
-            }
-
-            $pixel->apply_on_plans = $applyPlanArray;
-
-            $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
-
-            return new PixelEditResource($pixel);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json('Erro ao buscar pixel', 400);
-        }
-    }
 }

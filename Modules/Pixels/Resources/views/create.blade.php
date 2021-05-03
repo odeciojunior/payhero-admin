@@ -16,7 +16,8 @@
                     plataforma</h4>
                 <div class="row text-center">
                     <div class="col-lg-2 col-6 mr-30 offset-md-1">
-                        <img src="{{asset('modules/global/img/pixel/analytics.png')}}" class="rounded-circle img-fluid logo-pixels"
+                        <img src="{{asset('modules/global/img/pixel/analytics.png')}}"
+                             class="rounded-circle img-fluid logo-pixels"
                              data-value="google_analytics"
                              alt="logo analytics">
                         <div class="" style="font: normal normal normal 11px Muli;">Google Analytics</div>
@@ -36,25 +37,29 @@
                         <div style="font: normal normal normal 11px Muli;">Google Adwords</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/facebook.png')}}" class="rounded-circle img-fluid  logo-pixels"
+                        <img src="{{asset('modules/global/img/pixel/facebook.png')}}"
+                             class="rounded-circle img-fluid  logo-pixels"
                              data-value="facebook"
                              alt="logo facebook">
                         <div style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-2">
-                        <img src="{{asset('modules/global/img/pixel/outbrain.png')}}" class="rounded-circle img-fluid  logo-pixels"
+                        <img src="{{asset('modules/global/img/pixel/outbrain.png')}}"
+                             class="rounded-circle img-fluid  logo-pixels"
                              data-value="outbrain"
                              alt="logo outbrain">
                         <div style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/taboola.png')}}" class="rounded-circle img-fluid logo-pixels"
+                        <img src="{{asset('modules/global/img/pixel/taboola.png')}}"
+                             class="rounded-circle img-fluid logo-pixels"
                              data-value="taboola"
                              alt="logo taboola">
                         <div style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/pinterest.png')}}" class="rounded-circle img-fluid logo-pixels"
+                        <img src="{{asset('modules/global/img/pixel/pinterest.png')}}"
+                             class="rounded-circle img-fluid logo-pixels"
                              data-value="pinterest"
                              alt="logo pinterest">
                         <div style="font: normal normal normal 11px Muli;">Pinterest</div>
@@ -84,7 +89,7 @@
             <div class="col-3">
                 <div class="switch-holder d-flex align-items-center">
                     <label class='switch'>
-                        <input type="checkbox" value="" name='status'
+                        <input type="checkbox" value="true" name='status'
                                class='check pixel-status' checked>
                         <span class='slider round'></span>
                     </label>
@@ -133,7 +138,6 @@
                                                readonly
                                         >
                                     </div>
-
                                     {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
                                     <div class="form-group col-6 purchase-event-name-div" style="display:none;">
                                         <label for="purchase-event-name" class="form-control-label">
@@ -146,7 +150,6 @@
                                                placeholder="Purchase"
                                                maxlength='255'>
                                     </div>
-
                                     {{-- INPUT DESCRIPTION--}}
                                     <div class="form-group col-12">
                                         <label for="name" class="font-text">Descrição</label>
@@ -156,7 +159,6 @@
                                                placeholder="Descrição"
                                                maxlength='30'>
                                     </div>
-
                                     {{-- INPUT CODE PIXEL --}}
                                     <div class="form-group col-6">
                                         <label for="code-pixel" class="font-text">Código</label>
@@ -172,7 +174,6 @@
                                                    maxlength="255">
                                         </div>
                                     </div>
-
                                     {{-- INPUT PERCENTAGE BOLETO VALUE --}}
                                     <div class="form-group col-3">
                                         <label for="percentage-value" class="font-text">% Boleto</label>
@@ -182,7 +183,7 @@
                                                class="form-control"
                                                placeholder="100" maxlength='3'>
                                     </div>
-
+                                    {{-- INPUT SELECT PLANS --}}
                                     <div class='form-group col-12'>
                                         <label for="add_pixel_plans" class="form-control-label">
                                             Plano(s) que executarão o pixel
@@ -206,7 +207,7 @@
                                             <label for="checkout" class='mb-10'>Checkout</label>
                                             <br>
                                             <label class="switch">
-                                                <input type="checkbox" value="" name='checkout'
+                                                <input type="checkbox" value="true" name='checkout'
                                                        class='check pixel-checkout' checked>
                                                 <span class="slider round"></span>
                                             </label>
@@ -217,7 +218,7 @@
                                             <label for="cartao">Purchase (cartão)</label>
                                             <br>
                                             <label class='switch'>
-                                                <input type="checkbox" value="" name='purchase_card'
+                                                <input type="checkbox" value="true" name='purchase_card'
                                                        class='check pixel-purchase-card'
                                                        checked>
                                                 <span class='slider round'></span>
@@ -228,7 +229,7 @@
                                         <div class="switch-holder">
                                             <label for="boleto">Purchase (boleto)</label>
                                             <label class='switch'>
-                                                <input type="checkbox" value="" name='purchase_boleto'
+                                                <input type="checkbox" value="true" name='purchase_boleto'
                                                        class='check pixel-purchase-boleto' checked>
                                                 <span class='slider round'></span>
                                             </label>

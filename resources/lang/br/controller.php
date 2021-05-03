@@ -9,14 +9,19 @@ return [
         'create' => 'Atualizado com sucesso'
     ],
     'pixel' => [
-        'create' => [
-            'permission' => 'Sem permissão para criar pixel'
-        ],
-        'index' => [
-            'permission' => 'Sem permissão para listar pixels'
+        'permission' => [
+            'create' => 'Sem permissão para criar pixel',
+            'index' => 'Sem permissão para listar pixel',
+            'edit' => 'Sem permissão para editar o pixel',
+            'update' => 'Sem permissão para atualizar o pixel',
+            'show' => 'Sem permissão para visualizar detalhes do pixel',
+            'destroy' => 'Sem permissão para excluir o pixel selecionado'
         ],
         'log' => [
-            'visualization' => 'Visualizou tela todos os pixels para o projeto'
+            'visualization' => [
+                'index' => 'Visualizou tela todos os pixels para o projeto',
+                'edit' => 'Visualizou tela editar pixel',
+            ]
         ]
     ]
 
