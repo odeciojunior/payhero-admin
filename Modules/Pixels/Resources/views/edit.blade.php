@@ -1,4 +1,4 @@
-<div style="display: none;" id="select-platform-pixel">
+<div style="display: none;" id="select-platform-edit-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10">
             <h4 class="col-12 modal-title text-center" id="modal-title"
@@ -17,50 +17,50 @@
                 </h4>
                 <div class="row text-center">
                     <div class="col-lg-2 col-6 mr-30 offset-md-1">
-                        <img src="{{asset('modules/global/img/pixel/analytics.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-edit"
                              data-value="google_analytics"
                              alt="logo analytics">
                         <div class="" style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/old-analytics.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
+                             class="rounded-circle img-fluid logo-pixels  logo-pixels-edit"
                              data-value="google_analytics_four"
                              alt="logo analytics four">
                         <div style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/google-ads.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
+                             class="rounded-circle img-fluid logo-pixels  logo-pixels-edit"
                              data-value="google_adwords"
                              alt="logo google adwords">
                         <div style="font: normal normal normal 11px Muli;">Google Adwords</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/facebook.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
+                             class="rounded-circle img-fluid logo-pixels  logo-pixels-edit"
                              data-value="facebook"
                              alt="logo facebook">
                         <div style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-2">
-                        <img src="{{asset('modules/global/img/pixel/outbrain.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
+                             class="rounded-circle img-fluid logo-pixels  logo-pixels-edit"
                              data-value="outbrain"
                              alt="logo outbrain">
                         <div style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/taboola.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-edit"
                              data-value="taboola"
                              alt="logo taboola">
                         <div style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/pinterest.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-edit"
                              data-value="pinterest"
                              alt="logo pinterest">
                         <div style="font: normal normal normal 11px Muli;">Pinterest</div>
@@ -112,27 +112,29 @@
                             <div style="width:100%">
                                 <div class="row">
                                     {{-- INPUT RADIO FACEBOOK-API --}}
-                                    <div class="form-group col-6" id="select-facebook-integration"
+                                    <input type="hidden" class="platform-edit" value="">
+                                    <div class="form-group col-6" id="select-facebook-integration-edit"
                                          style="display:none;">
                                         <label class="font-text">Tipo</label><br>
                                         <label class="col-md-5 form-check-label">
                                             <input type="radio" name="api-facebook" value="default"
-                                                   class="col-md-2 form-check-input"
+                                                   class="col-md-2 form-check-input facebook-api-default-edit"
                                                    checked>
                                             Padrão
                                         </label>
                                         <label class="col-md-5 form-check-label">
                                             <input type="radio" name="api-facebook" value="api"
-                                                   class="col-md-2 form-check-input">
+                                                   class="col-md-2 form-check-input facebook-api-edit">
                                             API
                                         </label>
                                     </div>
                                     {{-- INPUT TOKEN FACEBOOK--}}
-                                    <div class="form-group col-6" id="div-facebook-token-api" style="display:none;">
+                                    <div class="form-group col-6" id="div-facebook-token-api-edit"
+                                         style="display:none;">
                                         <label class="font-text">Token Acesso API Conversões</label>
-                                        <input name="facebook-token-api"
+                                        <input name="facebook-token-api-edit"
                                                type="text"
-                                               id='facebook-token-api'
+                                               id='facebook-token-api-edit'
                                                class="form-control pixel-code"
                                                placeholder="Token" maxlength='255'
                                                readonly
@@ -140,14 +142,14 @@
                                     </div>
 
                                     {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
-                                    <div class="form-group col-6 purchase-event-name-div" style="display:none;">
+                                    <div class="form-group col-6 div-purchase-event-name-edit" style="display:none;">
                                         <label for="purchase-event-name" class="form-control-label">
                                             Nome Evento Conversão
                                         </label>
                                         <input name="purchase-event-name"
                                                type="text"
                                                id='purchase-event-name'
-                                               class="form-control pixel-code"
+                                               class="form-control input-purchase-event-name-edit"
                                                placeholder="Purchase"
                                                maxlength='255'>
                                     </div>

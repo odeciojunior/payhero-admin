@@ -16,50 +16,50 @@
                     plataforma</h4>
                 <div class="row text-center">
                     <div class="col-lg-2 col-6 mr-30 offset-md-1">
-                        <img src="{{asset('modules/global/img/pixel/analytics.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                              data-value="google_analytics"
                              alt="logo analytics">
                         <div class="" style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/old-analytics.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                              data-value="google_analytics_four"
                              alt="logo analytics four">
                         <div style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/google-ads.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                              data-value="google_adwords"
                              alt="logo google adwords">
                         <div style="font: normal normal normal 11px Muli;">Google Adwords</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/facebook.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                              data-value="facebook"
                              alt="logo facebook">
                         <div style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-2">
-                        <img src="{{asset('modules/global/img/pixel/outbrain.png')}}"
-                             class="rounded-circle img-fluid  logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                              data-value="outbrain"
                              alt="logo outbrain">
                         <div style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/taboola.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                              data-value="taboola"
                              alt="logo taboola">
                         <div style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                     <div class="col-lg-2 col-6 mt-30 mr-30">
-                        <img src="{{asset('modules/global/img/pixel/pinterest.png')}}"
-                             class="rounded-circle img-fluid logo-pixels"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                              data-value="pinterest"
                              alt="logo pinterest">
                         <div style="font: normal normal normal 11px Muli;">Pinterest</div>

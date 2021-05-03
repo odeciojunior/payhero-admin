@@ -8,7 +8,9 @@ use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
+use Symfony\Component\HttpFoundation\File\File;
 use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
@@ -681,5 +683,18 @@ class FoxUtils
         }
 
         return $applyPlanArray;
+    }
+
+    public static function saveImageS3($path, $pathFile, $fileName)
+    {
+        $s3drive = Storage::disk('s3_documents');
+        $s3drive->putFileAs(
+            $path,
+            new File(storage_path($pathFile)),
+            $fileName,
+            'public'
+        );
+        $urlPath = $s3drive->url($path . $fileName);
+        dd($urlPath);
     }
 }
