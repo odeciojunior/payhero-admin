@@ -232,7 +232,6 @@ $(() => {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
-                    unique_product:  $(this).attr('id').includes('offer') ? 1 : 0,
                     page: params.page || 1
                 };
             },
