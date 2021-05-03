@@ -333,7 +333,7 @@ $(document).ready(function () {
                         let cashbackIcon = '';
                         if (value.cashback_value != '0.00') {
 
-                            cashbackIcon = `<a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
+                            cashbackIcon = `<a data-toggle="tooltip" title="Cashback de ${value.cashback_value}" role="button" style='margin-left: 5px;'>
                                                 <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
                                             </a>`;
 
