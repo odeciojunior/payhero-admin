@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\InvitePresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property int $invite
  * @property int $user_invited
  * @property int $company_id
@@ -30,11 +30,13 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Invitation extends Model
 {
-    use SoftDeletes, PresentableTrait, LogsActivity;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
 
-    const INVITATION_ACCEPTED = 1;
-    const INVITATION_PENDING = 2;
-    const INVITATION_EXPIRED = 3;
+    public const INVITATION_ACCEPTED = 1;
+    public const INVITATION_PENDING = 2;
+    public const INVITATION_EXPIRED = 3;
 
     /**
      * @var string
@@ -87,46 +89,38 @@ class Invitation extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Convite deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Convite foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Convite foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = 'Convite deletedo.';
+                break;
+            case 'updated':
+                $activity->description = 'Convite foi atualizado.';
+                break;
+            case 'created':
+                $activity->description = 'Convite foi criado.';
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function company()
+    public function company(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Company', 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function userInvited()
+    public function userInvited(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User', 'user_invited');
+        return $this->belongsTo(User::class, 'user_invited');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User', 'id', 'invite');
+        return $this->belongsTo(User::class, 'id', 'invite');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function invitation()
+    public function invitation(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Invitation');
+        return $this->belongsTo(Invitation::class);
     }
 }

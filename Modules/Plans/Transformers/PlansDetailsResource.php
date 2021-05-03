@@ -14,6 +14,8 @@ class PlansDetailsResource extends JsonResource
             $products[] = [
                 'product_id'   => $productsPlan->product_id,
                 'product_name' => $productsPlan->product->name,
+                'shopify_id'   => $productsPlan->product->shopify_id,
+                'variant_id'   => $productsPlan->product->shopify_variant_id,
                 'amount'       => $productsPlan->amount,
                 'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),

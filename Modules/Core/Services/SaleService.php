@@ -78,7 +78,7 @@ class SaleService
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id');
 
-            if(!$withCashback) {
+            if (!$withCashback) {
                 $transactions->where('type', '<>', $transactionModel->present()->getType('cashback'));
             }
 
@@ -299,17 +299,17 @@ class SaleService
             ->first();
 
         //calcule total
-        $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+        $subTotal =  FoxUtils::onlyNumbers($sale->sub_total);
 
         $total = $subTotal;
 
-        $shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
+        $shipment_value =  FoxUtils::onlyNumbers($sale->shipment_value);
         $total += $shipment_value;
         $sale->shipment_value = number_format(intval($shipment_value) / 100, 2, ',', '.');
 
-        if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
-            $total -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-            $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+        if (FoxUtils::onlyNumbers($sale->shopify_discount) > 0) {
+            $total -=  FoxUtils::onlyNumbers($sale->shopify_discount);
+            $discount =  FoxUtils::onlyNumbers($sale->shopify_discount);
         } else {
             $discount = '0,00';
         }
@@ -334,44 +334,52 @@ class SaleService
             }
         }
 
-        $taxa = 0;
+        $taxa = $totalTaxPercentage = $totalTax = $transactionRate = 0;
         $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal += $cashbackValue;
-        if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
-            $taxaReal = $totalToCalcTaxReal
-                - preg_replace('/[^0-9]/', '', $comission)
-                - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
-        } else {
-            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
+
+        if ($userTransaction->percentage_rate > 0) {
+            $totalTaxPercentage = (int) ($totalToCalcTaxReal * ( $userTransaction->percentage_rate / 100));
+            $totalTax += $totalTaxPercentage;
         }
+
+        if ($userTransaction->transaction_rate > 0) {
+            $transactionRate = FoxUtils::onlyNumbers($userTransaction->transaction_rate);
+            $totalTax += $transactionRate;
+        }
+
+
+        if (FoxUtils::onlyNumbers($sale->installment_tax_value) > 0) {
+            $taxaReal = $totalToCalcTaxReal
+                -  FoxUtils::onlyNumbers($comission)
+                -  FoxUtils::onlyNumbers($sale->installment_tax_value);
+        } else {
+            $taxaReal = $totalToCalcTaxReal -  FoxUtils::onlyNumbers($comission);
+        }
+
         if ($taxaReal < 0) {
             $taxaReal *= -1;
         }
+
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
         }
-        $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
         if ((!$sale->flag || empty($sale->flag)) && ($sale->payment_method == 1 || $sale->payment_method == 3)) {
             $sale->flag = 'generico';
-        } else {
-            if (!$sale->flag || empty($sale->flag)) {
-                $sale->flag = 'boleto';
-            }
+        } elseif (!$sale->flag || empty($sale->flag)) {
+            $sale->flag = 'boleto';
         }
 
         //format dates
         try {
             $sale->hours = (new Carbon($sale->start_date))->format('H:m:s') ?? '';
+            $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y') ?? '';
         } catch (Exception $e) {
             $sale->hours = '';
         }
-        try {
-            $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y') ?? '';
-        } catch (Exception $e) {
-            //
-        }
+
         if (isset($sale->boleto_due_date)) {
             try {
                 $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
@@ -389,31 +397,24 @@ class SaleService
 
         //add details to sale
         $sale->details = (object)[
-            'transaction_rate'         => 'R$ ' . number_format(
-                    preg_replace(
-                        '/[^0-9]/',
-                        '',
-                        $userTransaction->transaction_rate
-                    ) / 100,
-                    2,
-                    ',',
-                    '.'
-                ),
+            'transaction_rate'         => FoxUtils::formatMoney($transactionRate / 100),
             'percentage_rate'          => $userTransaction->percentage_rate ?? 0,
-            'total'                    => number_format(intval($total) / 100, 2, ',', '.'),
-            'subTotal'                 => number_format(intval($subTotal) / 100, 2, ',', '.'),
-            'discount'                 => number_format(intval($discount) / 100, 2, ',', '.'),
-            'automatic_discount'       => number_format(intval($sale->automatic_discount) / 100, 2, ',', '.'),
+            'totalTax'                => FoxUtils::formatMoney($totalTax / 100),
+            'total'                    => FoxUtils::formatMoney(intval($total) / 100),
+            'subTotal'                 => FoxUtils::formatMoney(intval($subTotal) / 100),
+            'discount'                 => FoxUtils::formatMoney(intval($discount) / 100),
+            'automatic_discount'       => FoxUtils::formatMoney(intval($sale->automatic_discount) / 100),
             'comission'                => $comission,
-            'taxa'                     => number_format($taxa / 100, 2, ',', '.'),
-            'taxaReal'                 => $taxaReal,
+            'taxa'                     => FoxUtils::formatMoney($taxa / 100),
+            'taxaDiscount'             => FoxUtils::formatMoney($totalTaxPercentage / 100),
+            'taxaReal'                 => FoxUtils::formatMoney($taxaReal / 100),
             'release_date'             => $userTransaction->release_date != null ? $userTransaction->release_date->format(
                 'd/m/Y'
             ) : '',
             'affiliate_comission'      => $affiliateComission,
-            'refund_value'             => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
+            'refund_value'             => FoxUtils::formatMoney(intval($sale->refund_value) / 100),
             'value_anticipable'        => '0,00',
-            'total_paid_value'         => number_format($sale->total_paid_value, 2, ',', '.'),
+            'total_paid_value'         => FoxUtils::formatMoney($sale->total_paid_value),
             'refund_observation'       => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
             'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             'company_name'             => $companyName,
@@ -469,9 +470,11 @@ class SaleService
             foreach ($sale->productsPlansSale as &$pps) {
                 $product = $pps->product->toArray();
                 $product['amount'] = $pps->amount;
-                if ($product['type_enum'] == (new Product)->present()->getType(
+                if (
+                    $product['type_enum'] == (new Product())->present()->getType(
                         'digital'
-                    ) && !empty($product['digital_product_url'])) {
+                    ) && !empty($product['digital_product_url'])
+                ) {
                     $product['digital_product_url'] = FoxUtils::getAwsSignedUrl(
                         $product['digital_product_url'],
                         $product['url_expiration_time']
@@ -762,7 +765,7 @@ class SaleService
         );
 
         $transactionUser = Transaction::where('sale_id', $sale->id)
-            ->where('type', (new Transaction)->present()->getType('producer'))
+            ->where('type', (new Transaction())->present()->getType('producer'))
             ->first();
 
         //Transferencia de entrada do cliente
@@ -773,7 +776,7 @@ class SaleService
                 'customer_id'    => $sale->customer_id,
                 'company_id'     => $transactionUser->company_id,
                 'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                'type_enum'      => (new Transfer)->present()->getTypeEnum('in'),
+                'type_enum'      => (new Transfer())->present()->getTypeEnum('in'),
                 'type'           => 'in',
                 'reason'         => 'Estorno de boleto',
             ]
@@ -891,8 +894,10 @@ class SaleService
         $saleTax = $cloudfoxTransaction->value;
 
         foreach ($sale->transactions as $transaction) {
-            if ($transaction->status_enum == $transactionModel->present()
-                    ->getStatusEnum('transfered') && !empty($transaction->company_id)) {
+            if (
+                $transaction->status_enum == $transactionModel->present()
+                    ->getStatusEnum('transfered') && !empty($transaction->company_id)
+            ) {
                 $refundValue = $transaction->value;
 
                 if ($transaction->type == $transactionModel->present()->getType('producer')) {
@@ -908,7 +913,7 @@ class SaleService
                         'user_id'        => $transaction->company->user_id,
                         'value'          => $refundValue,
                         'type'           => 'out',
-                        'type_enum'      => (new Transfer)->present()->getTypeEnum('out'),
+                        'type_enum'      => (new Transfer())->present()->getTypeEnum('out'),
                         'reason'         => 'Taxa de estorno de boleto',
                         'is_refund_tax'  => 1,
                         'company_id'     => $transaction->company->id,
@@ -1350,5 +1355,4 @@ class SaleService
             report($e);
         }
     }
-
 }
