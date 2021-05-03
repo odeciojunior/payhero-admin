@@ -28,10 +28,13 @@ class AffiliateLinksApiController extends Controller
             $links = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
                 $q->where('user_id', $userId)->where('project_id', $projectId);
             })->with('affiliate.project.domains', 'plan');
-            
+
             if (!empty($request->input('plan'))) {
-                $links = $links->whereHas('plan', function($q2) use ($request) {
-                    $q2->where('name', 'like', '%' . $request->input('plan') . '%');
+                $links = $links->whereHas('plan',
+                function($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->input('plan') . '%')
+                    ->orWhere('price', 'like', '%'. str_replace(array('R', '$', ' ', '.', ','), array('', '', '', '', '.'),$request->input('plan')). '%')
+                    ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
                 });
             }
 
@@ -40,6 +43,7 @@ class AffiliateLinksApiController extends Controller
             });
 
             return AffiliateLinkResource::collection($links->paginate(5));
+
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
