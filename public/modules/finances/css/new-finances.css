@@ -77,7 +77,7 @@
 }
 
 .price {
-    font-size: 25px;
+    font-size: 20px;
     display: inline;
 }
 
@@ -288,7 +288,7 @@ strong span {
 }
 
 .card.shadow {
-    border-radius: 0 16px 16px 16px;
+    border-radius: 16px 16px 16px 16px;
 }
 
 .s-config {
@@ -389,6 +389,20 @@ select, .select-pad {
     }
 }
 
+@media (max-width: 991px) {
+    .badge {
+        width: 10px;
+        height: 10px;
+
+        padding: .5rem;
+
+        border: 2px solid white;
+        box-shadow: 0 3px 6px #00000029;
+        text-indent: -9999px;
+        white-space: nowrap;
+    }
+}
+
 /*MOBILE SM*/
 @media (max-width: 767px) {
     .s-table {
@@ -409,24 +423,13 @@ select, .select-pad {
     .s-table.table-finance-transfers {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: "sale sale status"
-                             "date-start date-end value";
+                             "date-start date-end value"
+                             "codigo codigo codigo";
     }
 
     table.unify tr {
         border: none;
         margin: unset;
-    }
-
-    .badge {
-        width: 10px;
-        height: 10px;
-
-        padding: .5rem;
-
-        border: 2px solid white;
-        box-shadow: 0 3px 6px #00000029;
-        text-indent: -9999px;
-        white-space: nowrap;
     }
 
     .table td {
@@ -532,6 +535,21 @@ select, .select-pad {
     .weekdays-container .btn, .day-container .btn {
         width: 30% !important;
         margin: 2px 5px !important;
+    }
+}
+
+/*MOBILE XS*/
+@media (max-width: 420px) {
+    .bold-mobile {
+        font-size: 9px;
+    }
+
+    small.gray {
+        font-size: 9px;
+    }
+
+    .font-md-size-20 {
+        font-size: 9px !important
     }
 }
 

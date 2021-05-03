@@ -63,7 +63,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
@@ -72,7 +72,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-            <div class="page-content container" style="margin-bottom:100px;">
+            <div class="page-content container">
                 <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
@@ -112,9 +112,9 @@
 
 
                         </div>
-                        <div class="row collapse" id="bt_collapse">
+                        <div class="collapse" id="bt_collapse">
 
-                            <div class="d-flex flex-wrap" style="width:100%">
+                            <div class="row" style="width:100%">
                                 <div class="col-sm-12 col-md">
                                     <label for="project">Projeto</label>
                                     <select name="project" id="project" class="form-control select-pad"
@@ -165,7 +165,7 @@
                         </div>
 
                         <div class="row" style="height: 30px">
-                            <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                            <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                 <div
                                     class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                     data-toggle="collapse"
@@ -173,14 +173,16 @@
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
                                     <img id="icon-filtro"
+                                         class="hidden-xs-down"
                                          src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                     <span id="text-filtro">Filtros avançados</span>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-xl-3 text-right mt-20">
+                            <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro"
                                      class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px"
+                                    <img style="height: 12px; margin-right: 4px" 
+                                         class="hidden-xs-down"
                                          src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                     Aplicar filtros
                                 </div>
@@ -240,7 +242,7 @@
 
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0"
                                style="width:100%;">
                             <thead>
                             <tr class="">
@@ -261,10 +263,11 @@
                     </div>
 
                 </div>
-                <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
-                    {{-- js carrega... --}}
-                </ul>
-                <div style="margin-top:100px; width:100%; float:left;">&nbsp;</div>
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-25">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
 

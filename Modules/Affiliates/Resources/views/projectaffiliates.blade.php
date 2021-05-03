@@ -54,9 +54,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                                    {{-- js carrega... --}}
-                                </ul>
+                                <div class="row d-flex justify-content-center justify-content-md-end">
+                                    <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                                        {{-- js carrega... --}}
+                                    </ul>
+                                </div>
                             </div>
                             <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
                                 <div class="fixhalf"></div>
@@ -77,9 +79,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
-                                    {{-- js carrega... --}}
-                                </ul>
+                                <div class="row d-flex justify-content-center justify-content-md-end">
+                                    <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                                        {{-- js carrega... --}}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

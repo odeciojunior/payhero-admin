@@ -68,7 +68,7 @@ $(document).ready(function () {
                         dados += '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
-                        if (value.status != '1' || verifyAccountFrozen()) {
+                        if (value.status != '2' || verifyAccountFrozen()) {
                             dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-reload-1'></span></button></td>";
                             dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-bin-1'></span></button></td>";
 

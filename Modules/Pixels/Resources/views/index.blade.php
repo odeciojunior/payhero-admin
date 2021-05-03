@@ -43,7 +43,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-pixels" class="pagination-sm margin-chat-pagination"
+<ul id="pagination-pixels" class="pagination-sm margin-chat-pagination text-right"
     style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>

@@ -4,6 +4,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/coupons.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
     @endpush
@@ -47,18 +48,32 @@
                                             <label for="date_type" >Data</label>
                                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly >
                                         </div>
-                                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <label> </label>
-                                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                            </button>
-                                        </div>
-                                        <div class="col-2">
+                                    </div>
+                                    <div class="collapse" id="bt_collapse">
+                                        <div class="row"></div>
+                                    </div>
+                                    <div class="row" style="height: 30px">
+                                        {{-- <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                                data-toggle="collapse"
+                                                data-target="#bt_collapse"
+                                                aria-expanded="false"
+                                                aria-controls="bt_collapse">
+                                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                <span id="text-filtro">Filtros avançados</span>
+                                            </div>
+                                        </div> --}}
+                                        <div class="col-6 col-xl-3 mt-20 offset-xl-9">
+                                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                                Aplicar filtros
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
+                        <div class="fixhalf"></div>
 
                         <div class="col-lg-12">
                             <div class="card shadow" style="min-height: 300px;">
@@ -77,9 +92,11 @@
                                     </table>
                                 </div>
                             </div>
-                            <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
-                                {{-- js carrega... --}}
-                            </ul>
+                            <div class="row d-flex justify-content-center justify-content-md-end">
+                                <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
+                                    {{-- js carrega... --}}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

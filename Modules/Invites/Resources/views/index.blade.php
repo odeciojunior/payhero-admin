@@ -25,7 +25,7 @@
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
-            <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
+            <div class="card shadow p-20 mb-0" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div style="width: 20%">
                         <h6 class="text-center orange-gradient">
@@ -85,10 +85,12 @@
                     </table>
                 </div>
             </div>
-            <ul id="pagination-invites" class="pagination-sm margin-chat-pagination"
+            <div class="row d-flex justify-content-center justify-content-md-end pb-35">
+                <ul id="pagination-invites" class="pagination-sm margin-chat-pagination mb-0"
                 style="margin-top:10px;position:relative;float:right">
-                {{-- js pagination carrega --}}
-            </ul>
+                    {{-- js pagination carrega --}}
+                </ul>
+            </div>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle"
                  role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-simple">
@@ -289,7 +291,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=07') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=08') }}"></script>
     @endpush
 
 @endsection

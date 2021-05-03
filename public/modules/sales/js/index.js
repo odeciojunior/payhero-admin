@@ -526,7 +526,7 @@ $(document).ready(function () {
             collapse.css('transform', 'rotate(0deg)')
             text.text('Filtros avançados').fadeIn()
         }
-    })
+    });
 
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
