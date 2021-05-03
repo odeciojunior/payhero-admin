@@ -70,6 +70,7 @@ class SalesController extends Controller
             return $pdf->stream('comprovante.pdf');
 
         } catch (\Exception $e) {
+            report($e);
             abort(404);
         }
     }
