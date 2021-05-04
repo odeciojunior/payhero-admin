@@ -65,7 +65,7 @@ class TransactionResource extends JsonResource
         if ($sale->owner_id == auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {
-                $data['cashback_value'] = 'R$ ' . substr_replace(@$sale->cashback->value, ',', strlen(@$sale->cashback->value) - 2, 0);
+                $data['cashback_value'] = FoxUtils::formatMoney($sale->cashback->value / 100);
                 $data['total_paid'] = FoxUtils::formatMoney($this->value / 100);
             }
         } else {
