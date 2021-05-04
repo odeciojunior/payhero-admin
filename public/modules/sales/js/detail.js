@@ -267,6 +267,18 @@ $(() => {
 
     function renderSale(sale) {
         //Dados da venda
+        let paymentMethod = '';
+
+        if (sale.payment_method == 1) {
+            paymentMethod = 'Generico';
+        } else if (sale.payment_method == 3) {
+            paymentMethod = 'Debito';
+        } else if (sale.payment_method == 4) {
+            paymentMethod = 'PIX';
+        } else {
+            paymentMethod = 'Boleto';
+        }
+
         $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
             $('#sale-code').append(`<span class="text-muted font-size-16 d-block mt-1"> Upsell → ${sale.upsell}</span>`)
@@ -274,7 +286,7 @@ $(() => {
         if (sale.has_order_bump) {
             $('#sale-code').append(`<span class="text-muted font-size-16 d-block mt-1"> Order Bump </span>`)
         }
-        $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
+        $('#payment-type').text('Pagamento via ' + paymentMethod + ' em ' + sale.start_date + ' às ' + sale.hours);
         if (sale.release_date != '') {
             $('#release-date').text('Data de liberação: ' + sale.release_date);
         } else {

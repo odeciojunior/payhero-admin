@@ -19,15 +19,15 @@ class ProjectNotificationService
     public const EMAIL_TYPE = 1;
     public const SMS_TYPE   = 2;
 
-    public const SELECT_BILLET_GENERATED = 1;
-    public const SELECT_BILLET_COMPENSATED = 2;
-    public const SELECT_CARD_PAYMENT = 3;
-    public const SELECT_ABANDONED_CART = 4;
-    public const SELECT_BILLET_EXPIRED = 5;
-    public const SELECT_TRACKING_CODE = 6;
-    public const SELECT_PIX_GENERATED = 7;
-    public const SELECT_PIX_COMPENSATED = 8;
-    public const SELECT_PIX_EXPIRED = 9;
+    public const BOLETO_GENERATED = 1;
+    public const BOLETO_COMPENSATED = 2;
+    public const CARD_PAYMENT = 3;
+    public const ABANDONED_CART = 4;
+    public const BOLETO_EXPIRED = 5;
+    public const TRACKING_CODE = 6;
+    public const PIX_GENERATED = 7;
+    public const PIX_COMPENSATED = 8;
+    public const PIX_EXPIRED = 9;
 
     /**
      * @param $projectId
@@ -39,7 +39,7 @@ class ProjectNotificationService
             ProjectNotification::insert([
                                             [
                                                 'type_enum'         => self::SMS_TYPE, // sms
-                                                'event_enum'        => self::SELECT_BILLET_GENERATED,
+                                                'event_enum'        => self::BOLETO_GENERATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => 'Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}',
                                                 'notification_enum' => 1,
@@ -47,7 +47,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_EXPIRED,
+                                                'event_enum'        => self::BOLETO_EXPIRED,
                                                 'time'              => '10:00 horas',
                                                 'message'           => 'Olá {primeiro_nome}, seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! {url_boleto}',
                                                 'notification_enum' => 2,
@@ -55,7 +55,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
-                                                'event_enum'        => self::SELECT_ABANDONED_CART,
+                                                'event_enum'        => self::ABANDONED_CART,
                                                 'time'              => '1 hora depois',
                                                 'message'           => 'Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}',
                                                 'notification_enum' => 3,
@@ -63,7 +63,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
-                                                'event_enum'        => self::SELECT_ABANDONED_CART,
+                                                'event_enum'        => self::ABANDONED_CART,
                                                 'time'              => '12:00 horas próximo dia',
                                                 'message'           => 'Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}',
                                                 'notification_enum' => 4,
@@ -71,7 +71,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_GENERATED,
+                                                'event_enum'        => self::BOLETO_GENERATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Parabéns - Pegue aqui o seu boleto - Pedido {codigo_venda}',
@@ -84,7 +84,7 @@ class ProjectNotificationService
                                             // pagina 2
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_GENERATED,
+                                                'event_enum'        => self::BOLETO_GENERATED,
                                                 'time'              => '10:00 horas próximo dia',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Já separamos seu pedido',
@@ -96,7 +96,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_GENERATED,
+                                                'event_enum'        => self::BOLETO_GENERATED,
                                                 'time'              => '11:00 horas 2 dias após',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Vamos ter que liberar sua mercadoria',
@@ -108,7 +108,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_EXPIRED,
+                                                'event_enum'        => self::BOLETO_EXPIRED,
                                                 'time'              => '11:30 horas',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Hoje vence o seu boleto',
@@ -120,7 +120,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_ABANDONED_CART,
+                                                'event_enum'        => self::ABANDONED_CART,
                                                 'time'              => '1 hora depois',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Você pode perder dinheiro se ignorar esse email',
@@ -132,7 +132,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_ABANDONED_CART,
+                                                'event_enum'        => self::ABANDONED_CART,
                                                 'time'              => '12:00 horas próximo dia',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Posso liberar o seu pedido para outra pessoa?',
@@ -145,7 +145,7 @@ class ProjectNotificationService
                                             // pagina 3
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
-                                                'event_enum'        => self::SELECT_CARD_PAYMENT,
+                                                'event_enum'        => self::CARD_PAYMENT,
                                                 'time'              => 'Imediato',
                                                 'message'           => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato com o suporte através do link: {sac_link} . Em breve enviaremos o código de rastreio.',
                                                 'notification_enum' => 11,
@@ -153,7 +153,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_CARD_PAYMENT,
+                                                'event_enum'        => self::CARD_PAYMENT,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Sua compra foi aprovada - Pedido {codigo_venda}',
@@ -165,7 +165,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_BILLET_COMPENSATED,
+                                                'event_enum'        => self::BOLETO_COMPENSATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Boleto pago - Pedido {codigo_venda}',
@@ -177,7 +177,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_TRACKING_CODE,
+                                                'event_enum'        => self::TRACKING_CODE,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Seu código de rastreio chegou',
@@ -189,7 +189,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
-                                                'event_enum'        => self::SELECT_TRACKING_CODE,
+                                                'event_enum'        => self::TRACKING_CODE,
                                                 'time'              => 'Imediato',
                                                 'message'           => 'Olá {primeiro_nome}, seu código de rastreio chegou: {codigo_rastreio} Acesse: {link_rastreamento}',
                                                 'notification_enum' => 15,
@@ -197,7 +197,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_PIX_GENERATED,
+                                                'event_enum'        => self::PIX_GENERATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Seu código pix foi gerado',
@@ -209,7 +209,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_PIX_COMPENSATED,
+                                                'event_enum'        => self::PIX_COMPENSATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'PIX pago - Pedido {codigo_venda} ',
@@ -221,7 +221,7 @@ class ProjectNotificationService
                                             ],
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
-                                                'event_enum'        => self::SELECT_PIX_EXPIRED,
+                                                'event_enum'        => self::PIX_EXPIRED,
                                                 'time'              => '1 hora depois',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Finalize sua compra no PIX',

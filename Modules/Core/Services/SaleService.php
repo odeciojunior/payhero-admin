@@ -366,9 +366,15 @@ class SaleService
         }
 
         //set flag
-        if ((!$sale->flag || empty($sale->flag)) && ($sale->payment_method == 1 || $sale->payment_method == 3)) {
+        if (!empty($sale->flag)) {
+            $sale->flag = $sale->flag;
+        } elseif ($sale->payment_method == 1 && empty($sale->flag)) {
             $sale->flag = 'generico';
-        } elseif (!$sale->flag || empty($sale->flag)) {
+        } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
+            $sale->flag = 'debito';
+        } elseif ($sale->payment_method == 4 && empty($sale->flag)) {
+            $sale->flag = 'pix';
+        } else {
             $sale->flag = 'boleto';
         }
 
