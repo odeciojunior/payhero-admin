@@ -149,9 +149,10 @@
                     </div>
                 </div>
                 <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination"
-                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
+                    style="float:right; display:block; height:100px; margin-bottom:100px !important;">
                     {{-- js carrega... --}}
                 </ul>
+
             </div>
         </div>
         {{-- Quando não tem projeto cadastrado  --}}
