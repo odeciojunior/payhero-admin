@@ -141,6 +141,13 @@
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
+
+    <style>
+        .margin-chat-pagination {
+            display:block !important; height:100px  !important;
+        }
+    </style>
+
     <script>
 
         @if(\Auth::user())
