@@ -77,7 +77,14 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                             foreach ($fulfillment["line_items"] as $line_item) {
                                 //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
                                 $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
-                                    ->where('amount', $line_item["quantity"])->where('type_enum', (new Product)->present()->getType('physical'));
+                                    ->where('amount', $line_item["quantity"])
+                                    ->where('type_enum', (new Product)->present()->getType('physical'));
+                                if(!$products->count()){
+                                    $products = $saleProducts
+                                        ->where('name', $line_item["title"])
+                                        ->where('description', $line_item["variant_title"])
+                                        ->where('amount', $line_item["quantity"]);
+                                }
                                 if ($products->count()) {
                                     foreach ($products as $product) {
                                         $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);

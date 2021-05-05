@@ -4,6 +4,7 @@ namespace Modules\Withdrawals\Services;
 
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Transaction;
@@ -73,7 +74,7 @@ class WithdrawalService
     {
         $currentValue = 0;
         $withdrawal->company->transactions()
-            ->whereIn('gateway_id', [14, 15])
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
             ->orderBy('id')
@@ -132,7 +133,8 @@ class WithdrawalService
             );
 
             $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
+                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');

@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Core\Entities\Gateway;
 use PDF;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
@@ -49,7 +50,7 @@ class SalesController extends Controller
                 'sale',
                 'company'
             ])->where('sale_id', $id)
-                ->whereIn('gateway_id', [14, 15])
+                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
                 ->where('type', (new Transaction())->present()->getType('producer'))
                 ->whereHas('sale', function ($query) {
                     $query->where('payment_method', 1);
@@ -69,6 +70,7 @@ class SalesController extends Controller
             return $pdf->stream('comprovante.pdf');
 
         } catch (\Exception $e) {
+            report($e);
             abort(404);
         }
     }

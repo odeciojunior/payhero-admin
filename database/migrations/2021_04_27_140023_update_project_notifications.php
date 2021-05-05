@@ -19,7 +19,7 @@ class UpdateProjectNotifications extends Migration
             ProjectNotification::firstOrCreate(
                 [
                     'type_enum' => ProjectNotificationService::EMAIL_TYPE,
-                    'event_enum' => ProjectNotificationService::SELECT_PIX_GENERATED,
+                    'event_enum' => ProjectNotificationService::PIX_GENERATED,
                     'time' => 'Imediato',
                     'message' => json_encode(
                         [
@@ -36,7 +36,7 @@ class UpdateProjectNotifications extends Migration
             ProjectNotification::firstOrCreate(
                 [
                     'type_enum' => ProjectNotificationService::EMAIL_TYPE,
-                    'event_enum' => ProjectNotificationService::SELECT_PIX_COMPENSATED,
+                    'event_enum' => ProjectNotificationService::PIX_COMPENSATED,
                     'time' => 'Imediato',
                     'message' => json_encode(
                         [
@@ -53,7 +53,7 @@ class UpdateProjectNotifications extends Migration
             ProjectNotification::firstOrCreate(
                 [
                     'type_enum' => ProjectNotificationService::EMAIL_TYPE,
-                    'event_enum' => ProjectNotificationService::SELECT_PIX_EXPIRED,
+                    'event_enum' => ProjectNotificationService::PIX_EXPIRED,
                     'time' => '1 hora depois',
                     'message' => json_encode(
                         [
@@ -85,9 +85,9 @@ class UpdateProjectNotifications extends Migration
     {
         $projectsNotification = ProjectNotification::whereIn('notification_enum',
                                                              [
-                                                                 ProjectNotificationService::SELECT_PIX_GENERATED,
-                                                                 ProjectNotificationService::SELECT_PIX_COMPENSATED,
-                                                                 ProjectNotificationService::SELECT_PIX_EXPIRED
+                                                                 ProjectNotificationService::PIX_GENERATED,
+                                                                 ProjectNotificationService::PIX_COMPENSATED,
+                                                                 ProjectNotificationService::PIX_EXPIRED
                                                              ])->get();
 
         foreach ($projectsNotification as $projectNotrification) {

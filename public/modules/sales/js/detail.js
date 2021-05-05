@@ -182,7 +182,7 @@ $(() => {
                 getSale(response.data);
 
                 $("#refundAmount").val(response.data.total);
-                $("#refundBilletAmount").text('R$' + response.data.total);
+                $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind('click');
                 $(".btn_refund_transaction").on('click', function () {
                     var sale = $(this).attr('sale');
@@ -267,6 +267,18 @@ $(() => {
 
     function renderSale(sale) {
         //Dados da venda
+        let paymentMethod = '';
+
+        if (sale.payment_method == 1) {
+            paymentMethod = 'Generico';
+        } else if (sale.payment_method == 3) {
+            paymentMethod = 'Debito';
+        } else if (sale.payment_method == 4) {
+            paymentMethod = 'PIX';
+        } else {
+            paymentMethod = 'Boleto';
+        }
+
         $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
             $('#sale-code').append(`<span class="text-muted font-size-16 d-block mt-1"> Upsell → ${sale.upsell}</span>`)
@@ -274,7 +286,7 @@ $(() => {
         if (sale.has_order_bump) {
             $('#sale-code').append(`<span class="text-muted font-size-16 d-block mt-1"> Order Bump </span>`)
         }
-        $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
+        $('#payment-type').text('Pagamento via ' + paymentMethod + ' em ' + sale.start_date + ' às ' + sale.hours);
         if (sale.release_date != '') {
             $('#release-date').text('Data de liberação: ' + sale.release_date);
         } else {
@@ -339,8 +351,8 @@ $(() => {
             $('#chargeback-recovered').hide();
         }
         //Valores
-        $("#subtotal-value").html("R$ " + sale.subTotal);
-        $("#shipment-value").html("R$ " + sale.shipment_value);
+        $("#subtotal-value").html(sale.subTotal);
+        $("#shipment-value").html(sale.shipment_value);
 
         $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
         if (sale.dolar_quotation) {
@@ -351,15 +363,15 @@ $(() => {
 
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
         if (sale.installment_tax_value !== '0,00' && sale.user_sale_type == 'producer') {
-            $("#taxa-installment-value").html('R$ ' + sale.installment_tax_value);
+            $("#taxa-installment-value").html(sale.installment_tax_value);
             $("#taxas-installment-free-label").show();
             $("#taxa-installment-value").show();
         }
 
-        if (parseFloat(sale.discount) > 0) {
+        if (parseFloat(sale.discount.replace(/[^\d]/g, "")) > 0) {
            $('#discount-title').show()
            $('#discount-data').show()
-           $("#desconto-value").html("R$ " + sale.discount);
+           $("#desconto-value").html(sale.discount);
         }
         if (!!sale.cupom_code) {
             $("#cupom-code").html(sale.cupom_code);
@@ -369,28 +381,49 @@ $(() => {
         }
         $('.text-discount').html('');
         $("#automatic-discount-value").html('');
-        if (sale.automatic_discount !== '0,00') {
+
+        if (parseInt(sale.automatic_discount.replace(/[^\d]/g, "")) > 0) {
             if (sale.payment_method == 2) {
                 $('.text-discount').html('Desconto automático boleto');
             } else {
                 $('.text-discount').html('Desconto automático cartão');
             }
-            $("#automatic-discount-value").html("R$ " + sale.automatic_discount);
+            $(".automatic-discount-value").show();
+            $(".text-discount").show();
+            $("#automatic-discount-value").html(sale.automatic_discount);
+        } else {
+            $(".automatic-discount-value").hide();
+            $(".text-discount").hide();
         }
-        $("#total-value").html("R$ " + sale.total);
-        // $("#total-paid-value").html("R$ " + sale.total_paid_value);
+        $("#total-value").html(sale.total);
 
         if (sale.refund_value != '0,00' && sale.status == 8) {
             $('.text-partial-refund').show();
-            $("#partial-refund-value").html("R$ " + sale.refund_value);
+            $("#partial-refund-value").html(sale.refund_value);
             $("#partial-refund-value").show();
         } else {
             $('.text-partial-refund').hide();
             $("#partial-refund-value").hide();
         }
 
-        $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
-        $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
+        // Taxas detalhadas
+        $('#taxas-label').html(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
+        $('#taxareal-value').html(sale.taxaReal ? sale.taxaReal : '');
+
+        $('#tax-value-total').html(`Valor total: `);
+        $('#tax-value-total-value').html(sale.total);
+
+        $('#tax-percentage').html(`Taxa (${sale.percentage_rate}%)`);
+        $('#tax-percentage-value').html(`${sale.taxaDiscount}`);
+
+        $('#tax-fixed').html('Taxa fixa: ');
+        $('#tax-fixed-value').html(`${sale.transaction_rate}`);
+
+        $('#tax-total').html(`Valor total das taxas: `);
+        $('#tax-total-value').html(`- ${sale.totalTax}`);
+
+        $('#tax-comission').html('Valor recebido');
+        $('#tax-comission-value').html(`<b>${sale.comission}</b>`);
 
         $('#convertax-label, #convertax-value').hide();
         if (sale.convertax_value !== '0,00') {
@@ -402,16 +435,28 @@ $(() => {
         if (sale.value_anticipable != '0,00') {
 
             $(".div-anticipated").show();
-            $(".div-value-anticipated").html('').append(`<span class='text-muted ft-12'>R$ ${sale.value_anticipable}</span>`).show();
+            $(".div-value-anticipated").html('').append(`<span class='text-muted ft-12'> ${sale.value_anticipable}</span>`).show();
         }
 
         // valor cashback
         if (sale.has_cashback) {
             $("#cashback-label").removeClass('d-none');
-            $("#cashback-value").removeClass('d-none').html('').append(`<span class='ft-12' style="color: #5EE2A1;">R$ ${(sale.cashback_value / 100).toFixed(2)}</span>`).show();
+            $("#cashback-value").removeClass('d-none').html('').append(`<span class='ft-12' style="color: #5EE2A1;"> + ${sale.cashback_value}</span>`).show();
+
+            // Taxas detalhadas
+            $("#tax-subtotal").html("Subtotal:").parent().removeClass('d-none');
+            $("#tax-subtotal-value").html(sale.total).parent().removeClass('d-none');
+            $("#tax-cashback").html("Cashback:").parent().removeClass('d-none');
+            $("#tax-cashback-value").html(`+ ${sale.cashback_value}`).parent().removeClass('d-none').show()
         } else {
             $("#cashback-label").addClass('d-none')
             $("#cashback-value").addClass('d-none').html('')
+
+            // Taxas detalhadas
+            $("#tax-subtotal").parent().addClass('d-none')
+            $("#tax-subtotal-value").parent().addClass('d-none')
+            $("#tax-cashback").parent().addClass('d-none')
+            $("#tax-cashback-value").parent().addClass('d-none')
         }
 
         //comissao afiliado

@@ -4,6 +4,8 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -40,7 +42,7 @@ class TransactionsService
                             $q->where('has_valid_tracking', true)
                                 ->orWhereNull('delivery_id');
                         }
-                    )->whereIn('gateway_id', [14, 15]);
+                    )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
                 }
             );
 
@@ -64,20 +66,34 @@ class TransactionsService
                 $getnetService->setStatementSubSellerId($subsellerId)
                     ->setStatementSaleHashId($saleIdEncoded);
 
-                $result = json_decode($getnetService->getStatement());
+                if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID && $sale->payment_method == Sale::PIX_PAYMENT) {
 
-                if (!empty($result->list_transactions) &&
-                    !is_null($result->list_transactions[0]) &&
-                    !is_null($result->list_transactions[0]->details[0]) &&
-                    !is_null($result->list_transactions[0]->details[0]->release_status)
-                    && $result->list_transactions[0]->details[0]->release_status == 'N'
-                ) {
                     $transaction->update(
                         [
                             'is_waiting_withdrawal' => 1,
                         ]
                     );
+
+                } else if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
+
+                    $result = json_decode($getnetService->getStatement());
+
+                    if (!empty($result->list_transactions) &&
+                        !is_null($result->list_transactions[0]) &&
+                        !is_null($result->list_transactions[0]->details[0]) &&
+                        !is_null($result->list_transactions[0]->details[0]->release_status)
+                        && $result->list_transactions[0]->details[0]->release_status == 'N'
+                    ) {
+                        $transaction->update(
+                            [
+                                'is_waiting_withdrawal' => 1,
+                            ]
+                        );
+                    }
+
                 }
+
+
             } catch (Exception $e) {
                 report($e);
             }
@@ -89,4 +105,6 @@ class TransactionsService
             report($e);
         }
     }
+
+
 }
