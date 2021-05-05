@@ -24,6 +24,7 @@ class PixService
 
             $sales = Sale::with(
                 [
+                    'project',
                     'customer',
                     'pixCharges'
                 ]
@@ -40,7 +41,8 @@ class PixService
                     $querySale->where('status', 'ATIVA')
                         ->where('created_at', '<=',
                                 Carbon::now()->subHours(1)->toDateTimeString()
-                        );;
+                        )
+                        ->where('status', 'ATIVA');
                 }
             )
             ->get();
@@ -50,9 +52,8 @@ class PixService
                 $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
-                    //$pix->update(['status' => 'EXPIRED']);
-                   $sale->pixCharges->where('status', 'ATIVA')->first()->update(['status' => 'EXPIRED']);
-                   //event(new PixExpiredEvent($sale));
+                    $pix->update(['status' => 'EXPIRED']);
+                    //event(new PixExpiredEvent($sale));
                 }
             }
         } catch (Exception $e) {

@@ -12,7 +12,7 @@ class ChangePixPending extends Command
      *
      * @var string
      */
-    protected $signature = 'change:pixpendingtocanceled';
+    protected $signature = 'change:pixpending';
 
     /**
      * The console command description.
@@ -35,7 +35,7 @@ class ChangePixPending extends Command
     {
         $pixService = new PixService();
         $pixService->changePixPending();
-        dd('feitoo');
+        $this->line('feitoo');
     }
 
 }
