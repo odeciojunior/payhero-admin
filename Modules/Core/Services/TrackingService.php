@@ -283,7 +283,7 @@ class TrackingService
                     }
                 }
             } else { //senão cria o tracking
-                $tracking = Tracking::create($commonAttributes + $newAttributes);
+                $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
             }
 
             if (!empty($tracking)) {

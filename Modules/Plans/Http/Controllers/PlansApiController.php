@@ -33,9 +33,6 @@ class PlansApiController extends Controller
      */
     public function index($projectId, Request $request)
     {
-        function cleanSearch($string){
-            return str_replace(array('R','$', ' ',','), array('','','','.'), $string);
-        }
         try {
 
             $planModel    = new Plan();

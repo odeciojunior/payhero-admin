@@ -39,9 +39,6 @@ class ProjectsResource extends JsonResource
      */
     public function toArray($request)
     {
-        // $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
-        //                        ->where('project_id', $this->id)
-        //                        ->first();
         if (isset($this->affiliate_id)) {
             $affiliate = '';
             if ($this->affiliate_id > 0) {

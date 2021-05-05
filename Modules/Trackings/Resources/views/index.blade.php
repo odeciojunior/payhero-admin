@@ -244,7 +244,7 @@
                 <!-- Aviso Problemas com os Códigos -->
                 <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
                     <div class="d-flex">
-                        <i class="material-icons mr-10">contact_support</i>
+                        <i class="material-icons mr-10">help</i>
                         <div class="w-full">
                             <strong class="font-size-16">Problemas com os códigos?</strong>
                             <p class="font-size-14 pr-md-100 mb-5">
