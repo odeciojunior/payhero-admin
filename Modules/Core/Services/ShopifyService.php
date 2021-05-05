@@ -1146,6 +1146,7 @@ class ShopifyService
             }
 
             if ($pagination->hasNext()) {
+                sleep(1);
                 $nextPageInfo = $pagination->getNextPageInfo();
                 sleep(1);
                 $storeProducts = $pagination->current($nextPageInfo);
