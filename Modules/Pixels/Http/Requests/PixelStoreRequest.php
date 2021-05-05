@@ -32,7 +32,7 @@ class PixelStoreRequest extends FormRequest
             'name.required' => 'O campo Descrição é obrigatório',
             'name.max' => 'O campo Descrição permite apenas 30 caracteres',
             'code.required' => 'O campo Código é obrigatório',
-            'code.max' => 'O campo Descrição permite apenas 100 caracteres',
+            'code.max' => 'O campo Código permite no maximo 100 caracteres',
             'platform.required' => 'O campo Plataforma é obrigatório',
             'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
             'value_percentage_purchase_boleto.integer' => 'O campo % Valor Boleto deve ser um número',

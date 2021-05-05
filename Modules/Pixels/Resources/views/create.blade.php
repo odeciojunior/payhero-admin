@@ -72,7 +72,6 @@
     </div>
 </div>
 
-
 <div style="display: none;" id="configure-new-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10 align-items-center">
