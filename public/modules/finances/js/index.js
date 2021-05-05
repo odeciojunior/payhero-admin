@@ -237,7 +237,7 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>');
                 $('.saltoTotal').html('<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>');
                 $('.saldoBloqueado').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>');
-                //$('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
+                $('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
 
 
                 // Saldo bloqueado
@@ -299,8 +299,8 @@ $(document).ready(function () {
         // Fazer saque
         $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
         $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
-            const availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
-            const toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
+            const availableBalanceText = $('.available-balance').html().replace(/,/g, '').replace(/\./g, '');
+            const toTransferText = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
             const availableBalance = parseInt(availableBalanceText);
             const toTransfer = parseFloat(toTransferText);
 
@@ -426,10 +426,9 @@ $(document).ready(function () {
                 'bigger_value': dataWithdrawal.bigger_value
             }
 
-            const currentBalance = $('.available-balance').data('value').replace(',', '').replace('.', '');
-            const withdrawal = $('#custom-input-addon').val().replace(',', '').replace('.', '');
-
-            const debitValue = $(".debit-balance").data('value');
+            const currentBalance = $('.available-balance').data('value').replace(/,/g, '').replace(/\./g, '');  // SALDO DISPONIVEL
+            const withdrawal = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');             // SAQUE DESEJADO
+            const debitValue = $(".debit-balance").data('value').replace(/,/g, '').replace(/\./g, '');          // DIVIDA ATUAL
 
             const singleValue = modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
 
@@ -705,7 +704,7 @@ $(document).ready(function () {
         }
 
         function removeFormatNumbers(number) {
-            return number.replace(',', '').replace('.', '');
+            return number.replace(/,/g, '').replace(/\./g, '');
         }
 
         function manipulateModalSuccessWithdrawal() {
@@ -759,7 +758,7 @@ $(document).ready(function () {
                     $("#withdrawals-table-data").html('');
 
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' colspan='7' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                         return;
                     }
@@ -768,22 +767,22 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                            <td class="text-xs-left text-md-left">#${data.id}</td>
-                            <td class="text-xs-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
-                            <td class="text-xs-right text-md-left" style="grid-area: status" class="shipping-status">
+                            <td class="text-center" style="grid-area: codigo">#${data.id}</td>
+                            <td class="text-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
+                            <td class="text-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
+                            <td class="text-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
+                            <td class="text-right text-sm-right" style="grid-area: status" class="shipping-status">
                                 <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
                             </td>
-                            <td class="text-xs-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong>
+                            <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong>
                         `;
 
                         if (data.debt_pending_value != null && data.debt_pending_value != 'R$ 0,00') {
-                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small></a>`;
+                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}</small></a>`;
                         }
                         tableData += `
                             </td>
-                                <td class="d-none d-md-block">
+                                <td class="d-none d-lg-block">
                                     <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
                                         <span class='o-eye-1'></span>
                                     </a>
@@ -1222,6 +1221,8 @@ $(document).ready(function () {
     $('#pagination-statement').click(function () {
         setTimeout(function () {
             $('.s-table:visible').attr('style', 'display: !')
+            $('.table tr:visible:last > td:first').addClass('teste-1')
+            $('.table tr:visible:last > td:last').addClass('teste-2')
         }, 100);
     });
 });

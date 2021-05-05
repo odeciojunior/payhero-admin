@@ -158,6 +158,23 @@ $(document).ready(function () {
         },
     });
 
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
+
+        text.fadeOut(10);
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
+        } else {
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
+        }
+    });
+
     function datePicker() {
         //DatePicker
         let startDate = moment("2018-01-01 00:00:00");
@@ -536,6 +553,10 @@ $(document).ready(function () {
 
     function pagination(response) {
         $("#pagination").html("");
+
+        if (response.meta.total <= response.meta.per_page) {
+            return;
+        }
 
         var primeira_pagina =
             "<button id='primeira_pagina' class='btn nav-btn'>1</button>";

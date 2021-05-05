@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
     @endpush
 
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row">
                 <div class="col-12">

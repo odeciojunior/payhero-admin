@@ -47,7 +47,7 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
-                $('.page-title, .title-pad').text(project.name);
+                $('.title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Afiliado em ' + project.affiliate_date);
                 if (project.visibility === 'public') {
@@ -70,6 +70,7 @@ $(() => {
                 }
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
+                $('#show-billet-release').text(project.billet_release_days + ' dias');
                 loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {
@@ -155,7 +156,7 @@ $(() => {
 
             }, success: function (response) {
                 alertCustom('success', response.message);
-                updateConfiguracoes();
+                show();
                 loadingOnScreenRemove();
             }
         });

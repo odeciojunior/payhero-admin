@@ -4,6 +4,7 @@ namespace Modules\OrderBump\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\OrderBumpRule;
 use Modules\Core\Entities\Plan;
 use Modules\OrderBump\Http\Requests\OrderBumpRequest;
@@ -42,15 +43,7 @@ class OrderBumpApiController extends Controller
 
             $data = $request->getData();
 
-            $rule = $orderBumpModel->create($data);
-
-            if (!empty($rule) && $data['active_flag']) {
-                $orderBumpModel->where('project_id', $data['project_id'])
-                    ->where('id', '!=', $rule->id)
-                    ->update([
-                        'active_flag' => false,
-                    ]);
-            }
+            $orderBumpModel->create($data);
 
             return response()->json(['message' => 'Nova regra de order bump criada com succeso!']);
         } catch (\Exception $e) {
@@ -67,18 +60,21 @@ class OrderBumpApiController extends Controller
             $id = current(Hashids::decode($id));
             $rule = $orderBumpModel->find($id);
 
+            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+
             if ($rule->apply_on_plans[0] === 'all') {
                 $rule->apply_on_plans = collect()->push((object)[
                     'id' => 'all',
                     'name' => 'Qualquer plano',
-                    'description' => null,
+                    'description' => '',
+                    'variants' => 0,
                 ]);
             } else {
-                $rule->apply_on_plans = $plansModel->select('id', 'name', 'description')
+                $rule->apply_on_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
                     ->whereIn('id', $rule->apply_on_plans)
                     ->get();
             }
-            $rule->offer_plans = $plansModel->select('id', 'name', 'description')
+            $rule->offer_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
                 ->whereIn('id', $rule->offer_plans)
                 ->get();
 
@@ -96,16 +92,8 @@ class OrderBumpApiController extends Controller
             $data = $request->getData();
             $id = current(Hashids::decode($id));
 
-            $rule = $orderBumpModel->find($id)
+            $orderBumpModel->find($id)
                 ->update($data);
-
-            if (!empty($rule) && $data['active_flag']) {
-                $orderBumpModel->where('project_id', $data['project_id'])
-                    ->where('id', '!=', $id)
-                    ->update([
-                        'active_flag' => false,
-                    ]);
-            }
 
             return response()->json(['message' => 'Regra order bump atualizada com succeso!']);
         } catch (\Exception $e) {

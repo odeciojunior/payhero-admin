@@ -47,7 +47,7 @@
     @endpush
 
     <!-- Page -->
-        <div class="page">
+        <div class="page mb-0">
             <div style="display: none" class="page-header container">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
@@ -105,8 +105,8 @@
                                     <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
-                            <div class="row collapse" id="bt_collapse">
-                                <div class="d-flex flex-wrap">
+                            <div class="collapse" id="bt_collapse">
+                                <div class="row">
                                     <div class="col-sm-12 col-md">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
@@ -164,19 +164,19 @@
                                 </div>
                             </div>
                             <div class="row" style="height: 30px">
-                                <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                     <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                          data-toggle="collapse"
                                          data-target="#bt_collapse"
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
-                                        <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                        <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                         <span id="text-filtro">Filtros avançados</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-xl-3 text-right mt-20">
+                                <div class="col-6 col-xl-3 mt-20">
                                     <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                        <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                         Aplicar filtros
                                     </div>
                                 </div>
@@ -250,7 +250,7 @@
                             </div>
 
                         </div>
-                @endif
+                    @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
                     <div class="col-lg-12 p-0 pb-10">
@@ -277,9 +277,11 @@
                             </div>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                        {{-- js carrega... --}}
-                    </ul>
+                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-20">
+                        <ul id="pagination-sales" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                            {{-- js carrega... --}}
+                        </ul>
+                    </div>
                 <!-- Modal detalhes da venda-->
                     @include('sales::details')
                 <!-- End Modal -->

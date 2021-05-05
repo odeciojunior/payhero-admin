@@ -77,7 +77,7 @@
             <div class="card-show-content-finances" style="display:none">
                 {{-- TABS --}}
                 <div id="tabs-view">
-                    <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-content" id="nav-tabContent" style="min-height: 300px">
                         {{-- TRANSFERENCIAS --}}
                         <div class="tab-pane active"
                              id="nav-transfers"
@@ -176,7 +176,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='container col-sm-12 mt-20 d-none d-md-block'>
+                                    <div class='container col-sm-12 mt-20 d-none d-lg-block'>
                                         <div class='row'>
                                             <div class="col-sm-3 card">
                                                 <div class="card-body">
@@ -221,8 +221,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content" id="nav-tabContent">
-                                <div class='container col-sm-12 mt-20  d-md-none'>
+                            <div class="tab-content card shadow hidden-lg-up" id="nav-tabContent">
+                                <div class='container col-sm-12 mt-20  d-lg-none'>
                                     <div class='row'>
                                         <div class="col-12 col-sm-6 pl-0 pl-xs-0">
                                             <div class="card card-body mb-10">
@@ -262,11 +262,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
-                                    Histórico de transferências
-                                </h4>
+                                </div>                                
+                            </div>
+                            <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
+                                Histórico de transferências
+                            </h4>
+                            <div class="card shadow" style="min-height: 300px">
 
                                 <!-- Transferências -->
                                 <div class="tab-pane active"
@@ -274,8 +275,7 @@
                                      role="tabpanel"
                                      aria-labelledby="nav-home-tab">
                                     <table id='withdrawalsTable'
-                                           class="table table-striped table-condensed unify"
-                                           style="margin-bottom: 3.143rem !important">
+                                           class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
                                             <th scope="col">Código Saque</th>
@@ -293,11 +293,12 @@
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
                                 </div>
+                            </div>
+                            <div class="row justify-content-center justify-content-md-end pr-md-15">
+                                <ul id="pagination-withdrawals" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                                    {{--js carrega...--}}
+                                </ul>
                             </div>
                         </div>
                         {{--EXTRATO--}}
@@ -401,53 +402,45 @@
                                                                class="select-pad" placeholder="Transação">
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_3">
-                                                    <div class="input-holder form-group">
-                                                        <label for="statement_status_select">Status</label>
-                                                        <select class="form-control select-pad" name="status"
-                                                                id="statement_status_select">
-                                                            <option value="ALL">Todos</option>
-                                                            <option value="WAITING_FOR_VALID_POST">
-                                                                Aguardando postagem válida
-                                                            </option>
-                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação
-                                                            </option>
-                                                            <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
-                                                            <option value="WAITING_RELEASE">Aguardando liberação
-                                                            </option>
-                                                            <option value="PAID">Liquidado</option>
-                                                            <option value="REVERSED">Estornado</option>
-                                                            <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                            <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
-                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
-                                                        </select>
+                                            </div>
+                                            <div class="collapse" id="bt_collapse">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="input-holder form-group">
+                                                            <label for="statement_status_select">Status</label>
+                                                            <select class="form-control select-pad" name="status"
+                                                                    id="statement_status_select">
+                                                                <option value="ALL">Todos</option>
+                                                                <option value="WAITING_FOR_VALID_POST">
+                                                                    Aguardando postagem válida
+                                                                </option>
+                                                                <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                                </option>
+                                                                <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
+                                                                <option value="WAITING_RELEASE">Aguardando liberação
+                                                                </option>
+                                                                <option value="PAID">Liquidado</option>
+                                                                <option value="REVERSED">Estornado</option>
+                                                                <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
+                                                                <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                                <option value="PENDING_DEBIT">Débitos pendentes</option>
+                                                            </select>
+                                                        </div>
+                                                        <input name="withdrawal_id" id="withdrawal_id" type="hidden"
+                                                            class="select-pad" placeholder="Id do Saque">
                                                     </div>
-                                                    <input name="withdrawal_id" id="withdrawal_id" type="hidden"
-                                                           class="select-pad" placeholder="Id do Saque">
-                                                </div>
-
-                                                <div class="mt-30 col-md-4 d-none d-md-block">
-                                                    <button id="bt_filtro_statement"
-                                                            class="btn btn-primary w-p90"
-                                                            style="height: 40px;width: 75%;">
-                                                        <img style="height: 12px; margin-right: 4px"
-                                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                        Filtros
-                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="row d-md-none">
+                                            <div class="row">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
                                                         <div class="col-6 pr-0">
                                                             <div
                                                                 class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                 data-toggle="collapse"
-                                                                data-target=".bt-collapse"
+                                                                data-target="#bt_collapse"
                                                                 aria-expanded="false"
-                                                                aria-controls="bt_collapse_1 bt_collapse_2 bt_collapse_3">
+                                                                aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
                                                                      src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                                                 <span id="text-filtro">Filtros avançados</span>
@@ -459,7 +452,7 @@
                                                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                                 <img style="height: 12px; margin-right: 4px"
                                                                      src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                                Filtros
+                                                                filtros
                                                             </button>
                                                         </div>
                                                     </div>
@@ -491,30 +484,31 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <table id="statementTable"
-                                   class="table table-condensed unify table-striped"
-                                   style="margin-bottom: 3.143rem !important;">
-                                <thead>
-                                <tr>
-                                    <th scope="col" class="headCenter">Razão</th>
-                                    <th scope="col" class="headCenter">Data prevista
-                                        <i style="font-weight: normal"
-                                           class="o-question-help-1 ml-5 font-size-14"
-                                           data-toggle="tooltip"
-                                           title=""
-                                           data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                    </th>
-                                    <th scope="col" class="headCenter">Status</th>
-                                    <th scope="col" class="headCenter">Valor</th>
-                                </tr>
-                                </thead>
-                                <tbody id="table-statement-body"
-                                       class="custom-t-body table-statement-body-class">
-                                </tbody>
-                            </table>
-                            <div id="pagination-statement"
-                                 class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
-                                 style="margin-top: 10px;margin-bottom:100px; position:relative;">
+                            <div class="card shadow" style="min-height: 300px;">
+                                <table id="statementTable"
+                                    class="table table-condensed unify table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="headCenter">Razão</th>
+                                        <th scope="col" class="headCenter">Data prevista
+                                            <i style="font-weight: normal"
+                                            class="o-question-help-1 ml-5 font-size-14"
+                                            data-toggle="tooltip"
+                                            title=""
+                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
+                                        </th>
+                                        <th scope="col" class="headCenter">Status</th>
+                                        <th scope="col" class="headCenter">Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table-statement-body"
+                                        class="custom-t-body table-statement-body-class">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row justify-content-center justify-content-md-end pr-md-15">
+                                <ul id="pagination-statement" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10"></ul>
                             </div>
                         </div>
 

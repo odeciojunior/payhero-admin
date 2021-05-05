@@ -699,22 +699,32 @@ $(() => {
             alertCustom('error', 'Selecione as dimensões da imagem de capa');
             return false;
         }
+        
         event.preventDefault();
         loadingOnScreen();
+
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
+
         $('#terms_affiliates').val(termsaffiliates.getData());
+
         let verify = verificaParcelas(parcelas, parcelasJuros);
         let statusUrlAffiliates = 0;
+        
         if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
         }
+
         let formData = new FormData(document.getElementById("update-project"));
+        
         formData.append('status_url_affiliates', statusUrlAffiliates);
+        
         let discountCard = $('#credit_card_discount').val().replace('%', '');
         let discountBillet = $('#billet_discount').val().replace('%', '');
+        
         discountBillet = (discountBillet == '') ? 0 : discountBillet;
         discountCard = (discountCard == '') ? 0 : discountCard;
+        
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
@@ -746,7 +756,7 @@ $(() => {
 
                     $("#image-logo-email").imgAreaSelect({remove: true});
                     $("#previewimage").imgAreaSelect({remove: true});
-                    updateConfiguracoes();
+                    show();
                     loadingOnScreenRemove();
 
 
@@ -1152,27 +1162,25 @@ $(() => {
         }
     })
 
-    // $('#slick-tabs').change(() => {
-    $('#slick-tabs').slick({
-        infinite: false,
-        speed: 300,
-        slidesToShow: 7,
-        slidesToScroll: 1,
-        variableWidth: true,
-        nextArrow: false,
-        prevArrow: false,
+    
+        $('#slick-tabs').slick({
+            infinite: false,
+            speed: 300,
+            slidesToShow: 7,
+            variableWidth: true,
+            nextArrow: false,
+            prevArrow: false,
 
-        responsive: [
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                }
-            },
-        ]
-    });
-    // })
+            responsive: [
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+            ]
+        });
 
     let firstCategory = [
         "tab-domains",

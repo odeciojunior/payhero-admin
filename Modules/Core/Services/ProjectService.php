@@ -2,26 +2,20 @@
 
 namespace Modules\Core\Services;
 
+use DB;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Laracasts\Presenter\Exceptions\PresenterException;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\ProjectUpsellConfig;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\ShopifyService;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Affiliate;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
-use DB;
 
 /**
  * Class ProjectService
@@ -136,11 +130,10 @@ class ProjectService
     public function hasSales($projectId)
     {
         try {
-
             return $this->getProjectModel()
-                        ->has('sales')
-                        ->where('id', $projectId)
-                        ->count();
+                ->has('sales')
+                ->where('id', $projectId)
+                ->count();
         } catch (Exception $e) {
             Log::warning('ProjectService - Erro ao remover projeto');
             report($e);
@@ -160,26 +153,27 @@ class ProjectService
             $projectModel = new Project();
 
             $project = $this->getProjectModel()
-                            ->with([
-                                       'domains',
-                                       'shopifyIntegrations',
-                                       'plans',
-                                       'plans.productsPlans',
-                                       'plans.productsPlans.product',
-                                       'pixels',
-                                       'discountCoupons',
-                                       'shippings',
-                                       'usersProjects',
-                                       'notifications',
-                                       'affiliateRequests',
-                                       'affiliates',
-                                       'affiliates.affiliateLinks',
-                                       'upsellConfig',
-                                   ])
-                            ->where('id', $projectId)->first();
+                ->with(
+                    [
+                        'domains',
+                        'shopifyIntegrations',
+                        'plans',
+                        'plans.productsPlans',
+                        'plans.productsPlans.product',
+                        'pixels',
+                        'discountCoupons',
+                        'shippings',
+                        'usersProjects',
+                        'notifications',
+                        'affiliateRequests',
+                        'affiliates',
+                        'affiliates.affiliateLinks',
+                        'upsellConfig',
+                    ]
+                )
+                ->where('id', $projectId)->first();
 
             if ($project) {
-
                 if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
                     foreach ($project->pixels as $pixel) {
                         $pixel->delete();
@@ -199,28 +193,35 @@ class ProjectService
                 }
 
                 foreach ($project->domains as $domain) {
-
                     $this->getCloudFlareService()->deleteZoneById($domain->cloudflare_domain_id);
                     //zona deletada
                     $this->getSendgridService()->deleteLinkBrand($domain->name);
                     $this->getSendgridService()->deleteZone($domain->name);
 
                     $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                    $domainDeleted  = $domain->delete();
+                    $domainDeleted = $domain->delete();
 
                     if (!empty($project->shopify_id)) {
                         //se for shopify, voltar as integraçoes ao html padrao
                         try {
-
                             foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                                $shopify = $this->getShopifyService(
+                                    $shopifyIntegration->url_store,
+                                    $shopifyIntegration->token
+                                );
 
                                 $shopify->setThemeByRole('main');
                                 if (!empty($shopifyIntegration->theme_html)) {
-                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                    $shopify->setTemplateHtml(
+                                        $shopifyIntegration->theme_file,
+                                        $shopifyIntegration->theme_html
+                                    );
                                 }
                                 if (!empty($shopifyIntegration->layout_theme_html)) {
-                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                    $shopify->setTemplateHtml(
+                                        'layout/theme.liquid',
+                                        $shopifyIntegration->layout_theme_html
+                                    );
                                 }
                             }
                         } catch (Exception $e) {
@@ -231,7 +232,7 @@ class ProjectService
 
                 //remover integração do shopify
                 $shopifyIntegration = $this->getShopifyIntegration()
-                                           ->where('project_id', $project->id)->first();
+                    ->where('project_id', $project->id)->first();
 
                 if (!empty($shopifyIntegration)) {
                     $shopifyIntegration->delete();
@@ -240,19 +241,23 @@ class ProjectService
                 $products = Product::where('project_id', $project->id)->get();
 
                 foreach ($products as $product) {
-                    $product->update([
-                                         'shopify_variant_id' => '',
-                                         'shopify_id'         => '',
-                                     ]);
+                    $product->update(
+                        [
+                            'shopify_variant_id' => '',
+                            'shopify_id' => '',
+                        ]
+                    );
                 }
 
                 $plans = Plan::where('project_id', $project->id)->get();
 
                 foreach ($plans as $plan) {
-                    $plan->update([
-                                      'shopify_variant_id' => '',
-                                      'shopify_id'         => '',
-                                  ]);
+                    $plan->update(
+                        [
+                            'shopify_variant_id' => '',
+                            'shopify_id' => '',
+                        ]
+                    );
                 }
 
                 if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
@@ -283,10 +288,12 @@ class ProjectService
                     $upsellConfig->delete();
                 }
 
-                $projectUpdated = $project->update([
-                                                       'name'   => $project->name . ' (Excluído)',
-                                                       'status' => $projectModel->present()->getStatus('disabled'),
-                                                   ]);
+                $projectUpdated = $project->update(
+                    [
+                        'name' => $project->name . ' (Excluído)',
+                        'status' => $projectModel->present()->getStatus('disabled'),
+                    ]
+                );
 
                 if ($projectUpdated) {
                     return true;
@@ -300,7 +307,11 @@ class ProjectService
                 return false;
             }
         } catch (Exception $e) {
-            throw new ServiceException('ProjectService - Erro ao remover projeto - ' . $e->getMessage(), $e->getCode(), $e);
+            throw new ServiceException(
+                'ProjectService - Erro ao remover projeto - ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
     }
 
@@ -315,42 +326,53 @@ class ProjectService
         $userId = auth()->user()->account_owner_id;
 
         if ($affiliate) {
-            $projects = Project::leftJoin('users_projects', function($join) use($userId) {
-                                    $join->on('projects.id', '=', 'users_projects.project_id')
-                                        ->where('users_projects.user_id', $userId)
-                                        ->whereNull('users_projects.deleted_at');
-                                })
-                                ->leftJoin('affiliates', function($join) use($userId) {
-                                    $join->on('projects.id', '=', 'affiliates.project_id')
-                                        ->where('affiliates.user_id', $userId)
-                                        ->whereNull('affiliates.deleted_at');
-                                })
-                               ->select('projects.*', 'affiliates.created_at as affiliate_created_at', 'affiliates.percentage as affiliate_percentage',
-                                    'affiliates.status_enum as affiliate_status',
-                                    DB::raw('CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id'),
-                                    DB::raw('CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p'))
-                               ->whereIn('projects.status', $status)
-                               ->where('users_projects.user_id', $userId)
-                               ->orWhere('affiliates.user_id', $userId)
-                               ->orderBy('projects.status')
-                               ->orderBy('order_p')
-                               ->orderBy('projects.id', 'DESC');
-
+            $projects = Project::leftJoin(
+                'users_projects',
+                function ($join) use ($userId) {
+                    $join->on('projects.id', '=', 'users_projects.project_id')
+                        ->where('users_projects.user_id', $userId)
+                        ->whereNull('users_projects.deleted_at');
+                }
+            )
+                ->leftJoin(
+                    'affiliates',
+                    function ($join) use ($userId) {
+                        $join->on('projects.id', '=', 'affiliates.project_id')
+                            ->where('affiliates.user_id', $userId)
+                            ->whereNull('affiliates.deleted_at');
+                    }
+                )
+                ->select(
+                    'projects.*',
+                    'affiliates.created_at as affiliate_created_at',
+                    'affiliates.percentage as affiliate_percentage',
+                    'affiliates.status_enum as affiliate_status',
+                    DB::raw('CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id'),
+                    DB::raw(
+                        'CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p'
+                    )
+                )
+                ->whereIn('projects.status', $status)
+                ->where('users_projects.user_id', $userId)
+                ->orWhere('affiliates.user_id', $userId)
+                ->orderBy('projects.status')
+                ->orderBy('order_p')
+                ->orderBy('projects.id', 'DESC');
         } else {
-            $projects = Project::leftJoin('users_projects','projects.id', '=', 'users_projects.project_id')
-                               ->select('projects.*', 'users_projects.order_priority as order_p')
-                               ->whereIn('projects.status', $status)
-                               ->where('users_projects.user_id', $userId)
-                               ->whereNull('users_projects.deleted_at')
-                               ->orderBy('projects.status')
-                               ->orderBy('order_p')
-                               ->orderBy('projects.id', 'DESC');
+            $projects = Project::leftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
+                ->select('projects.*', 'users_projects.order_priority as order_p')
+                ->whereIn('projects.status', $status)
+                ->where('users_projects.user_id', $userId)
+                ->whereNull('users_projects.deleted_at')
+                ->orderBy('projects.status')
+                ->orderBy('order_p')
+                ->orderBy('projects.id', 'DESC');
         }
 
         if ($pagination) {
             return ProjectsSelectResource::collection($projects->get());
         } else {
-            return ProjectsResource::collection($projects->get());
+            return ProjectsResource::collection($projects->with('domains')->get());
         }
     }
 
@@ -359,14 +381,16 @@ class ProjectService
         try {
             $projectUpsellConfigModel = new ProjectUpsellConfig();
 
-            $projectUpsellConfigModel->create([
-                                                  'project_id'     => $projectId,
-                                                  'header'         => '(Mensagem do cabeçalho) Ex: Você não pode perder essa promoção...',
-                                                  'title'          => '(Título principal) Ex: Ganhe 30% de desconto...',
-                                                  'description'    => '(Descrição) Ex: Como você comprou esse produto, nós achamos que você poderia se interessar por...',
-                                                  'countdown_time' => null,
-                                                  'countdown_flag' => 0,
-                                              ]);
+            $projectUpsellConfigModel->create(
+                [
+                    'project_id' => $projectId,
+                    'header' => '(Mensagem do cabeçalho) Ex: Você não pode perder essa promoção...',
+                    'title' => '(Título principal) Ex: Ganhe 30% de desconto...',
+                    'description' => '(Descrição) Ex: Como você comprou esse produto, nós achamos que você poderia se interessar por...',
+                    'countdown_time' => null,
+                    'countdown_flag' => 0,
+                ]
+            );
         } catch (Exception $e) {
             return $e->getMessage();
         }

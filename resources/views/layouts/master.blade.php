@@ -139,58 +139,27 @@
 @if(env('APP_ENV', 'production') == 'production')
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
-
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3ff6c393-3915-4554-a046-cc8eae241938"> </script>
+
+    <style>
+        .margin-chat-pagination {
+            display:block !important; height:100px  !important;
+        }
+    </style>
 
     <script>
 
         @if(\Auth::user())
-
-            window.zESettings = {
-            webWidget: {
-                authenticate: {
-                    chat: {
-                        jwtFn: function(callback) {
-                            fetch('/generate-zend-jwt').then(function(res) {
-                                res.text().then(function(jwt) {
-                                    console.log("check for execution")
-                                    let jwtreplace = jwt.replace('"','', jwt)
-                                    jwtreplace = jwtreplace.replace('"','', jwtreplace)
-                                    callback(jwtreplace);
-                                });
-                            });
-                        }
-                    }
-                }
-            }
-        };
+            (function(m,a,i,s,_i,_m){
+                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
+                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
+                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
+            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
         @endif
     </script>
 
 @endif
 
 </body>
-
 </html>
-
-
-    <!-- chat huggy abandonado -->
-    {{-- <script>
-        var $_PowerZAP = {
-            defaultCountry: '+55',
-            widget_id: '15840',
-            company: "19537"
-        }; (function(i,s,o,g,r,a,m){
-            i[r]={
-                context:{
-                    id:'74ec354f8be1e7eb7f15b56a6e23fd69'
-                }
-            };
-            a=o;o=s.createElement(o);
-            o.async=1;o.src=g;m=s.getElementsByTagName(a)[0];
-            m.parentNode.insertBefore(o,m);
-        })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
-    </script> --}}
-    <!-- End code pzw.io  -->
