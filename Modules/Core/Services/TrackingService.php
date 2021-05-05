@@ -265,7 +265,7 @@ class TrackingService
                 ->first();
 
             //atualiza e faz outras verificações caso já exista
-            if (!empty($tracking)) {
+            if (empty($tracking)) {
                 $oldTracking = (object)$tracking->getAttributes();
 
                 //atualiza
@@ -283,7 +283,7 @@ class TrackingService
                     }
                 }
             } else { //senão cria o tracking
-                $tracking = Tracking::create($commonAttributes + $newAttributes);
+                $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
             }
 
             if (!empty($tracking)) {
