@@ -24,6 +24,14 @@ class TransfersResource extends JsonResource
 
         $codeAnticipation = null;
 
+        if (!empty($this->anticipation_id)) {
+            $anticipation = $this->anticipation->first();
+            $codeAnticipation = hashids_encode($anticipation->id, 'anticipation_id');
+        } elseif (!empty($this->transaction_id) && !empty($this->transaction->anticipatedTransactions()->first())) {
+            $anticipatedTransaction = $this->transaction->anticipatedTransactions()->first();
+            $codeAnticipation = hashids_encode($anticipatedTransaction->anticipation_id, 'anticipation_id');
+        }
+
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
         } elseif (!empty($this->transaction) && $this->reason == 'chargedback') {
