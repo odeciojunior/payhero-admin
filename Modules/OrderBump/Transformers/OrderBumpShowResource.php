@@ -19,14 +19,14 @@ class OrderBumpShowResource extends JsonResource
                     return [
                         'id' => $plan->id === 'all' ? 'all' : Hashids::encode($plan->id),
                         'name' => $plan->name,
-                        'description' => $plan->description,
+                        'description' => '',
                     ];
                 }),
             'offer_plans' => $this->getAttributes()['offer_plans']->map(function ($plan) {
                 return [
                     'id' => Hashids::encode($plan->id),
                     'name' => $plan->name,
-                    'description' => $plan->description,
+                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
                 ];
             }),
         ];
