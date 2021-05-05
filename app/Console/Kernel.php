@@ -115,6 +115,9 @@ class Kernel extends ConsoleKernel
         /** Achievements */
         $schedule->command('achievements:update')->dailyAt('09:00');
         $schedule->command('achievements:update')->dailyAt('21:00');
+
+        /** Pix Expired */
+        $schedule->command('change:pixpendingtocanceled')->everyMinute();
     }
 
     /**
