@@ -265,7 +265,7 @@ class TrackingService
                 ->first();
 
             //atualiza e faz outras verificações caso já exista
-            if (empty($tracking)) {
+            if (!empty($tracking)) {
                 $oldTracking = (object)$tracking->getAttributes();
 
                 //atualiza
