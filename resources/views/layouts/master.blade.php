@@ -61,8 +61,8 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=14') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=121') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=90') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')
@@ -140,6 +140,13 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
+
+
+    <style>
+        .margin-chat-pagination {
+            display:block !important; height:100px  !important;
+        }
+    </style>
 
     <script>
 
