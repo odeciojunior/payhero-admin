@@ -166,13 +166,10 @@
                     <div class='col-12 col-lg-12'>
                         
                         <div class="card card-shadow bg-white card-left orange">
-                            
                             <div class='card-header bg-white text-center py-25 d-flex justify-content-center align-items-center'
-                            style="max-height: 230px">
-                                
-                                <img src="{!! asset('modules/global/img/suporte.svg') !!}">
+                            style="height: 230px">Nenhum chamado encontrado
                             </div>
-                            <div class="card-body pb-20 pt-0 bg-white font-size-20 text-center d-flex justify-content-center align-items-center gray">Nenhum chamado encontrado</div>
+                            
                         </div>
                     </div>
                 </div>
