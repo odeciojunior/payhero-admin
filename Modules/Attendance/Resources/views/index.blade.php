@@ -47,17 +47,16 @@
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>Cliente</label>
-                                        <input id='customer-filter' class='form-control' type='text'
-                                               placeholder='Nome do cliente'>
+                                        <input id='customer-filter' class='form-control' type='text' placeholder='Nome do cliente'>
                                     </div>
                                 </div>
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
                                         <label>CPF do Cliente</label>
-                                        <input id='cpf-filter' class='form-control' type='text'
-                                               placeholder='CPF do cliente'>
+                                        <input id='cpf-filter' class='form-control' type='text' placeholder='CPF do cliente'>
                                     </div>
                                 </div>
+                            </div>
                             <div class="collapse" id="bt_collapse">
                                 <div class="row">
                                     <div class='col-12 col-md-3 col-lg-3'>
@@ -165,11 +164,15 @@
                 </div>
                 <div id='div-ticket-empty' class='row' style='display:none;'>
                     <div class='col-12 col-lg-12'>
+                        
                         <div class="card card-shadow bg-white card-left orange">
-                            <div
-                                class='card-header bg-white font-size-16 text-center py-20 d-flex justify-content-center align-items-center'
-                                style="height: 135.35px">Nenhum chamado encontrado
+                            
+                            <div class='card-header bg-white text-center py-25 d-flex justify-content-center align-items-center'
+                            style="max-height: 230px">
+                                
+                                <img src="{!! asset('modules/global/img/suporte.svg') !!}">
                             </div>
+                            <div class="card-body pb-20 pt-0 bg-white font-size-20 text-center d-flex justify-content-center align-items-center gray">Nenhum chamado encontrado</div>
                         </div>
                     </div>
                 </div>
