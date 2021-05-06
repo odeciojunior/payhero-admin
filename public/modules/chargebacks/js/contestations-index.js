@@ -46,6 +46,18 @@ $(document).ready(function () {
         getTotalValues();
     });
 
+    $('#transaction').on('change paste keyup select', function () {
+        let val = $(this).val();
+
+        if (val === '') {
+            $('#date_type').attr('disabled', false).removeClass('disableFields');
+            $('#date_range').attr('disabled', false).removeClass('disableFields');
+        } else {
+            $('#date_type').attr('disabled', true).addClass('disableFields');
+            $('#date_range').attr('disabled', true).addClass('disableFields');
+        }
+    });
+
     //Search project
     $('#project').select2({
         placeholder: 'Nome do projeto',

@@ -247,6 +247,11 @@ input, .input-pad {
     line-height: 1.57142857;
 }
 
+.disableFields {
+    background-color: #f3f7f9;
+    opacity: 1;
+}
+
 .form-sub {
     margin-top: 0;
     margin-bottom: 15px;

@@ -208,7 +208,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="date_updated">Data de aprovação venda</label>
-                            <input name='date_updated' id="date_updated" class="select-pad"
+                            <input name='date_updated' id="date_updated" class="input-pad"
                                    placeholder="Clique para editar..." readonly>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">

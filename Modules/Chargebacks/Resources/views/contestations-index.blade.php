@@ -106,7 +106,7 @@
 
                             <div class="col-sm-12 col-md">
                                 <label for="date_type">&nbsp;</label>
-                                <input name='date_range' id="date_range" class="select-pad"
+                                <input name='date_range' id="date_range" class="input-pad"
                                        placeholder="Clique para editar..." readonly style="">
                             </div>
 

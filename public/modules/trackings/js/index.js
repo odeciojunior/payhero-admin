@@ -6,6 +6,16 @@ $(() => {
         $(this).attr('src', 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png')
     });
 
+    $('#sale').on('change paste keyup select', function () {
+        let val = $(this).val();
+
+        if (val === '') {
+            $('#date_updated').attr('disabled', false).removeClass('disableFields');
+        } else {
+            $('#date_updated').attr('disabled', true).addClass('disableFields');
+        }
+    });
+
     $(document).on('click', '.copy', function () {
         let temp = $("<input>");
         $("body").append(temp);
