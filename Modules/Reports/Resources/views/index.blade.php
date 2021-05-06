@@ -31,8 +31,8 @@
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="row align-items-center form-icons">
-                            <i style="right: 65px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" style="width: 85%" value="" readonly>
+                            <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
                         </div>
                     </div>
                 </div>
