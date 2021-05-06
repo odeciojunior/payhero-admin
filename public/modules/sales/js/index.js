@@ -436,7 +436,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${
                                         value.end_date
                                     }</td>
-                                    <td style='white-space: nowrap;' class="text-center text-sm-right">
+                                    <td style='white-space: nowrap;' class="text-center text-md-right">
                                         ${
                                             cashback
                                                 ? cashback
