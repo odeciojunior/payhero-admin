@@ -69,8 +69,9 @@
                                             </select>
                                         </div>
                                         <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
-                                        <div class="col-sm-6 col-md-3">
+                                        <div class="col-sm-6 col-md-3 form-icons">
                                             <label for="date_range">‏‏‎ ‎</label>
+                                            <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-18"></i>
                                             <input name='date_range' id="date_range" class="select-pad"
                                             placeholder="Clique para editar..." readonly>
                                         </div>
