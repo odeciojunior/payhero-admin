@@ -207,8 +207,9 @@
                                     <option value="blocked">Não transferido por falta de rastreio</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 col-md-4">
+                            <div class="col-sm-6 col-md-4 form-icons">
                                 <label for="date_updated">Data de aprovação venda</label>
+                                <i style="right: 30px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
                                 <input name='date_updated' id="date_updated" class="select-pad"
                                     placeholder="Clique para editar..." readonly>
                             </div>
