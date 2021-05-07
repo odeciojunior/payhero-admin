@@ -222,21 +222,6 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                <label for="status_commission">Status da comissão</label>
-                                <select name='status_commission' id="status_commission" class="form-control select-pad">
-                                    <option value="">Todos</option>
-                                    <option value="transfered">Transferido</option>
-                                    <option value="pending">Pendente</option>
-                                    <option value="blocked">Não transferido por falta de rastreio</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                <label for="date_updated">Data de aprovação venda</label>
-                                <input name='date_updated' id="date_updated" class="input-pad"
-                                       placeholder="Clique para editar..." readonly>
-                            </div>
                         </div>
                     </div>
                     <div class="row" style="height: 30px">
