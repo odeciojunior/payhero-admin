@@ -103,9 +103,9 @@
                                 </div>
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group form-icons">
-                                        <label for="date_range" >Data</label>
+                                        <label for="date_range">&nbsp;</label>
                                         <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                        <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly >
+                                        <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly >
                                     </div>
                                 </div>
                             </div>

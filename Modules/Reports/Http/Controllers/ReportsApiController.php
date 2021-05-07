@@ -276,6 +276,7 @@ class ReportsApiController extends Controller
             $affiliateModel = new Affiliate();
 
             $dataSearch = $request->all();
+
             $projectId = current(Hashids::decode($request->input('project')));
 
             $requestStartDate = $request->input('startDate');

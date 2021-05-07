@@ -321,6 +321,10 @@ strong span {
     margin-left: 15px;
 }
 
+#nav-home-tab {
+    margin-left: 0px !important;
+}
+
 .nav-tabs .nav-link {
     margin: 0 5px;
 }
