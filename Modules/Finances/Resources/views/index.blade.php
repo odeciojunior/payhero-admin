@@ -442,14 +442,14 @@
                                                                 aria-expanded="false"
                                                                 aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
-                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                                                     src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
                                                                 <span id="text-filtro">Filtros avançados</span>
                                                             </div>
                                                         </div>
 
                                                         <div class="col-6 col-xl-3">
                                                             <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                                <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" http://dev.admin.net/modules/global/img/svg/check-all.svg ">
+                                                                <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
                                                                 Aplicar filtros
                                                             </div>
                                                         </div>
