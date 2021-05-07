@@ -262,7 +262,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
                                 Histórico de transferências
@@ -446,7 +446,7 @@
                                                         </div>
 
                                                         <div class="col-6 col-xl-3 mt-20">
-                                                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                            <div id="bt_filtro_statement" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                                                 <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
                                                                 Aplicar filtros
                                                             </div>
