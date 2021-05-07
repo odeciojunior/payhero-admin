@@ -442,7 +442,7 @@
                                                                 aria-expanded="false"
                                                                 aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
-                                                                     src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                                                 <span id="text-filtro">Filtros avançados</span>
                                                             </div>
                                                         </div>
