@@ -196,6 +196,7 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="collapse" id="bt_collapse">
                         <div class="row pt-15">
                             <div class="col-sm-6 col-md-4">
@@ -209,9 +210,10 @@
                             </div>
                             <div class="col-sm-6 col-md-4 form-icons">
                                 <label for="date_updated">Data de aprovação venda</label>
-                                <i style="right: 30px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
+                                <i style="right: 30px;"
+                                   class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
                                 <input name='date_updated' id="date_updated" class="select-pad"
-                                    placeholder="Clique para editar..." readonly>
+                                       placeholder="Clique para editar..." readonly>
                             </div>
                             <div class="col-sm-6 col-md-4 d-flex flex-column justify-content-center">
                                 <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
@@ -219,6 +221,21 @@
                                     <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
                                     <span class="slider round"></span>
                                 </label>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="status_commission">Status da comissão</label>
+                                <select name='status_commission' id="status_commission" class="form-control select-pad">
+                                    <option value="">Todos</option>
+                                    <option value="transfered">Transferido</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="blocked">Não transferido por falta de rastreio</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="date_updated">Data de aprovação venda</label>
+                                <input name='date_updated' id="date_updated" class="input-pad"
+                                       placeholder="Clique para editar..." readonly>
                             </div>
                         </div>
                     </div>
