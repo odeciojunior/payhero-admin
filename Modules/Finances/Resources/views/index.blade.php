@@ -375,8 +375,7 @@
                                                                placeholder="Clique para editar..." readonly>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_1">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="payment_method">Forma de pagamento</label>
                                                         <select name='payment_method' id="payment_method"
@@ -388,8 +387,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_2">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="statement_sale">
                                                             Transação <i style="font-weight: normal"
@@ -449,7 +447,7 @@
 
                                                         <div class="col-6 col-xl-3 mt-20">
                                                             <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                                <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
                                                                 Aplicar filtros
                                                             </div>
                                                         </div>
