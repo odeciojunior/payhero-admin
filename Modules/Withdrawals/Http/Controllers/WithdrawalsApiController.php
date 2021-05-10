@@ -3,7 +3,6 @@
 namespace Modules\Withdrawals\Http\Controllers;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -152,7 +151,8 @@ class WithdrawalsApiController
 
             $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
-            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company, $withdrawalValueRequested));
+            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,
+                $withdrawalValueRequested));
 
         } catch (Exception $e) {
             report($e);
@@ -167,7 +167,7 @@ class WithdrawalsApiController
 
             return response()->json([
                 'allowed' => auth()->user()->status != $userModel->present()
-                ->getStatus('withdrawal blocked'),
+                        ->getStatus('withdrawal blocked'),
             ]);
         } catch (Exception $e) {
             report($e);
@@ -288,7 +288,7 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-
+            
 
             $return = [
                 'id' => $id,
