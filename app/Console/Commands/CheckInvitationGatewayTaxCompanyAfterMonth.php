@@ -2,15 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
 
 /**
  * Class checkInvitationGatewayTaxCompanyAfterMonth
  * @package App\Console\Commands
  */
-class checkInvitationGatewayTaxCompanyAfterMonth extends Command
+class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
 {
     /**
      * The name and signature of the console command.
