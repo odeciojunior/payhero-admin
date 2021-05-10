@@ -4,16 +4,13 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Str;
-use Laracasts\Presenter\Exceptions\PresenterException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\RegeneratedBillet;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\UserProject;
 use SendGrid;
 use SendGrid\Mail\Mail;
 use Vinkla\Hashids\Facades\Hashids;
@@ -29,87 +26,73 @@ class CheckoutService
      */
     private $internalApiToken;
 
-    /**
-     * @param string|null $projectId
-     * @param string|null $dateStart
-     * @param string|null $dateEnd
-     * @param string|null $client
-     * @param string|null $customerDocument
-     * @param string|null $plan
-     * @return mixed
-     * @throws PresenterException
-     */
-    public function getAbandonedCart(
-        string $projectId = null,
-        string $dateStart = null,
-        string $dateEnd = null,
-        string $client = null,
-        string $customerDocument = null,
-        string $plan = null
-    )
+    public function getAbandonedCart(): LengthAwarePaginator
     {
-        $checkoutModel = new Checkout();
-        $domainModel = new Domain();
-        $affiliateModel = new Affiliate();
-
-        $affiliate = $affiliateModel->where('project_id', $projectId)
-            ->where('user_id', auth()->user()->account_owner_id)->first();
-
-        $abandonedCarts = $checkoutModel->whereIn(
-            'status_enum',
-            [
-                $checkoutModel->present()->getStatusEnum('recovered'),
-                $checkoutModel->present()->getStatusEnum('abandoned cart'),
-            ]
-        )->where('project_id', $projectId);
-
-        if (!empty($affiliate)) {
-            $abandonedCarts->where('affiliate_id', $affiliate->id);
-        }
-
-        if (!empty($client)) {
-            $abandonedCarts->where('client_name', 'like', '%' . $client . '%');
-        }
-
-        if (!empty($customerDocument)) {
-            $document = $customerDocument;
-            $abandonedCarts->whereHas(
-                'logs',
-                function ($query) use ($document) {
-                    $query->where('document', $document);
-                }
-            );
-        }
-
-        if (!empty($plan)) {
-            $planId = current(Hashids::decode($plan));
-            $abandonedCarts->whereHas(
-                'checkoutPlans',
-                function ($query) use ($planId) {
-                    $query->where('plan_id', $planId);
-                }
-            );
-        }
-
-        if (!empty($dateStart) && !empty($dateEnd)) {
-            $abandonedCarts->whereBetween('checkouts.created_at', [$dateStart, $dateEnd]);
+        $projectIds = [];
+        if (request('project') == 'all') {
+            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->pluck('project_id')->toArray();
         } else {
-            if (!empty($dateStart)) {
-                $abandonedCarts->whereDate('checkouts.created_at', '>=', $dateStart);
-            }
-            if (!empty($dateEnd)) {
-                $abandonedCarts->whereDate('checkouts.created_at', '<', $dateEnd);
-            }
+            $projectIds[] = hashids_decode(request('project'));
         }
 
-        return $abandonedCarts->with(
+        $dateRange = FoxUtils::validateDateRange(request('date_range'));
+
+        $abandonedCartsStatus = [
+            Checkout::STATUS_RECOVERED,
+            Checkout::STATUS_ABANDONED_CART
+        ];
+
+
+        $abandonedCarts = Checkout::with(
             [
-                'project.domains' => function ($query) use ($domainModel) {
-                    $query->where('status', $domainModel->present()->getStatus('approved'));
+                'project.domains' => function ($query) {
+                    $query->where('status', Domain::STATUS_APPROVED);
                 },
                 'checkoutPlans.plan',
             ]
-        )->orderBy('id', 'DESC')->paginate(10);
+        )
+            ->whereIn('status_enum', $abandonedCartsStatus)
+            ->whereIn('project_id', $projectIds)
+            ->whereBetween('created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+            ->when(
+                !empty(request('client')),
+                function ($query) {
+                    $query->where('client_name', 'like', '%' . request('client') . '%');
+                }
+            )
+            ->when(
+                !empty(request('client_document')),
+                function ($query) {
+                    $query->whereHas(
+                        'logs',
+                        function ($query) {
+                            $query->where('document', request('client_document'));
+                        }
+                    );
+                }
+            )
+            ->when(
+                !empty(request('plan')),
+                function ($query) {
+                    $query->whereHas(
+                        'checkoutPlans',
+                        function ($query) {
+                            $query->where('plan_id', request('plan'));
+                        }
+                    );
+                }
+            );
+
+        $affiliateIds = Affiliate::where('user_id', auth()->user()->account_owner_id)
+            ->whereIn('project_id', $projectIds)->pluck('id')->toArray();
+
+        if (!empty($affiliateIds) && count($affiliateIds) > 0) {
+            $abandonedCarts->whereIn('affiliate_id', $affiliateIds);
+        }
+
+        return $abandonedCarts->orderBy('id', 'DESC')->paginate(10);
     }
 
     /**
@@ -122,12 +105,12 @@ class CheckoutService
         foreach ($checkoutPlans as $checkoutPlan) {
             if (!empty($checkoutPlan->plan)) {
                 $total += intval(
-                    preg_replace(
-                        "/[^0-9]/",
-                        "",
-                        $checkoutPlan->plan->price
-                    )
-                ) * intval($checkoutPlan->amount);
+                        preg_replace(
+                            "/[^0-9]/",
+                            "",
+                            $checkoutPlan->plan->price
+                        )
+                    ) * intval($checkoutPlan->amount);
             }
         }
 

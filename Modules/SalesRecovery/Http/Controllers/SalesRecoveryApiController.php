@@ -175,7 +175,7 @@ class SalesRecoveryApiController extends Controller
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
 
-        $projectId = "";
+        $projectId = "all";
         if (!empty($data['project'])) {
             $projectId = current(Hashids::decode($data['project']));
         }
