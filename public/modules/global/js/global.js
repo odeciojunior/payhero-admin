@@ -561,7 +561,7 @@ function ajaxVerifyDocumentPending() {
                     $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
                     $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();  
+                    $('#document-pending').show();
                  }
             }
         },

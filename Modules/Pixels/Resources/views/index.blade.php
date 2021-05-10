@@ -40,9 +40,10 @@
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
-            <div id="add-pixel" class="d-flex align-items-center justify-content-end pointer">
+            <div class="d-flex align-items-center justify-content-end pointer">
                 <span class="link-button-dependent red"> Adicionar Pixel </span>
-                <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+                <a id="add-pixel"  data-toggle="modal"
+                 data-target="#modal-create-pixel" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
@@ -67,7 +68,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-pixels" class="pagination-sm margin-chat-pagination"
+<ul id="pagination-pixels" class="pagination-sm margin-chat-pagination text-right"
     style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>

@@ -1,5 +1,14 @@
 @extends("layouts.master")
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/shopify/css/index.css?') }}">
+    <style>
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+    </style>
+@endpush
+
 @section('content')
 
     <!-- Page -->
@@ -7,7 +16,12 @@
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
                 <div class="col-lg-8  align-items-center">
-                    <h1 class="page-title">Integrações com Shopify</h1>
+                    <h1 class="page-title my-10" style="min-height: 28px">
+                        <a class="gray" href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                            Integrações com Shopify
+                        </a>
+                    </h1>
                 </div>
                 <div class="col text-right" id="integration-actions" style="display:none">
                     <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-primary ml-10"

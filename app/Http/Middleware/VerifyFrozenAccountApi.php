@@ -16,9 +16,9 @@ class VerifyFrozenAccountApi
      */
     public function handle($request, Closure $next)
     {
-        if ((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') &&
+        if ((auth()->user()->status ?? null) == User::STATUS_ACCOUNT_FROZEN &&
             $this->inExceptArray($request) == false) {
-            return response()->json(['message' => 'Conta congelada!5'], 400);
+            return response()->json(['message' => 'Conta congelada!'], 400);
         }
 
         return $next($request);
@@ -36,7 +36,17 @@ class VerifyFrozenAccountApi
             '/api/old_finances/export',
             '/api/transfers/account-statement-data/export',
             '/api/logout',
+            '/api/projects/updateorder',
+            '/api/tracking/import',
+            '/api/sales/export',
         ];
+        
+        if ($request->route('transaction_id')) {
+            array_push($excepts,'/api/sales/newordershopify/'.$request->route('transaction_id'));
+        }
+        if ($request->route('achievement')) {
+            array_push($excepts,'/api/dashboard/update-achievements/'.$request->route('achievement'));
+        }
 
         if(strtoupper($request->method()) == 'GET') {
             return true;

@@ -233,7 +233,6 @@ input, select, textarea {
 
 input, .input-pad {
     width: 100%;
-    background: transparent;
     border: 1px solid #dddddd;
     background: #fff;
     border-radius: 6px;

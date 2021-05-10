@@ -25,7 +25,7 @@
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
-            <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
+            <div class="card shadow p-20 mb-0" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div style="width: 20%">
                         <h6 class="text-center orange-gradient">
@@ -60,7 +60,7 @@
         <div class="page-content container" id='page-invites'>
             <div id="content-error" class='' style='display:none;'>
                 <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/empty.svg" width="250px"/>
+                    <img src="modules/global/img/convites.svg" width="156px"/>
                     <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
                     <p class="desc gray" style='width:100%'>Envie convites, e
                         <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
@@ -85,10 +85,12 @@
                     </table>
                 </div>
             </div>
-            <ul id="pagination-invites" class="pagination-sm margin-chat-pagination"
+            <div class="row d-flex justify-content-center justify-content-md-end pb-35">
+                <ul id="pagination-invites" class="pagination-sm margin-chat-pagination mb-0"
                 style="margin-top:10px;position:relative;float:right">
-                {{-- js pagination carrega --}}
-            </ul>
+                    {{-- js pagination carrega --}}
+                </ul>
+            </div>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle"
                  role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-simple">
@@ -235,10 +237,9 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close"
-                       id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
@@ -265,10 +266,9 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close"
-                       id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
@@ -289,7 +289,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=07') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=08') }}"></script>
     @endpush
 
 @endsection

@@ -230,7 +230,7 @@ class AffiliatesApiController extends Controller
         }
     }
 
-    public function getAffiliates()
+    public function getAffiliates(Request $request)
     {
         try {
             $userProjectModel = new UserProject();
@@ -238,7 +238,22 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliates = $affiliateModel->with('user', 'company', 'project')->whereIn('project_id', $userProjects);
+            $affiliates = $affiliateModel->with('user', 'company', 'project');
+
+            if ($request->input('project') != "null" && $request->input('project') != "0") {
+                $affiliates->where('project_id', Hashids::decode($request->input('project')));
+            }
+
+            if ($request->input('name') != "null") {
+                $name = $request->input('name');
+                $affiliates->whereHas('user', function($q) use ($name) {
+                    return $q->where('name', 'like', '%'.$name.'%');
+                });
+            }
+            
+            if ($request->input('project') == "null" || $request->input('project') == "0") {
+                $affiliates->whereIn('project_id', $userProjects);
+            }
 
             return AffiliateResource::collection($affiliates->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {
@@ -246,7 +261,7 @@ class AffiliatesApiController extends Controller
         }
     }
 
-    public function getAffiliateRequests()
+    public function getAffiliateRequests(Request $request)
     {
         try {
             $userProjectModel = new UserProject();
@@ -254,7 +269,22 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliatesRequest = $affiliateRequest->with('user', 'company', 'project')->whereIn('project_id', $userProjects);
+            $affiliatesRequest = $affiliateRequest->with('user', 'company', 'project');
+
+            if ($request->input('project') != "null" && $request->input('project') != "0") {
+                $affiliatesRequest->where('project_id', Hashids::decode($request->input('project')));
+            }
+
+            if ($request->input('name') != "null") {
+                $name = $request->input('name');
+                $affiliatesRequest->whereHas('user', function($q) use ($name) {
+                    return $q->where('name', 'like', '%'.$name.'%');
+                });
+            }
+            
+            if ($request->input('project') == "null" || $request->input('project') == "0") {
+                $affiliatesRequest->whereIn('project_id', $userProjects);
+            }
 
             return AffiliateRequestResource::collection($affiliatesRequest->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {

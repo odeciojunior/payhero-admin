@@ -4,8 +4,7 @@ $(document).ready(function () {
     let shopifyIntegrationNotFound = false;
 
     loadingOnScreen();
-    $('#btn-integration-model').hide();
-
+    $("#btn-integration-model").hide();
     index();
 
     $.ajax({
@@ -13,8 +12,8 @@ $(document).ready(function () {
         url: "/api/companies?select=true",
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             $("#modal-content").hide();
@@ -25,36 +24,45 @@ $(document).ready(function () {
 
             htmlAlertShopify();
             loadingOnScreenRemove();
-        }
+        },
     });
 
     function htmlAlertShopify() {
         if (!companyNotFound) {
-            $('#btn-integration-model').hide();
-            $('#button-information').hide();
+            $("#btn-integration-model").hide();
+            $("#button-information").hide();
             $("#empty-companies-error").show();
         } else if (allCompanyNotApproved) {
-            $('#btn-integration-model').hide();
-            $('#button-information').hide();
+            $("#btn-integration-model").hide();
+            $("#button-information").hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
             if (shopifyIntegrationNotFound) {
                 $("#no-integration-found").show();
             }
 
-            $('#btn-integration-model').show();
-            $('#button-information').show().addClass('d-flex').css('display', 'flex');
+            $("#btn-integration-model").show();
+            $("#button-information")
+                .show()
+                .addClass("d-flex")
+                .css("display", "flex");
         }
     }
 
     function index() {
+        function checkImage(imageSrc, good, bad) {
+            var img = new Image();
+            img.onload = good;
+            img.onerror = bad;
+            img.src = imageSrc;
+        }
         $.ajax({
             method: "GET",
             url: "/api/apps/shopify",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
@@ -62,7 +70,7 @@ $(document).ready(function () {
             success: function success(response) {
                 let data = response.data;
 
-                $('#content').html("");
+                $("#content").html("");
 
                 if (isEmpty(data)) {
                     shopifyIntegrationNotFound = true;
@@ -70,15 +78,25 @@ $(document).ready(function () {
                 }
 
                 $(data).each(function (index, data) {
-                    $('#content').append(`
+                    $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${data.id}">
-                                <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"  alt="Photo Project"/>
+                            <div class="card shadow card-edit" project="${
+                                data.id
+                            }">
+                                <img class="card-img-top img-fluid w-full"  onerror="this.src = '/modules/global/img/produto.png'" src="${
+                                    !data.project_photo
+                                        ? "/modules/global/img/produto.png"
+                                        : data.project_photo
+                                }"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
-                                            <h4 class="card-title">${data.project_name}</h4>
-                                            <p class="card-text sm">Criado em ${data.created_at}</p>
+                                            <h4 class="card-title">${
+                                                data.project_name
+                                            }</h4>
+                                            <p class="card-text sm">Criado em ${
+                                                data.created_at
+                                            }</p>
                                         </div>
                                     </div>
                                 </div>
@@ -86,28 +104,28 @@ $(document).ready(function () {
                         </div>
                     `);
                 });
-
-
-            }
+            },
         });
     }
 
     function create(data) {
         let companyApproved = 0;
         if (isEmpty(data)) {
-            $('#integration-actions, .page-content').hide();
+            $("#integration-actions, .page-content").hide();
             return;
         }
 
         companyNotFound = true;
 
-        $('#integration-actions').show();
+        $("#integration-actions").show();
 
         $("#select_companies").empty();
         $(data).each(function (index, data) {
             if (data.capture_transaction_enabled) {
                 companyApproved = companyApproved + 1;
-                $("#select_companies").append(`<option value=${data.id}> ${data.name}</option>`);
+                $("#select_companies").append(
+                    `<option value=${data.id}> ${data.name}</option>`
+                );
             }
         });
 
@@ -115,12 +133,12 @@ $(document).ready(function () {
             allCompanyNotApproved = true;
         }
 
-        $(".modal-title").html('Adicionar nova integração com Shopify');
-        $("#bt_integration").addClass('btn-save');
-        $("#bt_integration").text('Realizar integração');
+        $(".modal-title").html("Adicionar nova integração com Shopify");
+        $("#bt_integration").addClass("btn-save");
+        $("#bt_integration").text("Realizar integração");
 
-        $('.check').on('click', function () {
-            if ($(this).is(':checked')) {
+        $(".check").on("click", function () {
+            if ($(this).is(":checked")) {
                 $(this).val(1);
             } else {
                 $(this).val(0);
@@ -128,14 +146,18 @@ $(document).ready(function () {
         });
     }
 
-    $('#btn-integration-model').on('click', function () {
-        $("#modal_add_integracao").modal('show');
+    $("#btn-integration-model").on("click", function () {
+        $("#modal_add_integracao").modal("show");
         $("#form_add_integration").show();
     });
 
     $("#bt_integration").on("click", function () {
-        if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
-            alertCustom('error', 'Dados informados inválidos');
+        if (
+            $("#token").val() == "" ||
+            $("#url_store").val() == "" ||
+            $("#company").val() == ""
+        ) {
+            alertCustom("error", "Dados informados inválidos");
             return false;
         }
 
@@ -143,10 +165,15 @@ $(document).ready(function () {
     });
 
     function saveIntegration() {
-        let form_data = new FormData(document.getElementById('form_add_integration'));
+        let form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
 
-        if (!form_data.get('company').length > 0) {
-            alertCustom('error', 'A empresa precisa estar aprovada transacionar para realizar a integração! ');
+        if (!form_data.get("company").length > 0) {
+            alertCustom(
+                "error",
+                "A empresa precisa estar aprovada transacionar para realizar a integração! "
+            );
             return false;
         }
 
@@ -157,8 +184,8 @@ $(document).ready(function () {
             url: "/api/apps/shopify",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
@@ -170,8 +197,8 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadingOnScreenRemove();
-                alertCustom('success', response.message);
-            }
+                alertCustom("success", response.message);
+            },
         });
     }
 });

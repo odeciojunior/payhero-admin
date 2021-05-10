@@ -4,12 +4,30 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
+        <style>
+            .o-arrow-right-1 {
+                font-size: 30px;
+            }
+
+            .o-arrow-right-1::before {
+                transform: rotate(180deg);
+            }
+            .gray:hover{
+                color:#a1a1a1 !important;
+            }
+        </style>
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
             <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="o-add-1" aria-hidden="true"></i></button>
-            <h2 class="page-title">Integrações</h2>
+                <i class="o-add-1" aria-hidden="true"></i>
+            </button>
+            <h1 class="page-title my-10" style="min-height: 28px">
+                <a class="gray" href="/apps">
+                    <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                    Integrações
+                </a>
+            </h1>
             <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
             <br>
             <div class="card shadow p-20 mb-0" id='card-integration-data' style='display:none;'>
@@ -74,7 +92,7 @@
                 <div id='mainModalBody' class="modal-dialog modal-simple">
                     <div id="modal-create-integration" class="modal-content">
                         <div class="modal-header">
-                            <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                             <h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center">Nova Integração</h4>
@@ -115,9 +133,9 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
@@ -143,9 +161,9 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">

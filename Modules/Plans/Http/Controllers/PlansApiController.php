@@ -35,10 +35,10 @@ class PlansApiController extends Controller
     {
         try {
 
-            $planModel = new Plan();
+            $planModel    = new Plan();
             $projectModel = new Project();
 
-            activity()->on($planModel)->tap(function (Activity $activity) {
+            activity()->on($planModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos os planos');
 
@@ -52,16 +52,31 @@ class PlansApiController extends Controller
                     if (Gate::allows('edit', [$project])) {
                         //se pode editar o projeto pode visualizar os planos dele
                         $plans = $planModel->with([
-                            'project.domains' => function ($query) use ($projectId) {
-                                $query->where([['project_id', $projectId], ['status', 3]])
-                                    ->first();
+                            'project.domains' => function($query) use ($projectId) {
+                                $query->where('project_id', $projectId)
+                                ->where('status', 3)
+                                ->first();
                             },
-                        ]);
-                        if ($request->has('plan') && !empty($request->input('plan'))) {
-                            $plans->where('name', 'like', '%' . $request->input('plan') . '%');
+                        ])->where('project_id', $projectId);
+
+                        if (!empty($request->input('plan'))) {
+                            $plans = $plans->where(
+                                function ($query) use ($request) {
+                                    $query->where('name', 'like', '%' . $request->input('plan') . '%')
+                                    ->orWhere('price', 'like', '%'. str_replace(array('R', '$', ' ', '.', ','), array('', '', '', '', '.'),$request->input('plan')). '%')
+                                    ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
+                                }
+                            );
                         }
 
-                        $plans = $plans->where('project_id', $projectId)->orderBy('id', 'DESC')->paginate(5);
+                        if($project->status == Project::STATUS_ACTIVE){
+                            $plans = $plans->where('status',Plan::STATUS_ACTIVE);
+
+                        }else{
+                            $plans = $plans->where('status',Plan::STATUS_DESABLE);
+                        }
+
+                        $plans = $plans->orderBy('id', 'DESC')->paginate(5);
 
                         return PlansResource::collection($plans);
                     } else {
@@ -97,15 +112,15 @@ class PlansApiController extends Controller
     public function store(PlanStoreRequest $request, $projectID)
     {
         try {
-            $planModel = new Plan();
-            $productPlan = new ProductPlan();
-            $projectModel = new Project();
+            $planModel          = new Plan();
+            $productPlan        = new ProductPlan();
+            $projectModel       = new Project();
             $affiliateLinkModel = new AffiliateLink();
-            $planService = new PlanService();
+            $planService        = new PlanService();
 
-            $requestData = $request->validated();
+            $requestData               = $request->validated();
             $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
-            $requestData['status'] = 1;
+            $requestData['status']     = 1;
 
             $projectId = $requestData['project_id'];
 
@@ -118,11 +133,12 @@ class PlansApiController extends Controller
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
-                        $requestData['name'] = FoxUtils::removeSpecialChars($requestData['name']);
+                        $requestData['name']        = FoxUtils::removeSpecialChars($requestData['name']);
                         $requestData['description'] = FoxUtils::removeSpecialChars($requestData['description']);
 
                         $plan = $planModel->create($requestData);
                         if (!empty($plan)) {
+
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
@@ -132,24 +148,24 @@ class PlansApiController extends Controller
                                 }
 
                                 $productPlan->create([
-                                    'product_id' => $requestData['products'][$keyProduct],
-                                    'plan_id' => $plan->id,
-                                    'amount' => $requestData['product_amounts'][$keyProduct] ?? 1,
-                                    'cost' => $requestData['product_cost'][$keyProduct] ?? 0,
-                                    'currency_type_enum' => $productPlan->present()
-                                        ->getCurrency($requestData['currency'][$keyProduct]),
+                                    'product_id'         => $requestData['products'][$keyProduct],
+                                    'plan_id'            => $plan->id,
+                                    'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                    'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                    'currency_type_enum' => $productPlan->present()->getCurrency($requestData['currency'][$keyProduct]),
                                 ]);
                             }
+
                             if (count($project->affiliates) > 0) {
+
                                 foreach ($project->affiliates as $affiliate) {
                                     $affiliateHash = Hashids::connection('affiliate')->encode($affiliate->id);
                                     $affiliateLinkModel->create([
-                                        'affiliate_id' => $affiliate->id,
-                                        'plan_id' => $plan->id,
-                                        'parameter' => $affiliateHash . Hashids::connection('affiliate')
-                                                ->encode($plan->id),
+                                        'affiliate_id'  => $affiliate->id,
+                                        'plan_id'       => $plan->id,
+                                        'parameter'     => $affiliateHash . Hashids::connection('affiliate')->encode($plan->id),
                                         'clicks_amount' => 0,
-                                        'link' => $planService->getCheckoutLink($plan),
+                                        'link'          => $planService->getCheckoutLink($plan),
                                     ]);
                                 }
                             }
@@ -174,7 +190,7 @@ class PlansApiController extends Controller
                 ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro tentar salvar Plano (PlansController - store)');
+            Log::warning('Erro ao tentar salvar Plano (PlansController - store)');
             report($e);
 
             return response()->json([
@@ -186,11 +202,11 @@ class PlansApiController extends Controller
     public function show($projectID, $id)
     {
         try {
-            $planModel = new Plan();
+            $planModel    = new Plan();
             $projectModel = new Project();
 
-            activity()->on($planModel)->tap(function (Activity $activity) use ($id) {
-                $activity->log_name = 'visualization';
+            activity()->on($planModel)->tap(function(Activity $activity) use ($id) {
+                $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::decode($id));
             })->log('Visualizou tela detalhes do plano');
 
@@ -204,11 +220,11 @@ class PlansApiController extends Controller
 
                     if (!empty($id)) {
                         $planId = current(Hashids::decode($id));
-                        $plan = $planModel->with([
-                            'productsPlans.product', 'project.domains' => function ($query) use ($projectId) {
-                                $query->where([['project_id', $projectId], ['status', 3]])
-                                    ->first();
-                            },
+                        $plan   = $planModel->with([
+                        'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
+                        $query->where([['project_id', $projectId], ['status', 3]])
+                        ->first();
+                        },
                         ])->find($planId);
 
                         if (empty($plan)) {
@@ -253,12 +269,12 @@ class PlansApiController extends Controller
     public function update(PlanUpdateRequest $request, $projectID, $id)
     {
         try {
-            $planModel = new Plan();
-            $productPlan = new ProductPlan();
+            $planModel    = new Plan();
+            $productPlan  = new ProductPlan();
             $projectModel = new Project();
 
             $requestData = $request->validated();
-            $projectId = current(Hashids::decode($projectID));
+            $projectId   = current(Hashids::decode($projectID));
 
             if ($projectId) {
                 //hash ok
@@ -268,25 +284,25 @@ class PlansApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
 
                     unset($requestData['project_id']);
-                    $planId = Hashids::decode($id)[0];
+                    $planId               = Hashids::decode($id)[0];
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->with('plansSales')->where('id', $planId)->first();
 
                     $plan->update([
-                        'name' => FoxUtils::removeSpecialChars($requestData['name']),
+                        'name'        => FoxUtils::removeSpecialChars($requestData['name']),
                         'description' => FoxUtils::removeSpecialChars($requestData['description']),
-                        'code' => $id,
-                        'price' => $requestData["price"],
-                        'status' => $planModel->present()->getStatus('active'),
+                        'code'        => $id,
+                        'price'       => $requestData["price"],
+                        'status'      => $planModel->present()->getStatus('active'),
                     ]);
 
-                    $productPlans = $productPlan->where('plan_id', $plan->id)->get();
-                    $productPlanId = $productPlans->pluck('product_id')->toArray();
+                    $productPlans      = $productPlan->where('plan_id', $plan->id)->get();
+                    $productPlanId     = $productPlans->pluck('product_id')->toArray();
                     $productPlanAmount = $productPlans->pluck('amount')->toArray();
-                    $resultId = array_diff($productPlanId, $requestData['products']);
-                    $resultAmount = array_diff($productPlanAmount, $requestData['product_amounts']);
+                    $resultId          = array_diff($productPlanId, $requestData['products']);
+                    $resultAmount      = array_diff($productPlanAmount, $requestData['product_amounts']);
 
                     if (count($plan->plansSales) > 0 && (!empty($resultId) || !empty($resultAmount)) || (count($requestData['products']) > count($productPlanId))) {
                         return response()->json(['message' => 'Impossível editar os produtos do plano pois possui vendas associadas.'], 400);
@@ -300,19 +316,19 @@ class PlansApiController extends Controller
 
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
-                            if (empty($requestData['product_cost'][$keyProduct]) || $requestData['product_cost'][$keyProduct] == '0.00') {
+                            if (empty($requestData['product_cost'][$keyProduct]) || $requestData['product_cost'][$keyProduct] == '0.00'){
                                 $requestData['product_cost'][$keyProduct] = 0;
-                            } else {
+                            }else{
                                 $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
                             }
 
                             $productPlan->create([
-                                'product_id' => $requestData['products'][$keyProduct],
-                                'plan_id' => $plan->id,
-                                'amount' => $requestData['product_amounts'][$keyProduct] ?? 1,
-                                'cost' => $requestData['product_cost'][$keyProduct] ?? 0,
+                                'product_id'         => $requestData['products'][$keyProduct],
+                                'plan_id'            => $plan->id,
+                                'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
                                 'currency_type_enum' => $productPlan->present()
-                                    ->getCurrency($requestData['currency'][$keyProduct]),
+                                                                    ->getCurrency($requestData['currency'][$keyProduct]),
                             ]);
                         }
                     }
@@ -354,9 +370,9 @@ class PlansApiController extends Controller
 
                 if ($planId) {
                     //hash Ok
-                    $plan = $planModel->with(['productsPlans', 'plansSales', 'project', 'affiliateLinks'])
-                        ->where('id', $planId)
-                        ->first();
+                    $plan    = $planModel->with(['productsPlans', 'plansSales', 'project', 'affiliateLinks'])
+                                         ->where('id', $planId)
+                                         ->first();
                     $project = $plan->project;
                     if (Gate::allows('edit', [$project])) {
 
@@ -401,7 +417,7 @@ class PlansApiController extends Controller
     public function getPlans(Request $request)
     {
         try {
-            $data = $request->all();
+            $data      = $request->all();
             $planModel = new Plan();
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
@@ -413,7 +429,8 @@ class PlansApiController extends Controller
                 }
 
                 $groupByVariants = boolval($data['variants'] ?? 1);
-                if ($groupByVariants) {
+
+                if($groupByVariants){
                     $plans->select('name',
                         DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.name = plans.name and p.deleted_at is null limit 1), group_concat(id)) as id"),
                         DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
@@ -476,8 +493,8 @@ class PlansApiController extends Controller
             $planId = current(Hashids::decode($request->input('plan')));
             $plan = Plan::find($planId);
             $planIds = Plan::where('name', $plan->name)
-                ->where('shopify_id', $plan->shopify_id)
-                ->get()->pluck('id');
+            ->where('shopify_id', $plan->shopify_id)
+            ->get()->pluck('id');
             $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
 
             foreach ($productPlans as $productPlan) {
@@ -499,14 +516,14 @@ class PlansApiController extends Controller
     public function updateConfigCost(Request $request)
     {
         try {
-            $costCurrency = $request->input('costCurrency');
+            $costCurrency      = $request->input('costCurrency');
             $updateCostShopify = $request->input('updateCostShopify');
             $updateAllCurrency = $request->input('updateAllCurrency');
-            $projectId = current(Hashids::decode($request->input('project')));
+            $projectId         = current(Hashids::decode($request->input('project')));
 
             $projectModel = new Project;
             $project = $projectModel->find($projectId);
-            if (empty($project->notazz_configs)) {
+            if(empty($project->notazz_configs)) {
                 $configs = [
                     'cost_currency_type' => $projectModel->present()->getCurrencyCost($costCurrency),
                     'update_cost_shopify' => $updateCostShopify
@@ -519,7 +536,7 @@ class PlansApiController extends Controller
 
             $project->update(['notazz_configs' => json_encode($configs)]);
 
-            if ($updateAllCurrency) {
+            if($updateAllCurrency) {
                 $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
                 $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
                 foreach ($productPlans as $productPlan) {

@@ -150,7 +150,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $withdrawalValueRequested = FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
             $currentValue = 0;
 
             $transactionsSum = $company->transactions()
@@ -158,6 +158,9 @@ class WithdrawalsApiController
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
+
+            $lower_value = 0;
+            $bigger_value = 0;
 
             $transactionsSum->chunk(
                 2000,
@@ -167,32 +170,28 @@ class WithdrawalsApiController
                 ) {
                     foreach ($transactions as $transaction) {
                         $currentValue += $transaction->value;
-
                         if ($currentValue >= $withdrawalValueRequested) {
-                            return response()->json(
-                                [
-                                    'data' => [
-                                        'lower_value' => $currentValue - $transaction->value,
-                                        'bigger_value' => $currentValue
-                                    ]
+                            return response()->json([
+                                'data' => [
+                                'lower_value' => $currentValue - $transaction->value,
+                                'bigger_value' => $currentValue
                                 ]
-                            )->send();
+
+                            ])->send();
                         }
                     }
                 }
             );
 
-            return response()->json(
-                [
-                    'data' => [
-                        'lower_value' => 0,
-                        'bigger_value' => 0
-                    ]
+            return response()->json([
+                'data' => [
+                'lower_value' => $lower_value,
+                'bigger_value' => $bigger_value
                 ]
-            );
+            ]);
+
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
@@ -202,12 +201,10 @@ class WithdrawalsApiController
         try {
             $userModel = new User();
 
-            return response()->json(
-                [
-                    'allowed' => auth()->user()->status != $userModel->present()
-                            ->getStatus('withdrawal blocked'),
-                ]
-            );
+            return response()->json([
+                'allowed' => auth()->user()->status != $userModel->present()
+                ->getStatus('withdrawal blocked'),
+            ]);
         } catch (Exception $e) {
             report($e);
 

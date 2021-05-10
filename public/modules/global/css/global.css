@@ -169,7 +169,7 @@ body {
     table.unify tr {
         background-color: #F8F8F8;
         border: 1px solid #DDDDDD;
-        padding: .35em;
+        /*padding: .35em;*/
     }
 
     table.unify th,
@@ -577,18 +577,6 @@ a.label {
     border-radius: 16px !important;
     -webkit-border-radius: 16px !important;
     -moz-border-radius: 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:first-child, .teste-1 {
-    border-radius: 0 0 0 16px !important;
-    -webkit-border-radius: 0 0 0 16px !important;
-    -moz-border-radius: 0 0 0 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:last-child, .teste-2 {
-    border-radius: 0 0 16px 0 !important;
-    -webkit-border-radius: 0 0 16px 0 !important;
-    -moz-border-radius: 0 0 16px 0 !important;
 }
 
 .sirius-radius {

@@ -26,19 +26,25 @@ class AffiliateLinksApiController extends Controller
             $userId    = auth()->user()->account_owner_id;
 
             $links = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
-                $q->where('user_id', $userId)
-                  ->where('project_id', $projectId);
-            })
-                                  ->with('affiliate.project.domains', 'plan');
+                $q->where('user_id', $userId)->where('project_id', $projectId);
+            })->with('affiliate.project.domains', 'plan');
+
             if (!empty($request->input('plan'))) {
-                $links = $links->whereHas('plan', function($q2) use ($request) {
-                    $q2->where('name', 'like', '%' . $request->input('plan') . '%');
+                $links = $links->whereHas('plan',
+                function($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->input('plan') . '%')
+                    ->orWhere('price', 'like', '%'. str_replace(array('R', '$', ' ', '.', ','), array('', '', '', '', '.'),$request->input('plan')). '%')
+                    ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
                 });
             }
 
-            return AffiliateLinkResource::collection($links->paginate(5));
-        } catch (Exception $e) {
+            $links = $links->whereHas('affiliate.project.domains', function($query) {
+                $query->where('status', 3);
+            });
 
+            return AffiliateLinkResource::collection($links->paginate(5));
+
+        } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }

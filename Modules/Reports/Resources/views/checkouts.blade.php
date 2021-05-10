@@ -28,10 +28,16 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <div class="row align-items-center">
-                                <span class="o-agenda-1"></span>
-                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" style="width: 85%" value="" readonly>
-                        </div>
+                            <div class="row align-items-center form-icons">
+                                <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18" style="right: 10%;"></i>
+                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 pr-30 ml-5" 
+                                value="" readonly style="width: 92%">
+                            </div>
+                        {{-- <div class="row align-items-center">
+                            <span class="o-agenda-1"></span>
+                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" 
+                            style="width: 85%" value="" readonly>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -86,6 +92,10 @@
                                         </ul>
                                     </div>
                                     <div class="widget-content tab-content bg-white p-20">
+                                        <div id="empty-graph" class="row justify-content-center align-items-center d-flex" style="vertical-align: middle">
+                                            <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                            <p style="font-size: 23px" class="gray">Nenhuma venda encontrada</p>
+                                        </div>
                                         <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>
                                         <div class="ct-chart tab-pane" id="scoreLineToWeek"></div>
                                         <div class="ct-chart tab-pane" id="scoreLineToMonth"></div>
@@ -101,7 +111,7 @@
                                     <div style='max-height: 150px; overflow-y: auto; height: 150px;'>
                                         <div style="padding: 0 20px;" class=" card-body data-holder">
                                             <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
-                                                <tbody id="origins-table-itens">
+                                                <tbody id="origins-table-itens"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                                 {{-- js carrega... --}}
                                                 </tbody>
                                             </table>

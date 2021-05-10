@@ -1,83 +1,103 @@
 $(document).ready(function () {
     const statusWithdrawals = {
-        1: 'warning',
-        2: 'primary',
-        3: 'success',
-        4: 'danger',
-        5: 'in_review',
-        8: 'primary',
-        9: 'partially-liquidating',
+        1: "warning",
+        2: "primary",
+        3: "success",
+        4: "danger",
+        5: "in_review",
+        8: "primary",
+        9: "partially-liquidating",
     };
 
     const statusExtract = {
-        'WAITING_FOR_VALID_POST': 'warning',
-        'WAITING_LIQUIDATION': 'warning',
-        'WAITING_WITHDRAWAL': 'warning',
-        'WAITING_RELEASE': 'warning',
-        'PAID': 'success',
-        'REVERSED': 'warning',
-        'ADJUSTMENT_CREDIT': 'success',
-        'ADJUSTMENT_DEBIT': 'danger',
-        'ERROR': 'error',
-    }
+        WAITING_FOR_VALID_POST: "warning",
+        WAITING_LIQUIDATION: "warning",
+        WAITING_WITHDRAWAL: "warning",
+        WAITING_RELEASE: "warning",
+        PAID: "success",
+        REVERSED: "warning",
+        ADJUSTMENT_CREDIT: "success",
+        ADJUSTMENT_DEBIT: "danger",
+        ERROR: "error",
+    };
 
     function formatMoney(value) {
-        return ((value / 100).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        }));
+        return (value / 100).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        });
     }
 
     //Comportamentos da tela
-    $('#date_range').daterangepicker({
-        startDate: moment().startOf('week'),
+    $("#date_range").daterangepicker({
+        startDate: moment().startOf("week"),
         endDate: moment(),
-        opens: 'center',
+        opens: "center",
         maxDate: moment().endOf("day"),
         alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
+        showCustomRangeLabel: "Customizado",
         autoUpdateInput: true,
         locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
+            locale: "pt-br",
+            format: "DD/MM/YYYY",
             applyLabel: "Aplicar",
             cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+            fromLabel: "De",
+            toLabel: "Até",
+            customRangeLabel: "Customizado",
+            weekLabel: "W",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro",
+            ],
+            firstDay: 0,
         },
         ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
+            Hoje: [moment(), moment()],
+            Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+            "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+            "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+            "Este mês": [moment().startOf("month"), moment().endOf("month")],
+            "Mês passado": [
+                moment().subtract(1, "month").startOf("month"),
+                moment().subtract(1, "month").endOf("month"),
+            ],
+        },
     });
 
-    $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+    $(".withdrawal-value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+    });
 
     let balanceLoader = {
         styles: {
             container: {
-                minHeight: '31px',
-                justifyContent: 'flex-start',
+                minHeight: "31px",
+                justifyContent: "flex-start",
             },
             loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
+                width: "20px",
+                height: "20px",
+                borderWidth: "4px",
             },
         },
-        insertBefore: '.grad-border',
+        insertBefore: ".grad-border",
     };
 
-    $("#date_range_statement_unique").val(moment().format('YYYY-MM-DD'));
+    $("#date_range_statement_unique").val(moment().format("YYYY-MM-DD"));
 
     //END - Comportamentos da tela
 
@@ -90,8 +110,8 @@ $(document).ready(function () {
             url: "/api/companies?select=true",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 loadingOnScreenRemove();
@@ -99,17 +119,17 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    $('.page-content').hide();
-                    $('#empty-companies-error').show();
+                    $(".page-content").hide();
+                    $("#empty-companies-error").show();
                     loadingOnScreenRemove();
                     return;
                 }
 
                 let itsApprovedTransactGetnet = false;
 
-                $('.page-content').show();
-                $('#menu-tabs-view').show();
-                $('.content-error').hide();
+                $(".page-content").show();
+                $("#menu-tabs-view").show();
+                $(".content-error").hide();
 
                 $(response.data).each(function (index, value) {
                     if (value.capture_transaction_enabled) {
@@ -122,7 +142,7 @@ $(document).ready(function () {
                 });
 
                 if (!itsApprovedTransactGetnet) {
-                    $('.page-content').hide();
+                    $(".page-content").hide();
                     $("#companies-not-approved-getnet").show();
                     loadingOnScreenRemove();
                     return;
@@ -133,7 +153,7 @@ $(document).ready(function () {
                 updateBalances();
                 checkAllowed();
                 loadingOnScreenRemove();
-            }
+            },
         });
     }
 
@@ -153,11 +173,11 @@ $(document).ready(function () {
 
     getCompanies();
 
-    $("#ir-agenda").on('click', function (e) {
+    $("#ir-agenda").on("click", function (e) {
         e.preventDefault();
 
         let company = $("#transfers_company_select").val();
-        $("#statement_status_select").val('ADJUSTMENT_DEBIT');
+        $("#statement_status_select").val("ADJUSTMENT_DEBIT");
         $("#statement_company_select").val(company);
         $("#bt_filtro_statement, #nav-statement-tab").click();
     });
@@ -168,31 +188,41 @@ $(document).ready(function () {
             url: "/api/withdrawals/checkallowed",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
-                $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
+                $("#bt-withdrawal, #bt-withdrawal_m")
+                    .prop("disabled", true)
+                    .addClass("disabled");
             },
-            success: response => {
+            success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
-                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', false).removeClass('disabled');
-                    $('#blocked-withdrawal').hide();
+                    $("#bt-withdrawal, #bt-withdrawal_m")
+                        .prop("disabled", false)
+                        .removeClass("disabled");
+                    $("#blocked-withdrawal").hide();
                 } else {
-                    $('#bt-withdrawal, #bt-withdrawal_m').prop('disabled', true).addClass('disabled');
-                    $('#blocked-withdrawal').show();
+                    $("#bt-withdrawal, #bt-withdrawal_m")
+                        .prop("disabled", true)
+                        .addClass("disabled");
+                    $("#blocked-withdrawal").show();
                 }
-            }
+            },
         });
     }
 
     //atualiza o saldo
     $(document).on("change", "#transfers_company_select", function () {
-        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
-        $('#custom-input-addon').val('');
+        $(
+            "#transfers_company_select option[value=" +
+                $("#transfers_company_select option:selected").val() +
+                "]"
+        ).prop("selected", true);
+        $("#custom-input-addon").val("");
         updateBalances();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
+        if ($(this).children("option:selected").attr("country") != "brazil") {
             $("#col_transferred_value").show();
         } else {
             $("#col_transferred_value").hide();
@@ -200,96 +230,136 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-        loadOnAnyEllipsis('.price', false, {
+        loadOnAnyEllipsis(".price", false, {
             styles: {
                 container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto',
-                    margin: 'auto'
+                    minHeight: "30px",
+                    width: "30px",
+                    height: "auto",
+                    margin: "auto",
                 },
                 loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
+                    width: "30px",
+                    height: "30px",
+                    borderWidth: "6px",
                 },
-
-            }
+            },
         });
-        loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
+        loadOnTable("#withdrawals-table-data", "#withdrawalsTable");
 
         $.ajax({
             url: "/api/finances/getbalances",
             type: "GET",
-            data: {company: $("#transfers_company_select option:selected").val()},
+            data: {
+                company: $("#transfers_company_select option:selected").val(),
+            },
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
-                loadOnAnyEllipsis('.price', true);
+                loadOnAnyEllipsis(".price", true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAnyEllipsis('.price', true);
-                $('.saldoPendente').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="pending-balance">0,00</span> </strong>');
-                $('.saldoDisponivel').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>');
-                $('.saltoTotal').html('<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>');
-                $('.saldoBloqueado').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>');
-                //$('.saldoDebito').html('<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>');
-
+                loadOnAnyEllipsis(".price", true);
+                $(".saldoPendente").html(
+                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="pending-balance">0,00</span> </strong>'
+                );
+                $(".saldoDisponivel").html(
+                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>'
+                );
+                $(".saltoTotal").html(
+                    '<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>'
+                );
+                $(".saldoBloqueado").html(
+                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>'
+                );
+                $(".saldoDebito").html(
+                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>'
+                );
 
                 // Saldo bloqueado
-                $('.saldoBloqueado').html('<span class="currency"><small class="font-size-12"> R$ </small> </span> <strong> <span class="blocked-balance">' + response.blocked_balance + '</span> </strong>');
+                $(".saldoBloqueado").html(
+                    '<span class="currency"><small class="font-size-12"> R$ </small> </span> <strong> <span class="blocked-balance">' +
+                        response.blocked_balance +
+                        "</span> </strong>"
+                );
                 // Saldo Debito Pendente
                 //$('.saldoDebito').html(`<span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span> <span class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">${response.pending_debt_balance}</span>`);
-                $('#go-to-pending-debt').show();
-                $('#go-to-pending-debt').html(response.pending_debt_balance);
+                $("#go-to-pending-debt").show();
+                $("#go-to-pending-debt").html(response.pending_debt_balance);
 
-                $('.totalConta').html('<span class="currency">R$ </span><span class="total-balance">0,00</span>');
-                $('.total_available').html('<span class="currency">R$ </span>' + isEmpty(response.available_balance));
+                $(".totalConta").html(
+                    '<span class="currency">R$ </span><span class="total-balance">0,00</span>'
+                );
+                $(".total_available").html(
+                    '<span class="currency">R$ </span>' +
+                        isEmpty(response.available_balance)
+                );
 
-                $(".available-balance").html(isEmpty(response.available_balance)).attr('data-value', isEmpty(response.available_balance));
-                $(".debit-balance").html(isEmpty(response.pending_debt_balance)).attr('data-value', isEmpty(response.pending_debt_balance));
+                $(".available-balance")
+                    .html(isEmpty(response.available_balance))
+                    .attr("data-value", isEmpty(response.available_balance));
+                $(".debit-balance")
+                    .html(isEmpty(response.pending_debt_balance))
+                    .attr("data-value", isEmpty(response.pending_debt_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".total-balance").html(isEmpty(response.total_balance));
 
-
-                $("#div-available-money, #div-available-money_m").unbind('click');
-                $("#div-available-money, #div-available-money_m").on("click", function () {
-                    $(".withdrawal-value").val(isEmpty(response.available_balance));
-                });
+                $("#div-available-money, #div-available-money_m").unbind(
+                    "click"
+                );
+                $("#div-available-money, #div-available-money_m").on(
+                    "click",
+                    function () {
+                        $(".withdrawal-value").val(
+                            isEmpty(response.available_balance)
+                        );
+                    }
+                );
 
                 updateWithdrawalsTable();
-            }
+            },
         });
 
         function isEmpty(value) {
             if (value.length === 0) {
                 return 0;
             } else {
-                return value
+                return value;
             }
         }
 
         function verifyWithdrawalIsValid(toTransfer, availableBalance) {
             if (toTransfer < 1) {
-                alertCustom('error', 'Valor do saque inválido!');
-                $('#custom-input-addon').val('');
-                $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                alertCustom("error", "Valor do saque inválido!");
+                $("#custom-input-addon").val("");
+                $(".withdrawal-value").maskMoney({
+                    thousands: ".",
+                    decimal: ",",
+                    allowZero: true,
+                });
                 return false;
             }
 
             if (toTransfer > availableBalance) {
-                alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
-                $('#custom-input-addon').val('');
-                $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                alertCustom(
+                    "error",
+                    "O valor requerido ultrapassa o limite disponivel"
+                );
+                $("#custom-input-addon").val("");
+                $(".withdrawal-value").maskMoney({
+                    thousands: ".",
+                    decimal: ",",
+                    allowZero: true,
+                });
                 return false;
             }
 
-            if ($('#custom-input-addon').val() == '') {
-                alertCustom('error', 'Valor do saque inválido!');
+            if ($("#custom-input-addon").val() == "") {
+                alertCustom("error", "Valor do saque inválido!");
                 return false;
             }
 
@@ -297,10 +367,16 @@ $(document).ready(function () {
         }
 
         // Fazer saque
-        $('#bt-withdrawal, #bt-withdrawal_m').unbind("click");
-        $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
-            const availableBalanceText = $('.available-balance').html().replace(/,/g, '').replace(/\./g, '');
-            const toTransferText = $('#custom-input-addon').val().replace(/,/g, '').replace(/\./g, '');
+        $("#bt-withdrawal, #bt-withdrawal_m").unbind("click");
+        $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
+            const availableBalanceText = $(".available-balance")
+                .html()
+                .replace(/,/g, "")
+                .replace(/\./g, "");
+            const toTransferText = $("#custom-input-addon")
+                .val()
+                .replace(/,/g, "")
+                .replace(/\./g, "");
             const availableBalance = parseInt(availableBalanceText);
             const toTransfer = parseFloat(toTransferText);
 
@@ -308,83 +384,105 @@ $(document).ready(function () {
                 return;
             }
 
-            $.ajax(
-                {
-                    url: "/api/withdrawals/getWithdrawalValues",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        company_id: $("#transfers_company_select").val(),
-                        withdrawal_value: $('#custom-input-addon').val()
-                    },
-                    headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'application/json',
-                    },
-                    error: (response) => {
-                        errorAjaxResponse(response);
-                    },
-                    success: (response) => {
-                        manipulateModalWithdrawal(response.data);
+            $.ajax({
+                url: "/api/withdrawals/getWithdrawalValues",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    company_id: $("#transfers_company_select").val(),
+                    withdrawal_value: $("#custom-input-addon").val(),
+                },
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    manipulateModalWithdrawal(response.data);
 
-                        $("#bt-confirm-withdrawal").unbind("click");
-                        $("#bt-confirm-withdrawal").on("click", function () {
-                            loadOnModal('#modal-body');
+                    $("#bt-confirm-withdrawal").unbind("click");
+                    $("#bt-confirm-withdrawal").on("click", function () {
+                        loadOnModal("#modal-body");
 
-                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
-                            $.ajax({
-                                url: "/api/withdrawals",
-                                type: "POST",
-                                data: {
-                                    company_id: $('#transfers_company_select').val(),
-                                    withdrawal_value: $(".s-btn.green").data('value')
-                                },
-                                dataType: "json",
-                                headers: {
-                                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                                    'Accept': 'application/json',
-                                },
-                                error: (response) => {
-                                    loadingOnScreenRemove();
-                                    errorAjaxResponse(response);
-                                },
-                                success: (response) => {
-                                    loadingOnScreenRemove();
-                                    loadOnAny('.price', true);
-                                    manipulateModalSuccessWithdrawal();
+                        $("#bt-confirm-withdrawal").attr(
+                            "disabled",
+                            "disabled"
+                        );
+                        $.ajax({
+                            url: "/api/withdrawals",
+                            type: "POST",
+                            data: {
+                                company_id: $(
+                                    "#transfers_company_select"
+                                ).val(),
+                                withdrawal_value: $(".s-btn.green").data(
+                                    "value"
+                                ),
+                            },
+                            dataType: "json",
+                            headers: {
+                                Authorization: $(
+                                    'meta[name="access-token"]'
+                                ).attr("content"),
+                                Accept: "application/json",
+                            },
+                            error: (response) => {
+                                loadingOnScreenRemove();
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
+                                loadingOnScreenRemove();
+                                loadOnAny(".price", true);
+                                manipulateModalSuccessWithdrawal();
 
-                                    $('.btn-return').on('click', function () {
-                                        $('#custom-input-addon').val('');
-                                    });
+                                $(".btn-return").on("click", function () {
+                                    $("#custom-input-addon").val("");
+                                });
 
-                                    $('.btn-return').click(function () {
-                                        $('.modal-body #modal-body-withdrawal').modal('hide');
-                                    });
+                                $(".btn-return").click(function () {
+                                    $(
+                                        ".modal-body #modal-body-withdrawal"
+                                    ).modal("hide");
+                                });
 
-                                    updateBalances();
-                                },
-                                complete: (response) => {
-                                    $("#bt-confirm-withdrawal").removeAttr('disabled');
-                                }
-                            });
+                                updateBalances();
+                            },
+                            complete: (response) => {
+                                $("#bt-confirm-withdrawal").removeAttr(
+                                    "disabled"
+                                );
+                            },
                         });
-                    }
-                }
-            );
+                    });
+                },
+            });
         });
 
-        function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
+        function modalValueIsSingleValue(
+            dataWithdrawal,
+            currentBalance,
+            withdrawal,
+            debitValue
+        ) {
             let valueLowerIsNegative = 2;
 
             if (debitValue != undefined) {
-                valueLowerIsNegative = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
+                valueLowerIsNegative =
+                    dataWithdrawal.lower_value -
+                    removeFormatNumbers(debitValue);
             }
 
-            return valueLowerIsNegative < 1
-                || dataWithdrawal.lower_value == 0
-                || dataWithdrawal.bigger_value == withdrawal
-                || dataWithdrawal.lower_value == withdrawal
-                || currentBalance == dataWithdrawal.bigger_value;
+            return (
+                valueLowerIsNegative < 1 ||
+                dataWithdrawal.lower_value == 0 ||
+                dataWithdrawal.bigger_value == withdrawal ||
+                dataWithdrawal.lower_value == withdrawal ||
+                currentBalance == dataWithdrawal.bigger_value
+            );
         }
 
         function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
@@ -402,7 +500,6 @@ $(document).ready(function () {
                 `;
             }
 
-
             return `
                 <div class="">
                     <div class="row justify-content-center">
@@ -417,38 +514,60 @@ $(document).ready(function () {
                     </div>
                 </div>
             `;
-
         }
 
         function manipulateModalWithdrawal(dataWithdrawal) {
             dataWithdrawal = {
-                'lower_value': dataWithdrawal.lower_value,
-                'bigger_value': dataWithdrawal.bigger_value
-            }
+                lower_value: dataWithdrawal.lower_value,
+                bigger_value: dataWithdrawal.bigger_value,
+            };
 
-            const currentBalance = $('.available-balance').data('value').replace(/,/g, '').replace(/\./g, '');
-            const withdrawal = $('#custom-input-addon').val().replace(/,/, '').replace(/\./, '');
+            const currentBalance = $(".available-balance")
+                .data("value")
+                .replace(/,/g, "")
+                .replace(/\./g, ""); // SALDO DISPONIVEL
+            const withdrawal = $("#custom-input-addon")
+                .val()
+                .replace(/,/g, "")
+                .replace(/\./g, ""); // SAQUE DESEJADO
+            const debitValue = $(".debit-balance")
+                .data("value")
+                .replace(/,/g, "")
+                .replace(/\./g, ""); // DIVIDA ATUAL
 
-            const debitValue = $(".debit-balance").data('value');
-
-            const singleValue = modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
+            const singleValue = modalValueIsSingleValue(
+                dataWithdrawal,
+                currentBalance,
+                withdrawal,
+                debitValue
+            );
 
             let withdrawRequestValid = false;
             let totalBalanceNegative = false;
 
-            $("#modal-body-withdrawal, #modal-withdraw-footer").html('');
+            $("#modal-body-withdrawal, #modal-withdraw-footer").html("");
 
             if (debitValue != undefined) {
-                let biggerValueIsZero = dataWithdrawal.bigger_value - removeFormatNumbers(debitValue);
-                let lowerValueIsZero = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
-                let debitVerify = removeFormatNumbers(currentBalance) - removeFormatNumbers(debitValue);
+                let biggerValueIsZero =
+                    dataWithdrawal.bigger_value -
+                    removeFormatNumbers(debitValue);
+                let lowerValueIsZero =
+                    dataWithdrawal.lower_value -
+                    removeFormatNumbers(debitValue);
+                let debitVerify =
+                    removeFormatNumbers(currentBalance) -
+                    removeFormatNumbers(debitValue);
 
                 if (debitVerify < 1) {
                     totalBalanceNegative = true;
 
-                    $('#modal-withdrawal-title').text("Não é possivel realizar este saque");
+                    $("#modal-withdrawal-title").text(
+                        "Não é possivel realizar este saque"
+                    );
 
-                    $("#debit-pending-informations").html(`
+                    $("#debit-pending-informations")
+                        .html(
+                            `
                         <div class="col-12">
                             <h3 class="text-center mt-10" id="text-title-debit-pending">Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.</h3>
                              <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
@@ -465,7 +584,11 @@ $(document).ready(function () {
                                             style="font: normal normal 300 19px/13px Roboto;
                                                     color: #41DC8F;"
                                         >
-                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${formatMoney(removeFormatNumbers(currentBalance))}</span>
+                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${formatMoney(
+                                                removeFormatNumbers(
+                                                    currentBalance
+                                                )
+                                            )}</span>
                                             </span>
                                     </div>
                                 </div>
@@ -475,7 +598,9 @@ $(document).ready(function () {
                                     </div>
                                     <div class="col-md-4 mt-10 text-right">
                                         <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
-                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(removeFormatNumbers(debitValue))}</span>
+                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(
+                                                removeFormatNumbers(debitValue)
+                                            )}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -495,12 +620,15 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         </div>
-                    `).show();
+                    `
+                        )
+                        .show();
 
-                    let result = currentBalance - removeFormatNumbers(debitValue);
+                    let result =
+                        currentBalance - removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
 
-                    $('#modal-withdraw-footer').html(`
+                    $("#modal-withdraw-footer").html(`
                         <hr>
                         <div class="col-md-12 text-center">
                             <button
@@ -512,14 +640,19 @@ $(document).ready(function () {
                             </button>
                         </div>
                     `);
-                } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) { // DOIS VALORES DO SAQUE SÃO MENORES QUE O VALOR DO DEBITO PENDENTE
+                } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
+                    // DOIS VALORES DO SAQUE SÃO MENORES QUE O VALOR DO DEBITO PENDENTE
                     withdrawRequestValid = true;
-                    $("#modal-body-withdrawal").html('');
+                    $("#modal-body-withdrawal").html("");
                     $("#text-description-debit-pending").html("");
 
-                    $('#modal-withdrawal-title').text("Não é possivel realizar este saque");
+                    $("#modal-withdrawal-title").text(
+                        "Não é possivel realizar este saque"
+                    );
 
-                    $("#debit-pending-informations").html(`
+                    $("#debit-pending-informations")
+                        .html(
+                            `
                         <div class="col-12">
                             <h3 class="text-center mt-10" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.</h3>
 
@@ -534,7 +667,9 @@ $(document).ready(function () {
                                             style="font: normal normal 300 19px/13px Roboto;
                                                     color: #41DC8F;"
                                         >
-                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${dataWithdrawal.bigger_value}</span>
+                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${
+                                                dataWithdrawal.bigger_value
+                                            }</span>
                                             </span>
                                     </div>
                                 </div>
@@ -544,7 +679,9 @@ $(document).ready(function () {
                                     </div>
                                     <div class="col-md-4 mt-10 text-right">
                                         <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
-                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(removeFormatNumbers(debitValue))}</span>
+                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(
+                                                removeFormatNumbers(debitValue)
+                                            )}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -564,9 +701,11 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         </div>
-                    `).show();
+                    `
+                        )
+                        .show();
 
-                    $('#modal-withdraw-footer').html(`
+                    $("#modal-withdraw-footer").html(`
                         <hr>
                         <div class="col-md-12 text-center">
                             <button
@@ -579,29 +718,48 @@ $(document).ready(function () {
                         </div>
                     `);
 
-                    $("#requested-amount-withdrawal").text(formatMoney(withdrawal));
+                    $("#requested-amount-withdrawal").text(
+                        formatMoney(withdrawal)
+                    );
 
-                    let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
+                    let result =
+                        removeFormatNumbers(withdrawal) -
+                        removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
                     $("#debit-pending-informations").show();
                 }
             }
 
+            if (
+                withdrawRequestValid === false &&
+                totalBalanceNegative === false
+            ) {
+                const htmlModal = optionsValuesWithdrawal(
+                    singleValue,
+                    dataWithdrawal
+                );
 
-            if (withdrawRequestValid === false && totalBalanceNegative === false) {
-                const htmlModal = optionsValuesWithdrawal(singleValue, dataWithdrawal);
+                $(
+                    "#modal-body-withdrawal, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending"
+                ).html("");
+                $("#modal-withdrawal-title").html("").html("Confirmar Saque");
 
-                $("#modal-body-withdrawal, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending").html('');
-                $("#modal-withdrawal-title").html('').html('Confirmar Saque');
-
-                $('#modal-body-withdrawal').html(`
+                $("#modal-body-withdrawal").html(`
                     <div>
                         <div class="mt-10 mb-10">
                             <h3 class="text-center mb-1">
-                                ${singleValue ? 'Saque disponível:' : "Saques disponíveis:"}
+                                ${
+                                    singleValue
+                                        ? "Saque disponível:"
+                                        : "Saques disponíveis:"
+                                }
                             </h3>
                             <p class="text-center">
-                                ${singleValue ? '' : 'Selecione o valor que mais se encaixa a sua solicitação'}
+                                ${
+                                    singleValue
+                                        ? ""
+                                        : "Selecione o valor que mais se encaixa a sua solicitação"
+                                }
                             </p>
                             <h3 class="text-center">
                                 <div class="radio-custom radio-primary mt-25" id="more-than-on-values-show">
@@ -613,8 +771,10 @@ $(document).ready(function () {
                     </div>
                 `);
 
-                if (debitValue != undefined && debitValue != '0,00') {
-                    $("#debit-pending-informations").html(`
+                if (debitValue != undefined && debitValue != "0,00") {
+                    $("#debit-pending-informations")
+                        .html(
+                            `
                         <div class="col-12">
                             <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
                             <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
@@ -631,7 +791,9 @@ $(document).ready(function () {
                                             style="font: normal normal 300 19px/13px Roboto;
                                                     color: #41DC8F;"
                                         >
-                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${dataWithdrawal.bigger_value}</span>
+                                            <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${
+                                                dataWithdrawal.bigger_value
+                                            }</span>
                                             </span>
                                     </div>
                                 </div>
@@ -641,7 +803,9 @@ $(document).ready(function () {
                                     </div>
                                     <div class="col-md-4 mt-10 text-right">
                                         <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
-                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(removeFormatNumbers(debitValue))}</span>
+                                            <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">${formatMoney(
+                                                removeFormatNumbers(debitValue)
+                                            )}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -661,14 +825,27 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         </div>
-                    `).show();
+                    `
+                        )
+                        .show();
 
-                    const newValueSelected = $(`#${$("#modal-body-withdrawal .s-btn.green").attr('id')}`);
-                    $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
-                    $("#value-withdrawal-received").text(formatMoney(newValueSelected.data('value') - removeFormatNumbers(debitValue)));
+                    const newValueSelected = $(
+                        `#${$("#modal-body-withdrawal .s-btn.green").attr(
+                            "id"
+                        )}`
+                    );
+                    $("#requested-amount-withdrawal").text(
+                        newValueSelected.text().trim()
+                    );
+                    $("#value-withdrawal-received").text(
+                        formatMoney(
+                            newValueSelected.data("value") -
+                                removeFormatNumbers(debitValue)
+                        )
+                    );
                 }
 
-                $('#modal-withdraw-footer').html(`
+                $("#modal-withdraw-footer").html(`
                     <div class="col-md-12 text-center">
                         <button
                             id="bt-cancel-withdrawal"
@@ -689,101 +866,143 @@ $(document).ready(function () {
                 `);
             }
 
-            $('#modal-withdrawal').modal('show');
+            $("#modal-withdrawal").modal("show");
 
             $("#bigger-value, #lower-value, #single-value").click(function () {
-                $("#bigger-value, #lower-value, #single-value").removeClass('green');
-                const optionSelected = $(this).attr('id');
-                const newValueSelected = $(`#${optionSelected}`).addClass('green');
-                $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
+                $("#bigger-value, #lower-value, #single-value").removeClass(
+                    "green"
+                );
+                const optionSelected = $(this).attr("id");
+                const newValueSelected = $(`#${optionSelected}`).addClass(
+                    "green"
+                );
+                $("#requested-amount-withdrawal").text(
+                    newValueSelected.text().trim()
+                );
 
                 if (debitValue != undefined) {
-                    let result = $(`#${optionSelected}`).data('value') - removeFormatNumbers(debitValue);
+                    let result =
+                        $(`#${optionSelected}`).data("value") -
+                        removeFormatNumbers(debitValue);
                     $("#value-withdrawal-received").text(formatMoney(result));
                 }
             });
         }
 
         function removeFormatNumbers(number) {
-            return number.replace(/,/g, '').replace(/\./g, '');
+            return number.replace(/,/g, "").replace(/\./g, "");
         }
 
         function manipulateModalSuccessWithdrawal() {
-            $("#debit-pending-informations").html('');
+            $("#debit-pending-informations").html("");
 
-            $('#modal-withdrawal-title').text("Sucesso!");
-            $('.modal-body #modal-body-withdrawal').html(`
+            $("#modal-withdrawal-title").text("Sucesso!");
+            $(".modal-body #modal-body-withdrawal").html(`
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                     <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
                     <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                 </svg>
                 <h3 align="center">
                     <strong>Sua solicitação foi para avaliação!</strong>
-                </h3>`
-            );
-            $('#modal-withdraw-footer').html(`
+                </h3>`);
+            $("#modal-withdraw-footer").html(`
                 <div style="width:100%;text-align:center;padding-top:3%">
                     <span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">
                         Retornar
                     </span>
-                </div>`
-            );
+                </div>`);
 
-            $('#modal-withdrawal').modal('show');
+            $("#modal-withdrawal").modal("show");
         }
-
 
         function updateWithdrawalsTable(link = null) {
             $("#pagination-withdrawals, #withdrawals-table-data").html("");
-            loadOnTable('#withdrawals-table-data', '#transfersTable');
+            loadOnTable("#withdrawals-table-data", "#transfersTable");
 
             if (link == null) {
-                link = '/api/withdrawals';
+                link = "/api/withdrawals";
             } else {
-                link = '/api/withdrawals' + link;
+                link = "/api/withdrawals" + link;
             }
 
             $.ajax({
                 method: "GET",
                 url: link,
-                data: {company: $("#transfers_company_select option:selected").val()},
+                data: {
+                    company: $(
+                        "#transfers_company_select option:selected"
+                    ).val(),
+                },
                 dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
                 },
                 error: (response) => {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    $("#withdrawals-table-data").html('');
+                    $("#withdrawals-table-data").html("");
 
-                    if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr style='border-radius: 16px;'><td  style='padding:  10px !important' colspan='6' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                    if (
+                        response.data === "" ||
+                        response.data === undefined ||
+                        response.data.length === 0
+                    ) {
+                        $("#withdrawals-table-data").html(
+                            "<tr style='border-radius: 16px;'><td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                                $("#withdrawals-table-data").attr("img-empty") +
+                                "'> Nenhum saque realizado até o momento</td></tr>"
+                        );
                         $("#withdrawals-pagination").html("");
                         return;
                     }
 
-                    let tableData = '';
+                    let tableData = "";
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                            <td class="text-xs-left text-md-left">#${data.id}</td>
-                            <td class="text-xs-left text-md-left font-md-size-18" style="grid-area: sale"> ${data.account_information_bank} <br> <small class="gray">${data.account_information}</small> </td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-start"> <strong class="bold-mobile">${data.date_request} </strong> <br> <small class="gray"> ${data.date_request_time} </small></td>
-                            <td class="text-xs-left text-md-left" style="grid-area: date-end"> <strong class="bold-mobile">${data.date_release} </strong> <br> <small class="gray"> ${data.date_release_time} </small></td>
-                            <td class="text-xs-right text-md-left" style="grid-area: status" class="shipping-status">
-                                <span data-toggle="tooltip" data-placement="left" title="${data.status_translated}" class="badge badge-${statusWithdrawals[data.status]}"> ${data.status_translated}</span>
+                            <td class="text-center" style="grid-area: codigo">#${
+                                data.id
+                            }</td>
+                            <td class="text-left font-md-size-18" style="grid-area: sale"> ${
+                                data.account_information_bank
+                            } <br> <small class="gray">${
+                            data.account_information
+                        }</small> </td>
+                            <td class="text-left" style="grid-area: date-start"> <strong class="bold-mobile">${
+                                data.date_request
+                            } </strong> <br> <small class="gray"> ${
+                            data.date_request_time
+                        } </small></td>
+                            <td class="text-left" style="grid-area: date-end"> <strong class="bold-mobile">${
+                                data.date_release
+                            } </strong> <br> <small class="gray"> ${
+                            data.date_release_time
+                        } </small></td>
+                            <td class="text-right text-sm-right" style="grid-area: status" class="shipping-status">
+                                <span data-toggle="tooltip" data-placement="left" title="${
+                                    data.status_translated
+                                }" class="badge badge-${
+                            statusWithdrawals[data.status]
+                        }"> ${data.status_translated}</span>
                             </td>
-                            <td class="text-xs-right text-md-left" style="grid-area: value"> <strong class="font-md-size-20">${data.value}</strong>
+                            <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">${
+                                data.value
+                            }</strong>
                         `;
 
-                        if (data.debt_pending_value != null && data.debt_pending_value != 'R$ 0,00') {
-                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}  D</small></a>`;
+                        if (
+                            data.debt_pending_value != null &&
+                            data.debt_pending_value != "R$ 0,00"
+                        ) {
+                            tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}</small></a>`;
                         }
                         tableData += `
                             </td>
-                                <td class="d-none d-md-block">
+                                <td class="d-none d-lg-block">
                                     <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
                                         <span class='o-eye-1'></span>
                                     </a>
@@ -792,43 +1011,47 @@ $(document).ready(function () {
                         `;
                     });
                     $("#withdrawals-table-data").append(tableData);
-                    $('#withdrawalsTable').addClass('table-striped')
+                    $("#withdrawalsTable").addClass("table-striped");
 
                     $(function () {
-                        $('[data-toggle="tooltip"]').tooltip()
+                        $('[data-toggle="tooltip"]').tooltip();
                     });
 
-                    pagination(response, 'withdrawals', updateWithdrawalsTable);
-                }
+                    pagination(response, "withdrawals", updateWithdrawalsTable);
+                },
             });
         }
     }
 
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro", function () {
-        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
+        $(
+            "#extract_company_select option[value=" +
+                $("#extract_company_select option:selected").val() +
+                "]"
+        ).prop("selected", true);
         updateTransfersTable();
     });
 
     function updateTransfersTable(link = null) {
-        $("#pagination-transfers, #table-transfers-body").html('');
-        loadOnAnyEllipsis('#available-in-period', false, balanceLoader);
+        $("#pagination-transfers, #table-transfers-body").html("");
+        loadOnAnyEllipsis("#available-in-period", false, balanceLoader);
 
-        loadOnTable('#table-transfers-body', '#transfersTable');
+        loadOnTable("#table-transfers-body", "#transfersTable");
         if (link == null) {
-            link = '/api/transfers';
+            link = "/api/transfers";
         } else {
-            link = '/api/transfers' + link;
+            link = "/api/transfers" + link;
         }
 
         let data = {
             company: $("#extract_company_select option:selected").val(),
             date_type: $("#date_type").val(),
             date_range: $("#date_range").val(),
-            reason: $('#reason').val(),
+            reason: $("#reason").val(),
             transaction: $("#transaction").val(),
-            type: $('#type').val(),
-            value: $('#transaction-value').val(),
+            type: $("#type").val(),
+            value: $("#transaction-value").val(),
         };
 
         $.ajax({
@@ -837,42 +1060,57 @@ $(document).ready(function () {
             data: data,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
                 let balance_in_period = response.meta.balance_in_period;
-                let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
-                let availableInPeriod = $('#available-in-period');
-                availableInPeriod.html(`<span${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
+                let isNegative =
+                    parseFloat(
+                        balance_in_period.replace(".", "").replace(",", ".")
+                    ) < 0;
+                let availableInPeriod = $("#available-in-period");
+                availableInPeriod.html(
+                    `<span${
+                        isNegative ? ' style="color:red;"' : ""
+                    }><span class="currency">R$ </span>${balance_in_period}</span>`
+                );
                 if (isNegative) {
-                    availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
+                    availableInPeriod
+                        .html(
+                            `<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`
+                        )
                         .parent()
-                        .find('.grad-border')
-                        .removeClass('green')
-                        .addClass('red');
+                        .find(".grad-border")
+                        .removeClass("green")
+                        .addClass("red");
                 } else {
-                    availableInPeriod.html(`<span class="currency">R$ </span>${balance_in_period}`)
+                    availableInPeriod
+                        .html(
+                            `<span class="currency">R$ </span>${balance_in_period}`
+                        )
                         .parent()
-                        .find('.grad-border')
-                        .removeClass('red')
-                        .addClass('green');
+                        .find(".grad-border")
+                        .removeClass("red")
+                        .addClass("green");
                 }
 
-                loadOnAnyEllipsis('#available-in-period', true);
+                loadOnAnyEllipsis("#available-in-period", true);
 
-                if (response.data == '') {
-                    $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
+                if (response.data == "") {
+                    $("#table-transfers-body").html(
+                        "<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>"
+                    );
                     return;
                 }
 
-                let data = '';
+                let data = "";
 
                 $.each(response.data, function (index, value) {
-                    data += '<tr >';
+                    data += "<tr >";
                     if (value.is_owner && value.sale_id) {
                         data += `<td style="vertical-align: middle;">
                             ${value.reason}
@@ -881,18 +1119,27 @@ $(document).ready(function () {
                             </a><br>
                             <small>Venda em: ${value.sale_date}</small>
                          </td>`;
-                    } else if (value.reason === 'Antecipação') {
+                    } else if (value.reason === "Antecipação") {
                         data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
                     } else {
-                        data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                        data += `<td style="vertical-align: middle;">${
+                            value.reason
+                        }${
+                            value.sale_id
+                                ? "<span> #" + value.sale_id + "</span>"
+                                : ""
+                        }</td>`;
                     }
 
-                    data += '<td style="vertical-align: middle;">' + value.date + '</td>';
+                    data +=
+                        '<td style="vertical-align: middle;">' +
+                        value.date +
+                        "</td>";
                     if (value.type_enum === 1) {
                         data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
-                        if (value.reason === 'Antecipação') {
+                        if (value.reason === "Antecipação") {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
-                        } else if (value.value_anticipable != '0,00') {
+                        } else if (value.value_anticipable != "0,00") {
                             data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
                         } else {
                             data += `</td>`;
@@ -900,54 +1147,87 @@ $(document).ready(function () {
                     } else {
                         data += `<td style="vertical-align: middle; color:red;"> ${value.value}</td> `;
                     }
-                    data += '</tr>';
+                    data += "</tr>";
                 });
 
                 $("#table-transfers-body").html(data);
 
-                pagination(response, 'transfers', updateTransfersTable);
-
-            }
+                pagination(response, "transfers", updateTransfersTable);
+            },
         });
     }
 
     function updateAccountStatementData() {
-        loadOnAnyEllipsis('#nav-statement #available-in-period-statement', false, balanceLoader);
+        loadOnAnyEllipsis(
+            "#nav-statement #available-in-period-statement",
+            false,
+            balanceLoader
+        );
 
-        $('#table-statement-body').html('');
-        $('#pagination-statement').html('');
-        loadOnTable('#table-statement-body', '#statementTable');
+        $("#table-statement-body").html("");
+        $("#pagination-statement").html("");
+        loadOnTable("#table-statement-body", "#statementTable");
 
-        let link = '/api/transfers/account-statement-data?dateRange=' + $("#date_range_statement").val() + '&company=' + $("#statement_company_select").val() + '&sale=' + $("#statement_sale").val() + '&status=' + $("#statement_status_select").val() + '&statement_data_type=' + $("#statement_data_type_select").val() + '&payment_method=' + $("#payment_method").val() + '&withdrawal_id=' + $("#withdrawal_id").val();
+        let link =
+            "/api/transfers/account-statement-data?dateRange=" +
+            $("#date_range_statement").val() +
+            "&company=" +
+            $("#statement_company_select").val() +
+            "&sale=" +
+            $("#statement_sale").val() +
+            "&status=" +
+            $("#statement_status_select").val() +
+            "&statement_data_type=" +
+            $("#statement_data_type_select").val() +
+            "&payment_method=" +
+            $("#payment_method").val() +
+            "&withdrawal_id=" +
+            $("#withdrawal_id").val();
 
         $(".numbers").hide();
 
         $.ajax({
             method: "GET",
             url: link,
-            dataType: 'json',
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
-                loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
+            error: (response) => {
+                loadOnAnyEllipsis(
+                    "#nav-statement #available-in-period-statement",
+                    true
+                );
 
-                let error = 'Erro ao gerar o extrato';
-                $('#export-excel').css('opacity', 0)
-                $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" + error + "</td></tr>");
+                let error = "Erro ao gerar o extrato";
+                $("#export-excel").css("opacity", 0);
+                $("#table-statement-body").html(
+                    "<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" +
+                        error +
+                        "</td></tr>"
+                );
                 errorAjaxResponse(error);
             },
-            success: response => {
+            success: (response) => {
                 updateClassHTML();
 
                 let items = response.items;
-                $('#statement-money #available-in-period-statement').html('R$ 0,00');
+                $("#statement-money #available-in-period-statement").html(
+                    "R$ 0,00"
+                );
 
                 if (isEmpty(items)) {
-                    loadOnAnyEllipsis('#nav-statement #available-in-period-statement', true);
-                    $('#export-excel').css('opacity', 0)
-                    $("#table-statement-body").html("<tr style='border-radius: 16px;'><td style='padding:  10px !important' colspan='11' class='text-center'>Nenhum dado encontrado</td></tr>");
+                    loadOnAnyEllipsis(
+                        "#nav-statement #available-in-period-statement",
+                        true
+                    );
+                    $("#export-excel").css("opacity", 0);
+                    $("#table-statement-body").html(
+                        "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                            $("#table-statement-body").attr("img-empty") +
+                            "'>Nenhum dado encontrado</td></tr>"
+                    );
                     return false;
                 }
 
@@ -955,7 +1235,6 @@ $(document).ready(function () {
                     let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
 
                     if (item.order && item.order.hashId) {
-
                         dataTable += `Transação`;
 
                         if (item.isInvite) {
@@ -983,68 +1262,76 @@ $(document).ready(function () {
                             ${item.date}
                         </td>
                          <td class="text-xs-right text-md-left" style="grid-area: status">
-                            <span data-toggle="tooltip" data-placement="left" title="${item.details.status}" class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">${item.details.status}</span>
+                            <span data-toggle="tooltip" data-placement="left" title="${
+                                item.details.status
+                            }" class="badge badge-sm badge-${
+                        statusExtract[item.details.type]
+                    } p-2">${item.details.status}</span>
                          </td>
                         <td class="text-xs-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
-                        ${(item.amount.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                        })
-                    )}
+                        ${item.amount.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                        })}
                         </td>
                         </tr>`;
 
                     $(function () {
-                        $('[data-toggle="tooltip"]').tooltip()
-                    })
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
 
                     updateClassHTML(dataTable);
                 });
 
-                let totalInPeriod = response.totalInPeriod ?? '0,00';
+                let totalInPeriod = response.totalInPeriod ?? "0,00";
 
                 let isNegativeStatement = false;
                 if (totalInPeriod < 1) {
                     isNegativeStatement = true;
                 }
 
-                let aux = totalInPeriod.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                })
-
-                $('#statement-money #available-in-period-statement').html(`
-                    <span${isNegativeStatement ? ' style="color:red;"' : ''}>
-                       <small class="font-size-12">R$ </small> ${(totalInPeriod.toLocaleString('pt-BR')
-                    )}
-                    </span>`
-                );
-                paginationStatement();
-
-                $('#export-excel').css('opacity', 1)
-                $("#pagination-statement span").addClass('jp-hidden');
-                $("#pagination-statement a").removeClass('active').addClass('btn nav-btn');
-                $("#pagination-statement a.jp-current").addClass('active');
-                $("#pagination-statement a").on('click', function () {
-                    $("#pagination-statement a").removeClass('active');
-                    $(this).addClass('active');
+                let aux = totalInPeriod.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
                 });
 
-                $("#pagination-statement").on('click', function () {
+                $("#statement-money #available-in-period-statement").html(`
+                    <span${isNegativeStatement ? ' style="color:red;"' : ""}>
+                       <small class="font-size-12">R$ </small> ${totalInPeriod.toLocaleString(
+                           "pt-BR"
+                       )}
+                    </span>`);
+                paginationStatement();
+
+                $("#export-excel").css("opacity", 1);
+                $("#pagination-statement span").addClass("jp-hidden");
+                $("#pagination-statement a")
+                    .removeClass("active")
+                    .addClass("btn nav-btn");
+                $("#pagination-statement a.jp-current").addClass("active");
+                $("#pagination-statement a").on("click", function () {
+                    $("#pagination-statement a").removeClass("active");
+                    $(this).addClass("active");
+                });
+
+                $("#pagination-statement").on("click", function () {
                     $("#pagination-statement span").remove();
                 });
 
-                loadOnAnyEllipsis('#nav-statement #statement-money  #available-in-period-statement', true);
-            }
+                loadOnAnyEllipsis(
+                    "#nav-statement #statement-money  #available-in-period-statement",
+                    true
+                );
+            },
         });
     }
 
     function updateClassHTML(dataTable = 0) {
         if (dataTable.length > 0) {
-            $('#table-statement-body').append(dataTable);
-            $("#statementTable").addClass('table-striped');
+            $("#table-statement-body").append(dataTable);
+            $("#statementTable").addClass("table-striped");
         } else {
-            $('#table-statement-body').html('');
+            $("#table-statement-body").html("");
         }
     }
 
@@ -1055,173 +1342,212 @@ $(document).ready(function () {
     });
 
     let rangesToDateRangeStatement = {
-        'Hoje': [moment(), moment()],
-        'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-        'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-        'Próximos 30 dias': [moment(), moment().add(29, 'days')],
-        'Este mês': [moment().startOf('month'), moment().endOf('month')],
-        'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        Hoje: [moment(), moment()],
+        Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+        "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+        "Próximos 30 dias": [moment(), moment().add(29, "days")],
+        "Este mês": [moment().startOf("month"), moment().endOf("month")],
+        "Mês passado": [
+            moment().subtract(1, "month").startOf("month"),
+            moment().subtract(1, "month").endOf("month"),
+        ],
     };
 
-    let envDebug = $("meta[name=app-debug]").attr('content');
+    let envDebug = $("meta[name=app-debug]").attr("content");
 
     //if (envDebug == 'true') {
-        rangesToDateRangeStatement['Todo período'] = [moment().subtract(1, 'year'), moment().add(40, 'days')];
+    rangesToDateRangeStatement["Todo período"] = [
+        moment().subtract(1, "year"),
+        moment().add(40, "days"),
+    ];
     //}
 
-    $('#date_range_statement').daterangepicker({
+    $("#date_range_statement").daterangepicker({
         maxSpan: {
             days: 31,
         },
-        startDate: moment().subtract(7, 'days'),
-        endDate: moment().add(7, 'days'),
-        opens: 'center',
-        maxDate: moment().add(1, 'month'),
+        startDate: moment().subtract(7, "days"),
+        endDate: moment().add(7, "days"),
+        opens: "center",
+        maxDate: moment().add(1, "month"),
         alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
+        showCustomRangeLabel: "Customizado",
         autoUpdateInput: true,
         locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
+            locale: "pt-br",
+            format: "DD/MM/YYYY",
             applyLabel: "Aplicar",
             cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+            fromLabel: "De",
+            toLabel: "Até",
+            customRangeLabel: "Customizado",
+            weekLabel: "W",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro",
+            ],
+            firstDay: 0,
         },
-        ranges: rangesToDateRangeStatement
+        ranges: rangesToDateRangeStatement,
     });
 
     $('#statement_sale').on('change paste keyup select', function () {
         let val = $(this).val();
 
-        if (val === '') {
-            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
-            $('#statement_data_type_select').attr('disabled', false).removeClass('disableFields');
+        if (val === "") {
+            $("#date_range_statement")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#statement_data_type_select")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         } else {
             $('#date_range_statement').attr('disabled', true).addClass('disableFields');
             $('#statement_data_type_select').attr('disabled', true).addClass('disableFields');
         }
     });
 
-    $('#statement_status_select').on('change paste keyup select', function () {
-
+    $("#statement_status_select").on("change paste keyup select", function () {
         let val = $(this).val();
 
-        if (val === 'PENDING_DEBIT') {
-
-            $('#date_range_statement').attr('disabled', true).addClass('disableFields');
-            $('#payment_method').attr('disabled', true).addClass('disableFields');
-            $('#statement_sale').val('').attr('disabled', true).addClass('disableFields');
-
+        if (val === "PENDING_DEBIT") {
+            $("#date_range_statement")
+                .attr("disabled", true)
+                .addClass("disableFields");
+            $("#payment_method")
+                .attr("disabled", true)
+                .addClass("disableFields");
+            $("#statement_sale")
+                .val("")
+                .attr("disabled", true)
+                .addClass("disableFields");
         } else {
-
-            $('#date_range_statement').attr('disabled', false).removeClass('disableFields');
-            $('#payment_method').attr('disabled', false).removeClass('disableFields');
-            $('#statement_sale').attr('disabled', false).removeClass('disableFields');
+            $("#date_range_statement")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#payment_method")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#statement_sale")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         }
     });
 
     // Finances report
 
-    let exportFinanceFormat = 'xls'
+    let exportFinanceFormat = "xls";
     $("#bt_get_sale_xls").on("click", function () {
-        $('#modal-export-finance-getnet').modal('show');
-        exportFinanceFormat = 'csv';
+        $("#modal-export-finance-getnet").modal("show");
+        exportFinanceFormat = "csv";
     });
 
     $("#bt_get_sale_csv").on("click", function () {
-        $('#modal-export-finance-getnet').modal('show');
-        exportFinanceFormat = 'xls';
+        $("#modal-export-finance-getnet").modal("show");
+        exportFinanceFormat = "xls";
     });
 
     $(".btn-confirm-export-finance-getnet").on("click", function () {
-        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
-        var email = $('#email_finance_export').val();
+        var regexEmail = new RegExp(
+            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
+        );
+        var email = $("#email_finance_export").val();
 
-        if (email == '' || !regexEmail.test(email)) {
-            alertCustom('error', 'Preencha o e-mail corretamente');
+        if (email == "" || !regexEmail.test(email)) {
+            alertCustom("error", "Preencha o e-mail corretamente");
             return false;
         } else {
             financesGetnetExport(exportFinanceFormat);
-            $('#modal-export-finance-getnet').modal('hide');
+            $("#modal-export-finance-getnet").modal("hide");
         }
     });
 
-// Download do relatorio
+    // Download do relatorio
     function financesGetnetExport(fileFormat) {
-
         let data = {
-            "dateRange": $("#date_range_statement").val(),
-            "company": $("#statement_company_select").val(),
-            "sale": $("#statement_sale").val(),
-            "status": $("#statement_status_select").val(),
-            "statement_data_type": $("#statement_data_type_select").val(),
-            "payment_method": $("#payment_method").val(),
-            "format": fileFormat,
-            "email": $('#email_finance_export').val(),
+            dateRange: $("#date_range_statement").val(),
+            company: $("#statement_company_select").val(),
+            sale: $("#statement_sale").val(),
+            status: $("#statement_status_select").val(),
+            statement_data_type: $("#statement_data_type_select").val(),
+            payment_method: $("#payment_method").val(),
+            format: fileFormat,
+            email: $("#email_finance_export").val(),
         };
 
         $.ajax({
             method: "POST",
-            url: '/api/transfers/account-statement-data/export',
+            url: "/api/transfers/account-statement-data/export",
             data: data,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: response => {
-                $('#export-finance-email').text(response.email);
-                $('#alert-finance-export').show()
-                    .shake();
-            }
+            success: (response) => {
+                $("#export-finance-email").text(response.email);
+                $("#alert-finance-export").show().shake();
+            },
         });
     }
 
-
     $(".nav-link-finances-show-export").on("click", function () {
-        $("#finances_export_btns").css('opacity', 1).removeClass('col-1').addClass('col-6');
+        $("#finances_export_btns")
+            .css("opacity", 1)
+            .removeClass("col-1")
+            .addClass("col-6");
 
-        $("#bt_get_sale_xls").removeClass('disabled');
-        $("#bt_get_sale_csv").removeClass('disabled');
-        $(".page-title").parent().removeClass('col-10');
+        $("#bt_get_sale_xls").removeClass("disabled");
+        $("#bt_get_sale_csv").removeClass("disabled");
+        $(".page-title").parent().removeClass("col-10");
     });
 
     $(".nav-link-finances-hide-export").on("click", function () {
-        $("#finances_export_btns").css('opacity', 0).removeClass('col-6').addClass('col-1')
-        $("#bt_get_sale_xls").addClass('disabled');
-        $("#bt_get_sale_csv").addClass('disabled');
-        $(".page-title").parent().addClass('col-10');
-
+        $("#finances_export_btns")
+            .css("opacity", 0)
+            .removeClass("col-6")
+            .addClass("col-1");
+        $("#bt_get_sale_xls").addClass("disabled");
+        $("#bt_get_sale_csv").addClass("disabled");
+        $(".page-title").parent().addClass("col-10");
     });
 
-    $('.btn-light-1').click(function () {
-        var collapse = $('#icon-filtro')
-        var text = $('#text-filtro')
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
-            collapse.css('transform', 'rotate(180deg)')
-            text.text('Minimizar filtros').fadeIn();
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
         } else {
-            collapse.css('transform', 'rotate(0deg)')
-            text.text('Filtros avançados').fadeIn()
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
         }
-    })
+    });
 
-    $('#pagination-statement').click(function () {
+    $("#pagination-statement").click(function () {
         setTimeout(function () {
-            $('.s-table:visible').attr('style', 'display: !')
-            $('.table tr:visible:last > td:first').addClass('teste-1')
-            $('.table tr:visible:last > td:last').addClass('teste-2')
+            $(".s-table:visible").attr("style", "display: !");
+            $(".table tr:visible:last > td:first").addClass("teste-1");
+            $(".table tr:visible:last > td:last").addClass("teste-2");
         }, 100);
     });
 });
@@ -1234,27 +1560,29 @@ $(document).ready(function () {
 });*/
 
 $("#go-to-pending-debt").on("click", function () {
-
     selectPendingDebt();
     $("#bt_filtro_statement").click();
 });
 
-
-$(document).on('click', '.pending_debit_withdrawal_id', function () {
-
+$(document).on("click", ".pending_debit_withdrawal_id", function () {
     selectPendingDebt();
 
-    $('#withdrawal_id').val($(this).attr('withdrawal_id'));
+    $("#withdrawal_id").val($(this).attr("withdrawal_id"));
     $("#bt_filtro_statement").click();
-    $('#withdrawal_id').val('');
+    $("#withdrawal_id").val("");
 });
 
 function selectPendingDebt() {
-
     $("#nav-statement-tab").click();
-    $('#statement_status_select option[value="PENDING_DEBIT"]').prop('selected', true);
+    $('#statement_status_select option[value="PENDING_DEBIT"]').prop(
+        "selected",
+        true
+    );
 
-    $('#date_range_statement').attr('disabled', true).addClass('disableFields');
-    $('#payment_method').attr('disabled', true).addClass('disableFields');
-    $('#statement_sale').val('').attr('disabled', true).addClass('disableFields');
+    $("#date_range_statement").attr("disabled", true).addClass("disableFields");
+    $("#payment_method").attr("disabled", true).addClass("disableFields");
+    $("#statement_sale")
+        .val("")
+        .attr("disabled", true)
+        .addClass("disableFields");
 }
