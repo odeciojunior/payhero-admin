@@ -318,7 +318,11 @@ strong span {
 }
 
 .nav-tabs .nav-link:first-of-type {
-    margin-left: 0px;
+    margin-left: 15px;
+}
+
+#nav-home-tab {
+    margin-left: 0px !important;
 }
 
 .nav-tabs .nav-link {

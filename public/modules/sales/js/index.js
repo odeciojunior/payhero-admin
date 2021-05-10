@@ -11,6 +11,30 @@ $(document).ready(function () {
             $(this).val(0);
         }
     });
+
+    $(".transaction-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+    $('.transaction-value').on('blur', function () {
+        if ($(this).val().length == 1) {
+            let val = '0,0'+$(this).val();
+            $('.transaction-value').val(val);
+        } else if($(this).val().length == 2) {
+            let val = '0,'+$(this).val();
+            $('.transaction-value').val(val);
+        }
+    });
+
+    $('#transaction').on('change paste keyup select', function () {
+        let val = $(this).val();
+
+        if (val === '') {
+            $('#date_type').attr('disabled', false).removeClass('disableFields');
+            $('#date_range').attr('disabled', false).removeClass('disableFields');
+        } else {
+            $('#date_type').attr('disabled', true).addClass('disableFields');
+            $('#date_range').attr('disabled', true).addClass('disableFields');
+        }
+    });
+
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -151,18 +175,22 @@ $(document).ready(function () {
 
     function getFilters(urlParams = false) {
         let data = {
-            project: $("#projeto").val(),
-            payment_method: $("#forma").val(),
-            status: $("#status").val(),
-            client: $("#comprador").val(),
-            customer_document: $("#customer_document").val(),
-            date_type: $("#date_type").val(),
-            date_range: $("#date_range").val(),
-            transaction: $("#transaction").val().replace("#", ""),
-            shopify_error: $("#shopify_error").val(),
-            plan: $("#plan").val(),
-            upsell: $("#upsell").val(),
-            order_bump: $("#order-bump").val(),
+            'project': $("#projeto").val(),
+            'payment_method': $("#forma").val(),
+            'status': $("#status").val(),
+            'client': $("#comprador").val(),
+            'customer_document': $("#customer_document").val(),
+            'date_type': $("#date_type").val(),
+            'date_range': $("#date_range").val(),
+            'transaction': $("#transaction").val().replace('#', ''),
+            'cashback': $("#cashback").val(),
+            'plan': $('#plan').val(),
+            'coupon': $("#cupom").val(),
+            'company': $("#empresa").val(),
+            'value': $("#valor").val().replace(/[^\d]+/g, ''),
+            'email_client': $("#email_cliente").val(),
+            'upsell': $("#upsell").val(),
+            'order_bump': $("#order-bump").val(),
         };
 
         if (urlParams) {
@@ -179,6 +207,7 @@ $(document).ready(function () {
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
+    getCompanies();
 
     //Carrega o modal para regerar boleto
     $(document).on("click", ".boleto-pending", function () {
@@ -261,6 +290,77 @@ $(document).ready(function () {
 
                 loadingOnScreenRemove();
             },
+        });
+    }
+
+    // Obtem os campos dos filtros
+    function getCoupons() {
+        var projectId = $("#projeto").val();
+        projectId = projectId != "" ? projectId : null;
+
+        $.ajax({
+            method: "GET",
+            url: "/api/project/" + projectId + "/couponsdiscounts?select=true",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                $("#cupom").html("");
+
+                if (response.data.length > 0) {
+                    $("#cupom").append("<option value=''>Todos cupons</option>");
+
+                    $.each(response.data, function (i, coupon) {
+                        $("#cupom").append($('<option>', {
+                            value: coupon.id,
+                            text: coupon.name
+                        }));
+                    });
+
+                    atualizar();
+                } else {
+                    $("#cupom").append("<option value=''>Nenhum cupom encontrado</option>");
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
+
+    // Obtem os campos dos filtros
+    function getCompanies() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: "/api/companies?select=true",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (i, company) {
+                        $("#empresa").append($('<option>', {
+                            value: company.id,
+                            text: company.name
+                        }));
+                    });
+
+                    atualizar();
+                }
+
+                loadingOnScreenRemove();
+            }
         });
     }
 
@@ -436,7 +536,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${
                                         value.end_date
                                     }</td>
-                                    <td style='white-space: nowrap;' class="text-center text-sm-right">
+                                    <td style='white-space: nowrap;' class="text-center text-md-right">
                                         ${
                                             cashback
                                                 ? cashback

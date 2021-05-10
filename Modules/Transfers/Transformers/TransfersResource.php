@@ -24,6 +24,14 @@ class TransfersResource extends JsonResource
 
         $codeAnticipation = null;
 
+        if (!empty($this->anticipation_id)) {
+            $anticipation = $this->anticipation->first();
+            $codeAnticipation = hashids_encode($anticipation->id, 'anticipation_id');
+        } elseif (!empty($this->transaction_id) && !empty($this->transaction->anticipatedTransactions()->first())) {
+            $anticipatedTransaction = $this->transaction->anticipatedTransactions()->first();
+            $codeAnticipation = hashids_encode($anticipatedTransaction->anticipation_id, 'anticipation_id');
+        }
+
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
         } elseif (!empty($this->transaction) && $this->reason == 'chargedback') {
@@ -34,6 +42,8 @@ class TransfersResource extends JsonResource
             $reason = 'Estorno da transação';
         } elseif ($this->reason == 'Antecipação') {
             $reason = 'Antecipação';
+        } elseif ($this->reason == 'canceled_antifraud') {
+            $reason = 'Chargeback';
         } else {
             $reason = $this->reason;
         }
@@ -46,24 +56,26 @@ class TransfersResource extends JsonResource
             $tax = number_format(intval($this->anticipation->tax) / 100, 2, ',', '.');
         }
 
-        $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
+        $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null(
+                $this->transaction_type
+            );
 
         $saleDate = !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)
-                                                       ->format('d/m/Y') : '';
+            ->format('d/m/Y') : '';
 
         return [
-            'id'                => Hashids::encode($this->id),
-            'type'              => $this->type,
-            'type_enum'         => $this->type_enum,
-            'value'             => $value,
-            'reason'            => $reason,
-            'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
-            'anticipation_id'   => $codeAnticipation,
-            'date'              => $this->created_at->format('d/m/Y'),
-            'is_owner'          => $isOwner,
-            'sale_date'         => $saleDate,
+            'id' => Hashids::encode($this->id),
+            'type' => $this->type,
+            'type_enum' => $this->type_enum,
+            'value' => $value,
+            'reason' => $reason,
+            'sale_id' => Hashids::connection('sale_id')->encode($this->sale_id),
+            'anticipation_id' => $codeAnticipation,
+            'date' => $this->created_at->format('d/m/Y'),
+            'is_owner' => $isOwner,
+            'sale_date' => $saleDate,
             'value_anticipable' => '0,00',
-            'tax'               => $tax,
+            'tax' => $tax,
         ];
     }
 }

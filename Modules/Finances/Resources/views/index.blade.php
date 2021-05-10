@@ -262,7 +262,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
                                 Histórico de transferências
@@ -375,8 +375,7 @@
                                                                placeholder="Clique para editar..." readonly>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_1">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="payment_method">Forma de pagamento</label>
                                                         <select name='payment_method' id="payment_method"
@@ -388,8 +387,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_2">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="statement_sale">
                                                             Transação <i style="font-weight: normal"
@@ -434,7 +432,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
-                                                        <div class="col-6 pr-0">
+                                                        <div class="col-6 col-xl-3 offset-xl-6 pr-0 mt-20">
                                                             <div
                                                                 class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                 data-toggle="collapse"
@@ -442,18 +440,16 @@
                                                                 aria-expanded="false"
                                                                 aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
-                                                                     src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                                     src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
                                                                 <span id="text-filtro">Filtros avançados</span>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
-                                                            <button id="bt_filtro_statement"
-                                                                    class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                                <img style="height: 12px; margin-right: 4px"
-                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                                filtros
-                                                            </button>
+                                                        <div class="col-6 col-xl-3 mt-20">
+                                                            <div id="bt_filtro_statement" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                                Aplicar filtros
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
