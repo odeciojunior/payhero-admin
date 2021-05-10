@@ -68,7 +68,7 @@
                         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
-                        <img src="{!! asset('modules/global/img/empty.svg') !!}" width="150px">
+                        <img src="{!! asset('modules/global/img/produtos.svg') !!}" width="156px">
                         <h1 class="big gray">Zero produtos por aqui!</h1>
                         {{--                    <div class='product-is-empty-cla'>--}}
                         {{--                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}

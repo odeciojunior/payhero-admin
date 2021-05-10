@@ -157,7 +157,9 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhum cupom encontrado</td></tr>");
+                    $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#body-table-coupons").attr("img-empty") +
+                        "'> Nenhum cupom encontrado</td></tr>");
                 }
                 pagination(response, 'coupons', atualizar);
             }
