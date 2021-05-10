@@ -290,7 +290,7 @@
                                             <th scope="col" class="d-none d-md-block"> &nbsp;</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="withdrawals-table-data" class="custom-t-body">
+                                        <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
                                         </tbody>
                                     </table>
                                 </div>
@@ -484,31 +484,29 @@
 
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
 
-                            <div class="card shadow" style="min-height: 300px;">
-                                <table id="statementTable"
-                                    class="table table-condensed unify table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col" class="headCenter">Razão</th>
-                                        <th scope="col" class="headCenter">Data prevista
-                                            <i style="font-weight: normal"
-                                            class="o-question-help-1 ml-5 font-size-14"
-                                            data-toggle="tooltip"
-                                            title=""
-                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                        </th>
-                                        <th scope="col" class="headCenter">Status</th>
-                                        <th scope="col" class="headCenter">Valor</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="table-statement-body"
-                                        class="custom-t-body table-statement-body-class">
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="row justify-content-center justify-content-md-end pr-md-15">
-                                <ul id="pagination-statement" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10"></ul>
+                            <table id="statementTable"
+                                   class="table table-condensed unify table-striped"
+                                   style="margin-bottom: 3.143rem !important;">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="headCenter">Razão</th>
+                                    <th scope="col" class="headCenter">Data prevista
+                                        <i style="font-weight: normal"
+                                           class="o-question-help-1 ml-5 font-size-14"
+                                           data-toggle="tooltip"
+                                           title=""
+                                           data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
+                                    </th>
+                                    <th scope="col" class="headCenter">Status</th>
+                                    <th scope="col" class="headCenter">Valor</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}" class="custom-t-body table-statement-body-class">
+                                </tbody>
+                            </table>
+                            <div id="pagination-statement"
+                                 class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
+                                 style="margin-top: 10px;margin-bottom:100px; position:relative;">
                             </div>
                         </div>
 

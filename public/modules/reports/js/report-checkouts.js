@@ -74,7 +74,6 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
                 // $("#qtd-acessed").html( response.contAcessed + ' ('+ response.percentAcessed +')');
                 $("#qtd-abandoned").html(response.contAbandoned + ' ('+ response.percentAbandoned +')');
                 $("#qtd-recovered").html(response.contRecovered + ' (' + response.percentRecovered +')');
@@ -94,12 +93,30 @@ $(function () {
                         table_data_itens += '</tr>';
                     });
                 } else {
-                    table_data_itens += `<tr> <td colspan="3" class="text-center"> Nenhuma venda encontrada</td> </tr>`;
+                    table_data_itens += "<tr> <td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#origins-table-itens").attr("img-empty") +
+                        "'>Nenhuma venda encontrada</td> </tr>";
                 }
                 $('#origins-table-itens').html("");
                 $("#origins-table-itens").append(table_data_itens);
-
-                updateGraph(response.chartData);
+                var flag = false;
+                $.each(response.chartData.checkout_data,function(index,value){
+                    if (value>0) {
+                        flag=true;
+                    }
+                });
+                if (flag==true) {
+                    $('#empty-graph').hide();
+                    $('#scoreLineToDay').show();
+                    $('#scoreLineToWeek').show();
+                    $('#scoreLineToMonth').show();
+                    updateGraph(response.chartData);
+                }else{
+                    $('#empty-graph').show();
+                    $('#scoreLineToDay').hide();
+                    $('#scoreLineToWeek').hide();
+                    $('#scoreLineToMonth').hide();
+                }
                 updateCheckoutsByOrigin();
             }
         });
@@ -130,7 +147,9 @@ $(function () {
             success: function success(response) {
 
                 if (response.data == '') {
-                    $('#origins-table').html("<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>");
+                    $('#origins-table').html("<td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#origins-table-itens").attr("img-empty") +
+                        "'>Nenhuma venda encontrada</div>");
                     $("#pagination").html("");
                 } else {
                     var table_data = '';

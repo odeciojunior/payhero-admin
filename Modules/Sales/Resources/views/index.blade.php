@@ -270,7 +270,7 @@
                                         <th class="table-title" width="80px;"> &nbsp;</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="dados_tabela">
+                                    <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                     {{-- js carrega... --}}
                                     </tbody>
                                 </table>

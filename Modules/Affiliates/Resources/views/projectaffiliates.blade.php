@@ -71,7 +71,10 @@
                                                 {{-- excluir, ativar/inativar --}}
                                             </tr>
                                         </thead>
-                                        <tbody class="body-table-affiliates">
+                                        <tbody id="body-table-affiliates" img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
+                                            <tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'>
+                                                <img style='width:124px;margin-right:12px;' src='{!! asset('modules/global/img/afiliados.svg')!!}'> Nenhum afiliado encontrado</td>
+                                            </tr>
                                             {{-- js carrega --}}
                                         </tbody>
                                     </table>
@@ -119,7 +122,7 @@
                                                 {{-- aceitar, recusar --}}
                                             </tr>
                                         </thead>
-                                        <tbody class="body-table-affiliate-requests">
+                                        <tbody id="body-table-affiliate-requests"  img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
                                         </tbody>
                                     </table>
                                 </div>

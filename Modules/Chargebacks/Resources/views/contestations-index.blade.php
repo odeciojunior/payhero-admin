@@ -257,7 +257,7 @@
                                 <td class="table-title" style="min-width: 100px;"></td>
                             </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data">
+                            <tbody id="chargebacks-table-data" img-empty="{!! asset('modules/global/img/contestacoes.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>

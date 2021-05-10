@@ -339,12 +339,12 @@
                                 <th class="table-title">Venda</th>
                                 <th class="table-title">Data de Aprovação</th>
                                 <th class="table-title">Produto</th>
-                                <td class="table-title">Status</td>
+                                <th class="table-title">Status</th>
                                 <th class="table-title">Código de Rastreio</th>
                                 <th class="table-title" style="width:90px;"></th>
                             </tr>
                             </thead>
-                            <tbody id="dados_tabela">
+                            <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>

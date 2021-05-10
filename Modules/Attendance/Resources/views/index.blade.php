@@ -167,9 +167,9 @@
                         
                         <div class="card card-shadow bg-white card-left orange">
                             <div class='card-header bg-white text-center py-25 d-flex justify-content-center align-items-center'
-                            style="height: 230px">Nenhum chamado encontrado
+                            style="height: 257px">
+                                <img style='width:124px;;margin-right:12px;' src="{!! asset('modules/global/img/suporte.svg') !!}">Nenhum chamado encontrado
                             </div>
-                            
                         </div>
                     </div>
                 </div>

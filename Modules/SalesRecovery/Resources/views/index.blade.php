@@ -149,7 +149,7 @@
                                     <td class="table-title display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data" class='min-row-height'>
+                            <tbody id="table_data" class='min-row-height'  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                             </tbody>
                         </table>
                     </div>

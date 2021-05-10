@@ -89,7 +89,7 @@
                                             <th>Quantidade utilizada</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="body-table-coupons">
+                                        <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                                         {{-- js carrega... --}}
                                         </tbody>
                                     </table>
