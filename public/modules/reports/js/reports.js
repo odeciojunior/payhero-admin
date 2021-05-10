@@ -131,19 +131,25 @@ $(function () {
                 $("#origins-table-itens").html("");
                 $("#origins-table-itens").append(table_data_itens);
                 var flag = false;
-                $.each(response.chartData.checkout_data,function(index,value){
-                    if (value>0) {
+                $.each(response.chartData.boleto_data,function(index,value){
+                    if (value!=false) {
+                        flag=true;
+                    }
+                });
+                $.each(response.chartData.credit_card_data,function(index,value){
+                    console.log(value);
+                    if (value!=false) {
                         flag=true;
                     }
                 });
                 if (flag==true) {
-                    $('#empty-graph').hide();
+                    $('#empty-graph>').hide();
                     $('#scoreLineToDay').show();
                     $('#scoreLineToWeek').show();
                     $('#scoreLineToMonth').show();
                     updateGraph(response.chartData);
                 }else{
-                    $('#empty-graph').show();
+                    $('#empty-graph>').show();
                     $('#scoreLineToDay').hide();
                     $('#scoreLineToWeek').hide();
                     $('#scoreLineToMonth').hide();

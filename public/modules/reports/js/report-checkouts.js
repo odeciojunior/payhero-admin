@@ -84,7 +84,6 @@ $(function () {
 
                 var table_data_itens = '';
                 if (!isEmpty(response.plans)){
-                    console.log('entrei', response.plans)
                     $.each(response.plans, function (index, data) {
                         table_data_itens += '<tr>';
                         table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
@@ -106,13 +105,13 @@ $(function () {
                     }
                 });
                 if (flag==true) {
-                    $('#empty-graph').hide();
+                    $('#empty-graph>').hide();
                     $('#scoreLineToDay').show();
                     $('#scoreLineToWeek').show();
                     $('#scoreLineToMonth').show();
                     updateGraph(response.chartData);
                 }else{
-                    $('#empty-graph').show();
+                    $('#empty-graph>').show();
                     $('#scoreLineToDay').hide();
                     $('#scoreLineToWeek').hide();
                     $('#scoreLineToMonth').hide();
