@@ -288,7 +288,6 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-            
 
             $return = [
                 'id' => $id,
