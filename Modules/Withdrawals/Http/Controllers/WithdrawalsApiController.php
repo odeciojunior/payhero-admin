@@ -3,6 +3,7 @@
 namespace Modules\Withdrawals\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -141,54 +142,17 @@ class WithdrawalsApiController
     public function getWithdrawalValues(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
 
             $data = $request->all();
 
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(current(Hashids::decode($data['company_id'])));
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
             $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
-            $currentValue = 0;
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
-
-            $lower_value = 0;
-            $bigger_value = 0;
-
-            $transactionsSum->chunk(
-                2000,
-                function ($transactions) use (
-                    &$currentValue,
-                    &$withdrawalValueRequested
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
-                        if ($currentValue >= $withdrawalValueRequested) {
-                            return response()->json([
-                                'data' => [
-                                'lower_value' => $currentValue - $transaction->value,
-                                'bigger_value' => $currentValue
-                                ]
-
-                            ])->send();
-                        }
-                    }
-                }
-            );
-
-            return response()->json([
-                'data' => [
-                'lower_value' => $lower_value,
-                'bigger_value' => $bigger_value
-                ]
-            ]);
+            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company, $withdrawalValueRequested));
 
         } catch (Exception $e) {
             report($e);
