@@ -22,14 +22,7 @@ class PixService
     {
         try {
 
-            $sales = Sale::with(
-                [
-                    'project',
-                    'customer',
-                    'pixCharges'
-                ]
-            )
-            ->where(
+            $sales = Sale::where(
                 [
                     ['payment_method', '=', Sale::PIX_PAYMENT],
                     ['status', '=', Sale::STATUS_PENDING]
@@ -41,8 +34,7 @@ class PixService
                     $querySale->where('status', 'ATIVA')
                         ->where('created_at', '<=',
                                 Carbon::now()->subHours(1)->toDateTimeString()
-                        )
-                        ->where('status', 'ATIVA');
+                        );
                 }
             )
             ->get();
