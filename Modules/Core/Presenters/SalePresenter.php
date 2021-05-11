@@ -194,7 +194,7 @@ class SalePresenter extends Presenter
                 case 3:
                     return 'debito';
                 case 4:
-                    return 'PIX';
+                    return 'pix';
             }
 
             return null;
@@ -206,7 +206,7 @@ class SalePresenter extends Presenter
                     return 2;
                 case 'debito':
                     return 3;
-                case 'PIX':
+                case 'pix':
                     return 4;
             }
 

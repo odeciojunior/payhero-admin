@@ -65,6 +65,7 @@
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
+                                <option value="4">PIX Vencido</option>
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>

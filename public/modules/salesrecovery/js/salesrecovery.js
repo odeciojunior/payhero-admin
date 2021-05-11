@@ -126,11 +126,14 @@ $(document).ready(function () {
             url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         }
 
-        if ($("#type_recovery option:selected").val() == 1) {
+        let typeRecoverySelected = $("#type_recovery option:selected").val();
+        if (typeRecoverySelected == 1) {
             return `/api/checkout${url}`;
-        } else if ($("#type_recovery option:selected").val() == 3) {
+        } else if (typeRecoverySelected == 3) {
             return `/api/recovery/getrefusedcart${url}`;
-        } else if ($("#type_recovery option:selected").val() == 5) {
+        } else if (typeRecoverySelected == 4) {
+            return `/api/recovery/get-pix${url}`;
+        } else if (typeRecoverySelected == 5) {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
@@ -165,15 +168,19 @@ $(document).ready(function () {
                 $('#table_data').html('');
                 $('#carrinhoAbandonado').addClass('table-striped');
 
-                if (response.data == '' && $('#type_recovery').val() == 1) {
+                let typeRecovery = $('#type_recovery').val();
+                if (response.data == '' && typeRecovery == 1) {
                     $("#pagination-salesRecovery").hide();
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado encontrado</td></tr>");
-                } else if (response.data == '' && $('#type_recovery').val() == 5) {
-                    $("#pagination-salesRecovery").hide();
-                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>");
-                } else if (response.data == '' && $('#type_recovery').val() == 3) {
+                } else if (response.data == '' && typeRecovery == 3) {
                     $("#pagination-salesRecovery").hide();
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado encontrado</td></tr>");
+                } else if (response.data == '' && typeRecovery == 4) {
+                    $("#pagination-salesRecovery").hide();
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum PIX vencido encontrado</td></tr>");
+                } else if (response.data == '' && typeRecovery == 5) {
+                    $("#pagination-salesRecovery").hide();
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido encontrado</td></tr>");
                 } else {
 
                     createHTMLTable(response);
