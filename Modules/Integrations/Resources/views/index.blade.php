@@ -112,13 +112,14 @@
                                             <select name="token_type_enum" class="select-enum-list">
                                                 <option value="2">Acesso Pessoal</option>
                                                 <option value="3">Integração Externa</option>
+                                                <option value="4">Checkout API</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 35px">
-                                    <div class="form-group col-12">
-                                        <input id="btn-save-integration" type="button" class="form-control btn col-sm-12 col-m-3 col-lg-3" value="Gerar Token" style="color:white;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">
+                                    <div class="form-group col-12 text-right">
+                                        <button id="btn-save-integration" type="button" class="btn btn-primary">Gerar Token</button>
                                     </div>
                                 </div>
                             </div>

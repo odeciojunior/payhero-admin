@@ -22,9 +22,10 @@ class ApiTokenPresenter extends Presenter
      */
     public $enum = [
         "integration_type_enum" => [
-            1 => 'admin',       //'Admin',
-            2 => 'personal',    //'Acesso Pessoal',
-            3 => 'external',    //'Integração Externa',
+            1 => 'admin',        //'Admin',
+            2 => 'personal',     //'Acesso Pessoal',
+            3 => 'external',     //'Integração Externa',
+            4 => 'checkout_api', //'Checkout API',
         ],
     ];
     /**
@@ -44,15 +45,10 @@ class ApiTokenPresenter extends Presenter
                 ApiToken::TOKEN_SCOPE_SALE,
                 ApiToken::TOKEN_SCOPE_PRODUCT,
         ],
+        4 => [  //Checkout API
+                ApiToken::TOKEN_SCOPE_SALE
+        ]
     ];
-
-    /**
-     * @return int
-     */
-    public function getPersonalIntegrationTypeEnum()
-    {
-        return $this->getIntegrationType('personal');
-    }
 
     /**
      * @param int|string $scope
@@ -66,14 +62,6 @@ class ApiTokenPresenter extends Presenter
         }
 
         return $this->getEnumGeneric('integration_type_enum', $enum);
-    }
-
-    /**
-     * @return int
-     */
-    public function getExternalIntegrationTypeEnum()
-    {
-        return $this->getIntegrationType('external');
     }
 
     /**
