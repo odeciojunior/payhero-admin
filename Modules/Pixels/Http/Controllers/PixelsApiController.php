@@ -15,6 +15,7 @@ use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
 use Modules\Pixels\Transformers\PixelsResource;
+use Sentry\Response;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -116,7 +117,7 @@ class PixelsApiController extends Controller
                     'name' => $validator['name'],
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
-                    'status' => $validator['status'],
+                    'status' => (bool) $validator['status'],
                     'checkout' => $validator['checkout'],
                     'purchase_boleto' => $validator['purchase_boleto'],
                     'purchase_card' => $validator['purchase_card'],
@@ -302,6 +303,7 @@ class PixelsApiController extends Controller
                     'value_percentage_purchase_pix' => $validated['value_percentage_purchase_pix']
                 ]
             );
+
             if ($pixelUpdated) {
                 return response()->json('Sucesso', 200);
             }

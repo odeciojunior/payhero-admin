@@ -181,10 +181,20 @@
 
                                     {{-- INPUT PERCENTAGE BOLETO VALUE --}}
                                     <div class="form-group col-3">
-                                        <label for="percentage-value" class="font-text">% Boleto</label>
+                                        <label for="percentage-boleto-value-edit" class="font-text">% Boleto</label>
                                         <input name="value_percentage_purchase_boleto"
+                                               id="percentage-boleto-value-edit"
                                                type="text"
-                                               class="form-control percentage-value-edit"
+                                               class="form-control percentage-boleto-value-edit"
+                                               placeholder="100" maxlength='3'>
+                                    </div>
+
+                                    <div class="form-group col-3">
+                                        <label for="percentage-pix-value-edit" class="font-text">% PIX</label>
+                                        <input name="value_percentage_purchase_pix"
+                                               id="percentage-pix-value-edit"
+                                               type="text"
+                                               class="form-control percentage-pix-value-edit"
                                                placeholder="100" maxlength='3'>
                                     </div>
 
@@ -205,9 +215,9 @@
                                     <div class='mb-1 col-12'>
                                         <label>Rodar Pixel:</label>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="checkout" class='mb-10'>Checkout</label>
+                                            <label for="checkout" class='mb-10'>Checkout (venda)</label>
                                             <br>
                                             <label class="switch">
                                                 <input type="checkbox" value="" name='checkout'
@@ -216,9 +226,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="cartao">Purchase (cartão)</label>
+                                            <label for="purchase_card">Purchase (cartão)</label>
                                             <br>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_card'
@@ -228,9 +238,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="boleto">Purchase (boleto)</label>
+                                            <label for="purchase_boleto">Purchase (boleto)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_boleto'
                                                        class='purchase-boleto-edit' checked>
@@ -238,11 +248,12 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-4 col-md-auto">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="pix">Purchase (pix):</label>
+                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp; (pix)</label>
                                             <label class='switch'>
-                                                <input type="checkbox" name='purchase_pix' class='check pixel-purchase-pix'>
+                                                <input type="checkbox" value="" name='purchase_pix'
+                                                       class='purchase-pix-edit' checked>
                                                 <span class='slider round'></span>
                                             </label>
                                         </div>

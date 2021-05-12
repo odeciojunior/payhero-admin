@@ -531,11 +531,11 @@ $(function () {
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
-        formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
-        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").is(':checked'));
-        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").is(':checked'));
-        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").is(':checked'));
-        formData.append('purchase_pix', $("#modal-create-pixel .pixel-purchase-pix").is(':checked'));
+        formData.append('status', $("#modal-create-pixel .status").is(':checked'));
+        formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
+        formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
+        formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
+        formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
 
         if (!validateDataPixelForm({
             'name': formData.get('name'),
@@ -543,6 +543,7 @@ $(function () {
             'is_api': formData.get('api-facebook'),
             'code': formData.get('code'),
             'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
+            'value_percentage_purchase_pix': formData.get('value_percentage_purchase_pix'),
             'facebook_token_api': formData.get('facebook-token-api'),
             'purchase_event_name': formData.get('purchase-event-name'),
             'plans_apply': formData.get('add_pixel_plans[]')
