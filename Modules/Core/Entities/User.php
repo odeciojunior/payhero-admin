@@ -68,6 +68,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $attendance_score
  * @property int $tracking_score
  * @property int $installment_cashback
+ * @property bool $get_faster
+ * @property int $release_count
  * @property int $level
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
@@ -149,6 +151,8 @@ class User extends Authenticable
         'tracking_score',
         'attendance_average_response_time',
         'installment_cashback',
+        'get_faster',
+        'release_count',
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
