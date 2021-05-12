@@ -258,31 +258,6 @@ $(document).ready(function () {
         }
     });
 
-    $('input[type=radio][name=format]').change(function () {
-        if (this.value == '1') {
-            $("#nav-logistic-tab").show();
-            $("#div_next_step").show();
-            $("#div_save_digital_product").hide();
-            $("#div_digital_product_upload").css('visibility', 'hidden');
-            $("#div_digital_product_upload").addClass('d-none');
-        } else if (this.value == '0') {
-            $("#nav-logistic-tab").hide();
-            $("#div_next_step").hide();
-            $("#div_save_digital_product").show();
-            $("#div_digital_product_upload").css('visibility', 'visible');
-            $("#div_digital_product_upload").removeClass('d-none');
-        }
-    });
-
-    $("#next_step").on("click", function () {
-        if ($("#nav-logistic-tab").css('visibility') == "visible") {
-            $("#nav-logistic-tab").click();
-        } else {
-            $("#nav-logistic-tab").submit();
-        }
-        $("#previewimage").imgAreaSelect({remove: true});
-    });
-
     $(".delete-product").on('click', function (event) {
         event.preventDefault();
 
@@ -318,7 +293,7 @@ $(document).ready(function () {
                     loadingOnScreenRemove();
 
                     alertCustom('success', response.message);
-                    // window.location = "/products";
+                    window.location = "/products";
                 }
             });
         });
@@ -395,4 +370,10 @@ $(document).ready(function () {
     // $(".btn-close-modal-plan").on("change", function () {
     //
     // });
+
+    // Produto Fisico
+    $('#height').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
+    $('#width').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
+    $('#length').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-comprimento.svg' });
+    $('#height, #width, #length').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
 });

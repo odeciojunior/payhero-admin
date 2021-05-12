@@ -1,0 +1,25 @@
+label {
+    font-size: 16px;
+    color: #707070;
+    margin-bottom: 14px;
+}
+
+.form-group input, 
+.form-group textarea {
+    color: #828282;
+    font-size: 16px;
+    padding: 16px 14px 16px 16px;
+    border-radius: 8px;
+    border-color: #7070704D;
+    height: auto;
+}
+
+.dropify-wrapper {
+    border: 2px dashed #2E85EC;
+    border-radius: 10px;
+}
+
+.dropify-wrapper .dropify-message span.file-icon, p {
+    color: #0D2C54;
+}
+

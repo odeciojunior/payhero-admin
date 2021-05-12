@@ -213,8 +213,10 @@ $(document).ready(function () {
                                         }</p>
                                     </div>
                                 </div>
+                                <div class="card-footer">
+                                    <p class="text-muted card-text sm">Criado em  ${value.created_at}</p>
+                                </div>
                             </div>
-                         </div>
                         </div>
                             `;
                         // dados = '';
@@ -282,4 +284,11 @@ $(document).ready(function () {
             updateProducts();
         }
     });
+
+    $('#new-product-button').on('click', function (event) {
+        event.preventDefault();
+
+        $('#new-product-modal').show();
+    })
+
 });

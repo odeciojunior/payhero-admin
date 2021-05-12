@@ -1,3 +1,56 @@
 .card-img-top.product-image {
     border-radius: 16px 16px 0 0;
 }
+
+.o-add-1 {
+    box-shadow: none;
+    font-size: 38px !important;
+    line-height: normal;
+}
+
+#filter-products {
+    padding: 20px 35px;
+    border-radius: 21px;
+    /* box-shadow: none; */
+}
+
+label {
+    font-size: 16px;
+    color: #707070;
+}
+
+#btn-filtro {
+    min-width: 150px;
+    font-size: 16px;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.form-control {
+    color: #828282;
+    font-size: 16px;
+    padding: 16px 14px 16px 16px;
+    border-radius: 8px;
+    margin-top: 8px;
+    border-color: #7070704D;
+    height: auto;
+}
+
+.modal-content {
+    border-radius: 16px;
+}
+
+.product-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.new-product-icon {
+  border-radius: 50%;
+  border: 2px solid #2DA6F6;
+  padding: 12px;
+  width: 64px;
+  height: 64px;
+}
