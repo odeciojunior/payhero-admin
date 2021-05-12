@@ -70,7 +70,7 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad">
-                                <option value="">Todos projetos</option>
+                                <option value="all">Todos projetos</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -149,7 +149,7 @@
                                     <td class="table-title display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data" class='min-row-height'>
+                            <tbody id="table_data" class='min-row-height'  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                             </tbody>
                         </table>
                     </div>

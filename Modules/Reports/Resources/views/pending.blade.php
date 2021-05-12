@@ -159,7 +159,7 @@
                                         <th class="table-title"></th>
                                     </tr>
                                     </thead>
-                                    <tbody id="body-table-pending">
+                                    <tbody id="body-table-pending"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                     {{-- js carrega... --}}
                                     </tbody>
                                 </table>

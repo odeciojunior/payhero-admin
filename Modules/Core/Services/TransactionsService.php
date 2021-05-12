@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -40,7 +41,7 @@ class TransactionsService
                             $q->where('has_valid_tracking', true)
                                 ->orWhereNull('delivery_id');
                         }
-                    )->whereIn('gateway_id', [14, 15]);
+                    )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
                 }
             );
 

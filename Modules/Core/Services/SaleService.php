@@ -11,6 +11,7 @@ use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
@@ -97,7 +98,7 @@ class SaleService
                         $querySale->where('project_id', $projectId);
                     }
                 );
-            }            
+            }
 
             if (!empty($filters["transaction"])) {
                 $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $filters["transaction"])));
@@ -148,12 +149,12 @@ class SaleService
                         $querySale->where('cupom_code', 'LIKE', '%' . $couponCode . '%');
                     }
                 );
-            }            
+            }
 
             // novo filtro
             if (!empty($filters["value"])) {
                 $value = $filters["value"];
-                
+
                 $transactions->where('value', $value);
             }
 
@@ -660,7 +661,7 @@ class SaleService
 
     public function saleIsGetnet(Sale $sale): bool
     {
-        if (in_array($sale->gateway_id, [14, 15])) {
+        if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
             return true;
         }
 
@@ -797,7 +798,7 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
-        if (in_array($sale->gateway_id, [14, 15])) {
+        if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
             $this->refundBilletNewFinances($sale);
         } else {
             $this->refundBilletOldFinances($sale);
@@ -1246,11 +1247,11 @@ class SaleService
             }
 
             if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
-                $transactions->whereIn('transactions.gateway_id', [14, 15])
+                $transactions->whereIn('transactions.gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
                     ->whereNull('transactions.withdrawal_id')
                     ->where('transactions.is_waiting_withdrawal', 0);
             } else {
-                $transactions->whereNotIn('transactions.gateway_id', [14, 15]);
+                $transactions->whereNotIn('transactions.gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             }
 
             // Filtros - INICIO

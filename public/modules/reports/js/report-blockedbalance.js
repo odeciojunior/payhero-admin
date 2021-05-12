@@ -227,7 +227,9 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#dados_tabela").attr("img-empty") +
+                        "'>Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response, 'sales', atualizar);
             }

@@ -476,7 +476,6 @@ a.label {
 }
 
 .site-menu-item:hover > a > span:first-child {
-    background: rgba(46, 133, 236, 0.3);
     border-radius: 0 44px 44px 0;
     display: inline-block;
     margin-right: 10px;
@@ -495,6 +494,8 @@ a.label {
     font-weight: 900;
     color: #fff;
     margin-right: 10px;
+    background-color: rgba(255,255,255,.2);
+    border-radius: 0 50px 50px 0;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;

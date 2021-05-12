@@ -55,7 +55,7 @@
                             @endif
                         </span>
                         <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                            <div id='notificationTemplate' class="scrollable-content">
+                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! asset('modules/global/img/notificacoes.svg')!!}">
                             </div>
                         </div>
                     </li>

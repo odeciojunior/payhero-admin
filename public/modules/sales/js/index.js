@@ -569,7 +569,9 @@ $(document).ready(function () {
                     );
                 } else {
                     $("#dados_tabela").html(
-                        "<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>"
+                        "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                            $("#dados_tabela").attr("img-empty") +
+                            "'>Nenhuma venda encontrada</td></tr>"
                     );
                 }
                 pagination(response, "sales", atualizar);

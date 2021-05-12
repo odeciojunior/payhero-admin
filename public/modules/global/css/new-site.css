@@ -964,16 +964,36 @@ input[type=radio] {
 }
 
 .site-menubar {
-    background: #0D2C54;
+    background: #0E0233;
 }
 
 .site-menu-item.active {
-    background: #0D2C54;
+    background: #0E0233;
 }
 
 .site-menu-item > .site-menu-sub {
-    background-color: #0D2C54;
+    background-color: #0E0233;
 }
+
+.site-menu-item.active > a {
+    background-color: rgba(255,255,255,.2);
+    border-radius: 0 50px 50px 0;
+    margin-right: 8px;
+}
+
+.site-menu-item:hover > a {
+    background-color: rgba(255,255,255,.2);
+    border-radius: 0 50px 50px 0;
+    margin-right: 8px;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+
 
 .site-menubar-unfold .site-navbar .navbar-header {
     width: 230px;

@@ -429,7 +429,9 @@ $(document).ready(function () {
 
                 if (response.data == "") {
                     $("#chargebacks-table-data").html(
-                        "<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma contestação encontrado</td></tr>"
+                        "<tr class='text-center gray'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                            $("#chargebacks-table-data").attr("img-empty") +
+                            "' alt='Sem contestações'>Nenhuma contestação encontrada</td></tr>"
                     );
                 }
                 pagination(response);

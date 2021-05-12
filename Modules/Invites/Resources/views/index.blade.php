@@ -60,7 +60,7 @@
         <div class="page-content container" id='page-invites'>
             <div id="content-error" class='' style='display:none;'>
                 <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/empty.svg" width="250px"/>
+                    <img src="modules/global/img/convites.svg" width="156px"/>
                     <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
                     <p class="desc gray" style='width:100%'>Envie convites, e
                         <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>

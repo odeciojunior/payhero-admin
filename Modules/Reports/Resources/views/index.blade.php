@@ -115,6 +115,10 @@
                                 </ul>
                             </div>
                             <div class="widget-content tab-content bg-white p-20">
+                                <div id="empty-graph" class="row justify-content-center align-items-center d-flex" style="vertical-align: middle">
+                                    <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                    <p style="font-size: 23px" class="gray">Nenhuma venda encontrada</p>
+                                </div>
                                 <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>
                                 <div class="ct-chart tab-pane" id="scoreLineToWeek"></div>
                                 <div class="ct-chart tab-pane" id="scoreLineToMonth"></div>
@@ -247,7 +251,7 @@
                                 <div style="padding: 0 20px;" class=" card-body data-holder">
                                     <table class="table-vendas-itens table table-striped"
                                            style="width:100%;margin: auto; margin-top:15px">
-                                        <tbody id="origins-table-itens">
+                                        <tbody id="origins-table-itens" img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                             {{-- js carrega... --}}
                                         </tbody>
                                     </table>
