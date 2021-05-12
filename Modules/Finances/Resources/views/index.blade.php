@@ -129,9 +129,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 pt-1">
-                                                <button id="bt-withdrawal"
-                                                        class="btn btn-success disabled btn-sacar mt-20"
-                                                        data-toggle="modal" disabled>
+                                                <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal" 
+                                                style="border-radius: 8px;" disabled>
                                                     Sacar dinheiro
                                                 </button>
                                             </div>
@@ -176,48 +175,48 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='container col-sm-12 mt-20 d-none d-lg-block'>
-                                        <div class='row'>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                        <h4 class="price saldoPendente"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right yellow"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                        <h4 class="price saldoBloqueado"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                        <h4 class="price saltoTotal"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right blue"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                        <h4 class="price saldoDebito" id="debit-value">
-                                                            <span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span>
-                                                            <a href="javascript:;" id="go-to-pending-debt" class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">0,00</a>
-                                                        </h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right red"></div>
+                                </div>
+                            </div>
+                            <div class='container col-sm-12 mt-20 d-none d-lg-block'>
+                                <div class='row'>
+                                    <div class="col-sm-3 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Saldo Pendente </h6>
+                                                <h4 class="price saldoPendente"></h4>
                                             </div>
                                         </div>
+                                        <div class="s-border-right yellow"></div>
+                                    </div>
+                                    <div class="col-sm-3 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
+                                                <h4 class="price saldoBloqueado"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right red"></div>
+                                    </div>
+                                    <div class="col-sm-3 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Saldo Total </h6>
+                                                <h4 class="price saltoTotal"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right blue"></div>
+                                    </div>
+                                    <div class="col-sm-3 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
+                                                <h4 class="price saldoDebito" id="debit-value">
+                                                    <span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span>
+                                                    <a href="javascript:;" id="go-to-pending-debt" class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">0,00</a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right red"></div>
                                     </div>
                                 </div>
                             </div>
