@@ -14,6 +14,8 @@ use PDOException;
 class WithdrawalService
 {
 
+    private int $biggerValue, $lowerValue, $currentValue;
+
     public function requestWithdrawal($company, $withdrawalValue): Withdrawal
     {
         $withdrawalModel = new Withdrawal();
@@ -134,7 +136,6 @@ class WithdrawalService
 
             $transactionsSum = $company->transactions()
                 ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
-
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
@@ -201,5 +202,44 @@ class WithdrawalService
         return (new Withdrawal())->where('company_id', $company->id)
             ->whereDate('created_at', now())
             ->exists();
+    }
+
+    public function getLowerAndBiggerAvailableValues(Company $company, int $withdrawalValueRequested): array
+    {
+
+        $transactionsSum = $company->transactions()
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->orderBy('id');
+
+        $this->currentValue = 0;
+        $this->lowerValue = 0;
+        $this->biggerValue = 0;
+
+        $transactionsSum->chunk(
+            2000,
+            function ($transactions) use ($withdrawalValueRequested) {
+
+                foreach ($transactions as $transaction) {
+
+                    $this->currentValue += $transaction->value;
+                    if ($this->currentValue >= $withdrawalValueRequested) {
+
+                        $this->lowerValue = $this->currentValue - $transaction->value;
+                        $this->biggerValue = $this->currentValue;
+
+                        return;
+                    }
+                }
+            }
+        );
+
+        return [
+            'data' => [
+                'lower_value' => $this->lowerValue,
+                'bigger_value' => $this->biggerValue,
+            ]
+        ];
     }
 }

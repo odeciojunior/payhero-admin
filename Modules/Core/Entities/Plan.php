@@ -38,6 +38,8 @@ use Spatie\Activitylog\Models\Activity;
 class Plan extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DESABLE = 0;
     /**
      * @var array
      */

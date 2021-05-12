@@ -92,8 +92,6 @@ class TransactionsService
                     }
 
                 }
-
-
             } catch (Exception $e) {
                 report($e);
             }
@@ -105,6 +103,4 @@ class TransactionsService
             report($e);
         }
     }
-
-
 }

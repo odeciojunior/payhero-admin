@@ -17,10 +17,24 @@ $(document).ready(function () {
         atualizar();
     });
 
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
+        }
+    });
+
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
     $('#date_range').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
+        startDate: moment('2018-01-01 00:00:00'),
         endDate: moment(),
         opens: 'center',
         maxDate: moment().endOf("day"),
@@ -247,7 +261,9 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada </td></tr>");
+                    $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#body-table-pending").attr("img-empty") +
+                        "'> Nenhuma venda encontrada </td></tr>");
                 }
                 pagination(response, 'pending', atualizar);
             }

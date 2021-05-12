@@ -83,10 +83,15 @@ $(document).ready(function () {
             success: function (response) {
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").css({'height': '300px', 'overflow-y': 'scroll'});
-
-                $(response.data).each(function(index, data){
-                    $("#notificationTemplate").append(notificationTemplate(data));
-                });
+                if($(response.data).length>0){
+                    $(response.data).each(function(index, data){
+                        $("#notificationTemplate").append(notificationTemplate(data));
+                    });
+                }else{
+                    $('#notificationTemplate').html("<div style='vertical-align middle;max-height:100px;padding-top:12%' class='text-center'><img src='" +
+                    $("#notificationTemplate").attr("img-empty") +
+                    "'><br> Nenhuma notificação por aqui.</div>");
+                }
                 markNotificationsAsRead();
             }
         });

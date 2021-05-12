@@ -8,9 +8,9 @@
                     </span>
                 </div>
             <div class='col-md-6'>
-                <div id="add-link" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-create-link">
+                <div class="d-flex align-items-center justify-content-end">
                     <span class="link-button-dependent red"> Adicionar Link </span>
-                    <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+                    <a id="add-link"  data-toggle="modal" data-target="#modal-create-link" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
@@ -45,9 +45,12 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Novo link</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
+                {{-- <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-16">close</i>
+                </a> --}}
             </div>
             <div style='min-height: 100px'>
                 @include('affiliates::createlink')

@@ -12,6 +12,16 @@ class BenefitsService
 {
     public static function updateUserCashback(User $user)
     {
+        if ($user->ignore_automatic_benefits_updates) {
+            activity()->on($user)->tap(
+                function (Activity $activity) use ($user) {
+                    $activity->log_name = 'benefits_change_ignored';
+                    $activity->subject_id = $user->id;
+                }
+            )->log('Cashback update ignorado');
+            return;
+        }
+
         if (!$user->relationLoaded('benefits')) {
             $user->load('benefits');
         }

@@ -19,7 +19,7 @@ $(document).ready(function () {
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
     $('#date_range').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
+        startDate: moment('2018-01-01 00:00:00'),
         endDate: moment(),
         opens: 'center',
         maxDate: moment().endOf("day"),
@@ -157,7 +157,9 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhum cupom encontrado</td></tr>");
+                    $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#body-table-coupons").attr("img-empty") +
+                        "'> Nenhum cupom encontrado</td></tr>");
                 }
                 pagination(response, 'coupons', atualizar);
             }

@@ -27,7 +27,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;">
+<ul id="pagination-coupons" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right;">
     {{-- js carrega... --}}
 </ul>
 
@@ -103,9 +103,9 @@
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                    <i class="material-icons md-16">close</i>
-                </a>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body text-center p-20">
                 <div class="d-flex justify-content-center">

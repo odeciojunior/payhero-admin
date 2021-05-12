@@ -69,6 +69,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $tracking_score
  * @property int $installment_cashback
  * @property int $level
+ * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
  * @property Collection $affiliateRequests
@@ -98,7 +99,10 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
-
+    public const STATUS_ACTIVE=1;
+    public const STATUS_WITHDRAWAL_BLOCKED=2;
+    public const STATUS_ACCOUNT_BLOCKED=3;
+    public const STATUS_ACCOUNT_FROZEN=4;
     /**
      * @var string
      */
@@ -149,6 +153,7 @@ class User extends Authenticable
         'attendance_average_response_time',
         'installment_cashback',
         'level',
+        'ignore_automatic_benefits_updates',
         'total_commission_value',
         'show_old_finances',
         'created_at',

@@ -34,7 +34,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
@@ -59,7 +59,6 @@
             <div class="page-content container">
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
-
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
@@ -71,7 +70,9 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad"> </select>
+                            <select name='select_project' id="project" class="form-control select-pad">
+                                <option value="all">Todos projetos</option>
+                            </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="plan">Plano</label>
@@ -80,29 +81,45 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for='date-range-sales-recovery'>Filtrar Data</label>
-                            <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad' placeholder='Clique para editar...' readonly>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="client-name">Nome do Cliente</label>
-                            <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="client-cpf">CPF do Cliente</label>
-                            <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
-                        </div>
-                        <div class='col-3'></div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right">
-                            <label></label>
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top:7px">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
+                            <div class="form-group form-icons">
+                                <label for='date-range-sales-recovery'>Filtrar Data</label>
+                                <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30' placeholder='Clique para editar...' readonly>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-15">
-                        <div class='col-xl-3'></div>
+                    <div class="collapse" id="bt_collapse">
+                        <div class="row pt-15">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="client-name">Nome do Cliente</label>
+                                <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="client-cpf">CPF do Cliente</label>
+                                <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 30px">
+                        <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                 data-toggle="collapse"
+                                 data-target="#bt_collapse"
+                                 aria-expanded="false"
+                                 aria-controls="bt_collapse">
+                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <span id="text-filtro">Filtros avançados</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-3 mt-20">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                Aplicar filtros
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="fixhalf"></div>
                 <!-- Aviso de Exportação -->
                 <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
                     <div class="d-flex">
@@ -133,7 +150,7 @@
                                     <td class="table-title display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data" class='min-row-height'>
+                            <tbody id="table_data" class='min-row-height'  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                             </tbody>
                         </table>
                     </div>
@@ -295,12 +312,10 @@
                     </div>
                     <!-- End Modal -->
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                            {{-- js carrega... --}}
-                        </ul>
-                    </div>
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination-salesRecovery" class="pl-5 pr-md-15 pb-20" style="margin-top:10px;position:relative;float:right;">
+                        {{-- js carrega... --}}
+                    </ul>
                 </div>
             </div>
         </div>

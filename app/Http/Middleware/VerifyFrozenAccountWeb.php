@@ -16,6 +16,9 @@ class VerifyFrozenAccountWeb
      */
     public function handle($request, Closure $next)
     {
+        if (str_starts_with($request->getRequestUri(),'/register/login')) {
+            return $next($request);
+        }
         if((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') &&
             $this->inExceptArray($request) == false) {
 
@@ -47,7 +50,8 @@ class VerifyFrozenAccountWeb
             '/apps',
             '/invitations',
             '/logout',
-            '/send-authenticated'
+            '/send-authenticated',
+            '/contestations'
         ];
 
         foreach ($excepts as $except) {

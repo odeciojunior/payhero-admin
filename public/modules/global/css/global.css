@@ -169,7 +169,7 @@ body {
     table.unify tr {
         background-color: #F8F8F8;
         border: 1px solid #DDDDDD;
-        padding: .35em;
+        /*padding: .35em;*/
     }
 
     table.unify th,
@@ -465,6 +465,7 @@ a.label {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
 .site-menu-item.has-sub > a, .site-menu-item > .site-menu-sub > li {
     margin-bottom: 5px;
     padding-left: 0 !important;
@@ -474,8 +475,7 @@ a.label {
     transition: all 0.3s;
 }
 
-.site-menu-item:hover > a > span:first-child{
-    background: rgba(46, 133, 236, 0.3);
+.site-menu-item:hover > a > span:first-child {
     border-radius: 0 44px 44px 0;
     display: inline-block;
     margin-right: 10px;
@@ -485,7 +485,7 @@ a.label {
     transition: all 0.3s;
 }
 
-.site-menu-item:hover > a > span > img  {
+.site-menu-item:hover > a > span > img {
     filter: brightness(0) invert(1);
 }
 
@@ -494,6 +494,8 @@ a.label {
     font-weight: 900;
     color: #fff;
     margin-right: 10px;
+    background-color: rgba(255,255,255,.2);
+    border-radius: 0 50px 50px 0;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -502,7 +504,7 @@ a.label {
 
 .menu-active > span {
     color: #fff;
-    background:  #fff;
+    background: #fff;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
@@ -541,14 +543,14 @@ a.label {
 }
 
 .table thead > tr > td:first-child, .table thead > tr > th:first-child {
-    border-radius: 16px 0 0 0!important;
+    border-radius: 16px 0 0 0 !important;
     -webkit-border-radius: 16px 0 0 0 !important;
     -moz-border-radius: 16px 0 0 0 !important;
 }
 
-.table thead > tr > td:last-child,.table thead > tr > th:last-child {
+.table thead > tr > td:last-child, .table thead > tr > th:last-child {
 
-    border-radius: 0 16px 0 0!important;
+    border-radius: 0 16px 0 0 !important;
     -webkit-border-radius: 0 16px 0 0 !important;
     -moz-border-radius: 0 16px 0 0 !important;
 }
@@ -576,18 +578,6 @@ a.label {
     border-radius: 16px !important;
     -webkit-border-radius: 16px !important;
     -moz-border-radius: 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:first-child, .teste-1 {
-    border-radius: 0 0 0 16px !important;
-    -webkit-border-radius: 0 0 0 16px !important;
-    -moz-border-radius: 0 0 0 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:last-child, .teste-2 {
-    border-radius: 0 0 16px 0 !important;
-    -webkit-border-radius: 0 0 16px 0 !important;
-    -moz-border-radius: 0 0 16px 0 !important;
 }
 
 .sirius-radius {
@@ -630,7 +620,7 @@ a.label {
     border-radius: 0 0 16px 16px;
     height: 10px;
     position: absolute;
-    bottom: 100% ;
+    bottom: 100%;
 }
 
 .s-border-bottom {
@@ -664,7 +654,7 @@ a.label {
 }
 
 .s-btn {
-    background-color: #FFFFFF ;
+    background-color: #FFFFFF;
     border: 2px solid #2626264D;
     font: normal normal bold 24px/30px Muli;
     padding: 15px 40px;
@@ -681,7 +671,7 @@ a.label {
 }
 
 .green.s-btn {
-    background-color: #5FE2A1 ;
+    background-color: #5FE2A1;
     border: 2px solid #26262633;
     color: #FFF;
 }
@@ -704,10 +694,15 @@ a.label {
 .select2-search__field {
     min-width: 104px;
 }
+
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
     white-space: normal;
 }
 
 #notification-amount {
     padding: 5px 5px !important
+}
+
+.s-border-radius {
+    border-radius: 16px;
 }

@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
     @endpush
 
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row">
                 <div class="col-8">
@@ -31,72 +31,81 @@
                                             <option value="0">Todas as empresas</option>
                                         </select>
                                     </div>
-
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Projeto</label>
                                         <select name='select_project' id="project" class="form-control select-pad">
                                             <option value="0">Todas os projetos</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-8 col-md">
+                                    <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                                     </div>
-                                    <div class="col-sm-8 col-md">
+                                    <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad"
                                                placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
                                 </div>
-                                <div class="row mt-md-15">
-                                    <div class="col-sm-6 col-md">
-                                        <label for="forma">Forma de pagamento</label>
-                                        <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                            <option value="">Boleto e cartão de crédito</option>
-                                            <option value="1">Cartão de crédito</option>
-                                            <option value="2">Boleto</option>
-                                            <option value="4">PIX</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="sale_code">Transação</label>
-                                        <input type="text" id="sale_code" placeholder="transação">
-                                    </div>
-                                    <div class="col-sm-6 col-md">
-                                        <label for="date_type">Data</label>
-                                        <select name='date_type' id="date_type" class="form-control select-pad">
-                                            <option value="start_date">Data do pedido</option>
-                                            <option value="end_date">Data do pagamento</option>
-                                        </select>
-                                    </div>
-                                    <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="date_range">‏‏‎ ‎</label>
-                                        <input name='date_range' id="date_range" class="select-pad"
-                                               placeholder="Clique para editar..." readonly>
-                                    </div>
-                                </div>
-                                <div class="row mt-md-15">
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <div id="select-statement-div" style="display:none;">
-                                            <label for="type_statement">Tipo Extrato</label>
-                                            <select name='select_type_statement'
-                                                    id="type_statement"
-                                                    class="form-control select-pad"
-                                            >
-                                                <option value="manual_liquidation" selected>Extrato Antigo</option>
-                                                <option value="automatic_liquidation">Extrato Novo</option>
+                                <div class="collapse pt-20" id="bt_collapse">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="forma">Forma de pagamento</label>
+                                            <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                                <option value="">Boleto e cartão de crédito</option>
+                                                <option value="1">Cartão de crédito</option>
+                                                <option value="2">Boleto</option>
+                                                <option value="4">PIX</option>
                                             </select>
                                         </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="sale_code">Transação</label>
+                                            <input type="text" id="sale_code" placeholder="transação">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="date_type">Data</label>
+                                            <select name='date_type' id="date_type" class="form-control select-pad">
+                                                <option value="start_date">Data do pedido</option>
+                                                <option value="end_date">Data do pagamento</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
+                                        <div class="col-sm-6 col-md-3 form-icons">
+                                            <label for="date_range">‏‏‎ ‎</label>
+                                            <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-18"></i>
+                                            <input name='date_range' id="date_range" class="select-pad"
+                                            placeholder="Clique para editar..." readonly>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 pt-20">
+                                            <div id="select-statement-div" style="display:none;">
+                                                <label for="type_statement">Tipo Extrato</label>
+                                                <select name='select_type_statement'
+                                                id="type_statement"
+                                                class="form-control select-pad"
+                                                >
+                                                    <option value="manual_liquidation" selected>Extrato Antigo</option>
+                                                    <option value="automatic_liquidation">Extrato Novo</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                </div>
+                                <div class="row" style="height: 30px">
+                                    <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                                        <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                             data-toggle="collapse"
+                                             data-target="#bt_collapse"
+                                             aria-expanded="false"
+                                             aria-controls="bt_collapse">
+                                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                            <span id="text-filtro">Filtros avançados</span>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex align-items-center pt-md-20 pt-10">
-                                        <button id="bt_filtro" class="btn btn-primary col">
-                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                        </button>
+                                    <div class="col-6 col-xl-3 mt-20">
+                                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                            <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                            Aplicar filtros
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -151,16 +160,18 @@
                                         <th class="table-title"></th>
                                     </tr>
                                     </thead>
-                                    <tbody id="body-table-pending">
+                                    <tbody id="body-table-pending"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                     {{-- js carrega... --}}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <ul id="pagination-pending" class="pagination-sm margin-chat-pagination"
+                        <div class="row justify-content-center justify-content-md-end">
+                            <ul id="pagination-pending" class="pl-5 pr-md-15 mb-20"
                             style="position:relative;float:right">
-                            {{-- js carrega... --}}
-                        </ul>
+                                {{-- js carrega... --}}
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- Modal detalhes da venda-->
@@ -177,7 +188,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/reports/js/detail.js?v=09') }}"></script>
+    <script src="{{ asset('modules/reports/js/detail.js?v=s08') }}"></script>
     <script src='{{ asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000)) }}'></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>

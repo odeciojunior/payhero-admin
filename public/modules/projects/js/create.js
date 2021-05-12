@@ -68,11 +68,12 @@ $(document).ready(function () {
         }
     }
 
-    $('#btn-save').on('click', () => {
+    let btnSave = $('#btn-save')
+    btnSave.on('click', () => {
         if (verifyFields()) {
             return false;
         } else {
-
+            btnSave.prop("disabled", true);
             loadingOnScreen();
             let formData = new FormData(document.querySelector('#form-create-project'));
             $.ajax({
@@ -90,7 +91,7 @@ $(document).ready(function () {
                 error: (response) => {
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
-
+                    btnSave.prop("disabled", false);
                 },
                 success: (response) => {
                     loadingOnScreenRemove();
@@ -99,7 +100,6 @@ $(document).ready(function () {
                 }
             });
         }
-
     });
 
     var p = $("#preview-image-project");

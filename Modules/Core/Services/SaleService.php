@@ -10,6 +10,8 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
@@ -45,15 +47,21 @@ class SaleService
             $companyModel = new Company();
             $customerModel = new Customer();
             $transactionModel = new Transaction();
+            $couponModel = new DiscountCoupon();
 
             if (!$userId) {
                 $userId = auth()->user()->account_owner_id;
             }
 
-            $userCompanies = $companyModel->where('user_id', $userId)
+            if (empty($filters["company"])) {
+                $userCompanies = $companyModel->where('user_id', $userId)
                 ->get()
                 ->pluck('id')
                 ->toArray();
+            } else {
+                $companyId = current(Hashids::decode($filters["company"]));
+                $userCompanies = array($companyId);
+            }
 
             $relationsArray = [
                 'sale',
@@ -93,10 +101,7 @@ class SaleService
             }
 
             if (!empty($filters["transaction"])) {
-                $saleId = current(
-                    Hashids::connection('sale_id')
-                        ->decode(str_replace('#', '', $filters["transaction"]))
-                );
+                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $filters["transaction"])));
 
                 $transactions->whereHas(
                     'sale',
@@ -106,7 +111,7 @@ class SaleService
                 );
             }
 
-            if (!empty($filters["client"])) {
+            if (!empty($filters["client"]) && empty($filters["email_client"])) {
                 $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
@@ -126,6 +131,47 @@ class SaleService
                     $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
                 }
 
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($customers) {
+                        $querySale->whereIn('customer_id', $customers);
+                    }
+                );
+            }
+
+            // novo filtro
+            if (!empty($filters["coupon"])) {
+                $couponCode = $filters["coupon"];
+
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($couponCode) {
+                        $querySale->where('cupom_code', 'LIKE', '%' . $couponCode . '%');
+                    }
+                );
+            }
+
+            // novo filtro
+            if (!empty($filters["value"])) {
+                $value = $filters["value"];
+
+                $transactions->where('value', $value);
+            }
+
+            // novo filtro
+            if (!empty($filters["email_client"]) && empty($filters["client"])) {
+                $customers = $customerModel->where('email', 'LIKE', '%' . $filters["email_client"] . '%')->pluck('id');
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($customers) {
+                        $querySale->whereIn('customer_id', $customers);
+                    }
+                );
+            }
+
+            // novo filtro
+            if (!empty($filters["email_client"]) && !empty($filters["client"])) {
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->where('email', 'LIKE', '%' . $filters["email_client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($customers) {
@@ -198,6 +244,15 @@ class SaleService
                     'sale',
                     function ($querySale) {
                         $querySale->whereNotNull('upsell_id');
+                    }
+                );
+            }
+
+            if (!empty($filters["cashback"])) {
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) {
+                        $querySale->whereHas('cashback');
                     }
                 );
             }
@@ -612,7 +667,7 @@ class SaleService
 
     public function saleIsGetnet(Sale $sale): bool
     {
-        if (in_array($sale->gateway_id, [14, 15])) {
+        if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
             return true;
         }
 
@@ -749,7 +804,7 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
-        if (in_array($sale->gateway_id, [14, 15])) {
+        if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
             $this->refundBilletNewFinances($sale);
         } else {
             $this->refundBilletOldFinances($sale);
@@ -1198,11 +1253,11 @@ class SaleService
             }
 
             if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
-                $transactions->whereIn('transactions.gateway_id', [14, 15])
+                $transactions->whereIn('transactions.gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
                     ->whereNull('transactions.withdrawal_id')
                     ->where('transactions.is_waiting_withdrawal', 0);
             } else {
-                $transactions->whereNotIn('transactions.gateway_id', [14, 15]);
+                $transactions->whereNotIn('transactions.gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             }
 
             // Filtros - INICIO

@@ -57,6 +57,11 @@ $(document).ready(function () {
                     }
                 }
 
+                $('#photo_x1').val(x1);
+                $('#photo_y1').val(y1);
+                $('#photo_w').val(x2 - x1);
+                $('#photo_h').val(y2 - y1);
+
                 previewImageReview.imgAreaSelect({
                     x1: x1, y1: y1, x2: x2, y2: y2,
                     aspectRatio: '1:1',

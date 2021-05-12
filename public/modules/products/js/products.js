@@ -83,10 +83,14 @@ $(document).ready(function () {
                     if (response.data.product.type_enum == 1) {
                         $('#physical').attr('checked', true);
                         $('#div_digital_product_upload').css('visibility', 'hidden');
+                        $('#nav-logistic-tab').css('visibility', 'visible');
+                        $("#div_digital_product_upload").addClass('d-none');
                         $('#digital_product_url').dropify();
                     } else {
                         $('#digital').attr('checked', true);
                         $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#nav-logistic-tab').css('visibility', 'hidden');
+                        $("#div_digital_product_upload").removeClass('d-none');
                         $('#digital_product_url').dropify({
                             messages: {
                                 'default': 'Arraste e solte ou clique para adicionar um arquivo',
@@ -260,16 +264,22 @@ $(document).ready(function () {
             $("#div_next_step").show();
             $("#div_save_digital_product").hide();
             $("#div_digital_product_upload").css('visibility', 'hidden');
+            $("#div_digital_product_upload").addClass('d-none');
         } else if (this.value == '0') {
             $("#nav-logistic-tab").hide();
             $("#div_next_step").hide();
             $("#div_save_digital_product").show();
             $("#div_digital_product_upload").css('visibility', 'visible');
+            $("#div_digital_product_upload").removeClass('d-none');
         }
     });
 
     $("#next_step").on("click", function () {
-        $("#nav-logistic-tab").click();
+        if ($("#nav-logistic-tab").css('visibility') == "visible") {
+            $("#nav-logistic-tab").click();
+        } else {
+            $("#nav-logistic-tab").submit();
+        }
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
@@ -343,6 +353,8 @@ $(document).ready(function () {
 
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
+        $('#nav-logistic-tab').css('visibility', 'visible');
+        $("#div_digital_product_upload").addClass('d-none');
         $('.div-expiration-time').hide();
         $('#url_expiration_time').val('');
     });
@@ -367,12 +379,16 @@ $(document).ready(function () {
                         $('#physical').click();
                     } else {
                         $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#nav-logistic-tab').css('visibility', 'hidden');
+                        $("#div_digital_product_upload").removeClass('d-none');
                         $('.div-expiration-time').show();
                     }
                 },
             });
         } else {
             $('#div_digital_product_upload').css('visibility', 'visible');
+            $('#nav-logistic-tab').css('visibility', 'hidden');
+            $("#div_digital_product_upload").removeClass('d-none');
             $('.div-expiration-time').show();
         }
     });

@@ -66,10 +66,10 @@ $(() => {
             success: resp => {
                 let rule = resp.data;
                 let applyOnPlans = rule.apply_on_plans
-                    .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
+                    .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
                     .join(' / ');
                 let offerPlans = rule.offer_plans
-                    .map(plan => plan.name + (plan.description ? ' - ' + plan.description : ''))
+                    .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
                     .join(' / ');
                 $('#order-bump-show-table .order-bump-description').html(rule.description);
                 $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
@@ -104,7 +104,7 @@ $(() => {
                 applyOnPlansInput.html('');
                 for (let plan of rule.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    applyOnPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    applyOnPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : '')}</option>`);
                 }
                 applyOnPlansInput.val(applyOnPlans);
 
@@ -112,7 +112,7 @@ $(() => {
                 let offerPlans = [];
                 for (let plan of rule.offer_plans) {
                     offerPlans.push(plan.id);
-                    offerPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    offerPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : '')}</option>`);
                 }
                 offerPlansInput.val(offerPlans);
 
@@ -180,9 +180,15 @@ $(() => {
             }
         })
     });
-
-    $(document).on('click', '.destroy-order-bump', function () {
+    // load delete modal
+    $(document).on('click', '.destroy-order-bump', function (event) {
         let id = $(this).data('id');
+        $('#modal-delete-order-bump .btn-delete').attr('order-bump-id', id);
+        $("#modal-delete-order-bump").modal('show');
+    });
+    $(document).on('click', '#modal-delete-order-bump .btn-delete', function () {
+        // let id = $(this).data('id');
+        let id = $('#modal-delete-order-bump .btn-delete').attr('order-bump-id');
         $.ajax({
             method: 'POST',
             url: '/api/orderbump/' + id,
@@ -231,7 +237,6 @@ $(() => {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
-                    variants: 0,
                     page: params.page || 1
                 };
             },
