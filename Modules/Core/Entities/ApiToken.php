@@ -38,11 +38,17 @@ use Modules\Core\Presenters\ApiTokenPresenter;
 class ApiToken extends Model
 {
     use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity;
+
     const TOKEN_SCOPE_ADMIN   = "admin";
     const TOKEN_SCOPE_USER    = "user";
     const TOKEN_SCOPE_SALE    = "sale";
     const TOKEN_SCOPE_PRODUCT = "product";
     const TOKEN_SCOPE_CLIENT  = "client";
+
+    const INTEGRATION_TYPE_ADMIN        = 1;
+    const INTEGRATION_TYPE_PERSONAL     = 2;
+    const INTEGRATION_TYPE_EXTERNAL     = 3;
+    const INTEGRATION_TYPE_CHECKOUT_API = 4;
     /**
      * @var array
      */
@@ -67,6 +73,7 @@ class ApiToken extends Model
      */
     protected $fillable = [
         'user_id',
+        'company_id',
         'token_id',
         'access_token',
         'scopes',
@@ -109,6 +116,14 @@ class ApiToken extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**
