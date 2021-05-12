@@ -3,6 +3,14 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/projects/css/index.css') }}">
+        <style>
+            .card{
+                min-height:403px;
+            }
+            .card-title{
+                min-height:56px;
+            }
+        </style>
     @endpush
     <!-- Page -->
     <div class="page">

@@ -169,7 +169,7 @@ body {
     table.unify tr {
         background-color: #F8F8F8;
         border: 1px solid #DDDDDD;
-        padding: .35em;
+        /*padding: .35em;*/
     }
 
     table.unify th,
@@ -476,7 +476,6 @@ a.label {
 }
 
 .site-menu-item:hover > a > span:first-child {
-    background: rgba(46, 133, 236, 0.3);
     border-radius: 0 44px 44px 0;
     display: inline-block;
     margin-right: 10px;
@@ -495,6 +494,8 @@ a.label {
     font-weight: 900;
     color: #fff;
     margin-right: 10px;
+    background-color: rgba(255,255,255,.2);
+    border-radius: 0 50px 50px 0;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -577,18 +578,6 @@ a.label {
     border-radius: 16px !important;
     -webkit-border-radius: 16px !important;
     -moz-border-radius: 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:first-child, .teste-1 {
-    border-radius: 0 0 0 16px !important;
-    -webkit-border-radius: 0 0 0 16px !important;
-    -moz-border-radius: 0 0 0 16px !important;
-}
-
-.table-striped > tbody > tr:nth-child(-n+10) > td:last-child, .teste-2 {
-    border-radius: 0 0 16px 0 !important;
-    -webkit-border-radius: 0 0 16px 0 !important;
-    -moz-border-radius: 0 0 16px 0 !important;
 }
 
 .sirius-radius {

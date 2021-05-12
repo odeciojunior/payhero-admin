@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -32,7 +33,7 @@ class TransactionsService
                     ['status_enum', (new Transaction())->present()->getStatusEnum('paid')],
                     ['is_waiting_withdrawal', 0],
                 ]
-            )->whereIn('gateway_id', [14, 15])
+            )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
             ->where(function ($where) {
                 $where->where('tracking_required', false)
                     ->orWhereHas('sale', function ($query) {

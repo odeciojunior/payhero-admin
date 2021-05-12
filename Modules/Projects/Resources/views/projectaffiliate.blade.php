@@ -2,14 +2,14 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=07') }}">
 @endpush
 
 @section('content')
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="" class="page-header container">
             <h1 class="page-title" style="min-height: 28px">
                 <a class="gray" href="/projects">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
@@ -47,7 +47,7 @@
                                     </div>
                                     <div class='col-md-6'>
                                         <h5 class=""><strong> Dias para liberar dinheiro </strong></h5>
-                                        <p class="card-text sm">Cartão de débito: <span id='show-debit-release'></span></p>
+                                        <p class="card-text sm"><span id='show-billet-release'></span></p>
 
                                         <h5 class=""><strong> Duração do cookie </strong></h5>
                                         <p id="show-cookie-duration" class="card-text sm"></p>
@@ -108,7 +108,7 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=s0')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s0')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s01')}}"></script>
         <script src="{{asset('modules/affiliates/js/links.js?v=s04')}}"></script>
     @endpush
 @endsection

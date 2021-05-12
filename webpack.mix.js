@@ -156,7 +156,7 @@ mix.babel([
 //salesRecovery
 mix.babel([
     'resources/assets/modules/salesrecovery/js/salesrecovery.js',
-], 'public/modules/salesrecovery/js/salesrecovery.js');
+], 'public/modules/salesrecovery/js/salesy.js');
 
 //Shipping
 mix.babel([

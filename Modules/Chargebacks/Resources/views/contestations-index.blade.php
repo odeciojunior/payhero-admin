@@ -56,6 +56,7 @@
                 border-radius: 50px;
                 margin-top: -12px;
             }
+
             .table thead > tr > td {
                 padding: 15px 12px !important;
             }
@@ -63,7 +64,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
@@ -72,7 +73,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display:none">
-            <div class="page-content container" style="margin-bottom:100px;">
+            <div class="page-content container">
                 <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
@@ -81,11 +82,11 @@
 
                             <div class="col-sm-12 col-md">
                                 <label for="transaction">Transação</label>
-                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                                <input name="transaction" id="transaction" class="select-pad" placeholder="Transação">
                             </div>
 
                             <div class="col-sm-12 col-md">
-                                <label for="is_expired" class='mb-10'>Expiração</label>
+                                <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="form-control select-pad">
                                     <option value="0">Ambos</option>
@@ -105,26 +106,26 @@
                             </div>
 
                             <div class="col-sm-12 col-md">
-                                <label for="date_type">&nbsp;</label>
-                                <input name='date_range' id="date_range" class="input-pad"
-                                       placeholder="Clique para editar..." readonly style="">
+                                <div class="form-group form-icons">
+                                    <label for="date_type">&nbsp;</label>
+                                    <i style="right: 20px;"
+                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="select-pad pr-30"
+                                           placeholder="Clique para editar..." readonly style="">
+                                </div>
                             </div>
-
-
                         </div>
-                        <div class="row collapse" id="bt_collapse">
+                        <div class="collapse" id="bt_collapse">
 
-                            <div class="d-flex flex-wrap" style="width:100%">
+                            <div class="row">
                                 <div class="col-sm-12 col-md">
-                                    <label for="project">Projeto</label>
-                                    <select name="project" id="project" class="form-control select-pad"
-                                            style='width:100%;' data-plugin="select2">
+                                    <label for="project">Projeto</label><br>
+                                    <select name='project' id="project" class="form-control select-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
-
                                 <div class="col-sm-12 col-md">
-                                    <label for="is_contested" class='mb-10'>Concluído</label>
+                                    <label for="is_contested">Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="form-control select-pad">
                                         <option value="0">Ambos</option>
@@ -165,7 +166,7 @@
                         </div>
 
                         <div class="row" style="height: 30px">
-                            <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                            <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                 <div
                                     class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                     data-toggle="collapse"
@@ -173,14 +174,16 @@
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
                                     <img id="icon-filtro"
+                                         class="hidden-xs-down"
                                          src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                     <span id="text-filtro">Filtros avançados</span>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-xl-3 text-right mt-20">
+                            <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro"
                                      class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                     <img style="height: 12px; margin-right: 4px"
+                                         class="hidden-xs-down"
                                          src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                     Aplicar filtros
                                 </div>
@@ -195,7 +198,8 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body ">
                                 <h5 class="gray font-size-16 ">N° de contestações</h5>
-                                <h4 class="total-number"><span class="font-size-30 bold " id="total-contestation"></span><span
+                                <h4 class="total-number"><span class="font-size-30 bold "
+                                                               id="total-contestation"></span><span
                                         id="total-contestation-tax"></span></h4>
 
                             </div>
@@ -206,7 +210,8 @@
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Resultantes em chargeback</h5>
-                                <h4 class="total-number"><span class="font-size-30 bold " id="total-chargeback-tax-val"></span>
+                                <h4 class="total-number"><span class="font-size-30 bold "
+                                                               id="total-chargeback-tax-val"></span>
                                     <span id="total-chargeback-tax"></span></h4>
 
                             </div>
@@ -218,7 +223,7 @@
                             <div class="card-body">
                                 <h5 class="gray font-size-16">Total em R$</h5>
                                 <h4 class="total-number" style="">R$ <span class="font-size-30 bold"
-                                                                     id="total-contestation-value"></span></h4>
+                                                                           id="total-contestation-value"></span></h4>
                             </div>
                             <div class="s-border-right yellow"></div>
                         </div>
@@ -240,7 +245,7 @@
 
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0"
                                style="width:100%;">
                             <thead>
                             <tr class="">
@@ -254,30 +259,31 @@
                                 <td class="table-title" style="min-width: 100px;"></td>
                             </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data">
+                            <tbody id="chargebacks-table-data" img-empty="{!! asset('modules/global/img/contestacoes.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
 
                 </div>
-                <ul id="pagination" class="pagination-sm" style="margin-top:10px; position:relative;float:right">
-                    {{-- js carrega... --}}
-                </ul>
-                <div style="margin-top:100px; width:100%; float:left;">&nbsp;</div>
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-25">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 @include('chargebacks::contestations-files')
                 @include('sales::details')
 
+            </div>
+            {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+            {{-- FIM projeto nao existem projetos--}}
         </div>
-        {{-- Quando não tem projeto cadastrado  --}}
-        @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
-    </div>
-    @push('scripts')
-        <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        @push('scripts')
+            <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
+            <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+            <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
 @endsection

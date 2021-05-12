@@ -10,6 +10,7 @@ use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
@@ -498,9 +499,9 @@ class CompanyService
 
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             }
         }
 
@@ -521,9 +522,9 @@ class CompanyService
 
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn('gateway_id', [14, 15]);
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [14, 15]);
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
             }
         }
 
@@ -593,7 +594,13 @@ class CompanyService
 
         $totalBalance = $pendingBalance + $availableBalance - $pendingDebt;
 
-        if ($totalBalance - foxutils()->onlyNumbers($sale->total_paid_value) < 0) {
+        if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+            $saleValue = floatval($transaction->value);
+        } else {
+            $saleValue = floatval(foxutils()->onlyNumbers($sale->total_paid_value));
+        }
+
+        if ($totalBalance - $saleValue < 0) {
             return false;
         }
 

@@ -107,7 +107,7 @@ return [
         ],
         "invitation" => [
             "status" => [
-                "accepted" => "Aceito",
+                "accepted" => "Ativo",
                 "pending" => "Pendente",
                 "expired" => "Expirado",
             ],

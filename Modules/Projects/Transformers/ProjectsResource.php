@@ -77,6 +77,7 @@ class ProjectsResource extends JsonResource
             'credit_card' => $this->credit_card,
             'boleto_due_days' => $this->boleto_due_days,
             'boleto_redirect' => $this->boleto_redirect,
+            'billet_release_days'    => $this->usersProjects[0]->company->gateway_release_money_days ?? '',
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
             // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
