@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Services\CloudFlareService;
 
 class GenericCommand extends Command
 {
