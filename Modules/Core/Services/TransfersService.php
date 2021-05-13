@@ -36,52 +36,27 @@ class TransfersService
             report($e);
         }
 
-        $gatewayIds = Gateway::whereIn(
-            'name',
-            [
-                'getnet_sandbox',
-                'getnet_production'
-            ]
-        )->get()->pluck('id')->toArray();
+        $gatewayIds = Gateway::whereIn('name', ['getnet_sandbox', 'getnet_production'])
+            ->get()
+            ->pluck('id')
+            ->toArray();
 
-        // Transações pagas
+        $transactions = $transactionModel->with('sale')
+            ->where([
+                ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
+            ])->where(function ($where) use ($gatewayIds) {
+                $where->where('tracking_required', false)
+                    ->orWhereHas('sale', function ($query) use ($gatewayIds) {
+                        $query->where(function ($q) {
+                            $q->where('has_valid_tracking', true)
+                                ->orWhereNull('delivery_id');
+                        })->whereNotIn('gateway_id', $gatewayIds);
+                    });
+            });
+
         if (empty($saleId)) {
-            $transactions = $transactionModel->with('sale')
-                ->where(
-                    [
-                        ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                        ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
-                    ]
-                )->whereHas(
-                    'sale',
-                    function ($query) use ($gatewayIds) {
-                        $query->where(
-                            function ($q) {
-                                $q->where('has_valid_tracking', true)
-                                    ->orWhereNull('delivery_id');
-                            }
-                        )->whereNotIn('gateway_id', $gatewayIds);
-                    }
-                );
-        } else {
-            $transactions = $transactionModel->with('sale')
-                ->where(
-                    [
-                        ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                        ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
-                        ['sale_id', $saleId]
-                    ]
-                )->whereHas(
-                    'sale',
-                    function ($query) use ($gatewayIds) {
-                        $query->where(
-                            function ($q) {
-                                $q->where('has_valid_tracking', true)
-                                    ->orWhereNull('delivery_id');
-                            }
-                        )->whereNotIn('gateway_id', $gatewayIds);
-                    }
-                );
+            $transactions->where('sale_id', $saleId);
         }
 
         try {
