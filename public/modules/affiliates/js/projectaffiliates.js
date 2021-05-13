@@ -37,9 +37,17 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
                     $.each(response.data, function (i, project) {
                         if (project.affiliated == false) {
-                            $("#projeto").append(
+                            $("#project-affiliate").append(
+                                $("<option>", {
+                                    value: project.id,
+                                    text: project.name,
+                                })
+                            );
+                            $("#project-affiliate-request").append(
                                 $("<option>", {
                                     value: project.id,
                                     text: project.name,
@@ -51,7 +59,15 @@ $(document).ready(function () {
                     getAffiliates();
                     getAffiliatesRequest();
                 } else {
-                    $("#projeto").append(
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#project-affiliate").append(
+                        $("<option>", {
+                            value: 0,
+                            text: "Nenhum projeto encontrado",
+                        })
+                    );
+                    $("#project-affiliate-request").append(
                         $("<option>", {
                             value: 0,
                             text: "Nenhum projeto encontrado",
@@ -107,7 +123,6 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#body-table-affiliates").html("");
-                console.log(response.data);
                 if (response.data == "") {
                     $("#body-table-affiliates").html(
                         "<tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +

@@ -288,7 +288,7 @@ strong span {
 }
 
 .card.shadow {
-    border-radius: 16px 16px 16px 16px;
+    border-radius: 0 12px 12px 12px;
 }
 
 .s-config {
