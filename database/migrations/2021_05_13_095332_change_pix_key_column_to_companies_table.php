@@ -15,6 +15,8 @@ class ChangePixKeyColumnToCompaniesTable extends Migration
     {
         Schema::table('companies', function (Blueprint $table) {
             $table->boolean('pix_key')->default(false)->change();
+        });
+        Schema::table('companies', function (Blueprint $table) {
             $table->renameColumn('pix_key', 'has_pix_key');
         });
     }
@@ -27,8 +29,11 @@ class ChangePixKeyColumnToCompaniesTable extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('pix_key')->after('gateway_tax')->nullable()->change();
             $table->renameColumn('has_pix_key', 'pix_key');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->string('pix_key')->after('gateway_tax')->nullable()->change();
         });
     }
 }
