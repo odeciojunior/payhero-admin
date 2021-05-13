@@ -1,4 +1,4 @@
-<div id="no-integration-found" class='row justify-content-center' style="display:none">
+<div id="no-integration-found" class='justify-content-center' style="display:none">
     <div class="content-error text-center">
         <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
         <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>

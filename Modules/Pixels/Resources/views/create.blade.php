@@ -34,7 +34,7 @@
                              class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                              data-value="google_adwords"
                              alt="logo google adwords">
-                        <div style="font: normal normal normal 11px Muli;">Google Adwords</div>
+                        <div style="font: normal normal normal 11px Muli;">Google Ads</div>
                     </div>
                     <div class="col-lg-2 col-6 mr-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
