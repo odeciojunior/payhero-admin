@@ -137,6 +137,9 @@
                 </div>
             </div>
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
         {{-- MODAL --}}
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered  modal-simple">

@@ -270,7 +270,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    $("#export-excel").show();
+                    $("#export-excel > div >").show();
 
                     $.each(response.data, function (i, project) {
                         $("#projeto").append(
@@ -283,7 +283,7 @@ $(document).ready(function () {
 
                     atualizar();
                 } else {
-                    $("#export-excel").hide();
+                    $("#export-excel > div >").hide();
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }

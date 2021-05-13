@@ -132,7 +132,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
-                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
+                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance" style="min-height: 545px">
 
                             <div class="card pb-15 card-shadow bg-white w-full performance-card">
 

@@ -163,8 +163,6 @@ class DomainsApiController extends Controller
                 ]
             );
 
-            TaskService::setCompletedTask($project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
-
             if (empty($domainCreated)) {
                 DB::rollBack();
 
@@ -198,6 +196,12 @@ class DomainsApiController extends Controller
                 DB::rollBack();
 
                 return response()->json(['message' => 'Erro ao criar domínio.'], 400);
+            }
+
+            try {
+                TaskService::setCompletedTask($project->users->first(), Task::find(Task::TASK_DOMAIN_APPROVED));
+            } catch (Exception $e) {
+                report($e);
             }
 
             DB::commit();
