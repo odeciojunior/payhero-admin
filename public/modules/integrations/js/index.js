@@ -3,11 +3,13 @@ $(document).ready(function () {
         admin: 'Admin',
         personal: 'Acesso Pessoal',
         external: 'Integração Externa',
+        checkoutApi: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
         admin: 'default',
         personal: 'primary',
         external: 'warning',
+        checkoutApi: 'warning'
     };
     let status = {
         active: 'Ativo',
@@ -21,6 +23,7 @@ $(document).ready(function () {
 
     refreshIntegrations();
     createIntegration();
+    getCompanies();
 
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
@@ -179,11 +182,14 @@ $(document).ready(function () {
             $("#btn-save-integration").on('click', function () {
                 let description = $("#description").val();
                 let tokenTypeEnum = $(".select-enum-list").val();
+                let companyHash = $("#companies").val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
+                } else if (!companyHash && tokenTypeEnum == 4) {
+                    alertCustom('error', 'O campo Empresa é obrigatório para a integração Checkout API');
                 } else {
                     loadingOnScreen();
-                    storeIntegration(description, tokenTypeEnum);
+                    storeIntegration(description, tokenTypeEnum, companyHash);
                     ''
                 }
             });
@@ -191,13 +197,14 @@ $(document).ready(function () {
         });
     }
 
-    function storeIntegration(description, tokenTypeEnum) {
+    function storeIntegration(description, tokenTypeEnum, companyHash) {
         $.ajax({
             method: "POST",
             url: "/api/integrations",
             data: {
                 description: description,
                 token_type_enum: tokenTypeEnum,
+                company_id: companyHash
             },
             dataType: "json",
             headers: {
@@ -205,12 +212,10 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                // console.log(response);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                // console.log(response);
                 $(".close").click();
                 alertCustom('success', 'Integração criada com sucesso!');
                 loadingOnScreenRemove();
@@ -218,6 +223,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //Botao de copiar
     $(document).on("click", '.btnCopiarLink', function () {
         var tmpInput = $("<input>");
@@ -295,5 +301,48 @@ $(document).ready(function () {
                 });
             }
         }
+    }
+
+    function handleIntegrationTypeChange(e) {
+        let type = e.target.value;
+        let companiesContainer = $('.companies-container');
+        // type = 4 is Checkout API type
+        if (type == 4) {
+            companiesContainer.addClass('d-flex').removeClass('d-none');
+        } else {
+            companiesContainer.addClass('d-none').removeClass('d-flex');
+        }
+    }
+
+    $('.select-enum-list').on('change', handleIntegrationTypeChange);
+
+    // Obtem os campos dos filtros
+    function getCompanies() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: "/api/companies?select=true",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (i, company) {
+                        $("#companies").append($('<option>', {
+                            value: company.id,
+                            text: company.name
+                        }));
+                    });
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
     }
 });

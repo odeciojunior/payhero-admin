@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ApiToken;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Integrations\Transformers\ApiTokenCollection;
 use Modules\Integrations\Transformers\ApiTokenResource;
@@ -57,8 +58,12 @@ class IntegrationsApiController extends Controller
             $apiTokenModel     = new ApiToken();
             $apiTokenPresenter = $apiTokenModel->present();
             $tokenTypeEnum     = $request->get('token_type_enum');
+            $company           = Company::find(current(hashids()->decode($request->get('company_id'))));
             if (empty($tokenTypeEnum)) {
                 return response()->json(['message' => 'O Tipo de Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
+            }
+            if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API && !$company) {
+                return response()->json(['message' => 'O campo Empresa é obrigatório para a integração Checkout API'], Response::HTTP_BAD_REQUEST);
             }
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
             if (empty($scopes)) {
@@ -66,9 +71,10 @@ class IntegrationsApiController extends Controller
             }
             $tokenIntegration = ApiToken::generateTokenIntegration($description, $scopes);
             /** @var ApiToken $token */
-            $token = $apiTokenModel->newQuery()->create(
+            $token = $apiTokenModel->create(
                 [
                     'user_id'               => auth()->user()->account_owner_id,
+                    'company_id'            => $company->id,
                     'token_id'              => $tokenIntegration->token->getKey(),
                     'access_token'          => $tokenIntegration->accessToken,
                     'scopes'                => json_encode($scopes, true),

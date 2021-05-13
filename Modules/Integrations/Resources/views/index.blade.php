@@ -117,6 +117,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row companies-container d-none">
+                                    <div class="col-sm-12 col-md">
+                                        <label for="empresa">Empresa</label>
+                                        <select name="company_id" id="companies" class="form-control select-pad">
+                                            <option value="">Todas empresas</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row" style="margin-top: 35px">
                                     <div class="form-group col-12 text-right">
                                         <button id="btn-save-integration" type="button" class="btn btn-primary">Gerar Token</button>
