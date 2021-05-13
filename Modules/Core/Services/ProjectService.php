@@ -17,6 +17,8 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
@@ -55,6 +57,15 @@ class ProjectService
     private $shopifyService;
 
     /**
+     * @var WooCommerceService
+     */
+    private $wooCommerceService;
+    /**
+     * @var WooCommerceIntegration
+     */
+    private $wooCommerceIntegrationModel;
+
+    /**
      * @param string|null $urlStore
      * @param string|null $token
      * @return ShopifyService
@@ -78,6 +89,33 @@ class ProjectService
         }
 
         return $this->shopifyIntegrationModel;
+    }
+
+    /**
+     * @param string|null $urlStore
+     * @param string|null $tokenUser
+     * @param string|null $tokenPass
+     * @return WooCommerceService
+     */
+    private function getWooCommerceService(string $urlStore = null, string $tokenUser = null, string $tokenPass = null)
+    {
+        if (!$this->wooCommerceService) {
+            $this->wooCommerceService = new WooCommerceService($urlStore, $tokenUser, $tokenPass);
+        }
+
+        return $this->wooCommerceService;
+    }
+
+    /**
+     * @return Application|mixed
+     */
+    function getWooCommerceIntegration()
+    {
+        if (!$this->wooCommerceIntegrationModel) {
+            $this->wooCommerceIntegrationModel = app(WooCommerceIntegration::class);
+        }
+
+        return $this->wooCommerceIntegrationModel;
     }
 
     /**
@@ -229,6 +267,23 @@ class ProjectService
                     }
                 }
 
+                //remover integração do woocommerce
+                $wooCommerceIntegration = $this->getWooCommerceIntegration()
+                                           ->where('project_id', $project->id)->first();
+                
+                if (!empty($wooCommerceIntegration)) {
+                    $wooCommerceIntegration->delete();
+                    $wooCommerceService = $this->getWooCommerceService(
+                        $wooCommerceIntegration->url_store,
+                        $wooCommerceIntegration->token_user,
+                        $wooCommerceIntegration->token_pass,
+                    );
+                    if($wooCommerceService->verifyPermissions()){
+                        $wooCommerceService->deleteHooks($project->id);
+                    }
+                }
+                //end woo
+
                 //remover integração do shopify
                 $shopifyIntegration = $this->getShopifyIntegration()
                                            ->where('project_id', $project->id)->first();
@@ -254,6 +309,9 @@ class ProjectService
                                       'shopify_id'         => '',
                                   ]);
                 }
+                //end shopify
+
+
 
                 if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
                     foreach ($project->notifications as $notification) {

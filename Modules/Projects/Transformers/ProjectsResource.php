@@ -67,6 +67,7 @@ class ProjectsResource extends JsonResource
             'discount_recovery_value' => $this->discount_recovery_value,
             'created_at' => (new Carbon($this->created_at))->format('d/m/Y'),
             'shopify_id' => $this->shopify_id,
+            'woocommerce_id' => $this->woocommerce_id,
             'logo' => $this->logo,
             'url_page' => $this->url_page,
             'contact' => $this->contact ?? '',
