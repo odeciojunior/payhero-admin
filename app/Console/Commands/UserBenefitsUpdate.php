@@ -47,7 +47,7 @@ class UserBenefitsUpdate extends Command
 
         foreach ($users as $user) {
             $this->line($user->id . ' - ' . $user->name);
-            $benefitsService->updateUserCashback($user);
+            $benefitsService->updateUserBenefits($user);
         }
 
         $this->line($now);
