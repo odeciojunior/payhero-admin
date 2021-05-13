@@ -141,58 +141,21 @@ class WithdrawalsApiController
     public function getWithdrawalValues(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
 
             $data = $request->all();
 
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(current(Hashids::decode($data['company_id'])));
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $withdrawalValueRequested = FoxUtils::onlyNumbers($data['withdrawal_value']);
-            $currentValue = 0;
+            $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
+            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,
+                $withdrawalValueRequested));
 
-            $transactionsSum->chunk(
-                2000,
-                function ($transactions) use (
-                    &$currentValue,
-                    &$withdrawalValueRequested
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
-
-                        if ($currentValue >= $withdrawalValueRequested) {
-                            return response()->json(
-                                [
-                                    'data' => [
-                                        'lower_value' => $currentValue - $transaction->value,
-                                        'bigger_value' => $currentValue
-                                    ]
-                                ]
-                            )->send();
-                        }
-                    }
-                }
-            );
-
-            return response()->json(
-                [
-                    'data' => [
-                        'lower_value' => 0,
-                        'bigger_value' => 0
-                    ]
-                ]
-            );
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
@@ -202,12 +165,10 @@ class WithdrawalsApiController
         try {
             $userModel = new User();
 
-            return response()->json(
-                [
-                    'allowed' => auth()->user()->status != $userModel->present()
-                            ->getStatus('withdrawal blocked'),
-                ]
-            );
+            return response()->json([
+                'allowed' => auth()->user()->status != $userModel->present()
+                        ->getStatus('withdrawal blocked'),
+            ]);
         } catch (Exception $e) {
             report($e);
 
@@ -328,12 +289,12 @@ class WithdrawalsApiController
                 ];
             }
 
-
             $return = [
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
-                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
+                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',',
+                        '.'),
                 'transactions' => $arrayTransactions,
             ];
 

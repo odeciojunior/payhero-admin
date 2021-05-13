@@ -2,6 +2,18 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+    <style>
+        .o-arrow-right-1 {
+            font-size: 30px;
+        }
+
+        .o-arrow-right-1::before {
+            transform: rotate(180deg);
+        }
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+     </style>
 @endpush
 @section('content')
     <div id='project-content'>
@@ -9,7 +21,12 @@
             <div style="display: none" class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
-                        <h1 class="page-title">Integrações Reportana</h1>
+                        <h1 class="page-title my-10" style="min-height: 28px">
+                            <a class="gray" href="/apps">
+                                <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                                Integrações Reportana
+                            </a>
+                        </h1>
                     </div>
                     <div class="col text-right" id="integration-actions" style="display:none">
                         <a id='btn-add-integration' class="btn btn-floating btn-primary"
@@ -67,7 +84,7 @@
 
             <div id="no-integration-found" class='row justify-content-center' style="display:none; width:100%;">
                 <div class="content-error text-center">
-                    <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
                     <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                     <p class="desc gray">Integre seus projetos com Reportana de forma totalmente automatizada!</p>
                 </div>

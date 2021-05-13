@@ -4,13 +4,24 @@
 namespace Modules\Core\Services;
 
 
-use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Entities\User;
 use Modules\Dashboard\Transformers\BenefitCollection;
+use Spatie\Activitylog\Models\Activity;
 
 class BenefitsService
 {
-    public static function updateUserCashback(Model $user)
+    public static function updateUserCashback(User $user)
     {
+        if ($user->ignore_automatic_benefits_updates) {
+            activity()->on($user)->tap(
+                function (Activity $activity) use ($user) {
+                    $activity->log_name = 'benefits_change_ignored';
+                    $activity->subject_id = $user->id;
+                }
+            )->log('Cashback update ignorado');
+            return;
+        }
+
         if (!$user->relationLoaded('benefits')) {
             $user->load('benefits');
         }
@@ -34,7 +45,9 @@ class BenefitsService
             }
         }
 
-        if ($fullInstallmentTax) {
+        // User only has cashback if it has full installment tax (at this time 2.99%)
+        // and account score greater than or equal 6
+        if ($fullInstallmentTax && $user->account_score >= 6) {
             if (!is_null($cashback2)) {
                 if ($user->installment_cashback != 1) {
                     $user->installment_cashback = 1;
@@ -58,8 +71,6 @@ class BenefitsService
                     $user->installment_cashback = 0;
                     $user->save();
                 }
-                $user->installment_cashback = 0;
-                $user->save();
             }
         } else {
             if ($cashback1) {
@@ -72,10 +83,17 @@ class BenefitsService
             }
             $user->installment_cashback = 0;
             $user->save();
+
+            activity()->on($user)->tap(
+                function (Activity $activity) use ($user) {
+                    $activity->log_name = 'benefits_change';
+                    $activity->subject_id = $user->id;
+                }
+            )->log('Cashback desativado');
         }
     }
 
-    public function getUserBenefits(Model $user): array
+    public function getUserBenefits(User $user): array
     {
         $benefits = $user->benefits;
         $activeBenefits = $benefits->where('enabled', 1);
@@ -107,7 +125,7 @@ class BenefitsService
 
         return [
             'active' => new BenefitCollection($result),
-            'next' => new BenefitCollection($nextBenefits),
+            'next'   => new BenefitCollection($nextBenefits),
         ];
     }
 }

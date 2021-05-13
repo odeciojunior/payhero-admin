@@ -10,7 +10,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-lg-4">
@@ -172,7 +172,7 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project-select">Projeto</label>
                             <select name='project' id="project-select" class="form-control select-pad">
-                                <option value="">Todos</option>
+                                <option value="">Todos projetos</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -196,32 +196,50 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="status_commission">Status da comissão</label>
-                            <select name='status_commission' id="status_commission" class="form-control select-pad">
-                                <option value="">Todos</option>
-                                <option value="transfered">Transferido</option>
-                                <option value="pending">Pendente</option>
-                                <option value="blocked">Não transferido por falta de rastreio</option>
-                            </select>
+
+                    <div class="collapse" id="bt_collapse">
+                        <div class="row pt-15">
+                            <div class="col-sm-6 col-md-4">
+                                <label for="status_commission">Status da comissão</label>
+                                <select name='status_commission' id="status_commission" class="form-control select-pad">
+                                    <option value="">Todos</option>
+                                    <option value="transfered">Transferido</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="blocked">Não transferido por falta de rastreio</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-4 form-icons">
+                                <label for="date_updated">Data de aprovação venda</label>
+                                <i style="right: 30px;"
+                                   class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
+                                <input name='date_updated' id="date_updated" class="select-pad"
+                                       placeholder="Clique para editar..." readonly>
+                            </div>
+                            <div class="col-sm-6 col-md-4 d-flex flex-column justify-content-center">
+                                <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
+                                <label class="switch">
+                                    <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_updated">Data de aprovação venda</label>
-                            <input name='date_updated' id="date_updated" class="select-pad"
-                                   placeholder="Clique para editar..." readonly>
+                    </div>
+                    <div class="row" style="height: 30px">
+                        <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                 data-toggle="collapse"
+                                 data-target="#bt_collapse"
+                                 aria-expanded="false"
+                                 aria-controls="bt_collapse">
+                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <span id="text-filtro">Filtros avançados</span>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
-                            <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
-                            <label class="switch">
-                                <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
+                        <div class="col-6 col-xl-3 mt-20">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                Aplicar filtros
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,7 +247,7 @@
                 <!-- Aviso Problemas com os Códigos -->
                 <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
                     <div class="d-flex">
-                        <i class="material-icons mr-10">contact_support</i>
+                        <i class="material-icons mr-10">help</i>
                         <div class="w-full">
                             <strong class="font-size-16">Problemas com os códigos?</strong>
                             <p class="font-size-14 pr-md-100 mb-5">
@@ -323,21 +341,23 @@
                                 <th class="table-title">Venda</th>
                                 <th class="table-title">Data de Aprovação</th>
                                 <th class="table-title">Produto</th>
-                                <td class="table-title">Status</td>
+                                <th class="table-title">Status</th>
                                 <th class="table-title">Código de Rastreio</th>
                                 <th class="table-title" style="width:90px;"></th>
                             </tr>
                             </thead>
-                            <tbody id="dados_tabela">
+                            <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
-                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;margin-right:100px;">
-                    {{-- js carrega... --}}
-                </ul>
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination-trackings" class="pl-5 pr-md-15 pb-20"
+                    style="margin-top:10px;position:relative;float:right;">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 <!-- Modal detalhes da venda-->
                 @include('sales::details')
                 <!-- End Modal -->

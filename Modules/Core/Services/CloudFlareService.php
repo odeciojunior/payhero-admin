@@ -81,7 +81,7 @@ class CloudFlareService
     /**
      * @return Application|mixed|SendgridService
      */
-    private function getSendgridService()
+    public function getSendgridService()
     {
         if (!$this->sendgridService) {
             $this->sendgridService = app(SendgridService::class);
@@ -955,5 +955,21 @@ class CloudFlareService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    public function removeDomain($domain)
+    {
+        $this->setZone($domain->name);
+
+        $domain->load('domainsRecords');
+        foreach ($domain->domainsRecords as $domainsRecord) {
+            $this->deleteRecord($domainsRecord->cloudflare_record_id);
+        }
+
+        $this->getSendgridService()->deleteZone($domain->name);
+
+        $this->getSendgridService()->deleteLinkBrand($domain->name);
+
+        $this->deleteZone($domain->name);
     }
 }

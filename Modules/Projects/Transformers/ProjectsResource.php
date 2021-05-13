@@ -39,9 +39,6 @@ class ProjectsResource extends JsonResource
      */
     public function toArray($request)
     {
-        // $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
-        //                        ->where('project_id', $this->id)
-        //                        ->first();
         if (isset($this->affiliate_id)) {
             $affiliate = '';
             if ($this->affiliate_id > 0) {
@@ -81,6 +78,7 @@ class ProjectsResource extends JsonResource
             'credit_card' => $this->credit_card,
             'boleto_due_days' => $this->boleto_due_days,
             'boleto_redirect' => $this->boleto_redirect,
+            'billet_release_days'    => $this->usersProjects[0]->company->gateway_release_money_days ?? '',
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
             // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),

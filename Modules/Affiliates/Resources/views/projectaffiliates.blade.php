@@ -35,7 +35,29 @@
                         <div class="tab-content">
                             <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">
                                 <div class="fixhalf"></div>
-                                <div class="card shadow " style="min-height: 300px">
+                                <div class="card card-body shadow " style="min-height: 300px">
+                                    <div class="row mb-15">                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="type-products">Projeto</label>
+                                                <select class="form-control" id="project-affiliate" data-name="projects">
+                                                    <option value="0">Todos projetos</option>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Nome do afiliado</label>
+                                                <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                            </div>
+                                        </div>                
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
+                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full">
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
                                     <table class='table text-left table-striped unify table-affiliate' style='width:100%'>
                                         <thead>
                                             <tr>
@@ -49,18 +71,45 @@
                                                 {{-- excluir, ativar/inativar --}}
                                             </tr>
                                         </thead>
-                                        <tbody class="body-table-affiliates">
+                                        <tbody id="body-table-affiliates" img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
+                                            <tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'>
+                                                <img style='width:124px;margin-right:12px;' src='{!! asset('modules/global/img/afiliados.svg')!!}'> Nenhum afiliado encontrado</td>
+                                            </tr>
                                             {{-- js carrega --}}
                                         </tbody>
                                     </table>
                                 </div>
-                                <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                                    {{-- js carrega... --}}
-                                </ul>
+                                <div class="row d-flex justify-content-center justify-content-md-end">
+                                    <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                                        {{-- js carrega... --}}
+                                    </ul>
+                                </div>
                             </div>
+
                             <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
                                 <div class="fixhalf"></div>
-                                <div class="card shadow " style="min-height: 300px">
+                                <div class="card card-body shadow " style="min-height: 300px">
+                                    <div class="row mb-15">                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="type-products">Projeto</label>
+                                                <select class="form-control" id="project-affiliate-request" data-name="projects">
+                                                    <option value="0">Todos projetos</option>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-lg-5 col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Nome do afiliado</label>
+                                                <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                            </div>
+                                        </div>                
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
+                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full">
+                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
+                                            </button>
+                                        </div>
+                                    </div>
                                     <table class="table table-striped table-affiliate-request">
                                         <thead>
                                             <tr>
@@ -73,27 +122,32 @@
                                                 {{-- aceitar, recusar --}}
                                             </tr>
                                         </thead>
-                                        <tbody class="body-table-affiliate-requests">
+                                        <tbody id="body-table-affiliate-requests"  img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
                                         </tbody>
                                     </table>
                                 </div>
-                                <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
-                                    {{-- js carrega... --}}
-                                </ul>
+                                <div class="row d-flex justify-content-center justify-content-md-end">
+                                    <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                                        {{-- js carrega... --}}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {{-- Quando não tem projeto cadastrado  --}}
+            @include('projects::empty')
+        {{-- FIM projeto nao existem projetos--}}
         {{-- MODAL --}}
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered  modal-simple">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir_affiliate">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div id="modal_excluir_body_affiliate" class="modal-body text-center p-20">
                         <div class="d-flex justify-content-center">
@@ -121,9 +175,9 @@
                 <div class="modal-content p-10">
                     <div class="modal-header simple-border-bottom mb-10">
                         <h4 class="modal-title" id="modal-title">Editar afiliado</h4>
-                        <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div class="modal-body" style='min-height: 100px'>
                         @include('affiliates::edit')
@@ -146,9 +200,9 @@
                 <div class="modal-content p-10">
                     <div class="modal-header simple-border-bottom mb-10">
                         <h4 class="modal-title" id="modal-title">Visualizar afiliado</h4>
-                        <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                            <i class="material-icons md-16">close</i>
-                        </a>
+                        <button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
                     <div class="modal-body" style='min-height: 100px'>
                         @include('affiliates::show')

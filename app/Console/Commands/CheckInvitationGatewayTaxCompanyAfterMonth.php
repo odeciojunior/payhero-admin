@@ -2,15 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
 
 /**
  * Class checkInvitationGatewayTaxCompanyAfterMonth
  * @package App\Console\Commands
  */
-class checkInvitationGatewayTaxCompanyAfterMonth extends Command
+class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
 {
     /**
      * The name and signature of the console command.
@@ -43,18 +41,18 @@ class checkInvitationGatewayTaxCompanyAfterMonth extends Command
      */
     public function handle()
     {
-        $companies = Company::where('gateway_tax' , 3.9)->get();
-
-        foreach ($companies as $company) {
-            if(Carbon::now()->gt(Carbon::parse($company->created_at)->addMonth())) {
-                $company->update(
-                    [
-                        'gateway_tax' => Company::GATEWAY_TAX
-                    ]
-                );
-            }
-        }
-
-        return 0;
+//        $companies = Company::where('gateway_tax' , 3.9)->get();
+//
+//        foreach ($companies as $company) {
+//            if(Carbon::now()->gt(Carbon::parse($company->created_at)->addMonth())) {
+//                $company->update(
+//                    [
+//                        'gateway_tax' => Company::GATEWAY_TAX
+//                    ]
+//                );
+//            }
+//        }
+//
+//        return 0;
     }
 }

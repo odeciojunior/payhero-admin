@@ -98,7 +98,6 @@ class ReportService
             })
             ->where('sales.owner_id', auth()->user()->account_owner_id)
             ->where('sales.project_id', $projectId)
-            //                       ->where('sales.status', 1)
             ->whereDate('sales.start_date', $data['startDate'])
             ->groupBy('hour', 'sales.payment_method')
             ->get()->toArray();

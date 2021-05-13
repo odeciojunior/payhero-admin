@@ -17,7 +17,8 @@ $(document).ready(function () {
     let ticketId = '';
     $('#cpf-filter').mask('000.000.000-00');
 
-    $("#btn-filter").on("click", function (event) {
+
+    $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         deleteCookie('filterTickets');
         getTickets();
@@ -440,6 +441,20 @@ $(document).ready(function () {
             deleteCookie('filterTickets');
             getTickets();
             getTotalValues();
+        }
+    });
+
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
         }
     });
 });

@@ -14,7 +14,7 @@
                 <div class='col-md-12'>
                     <div class='row mx-10'>
                         <div class='col-md-12'>
-                            <label class='page-title project-header' style='font-size: 2em'></label>
+                            <label class='page-title project-header' style='font-size: 2em; line-height: normal;'></label>
                         </div>
                         <div class='col-md-6'>
                             <p class="card-text sm mt-10 mx-5" id="created_by"></p>

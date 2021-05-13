@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=04') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=9') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=12') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=8') }}">
     @endpush
 
@@ -117,7 +117,12 @@
                                 </div>
                                 <div class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5" style="height: 270px">
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
-                                    <div id="empty-sale" style="display: none; font-size: 14px"> Nenhuma venda encontrada </div>
+                                    <div id="empty-sale" class="row" style="display: none;">
+                                        <div class="col-sm-8">
+                                            <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                        </div>
+                                        <p style="font-size: 23px" class="col-sm-4 gray justify-content-center align-items-center d-flex flex-column p-5">Nenhuma venda encontrada</p>
+                                     </div>
                                 </div>
                                 <div id="chart-loading"></div>
                             </div>
@@ -127,7 +132,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
-                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
+                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance" style="min-height: 545px">
 
                             <div class="card pb-15 card-shadow bg-white w-full performance-card">
 

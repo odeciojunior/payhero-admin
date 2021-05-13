@@ -31,9 +31,9 @@
           content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png?v=1') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png?v=1') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png?v=1') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=04') }}">
@@ -61,9 +61,9 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=14') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=120') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=70') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=32') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=123') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=72') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=33') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
     @stack('css')
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -124,7 +124,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=560') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=570') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -139,58 +139,27 @@
 @if(env('APP_ENV', 'production') == 'production')
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
-
     <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
 
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3ff6c393-3915-4554-a046-cc8eae241938"> </script>
+
+    <style>
+        .margin-chat-pagination {
+            display:block !important; height:100px  !important;
+        }
+    </style>
 
     <script>
 
         @if(\Auth::user())
-
-            window.zESettings = {
-            webWidget: {
-                authenticate: {
-                    chat: {
-                        jwtFn: function(callback) {
-                            fetch('/generate-zend-jwt').then(function(res) {
-                                res.text().then(function(jwt) {
-                                    console.log("check for execution")
-                                    let jwtreplace = jwt.replace('"','', jwt)
-                                    jwtreplace = jwtreplace.replace('"','', jwtreplace)
-                                    callback(jwtreplace);
-                                });
-                            });
-                        }
-                    }
-                }
-            }
-        };
+            (function(m,a,i,s,_i,_m){
+                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
+                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
+                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
+            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
         @endif
     </script>
 
 @endif
 
 </body>
-
 </html>
-
-
-    <!-- chat huggy abandonado -->
-    {{-- <script>
-        var $_PowerZAP = {
-            defaultCountry: '+55',
-            widget_id: '15840',
-            company: "19537"
-        }; (function(i,s,o,g,r,a,m){
-            i[r]={
-                context:{
-                    id:'74ec354f8be1e7eb7f15b56a6e23fd69'
-                }
-            };
-            a=o;o=s.createElement(o);
-            o.async=1;o.src=g;m=s.getElementsByTagName(a)[0];
-            m.parentNode.insertBefore(o,m);
-        })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
-    </script> --}}
-    <!-- End code pzw.io  -->

@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=06') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
@@ -47,7 +47,7 @@
     @endpush
 
     <!-- Page -->
-        <div class="page">
+        <div class="page mb-0">
             <div style="display: none" class="page-header container">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
@@ -57,7 +57,7 @@
                         <div class="col-6 text-right">
                             <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                                 <div class="p-2 d-flex justify-content-end align-items-center">
-                                    <span id="bt_get_csv_default" class="o-download-cloud-1 icon-export btn mr-2"></span>
+                                    <span class="o-download-cloud-1 mr-2"></span>
                                     <div class="btn-group" role="group">
                                         <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
                                         <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
@@ -77,21 +77,35 @@
                         <div id="" class="card shadow p-20">
                             <div class="row align-items-baseline mb-md-15">
                                 <div class="col-sm-12 col-md">
-                                    <label for="projeto">Projeto</label>
-                                    <select name='select_project' id="projeto" class="form-control select-pad">
-                                        <option value="">Todos projetos</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 col-md">
-                                    <label for="plan">Plano</label>
-                                    <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
-                                        <option value="">Todos planos</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 col-md">
                                     <label for="transaction">Transação</label>
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
+
+                                <div class="col-sm-12 col-md">
+                                    <label for="status">Status</label>
+                                    <select name='sale_status' id="status" class="form-control select-pad">
+                                        <option value="">Todos status</option>
+                                        <option value="1">Aprovado</option>
+                                        <option value="2">Aguardando pagamento</option>
+                                        <option value="4">Chargeback</option>
+                                        <option value="7">Estornado</option>
+                                        {{--<option value="6">Em análise</option>--}}
+                                        {{--<option value="8">Parcialmente estornado</option>--}}
+                                        <option value="chargeback_recovered">Chargeback recuperado</option>
+                                        <option value="20">Revisão Antifraude</option>
+                                        <option value="24">Em disputa</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-12 col-md">
+                                    <label for="forma">Forma de pagamento</label>
+                                    <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                        <option value="">Boleto e cartão de crédito</option>
+                                        <option value="1">Cartão de crédito</option>
+                                        <option value="2">Boleto</option>
+                                    </select>
+                                </div>
+
                                 <div class="col-sm-6 col-md">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="form-control select-pad">
@@ -99,84 +113,106 @@
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-6 col-md form-icons">
                                     <label for="date_range">&nbsp;</label>
-                                    <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-18"></i>
-                                    <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
+                                    <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
+
                             <div class="row collapse" id="bt_collapse">
+                                <div class="d-flex flex-wrap mb-md-15">
+                                    <div class="col-sm-12 col-md">
+                                        <label for="empresa">Empresa</label>
+                                        <select name="select_company" id="empresa" class="form-control select-pad select-company">
+                                            <option value="">Todas empresas</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md">
+                                        <label for="projeto">Projeto</label>
+                                        <select name='select_project' id="projeto" class="form-control select-pad">
+                                            <option value="">Todos projetos</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md">
+                                        <label for="plan">Plano</label>
+                                        <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                            <option value="">Todos planos</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md">
+                                        <label for="cupom">Cupom</label>
+                                        <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
+                                    </div>
+
+                                    <div class="col-sm-12 col-md">
+                                        <label for="valor">Comissão</label>
+                                        <input name="value" id="valor" class="input-pad transaction-value" placeholder="Valor da comissão">
+                                    </div>
+                                </div>
+
                                 <div class="d-flex flex-wrap">
                                     <div class="col-sm-12 col-md">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
                                     </div>
+
                                     <div class="col-sm-12 col-md">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
+
                                     <div class="col-sm-12 col-md">
-                                        <label for="status">Status</label>
-                                        <select name='sale_status' id="status" class="form-control select-pad">
-                                            <option value="">Todos status</option>
-                                            <option value="1">Aprovado</option>
-                                            <option value="2">Aguardando pagamento</option>
-                                            <option value="4">Chargeback</option>
-                                            <option value="7">Estornado</option>
-                                            {{--                                <option value="6">Em análise</option>--}}
-                                            {{--                                <option value="8">Parcialmente estornado</option>--}}
-                                            <option value="chargeback_recovered">Chargeback recuperado</option>
-                                            <option value="20">Revisão Antifraude</option>
-                                            <option value="24">Em disputa</option>
-                                        </select>
+                                        <label for="email_cliente">Email do cliente</label>
+                                        <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
-                                    <div class="col-sm-12 col-md">
-                                        <label for="forma">Forma de pagamento</label>
-                                        <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                            <option value="">Boleto e cartão de crédito</option>
-                                            <option value="1">Cartão de crédito</option>
-                                            <option value="2">Boleto</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-12 col-md d-flex align-items-center flex-wrap mt-15">
-                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+
+                                    <div class="col-sm-12 col-md d-flex align-items-center flex-wrap mt-20" style="flex-grow: 2.134 !important;">
+                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                             <label class="switch mr-2">
                                                 <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
                                                 <span class="slider round"></span>
                                             </label>
                                             <span class="switch-text"> Upsell </span>
                                         </div>
-                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+
+                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                             <label class="switch mr-2">
                                                 <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
                                                 <span class="slider round"></span>
                                             </label>
                                             <span class="switch-text"> Order Bump </span>
                                         </div>
-                                        <div class='col-sm-6 col-md-12 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+
+                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                             <label class="switch mr-2">
-                                                <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                                <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
                                                 <span class="slider round"></span>
                                             </label>
-                                            <span class="switch-text"> Shopify Erros </span>
+                                            <span class="switch-text"> Cashback </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row" style="height: 30px">
-                                <div class="col-sm-6 col-xl-3 text-right mt-20 offset-xl-6">
+                                <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                     <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                          data-toggle="collapse"
                                          data-target="#bt_collapse"
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
-                                        <img id="icon-filtro" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                        <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
                                         <span id="text-filtro">Filtros avançados</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-xl-3 text-right mt-20">
+                                <div class="col-6 col-xl-3 mt-20">
                                     <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                        <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                        <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                         Aplicar filtros
                                     </div>
                                 </div>
@@ -250,34 +286,38 @@
                             </div>
 
                         </div>
-                @endif
+                    @endif
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
-                    <div class="card shadow " style="min-height: 300px">
-                        <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
-                                <thead>
-                                <tr>
-                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Descrição</td>
-                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                    <td class="table-title">Forma</td>
-                                    <td class="table-title">Status</td>
-                                    <td class="table-title display-sm-none display-m-none">Iniciada em</td>
-                                    <td class="table-title display-sm-none">Pagamento</td>
-                                    <td class="table-title">Comissão</td>
-                                    <td class="table-title" width="80px;"> &nbsp;</td>
-                                </tr>
-                                </thead>
-                                <tbody id="dados_tabela">
-                                {{-- js carrega... --}}
-                                </tbody>
-                            </table>
+                    <div class="col-lg-12 p-0 pb-10">
+                        <div class="card shadow" style="min-height: 300px">
+                            <div class="page-invoice-table table-responsive">
+                                <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
+                                        <th class="table-title">Descrição</th>
+                                        <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
+                                        <th class="table-title">Forma</th>
+                                        <th class="table-title">Status</th>
+                                        <th class="table-title display-sm-none display-m-none">Iniciada em</th>
+                                        <th class="table-title display-sm-none">Pagamento</th>
+                                        <th class="table-title">Comissão</th>
+                                        <th class="table-title" width="80px;"> &nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
+                                    {{-- js carrega... --}}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
-                        {{-- js carrega... --}}
-                    </ul>
+                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-20">
+                        <ul id="pagination-sales" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                            {{-- js carrega... --}}
+                        </ul>
+                    </div>
                 <!-- Modal detalhes da venda-->
                     @include('sales::details')
                 <!-- End Modal -->
