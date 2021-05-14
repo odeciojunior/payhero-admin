@@ -6,7 +6,6 @@ $(document).ready(function () {
     loadingOnScreen();
     $("#btn-integration-model").hide();
     index();
-
     $.ajax({
         method: "GET",
         url: "/api/companies?select=true",
@@ -16,12 +15,13 @@ $(document).ready(function () {
             Accept: "application/json",
         },
         error: function error(response) {
+            
             $("#modal-content").hide();
             errorAjaxResponse(response);
         },
         success: function success(response) {
             create(response.data);
-
+            
             htmlAlertShopify();
             loadingOnScreenRemove();
         },
@@ -37,10 +37,6 @@ $(document).ready(function () {
             $("#button-information").hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            if (shopifyIntegrationNotFound) {
-                $("#no-integration-found").show();
-            }
-
             $("#btn-integration-model").show();
             $("#button-information")
                 .show()
@@ -71,9 +67,10 @@ $(document).ready(function () {
                 let data = response.data;
 
                 $("#content").html("");
-
+                
                 if (isEmpty(data)) {
                     shopifyIntegrationNotFound = true;
+                    $("#no-integration-found").show();
                     return;
                 }
 

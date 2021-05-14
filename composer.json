@@ -11,6 +11,7 @@
         "php": "^7.4",
         "ext-json": "*",
         "arcanedev/log-viewer": "~7.0",
+        "automattic/woocommerce": "^3.0",
         "barryvdh/laravel-cors": "2.0.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "cloudflare/sdk": "^1.0",

@@ -36,6 +36,7 @@ use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ProjectsApiController
@@ -73,7 +74,7 @@ class ProjectsApiController extends Controller
                     $projectStatus = [$projectModel->present()->getStatus('active')];
                 }
             }
-
+            
             return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             report($e);
@@ -558,7 +559,7 @@ class ProjectsApiController extends Controller
             $projectStatus = [
                 $projectModel->present()->getStatus('active'),
             ];
-
+            
             return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             report($e);
