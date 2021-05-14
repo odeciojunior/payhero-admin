@@ -28,6 +28,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $url_page
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
+ * @property string $woocommerce_id
  * @property string $installments_amount
  * @property string $installments_interest_free
  * @property string $cookie_duration
@@ -122,6 +123,7 @@ class Project extends Model
         'url_page',
         'automatic_affiliation',
         'shopify_id',
+        'woocommerce_id',
         'installments_amount',
         'installments_interest_free',
         'cookie_duration',

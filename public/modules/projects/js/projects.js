@@ -338,6 +338,10 @@ $(() => {
         $('#update-project #url-affiliates').val(project.url_affiliates);
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
+        if (project.woocommerce_id) {
+            $('#update-project #woocommerce-configs').show();
+            $('.listWooCommerceConfiguration').show();
+        }
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
             $('.listShopifyConfiguration').show();

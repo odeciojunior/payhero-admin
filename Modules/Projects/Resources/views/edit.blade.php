@@ -174,6 +174,13 @@
                         Configurações Shopify
                     </a>
                 </li>
+                <li class="nav-item listWooCommerceConfiguration" role="presentation" style='display:none;'>
+                    <a class="nav-link" data-toggle="tab" href="#tabWooCommerceConfiguration"
+                       aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
+                        <i class="icon ribbon-woo" aria-hidden="true" style='font-size:15px;'></i>
+                        Configurações WooCommerce
+                    </a>
+                </li>
                 <li class="nav-item listAffiliateConfiguration" role="presentation">
                     <a class="nav-link" data-toggle="tab" href="#tabAffiliateConfiguration"
                        aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
@@ -877,6 +884,26 @@
                     </div>
                     <hr>
                 </div>
+
+                <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
+                    <div class='row justify-content-center mx-20 mt-30'>
+                        
+                        <div class='col-md-4 pt-20'>
+                            <a id="product" role="button" integration-status=""
+                               class="pointer align-items-center" data-toggle="modal"
+                               data-target="#modal-woocom-integration">
+                                <span class="o-reload-1 font-size-16"></span>
+                                <span class="gray"> Sincronizar produtos com WooCommerce </span>
+                            </a>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <hr>
+                </div>
+
+
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
                     <div class='my-30 mx-30'>
                         <div class='row'>

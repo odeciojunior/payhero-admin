@@ -32,6 +32,8 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $gateway_released_at
  * @property boolean $is_waiting_withdrawal
  * @property integer $withdrawal_id
+ * @property boolean $tracking_required
+ * @property boolean $is_security_reserve
  * @property Company $company
  * @property Sale $sale
  * @property Gateway $gateway
@@ -98,7 +100,9 @@ class Transaction extends Model
         'gateway_released_at',
         'is_waiting_withdrawal',
         'withdrawal_id',
-        'gateway_transferred'
+        'gateway_transferred',
+        'tracking_required',
+        'is_security_reserve',
     ];
 
     protected static $logFillable = true;
