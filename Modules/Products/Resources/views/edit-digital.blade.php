@@ -11,12 +11,12 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">Editar produto digital</h1>
-            <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
+            <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                <div class="panel px-40 p-30" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
                         <div class="col-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
@@ -46,9 +46,14 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-12">
-                                    <label for="product">Arquivo do produto</label>
-                                    <input type="file" id="digital_product" name="digital_product">
+                                <div class="col-12 input-file-container">  
+                                    <label for="digital_product">Arquivo do produto</label>
+                                    <input class="input-file" id="digital_product" type="file">
+                                    <div>
+                                        <label tabindex="0" for="digital_product" class="input-file-trigger">Escolher arquivos</label>
+                                        <span id="file_return" class="ml-20"></span>
+
+                                    </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
                             </div>
@@ -57,7 +62,7 @@
                 </div>
 
                 <div class="form-group row float-right mr-10">
-                    <button type="button" class="btn btn-light btn-lg">Cancelar</button>
+                    <a type="button" class="btn btn-light btn-lg" href="/products">Cancelar</a>
                     <button type="button" class="btn btn-danger delete-product btn-lg ml-15" data-toggle="modal" data-target="#modal-delete">Excluir produto</button>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
                 </div>
@@ -111,7 +116,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/products.js?v=05') }}"></script>
+        <script src="{{ asset('modules/products/js/products.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

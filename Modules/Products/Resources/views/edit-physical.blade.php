@@ -9,39 +9,23 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div class="page-header container">
             <h1 class="page-title">Editar produto físico</h1>
-            <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
+            <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel p-30">
-                    <div class="row justify-content-between align-items-baseline mb-40">
-                        <h4>1. Informações Básicas</h4>
-                    </div>
+                <div class="panel px-40 p-30" style="border-radius: 16px">
+                    <h4 class="mb-20 pb-20" style="border-bottom: 1px solid #ddd;">1. Informações Básicas</h4>
                     <div class="row justify-content-between align-items-baseline">
-                        {{-- <div class="col-4">
+                        <div class="col-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="digital_product_url">Imagem do produto</label>
                                     <input type="file" id="digital_product_url" name="digital_product_url" data-height="200" data-max-width="200">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPEG com 650px x 650px (1:1).</small>
                                 </div>
-                            </div>
-                        </div> --}}
-                        <div class="col-4">
-                            <div class=" flex-column">
-                                <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
-                                <label for="name">Selecione uma imagem</label>
-                                <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src='' style="height: 300px; width: 300px;">
-                                <input type="hidden" name="photo_x1" value=''>
-                                <input type="hidden" name="photo_y1" value=''>
-                                <input type="hidden" name="photo_w" id="photo_w" value=''>
-                                <input type="hidden" name="photo_h" id="photo_h" value=''>
-                                <p class="text-center text-muted mt-5" style="font-size:10px;">
-                                    Sugerimos PNG ou JPEG com 650px x 650px (1:1).
-                                </p>
                             </div>
                         </div>
                         <div class="col-8">
@@ -63,31 +47,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-between align-items-baseline my-40">
-                        <h4> 2. Logística </h4>
-                    </div>
+                    <h4 class="py-20 my-20" style="border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;"> 2. Logística </h4>
                     <div class="row justify-content-between">
                         <div class="row col-8">
                             <div class="col-3">
-                                <label for="width">Altura</label>
+                                <label for="height">Altura</label>
                                 <div class="input-group">
-                                    <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 150" data-mask="0#">
+                                    <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <label for="height">Largura</label>
+                                <label for="width">Largura</label>
                                 <div class="input-group">
-                                    <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 135" data-mask="0#">
+                                    <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 135" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <label for="width">Comprimento</label>
+                                <label for="length">Comprimento</label>
                                 <div class="input-group">
                                     <input name="length" type="text" class="form-control" id="length" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
@@ -104,7 +86,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-12 mt-0">
+                            <div class="col-12 mt-0">
                                 <small class="text-muted">
                                     Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
@@ -115,10 +97,11 @@
                             </div>
                         </div>
                         
-                        <div class="form-group col-4">
-                            <img src="https://via.placeholder.com/150"
-                                        class="img-fluid"
-                                        alt="novo produto fisico">
+                        <div class="col-4">
+                            <img id="caixinha-img"
+                                 src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
+                                 class="img-fluid"
+                                 alt="novo produto fisico">
                         </div>
                     </div>
                 </div>
@@ -129,7 +112,7 @@
                             <i class="o-bin-1 align-middle mr-5 white" aria-hidden="true"></i> Excluir produto
                         </a>
                     </div> --}}
-                    <button type="button" class="btn btn-light btn-lg">Cancelar</button>
+                    <a class="btn btn-light btn-lg" href="/products">Cancelar</a>
                     <button type="button" class="btn btn-danger delete-product btn-lg ml-15" data-toggle="modal" data-target="#modal-delete">Excluir produto</button>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
                 </div>
@@ -183,7 +166,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=04') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=05') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

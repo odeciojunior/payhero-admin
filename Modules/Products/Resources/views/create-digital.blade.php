@@ -45,19 +45,23 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <label for="product">Arquivo do produto</label>
-                                    <input type="file" id="digital_product" name="digital_product">
+                                <div class="col-12 input-file-container">  
+                                    <label for="digital_product">Arquivo do produto</label>
+                                    <input class="input-file" id="digital_product" type="file">
+                                    <div>
+                                        <label tabindex="0" for="digital_product" class="input-file-trigger">Escolher arquivos</label>
+                                        <span id="file_return" class="ml-20"></span>
+
+                                    </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
-                                
                             </div>
                         </div>
                         
                     </div>
                 </div>
 
-                <div class="form-group row float-right">
+                <div class="form-group row float-right pr-15">
                     <a type="button" class="btn btn-light btn-lg" href="/products">Cancelar</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Tudo certo!</button>
                 </div>
@@ -66,7 +70,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/products/js/create-digital.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

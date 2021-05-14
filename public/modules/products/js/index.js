@@ -182,43 +182,32 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         dados = `
-                        <div class="col-xl-3 col-md-6 d-flex align-items-stretch">
-                        <div class="card shadow" style="cursor:pointer;width:100%; ">
-                        <img style="min-height: 200px;" class="card-img-top product-image" src="${
-                            value.image
-                        }"
-                            data-link="${
-                                value.link
-                            }" alt="Imagem do produto" data-code="${value.id}">
-                            ${
-                                value.type_enum == 2
-                                    ? `<span class="ribbon-inner ribbon-primary" style="background-color:${
-                                          badgeList[value.status_enum]
-                                      }">
-                            ${statusList[value.status_enum]}</span>`
-                                    : ""
+                        <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%; max-width: 19vw">
+                            <img style="min-height: 200px;"
+                                class="card-img-top product-image" src="${value.image}" data-link="${value.link}" 
+                                alt="Imagem do produto" data-code="${value.id}">
+                            ${value.type_enum == 2
+                                ? `<span class="ribbon-inner ribbon-primary" 
+                                         style="background-color:${badgeList[value.status_enum]}"> ${statusList[value.status_enum]}
+                                    </span>`
+                                : ""
                             }
                             <div class="card-body">
                                 <div class="row align-items-end justify-content-between">
                                     <div class="col-10">
-                                        <h5 class="card-title">${
-                                            value.name
-                                        }</h5>
+                                        <h5 class="card-title">${value.name}</h5>
                                         <h5 class="">${value.description}</h5>
-                                        <p class="card-text sm">Criado em  ${
-                                            value.created_at
-                                        }</p>
-                                        <p class="card-text sm">ID: ${
-                                            value.id_view
+                                        <p class="card-text sm">Criado em  ${value.created_at}</p>
+                                        <p class="card-text sm">ID: ${value.id_view
                                         }</p>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <p class="text-muted card-text sm">Criado em  ${value.created_at}</p>
-                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <p class="text-muted card-text sm">Criado em  ${value.created_at}</p>
                             </div>
                         </div>
-                            `;
+                        `;
                         // dados = '';
                         // dados += '<div class="col-xl-3 col-md-6 d-flex align-items-stretch">';
                         // dados += '<div class="card shadow" style="cursor:pointer;width:100%; ">';

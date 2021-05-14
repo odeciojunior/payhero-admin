@@ -8,15 +8,15 @@
     @endpush
 
     <!-- Page -->
-    <div class="page" style="display: none">
-        <div style="display: none" class="page-header container">
+    <div class="page">
+        <div class="page-header container">
             <h1 class="page-title">Novo produto físico</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">
             <form id='my-form-add-product'>
                 <div class="panel px-40 p-30" data-plugin="matchHeight" style="border-radius: 16px">
-                    <h4 class="mb-40">1. Informações Básicas</h4>
+                    <h4 class="mb-20 pb-20" style="border-bottom: 1px solid #ddd;">1. Informações Básicas</h4>
                     <div class="row justify-content-between align-items-baseline">
                         <div class="col-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
@@ -41,9 +41,7 @@
                             </div>
                         </div>                        
                     </div>
-                    <div class="row justify-content-between align-items-baseline my-40">
-                        <h4> 2. Logística </h4>
-                    </div>
+                    <h4 class="py-20 my-20" style="border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;"> 2. Logística </h4>
                     <div class="row justify-content-between">
                         <div class="row col-8">
                             <div class="col-3">
@@ -78,11 +76,11 @@
                                 <div class="input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">CM</span>
+                                        <span class="input-group-text">G</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-12 mt-0">
+                            <div class="col-12 mt-0">
                                 <small class="text-muted">
                                     Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
@@ -93,7 +91,7 @@
                             </div>
                         </div>
                         
-                        <div class="form-group col-4">
+                        <div class="col-4">
                             <img id="caixinha-img"
                                  src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
                                  class="img-fluid"
@@ -102,7 +100,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row float-right">
+                <div class="form-group row float-right pr-15">
                     <a type="button" class="btn btn-light btn-lg" href="/products">Cancelar</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Tudo certo!</button>
                 </div>

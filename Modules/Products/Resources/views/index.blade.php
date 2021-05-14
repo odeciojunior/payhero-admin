@@ -59,7 +59,7 @@
                 </div>
            </div>
             <div class="page-content container">
-                <div id='data-table-products' class='row'>
+                <div id='data-table-products' class='card-deck mx-0' style="justify-content: space-between">
                 </div>
                 <div class="row justify-content-center justify-content-md-end">
                     <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
@@ -91,7 +91,7 @@
                         <div class="row text-center">
                             <div class="col-6">
                                 <a href="/products/create/physical">
-                                    <img src="{{ asset('/modules/global/img/svg/phone.svg') }}"
+                                    <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}"
                                          class="rounded-circle img-fluid mb-2 new-product-icon"
                                          data-value="product_physical"
                                          alt="novo produto fisico">
@@ -100,7 +100,7 @@
                             </div>
                             <div class="col-6">
                                 <a href="/products/create/digital">
-                                    <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}"
+                                    <img src="{{ asset('/modules/global/img/svg/phone.svg') }}"
                                          {{-- src="https://sirius.cloudfox.net/modules/global/img/svg/caixa-fisica.svg" --}}
                                          class="rounded-circle img-fluid mb-2 new-product-icon"
                                          data-value="product_digital"
@@ -116,7 +116,7 @@
         </div>
         
         {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
+        @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
     </div>
 

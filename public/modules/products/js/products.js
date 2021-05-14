@@ -1,6 +1,7 @@
 $(document).ready(function () {
     let code = window.location.href.split('/')[4];
     let typeEnum;
+
     getDataProducts();
     function getDataProducts() {
         loadingOnScreen();
@@ -250,7 +251,6 @@ $(document).ready(function () {
     $('.money').mask('#.###,#0', {reverse: true});
 
     $("#shipping").on("change", function () {
-
         if ($(this).val() == 'proprio') {
             $("#div_carrier_id").hide();
         } else {
@@ -371,9 +371,15 @@ $(document).ready(function () {
     //
     // });
 
-    // Produto Fisico
+    /* Produto Fisico */
     $('#height').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
     $('#width').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
     $('#length').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-comprimento.svg' });
     $('#height, #width, #length').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
+
+    /* Upload Digital Product Input */
+    document.getElementById('digital_product').addEventListener("change", function () {
+        productName = this.value.split('\\')[2] || '';
+        document.getElementById('file_return').innerHTML = productName;
+    });
 });

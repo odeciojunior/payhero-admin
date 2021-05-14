@@ -24,3 +24,38 @@ label {
     color: #0D2C54;
 }
 
+/* Upload Digital Product Input */
+
+.input-file-trigger::before {
+    content: "\e800";
+    font-family: dropify;
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+#file_return,
+.input-file-trigger {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.input-file-trigger {    
+    color: #3B8CED;
+    cursor: pointer;
+}
+
+
+.input-file {
+    position: absolute;
+    top: 0; left: 0;
+    width: 225px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.input-file:hover + .input-file-trigger,
+.input-file:focus + .input-file-trigger,
+.input-file-trigger:hover,
+.input-file-trigger:focus {
+    color: #39D2B4;
+}
