@@ -138,8 +138,8 @@
 
 @if(env('APP_ENV', 'production') == 'production')
 
-    <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
-    <script src="{{ asset('modules/global/js/notifications.js?v=10') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=11') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=11') }}"></script>
 
 
     <style>

@@ -24,15 +24,15 @@ class PusherNotificationService
     /**
      * @var string
      */
-    private static $authKey = '339254dee7e0c0a31840';
+    private static $authKey = '774967990ce1211af067';
     /**
      * @var string
      */
-    private static $secret = '78ed93b50a3327693d20';
+    private static $secret = '0ec01e912688856aef6b';
     /**
      * @var string
      */
-    private static $appId = '724843';
+    private static $appId = '0ec01e912688856aef6b';
 
     /**
      * @param Sale $sale
