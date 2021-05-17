@@ -18,7 +18,7 @@
                 @method('PUT')
                 <div class="panel px-40 p-20" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-4 d-flex flex-column align-items-center">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="digital_product_url">Imagem do produto</label>
@@ -26,6 +26,7 @@
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPEG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
+                            <button class="btn btn-primary btn-lg btn-view-product-url mt-30" style="width: 150px">Visualizar</button>
                         </div>
                         <div class="col-12 col-md-8">
                             <div class="row">
