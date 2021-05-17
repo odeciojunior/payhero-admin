@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var pusher = new Pusher('339254dee7e0c0a31840', {
+    var pusher = new Pusher('774967990ce1211af067', {
         cluster: 'us2',
         forceTLS: true
     });
