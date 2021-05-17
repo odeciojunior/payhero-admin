@@ -191,6 +191,7 @@ $(document).ready(function () {
             'email_client': $("#email_cliente").val(),
             'upsell': $("#upsell").val(),
             'order_bump': $("#order-bump").val(),
+            'is_security_reserve': $('#is-security-reserve').val(),
         };
 
         if (urlParams) {
@@ -465,6 +466,15 @@ $(document).ready(function () {
                                             </a>`;
                         }
 
+                        let is_security_reserve = "";
+                        if (value.is_security_reserve) {
+                            is_security_reserve = `
+                                            <a data-toggle="tooltip" title="Reserva de Segurança"
+                                                role="button" style='margin-left: 5px;' >
+                                                    <img width="20px" src="/modules/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                            </a>`;
+                        }
+
                         let cashback = "";
                         let cashbackIcon = "";
                         if (value.cashback_value != "0.00") {
@@ -487,6 +497,7 @@ $(document).ready(function () {
                                             ${upsell}
                                             ${has_order_bump}
                                             ${cupomCode}
+                                            ${is_security_reserve}
                                         </div>
                                     </td>
                                     <td>${value.product}${
