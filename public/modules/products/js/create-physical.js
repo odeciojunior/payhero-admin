@@ -42,7 +42,6 @@ $(document).ready(function () {
             let formData = new FormData(myForm);
 
             formData.append('type_enum', 'physical');
-
             $.ajax({
                 method: 'POST',
                 url: "/api/products",
@@ -70,12 +69,13 @@ $(document).ready(function () {
         }
     });
 
-
     $('.money').mask('#.###,#0', { reverse: true });
 
     // Produto Fisico
     $('#height').on('focusin', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
     $('#width').on('focusin', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
     $('#length').on('focusin', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-comprimento.svg' });
-    $('#height, #width, #length').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
+    $('#weight').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-peso.svg' });
+    $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
+
 });

@@ -326,56 +326,12 @@ $(document).ready(function () {
 
     $('#url_expiration_time').mask('0#');
 
-    $("#physical").on("change", function () {
-        $('#div_digital_product_upload').css('visibility', 'hidden');
-        $('#nav-logistic-tab').css('visibility', 'visible');
-        $("#div_digital_product_upload").addClass('d-none');
-        $('.div-expiration-time').hide();
-        $('#url_expiration_time').val('');
-    });
-
-    $("#digital").on("change", function () {
-        if (typeEnum == 1) {
-            $.ajax({
-                method: 'POST',
-                url: '/api/products/verifyproductinplan',
-                dataType: "json",
-                data: {product_id: code},
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: function (response) {
-                    errorAjaxResponse(response)
-                },
-                success: function (response) {
-                    if (response.product_in_plan) {
-                        $('#modal-plan-already-created').modal('show');
-                        $('#physical').click();
-                    } else {
-                        $('#div_digital_product_upload').css('visibility', 'visible');
-                        $('#nav-logistic-tab').css('visibility', 'hidden');
-                        $("#div_digital_product_upload").removeClass('d-none');
-                        $('.div-expiration-time').show();
-                    }
-                },
-            });
-        } else {
-            $('#div_digital_product_upload').css('visibility', 'visible');
-            $('#nav-logistic-tab').css('visibility', 'hidden');
-            $("#div_digital_product_upload").removeClass('d-none');
-            $('.div-expiration-time').show();
-        }
-    });
-    // $(".btn-close-modal-plan").on("change", function () {
-    //
-    // });
-
     /* Produto Fisico */
     $('#height').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
     $('#width').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
     $('#length').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-comprimento.svg' });
-    $('#height, #width, #length').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
+    $('#weight').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-peso.svg' });
+    $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
 
     /* Upload Digital Product Input */
     document.getElementById('digital_product').addEventListener("change", function () {

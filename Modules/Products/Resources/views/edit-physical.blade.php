@@ -16,10 +16,11 @@
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel px-40 p-30" style="border-radius: 16px">
-                    <h4 class="mb-20 pb-20" style="border-bottom: 1px solid #ddd;">1. Informações Básicas</h4>
-                    <div class="row justify-content-between align-items-baseline">
-                        <div class="col-4">
+                <div class="panel py-10" style="border-radius: 16px">
+                    <h4 class="px-40">1. Informações Básicas</h4>
+                    <hr class="my-20">
+                    <div class="px-40 row justify-content-between align-items-baseline">
+                        <div class="col-12 col-md-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="digital_product_url">Imagem do produto</label>
@@ -28,7 +29,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-12 col-md-8">
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="name">Nome do produto</label>
@@ -47,10 +48,19 @@
                             </div>
                         </div>
                     </div>
-                    <h4 class="py-20 my-20" style="border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;"> 2. Logística </h4>
-                    <div class="row justify-content-between">
-                        <div class="row col-8">
-                            <div class="col-3">
+                    <hr class="my-20">
+                    <h4 class="px-40"> 2. Logística </h4>
+                    <hr class="my-20">
+                    <div class="px-40 row justify-content-between">
+                        <div class="col-12 col-md-4 text-center">
+                            <img id="caixinha-img"
+                                 src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
+                                 class="img-fluid"
+                                 alt="novo produto fisico">
+                        </div>
+                        
+                        <div class="row col-12 col-md-8">
+                            <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="height">Altura</label>
                                 <div class="input-group">
                                     <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 150" data-mask="0#">
@@ -59,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="width">Largura</label>
                                 <div class="input-group">
                                     <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 135" data-mask="0#">
@@ -68,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="length">Comprimento</label>
                                 <div class="input-group">
                                     <input name="length" type="text" class="form-control" id="length" placeholder="Ex: 150" data-mask="0#">
@@ -77,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="weight">Peso</label>
                                 <div class="input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
@@ -95,13 +105,6 @@
                                     Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
                                 </small>
                             </div>
-                        </div>
-                        
-                        <div class="col-4">
-                            <img id="caixinha-img"
-                                 src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
-                                 class="img-fluid"
-                                 alt="novo produto fisico">
                         </div>
                     </div>
                 </div>

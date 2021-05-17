@@ -15,8 +15,11 @@ label {
 }
 
 .dropify-wrapper {
+    height: 250px !important;
+    width: 300px !important;
     border: 2px dashed #2E85EC;
     border-radius: 10px;
+    margin: auto;
 }
 
 .dropify-wrapper .dropify-message span.file-icon, p {

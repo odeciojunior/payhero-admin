@@ -15,9 +15,9 @@
         </div>
         <div class="page-content container">
             <form id='my-form-add-product'>
-                <div class="panel px-40 p-30" data-plugin="matchHeight" style="border-radius: 16px">
+                <div class="panel px-40 p-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
-                        <div class="col-4">
+                        <div class="col-12 col-md-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="digital_product_url">Imagem do produto</label>
@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-12 col-md-8">
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="name">Nome do produto</label>
@@ -38,23 +38,26 @@
                                     <small class="text-muted"> Máximo 30 caracteres. </small>
                                 </div>
 
-                                <div class='form-group col-12 div-expiration-time'>
-                                    <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
-                                    <div class="d-flex input-group">
-                                        <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='5' data-mask="0#" >
-                                    </div>
-                                </div>
-
-                                <div class="col-12 input-file-container">  
+                                <div class="form-group col-12 col-xl-8 input-file-container">  
                                     <label for="digital_product">Arquivo do produto</label>
                                     <input class="input-file" id="digital_product" type="file">
                                     <div>
-                                        <label tabindex="0" for="digital_product" class="input-file-trigger">Escolher arquivos</label>
+                                        <label tabindex="0" for="digital_product" class="input-file-trigger px-10">Escolher arquivos</label>
                                         <span id="file_return" class="ml-20"></span>
-
                                     </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
+
+                                <div class="col-12 col-xl-4 div-expiration-time">
+                                    <label for="url_expiration_time">Tempo de expiração da url</label>
+                                    <div class="input-group">
+                                        <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" min="0" maxlength="5" data-mask="0#">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">HORA</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         

@@ -39,18 +39,37 @@ label {
 .modal-content {
     border-radius: 16px;
 }
-
-.product-button {
+.new-product-icon {
+    width: 72px;
+    height: 72px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    align-content: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #4C4C4C;
+    color: #4C4C4C;
+    padding: 12px;
+}
+.new-product-icon:hover {
+    border-radius: 50%;
+    border: 2px solid #2DA6F6;
+    color: #2DA6F6;
+}
+.new-product-icon img {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
 }
 
-.new-product-icon {
-  border-radius: 50%;
-  border: 2px solid #2DA6F6;
-  padding: 12px;
-  width: 64px;
-  height: 64px;
+.card-img-top {
+    height: 200px;
+    object-fit: contain;
+}
+
+.card-description {
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

@@ -54,11 +54,8 @@ $(document).ready(function () {
             loadOnAny('.page', false);
             let myForm = document.getElementById('my-form-add-product');
             let formData = new FormData(myForm);
-            if ($('#physical').is(':checked')) {
-                formData.append('type_enum', 'physical');
-            } else {
-                formData.append('type_enum', 'digital');
-            }
+
+            formData.append('type_enum', 'digital');
             $.ajax({
                 method: 'POST',
                 url: "/api/products",

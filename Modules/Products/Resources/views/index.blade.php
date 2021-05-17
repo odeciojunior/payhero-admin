@@ -59,7 +59,9 @@
                 </div>
            </div>
             <div class="page-content container">
-                <div id='data-table-products' class='card-deck mx-0' style="justify-content: space-between">
+                <div id='data-table-products' class='row g-2'>
+                    
+
                 </div>
                 <div class="row justify-content-center justify-content-md-end">
                     <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
@@ -86,29 +88,22 @@
                 <div class="modal-header simple-border-bottom px-20">
                   <h4 class="col-12 modal-title text-center" style="color:#787878; font: normal normal bold 20px Muli;">Criar novo produto</h4>
                 </div>
-                <div class="modal-body py-40">
+                <div class="modal-body pt-20">
                     <div class="container-fluid">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <a href="/products/create/physical">
-                                    <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}"
-                                         class="rounded-circle img-fluid mb-2 new-product-icon"
-                                         data-value="product_physical"
-                                         alt="novo produto fisico">
-                                    <div class="" style="font: normal normal normal 11px Muli;">Físico</div>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="/products/create/digital">
-                                    <img src="{{ asset('/modules/global/img/svg/phone.svg') }}"
-                                         {{-- src="https://sirius.cloudfox.net/modules/global/img/svg/caixa-fisica.svg" --}}
-                                         class="rounded-circle img-fluid mb-2 new-product-icon"
-                                         data-value="product_digital"
-                                         alt="novo produto digital">
-                                    <div class="" style="font: normal normal normal 11px Muli;">Digital</div>
-                                </a>
-                            </div>
+                      <div class="row text-center">
+                        <div class="col-6 d-flex flex-column align-items-center">
+                          <a href="/products/create/physical" class="mb-2 new-product-icon">
+                            <img src="http://dev.admin.net/modules/global/img/svg/caixa-fisica.svg" class="pb-5"  data-value="product_physical" alt="novo produto fisico">
+                          </a>
+                          <p>Físico</p>
                         </div>
+                        <div class="col-6 d-flex flex-column align-items-center">
+                          <a href="/products/create/digital" class="mb-2 new-product-icon">
+                            <img src="http://dev.admin.net/modules/global/img/svg/phone.svg" class="pb-5" data-value="product_digital" alt="novo produto digital">
+                          </a>
+                          <p>Digital</p>
+                        </div>
+                      </div>
                     </div>
                 </div>
               </div>

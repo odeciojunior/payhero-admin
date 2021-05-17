@@ -15,9 +15,11 @@ label {
 }
 
 .dropify-wrapper {
-    height: 300px !important;
+    height: 250px !important;
+    width: 300px !important;
     border: 2px dashed #2E85EC;
     border-radius: 10px;
+    margin: auto;
 }
 
 .dropify-wrapper .dropify-message span.file-icon, p {
@@ -42,6 +44,8 @@ label {
 .input-file-trigger {    
     color: #3B8CED;
     cursor: pointer;
+    background-color: #F8FDFF;
+    border-radius: 16px;
 }
 
 
