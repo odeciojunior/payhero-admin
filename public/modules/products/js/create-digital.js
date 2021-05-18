@@ -19,10 +19,10 @@ $(document).ready(function () {
             ver = false;
             $("#description").focus();
         }
-        if ($.trim($('#digital_product_url').val()) === '') {
+        if ($.trim($('#digital_product').val()) === '') {
             alertCustom('error', 'Selecione o produto digital');
             ver = false;
-            $('#digital_product_url').focus();
+            $('#digital_product').focus();
         }
         if ($.trim($('#url_expiration_time').val()) === '') {
             alertCustom('error', 'Preencha o campo Tempo de expiração da url');
@@ -40,14 +40,6 @@ $(document).ready(function () {
     });
 
     $("#my-form-add-product").submit(function (event) {
-        if ($('#digital_product_url').val() == '') {
-            alertCustom('error', 'Selecione o produto digital');
-            return false;
-        }
-        if ($('#url_expiration_time').val() == '') {
-            alertCustom('error', 'Preencha o campo Tempo de expiração da url');
-            return false;
-        }
         event.preventDefault();
 
         if (verify()) {

@@ -20,21 +20,6 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (!isEmpty(response.data.product)) {
-
-                    /**
-                     * Se for produto shopify o botao delete nao aparece
-                     *//*
-                    if (!response.data.product.shopify_id) {
-                        $(".delete-product").show();
-                        $('.delete-product').attr('product', response.data.product.id);
-                        $('.delete-product').attr('productname', response.data.product.name);
-
-                    }*/
-
-                    $(".delete-product").show();
-                    $('.delete-product').attr('product', response.data.product.id);
-                    $('.delete-product').attr('productname', response.data.product.name);
-
                     /**
                      * Select com as categorias
                      */
@@ -45,8 +30,22 @@ $(document).ready(function () {
                         }));
 
                     });
-
                     $("#select-categories  option[value='" + response.data.product.category_id + "']").prop("selected", true);
+
+                    /**
+                     * Se for produto shopify o botao delete nao aparece
+                     *
+                    if (!response.data.product.shopify_id) {
+                        $(".delete-product").show();
+                        $('.delete-product').attr('product', response.data.product.id);
+                        $('.delete-product').attr('productname', response.data.product.name);
+
+                    }
+                    */
+
+                    $(".delete-product").show();
+                    $('.delete-product').attr('product', response.data.product.id);
+                    $('.delete-product').attr('productname', response.data.product.name);
 
                     /**
                      * Image
@@ -95,75 +94,7 @@ $(document).ready(function () {
 
                     $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
-                    var p = $("#previewimage");
-                    $("#photo").on("change", function () {
-
-                        var imageReader = new FileReader();
-                        imageReader.readAsDataURL(document.getElementById("photo").files[0]);
-
-                        imageReader.onload = function (oFREvent) {
-                            p.attr('src', oFREvent.target.result).fadeIn();
-
-                            p.on('load', function () {
-
-                                var img = document.getElementById('previewimage');
-                                var x1, x2, y1, y2;
-
-                                if (img.naturalWidth > img.naturalHeight) {
-                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                    x2 = x1 + (y2 - y1);
-                                } else {
-                                    if (img.naturalWidth < img.naturalHeight) {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                        y2 = y1 + (x2 - x1);
-                                    } else {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    }
-                                }
-
-                                $('input[name="photo_x1"]').val(x1);
-                                $('input[name="photo_y1"]').val(y1);
-                                $('input[name="photo_w"]').val(x2 - x1);
-                                $('input[name="photo_h"]').val(y2 - y1);
-
-                                $('#previewimage').imgAreaSelect({
-                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                    aspectRatio: '1:1',
-                                    handles: true,
-                                    imageHeight: this.naturalHeight,
-                                    imageWidth: this.naturalWidth,
-                                    onSelectEnd: function onSelectEnd(img, selection) {
-                                        $('input[name="photo_x1"]').val(selection.x1);
-                                        $('input[name="photo_y1"]').val(selection.y1);
-                                        $('input[name="photo_w"]').val(selection.width);
-                                        $('input[name="photo_h"]').val(selection.height);
-                                    }
-                                });
-
-                            });
-                        };
-                    });
-
-                    $("#previewimage").on("click", function () {
-                        $("#photo").click();
-                    });
-
                     $("#my-form").submit(function (event) {
-                        if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
-                            alertCustom('error', 'Selecione as dimensões da imagem');
-                            return false;
-                        }
-                        if ($('#digital').is(':checked') && $('#url_expiration_time').val() == '') {
-                            alertCustom('error', 'Preencha o campo Tempo de expiração da url');
-                            return false;
-                        }
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
@@ -176,7 +107,7 @@ $(document).ready(function () {
                             formData.append('type_enum', 'digital');
                         }
 
-                        if (verify()) {
+                        if (verify(response.data.product.type_enum)) {
                             loadOnAny('.page', false);
                             $.ajax({
                                 method: 'POST',
@@ -218,7 +149,7 @@ $(document).ready(function () {
      * Helper verifica campos
      * @returns {boolean}
      */
-    function verify() {
+    function verify(type_enum) {
         let ver = true;
         if ($.trim($('#name').val()) === '') {
             $("#nav-basic-tab").click();
@@ -231,6 +162,17 @@ $(document).ready(function () {
             $("#description").focus();
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
+        }
+
+        if (type_enum == 1) {
+
+        }
+        if (type_enum == 2) {
+            if ($.trim($('#url_expiration_time').val()) === '') {
+                alertCustom('error', 'Preencha o campo Tempo de expiração da url');
+                ver = false;
+                $("#url_expiration_time").focus();
+            }
         }
         return ver;
     }

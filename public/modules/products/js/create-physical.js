@@ -69,8 +69,6 @@ $(document).ready(function () {
         }
     });
 
-    $('.money').mask('#.###,#0', { reverse: true });
-
     // Produto Fisico
     $('#height').on('focusin', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
     $('#width').on('focusin', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
