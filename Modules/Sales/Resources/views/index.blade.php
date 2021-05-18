@@ -172,29 +172,31 @@
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
 
-                                    <div class="col-sm-12 col-md d-flex align-items-center flex-wrap mt-20" style="flex-grow: 2.134 !important;">
-                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
-                                            <label class="switch mr-2">
-                                                <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
-                                                <span class="slider round"></span>
-                                            </label>
-                                            <span class="switch-text"> Upsell </span>
-                                        </div>
+                                    <div class="col-sm-12 col-md mt-20" style="flex-grow: 2.134 !important;">
+                                        <div class="row w-full">
+                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                                <label class="switch mr-2">
+                                                    <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <span class="switch-text"> Upsell </span>
+                                            </div>
 
-                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
-                                            <label class="switch mr-2">
-                                                <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
-                                                <span class="slider round"></span>
-                                            </label>
-                                            <span class="switch-text"> Order Bump </span>
-                                        </div>
+                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                                <label class="switch mr-2">
+                                                    <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <span class="switch-text"> Order Bump </span>
+                                            </div>
 
-                                        <div class='col-sm-4 col-md d-flex align-items-center justify-content-sm-center justify-content-md-start'>
-                                            <label class="switch mr-2">
-                                                <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
-                                                <span class="slider round"></span>
-                                            </label>
-                                            <span class="switch-text"> Cashback </span>
+                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                                <label class="switch mr-2">
+                                                    <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <span class="switch-text"> Cashback </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

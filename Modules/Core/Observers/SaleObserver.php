@@ -4,9 +4,9 @@ namespace Modules\Core\Observers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
-use Redis;
 
 class SaleObserver
 {
@@ -14,6 +14,10 @@ class SaleObserver
     {
         try {
             if ($sale->getOriginal('has_valid_tracking') != $sale->has_valid_tracking) {
+
+                if (!$sale->relationLoaded('transactions')) {
+                    $sale->load('transactions');
+                }
 
                 Redis::connection('redis-statement')->set(
                     "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()

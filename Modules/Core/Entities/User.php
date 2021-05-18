@@ -60,7 +60,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @mixin \Eloquent
  * @property string $transaction_rate
  * @property int $chargeback_rate
  * @property int $account_score
@@ -70,6 +69,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $installment_cashback
  * @property bool $get_faster
  * @property int $release_count
+ * @property bool $has_security_reserve
  * @property int $level
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
@@ -156,6 +156,7 @@ class User extends Authenticable
         'installment_cashback',
         'get_faster',
         'release_count',
+        'has_security_reserve',
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',

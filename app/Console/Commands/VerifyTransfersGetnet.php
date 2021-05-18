@@ -55,16 +55,16 @@ class VerifyTransfersGetnet extends Command
         $transactions = $transactionModel->with('sale')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-            ->whereHas(
-                'sale',
-                function ($query) use ($gatewayIds) {
-                    $query->where(
-                        function ($q) use ($gatewayIds) {
-                            $q->where('has_valid_tracking', true)->orWhereNull('delivery_id');
-                        }
-                    )->whereIn('gateway_id', $gatewayIds);
-                }
-            );
+            ->whereIn('gateway_id', $gatewayIds)
+            ->where(function ($where) use ($gatewayIds) {
+                $where->where('tracking_required', false)
+                    ->orWhereHas('sale', function ($query) use ($gatewayIds) {
+                        $query->where(function ($q) {
+                            $q->where('has_valid_tracking', true)
+                                ->orWhereNull('delivery_id');
+                        });
+                    });
+            });
 
         foreach ($transactions->cursor() as $transaction) {
             try {

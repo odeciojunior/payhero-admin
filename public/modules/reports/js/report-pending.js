@@ -78,7 +78,8 @@ $(document).ready(function () {
             'sale_code': $("#sale_code").val().replace('#', ''),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
-            'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val()
+            'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val(),
+            'is_security_reserve': $('#is-security-reserve').val(),
         };
 
         if (urlParams) {
@@ -240,8 +241,18 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
 
+                        let is_security_reserve = "";
+                        if (value.is_security_reserve) {
+                            is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
+                                                       <img width="12px" src="/modules/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                                   </label>`;
+                        }
+
                         dados = `  <tr>
-                                    <td>${value.sale_code}</td>
+                                    <td class="text-center">
+                                        ${value.sale_code}
+                                        ${is_security_reserve}
+                                    </td>
                                     <td>${value.project}</td>
                                     <td>${value.client}</td>
                                     <td class="display-sm-none display-m-none display-lg-none">
