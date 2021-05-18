@@ -783,8 +783,8 @@ $(() => {
 
         $("#modal-change-shopify-integration-title").html('Sincronizar template');
         $("#modal-change-shopify-integration-text").html(`
-            Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações 
-            feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja. 
+            Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações
+            feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja.
             Em caso de dúvidas, entre em contato com o suporte pelo chat.
         `);
 
@@ -1240,5 +1240,18 @@ $(() => {
             style: 'currency',
             currency: 'BRL',
         }));
+    }
+
+    let pix_account_element =  $("#pix_discount");
+    if(pix_account_element.val() < 1) {
+        setZetoToPixDiscount();
+    }
+    pix_account_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount();
+        }
+    })
+    function setZetoToPixDiscount() {
+        pix_account_element.val(0);
     }
 });

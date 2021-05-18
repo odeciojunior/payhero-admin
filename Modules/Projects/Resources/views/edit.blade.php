@@ -1108,20 +1108,3 @@
         </div>
     </div>
 </div>
-
-
-<script>
-
-    let pix_account_element =  $("#pix_discount");
-    if(pix_account_element.val() < 1) {
-        setZetoToPixDiscount();
-    }
-    pix_account_element.on("change", function () {
-        if($(this).val() < 1) {
-            setZetoToPixDiscount();
-        }
-    })
-    function setZetoToPixDiscount() {
-        pix_account_element.val(0);
-    }
-</script>
