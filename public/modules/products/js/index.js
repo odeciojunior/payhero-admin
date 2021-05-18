@@ -182,9 +182,9 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         dados = `
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
                             <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%">
-                                <img style="min-height: 200px;"
+                                <img style="min-height: 200px; cursor: pointer;"
                                     class="card-img-top product-image p-15" src="${value.image}" data-link="${value.link}"
                                     alt="Imagem do produto" data-code="${value.id}">
                                 ${value.type_enum == 2
