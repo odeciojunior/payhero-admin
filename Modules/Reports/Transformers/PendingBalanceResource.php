@@ -29,14 +29,15 @@ class PendingBalanceResource extends JsonResource
         }
 
         $data = [
-            'id'         => Hashids::connection('sale_id')->encode($sale->id),
-            'sale_code'  => '#' . Hashids::connection('sale_id')->encode($sale->id),
-            'brand'      => $flag ?? '',
-            'project'    => $sale->project->name ?? '',
-            'client'     => $sale->customer->name ?? '',
+            'id' => Hashids::connection('sale_id')->encode($sale->id),
+            'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
+            'brand' => $flag ?? '',
+            'project' => $sale->project->name ?? '',
+            'client' => $sale->customer->name ?? '',
             'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
-            'end_date'   => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
+            'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
             'total_paid' => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
+            'is_security_reserve' => intval($this->is_security_reserve),
         ];
 
         return $data;

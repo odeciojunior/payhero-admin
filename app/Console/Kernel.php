@@ -121,7 +121,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('21:00');
 
 //        /** Check GatewayTax invitations Diogo */
-//        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
     }
 
     /**

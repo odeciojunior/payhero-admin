@@ -10,7 +10,7 @@ use Spatie\Activitylog\Models\Activity;
 
 class BenefitsService
 {
-    public static function updateUserCashback(User $user)
+    public static function updateUserBenefits(User $user)
     {
         if ($user->ignore_automatic_benefits_updates) {
             activity()->on($user)->tap(
@@ -21,10 +21,16 @@ class BenefitsService
             )->log('Cashback update ignorado');
             return;
         }
-
         if (!$user->relationLoaded('benefits')) {
             $user->load('benefits');
         }
+
+        self::updateUserCashback($user);
+        self::updateUserGetFaster($user);
+    }
+
+    private static function updateUserCashback(User $user)
+    {
         $benefits = $user->benefits;
         $cashback2 = $benefits->where('name', 'cashback_2')
             ->where('enabled', 1)
@@ -93,6 +99,20 @@ class BenefitsService
         }
     }
 
+    private static function updateUserGetFaster(User $user)
+    {
+        $benefits = $user->benefits;
+
+        $getFaster = !!$benefits->where('name', 'get_faster')
+            ->where('enabled', 1)
+            ->count();
+
+        if ($user->get_faster != $getFaster) {
+            $user->get_faster = $getFaster;
+            $user->save();
+        }
+    }
+
     public function getUserBenefits(User $user): array
     {
         $benefits = $user->benefits;
@@ -125,7 +145,7 @@ class BenefitsService
 
         return [
             'active' => new BenefitCollection($result),
-            'next'   => new BenefitCollection($nextBenefits),
+            'next' => new BenefitCollection($nextBenefits),
         ];
     }
 }
