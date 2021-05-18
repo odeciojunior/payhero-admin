@@ -1271,15 +1271,36 @@ $(() => {
     }
 
     let pix_account_element =  $("#pix_discount");
+    let credit_card_discount_element =  $("#credit_card_discount");
+    let billet_discount_element =  $("#billet_discount");
+
     if(pix_account_element.val() < 1) {
-        setZetoToPixDiscount();
+        setZetoToPixDiscount(pix_account_element);
     }
+    if(credit_card_discount_element.val() < 1) {
+        setZetoToPixDiscount(credit_card_discount_element);
+    }
+    if(billet_discount_element.val() < 1) {
+        setZetoToPixDiscount(billet_discount_element);
+    }
+
     pix_account_element.on("change", function () {
         if($(this).val() < 1) {
-            setZetoToPixDiscount();
+            setZetoToPixDiscount(pix_account_element);
         }
     })
-    function setZetoToPixDiscount() {
-        pix_account_element.val(0);
+    credit_card_discount_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount(credit_card_discount_element);
+        }
+    })
+    billet_discount_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount(billet_discount_element);
+        }
+    })
+
+    function setZetoToPixDiscount(element) {
+        element.val(0);
     }
 });
