@@ -887,7 +887,7 @@
 
                 <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
                     <div class='row justify-content-center mx-20 mt-30'>
-                        
+
                         <div class='col-md-4 pt-20'>
                             <a id="product" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
@@ -896,10 +896,10 @@
                                 <span class="gray"> Sincronizar produtos com WooCommerce </span>
                             </a>
                         </div>
-                        
+
                     </div>
-                    
-                    
+
+
                     <hr>
                 </div>
 
@@ -1108,3 +1108,20 @@
         </div>
     </div>
 </div>
+
+
+<script>
+
+    let pix_account_element =  $("#pix_discount");
+    if(pix_account_element.val() < 1) {
+        setZetoToPixDiscount();
+    }
+    pix_account_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount();
+        }
+    })
+    function setZetoToPixDiscount() {
+        pix_account_element.val(0);
+    }
+</script>
