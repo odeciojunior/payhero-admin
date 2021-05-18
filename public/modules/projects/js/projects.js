@@ -325,6 +325,7 @@ $(() => {
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #pix_redirect').val(project.pix_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
+        $('#update-project #pix').val(project.pix);
         termsaffiliates.setData(project.terms_affiliates ?? ' ');
 
         if (project.automatic_affiliation == 1) {
