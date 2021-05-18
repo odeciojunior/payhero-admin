@@ -269,9 +269,11 @@ $(() => {
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
 
-
+        let company_selected = null;
         for (let company of companies) {
+            if(company.id == userProject.company_id) company_selected = company;
             if (company.id == userProject.company_id || company.capture_transaction_enabled) {
+                if(company.id === userProject.company_id) company_selected = company;
                 $('#update-project #companies').append(
                     `<option value="${company.id}"
                     ${(company.id === userProject.company_id ? 'selected' : '')}
@@ -283,6 +285,32 @@ $(() => {
               `);
             }
         }
+
+        function validateInputPixInCheckout(company_selected) {
+
+            let pix_element = $("#pix")
+
+            if(company_selected.has_pix_key) {
+                $("#pix option[value='1']").prop("disabled",false).css("backgroundColor", "white").html('Sim')
+            }else{
+                pix_element.val(0);
+                $("#pix option[value='1']").prop("disabled",true).css("backgroundColor", "grey").html('Sim (A empresa selecionada não possui a chave do PIX)')
+            }
+
+        }
+
+        $("#companies").on("change", function () {
+            let company_sel = null;
+
+            for (let company of companies) {
+                if(company.id === $(this).val()) company_sel = company;
+            }
+
+            if(company_sel)
+                validateInputPixInCheckout(company_sel);
+        })
+
+        validateInputPixInCheckout(company_selected);
 
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();
