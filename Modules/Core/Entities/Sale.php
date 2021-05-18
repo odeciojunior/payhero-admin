@@ -323,7 +323,11 @@ class Sale extends Model
 
         $saleIsChargeback = $this->status == 4;
         $saleIsDigitalProduct = empty($this->delivery_id);
+        $trackingNotRequired = !!$this->transactions
+            ->where('tracking_required', false)
+            ->where('type', Transaction::TYPE_PRODUCER)
+            ->count();
 
-        return $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
+        return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
 }
