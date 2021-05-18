@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
     @endpush
 
     <div class="page mb-0">
@@ -86,6 +87,15 @@
                                                     <option value="automatic_liquidation">Extrato Novo</option>
                                                 </select>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class='col-md-3 d-flex align-items-center'>
+                                            <label class="switch mr-2">
+                                                <input type="checkbox" id='is-security-reserve' name="cashback" class='check' value='0'>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <span class="switch-text w-100"> Reserva de Segurança </span>
                                         </div>
                                     </div>
                                 </div>

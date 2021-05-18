@@ -52,7 +52,6 @@ class TransactionResource extends JsonResource
             'cupom_code'              => $sale->cupom_code ?? null,
             'has_order_bump'          => $sale->has_order_bump,
             'has_contestation'        => $sale->contestations->count() ? true : false,
-            'is_security_reserve'     => $this->is_security_reserve,
         ];
         $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
 

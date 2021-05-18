@@ -197,15 +197,6 @@
                                                 <span class="switch-text"> Cashback </span>
                                             </div>
                                         </div>
-                                        <div class="row w-full mt-20">
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
-                                                <label class="switch mr-2">
-                                                    <input type="checkbox" id='is-security-reserve' name="cashback" class='check' value='0'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                                <span class="switch-text"> Reserva de Segurança </span>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
