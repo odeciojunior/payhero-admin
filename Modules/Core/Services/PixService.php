@@ -32,10 +32,9 @@ class PixService
             ->whereHas(
                 'pixCharges',
                 function ($querySale) {
-                    $querySale->where('status', 'ATIVA')
-                        ->where('created_at', '<=',
-                                Carbon::now()->subHour()->toDateTimeString()
-                        );
+                    $querySale->where('created_at', '<=',
+                            Carbon::now()->subHour()->toDateTimeString()
+                    );
                 }
             )
             ->get();
@@ -46,8 +45,8 @@ class PixService
 
                 if (!FoxUtils::isEmpty($pix)) {
                     $pix->update(['status' => 'EXPIRED']);
-                    event(new PixExpiredEvent($sale));
                 }
+                event(new PixExpiredEvent($sale));
             }
         } catch (Exception $e) {
             report($e);
