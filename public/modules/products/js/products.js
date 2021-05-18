@@ -51,7 +51,7 @@ $(document).ready(function () {
                     /**
                      * Image
                      */
-                    $("#previewimage").attr('src', response.data.product.photo);
+                    $("#product_photo").attr('src', response.data.product.photo);
 
                     $("img").on("error", function () {
                         $(this).attr("src", "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png");
@@ -80,31 +80,18 @@ $(document).ready(function () {
                     }
                     typeEnum = response.data.product.type_enum;
 
-                    //seleciona radio button product type
-                    if (response.data.product.type_enum == 1) {
-                        $('#physical').attr('checked', true);
-                        $('#div_digital_product_upload').css('visibility', 'hidden');
-                        $('#nav-logistic-tab').css('visibility', 'visible');
-                        $("#div_digital_product_upload").addClass('d-none');
-                        $('#digital_product_url').dropify();
-                    } else {
-                        $('#digital').attr('checked', true);
-                        $('#div_digital_product_upload').css('visibility', 'visible');
-                        $('#nav-logistic-tab').css('visibility', 'hidden');
-                        $("#div_digital_product_upload").removeClass('d-none');
-                        $('#digital_product_url').dropify({
-                            messages: {
-                                'default': 'Arraste e solte ou clique para adicionar um arquivo',
-                                'replace': 'Arraste e solte ou clique para substituir',
-                            },
-                            defaultFile: response.data.product.digital_product_url,
-                        });
-                        if (response.data.product.digital_product_url != '') {
-                            $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
-                            $(".btn-view-product-url").show();
-                        }
-                        $('.div-expiration-time').show();
+                    $('#product_photo').dropify({
+                        messages: {
+                            'default': 'Arraste e solte ou clique para adicionar um arquivo',
+                            'replace': 'Arraste e solte ou clique para substituir',
+                        },
+                        defaultFile: response.data.product.photo,
+                    });
+                    if (response.data.product.digital_product_url != '') {
+                        $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
+                        $(".btn-view-product-url").show();
                     }
+                    $('.div-expiration-time').show();
 
                     $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
@@ -183,7 +170,7 @@ $(document).ready(function () {
 
                         let formData = new FormData(myForm);
 
-                        if ($('#physical').is(':checked')) {
+                        if (response.data.product.type_enum == 1) {
                             formData.append('type_enum', 'physical');
                         } else {
                             formData.append('type_enum', 'digital');
@@ -334,8 +321,10 @@ $(document).ready(function () {
     $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
 
     /* Upload Digital Product Input */
-    document.getElementById('digital_product').addEventListener("change", function () {
-        productName = this.value.split('\\')[2] || '';
-        document.getElementById('file_return').innerHTML = productName;
-    });
+    if ($('#digital_product')[0] != undefined) {
+        $('#digital_product')[0].addEventListener("change", function () {
+            productName = this.value.split('\\')[2] || '';
+            $('#file_return')[0].innerHTML = productName;
+        });
+    }
 });

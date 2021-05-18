@@ -282,7 +282,7 @@ class ProductsApiController extends Controller
                     $this->getAmazonFileService()->deleteFile($product->photo);
 
                     $img = Image::make($productPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
