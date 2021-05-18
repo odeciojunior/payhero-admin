@@ -41,7 +41,6 @@ class PixService
             ->get();
 
             foreach ($sales as $sale) {
-
                 $sale->update(['status' => Sale::STATUS_CANCELED]);
                 $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
