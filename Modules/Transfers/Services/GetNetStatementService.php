@@ -76,7 +76,10 @@ class GetNetStatementService
             $this->preparesNodeAdjustments($adjustments);
         }
 
-        $this->preparesDatabasePixWithSaleSearch();
+        if (in_array($this->filters['payment_method'], ['ALL', 'PIX'])) {
+            $this->preparesDatabasePixWithSaleSearch();
+        }
+
         $this->preparesDatabasePendingDebtsWithSaleSearch();
         $items = collect($this->statementItems)->sortByDesc('sequence')->values();
 
@@ -490,7 +493,7 @@ class GetNetStatementService
                     $details->setStatus('Aguardando postagem válida')
                         ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
                         ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
-                } else if ($pix_sale->transaction_status == 'transfered') {
+                } elseif ($pix_sale->transaction_status == 'transfered') {
                     $details->setStatus('Liquidado')
                         ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
                         ->setType(Details::STATUS_PAID);
@@ -501,13 +504,11 @@ class GetNetStatementService
                 }
 
             } else {
-
-
                 if (empty($pix_sale->release_date) || $pix_sale->release_date <= \Carbon\Carbon::now()->format('Y-m-d')) {
                     $details->setStatus('Aguardando liquidação')
                         ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
-                } else if (empty($pix_sale->withdrawal_id)) {
+                } elseif (empty($pix_sale->withdrawal_id)) {
                     $details->setStatus('Aguardando saque')
                         ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
@@ -516,7 +517,6 @@ class GetNetStatementService
                         ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
                         ->setType(Details::STATUS_PAID);
                 }
-
             }
 
             $sequence = $pix_sale->end_date ? Carbon::parse($pix_sale->end_date)->format('Ymd') : 0;

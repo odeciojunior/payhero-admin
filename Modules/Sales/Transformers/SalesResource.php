@@ -31,6 +31,19 @@ class SalesResource extends JsonResource
             $thankPageUrl = 'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
         }
 
+        //set flag
+        if (!empty($this->flag)) {
+            $flag = $this->flag;
+        } elseif ($this->payment_method == 1 && empty($this->flag)) {
+            $flag = 'generico';
+        } elseif ($this->payment_method == 3 && empty($this->flag)) {
+            $flag = 'debito';
+        } elseif ($this->payment_method == 4 && empty($this->flag)) {
+            $flag = 'pix';
+        } else {
+            $flag = 'boleto';
+        }
+
         $data = [
             //hide ids
             'id'                       => Hashids::connection('sale_id')->encode($this->id),
@@ -40,7 +53,7 @@ class SalesResource extends JsonResource
             'client_id'                => Hashids::encode($this->customer_id),
             //sale
             'payment_method'           => $this->payment_method,
-            'flag'                     => $this->flag,
+            'flag'                     => $flag,
             'start_date'               => $this->start_date,
             'hours'                    => $this->hours,
             'status'                   => $this->status,
