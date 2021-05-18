@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\PixCharge;
+use Modules\Core\Events\PixExpiredEvent;
 
 /**
  * Class PixService
@@ -33,7 +34,7 @@ class PixService
                 function ($querySale) {
                     $querySale->where('status', 'ATIVA')
                         ->where('created_at', '<=',
-                                Carbon::now()->subHours(1)->toDateTimeString()
+                                Carbon::now()->subHour()->toDateTimeString()
                         );
                 }
             )
@@ -41,11 +42,12 @@ class PixService
 
             foreach ($sales as $sale) {
 
+                $sale->update(['status' => Sale::STATUS_CANCELED]);
                 $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
                     $pix->update(['status' => 'EXPIRED']);
-                    //event(new PixExpiredEvent($sale));
+                    event(new PixExpiredEvent($sale));
                 }
             }
         } catch (Exception $e) {
