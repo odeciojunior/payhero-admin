@@ -94,9 +94,9 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
                 ->where(
                     'notification_enum',
-                    $projectNotificationPresenter->getNotificationEnum('email_pix_paid_immediate')
+                    ProjectNotification::NOTIFICATION_EMAIL_PIX_EXPIRED_AN_HOUR_LATER
                 )
-                ->where('status', $projectNotificationPresenter->getStatus('active'))
+                ->where('status', ProjectNotification::STATUS_ACTIVE)
                 ->first();
 
             if (empty($projectNotificationEmail)) {
