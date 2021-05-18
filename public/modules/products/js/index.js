@@ -197,7 +197,6 @@ $(document).ready(function () {
                                 <div class="card-body pt-0">
                                     <h5 class="card-title">${value.name}</h5>
                                     <h5 class="card-description">${value.description}</h5>
-                                    <h5 class="card-description">${value.id}</h5>
                                 </div>
                                 <div class="card-footer bg-transparent">
                                     <p class="text-muted card-text sm">Criado em  ${value.created_at}</p>

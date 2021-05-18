@@ -26,7 +26,7 @@ $(document).ready(function () {
         return ver;
     }
 
-    $('#digital_product_url').dropify({
+    $('#product_photo').dropify({
         messages: {
             'default': 'Arraste e solte ou clique para adicionar um arquivo',
             'replace': 'Arraste e solte ou clique para substituir',

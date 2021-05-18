@@ -41,10 +41,10 @@
                                 </div>
 
                                 <div class="form-group col-12 col-xl-8 input-file-container">  
-                                    <label for="digital_product">Arquivo do produto</label>
-                                    <input class="input-file" id="digital_product" type="file">
+                                    <label for="digital_product_url">Arquivo do produto</label>
+                                    <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div>
-                                        <label tabindex="0" for="digital_product" class="input-file-trigger">Escolher arquivos</label>
+                                        <label tabindex="0" for="digital_product_url" class="input-file-trigger">Escolher arquivos</label>
                                         <span id="file_return" class="ml-20"></span>
 
                                     </div>

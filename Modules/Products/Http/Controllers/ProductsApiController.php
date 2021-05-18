@@ -137,7 +137,7 @@ class ProductsApiController extends Controller
             if ($productPhoto != null) {
                 try {
                     $img = Image::make($productPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
                     $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
@@ -169,8 +169,7 @@ class ProductsApiController extends Controller
                 }
             }
 
-            return response()->json([
-                'message' => 'Produto salvo com sucesso!',
+            return response()->json(['message' => 'Produto salvo com sucesso!'
             ], 200);
         } catch (Exception $e) {
             report($e);
@@ -311,7 +310,7 @@ class ProductsApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Produto Atualizado com sucesso!'], 200);
+            return response()->json(['message' => 'Produto Atualizado com sucesso!', 'digital_product_url' => $product->digital_product_url], 200);
         } catch (Exception $e) {
             report($e);
 

@@ -47,7 +47,6 @@ class ProductsController extends Controller
 
 
         $product = (new Product())->find(current(Hashids::decode($id)));
-
         if (isset($product->type_enum) && $product->type_enum === Product::TYPE_DIGITAL) {
             return view('products::edit-digital');
         }

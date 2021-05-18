@@ -126,9 +126,11 @@ $(document).ready(function () {
 
                                     errorAjaxResponse(response);
 
-                                }, success: function (response) {
+                                },
+                                success: function (response) {
                                     loadOnAny('.page', true);
                                     alertCustom('success', response.message);
+                                    $(".btn-view-product-url").attr('link', response.digital_product_url);
                                     // window.location = "/products";
                                 }
                             });
@@ -263,8 +265,8 @@ $(document).ready(function () {
     $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
 
     /* Upload Digital Product Input */
-    if ($('#digital_product')[0] != undefined) {
-        $('#digital_product')[0].addEventListener("change", function () {
+    if ($('#digital_product_url')[0] != undefined) {
+        $('#digital_product_url')[0].addEventListener("change", function () {
             productName = this.value.split('\\')[2] || '';
             $('#file_return')[0].innerHTML = productName;
         });
