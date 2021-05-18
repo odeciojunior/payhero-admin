@@ -84,8 +84,8 @@
                                                         id="type_statement"
                                                         class="form-control select-pad"
                                                 >
-                                                    <option value="manual_liquidation" selected>Extrato Antigo</option>
-                                                    <option value="automatic_liquidation">Extrato Novo</option>
+                                                    <option value="manual_liquidation">Extrato Antigo</option>
+                                                    <option value="automatic_liquidation" selected>Extrato Novo</option>
                                                 </select>
                                             </div>
                                         </div>
