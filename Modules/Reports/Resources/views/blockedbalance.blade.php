@@ -184,7 +184,7 @@
                     </div>
                 </div>
                 <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination-sales" class="pl-5 pr-md-15 mb-30">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination " style="position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
