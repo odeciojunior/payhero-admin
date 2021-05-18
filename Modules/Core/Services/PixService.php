@@ -40,12 +40,12 @@ class PixService
             ->get();
 
             foreach ($sales as $sale) {
-                $sale->update(['status' => Sale::STATUS_CANCELED]);
-                $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
+//                $sale->update(['status' => Sale::STATUS_CANCELED]);
+//                $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
-                if (!FoxUtils::isEmpty($pix)) {
-                    $pix->update(['status' => 'EXPIRED']);
-                }
+//                if (!FoxUtils::isEmpty($pix)) {
+//                    $pix->update(['status' => 'EXPIRED']);
+//                }
                 event(new PixExpiredEvent($sale));
             }
         } catch (Exception $e) {
