@@ -70,28 +70,27 @@
                                                 <option value="end_date">Data do pagamento</option>
                                             </select>
                                         </div>
-                                        <!-- <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10"> -->
                                         <div class="col-sm-6 col-md-3 form-icons">
                                             <label for="date_range">‏‏‎ ‎</label>
                                             <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-18"></i>
                                             <input name='date_range' id="date_range" class="select-pad"
                                             placeholder="Clique para editar..." readonly>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 pt-20">
-                                            <div id="select-statement-div" style="display:none;">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3 pt-20" style="display:none">
+                                            <div id="select-statement-div" >
                                                 <label for="type_statement">Tipo Extrato</label>
                                                 <select name='select_type_statement'
-                                                id="type_statement"
-                                                class="form-control select-pad"
+                                                        id="type_statement"
+                                                        class="form-control select-pad"
                                                 >
-                                                    <option value="manual_liquidation" selected>Extrato Antigo</option>
-                                                    <option value="automatic_liquidation">Extrato Novo</option>
+                                                    <option value="manual_liquidation">Extrato Antigo</option>
+                                                    <option value="automatic_liquidation" selected>Extrato Novo</option>
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class='col-md-3 d-flex align-items-center'>
+                                        <div class='col-md-3 pt-30 d-flex align-items-center'>
                                             <label class="switch mr-2">
                                                 <input type="checkbox" id='is-security-reserve' name="cashback" class='check' value='0'>
                                                 <span class="slider round"></span>
