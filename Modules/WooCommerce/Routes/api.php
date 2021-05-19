@@ -8,7 +8,9 @@ Route::group(
     ],
     function() {
         Route::apiResource('/apps/woocommerce/', 'WooCommerceApiController')
-             ->only('index', 'store');
+             ->only('index', 'store')
+            ->names('woocommmerce');
+
         Route::get('/apps/woocommerce/user-companies', [
             'uses' => 'WooCommerceApiController@getCompanies',
             'as'   => 'woocommerce.getcompanies',
