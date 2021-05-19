@@ -89,8 +89,7 @@ class PostBackWooCommerceController extends Controller
             $newValues = [
                 'name'=>$request['name'],
                 'price'=>$request['price'],
-                'photo'=>$request['images'][0]['src'],
-                'description' => mb_substr($request['description'], 0, 100),
+                'photo'=>$request['images'][0]['src']
 
             ];
             Product::where('shopify_variant_id', $request['sku'])
@@ -139,7 +138,7 @@ class PostBackWooCommerceController extends Controller
 
             if (!empty($project)) {
 
-                Log::debug($requestData);
+                //Log::debug($requestData);
 
                 // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
                 //     ->onQueue('high');
@@ -151,7 +150,7 @@ class PostBackWooCommerceController extends Controller
                     200
                 );
             } else {
-                Log::warning('WooCommerce atualizar código de rastreio - projeto não encontrado');
+                //Log::warning('WooCommerce atualizar código de rastreio - projeto não encontrado');
 
                 //projeto nao existe
                 return response()->json(

@@ -80,7 +80,8 @@ class WooCommerceService
             
             return true;
         }catch(Exception $e){
-            Log::debug($e);
+            report($e);
+
             return false;
         }
     }
@@ -237,7 +238,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'order.updated',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -245,7 +246,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.updated',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -253,7 +254,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.created',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
         $this->woocommerce->post('webhooks', $data);
     }

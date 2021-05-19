@@ -72,7 +72,7 @@ class WooCommerceApiController extends Controller
 
             return WooCommerceResource::collection(collect($projects));
         } catch (Exception $e) {
-            // print_r($e);
+            report($e);
             return response()->json(['message' => 'Ocorreu algum erro!'], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -148,7 +148,7 @@ class WooCommerceApiController extends Controller
                     );
                 }
             } catch (Exception $e) {
-                
+                report($e);
             }
             
             if(!$woocommerceService->verifyPermissions()){
@@ -299,7 +299,7 @@ class WooCommerceApiController extends Controller
                 $shippingCreated->delete();
                 $projectCreated->delete();
                 
-                Log::debug($e);
+                report($e);
                 
                 return response()->json(
                     [
@@ -317,6 +317,7 @@ class WooCommerceApiController extends Controller
                 ],
                 200
             );
+            
         } catch (Exception $e) {
             report($e);
 
