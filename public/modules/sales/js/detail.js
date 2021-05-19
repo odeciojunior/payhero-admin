@@ -428,6 +428,7 @@ $(() => {
         } else {
             $("#discount-title").hide();
             $("#discount-data").hide();
+            $("#automatic-discount-value").hide();
         }
         if (!!sale.cupom_code) {
             $("#cupom-code").html(sale.cupom_code);
