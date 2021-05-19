@@ -47,6 +47,7 @@ class PixService
 //                    $pix->update(['status' => 'EXPIRED']);
 //                }
                 event(new PixExpiredEvent($sale));
+                dd('stop');
             }
         } catch (Exception $e) {
             report($e);

@@ -98,8 +98,6 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 ->where('status', ProjectNotification::STATUS_ACTIVE)
                 ->first();
 
-            \Illuminate\Support\Facades\Log::warning('$projectNotificationEmail: '  . empty($projectNotificationEmail));
-            \Illuminate\Support\Facades\Log::warning('$projectNotificationEmail: ' , $projectNotificationEmail->toArray());
             if (empty($projectNotificationEmail)) {
                 return false;
             }
@@ -137,8 +135,6 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 'discount' => $discount,
                 'sac_link' => "https://sac." . $domain->name,
             ];
-
-            \Illuminate\Support\Facades\Log::warning("Dados do Email: ", $data);
 
             $sendGridService->sendEmail(
                 'noreply@' . $domain['name'],
