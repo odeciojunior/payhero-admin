@@ -263,11 +263,15 @@ $(document).ready(function () {
     $('#url_expiration_time').mask('0#');
 
     /* Produto Fisico */
-    $('#height').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-altura.svg' });
-    $('#width').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-largura.svg' });
-    $('#length').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-comprimento.svg' });
-    $('#weight').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-peso.svg' });
-    $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha.svg' });
+    alterarCaixinha('#height', 'caixinha-altura');
+    alterarCaixinha('#width', 'caixinha-largura');
+    alterarCaixinha('#length', 'caixinha-comprimento');
+    alterarCaixinha('#weight', 'caixinha-peso');
+
+    function alterarCaixinha(input, newValue) {
+        $(input).on('focus', function () { $('#caixinha-img')[0].src = $('#caixinha-img')[0].src.replace('caixinha', newValue) });
+        $(input).on('focusout', function () { $('#caixinha-img')[0].src = $('#caixinha-img')[0].src.replace(newValue, 'caixinha') });
+    }
 
     /* Upload Digital Product Input */
     if ($('#digital_product_url')[0] != undefined) {
