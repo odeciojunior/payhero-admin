@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         Sale::observe(SaleObserver::class);
         Company::observe(CompanyObserver::class);
         TicketMessage::observe(TicketMessageObserver::class);
+
+        Paginator::useBootstrap();
     }
 
     /**

@@ -283,6 +283,37 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal para integração com woocommerce -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
+                         id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
+                         role="dialog" tabindex="-1">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                                <div class="modal-body text-center p-20">
+                                    <div class="d-flex justify-content-center">
+                                        <span class="o-reload-1"></span>
+                                    </div>
+                                    <h3 class="black" id="modal-title">Sincronizar produtos com WooCommerce </h3>
+                                    <p class="gray" id="modal-text"></p>
+                                </div>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                    <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
+                                        Cancelar
+                                    </button>
+                                    <button id="bt-modal-change-woocommerce" type="button"
+                                            class="btn btn-success" style="width: 20%;">Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
