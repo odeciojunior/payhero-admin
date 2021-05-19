@@ -53,11 +53,11 @@ class WooCommerceApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todos as integrações com o woocommerce');
-            
-            
-            
+
+
+
             $woocommerceIntegrations = $woocommerceIntegrationModel->where('user_id', auth()->user()->account_owner_id)->get();
-            
+
 
             $projects = [];
 
@@ -88,7 +88,7 @@ class WooCommerceApiController extends Controller
             $userService = new UserService();
 
             $dataRequest = $request->all();
-            
+
             if (strlen($dataRequest['token_user']) < 10 || strlen($dataRequest['token_user']) > 100) {
                 return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
             }
@@ -114,15 +114,15 @@ class WooCommerceApiController extends Controller
                 );
             }
 
-            
+
 
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
                 ->orWhere('token_user', $dataRequest['token_user'])->first();
-            
+
             if ($woocommerceIntegration) {
-                
-                
+
+
                 if ($woocommerceIntegration->status == 1) {
                     return response()->json(['message' => 'Integração em andamento'], 400);
                 }
@@ -132,10 +132,10 @@ class WooCommerceApiController extends Controller
 
             try {
                 $dataRequest['url_store'] = $dataRequest['url_store'];
-                
+
 
                 $urlStore = $dataRequest['url_store'];
-                
+
 
                 $woocommerceService = new WooCommerceService($urlStore , $dataRequest['token_user'], $dataRequest['token_pass'], );
 
@@ -148,11 +148,11 @@ class WooCommerceApiController extends Controller
                     );
                 }
             } catch (Exception $e) {
-                
+
             }
-            
+
             if(!$woocommerceService->verifyPermissions()){
-                
+
                 return response()->json(
                     [
                         'message' => 'Problema ao testar a chave de acesso!'
@@ -160,17 +160,20 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
-            
 
-            
+
+
             $woocommerceName = $urlStore;
-            
+            $company = Company::find(current(Hashids::decode($dataRequest['company'])));
+
+            $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
             try{
                 $projectCreated = $projectModel->create(
                     [
                         'name' => $woocommerceName,
                         'status' => $projectModel->present()->getStatus('active'),
                         'visibility' => 'private',
+                        'pix' => $has_pix_key,
                         'percentage_affiliates' => '0',
                         'description' => $woocommerceName,
                         'invoice_description' => $woocommerceName,
@@ -187,10 +190,10 @@ class WooCommerceApiController extends Controller
                         ])
                     ]
                 );
-               
+
 
             }catch (Exception  $e) {
-               
+
             }
 
             if (empty($projectCreated->id)) {
@@ -211,8 +214,8 @@ class WooCommerceApiController extends Controller
                     'not_apply_on_plans' => '[]'
                 ]
             );
-            
-            
+
+
 
             if (empty($shippingCreated->id)) {
                 $projectCreated->delete();
@@ -236,7 +239,7 @@ class WooCommerceApiController extends Controller
                 ]
             );
 
-            
+
 
             if (empty($woocommerceIntegrationCreated->id)) {
                 $shippingCreated->delete();
@@ -284,23 +287,23 @@ class WooCommerceApiController extends Controller
                 // $woocommerceService = new WooCommerceService($dataRequest['url_store'] , $dataRequest['token_user'], $dataRequest['token_pass'] );
                 // $woocommerceService->verifyPermissions();
                 $products = $woocommerceService->fetchProducts();
-                
+
                 $result = $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
-                
+
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
                     ]
                 );
-                
-                
+
+
             }catch(Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
                 $projectCreated->delete();
-                
+
                 Log::debug($e);
-                
+
                 return response()->json(
                     [
                         'message' => 'Problema ao criar integração, tente novamente mais tarde'
@@ -308,8 +311,8 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
-            
-            
+
+
 
             return response()->json(
                 [
@@ -326,38 +329,38 @@ class WooCommerceApiController extends Controller
 
     public function synchronizeProducts(Request $request)
     {
-        
+
     }
 
 
     public function undoIntegration(Request $request)
     {
-        
+
     }
 
     public function reIntegration(Request $request)
     {
-        
+
     }
 
 
     public function synchronizeTrackings(Request $request)
     {
-        
+
     }
 
     public function updateToken(Request $request)
     {
-        
+
     }
 
     public function verifyPermission(Request $request)
     {
-        
+
     }
 
     public function setSkipToCart(Request $request)
     {
-        
+
     }
 }
