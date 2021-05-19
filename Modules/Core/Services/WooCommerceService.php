@@ -53,7 +53,8 @@ class WooCommerceService
 
     public function test_url()
     {
-        $file = 'http://'.$this->url;
+        //Log::debug("service: ".$this->url);
+        $file = $this->url;
         $file_headers = @get_headers($file);
         if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
             $exists = false;
@@ -68,7 +69,7 @@ class WooCommerceService
     {
         try{
             $this->woocommerce = new Client(
-                'http://'.$this->url, 
+                $this->url, 
                 $this->user, 
                 $this->pass,
                 [
@@ -232,11 +233,11 @@ class WooCommerceService
 
     public function createHooks($projectId)
     {
-        //Order update
+        //Order update.
         $data = [
             'name' => "$projectId",
             'topic' => 'order.updated',
-            'delivery_url' => 'http://dev.admin.com/postback/woocommerce/'.$projectId.'/tracking'
+            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -244,7 +245,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.updated',
-            'delivery_url' => 'http://dev.admin.com/postback/woocommerce/'.$projectId.'/product/update'
+            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -252,7 +253,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.created',
-            'delivery_url' => 'http://dev.admin.com/postback/woocommerce/'.$projectId.'/product/create'
+            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
         $this->woocommerce->post('webhooks', $data);
     }
