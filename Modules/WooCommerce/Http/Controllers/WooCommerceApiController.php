@@ -114,9 +114,7 @@ class WooCommerceApiController extends Controller
                 );
             }
 
-            //tratamento parcial do dominio
-            $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
-            $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
+            
 
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
@@ -133,11 +131,11 @@ class WooCommerceApiController extends Controller
             }
 
             try {
-                $dataRequest['url_store'] = 'http://' . $dataRequest['url_store'];
-                $dataRequest['url_store'] = parse_url($dataRequest['url_store'], PHP_URL_HOST);
+                $dataRequest['url_store'] = $dataRequest['url_store'];
+                
 
                 $urlStore = $dataRequest['url_store'];
-                //dd('here'. $urlStore);
+                
 
                 $woocommerceService = new WooCommerceService($urlStore , $dataRequest['token_user'], $dataRequest['token_pass'], );
 
@@ -176,7 +174,7 @@ class WooCommerceApiController extends Controller
                         'percentage_affiliates' => '0',
                         'description' => $woocommerceName,
                         'invoice_description' => $woocommerceName,
-                        'url_page' => 'https://' . $urlStore,
+                        'url_page' => $urlStore,
                         'automatic_affiliation' => false,
                         'woocommerce_id' => '1',
                         'boleto' => '1',

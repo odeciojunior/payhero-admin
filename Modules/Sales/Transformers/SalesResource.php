@@ -85,8 +85,7 @@ class SalesResource extends JsonResource
             'has_order_bump'           => $this->has_order_bump,
             'has_contestation'         => $this->contestations->count() ? true : false,
             'cashback_value'           => isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0 ,
-            'has_cashback'             => $this->cashback->value ?? false,
-            'is_security_reserve'      => $this->details->is_security_reserve,
+            'has_cashback'             => $this->cashback->value ?? false
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         if (count($shopifyIntegrations) > 0) {
