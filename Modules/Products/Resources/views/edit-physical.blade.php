@@ -17,7 +17,7 @@
             <form id='my-form'>
                 @method('PUT')
                 <div class="panel py-10" style="border-radius: 16px">
-                    <h4 class="px-40">1. Informações Básicas</h4>
+                    <h4 class="px-40">1. Informações básicas</h4>
                     <hr class="my-20">
                     <div class="px-40 row justify-content-between align-items-baseline">
                         <div class="col-12 col-md-4">
@@ -25,7 +25,7 @@
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do produto</label>
                                     <input type="file" id="product_photo" name="product_photo" data-height="650" data-max-width="650">
-                                    <small class="text-center text-muted mt-15">Sugerimos PNG ou JPEG com 650px x 650px (1:1).</small>
+                                    <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
                         </div>

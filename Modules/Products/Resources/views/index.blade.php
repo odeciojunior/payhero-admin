@@ -93,13 +93,13 @@
                       <div class="row text-center">
                         <div class="col-6 d-flex flex-column align-items-center">
                           <a href="/products/create/physical" class="mb-2 new-product-icon">
-                            <img src="http://dev.admin.net/modules/global/img/svg/caixa-fisica.svg" class="pb-5"  data-value="product_physical" alt="novo produto fisico">
+                            <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}" class="pb-5"  data-value="product_physical" alt="novo produto fisico">
                           </a>
                           <p>Físico</p>
                         </div>
                         <div class="col-6 d-flex flex-column align-items-center">
                           <a href="/products/create/digital" class="mb-2 new-product-icon">
-                            <img src="http://dev.admin.net/modules/global/img/svg/phone.svg" class="pb-5" data-value="product_digital" alt="novo produto digital">
+                            <img src="{{ asset('/modules/global/img/svg/phone.svg') }}" class="pb-5" data-value="product_digital" alt="novo produto digital">
                           </a>
                           <p>Digital</p>
                         </div>

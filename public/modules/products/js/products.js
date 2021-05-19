@@ -263,11 +263,11 @@ $(document).ready(function () {
     $('#url_expiration_time').mask('0#');
 
     /* Produto Fisico */
-    $('#height').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-altura.svg' });
-    $('#width').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-largura.svg' });
-    $('#length').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-comprimento.svg' });
-    $('#weight').on('focus', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha-peso.svg' });
-    $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = 'http://dev.admin.net/modules/global/img/svg/caixinha.svg' });
+    $('#height').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-altura.svg' });
+    $('#width').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-largura.svg' });
+    $('#length').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-comprimento.svg' });
+    $('#weight').on('focus', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha-peso.svg' });
+    $('#height, #width, #length, #weight').on('focusout', function () { $('#caixinha-img')[0].src = '/modules/global/img/svg/caixinha.svg' });
 
     /* Upload Digital Product Input */
     if ($('#digital_product_url')[0] != undefined) {

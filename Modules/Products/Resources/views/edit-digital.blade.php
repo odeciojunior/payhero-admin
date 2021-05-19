@@ -23,7 +23,7 @@
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do produto</label>
                                     <input type="file" id="product_photo" name="product_photo" data-height="650" data-max-width="650">
-                                    <small class="text-center text-muted mt-15">Sugerimos PNG ou JPEG com 650px x 650px (1:1).</small>
+                                    <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
                             <button class="btn btn-primary btn-lg btn-view-product-url mt-30" style="width: 150px">Visualizar</button>
