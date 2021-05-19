@@ -20,6 +20,7 @@ use Vinkla\Hashids\Facades\Hashids;
  *
  * @property integer $id
  * @property int $owner_id
+ * @property int $company_id
  * @property integer $affiliate_id
  * @property integer $customer_id
  * @property integer $delivery_id
@@ -68,6 +69,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
+ * @property Company $company
  * @property Collection $plansSales
  * @property Collection $transactions
  * @property Collection $productsPlansSale
@@ -141,6 +143,7 @@ class Sale extends Model
      */
     protected $fillable = [
         'owner_id',
+        'company_id',
         'affiliate_id',
         'customer_id',
         'delivery_id',
@@ -230,6 +233,11 @@ class Sale extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\User', 'owner_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function plansSales(): HasMany
