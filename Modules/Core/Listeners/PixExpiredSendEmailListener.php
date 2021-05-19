@@ -90,7 +90,6 @@ class PixExpiredSendEmailListener implements ShouldQueue
             }
 
             //Traz o assunto, titulo e texto do email formatados
-            $projectNotificationPresenter = $projectNotificationModel->present();
             $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
                 ->where(
                     'notification_enum',

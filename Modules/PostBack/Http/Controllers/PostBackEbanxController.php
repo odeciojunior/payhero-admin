@@ -2,7 +2,6 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use \Ebanx\Config;
 use Carbon\Carbon;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Plan;
