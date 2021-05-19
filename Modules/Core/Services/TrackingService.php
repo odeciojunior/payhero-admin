@@ -143,9 +143,9 @@ class TrackingService
 
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
-                        'tracking_status'      => $status,
-                        'created_at'           => Carbon::parse($log->Date)->format('d/m/Y'),
-                        'event'                => $event,
+                        'tracking_status' => $status,
+                        'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
+                        'event' => $event,
                     ]);
                 }
             }
@@ -248,17 +248,17 @@ class TrackingService
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
             $commonAttributes = [
-                'sale_id'              => $productPlanSale->sale_id,
-                'product_id'           => $productPlanSale->product_id,
+                'sale_id' => $productPlanSale->sale_id,
+                'product_id' => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
-                'amount'               => $productPlanSale->amount,
-                'delivery_id'          => $productPlanSale->sale->delivery->id,
+                'amount' => $productPlanSale->amount,
+                'delivery_id' => $productPlanSale->sale->delivery->id,
             ];
 
             $newAttributes = [
-                'tracking_code'        => $trackingCode,
+                'tracking_code' => $trackingCode,
                 'tracking_status_enum' => $statusEnum,
-                'system_status_enum'   => $systemStatusEnum,
+                'system_status_enum' => $systemStatusEnum,
             ];
 
             $tracking = Tracking::where($commonAttributes)
@@ -319,7 +319,12 @@ class TrackingService
             $salePresenter->getStatus('in_dispute'),
         ];
 
-        $productPlanSales = $productPlanSaleModel->with(['tracking', 'sale.delivery', 'sale.customer', 'product',]);
+        $productPlanSales = $productPlanSaleModel->with([
+            'tracking',
+            'sale.delivery',
+            'sale.customer',
+            'product',
+        ]);
 
         $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
             //tipo da data e periodo obrigatorio
@@ -346,26 +351,12 @@ class TrackingService
                             ->orWhereHas('sale', function ($query) {
                                 $query->where('is_chargeback_recovered', true);
                             });
-                        })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
+                            ->where('tracking_required', true);
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
                 });
-                if ($filters['transaction_status'] == 'blocked') {
-                    $productPlanSales->where(function ($query) {
-                        $query->whereHas('tracking', function ($trackingsQuery) {
-                            $trackingPresenter = (new Tracking)->present();
-                            $status = [
-                                $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                                $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
-                                //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
-                                $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
-                                $trackingPresenter->getSystemStatusEnum('duplicated'),
-                            ];
-                            $trackingsQuery->whereIn('system_status_enum', $status);
-                        })->orDoesntHave('tracking');
-                    });
-                }
             }
         });
 
@@ -547,7 +538,8 @@ class TrackingService
         return round(($salesWithTrackingCodeProblemsAmount * 100 / $approvedSalesAmount), 2);
     }
 
-    public static  function  getTrackingToday(User $user) {
+    public static function getTrackingToday(User $user)
+    {
         return Tracking::join('sales', 'sales.id', '=', 'trackings.sale_id')
             ->whereBetween(
                 'trackings.created_at',

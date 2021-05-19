@@ -472,7 +472,7 @@ class SaleService
             'total_paid_value'         => FoxUtils::formatMoney($sale->total_paid_value),
             'refund_observation'       => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
             'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
-            'company_name'             => $companyName,
+            'company_name'             => $companyName
         ];
     }
 
@@ -1331,6 +1331,12 @@ class SaleService
                     }
                 );
             }
+
+            // Reserva de Segurança
+            if (!empty($filters['is_security_reserve']) && $filters['is_security_reserve'] == true) {
+                $transactions->where('is_security_reserve', true);
+            }
+
             // Filtros - FIM
             return $transactions;
         } catch (Exception $e) {

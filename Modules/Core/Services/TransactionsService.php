@@ -33,17 +33,17 @@ class TransactionsService
                     ['status_enum', (new Transaction())->present()->getStatusEnum('paid')],
                     ['is_waiting_withdrawal', 0],
                 ]
-            )->whereHas(
-                'sale',
-                function ($query) {
-                    $query->where(
-                        function ($q) {
+            )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+            ->where(function ($where) {
+                $where->where('tracking_required', false)
+                    ->orWhereHas('sale', function ($query) {
+                        $query->where(function ($q) {
                             $q->where('has_valid_tracking', true)
                                 ->orWhereNull('delivery_id');
-                        }
-                    )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
-                }
-            );
+                        });
+                    });
+            });
+
 
         $getnetService = new GetnetBackOfficeService();
 
