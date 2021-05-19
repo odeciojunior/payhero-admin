@@ -1,8 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Entities\TicketMessage;
 
 class TicketsTableSeeder extends Seeder
 {

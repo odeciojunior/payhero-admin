@@ -162,7 +162,6 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Yajra\DataTables\DataTablesServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
@@ -222,7 +221,6 @@ return [
         'URL'          => Illuminate\Support\Facades\URL::class,
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
-        'DataTables'   => Yajra\DataTables\Facades\DataTables::class,
         'Image'        => Intervention\Image\Facades\Image::class,
         'Javascript'   => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         'Hashids'      => Vinkla\Hashids\Facades\Hashids::class,
