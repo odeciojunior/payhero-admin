@@ -79,7 +79,7 @@ $(document).ready(function () {
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val(),
-            'is_security_reserve': $('#is-security-reserve').val(),
+            'is_security_reserve': $('#is-security-reserve').is(':checked') ? 1: 0,
         };
 
         if (urlParams) {
