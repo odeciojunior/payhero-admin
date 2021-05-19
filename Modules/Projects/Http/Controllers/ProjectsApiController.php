@@ -74,7 +74,7 @@ class ProjectsApiController extends Controller
                     $projectStatus = [$projectModel->present()->getStatus('active')];
                 }
             }
-            
+
             return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             report($e);
@@ -448,10 +448,31 @@ class ProjectsApiController extends Controller
                 ['project_id', $project->id],
             ])->first();
             if (!empty($requestValidated['company_id'])) {
+
                 $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+
                 if ($userProject->company_id != $requestValidated['company_id']) {
+
+                    $old_company = $userProject->company;
                     $userProject->update(['company_id' => $requestValidated['company_id']]);
+                    $new_company = Company::find($requestValidated['company_id']);
+
+                    if($old_company->has_pix_key != $new_company->has_pix_key){
+                        $boo_pix = $new_company->has_pix_key;
+                        foreach($new_company->usersProjects as $userProject) {
+                            $project = $userProject->project;
+                            $project->pix = $boo_pix;
+                            $project->save();
+                        }
+
+                    }
                 }
+            }
+
+            if (!empty($requestValidated['pix']) && $userProject->project->pix != $requestValidated['pix']) {
+                $project = $userProject->project;
+                $project->pix = $requestValidated['pix'];
+                $project->save();
             }
 
             //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
@@ -559,7 +580,7 @@ class ProjectsApiController extends Controller
             $projectStatus = [
                 $projectModel->present()->getStatus('active'),
             ];
-            
+
             return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             report($e);
