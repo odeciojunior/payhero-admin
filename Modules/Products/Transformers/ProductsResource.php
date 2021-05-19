@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Transformers;
 
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,7 +22,7 @@ class ProductsResource extends JsonResource
         return [
             'id'          => $this->id_code,
             'id_view'     => ($this->shopify == 1 ? $this->shopify_id : $this->id_code),
-            'name'        => mb_substr($this->name, 0, 18),
+            'name'        => Str::limit($this->name, 18),
             'description' => mb_substr($this->description, 0, 20),
             'image'       => $this->photo == '' ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $this->photo,
             'link'        => '/api/products/' . $this->id_code . '/edit',

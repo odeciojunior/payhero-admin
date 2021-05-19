@@ -84,7 +84,16 @@ $(document).ready(function () {
                             'default': 'Arraste e solte ou clique para adicionar um arquivo',
                             'replace': 'Arraste e solte ou clique para substituir',
                         },
+                        error: {
+                            'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
+                            'minWidth': 'A imagem deve ter largura maior que {{ value }}px.',
+                            'maxWidth': 'A imagem deve ter largura menor que {{ value }}px.',
+                            'minHeight': 'A imagem deve ter altura maior que {{ value }}px.',
+                            'maxHeight': 'A imagem deve ter altura menor que {{ value }}px.',
+                            'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
+                        },
                         defaultFile: response.data.product.photo,
+                        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
                     });
                     if (response.data.product.digital_product_url != '') {
                         $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
