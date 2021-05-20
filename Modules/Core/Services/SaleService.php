@@ -47,7 +47,6 @@ class SaleService
             $companyModel = new Company();
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $couponModel = new DiscountCoupon();
 
             if (!$userId) {
                 $userId = auth()->user()->account_owner_id;
@@ -82,7 +81,7 @@ class SaleService
             }
 
             $transactions = $transactionModel->with($relationsArray)
-                ->whereIn('company_id', $userCompanies)
+                ->whereIn('transactions.company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id');
 
