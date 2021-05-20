@@ -31,19 +31,6 @@ class SalesResource extends JsonResource
             $thankPageUrl = 'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
         }
 
-        //set flag
-        if (!empty($this->flag)) {
-            $flag = $this->flag;
-        } elseif ($this->payment_method == 1 && empty($this->flag)) {
-            $flag = 'generico';
-        } elseif ($this->payment_method == 3 && empty($this->flag)) {
-            $flag = 'debito';
-        } elseif ($this->payment_method == 4 && empty($this->flag)) {
-            $flag = 'pix';
-        } else {
-            $flag = 'boleto';
-        }
-
         $data = [
             //hide ids
             'id'                       => Hashids::connection('sale_id')->encode($this->id),
@@ -53,7 +40,7 @@ class SalesResource extends JsonResource
             'client_id'                => Hashids::encode($this->customer_id),
             //sale
             'payment_method'           => $this->payment_method,
-            'flag'                     => $flag,
+            'flag'                     => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(), 
             'start_date'               => $this->start_date,
             'hours'                    => $this->hours,
             'status'                   => $this->status,
@@ -97,7 +84,7 @@ class SalesResource extends JsonResource
             'company_name'             => $this->details->company_name,
             'has_order_bump'           => $this->has_order_bump,
             'has_contestation'         => $this->contestations->count() ? true : false,
-            'cashback_value'           => isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0 ,
+            'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback'             => $this->cashback->value ?? false
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);

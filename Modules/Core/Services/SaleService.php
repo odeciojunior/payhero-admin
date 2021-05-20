@@ -280,8 +280,7 @@ class SaleService
 
             return $transactions;
         } catch (Exception $e) {
-            report($e);
-
+            report($e);            
             return null;
         }
     }
@@ -421,16 +420,9 @@ class SaleService
         }
 
         //set flag
-        if (!empty($sale->flag)) {
-            $sale->flag = $sale->flag;
-        } elseif ($sale->payment_method == 1 && empty($sale->flag)) {
-            $sale->flag = 'generico';
-        } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
-            $sale->flag = 'debito';
-        } elseif ($sale->payment_method == 4 && empty($sale->flag)) {
-            $sale->flag = 'pix';
-        } else {
-            $sale->flag = 'boleto';
+        
+        if (empty($sale->flag)) {
+            $sale->flag = $sale->present()->getPaymentFlag();
         }
 
         //format dates

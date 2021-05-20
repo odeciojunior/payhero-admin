@@ -11,17 +11,17 @@
     margin: 40px;
 }
 .ct-legend .ct-series-0, .ct-series-a .ct-line {
-    color: #00FF7F;
-    stroke: #00FF7F;
+    color: #ff700a;
+    stroke: #ff700a;
 }
 .ct-legend .ct-series-1, .ct-series-b .ct-line {
-    color: #1E90FF;
-    stroke: #1E90FF;
+    color: #2f2d2c;
+    stroke: #2f2d2c;
 }
 
 .ct-legend .ct-series-2, .ct-series-c .ct-line {
-    color: #35aea5;
-    stroke: #35aea5
+    color: #37b4aa;
+    stroke: #37b4aa
 }
 
 .ct-point {

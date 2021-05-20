@@ -213,4 +213,49 @@ class SalePresenter extends Presenter
             return null;
         }
     }
+
+    /**
+     * @param null $paymentFlag
+     * @return int|string|null
+     */
+    public function getPaymentForm($paymentType = null)
+    {
+        $paymentType = $paymentType ?? $this->payment_method;
+
+        if (is_numeric($paymentType)) {
+            switch ($paymentType) {
+                case 1:
+                case 3:                
+                    return 'Cartão';
+                case 2:
+                    return 'Boleto';
+                case 4:
+                    return 'Pix';
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param null $paymentFlag
+     * @return int|string|null
+     */
+    public function getPaymentFlag($paymentType = null)
+    {
+        $paymentType = $paymentType ?? $this->payment_method;
+
+        if (is_numeric($paymentType)) {
+            switch ($paymentType) {
+                case 1:
+                    return 'generico';
+                case 3:              
+                    return 'debito';  
+                case 2:
+                    return 'boleto';
+                case 4:
+                    return 'pix';
+            }
+        }
+        return null;
+    }
 }

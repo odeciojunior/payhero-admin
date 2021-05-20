@@ -91,7 +91,7 @@ class SalesApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao exibir detalhes da venda'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);//'Erro ao exibir detalhes da venda'
         }
     }
 
