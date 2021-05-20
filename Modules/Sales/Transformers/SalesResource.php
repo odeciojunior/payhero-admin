@@ -27,8 +27,12 @@ class SalesResource extends JsonResource
         }
 
         $thankPageUrl = '';
+        $thankLabelText = 'Link página de obrigado:';        
         if (isset($this->project->domains[0]->name)) {
             $thankPageUrl = 'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
+        }
+        if($this->payment_method==4){
+            $thankLabelText = 'Link página de Qrcode:';
         }
 
         $data = [
@@ -81,6 +85,7 @@ class SalesResource extends JsonResource
             'is_chargeback_recovered'  => $this->is_chargeback_recovered,
             'observation'              => $this->observation,
             'thank_page_url'           => $thankPageUrl,
+            'thank_label_text'         => $thankLabelText,
             'company_name'             => $this->details->company_name,
             'has_order_bump'           => $this->has_order_bump,
             'has_contestation'         => $this->contestations->count() ? true : false,

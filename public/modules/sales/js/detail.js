@@ -741,7 +741,7 @@ $(() => {
             $(".div-refund-observation").hide();
         }
         if (sale.thank_page_url != "") {
-            $("#thank-page-url").text("Link página de obrigado:").show();
+            $("#thank-page-url").text(sale.thank_label_text).show();
             $(".btn-copy-thank-page-url").attr("link", sale.thank_page_url);
             $(".btn-copy-thank-page-url").show();
         } else {
