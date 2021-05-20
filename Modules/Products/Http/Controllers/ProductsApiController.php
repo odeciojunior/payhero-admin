@@ -8,7 +8,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
@@ -230,6 +232,9 @@ class ProductsApiController extends Controller
             })->log('Visualizou tela editar produto ' . $product->name);
 
             $categories = $categoryModel->all();
+
+            $productUrl = Str::before($product->photo, '?v=');
+            $product->photo = Http::get($productUrl)->successful() ? $productUrl : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png';
 
             return EditProductResource::make([
                 'product' => $product,

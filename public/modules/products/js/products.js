@@ -88,7 +88,7 @@ $(document).ready(function () {
                             'maxHeight': 'A imagem deve ter altura menor que {{ value }}px.',
                             'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
                         },
-                        defaultFile: response.data.product.photo.split('?')[0] || response.data.product.photo,
+                        defaultFile: response.data.product.photo,
                         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
                     });
                     if (response.data.product.digital_product_url != '') {
