@@ -100,10 +100,10 @@
                                 <div class="col-sm-12 col-md">
                                     <label for="forma">Forma de pagamento</label>
                                     <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                        <option value="">Boleto e cartão de crédito</option>
+                                        <option value="">Todas formas de pagamento</option>
                                         <option value="1">Cartão de crédito</option>
                                         <option value="2">Boleto</option>
-                                        <option value="4">PIX</option>
+                                        <option value="4">Pix</option>
                                     </select>
                                 </div>
 

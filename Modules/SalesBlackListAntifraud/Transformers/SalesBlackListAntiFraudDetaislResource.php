@@ -18,19 +18,6 @@ class SalesBlackListAntiFraudDetaislResource extends JsonResource
      */
     public function toArray($request)
     {
-        //set flag
-        if (!empty($this->flag)) {
-            $flag = $this->flag;
-        } elseif ($this->payment_method == 1 && empty($this->flag)) {
-            $flag = 'generico';
-        } elseif ($this->payment_method == 3 && empty($this->flag)) {
-            $flag = 'debito';
-        } elseif ($this->payment_method == 4 && empty($this->flag)) {
-            $flag = 'pix';
-        } else {
-            $flag = 'boleto';
-        }
-
         return [
             'id'             => Hashids::connection('sale_id')->encode($this->id),
             'delivery_id'    => Hashids::encode($this->delivery_id),
@@ -38,7 +25,7 @@ class SalesBlackListAntiFraudDetaislResource extends JsonResource
             'customer_id'    => Hashids::encode($this->customer_id),
             //sale
             'payment_method' => $this->payment_method,
-            'flag'           => $flag,
+            'flag'           => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(),
             'start_date'     => \Carbon\Carbon::parse($this->start_date)->format('d/m/Y H:i:s'),
             'status'         => $this->status,
 

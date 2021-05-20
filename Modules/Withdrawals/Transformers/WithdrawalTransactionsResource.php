@@ -60,11 +60,8 @@ class WithdrawalTransactionsResource extends JsonResource
             }
         }
 
-        if ((!$this->sale->flag || empty($this->sale->flag)) && $this->sale->payment_method == 1) {
-            $this->sale->flag = 'generico';
-        }
-        elseif ($this->sale->payment_method == 2) {
-            $this->sale->flag = 'boleto';
+        if(empty($this->sale->flag)){
+            $this->sale->flag = $this->sale->present()->getPaymentFlag();
         }
 
         return [

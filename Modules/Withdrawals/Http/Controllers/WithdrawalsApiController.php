@@ -218,10 +218,8 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
-                    $transaction->sale->flag = 'generico';
-                } elseif ($transaction->sale->payment_method == 2) {
-                    $transaction->sale->flag = 'boleto';
+                if(empty($transaction->sale->flag)){
+                    $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
                 if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
