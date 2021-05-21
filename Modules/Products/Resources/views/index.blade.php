@@ -59,10 +59,7 @@
                 </div>
            </div>
             <div class="page-content container">
-                <div id='data-table-products' class='row g-2'>
-                    
-
-                </div>
+                <div id='data-table-products' class='row g-2'></div>
                 <div class="row justify-content-center justify-content-md-end">
                     <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
                 </div>

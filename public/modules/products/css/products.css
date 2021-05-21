@@ -51,6 +51,9 @@ label {
     color: #4C4C4C;
     padding: 12px;
 }
+.new-product-icon:hover img {
+    filter: invert(67%) sepia(41%) saturate(5064%) hue-rotate(177deg) brightness(96%) contrast(100%);
+}
 .new-product-icon:hover {
     border-radius: 50%;
     border: 2px solid #2DA6F6;
