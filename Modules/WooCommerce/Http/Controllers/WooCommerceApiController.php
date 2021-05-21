@@ -118,7 +118,7 @@ class WooCommerceApiController extends Controller
 
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
-                ->orWhere('token_user', $dataRequest['token_user'])->first();
+                ->where('token_user', $dataRequest['token_user'])->first();
             
             if ($woocommerceIntegration) {
                 
@@ -281,11 +281,10 @@ class WooCommerceApiController extends Controller
 
 
             try{
-                // $woocommerceService = new WooCommerceService($dataRequest['url_store'] , $dataRequest['token_user'], $dataRequest['token_pass'] );
-                // $woocommerceService->verifyPermissions();
+                
                 $products = $woocommerceService->fetchProducts();
                 
-                $result = $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
+                $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
                 
                 $woocommerceIntegrationCreated->update(
                     [
