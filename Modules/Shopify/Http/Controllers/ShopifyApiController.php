@@ -2,6 +2,7 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use App\Jobs\ImportShopifyProductsStore;
 use App\Jobs\ImportShopifyTrackingCodesJob;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,6 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
@@ -293,7 +293,8 @@ class ShopifyApiController extends Controller
             $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
             $projectService->createUpsellConfig($projectCreated->id);
 
-            event(new ShopifyIntegrationEvent($shopifyIntegrationCreated, auth()->user()->account_owner_id));
+            dispatch((new ImportShopifyProductsStore($shopifyIntegrationCreated, auth()->user()->account_owner_id)));
+
             TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             return response()->json(
@@ -554,47 +555,37 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function synchronizeProducts(Request $request)
+    public function synchronizeProducts(Request $request): JsonResponse
     {
         try {
             $requestData = $request->all();
 
-            $projectId = current(Hashids::decode($requestData['project_id']));
-            $shopifyModel = new ShopifyIntegration();
-            $projectModel = new Project();
-            $project = $projectModel->find($projectId);
+            $projectId = hashids_decode($requestData['project_id']);
+            $project = Project::find($projectId);
 
-            activity()->on($shopifyModel)->tap(
+            activity()->on((new ShopifyIntegration()))->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'updated';
                 }
             )->log('Sicronizou produtos do shopify para o projeto ' . $project->name);
 
-            if (!empty($projectId)) {
-                $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
-                if (!empty($shopifyIntegration)) {
-                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-
-                    return response()->json(
-                        ['message' => 'Os Produtos do shopify estão sendo sincronizados.'],
-                        Response::HTTP_OK
-                    );
-                } else {
-                    return response()->json(
-                        ['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'],
-                        Response::HTTP_BAD_REQUEST
-                    );
-                }
-            } else {
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $projectId)->first();
+            if (empty($shopifyIntegration)) {
                 return response()->json(
                     ['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
-        } catch (Exception $e) {
-            Log::critical(
-                'Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts'
+
+            dispatch(
+                (new ImportShopifyProductsStore($shopifyIntegration, auth()->user()->account_owner_id))
             );
+
+            return response()->json(
+                ['message' => 'Os Produtos do shopify estão sendo sincronizados.'],
+                Response::HTTP_OK
+            );
+        } catch (Exception $e) {
             report($e);
 
             return response()->json(
