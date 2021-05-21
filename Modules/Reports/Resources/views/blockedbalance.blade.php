@@ -32,6 +32,9 @@
             .select2-container--open .select2-selection__arrow b {
                 border-color: transparent transparent #8f9ca2 transparent !important;
             }
+            .ajust-font{
+                font-size: 15px;
+            }
         </style>
     @endpush
 

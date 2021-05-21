@@ -217,7 +217,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
                                     <td>
-                                        ${value.reason_blocked}
+                                        <span class="ajust-font">${value.reason_blocked}</span>
                                     </td>
                                 </tr>`;
 
