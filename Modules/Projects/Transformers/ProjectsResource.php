@@ -89,7 +89,7 @@ class ProjectsResource extends JsonResource
             "terms_affiliates" => $this->terms_affiliates,
             "cookie_duration" => $this->cookie_duration,
             "automatic_affiliation" => $this->automatic_affiliation,
-            "url_affiliates" => route('index', Hashids::encode($this->id)),
+            "url_affiliates" => route('affiliates.index', hashids_encode($this->id)),
             "percentage_affiliates" => $this->percentage_affiliates,
             'affiliated' => $affiliated,
             'affiliate_id' => Hashids::encode($affiliate->id ?? ''),
