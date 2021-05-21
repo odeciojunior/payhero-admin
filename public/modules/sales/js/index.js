@@ -508,7 +508,7 @@ $(document).ready(function () {
                                             <span class="badge badge-${
                                                 statusArray[value.status]
                                             } ${
-                                value.status_translate === "Pendente"
+                                value.status_translate === "Pendente" && value.brand !='pix'
                                     ? "boleto-pending"
                                     : ""
                             }" ${
