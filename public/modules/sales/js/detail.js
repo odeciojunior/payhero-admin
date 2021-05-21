@@ -287,7 +287,7 @@ $(() => {
         let paymentMethod = '';
 
         if (sale.payment_method == 1) {
-            paymentMethod = 'Generico';
+            paymentMethod = 'Cartão';
         } else if (sale.payment_method == 3) {
             paymentMethod = 'Debito';
         } else if (sale.payment_method == 4) {
@@ -672,6 +672,11 @@ $(() => {
             );
             $("#details-card").hide();
             $("#details-boleto").show();
+        }
+
+        if (sale.payment_method === 4) {
+            $("#details-card").hide();
+            $("#details-boleto").hide();
         }
 
         $("#checkout-attempts").hide();
