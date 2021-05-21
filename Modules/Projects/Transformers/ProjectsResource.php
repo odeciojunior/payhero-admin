@@ -3,11 +3,8 @@
 namespace Modules\Projects\Transformers;
 
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * @property mixed id
@@ -32,17 +29,12 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class ProjectsResource extends JsonResource
 {
-    /**
-     * @param Request $request
-     * @return array
-     * @throws Exception
-     */
-    public function toArray($request)
+    public function toArray($request): array
     {
         if (isset($this->affiliate_id)) {
             $affiliate = '';
             if ($this->affiliate_id > 0) {
-                $affiliate = new Affiliate;
+                $affiliate = new Affiliate();
                 $affiliate->id = $this->affiliate_id;
                 $affiliate->created_at = $this->affiliate_created_at;
                 $affiliate->percentage = $this->affiliate_percentage;
@@ -51,12 +43,12 @@ class ProjectsResource extends JsonResource
         } else {
             $affiliate = $this->affiliates[0] ?? '';
         }
-        $affiliated = !empty($affiliate) ? true : false;
+        $affiliated = !empty($affiliate);
 
         $notazzConfig = json_decode($this->notazz_configs);
 
         return [
-            'id' => Hashids::encode($this->id),
+            'id' => hashids_encode($this->id),
             'photo' => $this->photo,
             'name' => $this->name,
             'description' => $this->description,
@@ -78,10 +70,9 @@ class ProjectsResource extends JsonResource
             'credit_card' => $this->credit_card,
             'boleto_due_days' => $this->boleto_due_days,
             'boleto_redirect' => $this->boleto_redirect,
-            'billet_release_days'    => $this->usersProjects[0]->company->gateway_release_money_days ?? '',
+            'billet_release_days' => $this->usersProjects->first()->company->gateway_release_money_days ?? '',
             'card_redirect' => $this->card_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
-            // 'cost_currency_type' => $this->present()->getCurrencyCost($this->cost_currency_type),
             'cost_currency_type' => $this->present()->getCurrencyCost($notazzConfig->cost_currency_type ?? 1),
             'update_cost_shopify' => $notazzConfig->update_cost_shopify ?? 1,
             'status' => isset($this->domains[0]->name) ? 1 : 0,
@@ -92,8 +83,10 @@ class ProjectsResource extends JsonResource
             "url_affiliates" => route('affiliates.index', hashids_encode($this->id)),
             "percentage_affiliates" => $this->percentage_affiliates,
             'affiliated' => $affiliated,
-            'affiliate_id' => Hashids::encode($affiliate->id ?? ''),
-            'affiliate_date' => (!empty($affiliate->created_at)) ? (new Carbon($affiliate->created_at))->format('d/m/Y') : '',
+            'affiliate_id' => hashids_encode($affiliate->id ?? ''),
+            'affiliate_date' => (!empty($affiliate->created_at)) ? (new Carbon($affiliate->created_at))->format(
+                'd/m/Y'
+            ) : '',
             "status_url_affiliates" => $this->status_url_affiliates,
             "commission_type_enum" => $this->commission_type_enum,
             "commission_affiliate" => $affiliate->percentage ?? '',
@@ -110,9 +103,9 @@ class ProjectsResource extends JsonResource
             'countdown_timer_time' => $this->countdown_timer_time,
             'countdown_timer_description' => $this->countdown_timer_description,
             'countdown_timer_finished_message' => $this->countdown_timer_finished_message,
-            'reviews_config_icon_type'         => $this->reviews_config_icon_type,
-            'reviews_config_icon_color'        => $this->reviews_config_icon_color,
-            'product_amount_selector'          => $this->product_amount_selector,
+            'reviews_config_icon_type' => $this->reviews_config_icon_type,
+            'reviews_config_icon_color' => $this->reviews_config_icon_color,
+            'product_amount_selector' => $this->product_amount_selector,
             'finalizing_purchase_config_toogle' => $this->finalizing_purchase_config_toogle,
             'finalizing_purchase_config_text' => $this->finalizing_purchase_config_text,
             'finalizing_purchase_config_min_value' => $this->finalizing_purchase_config_min_value,
@@ -125,7 +118,14 @@ class ProjectsResource extends JsonResource
             'open_tickets' => $this->open_tickets ?? 0,
             'without_tracking' => $this->without_tracking ?? 0,
             'approved_sales' => $this->approved_sales ?? 0,
-            'approved_sales_value' => $this->approved_sales_value ? substr_replace(@$this->approved_sales_value, '.', strlen(@$this->approved_sales_value) - 2, 0) : 0,
+            'approved_sales_value' => $this->approved_sales_value ? substr_replace(
+                @$this->approved_sales_value,
+                '.',
+                strlen(
+                    @$this->approved_sales_value
+                ) - 2,
+                0
+            ) : 0,
         ];
     }
 }
