@@ -25,7 +25,7 @@ class UpdateProjectNotifications extends Migration
                         [
                             'subject' => 'Seu código pix foi gerado',
                             'title' => 'Efetue o pagamento, a promoção termina hoje!',
-                            'content' => 'Olá {primeiro_nome}, não esqueça de pagar seu PIX para enviarmos seu pedido! {url_pix}',
+                            'content' => 'Olá {primeiro_nome}, não esqueça de pagar seu PIX para enviarmos seu pedido!',
                         ]
                     ),
                     'notification_enum' => 16,
@@ -54,7 +54,7 @@ class UpdateProjectNotifications extends Migration
                 [
                     'type_enum' => ProjectNotificationService::EMAIL_TYPE,
                     'event_enum' => ProjectNotificationService::PIX_EXPIRED,
-                    'time' => '1 hora depois',
+                    'time' => 'Imediato',
                     'message' => json_encode(
                         [
                             'subject' => 'Finalize sua compra no PIX',
