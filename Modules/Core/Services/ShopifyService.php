@@ -1133,6 +1133,7 @@ class ShopifyService
         $project = $projectModel->find($projectId);
 
         $pagination = $this->getShopProducts();
+        sleep(1);
         $storeProducts = $pagination->current();
         $nextPagination = true;
 
