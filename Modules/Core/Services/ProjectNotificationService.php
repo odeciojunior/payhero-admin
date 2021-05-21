@@ -202,7 +202,7 @@ class ProjectNotificationService
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Seu código pix foi gerado',
                                                                                        'title'   => 'Efetue o pagamento, a promoção termina hoje!',
-                                                                                       'content' => 'Olá {primeiro_nome}, não esqueça de pagar seu PIX para enviarmos seu pedido! {url_pix}',
+                                                                                       'content' => 'Olá {primeiro_nome}, não esqueça de pagar seu PIX para enviarmos seu pedido!',
                                                                                    ]),
                                                 'notification_enum' => 16,
                                                 'project_id'        => $projectId,
