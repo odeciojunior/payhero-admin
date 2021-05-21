@@ -162,6 +162,7 @@ $(document).ready(function () {
                     updatePerformance();
                     updateAccountHealth();
                     setTimeout(verifyOnboarding, 1000);
+                    setTimeout(verifyPixOnboarding, 1600);
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -523,15 +524,15 @@ $(document).ready(function () {
                                 <div id="storytelling">${data.storytelling}</div>
                             `
 
-                                if( !isEmpty(data.benefits) ) {
-                                    modal_is_level_type += `
+                            if (!isEmpty(data.benefits)) {
+                                modal_is_level_type += `
                                     <div id="benefits">
                                         <div id="benefits-title">Aqui está sua recompensa:</div>
                                         <div class="d-flex justify-content-center align-items-center">
                                             <span id="benefits-data"><span class="material-icons">done</span> ${data.benefits}</span>
                                         </div>
                                     </div>`
-                                }
+                            }
                         }
 
                         let modal = `
@@ -546,7 +547,7 @@ $(document).ready(function () {
                                         <div class="modal-body">
 
                                             ${modal_is_achievement_type}
-                                            
+
 
                                             ${modal_is_level_type}
 
@@ -566,7 +567,7 @@ $(document).ready(function () {
 
                         $(`#modal-achievement-data-${index}`).on('shown.bs.modal', function () {
                             // $('body').addClass('blurred');
-                            $(`#modal-achievement-data-${index}`).unbind( "click" );
+                            $(`#modal-achievement-data-${index}`).unbind("click");
                             showConfetti();
                         });
 
@@ -646,19 +647,19 @@ $(document).ready(function () {
 
                         setTimeout(() => {
                             loadingOnChartRemove('#loader-onboarding')
-                        },1000)
+                        }, 1000)
                     })
 
 
                     $('#modal-onboarding').on('shown.bs.modal', function () {
-                            modalOnboarding.slick("refresh")
-                            $('#user-name').html(response.name)
-                            $(`#modal-onboarding`).unbind( "click" );
-                        })
+                        modalOnboarding.slick("refresh")
+                        $('#user-name').html(response.name)
+                        $(`#modal-onboarding`).unbind("click");
+                    })
                         .modal('show');
                     setTimeout(() => {
                         loadingOnChartRemove('#loader-onboarding')
-                    },1000)
+                    }, 1000)
                     $('#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health').click(() => {
                         modalOnboarding.slick("slickNext")
                     })
@@ -683,6 +684,101 @@ $(document).ready(function () {
                     });
                 } else {
                     verifyAchievements()
+                }
+            }
+        });
+    }
+
+    function verifyPixOnboarding() {
+        $.ajax({
+            method: "GET",
+            url: '/api/dashboard/verify-pix-onboarding',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: function success(response) {
+
+                if (response.read === false) {
+                    loadingOnChart('#loader-onboarding')
+                    let modalPixOnboarding = $('#modal-content-pix')
+
+                    modalPixOnboarding.slick({
+                        slidesToShow: 1,
+                        mobileFirst: true,
+                        infinite: false,
+                        arrows: false,
+                        adaptiveHeight: true
+                    })
+
+                    $(window).on('resize', () => {
+                        loadingOnChart('#loader-onboarding')
+                        modalPixOnboarding.slick("refresh")
+
+                        setTimeout(() => {
+                            loadingOnChartRemove('#loader-onboarding')
+                        }, 1000)
+                    })
+
+
+                    $('#modal-pix-onboarding').on('shown.bs.modal', function () {
+                        modalPixOnboarding.slick("refresh")
+                        $('#user-name').html(response.name)
+                        $('#modal-pix').unbind("click");
+                    })
+                        .modal('show');
+                    setTimeout(() => {
+                        loadingOnChartRemove('#loader-onboarding')
+                    }, 1000)
+
+                    $('.pix-onboarding-next').click(() => {
+                        modalPixOnboarding.slick("slickNext")
+                    })
+
+                    $('.pix-onboarding-previous').click(() => {
+                        modalPixOnboarding.slick("slickPrev")
+                    })
+
+                    $('.pix-onboarding-later').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-pix-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-pix-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-pix-onboarding').modal('hide')
+                            }
+                        });
+                    });
+
+                    $('.pix-onboarding-finish').click(() => {
+                        $.ajax({
+                            method: "PUT",
+                            url: '/api/dashboard/update-pix-onboarding/' + response.onboarding,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function error() {
+                                $('#modal-pix-onboarding').modal('hide')
+                            },
+                            success: function success() {
+                                $('#modal-pix-onboarding').modal('hide')
+                                if (response.accounts_url.indexOf('http') == -1) {
+                                    response.accounts_url = '//' + response.accounts_url
+                                }
+                                window.location.href = response.accounts_url
+                            }
+                        });
+                    });
                 }
             }
         });

@@ -15,6 +15,7 @@
     <div class="page dashboard">
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
+        @include('dashboard::pix.pix')
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-8 mb-15">

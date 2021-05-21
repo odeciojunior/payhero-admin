@@ -25,5 +25,7 @@ Route::group(
         Route::put('/dashboard/update-onboarding/{onboarding}', 'DashboardApiController@updateOnboarding');
         Route::get('/dashboard/verify-achievements', 'DashboardApiController@getAchievements');
         Route::put('/dashboard/update-achievements/{achievement}', 'DashboardApiController@updateAchievements');
+        Route::get('/dashboard/verify-pix-onboarding', 'DashboardApiController@verifyPixOnboarding');
+        Route::put('/dashboard/update-pix-onboarding/{onboarding}', 'DashboardApiController@updatePixOnboarding');
     }
 );
