@@ -222,7 +222,7 @@ class ProjectNotificationService
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
                                                 'event_enum'        => self::PIX_EXPIRED,
-                                                'time'              => '1 hora depois',
+                                                'time'              => 'Imediato',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Finalize sua compra no PIX',
                                                                                        'title'   => 'Seu PIX expirou!',

@@ -54,7 +54,7 @@ class UpdateProjectNotifications extends Migration
                 [
                     'type_enum' => ProjectNotificationService::EMAIL_TYPE,
                     'event_enum' => ProjectNotificationService::PIX_EXPIRED,
-                    'time' => '1 hora depois',
+                    'time' => 'Imediato',
                     'message' => json_encode(
                         [
                             'subject' => 'Finalize sua compra no PIX',
