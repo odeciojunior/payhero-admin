@@ -50,7 +50,7 @@ class AffiliateRequestSendEmailListener implements ShouldQueue
             $producer->load('userNotification');
 
             if ($producer->userNotification->affiliation) {
-                $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-0386c841a52c466e96840eb5a663b400', $data);
+                $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-0386c841a52c466e96840eb5a663b400', $data);
             }
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de solicitação de afiliação para o projeto ' . $project->id);

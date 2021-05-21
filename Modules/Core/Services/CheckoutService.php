@@ -339,7 +339,7 @@ class CheckoutService
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new Mail();
-                    $sendgridMail->setFrom('noreply@cloudfox.net', 'cloudfox');
+                    $sendgridMail->setFrom('help@cloudfox.net', 'cloudfox');
                     $sendgridMail->addTo($email, 'cloudfox');
                     $sendgridMail->setTemplateId('d-f44033c3eaec46d2a6226f796313d9fc');
 

@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => 'noreply@cloudfox.net',
+        'address' => 'help@cloudfox.net',
         'name' => 'Cloudfox',
     ],
 
@@ -84,7 +84,7 @@ return [
     |
     */
 
-    'username' => 'noreply@cloudfox.net',
+    'username' => 'help@cloudfox.net',
 
     'password' => '',
 

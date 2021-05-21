@@ -757,7 +757,7 @@ class ProjectsApiController extends Controller
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 'cloudfox',
                 $contact,
                 auth()->user()->name,
