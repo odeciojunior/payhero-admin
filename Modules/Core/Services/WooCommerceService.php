@@ -115,7 +115,7 @@ class WooCommerceService
 
             ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
             
-            //$this->importProduct($projectId, $userId, $_product);
+            
 
             
         }
