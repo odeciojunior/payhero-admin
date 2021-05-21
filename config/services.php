@@ -1,12 +1,5 @@
 <?php
 
-\Ebanx\Config::set([
-    'integrationKey' => 'test_ik_WkYi7P55VR0bk_ZcxtgGTA',
-    'testMode'       => true,
-]);
-
-\Ebanx\Config::setDirectMode(true);
-
 return [
 
     /*
