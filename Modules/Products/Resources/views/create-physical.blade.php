@@ -15,15 +15,15 @@
         </div>
         <div class="page-content container">
             <form id='my-form-add-product'>
-                <div class="panel py-10" data-plugin="matchHeight" style="border-radius: 16px">
+                <div class="panel pt-10 pb-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <h4 class="px-40">1. Informações básicas</h4>
                     <hr class="my-20">
                     <div class="px-40 row justify-content-between align-items-baseline">
-                        <div class="col-12 col-md-4">
+                        <div class="form-group col-12 col-md-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do produto</label>
-                                    <input type="file" id="product_photo" name="product_photo" data-height="650" data-max-width="650">
+                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
@@ -37,7 +37,6 @@
                                 <div class="form-group col-12">
                                     <label for="description">Descrição</label>
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
-                                    <small class="form-text text-muted">Máximo 30 caracteres. </small>
                                 </div>                            
                             </div>
                         </div>                        
@@ -56,7 +55,7 @@
                         <div class="row col-12 col-md-8">
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="height">Altura</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -65,7 +64,7 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="width">Largura</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 135" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -74,7 +73,7 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="length">Comprimento</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="length" type="text" class="form-control" id="length" placeholder="Ex: 150" value="{{--{!! $product->width !!}--}}" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -83,14 +82,14 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="weight">Peso</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">G</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 mt-0">
+                            <div class="form-group col-12 mt-0">
                                 <small class="text-muted">
                                     Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
@@ -104,7 +103,7 @@
                 </div>
 
                 <div class="form-group row float-right pr-15">
-                    <a type="button" class="btn btn-light btn-lg" href="/products">Cancelar</a>
+                    <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Tudo certo!</button>
                 </div>
             </form>

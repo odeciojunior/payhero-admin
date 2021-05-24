@@ -4,14 +4,36 @@ label {
     margin-bottom: 14px;
 }
 
+a, 
+a:hover {
+    text-decoration: none;
+    color: #707070;
+}
+
+.btn-cancelar {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0.900rem 1.286rem;
+    font-size: 1.268rem;
+    line-height: 1.333333333;
+    color: #707070;
+}
+
 .form-group input, 
-.form-group textarea {
+.form-group textarea,
+.input-group-text {
     color: #828282;
     font-size: 16px;
     padding: 16px 14px 16px 16px;
     border-radius: 8px;
     border-color: #7070704D;
     height: auto;
+}
+
+.input-group-text {
+    background-color: #F3F3F3;
+    border-left: 0px;
 }
 
 .dropify-wrapper {
@@ -47,7 +69,6 @@ label {
     background-color: #F8FDFF;
     border-radius: 16px;
 }
-
 
 .input-file {
     position: absolute;

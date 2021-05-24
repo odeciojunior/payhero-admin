@@ -17,6 +17,22 @@ $(document).ready(function () {
             error: function error(response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
+
+                $('#product_photo').dropify({
+                    messages: {
+                        'default': 'Arraste e solte ou clique para adicionar um arquivo',
+                        'replace': 'Arraste e solte ou clique para substituir',
+                    },
+                    error: {
+                        'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
+                        'minWidth': 'A imagem deve ter largura maior que {{ value }}px.',
+                        'maxWidth': 'A imagem deve ter largura menor que {{ value }}px.',
+                        'minHeight': 'A imagem deve ter altura maior que {{ value }}px.',
+                        'maxHeight': 'A imagem deve ter altura menor que {{ value }}px.',
+                        'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
+                    },
+                    imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
+                });
             },
             success: function (response) {
                 if (!isEmpty(response.data.product)) {
@@ -277,7 +293,9 @@ $(document).ready(function () {
     if ($('#digital_product_url')[0] != undefined) {
         $('#digital_product_url')[0].addEventListener("change", function () {
             productName = this.value.split('\\')[2] || '';
-            $('#file_return')[0].innerHTML = productName;
+            $('#file_return')[0].innerHTML = productName.length > 25
+                ? productName.substring(0, 21) + productName.substring(productName.length - 4)
+                : productName;
         });
     }
 });

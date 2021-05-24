@@ -10,21 +10,25 @@
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
-            <h1 class="page-title">Editar produto físico</h1>
+            <h1 class="page-title">
+                <a href="/products">
+                    <span class="o-arrow-right-1 font-size-30 mr-2" aria-hidden="true"></span>Editar produto físico
+                </a>
+            </h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel py-10" style="border-radius: 16px">
+                <div class="panel pt-10 pb-20 mb-20" style="border-radius: 16px">
                     <h4 class="px-40">1. Informações básicas</h4>
                     <hr class="my-20">
                     <div class="px-40 row justify-content-between align-items-baseline">
-                        <div class="col-12 col-md-4">
+                        <div class="form-group col-12 col-md-4">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do produto</label>
-                                    <input type="file" id="product_photo" name="product_photo" data-height="650" data-max-width="650">
+                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
@@ -38,7 +42,6 @@
                                 <div class="form-group col-12">
                                     <label for="description">Descrição</label>
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
-                                    <p class="text-muted mb-0"><small>Máximo 30 caracteres.</small></p>
                                 </div>
                                 <div class="form-group col-12" id="sku" style="display: none">
                                     <label>SKU</label>
@@ -62,7 +65,7 @@
                         <div class="row col-12 col-md-8">
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="height">Altura</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -71,7 +74,7 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="width">Largura</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 135" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -80,7 +83,7 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="length">Comprimento</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="length" type="text" class="form-control" id="length" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CM</span>
@@ -89,14 +92,14 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <label for="weight">Peso</label>
-                                <div class="input-group">
+                                <div class="form-group input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
                                     <div class="input-group-append">
                                         <span class="input-group-text">G</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 mt-0">
+                            <div class="form-group col-12 mt-0">
                                 <small class="text-muted">
                                     Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
@@ -109,27 +112,20 @@
                     </div>
                 </div>
 
-                <div class="form-group row float-right mr-10">
-                    {{-- <div class='col-12'>
-                        <a style='display:none;' class="btn btn-primary delete-product white float-right d-flex align-items-center" productname='' product="" data-toggle="modal" data-target="#modal-delete">
-                            <i class="o-bin-1 align-middle mr-5 white" aria-hidden="true"></i> Excluir produto
-                        </a>
-                    </div> --}}
-                    <a class="btn btn-light btn-lg" href="/products">Cancelar</a>
-                    <button type="button" class="btn btn-danger delete-product btn-lg ml-15" data-toggle="modal" data-target="#modal-delete">Excluir produto</button>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                <div class="form-group w-full mr-10">
+                    <a class="btn-excluir delete-product float-left" data-toggle="modal" data-target="#modal-delete" href="#"><img style="height: 20px; margin-right: 4px; filter: invert(33%) sepia(75%) saturate(7449%) hue-rotate(354deg) brightness(86%) contrast(124%);" src="https://sirius.cloudfox.net/modules/global/img/svg/sirius-lixo.svg">Excluir produto</a>
+                    <button type="submit" class="btn btn-primary btn-lg ml-15 float-right"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    <a class="btn-cancelar float-right" href="/products">Cancelar</a>
                 </div>
             </form>
             <!-- Modal padrão para excluir -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog  modal-dialog-centered  modal-simple">
                     <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete">
-                                <i class="material-icons md-16">close</i>
-                            </a>
-                        </div>
                         <div id="modal_excluir_body" class="modal-body text-center p-20">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <div class=" justify-content-center">
                                 <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                             </div>

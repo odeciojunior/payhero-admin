@@ -79,8 +79,12 @@ $(document).ready(function () {
     $('#url_expiration_time').mask('0#');
 
     /* Upload Digital Product Input */
-    document.getElementById('digital_product_url').addEventListener("change", function () {
-        productName = this.value.split('\\')[2] || '';
-        document.getElementById('file_return').innerHTML = productName;
-    });
+    if ($('#digital_product_url')[0] != undefined) {
+        $('#digital_product_url')[0].addEventListener("change", function () {
+            productName = this.value.split('\\')[2] || '';
+            $('#file_return')[0].innerHTML = productName.length > 25
+                ? productName.substring(0, 21) + productName.substring(productName.length - 4)
+                : productName;
+        });
+    }
 });

@@ -84,6 +84,9 @@
               <div class="modal-content s-border-radius">
                 <div class="modal-header simple-border-bottom px-20">
                   <h4 class="col-12 modal-title text-center" style="color:#787878; font: normal normal bold 20px Muli;">Criar novo produto</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                 <div class="modal-body pt-20">
                     <div class="container-fluid">

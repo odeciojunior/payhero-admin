@@ -233,8 +233,10 @@ class ProductsApiController extends Controller
 
             $categories = $categoryModel->all();
 
-            $productUrl = Str::before($product->photo, '?v=');
-            $product->photo = Http::get($productUrl)->successful() ? $productUrl : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png';
+            if (Str::contains($product->photo, '?v=')) {
+                $productUrl = Str::before($product->photo, '?v=');
+                $product->photo = Http::get($productUrl)->successful() ? $product->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png';
+            }
 
             return EditProductResource::make([
                 'product' => $product,
@@ -280,6 +282,10 @@ class ProductsApiController extends Controller
             $product->update($data);
 
             $productPhoto = $request->file('product_photo');
+
+            // if ($productPhoto == null) {
+            //     $product->update(['photo' => null]);
+            // }
 
             if ($productPhoto != null) {
                 try {

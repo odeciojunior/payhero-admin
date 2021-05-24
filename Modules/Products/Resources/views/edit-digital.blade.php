@@ -10,25 +10,31 @@
     <!-- Page -->
     <div class="page">
         <div style="display: none" class="page-header container">
-            <h1 class="page-title">Editar produto digital</h1>
+            <h1 class="page-title">
+                <a href="/products">
+                    <span class="o-arrow-right-1 font-size-30 mr-2" aria-hidden="true"></span>Editar produto digital
+                </a>
+            </h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel px-40 p-20" style="border-radius: 16px">
+                <div class="panel px-40 p-20 mb-20" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
-                        <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                        <div class="col-12 col-lg-5 col-xl-4 d-flex flex-column align-items-center">
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do produto</label>
-                                    <input type="file" id="product_photo" name="product_photo" data-height="650" data-max-width="650">
+                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
-                            <button class="btn btn-primary btn-lg btn-view-product-url mt-30" style="width: 150px">Visualizar</button>
+                            <div class="my-30">
+                                <button class="btn btn-primary btn-lg btn-view-product-url" style="width: 150px">Visualizar</button>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-8">
+                        <div class="col-12 col-lg-7 col-xl-8">
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="name">Nome do produto</label>
@@ -37,26 +43,25 @@
                                 <div class="form-group col-12">
                                     <label for="description">Descrição</label>
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
-                                    <small class="text-muted"> Máximo 30 caracteres. </small>
                                 </div>
 
-                                <div class="form-group col-12 col-xl-8 input-file-container">  
+                                <div class="form-group col-12 col-md-8 input-file-container">  
                                     <label for="digital_product_url">Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
-                                    <div>
-                                        <label tabindex="0" for="digital_product_url" class="input-file-trigger">Escolher arquivos</label>
-                                        <span id="file_return" class="ml-20"></span>
+                                    <div class="form-group d-flex pt-10">
+                                        <label tabindex="0" for="digital_product_url" class="input-file-trigger mb-0">Escolher arquivos</label>
+                                        <span id="file_return" class="ml-20 pt-10"></span>
 
                                     </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
 
-                                <div class="col-12 col-xl-4 div-expiration-time">
-                                    <label for="url_expiration_time">Tempo de expiração da url</label>
-                                    <div class="input-group">
+                                <div class="col-12 col-md-4 div-expiration-time">
+                                    <label for="url_expiration_time">Expiração do link</label>
+                                    <div class="form-group input-group">
                                         <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" min="0" maxlength="5" data-mask="0#">
                                         <div class="input-group-append">
-                                            <span class="input-group-text">HORA</span>
+                                            <span class="input-group-text">HORA(S)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -65,22 +70,21 @@
                     </div>
                 </div>
 
-                <div class="form-group row float-right mr-10">
-                    <a type="button" class="btn btn-light btn-lg" href="/products">Cancelar</a>
-                    <button type="button" class="btn btn-danger delete-product btn-lg ml-15" data-toggle="modal" data-target="#modal-delete">Excluir produto</button>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                <div class="form-group w-full mr-10">
+                    <a class="btn-excluir delete-product float-left" data-toggle="modal" data-target="#modal-delete" href="#"><img style="height: 20px; margin-right: 4px; filter: invert(33%) sepia(75%) saturate(7449%) hue-rotate(354deg) brightness(86%) contrast(124%);" src="https://sirius.cloudfox.net/modules/global/img/svg/sirius-lixo.svg">Excluir produto</a>
+                    <button type="submit" class="btn btn-primary btn-lg ml-15 float-right"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    <a class="btn-cancelar float-right" href="/products">Cancelar</a>
                 </div>
             </form>
+            
             <!-- Modal padrão para excluir -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog  modal-dialog-centered  modal-simple">
                     <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete">
-                                <i class="material-icons md-16">close</i>
-                            </a>
-                        </div>
                         <div id="modal_excluir_body" class="modal-body text-center p-20">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <div class=" justify-content-center">
                                 <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                             </div>

@@ -4,14 +4,46 @@ label {
     margin-bottom: 14px;
 }
 
+a, 
+a:hover,
+.o-arrow-right-1::before {
+    text-decoration: none;
+    color: #707070;
+}
+
+.o-arrow-right-1::before {
+    transform: rotate(180deg);
+}
+
+.btn-cancelar,
+.btn-excluir {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0.900rem 1.286rem;
+    font-size: 15px;
+    line-height: 1.333333333;
+    color: #707070;
+}
+
+.btn-excluir {
+    color: #F10800;
+}
+
 .form-group input, 
-.form-group textarea {
+.form-group textarea,
+.input-group-text {
     color: #828282;
     font-size: 16px;
     padding: 16px 14px 16px 16px;
     border-radius: 8px;
     border-color: #7070704D;
     height: auto;
+}
+
+.input-group-text {
+    background-color: #F3F3F3;
+    border-left: 0px;
 }
 
 .dropify-wrapper {
