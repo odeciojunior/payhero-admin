@@ -1,6 +1,7 @@
 <?php
+
 namespace Modules\WooCommerce\Http\Controllers;
-use Automattic\WooCommerce\Client;
+
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,6 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
 use Modules\Core\Services\WooCommerceService;
@@ -50,7 +50,7 @@ class WooCommerceApiController extends Controller
             }
             return WooCommerceResource::collection(collect($projects));
         } catch (Exception $e) {
-            // print_r($e);
+            report($e);
             return response()->json(['message' => 'Ocorreu algum erro!'], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -86,7 +86,7 @@ class WooCommerceApiController extends Controller
             }
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
-                ->orWhere('token_user', $dataRequest['token_user'])->first();
+                ->where('token_user', $dataRequest['token_user'])->first();
             if ($woocommerceIntegration) {
                 if ($woocommerceIntegration->status == 1) {
                     return response()->json(['message' => 'Integração em andamento'], 400);
@@ -106,6 +106,7 @@ class WooCommerceApiController extends Controller
                     );
                 }
             } catch (Exception $e) {
+                report($e);
             }
             if (!$woocommerceService->verifyPermissions()) {
                 return response()->json(
@@ -142,6 +143,7 @@ class WooCommerceApiController extends Controller
                     ]
                 );
             } catch (Exception  $e) {
+                report($e);
             }
             if (empty($projectCreated->id)) {
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde!'], 400);
@@ -214,21 +216,29 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
-            try {
-                // $woocommerceService = new WooCommerceService($dataRequest['url_store'] , $dataRequest['token_user'], $dataRequest['token_pass'] );
-                // $woocommerceService->verifyPermissions();
+
+
+
+            try{
+
                 $products = $woocommerceService->fetchProducts();
-                $result = $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
+                
+                $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
+                
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
                     ]
                 );
-            } catch (Exception $e) {
+                
+                
+            }catch(Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
                 $projectCreated->delete();
-                Log::debug($e);
+                
+                report($e);
+                
                 return response()->json(
                     [
                         'message' => 'Problema ao criar integração, tente novamente mais tarde'
@@ -242,6 +252,7 @@ class WooCommerceApiController extends Controller
                 ],
                 200
             );
+
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);

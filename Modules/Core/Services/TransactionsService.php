@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -26,48 +27,46 @@ class TransactionsService
         }
 
         $transactionModel = new Transaction();
+        $getnetService = new GetnetBackOfficeService();
 
         $transactions = $transactionModel->with('sale')
-            ->where(
-                [
-                    ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                    ['status_enum', (new Transaction())->present()->getStatusEnum('paid')],
-                    ['is_waiting_withdrawal', 0],
-                ]
-            )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
+            ->where('is_waiting_withdrawal', 0)
+            ->whereNull('withdrawal_id')
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->where(function ($where) {
                 $where->where('tracking_required', false)
                     ->orWhereHas('sale', function ($query) {
                         $query->where(function ($q) {
                             $q->where('has_valid_tracking', true)
                                 ->orWhereNull('delivery_id');
-                        }
-                    )->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
-                }
-            );
-           });
+                        });
+                    });
+            });
+
 
         $getnetService = new GetnetBackOfficeService();
 
         foreach ($transactions->cursor() as $transaction) {
             try {
 
-                if (empty($transaction->company_id)) {
-                    continue;
-                }
-                $sale = $transaction->sale;
-                $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
+                    if (empty($transaction->company_id)) {
+                        continue;
+                    }
+                    $sale = $transaction->sale;
+                    $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
 
-                if (FoxUtils::isProduction()) {
-                    $subsellerId = $transaction->company->subseller_getnet_id;
-                } else {
-                    $subsellerId = $transaction->company->subseller_getnet_homolog_id;
-                }
+                    if (FoxUtils::isProduction()) {
+                        $subsellerId = $transaction->company->subseller_getnet_id;
+                    } else {
+                        $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                    }
 
-                $getnetService->setStatementSubSellerId($subsellerId)
-                    ->setStatementSaleHashId($saleIdEncoded);
+                    $getnetService->setStatementSubSellerId($subsellerId)
+                        ->setStatementSaleHashId($saleIdEncoded);
 
-                if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID && $sale->payment_method == Sale::PIX_PAYMENT) {
+                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID && $sale->payment_method == Sale::PIX_PAYMENT) {
 
                     $transaction->update(
                         [
@@ -96,7 +95,7 @@ class TransactionsService
             } catch (Exception $e) {
                 report($e);
             }
-        }
+        }});
 
         try {
             settings()->group('withdrawal_request')->set('withdrawal_request', true);
