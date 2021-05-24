@@ -41,6 +41,10 @@ class ShopifyIntegration extends Model
     public const SHOPIFY_BASIC_THEME = 1;
     public const SHOPIFY_AJAX_THEME = 2;
 
+    public const STATUS_PENDING = 1;
+    public const STATUS_APPROVED = 2;
+    public const STATUS_DISABLED = 3;
+
     /**
      * @var string
      */

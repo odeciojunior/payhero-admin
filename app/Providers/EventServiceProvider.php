@@ -20,7 +20,6 @@ use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
-use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Modules\Core\Events\TicketMessageEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -42,7 +41,6 @@ use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
-use Modules\Core\Listeners\ImportShopifyStoreListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
 use Modules\Core\Listeners\NotifySalesExportedListener;
@@ -86,9 +84,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         BilletRefundedEvent::class => [
             BilletRefundedSendEmailListener::class,
-        ],
-        ShopifyIntegrationEvent::class => [
-            ImportShopifyStoreListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
