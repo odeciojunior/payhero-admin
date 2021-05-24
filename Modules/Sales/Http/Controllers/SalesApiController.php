@@ -150,7 +150,7 @@ class SalesApiController extends Controller
 
             $sale = Sale::find($saleIdDecoded);
 
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
+            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST
