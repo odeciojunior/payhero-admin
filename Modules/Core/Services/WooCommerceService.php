@@ -24,7 +24,7 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Selector\Selector;
 use Vinkla\Hashids\Facades\Hashids;
-
+use App\Jobs\ImportWooCommerceProduct;
 
 use Automattic\WooCommerce\Client;
 
@@ -53,7 +53,7 @@ class WooCommerceService
 
     public function test_url()
     {
-        //Log::debug("service: ".$this->url);
+        
         $file = $this->url;
         $file_headers = @get_headers($file);
         if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
@@ -80,7 +80,8 @@ class WooCommerceService
             
             return true;
         }catch(Exception $e){
-            Log::debug($e);
+            report($e);
+
             return false;
         }
     }
@@ -109,19 +110,41 @@ class WooCommerceService
         $createdProdcts = 0;
 
         foreach($products as $_product){
-
+        
             if($_product->status != 'publish') continue;
+
+            ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
+            
+            
+
+            
+        }
+
+        $hashedProjectId = Hashids::encode($projectId);
+
+        $this->createHooks($hashedProjectId);
+
+        return $createdProdcts;
+
+    }
+
+    public function importProduct($projectId, $userId, $_product)
+    {
+        try{
 
             $hashedProjectId = Hashids::encode($projectId);
             
 
             $description = '';
             if(empty($_product->variations)){
+
                 $this->createProduct($projectId, $userId, $_product, $description);
+                
                 $data = [
                     'sku' => $_product->id.'-'.$hashedProjectId.'-'
                 ];
-                $this->woocommerce->put('products/'.$_product->id, $data);
+                $res = $this->woocommerce->put('products/'.$_product->id, $data);
+                
 
             }else{
                 
@@ -145,18 +168,17 @@ class WooCommerceService
                         'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
                     ];
                     
-                    $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+                    $res = $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+                    
 
                     $description = '';
 
                 }
             }
+        }catch(Exception $e){
+            //Log::debug($e);
+            report($e);
         }
-
-        $this->createHooks($hashedProjectId);
-
-        return $createdProdcts;
-
     }
 
     public function createProduct($projectId, $userId, $_product, $description, $variationId = null)
@@ -237,7 +259,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'order.updated',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -245,7 +267,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.updated',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
         $this->woocommerce->post('webhooks', $data);
 
@@ -253,7 +275,7 @@ class WooCommerceService
         $data = [
             'name' => "$projectId",
             'topic' => 'product.created',
-            'delivery_url' => 'https://'.env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
+            'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
         $this->woocommerce->post('webhooks', $data);
     }

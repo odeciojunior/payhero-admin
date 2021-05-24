@@ -917,7 +917,7 @@ $(() => {
         });
     });
 
-    // Sincroniza produtos do shopify
+    // Sincroniza produtos do shopify/
     $("#bt-shopify-sincronization-product").on('click', function (event) {
         event.preventDefault();
 

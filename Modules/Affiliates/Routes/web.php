@@ -13,7 +13,7 @@
 
 Route::group(['middleware' => ['web', 'auth']], function() {
     Route::get('/affiliates/{projectId}', 'AffiliatesController@index')
-         ->name('index');
+        ->name('affiliates.index');
 
     Route::get('/affiliates', 'AffiliatesController@projectAffiliates')
          ->name('projectaffiliates');
