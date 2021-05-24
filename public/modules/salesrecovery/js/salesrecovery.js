@@ -529,7 +529,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img src='" +
+                "<img onerror=this.src='/modules/global/img/produto.png' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +

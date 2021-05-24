@@ -1006,7 +1006,7 @@ $(() => {
             }
             div += `<div class="row align-items-baseline justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-lg-5">
                             <h4 class="table-title mb-0">${value.name}</h4>
