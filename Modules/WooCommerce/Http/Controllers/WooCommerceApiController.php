@@ -72,7 +72,7 @@ class WooCommerceApiController extends Controller
 
             return WooCommerceResource::collection(collect($projects));
         } catch (Exception $e) {
-            // print_r($e);
+            report($e);
             return response()->json(['message' => 'Ocorreu algum erro!'], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -118,7 +118,7 @@ class WooCommerceApiController extends Controller
 
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
-                ->orWhere('token_user', $dataRequest['token_user'])->first();
+                ->where('token_user', $dataRequest['token_user'])->first();
             
             if ($woocommerceIntegration) {
                 
@@ -148,7 +148,7 @@ class WooCommerceApiController extends Controller
                     );
                 }
             } catch (Exception $e) {
-                
+                report($e);
             }
             
             if(!$woocommerceService->verifyPermissions()){
@@ -281,11 +281,10 @@ class WooCommerceApiController extends Controller
 
 
             try{
-                // $woocommerceService = new WooCommerceService($dataRequest['url_store'] , $dataRequest['token_user'], $dataRequest['token_pass'] );
-                // $woocommerceService->verifyPermissions();
+                
                 $products = $woocommerceService->fetchProducts();
                 
-                $result = $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
+                $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
                 
                 $woocommerceIntegrationCreated->update(
                     [
@@ -299,7 +298,7 @@ class WooCommerceApiController extends Controller
                 $shippingCreated->delete();
                 $projectCreated->delete();
                 
-                Log::debug($e);
+                report($e);
                 
                 return response()->json(
                     [
@@ -317,6 +316,7 @@ class WooCommerceApiController extends Controller
                 ],
                 200
             );
+            
         } catch (Exception $e) {
             report($e);
 
