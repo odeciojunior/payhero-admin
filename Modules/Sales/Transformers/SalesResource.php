@@ -29,7 +29,11 @@ class SalesResource extends JsonResource
         $thankPageUrl = '';
         $thankLabelText = 'Link página de obrigado:';        
         if (isset($this->project->domains[0]->name)) {
-            $thankPageUrl = 'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
+            $urlTest = '';
+            if(config('app.env')=='homolog'){
+                $urlTest = '-test';
+            }
+            $thankPageUrl = "https://checkout{$urlTest}.{$this->project->domains[0]->name}/order/" . Hashids::connection('sale_id')->encode($this->id);
         }
         if($this->payment_method==4){
             $thankLabelText = 'Link página de Qrcode:';
