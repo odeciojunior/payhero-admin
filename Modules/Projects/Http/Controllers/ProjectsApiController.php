@@ -74,7 +74,7 @@ class ProjectsApiController extends Controller
                     $projectStatus = [$projectModel->present()->getStatus('active')];
                 }
             }
-            
+
             return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             report($e);
@@ -336,7 +336,7 @@ class ProjectsApiController extends Controller
             // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
 
-            if(isset($requestValidated['finalizing_purchase_config_toogle'])) {
+            if(isset($requestValidated['finalizing_purchase_config_toogle']) && !empty($requestValidated['finalizing_purchase_config_toogle'])) {
 
                 $array = [
                     'toogle' => $requestValidated['finalizing_purchase_config_toogle'],
@@ -352,7 +352,7 @@ class ProjectsApiController extends Controller
 
 
 
-            if(isset($requestValidated['checkout_notification_config_toogle'])) {
+            if(isset($requestValidated['checkout_notification_config_toogle']) && !empty($requestValidated['checkout_notification_config_toogle'])) {
 
                 $messages = [];
 
@@ -559,7 +559,7 @@ class ProjectsApiController extends Controller
             $projectStatus = [
                 $projectModel->present()->getStatus('active'),
             ];
-            
+
             return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             report($e);
