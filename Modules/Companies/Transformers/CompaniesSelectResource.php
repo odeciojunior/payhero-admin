@@ -10,7 +10,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class CompaniesSelectResource extends JsonResource
 {
-    public function toArray($request)
+    public function toArray($request): array
     {
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
@@ -30,7 +30,6 @@ class CompaniesSelectResource extends JsonResource
             'user_personal_document_status' => (new User())->present()->getAddressDocumentStatus(
                 $this->user->personal_document_status
             ),
-//            'is_local' => env('APP_ENV') == 'local'
         ];
     }
 }
