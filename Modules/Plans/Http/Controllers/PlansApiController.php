@@ -555,4 +555,8 @@ class PlansApiController extends Controller
             ], 400);
         }
     }
+
+    public function configCustomProducts(Request $request){
+        //implementar
+    }
 }
