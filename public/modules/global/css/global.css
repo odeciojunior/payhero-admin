@@ -539,7 +539,6 @@ a.label {
 .card {
     font-family: 'Muli', sans-serif;
     border-radius: 16px;
-    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.1);
 }
 
 .table thead > tr > td:first-child, .table thead > tr > th:first-child {
@@ -557,7 +556,7 @@ a.label {
 
 .table thead > tr > td, .table thead > tr > th {
     background-color: #EFF7FF;
-    padding: 20px 0 20px 20px !important;
+    /* padding: 20px 0 20px 20px !important; */
     color: #002654;
 }
 
@@ -705,4 +704,10 @@ a.label {
 
 .s-border-radius {
     border-radius: 16px;
+}
+.table td {
+    padding: 18px !important;
+}
+tbody td{
+    font-size:14px;
 }

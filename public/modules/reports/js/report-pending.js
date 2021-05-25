@@ -198,12 +198,14 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total_sales').text('0');
-                $('#commission_pending, #total').text('R$ 0,00');
+                $('#commission_pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
-                    $('#commission_pending').text(response.commission);
-                    $('#total').text(response.total);
+                    var comission=response.commission.split(/\s/g);
+                    $('#commission_pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+                    var total=response.total.split(/\s/g);
+                    $('#total').html(total[0]+' <span class="font-size-30 bold">'+total[1]+'</span>');
                 }
             }
         });
@@ -240,7 +242,25 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-
+                        let start_date='';
+                        if (value.start_date) {
+                            start_date=value.start_date.split(/\s/g);//data inicial
+                            start_date= "<strong class='bold-mobile'>"+
+                                        start_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        start_date[1]
+                                    +" </small>";
+                        }
+                        
+                        let end_date='';
+                        if (value.end_date) {
+                            end_date=value.end_date.split(/\s/g);//data final
+                            end_date= "<strong class='bold-mobile'>"+
+                                        end_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        end_date[1]
+                                    +" </small>";
+                        }
                         let is_security_reserve = "";
                         if (value.is_security_reserve) {
                             is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
@@ -253,14 +273,14 @@ $(document).ready(function () {
                                         ${value.sale_code}
                                         ${is_security_reserve}
                                     </td>
-                                    <td>${value.project}</td>
-                                    <td>${value.client}</td>
+                                    <td class="text-left font-size-14">${value.project}</td>
+                                    <td class="text-left font-size-14">${value.client}</td>
                                     <td class="display-sm-none display-m-none display-lg-none">
                                         <img src='/modules/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                     </td>
-                                    <td class="display-sm-none display-m-none display-lg-none">${value.start_date}</td>
-                                    <td>${value.end_date}</td>
-                                    <td>${value.total_paid}</td>
+                                    <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
+                                    <td class="text-left font-size-14">${end_date}</td>
+                                    <td><b class="font-md-size-20">${value.total_paid}</b></td>
                                     <td>
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
                                     </td>

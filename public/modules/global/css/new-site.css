@@ -233,10 +233,10 @@ input, select, textarea {
 
 input, .input-pad {
     width: 100%;
-    border: 1px solid #dddddd;
+    border: 1px solid #CECECE;
     background: #fff;
-    border-radius: 6px;
-    padding: 8px 15px;
+    border-radius: 8px;
+    padding: 8px 16px;
     color: #707070;
     font-size: 16px;
     font-family: 'Muli', sans-serif;
@@ -264,6 +264,10 @@ input, .input-pad {
 }
 
 select.form-control {
+    padding: 8px 16px !important;
+    height: auto !important;
+}
+input.form-control {
     height: auto !important;
 }
 
@@ -279,9 +283,9 @@ select, .select-pad {
     width: 100%;
     height: auto;
     background: #fff;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    padding: 8px 15px;
+    border: 1px solid #CECECE;
+    border-radius: 8px;
+    padding: 8px 16px !important;
     color: #707070;
 
 }
@@ -757,7 +761,7 @@ input[type=radio] {
 }
 
 .table td {
-    padding: 15px 12px !important;
+    padding: 15px 18px !important;
 }
 
 .table td, .table th {

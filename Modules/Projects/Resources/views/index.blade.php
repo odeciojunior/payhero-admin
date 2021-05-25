@@ -26,11 +26,12 @@
             <div class="page-header-actions">
             </div>
         </div>
+        @include('projects::empty')
         <div class="page-content container">
             <div id="data-table-projects" class="row" style="margin-top: 30px">
             </div>
         </div>
-        @include('projects::empty')
+        
     </div>
     <!-- Modal add integração -->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config"
