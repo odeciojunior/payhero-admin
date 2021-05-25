@@ -40,7 +40,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control" id="project-affiliate" data-name="projects">
+                                                <select class="form-control select-pad" id="project-affiliate" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
@@ -51,8 +51,8 @@
                                                 <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100">
                                             </div>
                                         </div>                
-                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
-                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full">
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 28px">
+                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full p-10">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
@@ -61,13 +61,13 @@
                                     <table class='table text-left table-striped unify table-affiliate' style='width:100%'>
                                         <thead>
                                             <tr>
-                                                <th>Nome</th>
-                                                {{-- <th>Email</th> --}}
-                                                <th>Projeto</th>
-                                                <th>Data afiliação</th>
-                                                <th class="text-center">Porcentagem</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-center">Opções</th>
+                                                <td class="table-title">Nome</td>
+                                                {{-- <td class="table-title">Email</td> --}}
+                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Data afiliação</td>
+                                                <td class="text-center table-title">Porcentagem</td>
+                                                <td class="text-center table-title">Status</td>
+                                                <td class="text-center table-title">Opções</td>
                                                 {{-- excluir, ativar/inativar --}}
                                             </tr>
                                         </thead>
@@ -93,7 +93,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control" id="project-affiliate-request" data-name="projects">
+                                                <select class="form-control select-pad" id="project-affiliate-request" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
@@ -104,8 +104,8 @@
                                                 <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100">
                                             </div>
                                         </div>                
-                                        <div class="col-lg-2 col-md-6" style="margin-top: 30px">
-                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full">
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 28px">
+                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full p-10">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
@@ -113,12 +113,12 @@
                                     <table class="table table-striped table-affiliate-request">
                                         <thead>
                                             <tr>
-                                                <th>Nome</th>
-                                                <th>Email</th>
-                                                <th>Projeto</th>
-                                                <th>Data</th>
-                                                {{-- <th class="text-center">Status</th> --}}
-                                                <th class="text-center">Opções</th>
+                                                <td class="table-title">Nome</td>
+                                                <td class="table-title">Email</td>
+                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Data</td>
+                                                {{-- <td class="table-title" class="text-center">Status</td> --}}
+                                                <td class="table-title" class="text-center">Opções</td>
                                                 {{-- aceitar, recusar --}}
                                             </tr>
                                         </thead>
@@ -137,8 +137,6 @@
                 </div>
             </div>
         </div>
-        {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
         {{-- MODAL --}}
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">

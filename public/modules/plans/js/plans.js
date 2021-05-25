@@ -412,6 +412,40 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
+                                    $('.products_row_custom').append(`
+                                        <div class='card container '>
+                                            <div id="products_div_edit" class="row">
+                                                <div class="form-group col-sm-9 col-md-9 col-lg-9">
+                                                    <label>Produtos do plano:</label>
+                                                    <input type="text" id="product_${index}" name="product_${index}" value=` + value.product_name + ` readonly>                                                    
+                                                </div>
+                                                <div class="form-group col-sm-3 col-md-3 col-lg-3">
+                                                    <label>Ativar:</label>
+                                                    <div class="switch-holder d-inline" >
+                                                        <label class="switch" >
+                                                            <input type="checkbox" class="project_notification_status" data-id="${value.id}" >
+                                                            <span class="slider round" ></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-4 col-md-4 col-lg-4">
+                                                    <label>Tipo:</label>
+                                                    <select id="type_${index}" name="type" class="form-control">
+                                                        <option value="file">Arquivo</option>
+                                                        <option value="text">Texto</option>
+                                                     </select>
+                                                </div>
+                                                <div class="form-group col-sm-8 col-md-8 col-lg-8">
+                                                    <label>Observação a mostrar:</label>
+                                                    <input value="" id="obs_${index}" class="form-control" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    Nova linha
+                                                </div>
+                                            </div>
+                                            <hr class='mb-30 display-lg-none display-xlg-none'>
+                                        </div>
+                                    `);
                                 });
                                 $.each(response.data.products, function (index, value) {
                                     $('#select_currency_' + index).val(value.currency);
