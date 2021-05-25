@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
@@ -69,7 +70,7 @@ class PixelsApiController extends Controller
 
             if (!empty($validator['affiliate_id'])) {
                 $validator['affiliate_id'] = hashids_decode($validator['affiliate_id']);
-                $affiliateId = hashids_decode($validator['affiliate_id']);
+                $affiliateId = $validator['affiliate_id'];
             } else {
                 $affiliateId = 0;
                 $validator['affiliate_id'] = null;
@@ -78,7 +79,7 @@ class PixelsApiController extends Controller
             $project = Project::find(hashids_decode($projectId));
 
             if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => __('controller.pixel.create.permission')], 403);
+                return response()->json(['message' => __('controller.pixel.permission.create')], 403);
             }
 
             $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($validator['add_pixel_plans']));
@@ -353,6 +354,11 @@ class PixelsApiController extends Controller
 
             $project = $projectModel->find(current(Hashids::decode($projectId)));
             $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+            $pixel->platform_enum = Lang::get('definitions.enum.pixel.platform.' . $pixel->platform);
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
+            }
 
             activity()->on($pixelModel)->tap(
                 function (Activity $activity) use ($id) {
@@ -360,10 +366,6 @@ class PixelsApiController extends Controller
                     $activity->subject_id = current(Hashids::decode($id));
                 }
             )->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
-
-            if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
-            }
 
             $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
 

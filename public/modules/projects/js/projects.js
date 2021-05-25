@@ -703,7 +703,7 @@ $(() => {
             alertCustom('error', 'Selecione as dimensões da imagem de capa');
             return false;
         }
-        
+
         event.preventDefault();
         loadingOnScreen();
 
@@ -714,25 +714,28 @@ $(() => {
 
         let verify = verificaParcelas(parcelas, parcelasJuros);
         let statusUrlAffiliates = 0;
-        
+
         if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
         }
 
         let formData = new FormData(document.getElementById("update-project"));
-        
+
         formData.append('status_url_affiliates', statusUrlAffiliates);
-        
+
         let discountCard = $('#credit_card_discount').val().replace('%', '');
         let discountBillet = $('#billet_discount').val().replace('%', '');
-        
+
         discountBillet = (discountBillet == '') ? 0 : discountBillet;
         discountCard = (discountCard == '') ? 0 : discountCard;
-        
+
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
+
+        formData.set('finalizing_purchase_config_toogle',$('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
+        formData.set('checkout_notification_config_toogle',$('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
 
         if (!verify) {
             $.ajax({
@@ -779,8 +782,8 @@ $(() => {
 
         $("#modal-change-shopify-integration-title").html('Sincronizar template');
         $("#modal-change-shopify-integration-text").html(`
-            Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações 
-            feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja. 
+            Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações
+            feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja.
             Em caso de dúvidas, entre em contato com o suporte pelo chat.
         `);
 
@@ -884,7 +887,7 @@ $(() => {
         });
     });
 
-    // Sincroniza produtos do shopify
+    // Sincroniza produtos do shopify/
     $("#bt-shopify-sincronization-product").on('click', function (event) {
         event.preventDefault();
 
@@ -1166,7 +1169,7 @@ $(() => {
         }
     })
 
-    
+
         $('#slick-tabs').slick({
             infinite: false,
             speed: 300,

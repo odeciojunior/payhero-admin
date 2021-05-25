@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=5') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=1') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
 
