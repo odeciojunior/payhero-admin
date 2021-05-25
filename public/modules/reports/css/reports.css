@@ -47,5 +47,18 @@
     -moz-box-shadow: none;
     box-shadow: none;
 }*/
-
-
+@media only screen and (min-width: 768px){
+    .col-md-3.card {
+        margin-right: 10px;
+        max-width: calc(25% - 10px);
+    }
+}
+@media only screen and (min-width: 576px) and (max-width : 767px){
+    .col-sm-6.card {
+        margin-right: 10px;
+        max-width: calc(50% - 10px);
+    }
+}
+h4.number{
+    color:#57617c;
+}

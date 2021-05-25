@@ -15,6 +15,33 @@
             .badge.badge-success {
                 background-color: #5EE2A1;
             }
+            #content-error{
+                display:none;
+                height: 100%; 
+                width: 100%; 
+                position: absolute;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-align-items: center;
+                align-items: center;
+                -webkit-justify-content: center;
+                justify-content: center;
+            }
+            @media only screen and (min-width: 768px){
+                .col-md-3.card {
+                    margin-right: 10px;
+                    max-width: calc(25% - 10px);
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width : 767px){
+                .col-sm-6.card {
+                    margin-right: 10px;
+                    max-width: calc(50% - 10px);
+                }
+            }
+            strong span{
+                color: #57617c;
+            }
         </style>
     @endpush
     <div class="page">
@@ -25,59 +52,59 @@
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
-            <div class="card shadow p-20 mb-0" id='card-invitation-data' style='display:none;'>
-                <div class="row justify-content-center">
-                    <div style="width: 20%">
-                        <h6 class="text-center orange-gradient">
-                            <i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites
-                            enviados
-                        </h6>
-                        <h4 id='invitations_sent' class="number text-center orange-gradient"></h4>
+
+            <div class='container col-sm-12 d-lg-block' id='card-invitation-data' style='display:none;'>
+                <div class='row'>
+                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        <div class="card-body">
+                            <h5 class="font-size-14 gray-600">Convites enviados</h5>
+                            <h4 id='invitations_sent' class="font-size-30 bold"></h4>
+                        </div>
                     </div>
-                    <div style="width: 20%">
-                        <h6 class="text-center green-gradient">
-                            <i class="material-icons align-middle green-gradient mr-1"> people </i> Convites ativos
-                        </h6>
-                        <h4 id='invitations_accepted' class="number text-center green-gradient"></i>
-                        </h4>
+                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        <div class="card-body">
+                            <h5 class="font-size-14 gray-600">Convites ativos</h5>
+                            <h4 id='invitations_accepted' class="font-size-30 bold"></i>
+                            </h4>
+                        </div>
                     </div>
-                    <div style="width: 20%">
-                        <h6 class="text-center orange-gradient">
-                            <i class="material-icons align-middle orange-gradient"> attach_money </i> Comissão pendente
-                        </h6>
-                        <h4 id='commission_pending' class="number text-center orange-gradient" style='color:green'></i>
-                        </h4>
+                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        <div class="card-body">
+                            <h5 class="font-size-14 gray-600">Comissão pendente</h5>
+                            <h4 id='commission_pending'></h4>
+                        </div>
+                        <div class="s-border-right yellow"></div>
                     </div>
-                    <div style="width: 20%">
-                        <h6 class="text-center green-gradient">
-                            <i class="material-icons align-middle green-gradient"> attach_money </i> Comissão paga </h6>
-                        <h4 id='commission_paid' class="number text-center green-gradient"></i>
-                        </h4>
+                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        <div class="card-body">
+                            <h5 class="font-size-14 gray-600">Comissão paga </h5>
+                            <h4 id='commission_paid'></h4>
+                        </div>
+                        <div class="s-border-right red"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="page-content container" id='page-invites'>
-            <div id="content-error" class='' style='display:none;'>
-                <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/convites.svg" width="156px"/>
-                    <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
-                    <p class="desc gray" style='width:100%'>Envie convites, e
-                        <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
-                </div>
+        <div id="content-error" class='content-error text-center'>
+                <img src="modules/global/img/convites.svg" width="156px"/>
+                <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
+                <p class="desc gray">Envie convites, e
+                    <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
             </div>
+        <div class="page-content container" id='page-invites'>
+            
             <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead class="text-center">
-                        <th class="text-left">Convite</th>
-                        <th class="text-center">Email convidado</th>
-                        <th class="text-center">Empresa Recebedora</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Data cadastro</th>
-                        <th class="text-center">Data expiração</th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
+                            <td class="table-title text-left">Convite</td>
+                            <td class="table-title text-center">Email convidado</td>
+                            <td class="table-title text-center">Empresa Recebedora</td>
+                            <td class="table-title text-center">Status</td>
+                            <td class="table-title text-center">Data cadastro</td>
+                            <td class="table-title text-center">Data expiração</td>
+                            <td class="table-title text-center"></td>
+                            <td class="table-title text-center"></td>
                         </thead>
                         <tbody id='table-body-invites'>
                         {{-- js invites carrega  --}}
