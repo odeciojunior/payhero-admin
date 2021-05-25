@@ -37,7 +37,7 @@ class ImportWooCommerceProduct implements ShouldQueue
     {
         try {
 
-            // Log::debug("Executando na fila");
+            
 
             $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
 
@@ -47,13 +47,13 @@ class ImportWooCommerceProduct implements ShouldQueue
             
             $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
 
-            //Log::debug("Produto importado #".$this->_product->id);
+            
 
             
 
         } catch (Exception $e) {
             
-            Log::debug($e);
+            
 
             report($e);
 
