@@ -208,12 +208,12 @@ $(() => {
                     let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = response.data;
 
                     $('#total-trackings').text(total);
-                    $('#percentual-delivered').text(delivered ? delivered + ' (' + ((delivered * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' + ((dispatched * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-posted').text(posted ? posted + ' (' + ((posted * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' + ((out_for_delivery * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-exception').text(exception ? exception + ' (' + ((exception * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-unknown').text(unknown ? unknown + ' (' + ((unknown * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-delivered').html(delivered ? '<span class="font-size-30 bold">'+delivered + '</span> <span style="color:#959595">(' + ((delivered * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
+                    $('#percentual-dispatched').html(dispatched ? '<span class="font-size-30 bold">'+dispatched + '</span> <span style="color:#959595">(' + ((dispatched * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
+                    $('#percentual-posted').html(posted ? '<span class="font-size-30 bold">'+posted + '</span> <span style="color:#959595">(' + ((posted * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
+                    $('#percentual-out').html(out_for_delivery ? '<span class="font-size-30 bold">'+out_for_delivery + '</span> <span style="color:#959595">(' + ((out_for_delivery * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
+                    $('#percentual-exception').html(exception ? '<span class="font-size-30 bold">'+exception + '</span> <span style="color:#959595">(' + ((exception * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
+                    $('#percentual-unknown').html(unknown ? '<span class="font-size-30 bold">'+unknown + '</span> <span style="color:#959595">(' + ((unknown * 100) / total).toFixed(2) + '%)</span>' : '<span class="font-size-30 bold">0</span> <span style="color:#959595">(0.00%)</span>');
                 }
                 loadOnAny('.number', true);
             }
@@ -327,16 +327,14 @@ $(() => {
                                                 ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
                                             </span>
                                          </td>
-                                         <td class="td-status">
-                                            <div class="d-flex align-items-center">
-                                                <span class="badge badge-${getStatusBadge(tracking.tracking_status_enum)}">${tracking.tracking_status}</span>
-                                                ${getSystemStatus(tracking.system_status_enum)}
-                                                ${
-                                                    tracking.is_chargeback_recovered
-                                                    ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">'
-                                                    : ''
-                                                }
-                                            </div>
+                                         <td class="text-center">
+                                            <span class="badge badge-${getStatusBadge(tracking.tracking_status_enum)}">${tracking.tracking_status}</span>
+                                            ${getSystemStatus(tracking.system_status_enum)}
+                                            ${
+                                                tracking.is_chargeback_recovered
+                                                ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">'
+                                                : ''
+                                            }
                                          </td>
                                          <td>
                                             <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
