@@ -42,7 +42,7 @@ $(function () {
     }
 
     /**
-     * LIST PIXEL
+     * List All Pixel
      */
     function atualizarPixel() {
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -133,7 +133,7 @@ $(function () {
     function renderDetailPixel(pixel) {
         $('#modal-detail-pixel .pixel-description').html(pixel.name);
         $('#modal-detail-pixel .pixel-code').html(pixel.code);
-        $('#modal-detail-pixel .pixel-platform').html(pixel.platform);
+        $('#modal-detail-pixel .pixel-platform').html(pixel.platform_enum);
         $('#modal-detail-pixel .pixel-status').html(pixel.status == 1
             ? '<span class="badge badge-success text-left">Ativo</span>'
             : '<span class="badge badge-danger">Desativado</span>');
@@ -225,11 +225,9 @@ $(function () {
         $("#select-facebook-integration-edit, #div-facebook-token-api-edit, #facebook-token-api-edit, .div-purchase-event-name-edit").hide();
     }
 
-
     /**
      * Edit Facebook Manipulation
      */
-
     function pixelFacebook(pixel) {
         if (pixel.is_api) {
             $("#facebook-token-api-edit").prop('readonly', false).val(pixel.facebook_token);
@@ -377,7 +375,6 @@ $(function () {
             }(function (response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-
             }),
             success: function success() {
                 loadingOnScreenRemove();
