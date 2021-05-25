@@ -57,9 +57,6 @@
                 margin-top: -12px;
             }
 
-            .table thead > tr > td {
-                padding: 15px 12px !important;
-            }
         </style>
     @endpush
 
@@ -82,7 +79,7 @@
 
                             <div class="col-sm-12 col-md">
                                 <label for="transaction">Transação</label>
-                                <input name="transaction" id="transaction" class="select-pad" placeholder="Transação">
+                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
                             </div>
 
                             <div class="col-sm-12 col-md">
@@ -108,9 +105,9 @@
                             <div class="col-sm-12 col-md">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <i style="right: 20px;"
-                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input name='date_range' id="date_range" class="select-pad pr-30"
+                                    <i style="right: 24px;top: 41px;"
+                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-20"></i>
+                                    <input name='date_range' id="date_range" class="input-pad pr-30"
                                            placeholder="Clique para editar..." readonly style="">
                                 </div>
                             </div>
@@ -197,10 +194,10 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body ">
-                                <h5 class="gray font-size-16 ">N° de contestações</h5>
+                                <h5 class="font-size-14 gray-600 ">N° de contestações</h5>
                                 <h4 class="total-number"><span class="font-size-30 bold "
                                                                id="total-contestation"></span><span
-                                        id="total-contestation-tax"></span></h4>
+                                        id="total-contestation-tax" style="color:#959595"></span></h4>
 
                             </div>
                         </div>
@@ -209,10 +206,10 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="gray font-size-16">Resultantes em chargeback</h5>
+                                <h5 class="font-size-14 gray-600">Resultantes em chargeback</h5>
                                 <h4 class="total-number"><span class="font-size-30 bold "
                                                                id="total-chargeback-tax-val"></span>
-                                    <span id="total-chargeback-tax"></span></h4>
+                                    <span id="total-chargeback-tax" style="color:#959595"></span></h4>
 
                             </div>
                         </div>
@@ -221,8 +218,8 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="gray font-size-16">Total em R$</h5>
-                                <h4 class="total-number" style="">R$ <span class="font-size-30 bold"
+                                <h5 class="font-size-14 gray-600">Total em R$</h5>
+                                <h4 class="total-number" style=""><span style="color:#959595">R$ </span><span class="font-size-30 bold"
                                                                            id="total-contestation-value"></span></h4>
                             </div>
                             <div class="s-border-right yellow"></div>
@@ -232,7 +229,7 @@
                     <div class="col-md-3">
                         <div style="display:block;">
                             <div>
-                                <h5 class="gray font-size-16"> O que são contestações? </h5>
+                                <h5 class="font-size-14 gray-600"> O que são contestações? </h5>
                                 <p>
                                     São ocorrências enviadas pelas operadoras de crédito
                                     após contestações do titular do cartão.

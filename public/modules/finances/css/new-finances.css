@@ -266,11 +266,6 @@ strong span {
     transition: all 0.3s;
 }
 
-.col-sm-3.card {
-    margin-right: 10px;
-    max-width: calc(25% - 10px);
-}
-
 .input-custom-transfer {
     background-color: #FFF;
     border-radius: 12px;
@@ -619,4 +614,16 @@ select, .select-pad {
 
 #withdrawalsTable tr:last-of-type td:last-child {
     border-bottom-right-radius: 16px !important;
+}
+@media only screen and (min-width: 768px){
+    .col-md-3.card {
+        margin-right: 10px;
+        max-width: calc(25% - 10px);
+    }
+}
+@media only screen and (min-width: 576px) and (max-width : 767px){
+    .col-sm-6.card {
+        margin-right: 10px;
+        max-width: calc(50% - 10px);
+    }
 }

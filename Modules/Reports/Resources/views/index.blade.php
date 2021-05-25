@@ -36,8 +36,61 @@
                         </div>
                     </div>
                 </div>
+                <div class='container col-sm-12 mt-20 d-lg-block'>
+                    <div class='row'>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Receita gerada </h6>
+                                <h4 id='revenue-generated'>0</h4>
+                            </div>
+                            <div class="s-border-right yellow"></div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Aprovadas </h6>
+                                <h4 id='qtd-aproved' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Pendentes </h6>
+                                <h4 id='qtd-pending' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Canceladas </h6>
+                                <h4 id='qtd-canceled' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Recusadas </h6>
+                                <h4 id='qtd-recusadas' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Reembolsos </h6>
+                                <h4 id='qtd-reembolso' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Chargeback </h6>
+                                <h4 id='qtd-chargeback' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h6 class="font-size-14 gray-600"> Em disputa </h6>
+                                <h4 id='qtd-dispute' class=" font-size-30 bold">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row justify-content-between mt-20">
-                    <div class="col-lg-12">
+                    {{-- <div class="col-lg-12">
                         <div class="card shadow">
                             <div class="wrap">
                                 <div class="row justify-content-between gutter_top">
@@ -89,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart"
                          id="ecommerceChartView">
                         <div class="card card-shadow">
