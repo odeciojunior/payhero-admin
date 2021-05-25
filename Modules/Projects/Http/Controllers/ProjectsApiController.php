@@ -349,8 +349,7 @@ class ProjectsApiController extends Controller
 
             // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
-
-            if (isset($requestValidated['finalizing_purchase_config_toogle'])) {
+            if (isset($requestValidated['finalizing_purchase_config_toogle']) && !empty($requestValidated['finalizing_purchase_config_toogle'])) {
                 $array = [
                     'toogle' => $requestValidated['finalizing_purchase_config_toogle'],
                     'text' => $requestValidated['finalizing_purchase_config_text'],
@@ -363,10 +362,10 @@ class ProjectsApiController extends Controller
             }
 
 
-            if (isset($requestValidated['checkout_notification_config_toogle'])) {
+            if (isset($requestValidated['checkout_notification_config_toogle']) && !empty($requestValidated['checkout_notification_config_toogle'])) {
                 $messages = [];
 
-                if ($requestValidated['checkout_notification_config_messages']) {
+                if (isset($requestValidated['checkout_notification_config_messages']) && !empty($requestValidated['checkout_notification_config_messages'])) {
                     foreach ($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
                         $messages[$config_message_key] = config(
                                 'arrays.checkout_notification_config_messages'

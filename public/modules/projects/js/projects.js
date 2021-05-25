@@ -767,6 +767,9 @@ $(() => {
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
 
+        formData.set('finalizing_purchase_config_toogle',$('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
+        formData.set('checkout_notification_config_toogle',$('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
+
         if (!verify) {
             $.ajax({
                 method: "POST",
