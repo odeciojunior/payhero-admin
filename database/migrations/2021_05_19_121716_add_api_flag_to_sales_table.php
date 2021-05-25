@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCompanyIdToSalesTable extends Migration
+class AddApiFlagToSalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,9 @@ class AddCompanyIdToSalesTable extends Migration
     public function up()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->unsignedInteger('company_id')
-                ->after('owner_id')
-                ->nullable();
-
-            $table->foreign('company_id')
-                ->references('id')
-                ->on('companies')
-                ->onDelete('restrict');
+            $table->boolean('api_flag')
+                ->after('gateway_id')
+                ->default(false);
         });
     }
 
@@ -33,8 +28,7 @@ class AddCompanyIdToSalesTable extends Migration
     public function down()
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->dropForeign(['company_id']);
-            $table->dropColumn('company_id');
+            $table->dropColumn('api_flag');
         });
     }
 }
