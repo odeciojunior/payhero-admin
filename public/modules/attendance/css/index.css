@@ -1,12 +1,12 @@
 
 .btn-light-1, .btn-primary-1, .btn-success-1 {
-    box-shadow: 0 1px 15px #00000017;
     border-radius: 12px;
     padding: 15px;
     font-size: 14px;
 }
 
 .btn-light-1 {
+    border: 1px solid #dddddd;
     background-color: #FFF;
     color: #707070
 }
@@ -30,4 +30,19 @@
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
+}
+@media only screen and (min-width: 768px){
+    .col-md-3.card {
+        margin-right: 10px;
+        max-width: calc(25% - 10px);
+    }
+}
+@media only screen and (min-width: 576px) and (max-width : 767px){
+    .col-sm-6.card {
+        margin-right: 10px;
+        max-width: calc(50% - 10px);
+    }
+}
+h4.number{
+    color:#57617c;
 }

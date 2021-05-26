@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=s0') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=11') }}">
     <style>
         .popover {
             left: -50px !important;

@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=03') }}">
 @endpush
 
 @section('content')
@@ -28,7 +28,7 @@
                         <div class="col-lg-3 col-md-6">
                             <div class="form-group">
                                 <label for="type-products">Tipo</label>
-                                <select class="form-control" id='type-products'>
+                                <select class="form-control select-pad" id='type-products'>
                                     <option value="0">Meus Produtos</option>
                                     <option value="1">Produtos Shopify</option>
                                 </select>
@@ -37,7 +37,7 @@
                         <div class="col-lg-3 col-md-6" id='is-projects'>
                             <div class="form-group">
                                 <label id="select-projects-label" class="disabled" for="select-projects">Projeto</label>
-                                <select id='select-projects' class="form-control disabled" disabled>
+                                <select id='select-projects' class="form-control select-pad disabled" disabled>
                                     <option>Carregando...</option>
                                 </select>
                             </div>
@@ -49,8 +49,8 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-6" style="margin-top: 30px">
-                            <button id="btn-filtro" class="btn btn-primary w-full">
+                        <div class="col-lg-3 col-md-6" style="margin-top: 29px">
+                            <button id="btn-filtro" class="btn btn-primary w-full p-10">
                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                             </button>
                         </div>
@@ -65,7 +65,7 @@
                 </div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
-                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
                         <img src="{!! asset('modules/global/img/produtos.svg') !!}" width="156px">

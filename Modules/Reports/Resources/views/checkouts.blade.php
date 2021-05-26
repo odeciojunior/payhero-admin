@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     @endpush
 
     <div class="page">
@@ -44,14 +44,38 @@
                 <div class="tab-content gutter_top mt-15 gutter_bottom mb-30" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-vendas" role="tabpanel">
                         <div class="row justify-content-between">
-                            <div class="col-lg-12">
+                            <div class='container col-sm-12 mt-20 d-lg-block'>
+                                <div class='row' style="margin-left: 0;">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Total </h6>
+                                            <h4 id='qtd-total-checkouts' class="font-size-30 bold"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Abandonos </h6>
+                                            <h4 id='qtd-abandoned'></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Recuperados </h6>
+                                            <h4 id='qtd-recovered'></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Venda Finalizada </h6>
+                                            <h4 id='qtd-finalized'></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-lg-12">
                                 <div class="card shadow">
                                     <div class="wrap">
                                         <div class="row justify-content-between gutter_top">
-                                            {{-- <div class="col">
-                                                <h6 class="label-price relatorios"> Acessados </h6>
-                                                <h4 id='qtd-acessed' class="number blue-800">0</h4>
-                                            </div> --}}
                                             <div class="col">
                                                 <h6 class="label-price relatorios"> Total </h6>
                                                 <h4 id='qtd-total-checkouts' class="number blue-800">0<i class="fas fa-check"></i>
@@ -75,7 +99,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart" id="ecommerceChartView">
                                 <div class="card card-shadow">
                                     <div class="card-header card-header-transparent py-20">

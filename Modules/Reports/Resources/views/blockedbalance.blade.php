@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -31,6 +31,21 @@
             }
             .select2-container--open .select2-selection__arrow b {
                 border-color: transparent transparent #8f9ca2 transparent !important;
+            }
+            @media only screen and (min-width: 768px){
+                .col-md-4.card {
+                    margin-right: 10px;
+                    max-width: calc(33.33% - 10px);
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width : 767px){
+                .col-sm-6.card {
+                    margin-right: 10px;
+                    max-width: calc(50% - 10px);
+                }
+            }
+            strong span{
+                color: #57617c;
             }
         </style>
     @endpush
@@ -104,7 +119,7 @@
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group form-icons">
                                         <label for="date_range">&nbsp;</label>
-                                        <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                        <i style="right: 27px;top: 42px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-19"></i>
                                         <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly >
                                     </div>
                                 </div>
@@ -133,7 +148,31 @@
 
                 <!-- Resumo -->
                 <div class="fixhalf"></div>
-                <div class="card shadow p-20" style='display:block;'>
+                <div class='container col-sm-12 d-lg-block'>
+                    <div class='row'>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Quantidade de vendas</h5>
+                                <h4 id="total_sales" class="font-size-30 bold"></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Saldo bloqueado</h5>
+                                <h4 id="commission_blocked"></h4>
+                            </div>
+                            <div class="s-border-right yellow"></div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Valor Total </h5>
+                                <h4 id="total"></h4>
+                            </div>
+                            <div class="s-border-right red"></div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="card shadow p-20" style='display:block;'>
                     <div class="row justify-content-center">
                         <div class="col-md-4">
                             <h6 class="text-center green-gradient">
@@ -154,7 +193,7 @@
                             </h4>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Tabela -->
                 <div class="fixhalf"></div>
@@ -164,16 +203,16 @@
                             <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                                 <thead>
                                 <tr>
-                                    <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
-                                    <th class="table-title">Projeto</th>
-                                    <th class="table-title">Descrição</th>
-                                    <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
-                                    <th class="table-title">Forma</th>
-                                    <th class="table-title">Status</th>
-                                    <th class="table-title display-sm-none display-m-none">Data</th>
-                                    <th class="table-title display-sm-none">Pagamento</th>
-                                    <th class="table-title">Comissão</th>
-                                    <th class="table-title">Motivo bloqueio</th>
+                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
+                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Descrição</td>
+                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
+                                    <td class="table-title">Forma</td>
+                                    <td class="table-title text-center">Status</td>
+                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none">Pagamento</td>
+                                    <td class="table-title">Comissão</td>
+                                    <td class="table-title">Motivo bloqueio</td>
                                 </tr>
                                 </thead>
                                 <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
