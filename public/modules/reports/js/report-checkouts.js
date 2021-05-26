@@ -74,10 +74,9 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                // $("#qtd-acessed").html( response.contAcessed + ' ('+ response.percentAcessed +')');
-                $("#qtd-abandoned").html(response.contAbandoned + ' ('+ response.percentAbandoned +')');
-                $("#qtd-recovered").html(response.contRecovered + ' (' + response.percentRecovered +')');
-                $("#qtd-finalized").html(response.contFinalized + ' (' + response.percentFinalized + ')');
+                $("#qtd-abandoned").html('<span class="font-size-30 bold">'+response.contAbandoned + '</span> <span style="color:#959595">(' + response.percentAbandoned +')</span>');
+                $("#qtd-recovered").html('<span class="font-size-30 bold">'+response.contRecovered + '</span> <span style="color:#959595">(' + response.percentRecovered +')</span>');
+                $("#qtd-finalized").html('<span class="font-size-30 bold">'+response.contFinalized + '</span> <span style="color:#959595">(' + response.percentFinalized +')</span>');
                 $("#qtd-total-checkouts").html(response.contCheckouts);
                 $("#percent-desktop").html(response.conversaoDesktop + '%');
                 $("#percent-mobile").html(response.conversaoMobile + '%');

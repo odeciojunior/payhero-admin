@@ -24,6 +24,7 @@ $(() => {
                     $("#btn-config").css({ visibility: "visible" });
                 }
                 if (response.data.length) {
+                    $("#project-empty").hide();
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
                             linkProject = "";
@@ -112,7 +113,7 @@ $(() => {
                     );
                 } else {
                     $("#data-table-projects").hide();
-                    $(".content-error").show();
+                    $("#project-empty").show();
                     $("#btn-config").css({ visibility: "hidden" });
                 }
 
