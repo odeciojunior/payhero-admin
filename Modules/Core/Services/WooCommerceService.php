@@ -206,8 +206,7 @@ class WooCommerceService
                 'guarantee' => '0',
                 'format' => 1,
                 'category_id' => '11',
-                //'cost' => 1,
-                //'shopify' => true,
+                
                 'price' => $_product->price,
                 'shopify_id' => $variationId,
                 'shopify_variant_id' => $shopifyVariantId,
@@ -240,13 +239,15 @@ class WooCommerceService
 
         $productPlanModel->create($dataProductPlan);
         
-        //$createdProdcts++;
-        if(gettype($_product->images[0])=='array'){
-            $src = $_product->images[0]['src'];
-        }else{
-            $src = $_product->images[0]->src;
+        if(!empty($_product->images)){
+
+            if(gettype($_product->images[0])=='array'){
+                $src = $_product->images[0]['src'];
+            }else{
+                $src = $_product->images[0]->src;
+            }
+            $product->update(['photo' => $src]);
         }
-        $product->update(['photo' => $src]);
 
         
 
@@ -290,7 +291,6 @@ class WooCommerceService
             
             if($webhook->name == ''.$hashedProjectId){
                 
-                //$this->woocommerce->delete('webhooks/'.$webhook->id.'?force=true');
                 $ids[] = $webhook->id;
             }
         }
