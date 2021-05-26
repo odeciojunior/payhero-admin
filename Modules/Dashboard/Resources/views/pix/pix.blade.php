@@ -14,7 +14,7 @@
                     <div id="header-pix-onboarding-1" class="modal-header flex-wrap">
                         <div class="w-p100 d-flex flex-column justify-content-center align-items-center pb-40">
                             <img id="icon" class="mb-50" src="{{ asset('modules/global/img/pix/sirius-icon.svg') }}" width="35">
-                            <img id="icon" src="{{ asset('modules/global/img/pix/presentation.png') }}" width="400">
+                            <img class="img-fluid" src="{{ asset('modules/global/img/pix/presentation.png') }}" width="400">
                         </div>
                     </div>
                     <div class="modal-body text-center">

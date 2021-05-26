@@ -21,8 +21,6 @@ Route::group(
         Route::get('/dashboard/get-account-chargeback', 'DashboardApiController@getAccountChargeback');
         Route::get('/dashboard/get-account-attendance', 'DashboardApiController@getAccountAttendance');
         Route::get('/dashboard/get-account-tracking', 'DashboardApiController@getAccountTracking');
-        Route::get('/dashboard/verify-onboarding', 'DashboardApiController@verifyOnboarding');
-        Route::put('/dashboard/update-onboarding/{onboarding}', 'DashboardApiController@updateOnboarding');
         Route::get('/dashboard/verify-achievements', 'DashboardApiController@getAchievements');
         Route::put('/dashboard/update-achievements/{achievement}', 'DashboardApiController@updateAchievements');
         Route::get('/dashboard/verify-pix-onboarding', 'DashboardApiController@verifyPixOnboarding');

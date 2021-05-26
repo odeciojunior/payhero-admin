@@ -14,7 +14,7 @@
         <div class="col-12 col-lg-7 order-lg-1 h-p100">
             <div id="title-onboarding-2" class="text-lg-left text-center text-primary">O QUE VOCÊ PRECISA FAZER?</div>
             <div id="sub-title-onboarding-2" class="text-center text-lg-left">
-                Para começar a vender com PIX, registre sua chave
+                Para começar a vender com PIX, ative sua chave
             </div>
 
             <div class="row">
@@ -24,7 +24,7 @@
                         checkout.
                     </p>
                     <p>
-                        Antes de começar a vender por esse meio, <b>você precisa cadastrar sua chave PIX no Accounts</b>.
+                        Antes de começar a vender por esse meio, <b>você precisa ativar sua chave PIX no Accounts</b>.
                     </p>
                 </div>
 
