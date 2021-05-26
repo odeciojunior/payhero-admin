@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
     {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}"> --}}
-     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
