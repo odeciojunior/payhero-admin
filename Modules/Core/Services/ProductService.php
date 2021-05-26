@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use App\Services\Core\FoxUtils;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
