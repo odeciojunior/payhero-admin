@@ -26,10 +26,15 @@ class PostBackWooCommerceController extends Controller
 {   
     public function postBackProductCreate(Request $request)
     {
+        if(empty($request->project_id)) return;
+
         $projectId = current(Hashids::decode($request->project_id));
         $wooCommerceIntegration = WooCommerceIntegration::where('project_id',$projectId)->first();
         
         $product = (object)$request;
+        
+        if(empty($wooCommerceIntegration)) return;
+        if(empty($product->name)) return;
 
         $description = '';
         if(!empty($product['attributes'])){
@@ -84,14 +89,17 @@ class PostBackWooCommerceController extends Controller
     public function postBackProductUpdate(Request $request)
     {
         
-
         if(empty($request['variations'])){
-            $newValues = [
-                'name'=>$request['name'],
-                'price'=>$request['price'],
-                'photo'=>$request['images'][0]['src']
+            if(!empty($request['name']))
+                $newValues['name'] = $request['name'];
 
-            ];
+            if(!empty($request['price']))
+                $newValues['price'] = $request['price'];
+
+            if(!empty($request['images'][0]['src']))
+                $newValues['photo'] = $request['images'][0]['src'];
+
+            
             Product::where('shopify_variant_id', $request['sku'])
             ->update($newValues);
             

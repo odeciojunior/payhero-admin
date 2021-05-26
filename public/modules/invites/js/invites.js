@@ -43,7 +43,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    $("#content-error").css('display', 'block');
+                    $("#content-error").show();
                 } else {
                     $("#content-error").hide();
                     $("#card-table-invite").css('display', 'block');
@@ -309,8 +309,10 @@ $(document).ready(function () {
             success: (response) => {
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
-                $("#commission_paid").html('' + response.data.commission_paid + '');
-                $("#commission_pending").html('' + response.data.commission_pending + '');
+                var commission_paid=response.data.commission_paid.split(/\s/g);
+                $("#commission_paid").html(commission_paid[0]+' <strong class="font-size-30">'+commission_paid[1]+'</strong>');
+                var commission_pending=response.data.commission_pending.split(/\s/g);
+                $("#commission_pending").html(commission_pending[0]+' <strong class="font-size-30">'+commission_pending[1]+'</strong>');
                 $("#invitations_amount").html('' + response.data.invitations_available);
                 if(verifyAccountFrozen()) {
                     $('#store-invite').attr('disabled', true);

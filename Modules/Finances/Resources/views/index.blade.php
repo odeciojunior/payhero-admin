@@ -177,40 +177,40 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class='container col-sm-12 mt-20 d-none d-lg-block'>
+                            <div class='container col-sm-12 mt-20 d-lg-block'>
                                 <div class='row'>
-                                    <div class="col-sm-3 card">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                <h4 class="price saldoPendente"></h4>
+                                                <h5 class="font-size-14 gray-600"> Saldo Pendente </h5>
+                                                <h4 class="saldoPendente"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right yellow"></div>
                                     </div>
-                                    <div class="col-sm-3 card">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                <h4 class="price saldoBloqueado"></h4>
+                                                <h5 class="font-size-14 gray-600"> Saldo Bloqueado </h5>
+                                                <h4 class="saldoBloqueado"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right red"></div>
                                     </div>
-                                    <div class="col-sm-3 card">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                <h4 class="price saltoTotal"></h4>
+                                                <h5 class="font-size-14 gray-600"> Saldo Total </h5>
+                                                <h4 class="saltoTotal"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right blue"></div>
                                     </div>
-                                    <div class="col-sm-3 card">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                <h4 class="price saldoDebito" id="debit-value">
+                                                <h5 class="font-size-14 gray-600"> Débitos pendentes </h5>
+                                                <h4 class="saldoDebito" id="debit-value">
                                                     <span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span>
                                                     <a href="javascript:;" id="go-to-pending-debt" class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">0,00</a>
                                                 </h4>
@@ -220,53 +220,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content card shadow hidden-lg-up" id="nav-tabContent">
-                                <div class='container col-sm-12 mt-20  d-lg-none'>
-                                    <div class='row'>
-                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                    <h4 class="price saldoPendente"></h4>
-                                                </div>
-                                                <div class="s-border-right yellow"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                    <h4 class="price saldoBloqueado"></h4>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                    <h4 class="price saltoTotal"></h4>
-                                                </div>
-                                                <div class="s-border-right blue"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                    <h4 class="price saldoDebito" id="debit-value">
-                                                    </h4>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
                                 Histórico de transferências
                             </h4>
-                            <div class="card shadow" style="min-height: 300px">
+                            <div style="min-height: 300px">
 
                                 <!-- Transferências -->
                                 <div class="tab-pane active"
@@ -277,16 +234,16 @@
                                            class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
-                                            <th scope="col">Código Saque</th>
-                                            <th scope="col">Conta</th>
-                                            <th scope="col">Solicitação</th>
-                                            <th scope="col">Liberação</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Valor</th>
-                                            <th style="display: none" id="col_transferred_value" scope="col">Valor
+                                            <td class="table-title" scope="col">Código Saque</td>
+                                            <td class="table-title" scope="col">Conta</td>
+                                            <td class="table-title" scope="col">Solicitação</td>
+                                            <td class="table-title" scope="col">Liberação</td>
+                                            <td class="table-title text-center" scope="col">Status</td>
+                                            <td class="table-title" scope="col">Valor</td>
+                                            <td class="table-title" style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
-                                            </th>
-                                            <th scope="col" class="d-none d-md-block"> &nbsp;</th>
+                                            </td>
+                                            <td scope="col" class="d-none d-md-block table-title"> &nbsp;</td>
                                         </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
@@ -485,16 +442,16 @@
                                    style="margin-bottom: 3.143rem !important;">
                                 <thead>
                                 <tr>
-                                    <th scope="col" class="headCenter">Razão</th>
-                                    <th scope="col" class="headCenter">Data prevista
+                                    <td scope="col" class="headCenter table-title">Razão</td>
+                                    <td scope="col" class="headCenter table-title">Data prevista
                                         <i style="font-weight: normal"
                                            class="o-question-help-1 ml-5 font-size-14"
                                            data-toggle="tooltip"
                                            title=""
                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                    </th>
-                                    <th scope="col" class="headCenter">Status</th>
-                                    <th scope="col" class="headCenter">Valor</th>
+                                    </td>
+                                    <td scope="col" class="headCenter table-title text-center">Status</td>
+                                    <td scope="col" class="headCenter table-title">Valor</td>
                                 </tr>
                                 </thead>
                                 <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}" class="custom-t-body table-statement-body-class">
