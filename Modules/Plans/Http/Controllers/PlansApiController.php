@@ -3,6 +3,8 @@
 namespace Modules\Plans\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -556,7 +558,87 @@ class PlansApiController extends Controller
         }
     }
 
-    public function configCustomProducts(Request $request){
-        //implementar
+    public function saveConfigCustomProducts(Request $request){
+        
+        $rules = [
+            'plan'=>'required',
+            'products'=>'required'            
+        ];
+        $messages = [
+            'plan.required'=>'Informe o plano',
+            'products.required'=>'Informe o produto(s)',            
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$messages);
+
+        if($validator->fails()){
+            return response()->json($validator, 400);
+        }
+
+        $planId = $request->plan;//current(Hashids::decode($request->plan));
+        $plan = Plan::find($planId);
+        $productId = $request->product;//current(Hashids::decode($request->product));
+
+        $details = [];
+        foreach($request->products as $product){            
+            $product['product_id'] = $product['product'];//current(Hashids::decode($product['product']));
+            unset($product['product']);
+            $details[] = $product;
+        }
+
+        $plan->config_personalization_product = $details;
+        $plan->update();
+
+        // if(!empty($request->update_all) && $request->update_all === true){
+        //     $this->updateAllConfigCustomProduct($plan->project_id,$details);
+        // }
+
+        return response()->json([
+            'message' => 'Configurações atualizadas com sucesso',
+        ], 200);
+    }
+
+    public function inactiveCustomProduct(Request $request){
+        $rules = [
+            'plan'=>'required',
+            'product'=>'required'            
+        ];
+        $messages = [
+            'plan.required'=>'Informe o plano',
+            'product.required'=>'Informe o produto'
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$messages);
+
+        if($validator->fails()){
+            return response()->json($validator, 400);
+        }
+        
+        $planId = $request->plan;//current(Hashids::decode($request->plan));
+        $plan = Plan::find($planId);
+        $productId = $request->product;//current(Hashids::decode($request->product));
+        
+        $plan->config_personalization_product = null;
+        $plan->update();
+
+        return response()->json([
+            'message' => 'Configurações atualizadas com sucesso',
+        ], 200);
+    } 
+
+    public function updateAllConfigCustomProduct($projectId,$details){
+        
+        $productIds = \Illuminate\Support\Arr::pluck($details,['product_id']);
+
+        $productPlans = ProductPlan::whereHas('plans',function(Builder $query) use ($projectId) {
+            $query->where('project_id',$projectId);
+        })->whereIn('product_id',$productIds)->get()->pluck('plan_id');
+
+        $plans = Plan::whereIn('id', $productPlans)->get();
+
+        foreach ($plans as $plan) {
+            $plan->update(['config_personalization_product' =>$details]);
+        }
+
     }
 }

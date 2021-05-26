@@ -20,7 +20,7 @@ Route::group(
           Route::post('/plans/update-config-cost', 'PlansApiController@updateConfigCost')
           ->middleware('role:account_owner|admin|attendance');
           
-          Route::post('/plans/config-custom-product', 'PlansApiController@configCustomProducts')
+          Route::post('/plans/config-custom-product', 'PlansApiController@saveConfigCustomProducts')
           ->middleware('role:account_owner|admin|attendance');
 
     }

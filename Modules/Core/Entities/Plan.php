@@ -65,9 +65,14 @@ class Plan extends Model
         'status',
         'shopify_id',
         'shopify_variant_id',
+        'config_personalization_product',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'config_personalization_product'=>'array'
     ];
     /**
      * @var bool
