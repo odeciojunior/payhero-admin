@@ -4,12 +4,14 @@ namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
@@ -374,6 +376,82 @@ class PixelsApiController extends Controller
             report($e);
 
             return response()->json('Erro ao buscar pixel', 400);
+        }
+    }
+
+    public function getPixelConfigs($projectId): JsonResponse
+    {
+        try {
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project->pixelConfigs)) {
+                PixelConfig::create(['project_id' => $project->id]);
+            };
+
+            $project->load('pixelConfigs');
+            return response()->json(
+                [
+                    'data' => $project->pixelConfigs->makeHidden(
+                        ['id', 'project_id', 'created_at', 'updated_at', 'deleted_at']
+                    ),
+                    'message' => '',
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'message' => 'Ocorreu um erro tente novamente mais tarde!',
+                    'success' => false,
+                ],
+                400
+            );
+        }
+    }
+
+    public function storePixelConfigs(Request $request, $projectId): JsonResponse
+    {
+        try {
+            $data = $request->all();
+
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project) || empty($project->pixelConfigs)) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                    ]
+                );
+            }
+
+            $project->pixelConfigs->update(
+                [
+                    'url_webhook_events_facebook' => $data['webhook-facebook-pixel'],
+                    'metatags_facebook' => $data['metatag-verification-facebook'],
+                ]
+            );
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'success' => true,
+                    'message' => 'Configuração de Pixels atualizada com sucesso'
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                ],
+                400
+            );
         }
     }
 

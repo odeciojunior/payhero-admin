@@ -623,4 +623,46 @@ $(function () {
             planSelect.val('all').trigger("change");
         }
     });
+
+    $(".btn-config-pixel").on('click', function () {
+        $.ajax({
+            method: "GET",
+            url: "/api/projects/" + projectId + "/pixels/configs",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                $("#webhook-facebook-pixel").val(response.data.url_webhook_events_facebook);
+                $("#metatag-verification-facebook").val(response.data.metatags_facebook);
+
+                $("#modal-config-pixel").modal("show");
+            }
+        });
+    });
+
+    $(".btn-save-config-pixel").on('click', function () {
+        $.ajax({
+            method: "POST",
+            url: "/api/projects/" + projectId + "/pixels/saveconfigs",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'webhook-facebook-pixel': $("#webhook-facebook-pixel").val(),
+                'metatag-verification-facebook': $("#metatag-verification-facebook").val(),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                alertCustom("success", response.message);
+            }
+        });
+    });
 });

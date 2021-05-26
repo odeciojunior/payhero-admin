@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
@@ -140,6 +141,8 @@ class ProjectsApiController extends Controller
             if (empty($project)) {
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
+
+            PixelConfig::create(['project_id' => $project->id]);
 
             $shipping = $shippingModel->create(
                 [

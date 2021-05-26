@@ -30,20 +30,24 @@
 </style>
 
 <div class='row no-gutters mb-10'>
-    <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline"
-           data-toggle="modal" data-target="#modal-info-pixel" style="border-color: #76838f;">
-            <span class="o-info-1" style="font-size: 24px;"></span>
-        </a>
-        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-info-pixel"
-              style='margin-left:5px'>Como configurar os eventos pixel?</span>
-    </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
-            <div class="d-flex align-items-center justify-content-end pointer">
-                <span class="link-button-dependent red"> Adicionar Pixel </span>
-                <a id="add-pixel"  data-toggle="modal"
-                 data-target="#modal-create-pixel" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+            <div class="col-md-12 pl-0">
+                <div class="d-inline-block align-items-center float-right justify-content-end pointer">
+                    <span class="link-button-dependent red"> Adicionar Pixel </span>
+                    <a id="add-pixel" data-toggle="modal"
+                       data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
+                        <i class="o-add-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class='div-config2' style='display: inline-block;'>
+                    <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
+                        <span class="link-button-dependent red"> Configurações Pixel </span>
+                        <a class="ml-10 rounded-add pointer bg-secondary btn-config-pixel">
+                            <i class="icon wb-settings" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -141,162 +145,9 @@
 </div>
 
 <!--Modal Informações de pixels-->
-<div class="modal fade modal-3d-flip-vertical" id="modal-info-pixel" aria-hidden='true'
-     aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="panel-group panel-group-continuous m-0" id="exampleAccrodion1" aria-multiselectable="true"
-                 role="tablist">
-                <!-- Facebook -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFirst" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#facebook-details" aria-controls="facebook-details" aria-expanded="false">
-                            <strong>Facebook</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="facebook-details" aria-labelledby="exampleHeadingFirst"
-                         role="tabpanel" style="">
-                        <div class="panel-body">
-                            Nós enviamos os seguintes eventos:
-                            <ul>
-                                <li>InitiateCheckout</li>
-                                <li>BasicDataComplete</li>
-                                <li>DeliveryComplete</li>
-                                <li>AddPaymentInfo</li>
-                                <li>addCouponDiscount</li>
-                                <li>InitiateUpsell</li>
-                                <li>Purchase</li>
-                                <li>CardPurchase</li>
-                                <li>BoletoPurchase</li>
-                                <li>UpsellPurchase</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Google Analytics -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingSecond" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#google-analytics-details" aria-controls="google-analytics-details"
-                           aria-expanded="false">
-                            <strong>Google Analytics</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="google-analytics-details"
-                         aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
-                        <div class="panel-body">
-                            Nós enviamos os seguintes eventos:
-                            <ul>
-                                <li>begin_checkout</li>
-                                <li>basic_data_complete</li>
-                                <li>delivery_complete</li>
-                                <li>add_payment_info</li>
-                                <li>add_coupon_discount</li>
-                                <li>initiate_upsell</li>
-                                <li>purchase</li>
-                                <li>boleto_purchase</li>
-                                <li>card_purchase</li>
-                                <li>upsell_purchase</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Google Analytics 4.0 -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingThird" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#google-analytics-four-details" aria-controls="google-analytics-four-details"
-                           aria-expanded="false">
-                            <strong>Google Analytics 4.0</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="google-analytics-four-details"
-                         aria-labelledby="exampleHeadingThird"
-                         role="tabpanel" style="">
-                        <div class="panel-body">
-                            Para os eventos do pixel funcionarem normalmente você precisa cadastrar os seguintes eventos
-                            no seu <strong>google analytics 4.0</strong>:
-                            <ul>
-                                <li>begin_checkout</li>
-                                <li>basic_data_complete</li>
-                                <li>delivery_complete</li>
-                                <li>add_payment_info</li>
-                                <li>add_coupon_discount</li>
-                                <li>initiate_upsell</li>
-                                <li>purchase</li>
-                                <li>boleto_purchase</li>
-                                <li>card_purchase</li>
-                                <li>upsell_purchase</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Google Adwords -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFourth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#googles-adwords" aria-controls="googles-adwords" aria-expanded="false">
-                            <strong>Google Adwords</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="googles-adwords"
-                         aria-labelledby="exampleHeadingFourth" role="tabpanel" style="">
-                        <div class="panel-body">
-                            Nós enviamos os seguintes eventos:
-                            <ul>
-                                <li>conversion</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Facebook -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFifth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#taboola-details" aria-controls="taboola-details" aria-expanded="false">
-                            <strong>Taboola</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="taboola-details" aria-labelledby="exampleHeadingFifth"
-                         role="tabpanel" style="">
-                        <div class="panel-body">
-                            Para os eventos do pixel funcionarem normalmente, você deve cadastrar os seguintes eventos
-                            no Taboola:
-                            <ul>
-                                <li>start_checkout</li>
-                                <li>basic_data_complete</li>
-                                <li>delivery_complete</li>
-                                <li>add_payment_info</li>
-                                <li>initiate_upsell</li>
-                                <li>purchase</li>
-                                <li>upsell_purchase</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Outbrain -->
-                <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingSixth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse"
-                           href="#outbrain-details" aria-controls="outbrain-details" aria-expanded="false">
-                            <strong>Outbrain</strong>
-                        </a>
-                    </div>
-                    <div class="panel-collapse collapse" id="outbrain-details" aria-labelledby="exampleHeadingSixth"
-                         role="tabpanel" style="">
-                        <div class="panel-body">
-                            Para os eventos do pixel funcionarem normalmente, você deve cadastrar os seguintes eventos
-                            no Outbrain:
-                            <ul>
-                                <li>Categoria Purchase - nome <strong>Purchase</strong></li>
-                                <li>Categoria Checkout - nome <strong>Checkout</strong></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div id="modal-config-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical"  role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-simple">
+       @include('pixels::config')
     </div>
 </div>
 <!--Modal Informações de pixels-->
