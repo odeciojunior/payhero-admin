@@ -1,7 +1,11 @@
 label {
     font-size: 16px;
     color: #707070;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
+}
+
+#div_digital_product_upload > label {
+    margin: 8px auto;    
 }
 
 a, 
@@ -38,9 +42,9 @@ a:hover {
 
 .dropify-wrapper {
     height: 250px !important;
-    width: 300px !important;
+    width: 250px !important;
     border: 2px dashed #2E85EC;
-    border-radius: 10px;
+    border-radius: 8px;
     margin: auto;
 }
 
