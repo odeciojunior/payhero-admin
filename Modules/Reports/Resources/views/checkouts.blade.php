@@ -101,7 +101,7 @@
                                 </div>
                             </div> --}}
                             <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart" id="ecommerceChartView">
-                                <div class="card card-shadow">
+                                <div class="card">
                                     <div class="card-header card-header-transparent py-20">
                                         <ul class="nav nav-pills nav-pills-rounded chart-action" style="display: none">
                                             <li class="nav-item">
