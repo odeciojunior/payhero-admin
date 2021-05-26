@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\Core\FoxUtils;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
@@ -84,6 +85,8 @@ class ProductService
                     $product['tracking_status_enum'] = 'Não Informado';
                     $product['tracking_created_at'] = '';
                 }
+
+                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
 
                 $productsSale->add((object) $product);
             }
