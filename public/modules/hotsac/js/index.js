@@ -20,6 +20,7 @@ $(document).ready(function () {
                 if (isEmpty(response.projects)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();
+                    $("#no-integration-found").hide();
                 } else {
                     $('.select-pad').html("");
                     let projects = response.projects;

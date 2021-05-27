@@ -26,6 +26,7 @@
                 align-items: center;
                 -webkit-justify-content: center;
                 justify-content: center;
+                padding-bottom: 20%;
             }
             @media only screen and (min-width: 768px){
                 .col-md-3.card {
@@ -50,7 +51,7 @@
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="o-add-1" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
-            <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de
+            <p id='text-info' style="margin-top: 12px;">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
 
             <div class='container col-sm-12 d-lg-block' id='card-invitation-data' style='display:none;'>
