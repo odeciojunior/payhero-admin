@@ -152,7 +152,7 @@ $(document).ready(function () {
                                     loadOnAny('.page', true);
                                     alertCustom('success', response.message);
                                     $(".btn-view-product-url").attr('link', response.digital_product_url);
-                                    // window.location = "/products";
+                                    window.location = "/products";
                                 }
                             });
                         }

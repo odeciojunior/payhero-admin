@@ -43,6 +43,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         if (verify()) {
+            $("button[type='submit']").prop('disabled', true);
             loadOnAny('.page', false);
             let myForm = document.getElementById('my-form-add-product');
             let formData = new FormData(myForm);
@@ -64,7 +65,7 @@ $(document).ready(function () {
                     loadOnAny('.page', true);
 
                     errorAjaxResponse(response);
-
+                    $("button[type='submit']").prop('disabled', false);
                 }, success: function (response) {
                     loadOnAny('.page', true);
 
