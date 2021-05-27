@@ -19,6 +19,7 @@ $(document).ready(function () {
                 $('#content').html("");
                 if (isEmpty(response.projects)) {
                     $('#project-empty').show();
+                    $("#no-integration-found").hide();
                     $('#integration-actions').hide();
                 } else {
                     $('.select-pad').html("");
