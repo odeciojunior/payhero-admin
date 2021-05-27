@@ -26,7 +26,7 @@ class EditProductResource extends JsonResource
         $product    = [
             'id'                  => $this->resource['product']->id_code,
             'name'                => $this->resource['product']->name,
-            'photo'               => $this->resource['product']->photo ?? 'https://cloudfox-files.s3.amazonaws.com/produto.svg',
+            'photo'               => $this->resource['product']->photo ?? 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png',
             'description'         => $this->resource['product']->description,
             'sku'                 => $this->resource['product']->sku,
             'category_id'         => Hashids::encode($this->resource['product']->category_id),
