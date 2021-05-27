@@ -14,6 +14,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PostBackWooCommerceController
@@ -23,28 +24,67 @@ class PostBackWooCommerceController extends Controller
 {
     public function postBackProductCreate(Request $request)
     {
+        
         if (empty($request->project_id)) {
-            return;
+            return response()->json(
+                [
+                    'message' => 'success',
+                ],
+                200
+            );
         }
-
+        
         $projectId = current(Hashids::decode($request->project_id));
         $wooCommerceIntegration = WooCommerceIntegration::where('project_id', $projectId)->first();
-
+        
         $product = (object)$request;
 
+        
         if (empty($wooCommerceIntegration)) {
-            return;
-        }
-        if (empty($product->name)) {
-            return;
+            return response()->json(
+                [
+                    'message' => 'fail',
+                ],
+                200
+            );
         }
 
+        if (empty($product->name)) {
+            return response()->json(
+                [
+                    'message' => 'fail',
+                ],
+                200
+            );
+        }
+        
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
                 $description .= $attribute['option'] . ' ';
             }
         }
+
+        $user = UserProject::with('user')
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->where('project_id', hashids_decode($request->project_id))
+                ->first()->user;
+
+        $tmpSku = ($product->parent_id?$product->parent_id:$product->id).'-'.$request->project_id.'-'.str_replace(' ','',strtoupper($description));
+
+        $ifProductExists = Product::where("user_id", $user->id)
+                ->where('shopify_variant_id', $tmpSku)
+                ->first();
+
+        if(!empty($ifProductExists)){
+            return response()->json(
+                [
+                    'message' => 'product already exists',
+                ],
+                200
+            );
+        }
+                
 
 
         $wooCommerceService = new WooCommerceService(
@@ -88,10 +128,11 @@ class PostBackWooCommerceController extends Controller
 
     public function postBackProductUpdate(Request $request)
     {
+               
         if (empty($request->project_id) || empty($request['sku'])) {
             return response()->json(
                 [
-                    'message' => 'success',
+                    'message' => 'invalid data',
                 ],
                 200
             );
@@ -115,17 +156,21 @@ class PostBackWooCommerceController extends Controller
                 ->where('project_id', hashids_decode($request->project_id))
                 ->first()->user;
 
+
             Product::where("user_id", $user->id)
                 ->where('shopify_variant_id', $request['sku'])
                 ->first()
                 ->update($newValues);
 
+                
             unset($newValues['photo']);
-
+                
             Plan::where('project_id', hashids_decode($request->project_id))
                 ->where('shopify_variant_id', $request['sku'])
                 ->first()
                 ->update($newValues);
+            
+            
         }
 
         return response()->json(
