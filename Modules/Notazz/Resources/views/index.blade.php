@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=01') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+    <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=03') }}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;

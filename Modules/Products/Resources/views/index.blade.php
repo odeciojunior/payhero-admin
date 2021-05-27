@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=03') }}">
 @endpush
 
 @section('content')
@@ -65,7 +65,7 @@
                 </div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
-                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
                         <img src="{!! asset('modules/global/img/produtos.svg') !!}" width="156px">

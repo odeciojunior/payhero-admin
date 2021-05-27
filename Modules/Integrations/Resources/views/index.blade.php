@@ -2,8 +2,8 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=02') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
         <style>
             .o-arrow-right-1 {
                 font-size: 30px;
