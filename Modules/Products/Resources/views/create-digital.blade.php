@@ -10,7 +10,7 @@
     <!-- Page -->
     <div class="page" style="display: none">
         <div style="display: none" class="page-header container">
-            <h1 class="page-title">Novo produto digital</h1>
+            <h1 class="page-title" style="color: #707070;">Novo produto digital</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container">

@@ -1,6 +1,9 @@
+label, h1, h4, a, a:hover, .o-arrow-right-1::before, .btn-cancelar, .btn-excluir {
+    color: #707070;
+}
+
 label {
     font-size: 16px;
-    color: #707070;
     margin-bottom: 8px;
 }
 
@@ -12,7 +15,6 @@ a,
 a:hover,
 .o-arrow-right-1::before {
     text-decoration: none;
-    color: #707070;
 }
 
 .o-arrow-right-1::before {
@@ -23,7 +25,6 @@ a:hover,
 .btn-excluir {
     background: transparent;
     font-size: 18px;
-    color: #707070;
     border: 0;
 }
 

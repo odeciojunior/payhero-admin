@@ -1,6 +1,9 @@
+label, h1, h4, a, a:hover, .btn-cancelar {
+    color: #707070;
+}
+
 label {
     font-size: 16px;
-    color: #707070;
     margin-bottom: 8px;
 }
 
@@ -11,7 +14,6 @@ label {
 a, 
 a:hover {
     text-decoration: none;
-    color: #707070;
 }
 
 .btn-cancelar {
@@ -21,7 +23,6 @@ a:hover {
     padding: 0.900rem 1.286rem;
     font-size: 1.268rem;
     line-height: 1.333333333;
-    color: #707070;
 }
 
 .form-group input, 
