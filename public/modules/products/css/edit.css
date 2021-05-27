@@ -22,16 +22,23 @@ a:hover,
 .btn-cancelar,
 .btn-excluir {
     background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0.900rem 1.286rem;
-    font-size: 15px;
-    line-height: 1.333333333;
+    font-size: 18px;
     color: #707070;
+    border: 0;
 }
 
-.btn-excluir {
+.btn-excluir,
+.btn-excluir > span {
+    font-size: 18px;
     color: #F10800;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btn-excluir:hover,
+.btn-excluir:hover > span,
+.btn-cancelar:hover {
+    color: #000000;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .form-group input, 

@@ -71,9 +71,9 @@
                 </div>
 
                 <div class="form-group w-full mr-10">
-                    <a class="btn-excluir delete-product float-left" data-toggle="modal" data-target="#modal-delete" href="#"><img style="height: 20px; margin-right: 4px; filter: invert(33%) sepia(75%) saturate(7449%) hue-rotate(354deg) brightness(86%) contrast(124%);" src="https://sirius.cloudfox.net/modules/global/img/svg/sirius-lixo.svg">Excluir produto</a>
+                    <a class="btn btn-lg btn-excluir delete-product float-left" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15 float-right"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
-                    <a class="btn-cancelar float-right" href="/products">Cancelar</a>
+                    <a class="btn btn-lg btn-cancelar float-right" href="/products">Cancelar</a>
                 </div>
             </form>
             
