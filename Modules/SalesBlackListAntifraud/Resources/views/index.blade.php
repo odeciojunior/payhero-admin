@@ -3,9 +3,9 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales-blacklist-antifraud/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
     @endpush
 
     <!-- Page -->

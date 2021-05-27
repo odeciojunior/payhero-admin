@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
 
     <style>
         input[type="file"] {

@@ -3,7 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
