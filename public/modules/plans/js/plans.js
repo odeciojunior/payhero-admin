@@ -185,7 +185,8 @@ $(function () {
     $("#btn-search-plan").on('click', function () {
         index();
     });
-
+    
+    
     /**
      * Update Table Plan
      */
@@ -346,7 +347,7 @@ $(function () {
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
                     $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
-
+                    
                     $.ajax({
                         method: "GET",
                         url: '/api/project/' + projectId + '/plans/' + plan,
@@ -363,6 +364,18 @@ $(function () {
                             $("#form-update-plan").html('');
                             $("#form-update-plan").html(form_update_plan);
 
+                            $("#btn-modal").removeClass('btn-update-config-custom');
+                            $("#nav-custom-tab").on('click', function () {
+                                console.log('custom');
+                                $("#btn-modal").removeClass('btn-update-plan');
+                                $("#btn-modal").addClass('btn-update-config-custom');
+                            });
+                            $("#nav-geral-tab").on('click', function () {
+                                $("#btn-modal").removeClass('btn-update-config-custom');
+                                $("#btn-modal").addClass('btn-update-plan');
+                            });
+        
+
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
                             $('#plan-price_edit').val(response.data.price);
@@ -371,6 +384,7 @@ $(function () {
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
+                                    
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
                                     $('.products_row_edit').append(`
@@ -417,33 +431,60 @@ $(function () {
                                     `);
                                     $('#custom_products').append(`
                                         <div class='card container '>
-                                            <div id="products_div_edit" class="row">
-                                                <div class="form-group col-12">
-                                                    <label>Produtos do plano:</label>
-                                                    <input type="text" id="product_${index}" name="product_${index}" value=` + value.product_name + ` readonly>                                                    
-                                                </div>
-                                                <div class="col-sm-12" id="area-produtos-personalizados-${index}"></div>
+                                            <div class="row">
                                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                                    <button type="button" id="add_custom_product${index}" class="btn btn-primary col-12">Adicionar item</button>
+                                                    <h4 class="bold">Produto: ${value.product_name} </h4>
+                                                </div>                                                
+                                                <div class="col-sm-12" id="area-custom-products-${index}"></div>
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <button type="button" id="add_custom_product-${index}" class="btn btn-primary col-12">Adicionar item requerido</button>
                                                 </div>
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
-                                    $(document).on('click','#add_custom_product'+index,function(){
-                                        console.log('a');
-                                        $('#area-produtos-personalizados-'+index).append(`
+
+                                    $.each(value.custom_configs, function (indexC,valueC) {
+                                        
+                                        $(`#area-custom-products-${index}`).append(`
                                             <div class="row">
+                                                <input type="hidden" name="products[]" value="${value.product_id}">
                                                 <div class="form-group col-4">
                                                     <label>Tipo:</label>
-                                                    <select name="type[${index}][]" name="type" class="form-control select-pad">
+                                                    <select name="type[${value.product_id}][]" name="type" class="form-control select-pad">
+                                                        <option value="image" ${valueC.type=='image'?'selected':''}>Imagem</option>    
+                                                        <option value="file" ${valueC.type=='file'?'selected':''}>Arquivo</option>
+                                                        <option value="text" ${valueC.type=='text'?'selected':''}>Texto</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-8">
+                                                    <label>Título:</label>
+                                                    <input name="label[${value.product_id}][]" class="form-control input-pad" type="text" 
+                                                    placeholder="Ex. Verifique a qualidade da imagem antes de enviar" value="${valueC.label}">
+                                                </div>
+                                                <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
+                                                    <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
+                                                </div>
+                                            </div>
+                                        `);
+                                    });
+
+                                    $(document).on('click',`#add_custom_product-${index}`,function(){
+                                        console.log('add '+index);
+                                        $('#area-custom-products-'+index).append(`
+                                            <div class="row">
+                                                <input type="hidden" name="products[]" value="${value.product_id}">
+                                                <div class="form-group col-4">
+                                                    <label>Tipo:</label>
+                                                    <select name="type[${value.product_id}][]" name="type" class="form-control select-pad">
+                                                        <option value="image">Imagem</option>    
                                                         <option value="file">Arquivo</option>
                                                         <option value="text">Texto</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-8">
                                                     <label>Título:</label>
-                                                    <input value="" name="obs[${index}]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
+                                                    <input value="" name="label[${value.product_id}][]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
                                                 </div>
                                                 <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
                                                     <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
@@ -655,6 +696,55 @@ $(function () {
                                         index(pageCurrent);
                                     }
                                 });
+                            });
+
+                            /**
+                             * save config custom product
+                             */
+                            $(".btn-update-config-custom").unbind('click');
+                            $(".btn-update-config-custom").on('click', function (){
+                                
+                                var formData = new FormData(document.getElementById('form-update-plan-tab-2'));
+                                formData.append("plan", plan);
+                                console.log(formData);
+  
+                                loadingOnScreen();
+
+                                $.ajax({
+                                    method: "POST",                                    
+                                    url: '/api/plans/config-custom-product',
+                                    dataType: "json",
+                                    headers: {
+                                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                                        'Accept': 'application/json',
+                                    },
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    error: function (_error4) {
+                                        function error(_x4) {
+                                            return _error4.apply(this, arguments);
+                                        }
+
+                                        error.toString = function () {
+                                            return _error4.toString();
+                                        };
+
+                                        return error;
+                                    }(function (response) {
+                                        loadingOnScreenRemove();
+                                        errorAjaxResponse(response);
+
+                                        index(pageCurrent);
+                                    }),
+                                    success: function success(data) {
+                                        loadingOnScreenRemove();
+                                        alertCustom("success", "Configurações do Plano atualizado com sucesso");
+                                        index(pageCurrent);
+                                    }
+                                });
+
                             });
                         }
                     });

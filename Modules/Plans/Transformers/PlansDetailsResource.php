@@ -9,6 +9,7 @@ class PlansDetailsResource extends JsonResource
 {
     public function toArray($request)
     {
+        $configProduct = $this->config_personalization_product;
         $products = [];
         foreach ($this->productsPlans as $productsPlan) {
             $products[] = [
@@ -19,6 +20,7 @@ class PlansDetailsResource extends JsonResource
                 'amount'       => $productsPlan->amount,
                 'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
+                'custom_configs'=> !empty($configProduct[$productsPlan->product_id]) ? $configProduct[$productsPlan->product_id] : []
             ];
         }
 

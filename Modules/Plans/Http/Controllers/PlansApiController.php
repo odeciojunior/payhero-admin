@@ -559,7 +559,6 @@ class PlansApiController extends Controller
     }
 
     public function saveConfigCustomProducts(Request $request){
-        
         $rules = [
             'plan'=>'required',
             'products'=>'required'            
@@ -575,18 +574,27 @@ class PlansApiController extends Controller
             return response()->json($validator, 400);
         }
 
-        $planId = $request->plan;//current(Hashids::decode($request->plan));
-        $plan = Plan::find($planId);
-        $productId = $request->product;//current(Hashids::decode($request->product));
+        $products = array_unique($request->products);        
 
-        $details = [];
-        foreach($request->products as $product){            
-            $product['product_id'] = $product['product'];//current(Hashids::decode($product['product']));
-            unset($product['product']);
-            $details[] = $product;
+        $planId = current(Hashids::decode($request->plan));
+        $plan = Plan::find($planId);
+        
+        $details = [];        
+        foreach($products as $product){            
+            $details[$product]['type'] = !empty($request->type[$product]) ? $request->type[$product]: []; 
+            $details[$product]['label'] = !empty($request->label[$product]) ? $request->label[$product]: []; 
         }
 
-        $plan->config_personalization_product = $details;
+        $itens = [];
+        foreach($details as $key=>$detailL1){
+           foreach($detailL1 as $key2=> $detailL2){
+                foreach($detailL2 as $key3=>$detailL3){
+                    $itens[$key][$key3][$key2] = $detailL3??''; 
+                }
+           }
+        }
+
+        $plan->config_personalization_product = $itens;
         $plan->update();
 
         // if(!empty($request->update_all) && $request->update_all === true){
