@@ -14,10 +14,12 @@
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
+
+                    {{-- <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
                        style="background-color: #2E85EC;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-question-1 white font-size-30" aria-hidden="true"></i>
-                    </a>
+                    </a> --}}
+
                 </div>
             </div>
         </div>
