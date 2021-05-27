@@ -20,7 +20,7 @@
             <div class="page-content container">
                 <div class='row'>
                     <div class='col-12 col-lg-12'>
-                        <div class="card card-shadow p-20">
+                        <div class="card p-20">
                             <div class='row'>
                                 <div class='col-12 col-md-3 col-lg-3'>
                                     <div class='form-group'>
@@ -137,63 +137,12 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class='row'>
-                    <div class="col-6 col-lg-3">
-                        <div class="card card-shadow bg-white">
-                            <div class="card-header bg-white p-20 pb-0">
-                                <div>
-                                    <span class="card-desc">Chamados em aberto</span>
-                                </div>
-                                <div class='mt-10 mx-10'>
-                                    <span id="ticket-open" class="text-money ticket-number">2</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card card-shadow bg-white card-left">
-                            <div class="card-header bg-white p-20 pb-0">
-                                <div>
-                                    <span class="card-desc">Chamados em mediação</span>
-                                </div>
-                                <div class='mt-10 mx-10'>
-                                    <span id="ticket-mediation" class="text-money ticket-number">1</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card card-shadow bg-white card-left green">
-                            <div class="card-header bg-white p-20 pb-0">
-                                <div>
-                                    <span class="card-desc">Chamados resolvidos</span>
-                                </div>
-                                <div class='mt-10 mx-10'>
-                                    <span id="ticket-closed" class="text-money ticket-number">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <div class="card card-shadow bg-white card-left purple">
-                            <div class="card-header bg-white p-20 pb-0">
-                                <div>
-                                    <span class="card-desc">Total</span>
-                                </div>
-                                <div class='mt-10 mx-10'>
-                                    <span id="ticket-total" class="text-money ticket-number">3</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <div id='div-tickets' class='row' style='display:none;'>
                     {{-- js carrega... --}}
                 </div>
                 <div id='div-ticket-empty' class='row' style='display:none;'>
                     <div class='col-12 col-lg-12'>
-                        
-                        <div class="card card-shadow bg-white">
+                        <div class="card bg-white">
                             <div class='card-header bg-white text-center py-25 d-flex justify-content-center align-items-center'
                             style="height: 257px">
                                 <img style='width:124px;;margin-right:12px;' src="{!! asset('modules/global/img/suporte.svg') !!}">Nenhum chamado encontrado
@@ -225,7 +174,7 @@
                     </button>
                 </div>
                 <div id="modal-body-content" class="modal-body" style='min-height: 100px'>
-                    <div class="card card-shadow card-top card-ticket-color">
+                    <div class="card card-top card-ticket-color">
                         <div class="card-body bg-white p-40">
                             <div>
                                 <h4 class='font-weight-bold ticket-subject'></h4>

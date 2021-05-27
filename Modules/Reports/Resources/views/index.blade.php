@@ -145,7 +145,7 @@
                     </div> --}}
                     <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart"
                          id="ecommerceChartView">
-                        <div class="card card-shadow">
+                        <div class="card">
                             <div class="card-header card-header-transparent py-20">
                                 <!--div class="btn-group dropdown"-->
                                 <!--a href="#" class="text-body dropdown-toggle blue-grey-700" data-toggle="dropdown">PRODUCTS SALES</a-->
