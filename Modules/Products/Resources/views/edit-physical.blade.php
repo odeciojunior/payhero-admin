@@ -20,7 +20,7 @@
         <div class="page-content container">
             <form id='my-form'>
                 @method('PUT')
-                <div class="panel pt-10 pb-20 mb-20" style="border-radius: 16px">
+                <div class="panel pt-10 pb-20" style="border-radius: 16px">
                     <h4 class="px-40">1. Informações básicas</h4>
                     <hr class="my-20">
                     <div class="px-40 row justify-content-between align-items-baseline">
@@ -112,10 +112,15 @@
                     </div>
                 </div>
 
-                <div class="form-group w-full mr-10">
-                    <a class="btn btn-lg btn-excluir delete-product float-left" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15 float-right"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
-                    <a class="btn btn-lg btn-cancelar float-right" href="/products">Cancelar</a>
+                <div class="form-buttons">
+                    <div>
+                        <a class="btn btn-lg btn-excluir delete-product pl-0" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
+                    </div>
+
+                    <div>
+                        <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
+                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    </div>
                 </div>
             </form>
             <!-- Modal padrão para excluir -->

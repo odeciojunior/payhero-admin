@@ -16,6 +16,10 @@ a:hover {
     text-decoration: none;
 }
 
+.form-buttons {
+    justify-content: flex-end;
+}
+
 .btn-cancelar {
     background: transparent;
     border: none;

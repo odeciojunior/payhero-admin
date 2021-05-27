@@ -8,8 +8,8 @@
     @endpush
 
     <!-- Page -->
-    <div class="page" style="display: none">
-        <div style="display: none" class="page-header container">
+    <div class="page mb-0">
+        <div class="page-header container">
             <h1 class="page-title" style="color: #707070;">Novo produto digital</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row float-right pr-15">
+                <div class="row pr-15 form-buttons">
                     <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Tudo certo!</button>
                 </div>

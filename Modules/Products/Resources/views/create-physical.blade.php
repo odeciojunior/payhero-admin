@@ -102,7 +102,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row float-right pr-15">
+                <div class="row pr-15 form-buttons">
                     <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
                     <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Tudo certo!</button>
                 </div>
