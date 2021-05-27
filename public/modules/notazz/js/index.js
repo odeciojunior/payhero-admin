@@ -25,7 +25,7 @@ $(document).ready(function () {
             success: function success(response) {
                 $("#content").html("");
                 if (Object.keys(response.data).length === 0) {
-                    $("#no-integration-found").show();
+                    $("#no-integration-found").css('display','block');
                 } else {
                     $(response.data).each(function (index, data) {
                         $("#content").append(
