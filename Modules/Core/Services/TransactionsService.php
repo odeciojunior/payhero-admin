@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -34,7 +33,7 @@ class TransactionsService
             ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
             ->where('is_waiting_withdrawal', 0)
             ->whereNull('withdrawal_id')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
             ->where(function ($where) {
                 $where->where('tracking_required', false)
                     ->orWhereHas('sale', function ($query) {
@@ -45,11 +44,9 @@ class TransactionsService
                     });
             });
 
-
-        $getnetService = new GetnetBackOfficeService();
-
-        foreach ($transactions->cursor() as $transaction) {
-            try {
+        $transactions->chunkById(100, function ($transactions) use ($getnetService) {
+            foreach ($transactions as $transaction) {
+                try {
 
                     if (empty($transaction->company_id)) {
                         continue;
@@ -66,16 +63,6 @@ class TransactionsService
                     $getnetService->setStatementSubSellerId($subsellerId)
                         ->setStatementSaleHashId($saleIdEncoded);
 
-                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID && $sale->payment_method == Sale::PIX_PAYMENT) {
-
-                    $transaction->update(
-                        [
-                            'is_waiting_withdrawal' => 1,
-                        ]
-                    );
-
-                } else if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
-
                     $result = json_decode($getnetService->getStatement());
 
                     if (!empty($result->list_transactions) &&
@@ -90,12 +77,11 @@ class TransactionsService
                             ]
                         );
                     }
-
+                } catch (Exception $e) {
+                    report($e);
                 }
-            } catch (Exception $e) {
-                report($e);
             }
-        }});
+        });
 
         try {
             settings()->group('withdrawal_request')->set('withdrawal_request', true);
