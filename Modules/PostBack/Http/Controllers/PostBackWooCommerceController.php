@@ -6,45 +6,46 @@ namespace Modules\PostBack\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\PostbackLog;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\WebhookService;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class PostBackWooCommerceController
  * @package Modules\PostBack\Http\Controllers
  */
 class PostBackWooCommerceController extends Controller
-{   
+{
     public function postBackProductCreate(Request $request)
     {
-        if(empty($request->project_id)) return;
+        if (empty($request->project_id)) {
+            return;
+        }
 
         $projectId = current(Hashids::decode($request->project_id));
-        $wooCommerceIntegration = WooCommerceIntegration::where('project_id',$projectId)->first();
-        
+        $wooCommerceIntegration = WooCommerceIntegration::where('project_id', $projectId)->first();
+
         $product = (object)$request;
-        
-        if(empty($wooCommerceIntegration)) return;
-        if(empty($product->name)) return;
+
+        if (empty($wooCommerceIntegration)) {
+            return;
+        }
+        if (empty($product->name)) {
+            return;
+        }
 
         $description = '';
-        if(!empty($product['attributes'])){
-           
-            foreach($product['attributes'] as $attribute){
-                $description .= $attribute['option'].' ';
+        if (!empty($product['attributes'])) {
+            foreach ($product['attributes'] as $attribute) {
+                $description .= $attribute['option'] . ' ';
             }
-            
         }
-        
+
 
         $wooCommerceService = new WooCommerceService(
             $wooCommerceIntegration->url_store,
@@ -53,9 +54,9 @@ class PostBackWooCommerceController extends Controller
         );
         $wooCommerceService->verifyPermissions();
 
-        
-        $variationId = !empty($product->parent_id)?$product->id:null;
-        
+
+        $variationId = !empty($product->parent_id) ? $product->id : null;
+
         $sku = $wooCommerceService->createProduct(
             $wooCommerceIntegration->project_id,
             $wooCommerceIntegration->user_id,
@@ -67,15 +68,14 @@ class PostBackWooCommerceController extends Controller
         $data = [
             'sku' => $sku
         ];
-        if(empty($product->parent_id)){
-
-            $wooCommerceService->woocommerce->put('products/'.$product->id, $data);
-        }else{
-            $wooCommerceService->woocommerce->put('products/'.$product->parent_id.'/variations/'.$product->id, $data);
-
+        if (empty($product->parent_id)) {
+            $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
+        } else {
+            $wooCommerceService->woocommerce->put(
+                'products/' . $product->parent_id . '/variations/' . $product->id,
+                $data
+            );
         }
-
-
 
 
         return response()->json(
@@ -88,27 +88,44 @@ class PostBackWooCommerceController extends Controller
 
     public function postBackProductUpdate(Request $request)
     {
-        
-        if(empty($request['variations'])){
-            if(!empty($request['name']))
+        if (empty($request->project_id) || empty($request['sku'])) {
+            return response()->json(
+                [
+                    'message' => 'success',
+                ],
+                200
+            );
+        }
+
+        if (empty($request['variations'])) {
+            if (!empty($request['name'])) {
                 $newValues['name'] = $request['name'];
+            }
 
-            if(!empty($request['price']))
+            if (!empty($request['price'])) {
                 $newValues['price'] = $request['price'];
+            }
 
-            if(!empty($request['images'][0]['src']))
+            if (!empty($request['images'][0]['src'])) {
                 $newValues['photo'] = $request['images'][0]['src'];
+            }
 
-            
-            Product::where('shopify_variant_id', $request['sku'])
-            ->update($newValues);
-            
+            $user = UserProject::with('user')
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->where('project_id', hashids_decode($request->project_id))
+                ->first()->user;
+
+            Product::where("user_id", $user->id)
+                ->where('shopify_variant_id', $request['sku'])
+                ->first()
+                ->update($newValues);
+
             unset($newValues['photo']);
-            
-            Plan::where('shopify_variant_id', $request['sku'])
-            ->update($newValues);
-            
-            
+
+            Plan::where('project_id', hashids_decode($request->project_id))
+                ->where('shopify_variant_id', $request['sku'])
+                ->first()
+                ->update($newValues);
         }
 
         return response()->json(
@@ -126,7 +143,6 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            
             $postBackLogModel = new PostbackLog();
             $projectModel = new Project();
 
@@ -145,7 +161,6 @@ class PostBackWooCommerceController extends Controller
             $project = $projectModel->find($projectId);
 
             if (!empty($project)) {
-
                 //Log::debug($requestData);
 
                 // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
@@ -178,8 +193,7 @@ class PostBackWooCommerceController extends Controller
         }
     }
 
-    
-    
+
 }
 
 
