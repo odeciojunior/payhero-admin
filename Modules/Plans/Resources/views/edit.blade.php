@@ -1,21 +1,21 @@
-<form id="form-update-plan" method="PUT" action="/plans" enctype="multipart/form-data" style="display:none">
-    @csrf
-    @method('PUT')
-    {{--    <input type="hidden" value="{{Hashids::encode($plan->id)}}" name="id">--}}
-    <input type="hidden" value="" name="id" id='plan_id'>
-    <div class="container-fluid">
-        <div class="nav-tabs-horizontal">
-            <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
-                    role="tab" style="width:48%;">Dados gerais
-                </a>
-                <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
-                    role="tab" style="width:48%;">Produtos personalizados
-                </a>
-            </div>
+<div class="container-fluid" id="form-update-plan" style="display:none">
+    <div class="nav-tabs-horizontal">
+        <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
+                role="tab" style="width:48%;">Dados gerais
+            </a>
+            <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
+                role="tab" style="width:48%;">Produtos personalizados
+            </a>
         </div>
-        <div class="tab-content p-10" id="nav-tabContent">                    
-            <div class="tab-pane fade show active" id="nav-geral" role="tabpanel" aria-labelledby="nav-geral-tab">
+    </div>
+    <div class="tab-content p-10" id="nav-tabContent">                    
+        <div class="tab-pane fade show active" id="nav-geral" role="tabpanel" aria-labelledby="nav-geral-tab">
+            <form id="form-update-plan-tab-1" method="PUT" action="/plans" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                {{--    <input type="hidden" value="{{Hashids::encode($plan->id)}}" name="id">--}}
+                <input type="hidden" value="" name="id" id='plan_id'>
                 <div class="panel" data-plugin="matchHeight">
                     <h4 class='mt-0'> Dados gerais </h4>
                     <div style="width:100%">
@@ -46,16 +46,18 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">                
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">                
+            <form id="form-update-plan-tab-2" method="POST" action="/plans/config-custom-product" enctype="multipart/form-data">
+                @csrf
+                @method('POST')
                 <div class="row">
                     <div id="custom_products" class='col-md-12 products_row_custom'>
                         {{-- carregado no js--}}
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-
-        
     </div>
-</form>
+</div>

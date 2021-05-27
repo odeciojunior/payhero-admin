@@ -612,7 +612,7 @@ $(function () {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
                                 }
-                                var formData = new FormData(document.getElementById('form-update-plan'));
+                                var formData = new FormData(document.getElementById('form-update-plan-tab-1'));
                                 formData.append("project_id", projectId);
                                 loadingOnScreen();
                                 $.ajax({
