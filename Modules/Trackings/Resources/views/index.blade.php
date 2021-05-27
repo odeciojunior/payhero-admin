@@ -292,45 +292,57 @@
                     </div>
                 </div>
                 <!-- Resumo -->
-                <div class='container col-sm-12 mt-20 d-lg-block'>
-                    <div class='row'>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                <div class='row'>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Total </h6>
                                 <h4 id="total-trackings" class=" font-size-30 bold"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Postado </h6>
                                 <h4 id="percentual-posted"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Em trânsito</h6>
                                 <h4 id="percentual-dispatched"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Saiu para entrega</h6>
                                 <h4 id="percentual-out"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Entregues</h6>
                                 <h4 id="percentual-delivered"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Problema na entrega</h6>
                                 <h4 id="percentual-exception"></h4>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 card">
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
                             <div class="card-body">
                                 <h6   style="min-height:35px" class="font-size-14 gray-600"> Não informado</h6>
                                 <h4 id="percentual-unknown"></h4>
