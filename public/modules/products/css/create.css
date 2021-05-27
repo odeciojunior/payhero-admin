@@ -76,11 +76,7 @@ a:hover {
 }
 
 .input-file {
-    position: absolute;
-    top: 0; left: 0;
-    width: 225px;
-    opacity: 0;
-    cursor: pointer;
+    display: none;
 }
 
 .input-file:hover + .input-file-trigger,

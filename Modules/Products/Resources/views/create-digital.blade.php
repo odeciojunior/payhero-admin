@@ -38,7 +38,7 @@
                                 </div>
 
                                 <div class="form-group col-12 col-md-8 input-file-container">  
-                                    <label for="digital_product_url">Arquivo do produto</label>
+                                    <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
                                         <label tabindex="0" for="digital_product_url" class="input-file-trigger mb-0">Escolher arquivos</label>
