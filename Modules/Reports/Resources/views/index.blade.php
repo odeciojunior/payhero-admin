@@ -6,8 +6,8 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css?v=04') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=04') !!}">
     @endpush
 
     <div class="page mb-0">
