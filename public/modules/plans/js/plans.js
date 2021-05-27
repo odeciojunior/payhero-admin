@@ -338,6 +338,9 @@ $(function () {
                  * Edit Plan
                  */
                 $(".edit-plan").unbind('click');
+                $(document).on('click','.remove-custom-product',function(){
+                    $(this).parent('.card').remove();
+                });
                 $(".edit-plan").on('click', function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
@@ -412,40 +415,42 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
-                                    $('.products_row_custom').append(`
+                                    $('#custom_products').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
-                                                <div class="form-group col-sm-9 col-md-9 col-lg-9">
+                                                <div class="form-group col-12">
                                                     <label>Produtos do plano:</label>
                                                     <input type="text" id="product_${index}" name="product_${index}" value=` + value.product_name + ` readonly>                                                    
                                                 </div>
-                                                <div class="form-group col-sm-3 col-md-3 col-lg-3">
-                                                    <label>Ativar:</label>
-                                                    <div class="switch-holder d-inline" >
-                                                        <label class="switch" >
-                                                            <input type="checkbox" class="project_notification_status" data-id="${value.id}" >
-                                                            <span class="slider round" ></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-4 col-md-4 col-lg-4">
-                                                    <label>Tipo:</label>
-                                                    <select id="type_${index}" name="type" class="form-control">
-                                                        <option value="file">Arquivo</option>
-                                                        <option value="text">Texto</option>
-                                                     </select>
-                                                </div>
-                                                <div class="form-group col-sm-8 col-md-8 col-lg-8">
-                                                    <label>Observação a mostrar:</label>
-                                                    <input value="" id="obs_${index}" class="form-control" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
-                                                </div>
+                                                <div class="col-sm-12" id="area-produtos-personalizados-${index}"></div>
                                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                                    Nova linha
+                                                    <button type="button" id="add_custom_product${index}" class="btn btn-primary col-12">Adicionar item</button>
                                                 </div>
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
+                                    $(document).on('click','#add_custom_product'+index,function(){
+                                        console.log('a');
+                                        $('#area-produtos-personalizados-'+index).append(`
+                                            <div class="row">
+                                                <div class="form-group col-4">
+                                                    <label>Tipo:</label>
+                                                    <select name="type[${index}][]" name="type" class="form-control select-pad">
+                                                        <option value="file">Arquivo</option>
+                                                        <option value="text">Texto</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-8">
+                                                    <label>Título:</label>
+                                                    <input value="" name="obs[${index}]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
+                                                </div>
+                                                <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
+                                                    <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
+                                                </div>
+                                            </div>
+                                        `);
+                                    });
                                 });
                                 $.each(response.data.products, function (index, value) {
                                     $('#select_currency_' + index).val(value.currency);
