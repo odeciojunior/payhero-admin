@@ -33,16 +33,16 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
             <div class="col-md-12 pl-0">
-                <div class="d-inline-block align-items-center float-right justify-content-end pointer">
-                    <span class="link-button-dependent red"> Adicionar Pixel </span>
+                <div class=" align-items-center float-right justify-content-end pointer">
+                    <span class="link-button-dependent red"> Adicionar</span>
                     <a id="add-pixel" data-toggle="modal"
                        data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
                 </div>
-                <div class='div-config2' style='display: inline-block;'>
+                <div class='div-config2' >
                     <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
-                        <span class="link-button-dependent red"> Configurações Pixel </span>
+                        <span class="link-button-dependent red"> Configurações</span>
                         <a class="ml-10 rounded-add pointer bg-secondary btn-config-pixel">
                             <i class="icon wb-settings" aria-hidden="true"></i>
                         </a>
@@ -145,9 +145,9 @@
 </div>
 
 <!--Modal Informações de pixels-->
-<div id="modal-config-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical"  role="dialog" tabindex="-1">
+<div id="modal-config-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
-       @include('pixels::config')
+        @include('pixels::config')
     </div>
 </div>
 <!--Modal Informações de pixels-->
