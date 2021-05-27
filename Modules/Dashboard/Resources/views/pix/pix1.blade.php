@@ -17,7 +17,7 @@
             <div id="description-onboarding-2">A partir de hoje, você já pode habilitar o Pix como meio de pagamento instantâneo no seu checkout.</div>
 
             <div class="row">
-                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-md-baseline align-items-lg-center mb-15">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-md-baseline align-items-lg-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
                             <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/pix/pix.svg')}}">
@@ -28,7 +28,7 @@
                     </span>
                 </div>
 
-                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
                             <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/pix/secure-environment.svg')}}">
@@ -38,7 +38,7 @@
                         Um ambiente PIX seguro e prático com um ecossistema de recuperação para PIX abandonados.
                     </span>
                 </div>
-                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
                             <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/pix/pix-payment.svg')}}">
@@ -48,6 +48,10 @@
                         Ao solicitar saque, você receberá o valor das vendas via Pix direto na sua conta.
                     </span>
                 </div>
+                <div class="col-12 d-flex justify-content-end">
+                    <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
+                    <div class="btn btn-primary pix-onboarding-next">Continuar</div>
+                </div>
             </div>
         </div>
 
@@ -55,9 +59,5 @@
             <img id="img-onboarding" class="img-fluid" alt="Image" src="{{asset('modules/global/img/pix/pix-checkout.png')}}">
         </div>
     </div>
-</div>
-<div class="modal-footer justify-content-end">
-    <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
-    <div class="btn btn-primary pix-onboarding-next">Continuar</div>
 </div>
 

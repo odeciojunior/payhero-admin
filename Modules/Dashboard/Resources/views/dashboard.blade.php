@@ -39,7 +39,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6">
-                            <div class="card card-shadow bg-white stats-card">
+                            <div class="card bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
-                            <div class="card card-shadow bg-white stats-card">
+                            <div class="card bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
-                            <div class="card card-shadow bg-white stats-card">
+                            <div class="card bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
-                            <div class="card card-shadow bg-white stats-card">
+                            <div class="card bg-white stats-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -109,7 +109,7 @@
                         </div>
 
                         <div class="col-12 d-none d-sm-block">
-                            <div class="card card-shadow bg-white chart-card">
+                            <div class="card bg-white chart-card">
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
@@ -135,13 +135,13 @@
 
                         <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
 
-                            <div class="card pb-15 card-shadow bg-white w-full performance-card">
+                            <div class="card pb-15 bg-white w-full performance-card">
 
                             </div>
                         </div>
 
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-1 sirius-cashback">
-                            <div class="card card-shadow bg-white w-full d-none">
+                            <div class="card bg-white w-full d-none">
                                 <div
                                     class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
                                     <div class="font-size-14 gray-600 mr-auto">
@@ -163,14 +163,14 @@
                         </div>
 
                         <div class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
-                            <div class="card card-shadow bg-white w-full sirius-account-health">
+                            <div class="card bg-white w-full sirius-account-health">
 
                             </div>
                         </div>
 
 
 {{--                        <div class="col-lg-12 align-items-stretch order-0 order-sm-1">--}}
-{{--                            <div class="card card-shadow sirius-card">--}}
+{{--                            <div class="card sirius-card">--}}
 {{--                                <div--}}
 {{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
 {{--                                    <div class="font-size-16 text-white">--}}
@@ -198,7 +198,7 @@
 {{--                        </div>--}}
 
 {{--                        <div class="col-lg-12 order-0 order-sm-1">--}}
-{{--                            <div class="card card-shadow sirius-card">--}}
+{{--                            <div class="card sirius-card">--}}
 {{--                                <div--}}
 {{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
 {{--                                    <div class="font-size-16 text-white">--}}

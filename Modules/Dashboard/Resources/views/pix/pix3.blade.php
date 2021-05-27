@@ -38,16 +38,17 @@
                         conta, utilizando a sua chave como destino final.
                     </p>
                 </div>
+
+                <div class="col-12 d-flex justify-content-end">
+                    <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
+                    <div class="btn btn-primary pix-onboarding-next">Continuar</div>
+                </div>
             </div>
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
-            <img class="img-fluid" alt="Image" id="img-onboarding"
+            <img class="img-fluid" alt="Image" id="img-onboarding" width="100"
                  src="{{asset('modules/global/img/pix/pix-register-key.svg')}}">
         </div>
     </div>
-</div>
-<div class="modal-footer justify-content-end">
-    <div class="btn btn-link text-secondary pix-onboarding-later">Fazer isso depois</div>
-    <div class="btn btn-primary pix-onboarding-finish">Ir para o Accounts</div>
 </div>
