@@ -334,10 +334,12 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (i, company) {
-                        $("#companies").append($('<option>', {
-                            value: company.id,
-                            text: company.name
-                        }));
+                        if (company.capture_transaction_enabled) {
+                            $("#companies").append($('<option>', {
+                                value: company.id,
+                                text: company.name
+                            }));
+                        }
                     });
                 }
 
