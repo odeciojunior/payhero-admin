@@ -26,11 +26,26 @@ $(document).ready(function () {
         return ver;
     }
 
+
     $('#product_photo').dropify({
         messages: {
-            'default': 'Arraste e solte ou clique para adicionar um arquivo',
-            'replace': 'Arraste e solte ou clique para substituir',
+            'default': 'Arraste e solte uma imagem ou ',
+            'replace': 'Arraste e solte uma imagem ou ',
+            'remove': 'Remover',
+            'error': ''
         },
+        error: {
+            'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
+            'minWidth': 'A imagem deve ter largura maior que 650px.',
+            'maxWidth': 'A imagem deve ter largura menor que 650px.',
+            'minHeight': 'A imagem deve ter altura maior que 650px.',
+            'maxHeight': 'A imagem deve ter altura menor que 650px.',
+            'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
+        },
+        tpl: {
+            message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
+        },
+        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
     });
 
     $("#my-form-add-product").submit(function (event) {
