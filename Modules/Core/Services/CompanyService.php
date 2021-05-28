@@ -473,25 +473,10 @@ class CompanyService
 
     public function hasBalanceToRefund($sale): bool
     {
-
         $transaction = Transaction::where('sale_id', $sale->id)
             ->where('user_id', auth()->user()->account_owner_id)
             ->first();
-        $totalBalance = 0;
-        if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
-
-            $pendingBalance = $this->getPendingBalanceByGateway(
-                $transaction->company,
-                Gateway::GERENCIANET_PRODUCTION_ID
-            );
-            $availableBalance = $this->getAvailableBalanceByGateway(
-                $transaction->company,
-                Gateway::GERENCIANET_PRODUCTION_ID
-            );
-            $totalBalance = $pendingBalance + $availableBalance;
-
-        } else if (in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
-
+        if($sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
             $pendingBalance = $this->getPendingBalance(
                 $transaction->company,
                 CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
@@ -502,38 +487,22 @@ class CompanyService
             );
             $pendingDebt = $this->getPendingDebtBalance($transaction->company);
             $totalBalance = $pendingBalance + $availableBalance - $pendingDebt;
-        }
-        if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-            $saleValue = floatval($transaction->value);
-        } else {
-            $saleValue = floatval(foxutils()->onlyNumbers($sale->total_paid_value));
-        }
-        if ($totalBalance - $saleValue < 0) {
+            if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                $saleValue = floatval($transaction->value);
+            } else {
+                $saleValue = floatval(foxutils()->onlyNumbers($sale->total_paid_value));
+            }
+            if ($totalBalance - $saleValue < 0) {
+                return false;
+            }
+            return true;
+        }else if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
+            if($transaction->withdrawal_id == null && $transaction->status_enum == Transaction::STATUS_PAID) {
+                return true;
+            }
             return false;
         }
-        return true;
-    }
-
-    public function getPendingBalanceByGateway(Company $company, $gateway_id)
-    {
-        $pendingBalance = Transaction::where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->where('gateway_id', $gateway_id)
-            ->where('is_waiting_withdrawal', 0)
-            ->whereNull('withdrawal_id');
-        return $pendingBalance->sum('value');
-    }
-
-    public function getAvailableBalanceByGateway(Company $company, $gateway_id): int
-    {
-        return $company->transactions()
-            ->where(
-                'gateway_id',
-                $gateway_id
-            )
-            ->where('is_waiting_withdrawal', 1)
-            ->whereNull('withdrawal_id')
-            ->sum('value');
+        return false;
     }
 
     public function getPendingBalance(Company $company, ?int $liquidationType = null)
