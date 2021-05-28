@@ -29,6 +29,10 @@ a:hover {
     line-height: 1.333333333;
 }
 
+.btn-cancelar:hover {
+    background-color: #FFF;
+}
+
 .form-group input, 
 .form-group textarea,
 .input-group-text {

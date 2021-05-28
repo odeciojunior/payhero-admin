@@ -41,10 +41,13 @@ a:hover,
 }
 
 .btn-excluir:hover,
-.btn-excluir:hover > span,
-.btn-cancelar:hover {
-    color: #000000;
+.btn-excluir:hover > span {
+    color: #9b0400;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btn-cancelar:hover {
+    background-color: #FFF;
 }
 
 .form-group input, 
