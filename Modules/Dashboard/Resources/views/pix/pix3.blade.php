@@ -40,8 +40,8 @@
                 </div>
 
                 <div class="col-12 d-flex justify-content-end">
-                    <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
-                    <div class="btn btn-primary pix-onboarding-next">Continuar</div>
+                    <div class="btn btn-link text-secondary pix-onboarding-later">Fazer isso depois</div>
+                    <div class="btn btn-primary pix-onboarding-finish">Ir para o Accounts</div>
                 </div>
             </div>
         </div>
