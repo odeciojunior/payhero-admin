@@ -102,7 +102,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/notazz/js/index.js?v=s1')}}"></script>
+        <script src="{{asset('modules/notazz/js/index.js?v=s2')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection
