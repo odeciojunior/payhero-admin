@@ -144,7 +144,7 @@
 
     <style>
         .margin-chat-pagination {
-            display:block !important; height:100px  !important;
+            display:block !important; height:20px  !important;
         }
     </style>
 

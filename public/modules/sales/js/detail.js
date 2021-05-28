@@ -425,6 +425,7 @@ $(() => {
             $("#discount-title").show();
             $("#discount-data").show();
             $("#desconto-value").html(sale.discount);
+
         } else {
             $("#discount-title").hide();
             $("#discount-data").hide();
@@ -447,7 +448,7 @@ $(() => {
             }
             $(".automatic-discount-value").show();
             $(".text-discount").show();
-            $("#automatic-discount-value").html(sale.automatic_discount);
+            $("#automatic-discount-value").html(sale.automatic_discount).show();
         } else {
             $(".automatic-discount-value").hide();
             $(".text-discount").hide();
