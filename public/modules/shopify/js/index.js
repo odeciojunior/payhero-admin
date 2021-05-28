@@ -72,6 +72,8 @@ $(document).ready(function () {
                     shopifyIntegrationNotFound = true;
                     $("#no-integration-found").show();
                     return;
+                }else{
+                    $("#no-integration-found").hide();
                 }
 
                 $(data).each(function (index, data) {

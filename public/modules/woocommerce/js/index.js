@@ -40,6 +40,9 @@ $(document).ready(function () {
         } else if (!allCompanyNotApproved) {
             if (woocommerceIntegrationNotFound) {
                 $("#no-integration-found").show();
+            }else{
+                $("#no-integration-found").hide();
+
             }
 
             $('#btn-integration-model').show();

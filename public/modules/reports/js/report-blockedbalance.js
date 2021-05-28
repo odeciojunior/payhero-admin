@@ -339,7 +339,7 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total_sales').text('0');
-                $('#commission_blocked, #total').text('<span class="font-size-12">R$</span> <strong><span>0,00</strong></span>');
+                $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').html(response.total_sales);
