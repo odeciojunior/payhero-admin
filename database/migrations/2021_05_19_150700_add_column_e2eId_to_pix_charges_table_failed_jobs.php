@@ -16,7 +16,7 @@ class AddColumnE2eIdToPixChargesTableFailedJobs extends Migration
     {
 
         Schema::table('pix_charges', function (Blueprint $table) {
-            $table->boolean('e2eId')->nullable()->after('txid');
+            $table->string('e2eId')->nullable()->after('txid');
         });
 
     }
