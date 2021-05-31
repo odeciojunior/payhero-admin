@@ -41,6 +41,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property bool $boleto
  * @property string $boleto_redirect
  * @property string $card_redirect
+ * @property string $pix_redirect
  * @property string $analyzing_redirect
  * @property string $support_phone
  * @property bool $countdown_timer_flag
@@ -136,9 +137,11 @@ class Project extends Model
         'logo',
         'boleto',
         'credit_card',
+        'pix',
         'boleto_due_days',
         'boleto_redirect',
         'card_redirect',
+        'pix_redirect',
         'analyzing_redirect',
         'support_phone',
         'support_phone_verified',
@@ -149,6 +152,7 @@ class Project extends Model
         'whatsapp_button',
         'credit_card_discount',
         'billet_discount',
+        'pix_discount',
         'pre_selected_installment',
         'required_email_checkout',
         'document_type_checkout',

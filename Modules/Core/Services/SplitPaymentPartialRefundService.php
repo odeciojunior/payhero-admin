@@ -78,6 +78,12 @@ class SplitPaymentPartialRefundService
             }
         } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
             $this->transactionStatus = 'pending';
+        }else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('pix')) {
+            if (in_array($this->sale->status, [(new Sale)->present()->getStatus('approved'), (new Sale)->present()->getStatus('partial_refunded')])) {
+                $this->transactionStatus = 'paid';
+            } else {
+                $this->transactionStatus = 'in_process';
+            }
         }
 
         return $this;

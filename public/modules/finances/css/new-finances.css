@@ -282,9 +282,14 @@ strong span {
     border-bottom-color: transparent !important;
 }
 
+.card-tabs {
+    border-radius: 0 16px 16px 16px !important;
+}
+
 .card.shadow {
     border-radius: 0 12px 12px 12px;
 }
+
 
 .s-config {
     margin-left: auto !important;

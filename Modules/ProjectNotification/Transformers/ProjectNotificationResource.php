@@ -25,7 +25,10 @@ class ProjectNotificationResource extends JsonResource
 			3 => 'Compra no cartão',
 			4 => 'Carrinho abandonado',
 			5 => 'Boleto vencendo',
-			6 => 'Código de Rastreio'
+            6 => 'Código de Rastreio',
+			7 => 'PIX gerado',
+			8 => 'PIX compensado',
+			9 => 'PIX expirado'
 		];
 
         $arrayMessage = json_decode($this->message, true);

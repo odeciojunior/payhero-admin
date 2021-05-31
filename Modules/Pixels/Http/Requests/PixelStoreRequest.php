@@ -20,9 +20,11 @@ class PixelStoreRequest extends FormRequest
             'checkout' => 'nullable',
             'purchase_card' => 'nullable',
             'purchase_boleto' => 'nullable',
+            'purchase_pix' => 'nullable',
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
+            'value_percentage_purchase_pix' => 'nullable|integer|max:100|min:10'
         ];
     }
 
@@ -38,6 +40,9 @@ class PixelStoreRequest extends FormRequest
             'value_percentage_purchase_boleto.integer' => 'O campo % Valor Boleto deve ser um número',
             'value_percentage_purchase_boleto.min' => 'O valor do campo % Valor Boleto deve ser no mínimo 10',
             'value_percentage_purchase_boleto.max' => 'O valor do campo % Valor Boleto deve ser no máximo 100',
+            'value_percentage_purchase_pix.integer' => 'O campo % Valor Pix deve ser um número',
+            'value_percentage_purchase_pix.min' => 'O valor do campo % Valor Pix deve ser no mínimo 10',
+            'value_percentage_purchase_pix.max' => 'O valor do campo % Valor Pix deve ser no máximo 100',
         ];
     }
 

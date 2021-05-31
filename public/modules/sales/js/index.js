@@ -529,7 +529,7 @@ $(document).ready(function () {
                                             <span class="status-sale badge badge-${
                                                 statusArray[value.status]
                                             } ${
-                                value.status_translate === "Pendente"
+                                value.status_translate === "Pendente" && value.brand !='pix'
                                     ? "boleto-pending"
                                     : ""
                             }" ${

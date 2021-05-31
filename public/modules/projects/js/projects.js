@@ -269,9 +269,11 @@ $(() => {
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
 
-
+        let company_selected = null;
         for (let company of companies) {
+            if(company.id == userProject.company_id) company_selected = company;
             if (company.id == userProject.company_id || company.capture_transaction_enabled) {
+                if(company.id === userProject.company_id) company_selected = company;
                 $('#update-project #companies').append(
                     `<option value="${company.id}"
                     ${(company.id === userProject.company_id ? 'selected' : '')}
@@ -284,6 +286,32 @@ $(() => {
             }
         }
 
+        function validateInputPixInCheckout(company_selected) {
+
+            let pix_element = $("#pix")
+
+            if(company_selected.has_pix_key) {
+                $("#pix option[value='1']").prop("disabled",false).css("backgroundColor", "white").html('Sim')
+            }else{
+                pix_element.val(0);
+                $("#pix option[value='1']").prop("disabled",true).css("backgroundColor", "grey").html('Sim (A empresa selecionada não possui a chave do PIX)')
+            }
+
+        }
+
+        $("#companies").on("change", function () {
+            let company_sel = null;
+
+            for (let company of companies) {
+                if(company.id === $(this).val()) company_sel = company;
+            }
+
+            if(company_sel)
+                validateInputPixInCheckout(company_sel);
+        })
+
+        validateInputPixInCheckout(company_selected);
+
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();
         if (project.boleto === 1) {
@@ -295,7 +323,9 @@ $(() => {
         $('#boleto_due_days').val(project.boleto_due_days);
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
+        $('#update-project #pix_redirect').val(project.pix_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
+        $('#update-project #pix').val(project.pix);
         termsaffiliates.setData(project.terms_affiliates ?? ' ');
 
         if (project.automatic_affiliation == 1) {
@@ -369,6 +399,7 @@ $(() => {
         $("#checkout_type").val(project.checkout_type);
         $("#credit_card_discount").val(project.credit_card_discount);
         $("#billet_discount").val(project.billet_discount);
+        $("#pix_discount").val(project.pix_discount);
 
         // Verificação de email de contato
         if (project.contact_verified) {
@@ -725,12 +756,14 @@ $(() => {
 
         let discountCard = $('#credit_card_discount').val().replace('%', '');
         let discountBillet = $('#billet_discount').val().replace('%', '');
+        let discountPix = $('#pix_discount').val().replace('%', '');
 
         discountBillet = (discountBillet == '') ? 0 : discountBillet;
         discountCard = (discountCard == '') ? 0 : discountCard;
 
         formData.append('credit_card_discount', discountCard);
         formData.append('billet_discount', discountBillet);
+        formData.append('pix_discount', discountPix);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
 
@@ -1239,5 +1272,39 @@ $(() => {
             style: 'currency',
             currency: 'BRL',
         }));
+    }
+
+    let pix_account_element =  $("#pix_discount");
+    let credit_card_discount_element =  $("#credit_card_discount");
+    let billet_discount_element =  $("#billet_discount");
+
+    if(pix_account_element.val() < 1) {
+        setZetoToPixDiscount(pix_account_element);
+    }
+    if(credit_card_discount_element.val() < 1) {
+        setZetoToPixDiscount(credit_card_discount_element);
+    }
+    if(billet_discount_element.val() < 1) {
+        setZetoToPixDiscount(billet_discount_element);
+    }
+
+    pix_account_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount(pix_account_element);
+        }
+    })
+    credit_card_discount_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount(credit_card_discount_element);
+        }
+    })
+    billet_discount_element.on("change", function () {
+        if($(this).val() < 1) {
+            setZetoToPixDiscount(billet_discount_element);
+        }
+    })
+
+    function setZetoToPixDiscount(element) {
+        element.val(0);
     }
 });
