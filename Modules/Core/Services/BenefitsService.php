@@ -18,7 +18,7 @@ class BenefitsService
                     $activity->log_name = 'benefits_change_ignored';
                     $activity->subject_id = $user->id;
                 }
-            )->log('Cashback update ignorado');
+            )->log('Atualização dos benefícios ignorada');
             return;
         }
         if (!$user->relationLoaded('benefits')) {
@@ -31,13 +31,13 @@ class BenefitsService
 
     private static function updateUserCashback(User $user)
     {
-        $benefits = $user->benefits;
-        $cashback2 = $benefits->where('name', 'cashback_2')
-            ->where('enabled', 1)
-            ->first();
-        $cashback1 = $benefits->where('name', 'cashback_1')
-            ->where('enabled', 1)
-            ->first();
+        if (!$user->relationLoaded('benefits')) {
+            $user->load('benefits');
+        }
+
+        $benefits  = $user->benefits;
+        $cashback1 = $benefits->where('name', 'cashback_1')->first();
+        $cashback2 = $benefits->where('name', 'cashback_2')->first();
 
         if (!$user->relationLoaded('companies')) {
             $user->load('companies');
@@ -54,49 +54,37 @@ class BenefitsService
         // User only has cashback if it has full installment tax (at this time 2.99%)
         // and account score greater than or equal 6
         if ($fullInstallmentTax && $user->account_score >= 6) {
-            if (!is_null($cashback2)) {
-                if ($user->installment_cashback != 1) {
-                    $user->installment_cashback = 1;
-                    $user->save();
-                }
-                if (!is_null($cashback1)) {
-                    $cashback1->enabled = 0;
-                    $cashback1->save();
-                }
-            } else if (!is_null($cashback1)) {
-                if ($user->installment_cashback != 0.5) {
-                    $user->installment_cashback = 0.5;
-                    $user->save();
-                }
-                if (!is_null($cashback2)) {
-                    $cashback2->enabled = 0;
-                    $cashback2->save();
-                }
-            } else if (is_null($cashback1) && is_null($cashback2)) {
-                if ($user->installment_cashback != 0) {
-                    $user->installment_cashback = 0;
-                    $user->save();
-                }
-            }
-        } else {
-            if ($cashback1) {
+
+            if ($user->level >= 3) {
+                $user->installment_cashback = 1;
                 $cashback1->enabled = 0;
-                $cashback1->save();
-            }
-            if ($cashback2) {
+                $cashback2->enabled = 1;
+            } elseif ($user->level == 2) {
+                $user->installment_cashback = 0.5;
+                $cashback1->enabled = 1;
                 $cashback2->enabled = 0;
-                $cashback2->save();
+            } else {
+                $user->installment_cashback = 0;
+                $cashback1->enabled = 0;
+                $cashback2->enabled = 0;
             }
+
+        } else {
             $user->installment_cashback = 0;
-            $user->save();
+            $cashback1->enabled = 0;
+            $cashback2->enabled = 0;
 
             activity()->on($user)->tap(
                 function (Activity $activity) use ($user) {
                     $activity->log_name = 'benefits_change';
                     $activity->subject_id = $user->id;
                 }
-            )->log('Cashback desativado');
+            )->log('Cashback desativado por nota da conta menor que 6 ou desconto na taxa de parcelamento');
         }
+
+        $cashback1->save();
+        $cashback2->save();
+        $user->save();
     }
 
     private static function updateUserGetFaster(User $user)
@@ -145,7 +133,7 @@ class BenefitsService
 
         return [
             'active' => new BenefitCollection($result),
-            'next' => new BenefitCollection($nextBenefits),
+            'next'   => new BenefitCollection($nextBenefits),
         ];
     }
 }
