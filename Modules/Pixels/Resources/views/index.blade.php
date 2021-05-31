@@ -33,14 +33,14 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
             <div class="col-md-12 pl-0">
-                <div class=" align-items-center float-right justify-content-end pointer">
+                <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
                     <span class="link-button-dependent red"> Adicionar</span>
                     <a id="add-pixel" data-toggle="modal"
                        data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
                 </div>
-                <div class='div-config2' >
+                <div class='div-config2'>
                     <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
                         <span class="link-button-dependent red"> Configurações</span>
                         <a class="ml-10 rounded-add pointer bg-secondary btn-config-pixel">
