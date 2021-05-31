@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=03') }}">
 @endpush
 
 <div class='card shadow p-30'>

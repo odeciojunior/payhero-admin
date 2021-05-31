@@ -1,7 +1,7 @@
 <div class='col-md-12'>
     @if(count($projectsIntegrated) == 0)
         @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         @endpush
         <div class='row justify-content-center'>
             <div class="content-error text-center">

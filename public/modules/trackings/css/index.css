@@ -71,6 +71,18 @@
         left: 379px
     }
 }
-
-
-
+@media only screen and (min-width: 851px){
+    .col-md-3.card {
+        margin-right: 10px;
+        max-width: calc(25% - 10px);
+    }
+}
+@media only screen and (min-width: 530px) and (max-width : 850px){
+    .col-sm-6.card {
+        margin-right: 10px;
+        max-width: calc(50% - 10px);
+    }
+}
+h4.number{
+    color:#57617c;
+}

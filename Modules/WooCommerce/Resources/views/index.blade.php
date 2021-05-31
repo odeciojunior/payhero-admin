@@ -14,10 +14,24 @@
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
+
+                    {{-- <a data-toggle="modal" id="button-information" data-target='#modal_explicacao' class="btn btn-floating"
                        style="background-color: #2E85EC;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-question-1 white font-size-30" aria-hidden="true"></i>
-                    </a>
+                    </a> --}}
+
+
+
+                    <div class="w-200 mt-2" style="">
+                            <div class="d-flex align-items-center">
+                                <span class="o-download-cloud-1 mr-2"></span>
+                                <a href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip" id="btn-s" type="button" class="btn btn-round btn-default btn-outline"
+                                        style="min-width: 118px;">Download plugin
+                                </a>
+                              
+                            </div>
+                        </div>
+
                 </div>
             </div>
         </div>
