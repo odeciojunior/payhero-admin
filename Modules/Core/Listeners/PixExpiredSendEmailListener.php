@@ -81,7 +81,9 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
 
-            $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+            $shopify_discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+            $discount = intval($shopify_discount) + $sale->automatic_discount;
+
             if ($discount == 0 || $discount == null) {
                 $discount = '';
             }
