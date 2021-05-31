@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -150,6 +151,13 @@ class WithdrawalsApiController
             }
 
             $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $currentValue = 0;
+
+            $transactionsSum = $company->transactions()
+                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
 
             return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,
                 $withdrawalValueRequested));
@@ -210,10 +218,8 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
-                    $transaction->sale->flag = 'generico';
-                } elseif ($transaction->sale->payment_method == 2) {
-                    $transaction->sale->flag = 'boleto';
+                if(empty($transaction->sale->flag)){
+                    $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
                 if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
@@ -289,12 +295,12 @@ class WithdrawalsApiController
                 ];
             }
 
+
             $return = [
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
-                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',',
-                        '.'),
+                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
                 'transactions' => $arrayTransactions,
             ];
 

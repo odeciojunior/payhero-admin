@@ -218,6 +218,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/detail.js?v=s2') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/detail.js?v=3') }}"></script>
     @endpush
 </div>

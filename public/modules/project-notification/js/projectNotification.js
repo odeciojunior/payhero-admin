@@ -64,18 +64,8 @@ $(function () {
                 $('#modal-edit-project-notification .project-notification-title').val(response.data.title);
                 $('#modal-edit-project-notification .project-notification-subject').val(response.data.subject);
 
-                if (response.data.event_enum == 1) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 0).change();
-                } else if (response.data.event_enum == 2) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 1).change();
-                } else if (response.data.event_enum == 3) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 2).change();
-                } else if (response.data.event_enum == 4) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 3).change();
-                } else if (response.data.event_enum == 5) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 4).change();
-                } else if (response.data.event_enum == 6) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 5).change();
+                if (response.data.event_enum > 1) {
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", response.data.event_enum - 1).change();
                 }
 
                 if (response.data.type_enum == 1) {
@@ -286,22 +276,23 @@ $(function () {
                             <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
-                            <td style="text-align:center">
-                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}">
+                            <td style="text-align:center" class="d-flex justify-content-between align-items-center mb-0">
+                                <a role="button" title='Visualizar' class="details-project-notification pointer" project-notification="${value.id}">
                                     <span class="o-eye-1"></span>
                                 </a>
-                                 ${value.notification_enum != 11 ?
-                            `<a role="button" title="Editar" class="mg-responsive edit-project-notification pointer" project-notification='${value.id}'>
-                                    <span class="o-edit-1"></span>
-                                 </a>` :
-                            `<button style="background-color: transparent;" role="button" class="btn pointer" disabled="">
+                                 ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
+                            `<button style="background-color: transparent;" role="button" class="btn  disabled="">
                                      <span class="o-edit-1"></span>
-                                 </button>`}
-                                <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style=" opacity: 0.5;"' : ''}>
-                                   <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style="cursor: not-allowed"' : ''}>
+                                 </button>` :
+                            `<a role="button" title="Editar" class="edit-project-notification pointer" project-notification='${value.id}'>
+                                    <span class="o-edit-1"></span>
+                                 </a>` 
+                        }
+                                <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+                                   <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
                                        <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
-                                        ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'disabled' : ''}>
-                                       <span class="slider round" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style="cursor: not-allowed"' : ''}></span>
+                                        ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'disabled' : ''}>
+                                       <span class="slider round" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}></span>
                                    </label>
                                </div>
                             </td>

@@ -67,7 +67,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 //sale
                 'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order' => strval($sale->shopify_order),
-                'payment_form' => $sale->payment_method == 2 ? 'Boleto' : (($sale->payment_method == 1 || $sale->payment_method == 3) ? 'Cartão' : ''),
+                'payment_form' => $sale->present()->getPaymentForm(),
                 'installments_amount' => $sale->installments_amount ?? '',
                 'flag' => $sale->flag ?? '',
                 'boleto_link' => $sale->boleto_link ?? '',

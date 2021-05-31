@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -27,9 +28,18 @@ class SalesResource extends JsonResource
         }
 
         $thankPageUrl = '';
+        $thankLabelText = 'Link página de obrigado:';        
         if (isset($this->project->domains[0]->name)) {
-            $thankPageUrl = 'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
+            $urlCheckout = "https://checkout.{$this->project->domains[0]->name}/order/";
+            if(config('app.env')=='homolog'){
+                $urlCheckout = "https://checkout-test.cloudfox.net/order/";
+            }
+            $thankPageUrl = $urlCheckout . Hashids::connection('sale_id')->encode($this->id);
         }
+        if($this->payment_method==4 && $this->status <> Sale::STATUS_APPROVED){
+            $thankLabelText = 'Link página de Qrcode:';
+        }
+
 
         $data = [
             //hide ids
@@ -40,7 +50,7 @@ class SalesResource extends JsonResource
             'client_id'                => Hashids::encode($this->customer_id),
             //sale
             'payment_method'           => $this->payment_method,
-            'flag'                     => $this->flag,
+            'flag'                     => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(), 
             'start_date'               => $this->start_date,
             'hours'                    => $this->hours,
             'status'                   => $this->status,
@@ -81,10 +91,11 @@ class SalesResource extends JsonResource
             'is_chargeback_recovered'  => $this->is_chargeback_recovered,
             'observation'              => $this->observation,
             'thank_page_url'           => $thankPageUrl,
+            'thank_label_text'         => $thankLabelText,
             'company_name'             => $this->details->company_name,
             'has_order_bump'           => $this->has_order_bump,
             'has_contestation'         => $this->contestations->count() ? true : false,
-            'cashback_value'           => isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0 ,
+            'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback'             => $this->cashback->value ?? false
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);

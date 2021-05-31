@@ -181,7 +181,8 @@ $(function () {
 
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
-        $(".percentage-value-edit").val(pixel.value_percentage_purchase_boleto);
+        $('.percentage-value-boleto').val(pixel.value_percentage_purchase_boleto);
+        $('.percentage-value-pix').val(pixel.value_percentage_purchase_pix);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -203,6 +204,7 @@ $(function () {
         isChecked($(".checkout-edit"), pixel.checkout);
         isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
         isChecked($(".purchase-card-edit"), pixel.purchase_card);
+        isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
 
         // Manipulation Modal pixel
         changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"));
@@ -279,7 +281,8 @@ $(function () {
         const inputPlatformEdit = $("#modal-edit-pixel .platform-edit").val();
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
-        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-value-edit").val();
+        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
+        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -290,6 +293,7 @@ $(function () {
             'is_api': isApi,
             'code': inputCodeEdit,
             'value_percentage_purchase_boleto': valuePercentagePurchaseBoleto,
+            'value_percentage_purchase_pix': valuePercentagePurchasePix,
             'facebook_token_api': facebookTokenApi,
             'purchase_event_name': inputPurchaseEventName,
             'plans_apply': plansApply
@@ -315,11 +319,13 @@ $(function () {
                 checkout: $("#modal-edit-pixel .checkout-edit").is(':checked'),
                 purchase_card: $("#modal-edit-pixel .purchase-card-edit").is(':checked'),
                 purchase_boleto: $("#modal-edit-pixel .purchase-boleto-edit").is(':checked'),
+                purchase_pix: $("#modal-edit-pixel .purchase-pix-edit").is(':checked'),
                 edit_pixel_plans: plansApply,
                 purchase_event_name: inputPurchaseEventName,
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                value_percentage_purchase_pix: valuePercentagePurchasePix,
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -475,10 +481,21 @@ $(function () {
             return false;
         }
 
+        if (formData.value_percentage_purchase_pix.length > 3) {
+            alertCustom('error', 'O valore do campo % Valor PIX está incorreto!')
+            return false;
+        }
+
         if (formData.value_percentage_purchase_boleto.length < 1) {
             alertCustom('error', 'O campo % Valor Boleto é obrigatório')
             return false;
         }
+
+        if (formData.value_percentage_purchase_pix.length < 1) {
+            alertCustom('error', 'O campo % Valor PIX é obrigatório')
+            return false;
+        }
+
         if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
             alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
             return false;
@@ -511,10 +528,11 @@ $(function () {
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
-        formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
-        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").is(':checked'));
-        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").is(':checked'));
-        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").is(':checked'));
+        formData.append('status', $("#modal-create-pixel .status").is(':checked'));
+        formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
+        formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
+        formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
+        formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
 
         if (!validateDataPixelForm({
             'name': formData.get('name'),
@@ -522,6 +540,7 @@ $(function () {
             'is_api': formData.get('api-facebook'),
             'code': formData.get('code'),
             'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
+            'value_percentage_purchase_pix': formData.get('value_percentage_purchase_pix'),
             'facebook_token_api': formData.get('facebook-token-api'),
             'purchase_event_name': formData.get('purchase-event-name'),
             'plans_apply': formData.get('add_pixel_plans[]')
@@ -622,5 +641,45 @@ $(function () {
         if ((planSelect.val().length > 1 && planSelect.val().includes('all')) || (planSelect.val().includes('all') && planSelect.val() != 'all')) {
             planSelect.val('all').trigger("change");
         }
+    });
+
+    $(".btn-config-pixel").on('click', function () {
+        $.ajax({
+            method: "GET",
+            url: "/api/projects/" + projectId + "/pixels/configs",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                $("#metatag-verification-facebook").val(response.data.metatags_facebook);
+
+                $("#modal-config-pixel").modal("show");
+            }
+        });
+    });
+
+    $(".btn-save-config-pixel").on('click', function () {
+        $.ajax({
+            method: "POST",
+            url: "/api/projects/" + projectId + "/pixels/saveconfigs",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'metatag-verification-facebook': $("#metatag-verification-facebook").val(),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                alertCustom("success", response.message);
+            }
+        });
     });
 });

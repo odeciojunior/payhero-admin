@@ -697,4 +697,25 @@ class FoxUtils
         $urlPath = $s3drive->url($path . $fileName);
         dd($urlPath);
     }
+
+    public static function checkFileExistUrl(string $url = null, array $types = []): bool
+    {
+        if (empty($url)) {
+            return false;
+        }
+
+        $handle = @fopen($url, 'r');
+        $typeFile = pathinfo($url, PATHINFO_EXTENSION);
+        if (!$handle) {
+            return false;
+        }
+
+        if (!empty($types) && !empty($typeFile)) {
+            if (!in_array($typeFile, $types)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

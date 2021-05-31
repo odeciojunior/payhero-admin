@@ -20,6 +20,9 @@
                 <option value="4">Carrinho abandonado</option>
                 <option value="5">Boleto vencendo</option>
                 <option value="6">Código de Rastreio</option>
+                <option value="7">PIX gerado</option>
+                <option value="8">PIX compensado</option>
+                <option value="9">PIX expirado</option>
             </select>
         </div>
     </div>
