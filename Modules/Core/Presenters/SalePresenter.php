@@ -193,6 +193,8 @@ class SalePresenter extends Presenter
                     return 'boleto';
                 case 3:
                     return 'debito';
+                case 4:
+                    return 'pix';
             }
 
             return null;
@@ -204,9 +206,56 @@ class SalePresenter extends Presenter
                     return 2;
                 case 'debito':
                     return 3;
+                case 'pix':
+                    return 4;
             }
 
             return null;
         }
+    }
+
+    /**
+     * @param null $paymentFlag
+     * @return int|string|null
+     */
+    public function getPaymentForm($paymentType = null)
+    {
+        $paymentType = $paymentType ?? $this->payment_method;
+
+        if (is_numeric($paymentType)) {
+            switch ($paymentType) {
+                case 1:
+                case 3:                
+                    return 'Cartão';
+                case 2:
+                    return 'Boleto';
+                case 4:
+                    return 'Pix';
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param null $paymentFlag
+     * @return int|string|null
+     */
+    public function getPaymentFlag($paymentType = null)
+    {
+        $paymentType = $paymentType ?? $this->payment_method;
+
+        if (is_numeric($paymentType)) {
+            switch ($paymentType) {
+                case 1:
+                    return 'generico';
+                case 3:              
+                    return 'debito';  
+                case 2:
+                    return 'boleto';
+                case 4:
+                    return 'pix';
+            }
+        }
+        return null;
     }
 }

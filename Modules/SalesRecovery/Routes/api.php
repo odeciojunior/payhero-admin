@@ -14,6 +14,7 @@ Route::group(
         Route::get('checkout/getrecoverydata', 'SalesRecoveryApiController@getRecoveryData');
         Route::get('recovery/getrefusedcart', 'SalesRecoveryApiController@getCartRefused');
         Route::get('recovery/getboleto', 'SalesRecoveryApiController@getBoletoOverdue');
+        Route::get('recovery/get-pix', 'SalesRecoveryApiController@getPixOverdue');
 
         Route::post('recovery/details', 'SalesRecoveryApiController@getDetails');
         Route::post('recovery/regenerateboleto', 'SalesRecoveryApiController@regenerateBoleto');

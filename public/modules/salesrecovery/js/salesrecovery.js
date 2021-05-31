@@ -171,11 +171,14 @@ $(document).ready(function () {
             ).val()}&plan=${$("#plan").val()}`;
         }
 
-        if ($("#type_recovery option:selected").val() == 1) {
+        let typeRecoverySelected = $("#type_recovery option:selected").val();
+        if (typeRecoverySelected == 1) {
             return `/api/checkout${url}`;
-        } else if ($("#type_recovery option:selected").val() == 3) {
+        } else if (typeRecoverySelected == 3) {
             return `/api/recovery/getrefusedcart${url}`;
-        } else if ($("#type_recovery option:selected").val() == 5) {
+        } else if (typeRecoverySelected == 4) {
+            return `/api/recovery/get-pix${url}`;
+        } else if (typeRecoverySelected == 5) {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
@@ -207,7 +210,8 @@ $(document).ready(function () {
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                if (response.data == "" && $("#type_recovery").val() == 1) {
+                let typeRecovery = $('#type_recovery').val();
+                if (response.data == "" && typeRecovery) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
                         "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
@@ -216,7 +220,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    $("#type_recovery").val() == 5
+                    typeRecovery
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -226,7 +230,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    $("#type_recovery").val() == 3
+                    typeRecovery
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -248,7 +252,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if ($("#type_recovery").val() == "5") {
+                    if (typeRecovery) {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -525,7 +529,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img src='" +
+                "<img onerror=this.src='/modules/global/img/produto.png' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +

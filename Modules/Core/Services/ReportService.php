@@ -51,6 +51,7 @@ class ReportService
                     'label_list'       => ['', ''],
                     'credit_card_data' => [0, 0],
                     'boleto_data'      => [0, 0],
+                    'pix_data'         => [0, 0],
                     'currency'         => $currency,
                 ];
             }
@@ -104,27 +105,35 @@ class ReportService
 
         $creditCardData = [];
         $boletoData     = [];
+        $pixData     = [];
 
         foreach ($labelList as $label) {
             $creditCardValue = 0;
             $boletoValue     = 0;
+            $pixValue     = 0;
+
             foreach ($orders as $order) {
                 if ($order['hour'] == preg_replace("/[^0-9]/", "", $label)) {
-                    if ($order['payment_method'] == 1) {
+                    if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                         $creditCardValue = substr(intval($order['value']), 0, -2);
-                    } else {
+                    } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                         $boletoValue = substr(intval($order['value']), 0, -2);
+                    } else { // PIX
+                        $pixValue = substr(intval($order['value']), 0, -2);
                     }
                 }
             }
+
             array_push($creditCardData, $creditCardValue);
             array_push($boletoData, $boletoValue);
+            array_push($pixData, $pixValue);
         }
 
         return [
             'label_list'       => $labelList,
             'credit_card_data' => $creditCardData,
             'boleto_data'      => $boletoData,
+            'pix_data'         => $pixData,
             'currency'         => $currency,
         ];
     }
@@ -168,9 +177,7 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
-                //                           ->where('sales.status', 1)
                 ->whereBetween('start_date', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
 
@@ -182,27 +189,34 @@ class ReportService
             $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
+            $pixData     = [];
 
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
                 $boletoValue     = 0;
+                $pixValue     = 0;
                 foreach ($orders as $order) {
                     if (Carbon::parse($order['date'])->format('d-m') == $label) {
-                        if ($order['payment_method'] == 1) {
+                        if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                             $creditCardValue = substr(intval($order['value']), 0, -2);
-                        } else {
+                        } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                             $boletoValue = substr(intval($order['value']), 0, -2);
+                        } else { // PIX
+                            $pixValue = substr(intval($order['value']), 0, -2);
                         }
                     }
                 }
+
                 array_push($creditCardData, $creditCardValue);
                 array_push($boletoData, $boletoValue);
+                array_push($pixData, $pixValue);
             }
 
             return [
                 'label_list'       => $labelList,
                 'credit_card_data' => $creditCardData,
                 'boleto_data'      => $boletoData,
+                'pix_data'         => $pixData,
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
@@ -256,7 +270,6 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -269,30 +282,38 @@ class ReportService
             $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
+            $pixData     = [];
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
                 $boletoValue     = 0;
+                $pixValue     = 0;
+
                 foreach ($orders as $order) {
                     if (
                         (Carbon::parse($order['date'])
                                ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
                                                                                 ->format('d/m') == $label)
                     ) {
-                        if ($order['payment_method'] == 1) {
+                        if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                             $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                        } else {
+                        } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                             $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                        } else { // PIX
+                            $pixValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                         }
                     }
                 }
-                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
-                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+
+                array_push($creditCardData, substr($creditCardValue, 0, -2));
+                array_push($boletoData, substr($boletoValue, 0, -2));
+                array_push($pixData, substr($pixValue, 0, -2));
             }
 
             return [
                 'label_list'       => $labelList,
                 'credit_card_data' => $creditCardData,
                 'boleto_data'      => $boletoData,
+                'pix_data'         => $pixData,
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
@@ -345,7 +366,6 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -357,30 +377,37 @@ class ReportService
             $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
+            $pixData     = [];
+
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
                 $boletoValue     = 0;
+                $pixValue     = 0;
 
                 foreach ($orders as $order) {
                     for ($x = 1; $x <= 3; $x++) {
                         if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
-                            if ($order['payment_method'] == '1') {
+                            if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                                 $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                            } else {
+                            } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                                 $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            } else { // PIX
+                                $pixValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                             }
                         }
                     }
                 }
 
-                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
-                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+                array_push($creditCardData, substr($creditCardValue, 0, -2));
+                array_push($boletoData, substr($boletoValue, 0, -2));
+                array_push($pixData, substr($pixValue, 0, -2));
             }
 
             return [
                 'label_list'       => $labelList,
                 'credit_card_data' => $creditCardData,
                 'boleto_data'      => $boletoData,
+                'pix_data'         => $pixData,
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
@@ -445,28 +472,36 @@ class ReportService
             $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
+            $pixData     = [];
+
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
                 $boletoValue     = 0;
+                $pixValue     = 0;
+
                 foreach ($orders as $order) {
                     for ($x = 1; $x <= 6; $x++) {
                         if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
-                            if ($order['payment_method'] == 1) {
+                            if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                                 $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                            } else {
+                            } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                                 $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            } else { //PIX
+                                $pixValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                             }
                         }
                     }
                 }
-                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
-                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+                array_push($creditCardData, substr($creditCardValue, 0, -2));
+                array_push($boletoData, substr($boletoValue, 0, -2));
+                array_push($pixData, substr($pixValue, 0, -2));
             }
 
             return [
                 'label_list'       => $labelList,
                 'credit_card_data' => $creditCardData,
                 'boleto_data'      => $boletoData,
+                'pix_data'         => $pixData,
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
@@ -528,27 +563,34 @@ class ReportService
 
             $creditCardData = [];
             $boletoData     = [];
+            $pixData     = [];
+
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
                 $boletoValue     = 0;
+                $pixValue     = 0;
+
                 foreach ($orders as $order) {
                     if (Carbon::parse($order['date'])->format('m/y') == $label) {
-                        if ($order['payment_method'] == 1) {
+                        if ($order['payment_method'] == Sale::CREDIT_CARD_PAYMENT) {
                             $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                            $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                        } else {
+                        } elseif ($order['payment_method'] == Sale::BOLETO_PAYMENT) {
                             $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                        } else { // PIX
+                            $pixValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
                         }
                     }
                 }
-                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
-                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+                array_push($creditCardData, substr($creditCardValue, 0, -2));
+                array_push($boletoData, substr($boletoValue, 0, -2));
+                array_push($pixData, substr($pixValue, 0, -2));
             }
 
             return [
                 'label_list'       => $labelList,
                 'credit_card_data' => $creditCardData,
                 'boleto_data'      => $boletoData,
+                'pix_data'         => $pixData,
                 'currency'         => $currency,
             ];
         } catch (Exception $e) {
@@ -1057,7 +1099,7 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->where('transaction.company_id', $companyId);
                 })
-                ->where('sales.status', (new Sale())->present()->getStatus('approved'))
+                ->where('sales.status', Sale::STATUS_APPROVED)
                 ->whereBetween('end_date', [$startDate, $endDate])
                 ->groupBy('date');
 

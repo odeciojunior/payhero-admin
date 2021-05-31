@@ -324,5 +324,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=s10') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=' . uniqid()) }}"></script>
 @endpush

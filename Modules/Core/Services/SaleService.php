@@ -279,8 +279,7 @@ class SaleService
 
             return $transactions;
         } catch (Exception $e) {
-            report($e);
-
+            report($e);            
             return null;
         }
     }
@@ -420,10 +419,9 @@ class SaleService
         }
 
         //set flag
-        if ((!$sale->flag || empty($sale->flag)) && ($sale->payment_method == 1 || $sale->payment_method == 3)) {
-            $sale->flag = 'generico';
-        } elseif (!$sale->flag || empty($sale->flag)) {
-            $sale->flag = 'boleto';
+        
+        if (empty($sale->flag)) {
+            $sale->flag = $sale->present()->getPaymentFlag();
         }
 
         //format dates

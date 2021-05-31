@@ -120,6 +120,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('09:00');
         $schedule->command('achievements:update')->dailyAt('21:00');
 
+        /** Pix Expired */
+        $schedule->command('change:pixpending')->everyMinute();
+
 //        /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
     }

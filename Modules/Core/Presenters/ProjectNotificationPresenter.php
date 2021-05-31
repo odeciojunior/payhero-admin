@@ -3,6 +3,7 @@
 namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Services\ProjectNotificationService;
 
 class ProjectNotificationPresenter extends Presenter
 {
@@ -11,35 +12,47 @@ class ProjectNotificationPresenter extends Presenter
 
         if (is_numeric($event)) {
             switch ($event) {
-                case 1:
+                case ProjectNotificationService::SELECT_BOLETO_GENERATED:
                     return 'billet_generated';
-                case 2:
+                case ProjectNotificationService::SELECT_BOLETO_COMPENSATED:
                     return 'billet_paid';
-                case 3:
+                case ProjectNotificationService::SELECT_CARD_PAYMENT:
                     return 'credit_card_paid';
-                case 4:
+                case ProjectNotificationService::SELECT_ABANDONED_CART:
                     return 'abandoned_cart';
-                case 5:
+                case ProjectNotificationService::SELECT_BOLETO_EXPIRED:
                     return 'billet_due_today';
-                case 6:
+                case ProjectNotificationService::SELECT_TRACKING_CODE:
                     return 'tracking';
+                case ProjectNotificationService::SELECT_PIX_GENERATED:
+                    return 'pix_generated';
+                case ProjectNotificationService::SELECT_PIX_COMPENSATED:
+                    return 'pix_compensated';
+                case ProjectNotificationService::SELECT_PIX_EXPIRED:
+                    return 'pix_expired';
             }
 
             return '';
         } else {
             switch ($event) {
                 case 'billet_generated':
-                    return 1;
+                    return ProjectNotificationService::SELECT_BOLETO_GENERATED;
                 case 'billet_paid':
-                    return 2;
+                    return ProjectNotificationService::SELECT_BOLETO_COMPENSATED;
                 case 'credit_card_paid':
-                    return 3;
+                    return ProjectNotificationService::SELECT_CARD_PAYMENT;
                 case 'abandoned_cart':
-                    return 4;
+                    return ProjectNotificationService::SELECT_ABANDONED_CART;
                 case 'billet_due_today':
-                    return 5;
+                    return ProjectNotificationService::SELECT_BOLETO_EXPIRED;
                 case 'tracking':
-                    return 6;
+                    return ProjectNotificationService::SELECT_TRACKING_CODE;
+                case 'pix_generated':
+                    return ProjectNotificationService::SELECT_PIX_GENERATED;
+                case 'pix_compensated':
+                    return ProjectNotificationService::SELECT_PIX_COMPENSATED;
+                case 'pix_expired':
+                    return ProjectNotificationService::SELECT_PIX_EXPIRED;
             }
 
             return '';
