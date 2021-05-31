@@ -25,8 +25,10 @@ $(document).ready(function () {
             success: function success(response) {
                 $("#content").html("");
                 if (Object.keys(response.data).length === 0) {
-                    $("#no-integration-found").css('display','block');
+                    $("#no-integration-found").show();
                 } else {
+                    $("#no-integration-found").hide();
+
                     $(response.data).each(function (index, data) {
                         $("#content").append(
                             `

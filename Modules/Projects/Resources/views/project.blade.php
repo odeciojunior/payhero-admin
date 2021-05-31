@@ -304,10 +304,10 @@
                                     <p class="gray" id="modal-text"></p>
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                                    <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
+                                    <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
                                         Cancelar
                                     </button>
-                                    <button id="bt-modal-change-woocommerce" type="button"
+                                    <button id="bt-modal-sync-woocommerce" type="button"
                                             class="btn btn-success" style="width: 20%;">Confirmar
                                     </button>
                                 </div>
@@ -337,6 +337,8 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
+
     @endpush
 @endsection
 
