@@ -11,7 +11,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="form-group col-12">
-                <label>MetaTag Verificação dominio facebook</label>
+                <label>Metatag verificação domínio facebook</label>
                 <div class="input-group">
                     <textarea cols="80" rows="3" name="metatag-verification-facebook"
                               id="metatag-verification-facebook">
