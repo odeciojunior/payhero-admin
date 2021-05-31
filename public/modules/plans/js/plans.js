@@ -33,7 +33,7 @@ $(function () {
         $("#form-register-plan").html('');
         $("#form-register-plan").html(form_register_plan);
     }
-    function create() {
+    function create() {console.log('modal create');
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -60,8 +60,8 @@ $(function () {
                         $("#product_1").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''} data-cost="${data.cost}">${data.name}</option>`);
                     });
                     $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
-                    $("#btn-modal").addClass('btn-save-plan');
-                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
+                    $("#btn-modal-plan").addClass('btn-save-plan');
+                    $("#btn-modal-plan").html('<i class="material-icons btn-fix"> save </i>Salvar')
                     $("#modal_add_plan").modal('show');
                     $("#form-update-plan").hide();
                     $("#form-register-plan").show();
@@ -347,7 +347,8 @@ $(function () {
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
                     $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
-                    
+                    console.log('modal edit plan');
+
                     $.ajax({
                         method: "GET",
                         url: '/api/project/' + projectId + '/plans/' + plan,
@@ -364,24 +365,12 @@ $(function () {
                             $("#form-update-plan").html('');
                             $("#form-update-plan").html(form_update_plan);
 
-                            $("#btn-modal").removeClass('btn-update-config-custom');
-                            $("#nav-custom-tab").on('click', function () {
-                                console.log('custom');
-                                $("#btn-modal").removeClass('btn-update-plan');
-                                $("#btn-modal").addClass('btn-update-config-custom');
-                            });
-                            $("#nav-geral-tab").on('click', function () {
-                                $("#btn-modal").removeClass('btn-update-config-custom');
-                                $("#btn-modal").addClass('btn-update-plan');
-                            });
-        
-
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
                             $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
                             //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
-
+                            
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
                                     
@@ -429,7 +418,7 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
-                                    $('#custom_products').append(`
+                                    $('.products_row_custom').append(`
                                         <div class='card container '>
                                             <div class="row">
                                                 <div class="col-sm-12 col-md-12 col-lg-12">
@@ -445,7 +434,7 @@ $(function () {
                                     `);
 
                                     $.each(value.custom_configs, function (indexC,valueC) {
-                                        
+                                        console.log('carregando configs');
                                         $(`#area-custom-products-${index}`).append(`
                                             <div class="row">
                                                 <input type="hidden" name="products[]" value="${value.product_id}">
@@ -470,7 +459,7 @@ $(function () {
                                     });
 
                                     $(document).on('click',`#add_custom_product-${index}`,function(){
-                                        console.log('add '+index);
+                                        console.log('novo item config '+index);
                                         $('#area-custom-products-'+index).append(`
                                             <div class="row">
                                                 <input type="hidden" name="products[]" value="${value.product_id}">
@@ -597,10 +586,24 @@ $(function () {
                             $("#form-register-plan").hide();
                             $("#form-update-plan").show();
 
-                            $("#btn-modal").removeClass('btn-save-plan');
-                            $("#btn-modal").addClass('btn-update-plan');
-                            $("#btn-modal").text('Atualizar');
-                            $("#btn-modal").show();
+
+                            $("#btn-modal-plan").removeClass('btn-save-plan');
+                            $("#btn-modal-plan").removeClass('btn-update-config-custom');
+                            $("#btn-modal-plan").addClass('btn-update-plan');
+
+                            $("#btn-modal-plan").text('Atualizar');
+                            $("#nav-custom-tab").on('click', function () {                        
+                                $("#btn-modal-plan").removeClass('btn-update-plan');
+                                $("#btn-modal-plan").addClass('btn-update-config-custom');
+                                console.log('custom tab');
+                            });
+                            $("#nav-geral-tab").on('click', function () {
+                                $("#btn-modal-plan").removeClass('btn-update-config-custom');
+                                $("#btn-modal-plan").addClass('btn-update-plan');
+                                console.log('geral tab');
+                            });
+                            $("#btn-modal-plan").show();
+                            
                             $('.products_amount').mask('0#');
 
                             $('#products .card.container .row').each(function( index ) {
@@ -643,10 +646,63 @@ $(function () {
                             });
 
                             /**
+                             * save config custom product
+                             */
+                             //$(".btn-update-config-custom").unbind('click');
+                             $(document).on('click','.btn-update-config-custom',function(){                             
+                                 console.log('atualizando config');
+                                 var formData = new FormData(document.getElementById('form-update-plan-tab-2'));
+                                 formData.append("plan", plan);
+                                 console.log(formData);
+   
+                                 loadingOnScreen();
+ 
+                                 $.ajax({
+                                     method: "POST",                                    
+                                     url: '/api/plans/config-custom-product',
+                                     dataType: "json",
+                                     headers: {
+                                         'Authorization': $('meta[name="access-token"]').attr('content'),
+                                         'Accept': 'application/json',
+                                     },
+                                     data: formData,
+                                     processData: false,
+                                     contentType: false,
+                                     cache: false,
+                                     error: function (_error4) {
+                                         function error(_x4) {
+                                             return _error4.apply(this, arguments);
+                                         }
+ 
+                                         error.toString = function () {
+                                             return _error4.toString();
+                                         };
+ 
+                                         return error;
+                                     }(function (response) {
+                                         loadingOnScreenRemove();
+                                         errorAjaxResponse(response);
+ 
+                                         index(pageCurrent);
+                                     }),
+                                     success: function success(data) {
+                                         loadingOnScreenRemove();
+                                         alertCustom("success", "Configurações do Plano atualizado com sucesso");
+                                         index(pageCurrent);
+                                     }
+                                 });
+ 
+                             });
+
+                            /**
                              * Update Plan
                              */
-                            $(".btn-update-plan").unbind('click');
-                            $(".btn-update-plan").on('click', function () {
+                            
+                            //$(".btn-update-plan").unbind('click');
+                            $(document).on('click','.btn-update-plan',function(){ 
+                            //$(".btn-update-plan").on('click', function () {
+                                console.log('atualizando plan');
+                                
                                 var hasNoValue;
                                 $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
@@ -698,54 +754,7 @@ $(function () {
                                 });
                             });
 
-                            /**
-                             * save config custom product
-                             */
-                            $(".btn-update-config-custom").unbind('click');
-                            $(".btn-update-config-custom").on('click', function (){
-                                
-                                var formData = new FormData(document.getElementById('form-update-plan-tab-2'));
-                                formData.append("plan", plan);
-                                console.log(formData);
-  
-                                loadingOnScreen();
-
-                                $.ajax({
-                                    method: "POST",                                    
-                                    url: '/api/plans/config-custom-product',
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    error: function (_error4) {
-                                        function error(_x4) {
-                                            return _error4.apply(this, arguments);
-                                        }
-
-                                        error.toString = function () {
-                                            return _error4.toString();
-                                        };
-
-                                        return error;
-                                    }(function (response) {
-                                        loadingOnScreenRemove();
-                                        errorAjaxResponse(response);
-
-                                        index(pageCurrent);
-                                    }),
-                                    success: function success(data) {
-                                        loadingOnScreenRemove();
-                                        alertCustom("success", "Configurações do Plano atualizado com sucesso");
-                                        index(pageCurrent);
-                                    }
-                                });
-
-                            });
+                            
                         }
                     });
                 });
