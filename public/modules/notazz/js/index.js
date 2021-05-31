@@ -27,6 +27,8 @@ $(document).ready(function () {
                 if (Object.keys(response.data).length === 0) {
                     $("#no-integration-found").show();
                 } else {
+                    $("#no-integration-found").hide();
+
                     $(response.data).each(function (index, data) {
                         $("#content").append(
                             `

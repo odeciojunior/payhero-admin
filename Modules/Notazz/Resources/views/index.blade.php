@@ -11,7 +11,7 @@
 @section('content')
     <div class='page'>
         <div style="" class="page-header container">
-            <div class="row jusitfy-content-between">
+            <div class="row justify-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
                         <a class="gray" href="/apps">
@@ -31,23 +31,7 @@
             <div class="row" id="content">
                 {{-- js load dynamically --}}
             </div>
-            <div id="no-integration-found" class='row justify-content-center' style="display:none;
-                                                                height: 100%; 
-                                                                width: 100%; 
-                                                                position: absolute;
-                                                                display: -webkit-flex;
-                                                                display: flex;
-                                                                -webkit-align-items: center;
-                                                                align-items: center;
-                                                                -webkit-justify-content: center;
-                                                                justify-content: center;
-                                                                padding-bottom:116px">
-                <div class="content-error text-center">
-                    <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
-                    <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                    <p class="desc gray">Integre seus projetos com Notazz de forma totalmente automatizada!</p>
-                </div>
-            </div>
+            
             {{-- Modal add-edit integration --}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -70,6 +54,23 @@
                 </div>
             </div>
             {{-- End Modal  --}}
+        </div>
+        <div id="no-integration-found" class='justify-content-center' style="display:none;
+                                                                height: 100%; 
+                                                                width: 100%; 
+                                                                position: absolute;
+                                                                display: -webkit-flex;
+                                                                display: flex;
+                                                                -webkit-align-items: center;
+                                                                align-items: center;
+                                                                -webkit-justify-content: center;
+                                                                justify-content: center;
+                                                                padding-bottom:116px">
+                <div class="content-error text-center">
+                    <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                    <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+                    <p class="desc gray">Integre seus projetos com Notazz de forma totalmente automatizada!</p>
+                </div>
         </div>
     </div>
     <!-- Delete -->
@@ -101,7 +102,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/notazz/js/index.js?v=s1')}}"></script>
+        <script src="{{asset('modules/notazz/js/index.js?v=s2')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection
