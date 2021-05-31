@@ -11,13 +11,6 @@
     <div class="modal-body">
         <div class="row">
             <div class="form-group col-12">
-                <label>URL envio webhook eventos facebook</label>
-                <div class="input-group">
-                    <input type="text" class="form-control pixel-code" name="webhook-facebook-pixel"
-                           id="webhook-facebook-pixel" value="">
-                </div>
-            </div>
-            <div class="form-group col-12">
                 <label>MetaTag Verificação dominio facebook</label>
                 <div class="input-group">
                     <textarea cols="80" rows="3" name="metatag-verification-facebook"

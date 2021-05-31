@@ -636,7 +636,6 @@ $(function () {
             error: function (response) {
                 errorAjaxResponse(response);
             }, success: function success(response) {
-                $("#webhook-facebook-pixel").val(response.data.url_webhook_events_facebook);
                 $("#metatag-verification-facebook").val(response.data.metatags_facebook);
 
                 $("#modal-config-pixel").modal("show");
@@ -654,7 +653,6 @@ $(function () {
                 'Accept': 'application/json',
             },
             data: {
-                'webhook-facebook-pixel': $("#webhook-facebook-pixel").val(),
                 'metatag-verification-facebook': $("#metatag-verification-facebook").val(),
             },
             error: function (response) {

@@ -9,7 +9,6 @@ class PixelConfig extends Model
 {
     protected $fillable = [
         'project_id',
-        'url_webhook_events_facebook',
         'metatags_facebook'
     ];
 

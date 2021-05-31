@@ -17,7 +17,6 @@ class CreatePixelConfigsTable extends Migration
             'pixel_configs',
             function (Blueprint $table) {
                 $table->id();
-                $table->string('url_webhook_events_facebook')->nullable();
                 $table->text('metatags_facebook')->nullable();
                 $table->unsignedInteger('project_id')->index();
                 $table->timestamps();

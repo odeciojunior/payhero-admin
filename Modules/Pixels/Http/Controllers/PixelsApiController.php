@@ -430,7 +430,6 @@ class PixelsApiController extends Controller
 
             $project->pixelConfigs->update(
                 [
-                    'url_webhook_events_facebook' => $data['webhook-facebook-pixel'],
                     'metatags_facebook' => $data['metatag-verification-facebook'],
                 ]
             );
