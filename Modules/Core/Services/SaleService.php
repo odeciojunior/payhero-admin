@@ -280,7 +280,7 @@ class SaleService
 
             return $transactions;
         } catch (Exception $e) {
-            report($e);            
+            report($e);
             return null;
         }
     }
@@ -420,7 +420,7 @@ class SaleService
         }
 
         //set flag
-        
+
         if (empty($sale->flag)) {
             $sale->flag = $sale->present()->getPaymentFlag();
         }
@@ -621,12 +621,13 @@ class SaleService
                 $transactionRefundAmount = (int)$refundTransaction->value;
 
                 $company = Company::find($refundTransaction->company_id);
-                if (!is_null($company)) {
+                if (!is_null($company) && $sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
                     $this->checkPendingDebt($sale, $company, $transactionRefundAmount);
                 }
 
                 $refundTransaction->status = 'refunded';
                 $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
                 $refundTransaction->save();
             }
 

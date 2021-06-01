@@ -388,7 +388,7 @@
     <!-- Modal estonar transação-->
     <div id="modal-refund-transaction" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-simple">
-            <div class="modal-content p-10">
+            <div class="modal-content p-10" id="modal-refund">
                 <div class="modal-header simple-border-bottom mb-10">
                     <h4 class="modal-title" id="modal-title">Estornar transação</h4>
                     <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
@@ -429,7 +429,7 @@
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" data-dismiss="modal">
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" >
                         Estornar
                     </button>
                 </div>

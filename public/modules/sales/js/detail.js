@@ -1123,7 +1123,7 @@ $(() => {
         partial = 0,
         refundObservation
     ) {
-        loadingOnScreen();
+        loadingOnChart("#modal-refund");
         $.ajax({
             method: "POST",
             url: "/api/sales/refund/" + sale,
@@ -1138,12 +1138,14 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
             },
             success: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
                 atualizar(currentPage);
