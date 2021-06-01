@@ -6,8 +6,8 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css?v=04') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=04') !!}">
     @endpush
 
     <div class="page">
@@ -101,7 +101,7 @@
                                 </div>
                             </div> --}}
                             <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart" id="ecommerceChartView">
-                                <div class="card card-shadow">
+                                <div class="card">
                                     <div class="card-header card-header-transparent py-20">
                                         <ul class="nav nav-pills nav-pills-rounded chart-action" style="display: none">
                                             <li class="nav-item">

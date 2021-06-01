@@ -161,7 +161,6 @@ $(document).ready(function () {
                     updateChart();
                     updatePerformance();
                     updateAccountHealth();
-                    setTimeout(verifyOnboarding, 1000);
                     setTimeout(verifyPixOnboarding, 1600);
                 } else {
                     $(".content-error").show();
@@ -751,9 +750,11 @@ $(document).ready(function () {
                             },
                             error: function error() {
                                 $('#modal-pix-onboarding').modal('hide')
+                                verifyAchievements();
                             },
                             success: function success() {
                                 $('#modal-pix-onboarding').modal('hide')
+                                verifyAchievements();
                             }
                         });
                     });
@@ -779,6 +780,8 @@ $(document).ready(function () {
                             }
                         });
                     });
+                } else {
+                    verifyAchievements()
                 }
             }
         });

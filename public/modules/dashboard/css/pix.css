@@ -20,11 +20,6 @@
     align-items: center;
 }
 
-.modal-pix-onboarding .modal-header img {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
 .modal-pix-onboarding .modal-content .pages {
     display: flex;
     flex-direction: row;

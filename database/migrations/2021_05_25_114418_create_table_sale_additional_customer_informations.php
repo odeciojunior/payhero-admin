@@ -13,7 +13,7 @@ class CreateTableSaleAditionalCustomerInformations extends Migration
      */
     public function up()
     {
-        Schema::create('sale_aditional_customer_informations', function (Blueprint $table) {
+        Schema::create('sale_additional_customer_informations', function (Blueprint $table) {
             $table->increments('id'); 
             $table->unsignedBigInteger('sale_id');
             $table->unsignedBigInteger('plan_id');
@@ -36,6 +36,6 @@ class CreateTableSaleAditionalCustomerInformations extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_aditional_customer_informations');
+        Schema::dropIfExists('sale_additional_customer_informations');
     }
 }

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ asset('modules/global/css/upsell.css?v=s0') }}">
+<link rel="stylesheet" href="{{ asset('modules/global/css/upsell.css?v=10') }}">
 <div class="row justify-content-center">
     <div class="col pb-5">
         <div class="topbar" id="upsell-header"></div>

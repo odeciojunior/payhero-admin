@@ -15,6 +15,7 @@ class PixCharge extends Model
         'sale_id',
         'gateway_id',
         'txid',
+        'e2eId',
         'location_id',
         'location',
         'qrcode',

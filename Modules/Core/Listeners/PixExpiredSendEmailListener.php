@@ -81,7 +81,9 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
 
-            $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+            $shopify_discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+            $discount = intval($shopify_discount) + $sale->automatic_discount;
+
             if ($discount == 0 || $discount == null) {
                 $discount = '';
             }
@@ -126,9 +128,9 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "project_contact" => $project->contact,
                 'sale_code' => $saleCode,
                 "products" => $products,
-                "total_paid_value" => 'R$ ' . $sale->total_paid_value,
-                "shipment_value" => 'R$ ' . $sale->present()->getFormattedShipmentValue(),
-                "subtotal" => 'R$ ' . $subTotal,
+                "total_paid_value" => $sale->total_paid_value,
+                "shipment_value" => $sale->present()->getFormattedShipmentValue(),
+                "subtotal" => $subTotal,
                 "subject" => $subjectMessage,
                 "title" => $titleMessage,
                 "content" => $contentMessage,

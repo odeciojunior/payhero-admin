@@ -42,6 +42,7 @@
     z-index: 1;
 }
 
+<<<<<<< HEAD
 .list-linear-gradient-bottom {
     background: linear-gradient(to top, white, rgba(255, 255, 255, 0.8), transparent);
     background: -webkit-linear-gradient(to top, white, rgba(255, 255, 255, 0.8), transparent);
@@ -60,6 +61,8 @@
     -moz-box-shadow: none;
     box-shadow: none;
 }*/
+=======
+>>>>>>> 6e114004348b1d26e4aadba7b8906eda3edbebe7
 @media only screen and (min-width: 768px){
     .col-md-3.card {
         margin-right: 10px;
@@ -75,3 +78,7 @@
 h4.number{
     color:#57617c;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6e114004348b1d26e4aadba7b8906eda3edbebe7

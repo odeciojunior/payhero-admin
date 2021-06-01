@@ -14,7 +14,7 @@
         <div class="col-12 col-lg-7 order-lg-1 h-p100">
             <div id="title-onboarding-2" class="text-lg-left text-center text-primary">O QUE VOCÊ PRECISA FAZER?</div>
             <div id="sub-title-onboarding-2" class="text-center text-lg-left">
-                Para começar a vender com PIX, registre sua chave
+                Para começar a vender com PIX, ative sua chave
             </div>
 
             <div class="row">
@@ -24,7 +24,7 @@
                         checkout.
                     </p>
                     <p>
-                        Antes de começar a vender por esse meio, <b>você precisa cadastrar sua chave PIX no Accounts</b>.
+                        Antes de começar a vender por esse meio, <b>você precisa ativar sua chave PIX no Accounts</b>.
                     </p>
                 </div>
 
@@ -38,16 +38,17 @@
                         conta, utilizando a sua chave como destino final.
                     </p>
                 </div>
+
+                <div class="col-12 d-flex justify-content-end">
+                    <div class="btn btn-link text-secondary pix-onboarding-later">Fazer isso depois</div>
+                    <div class="btn btn-primary pix-onboarding-finish">Ir para o Accounts</div>
+                </div>
             </div>
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
-            <img class="img-fluid" alt="Image" id="img-onboarding"
+            <img class="img-fluid" alt="Image" id="img-onboarding" width="100"
                  src="{{asset('modules/global/img/pix/pix-register-key.svg')}}">
         </div>
     </div>
-</div>
-<div class="modal-footer justify-content-end">
-    <div class="btn btn-link text-secondary pix-onboarding-later">Fazer isso depois</div>
-    <div class="btn btn-primary pix-onboarding-finish">Ir para o Accounts</div>
 </div>

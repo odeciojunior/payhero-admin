@@ -19,26 +19,26 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $carrier_id
  * @property string $photo
  * @property string $visibility
- * @property boolean $status
+ * @property bool $status
  * @property string $name
  * @property string $description
  * @property string $invoice_description
  * @property string $percentage_affiliates
  * @property string $terms_affiliates
  * @property string $url_page
- * @property boolean $automatic_affiliation
+ * @property bool $automatic_affiliation
  * @property string $shopify_id
  * @property string $woocommerce_id
  * @property string $installments_amount
  * @property string $installments_interest_free
  * @property string $cookie_duration
- * @property boolean $url_cookies_checkout
+ * @property bool $url_cookies_checkout
  * @property string $contact
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $logo
- * @property boolean $boleto
+ * @property bool $boleto
  * @property string $boleto_redirect
  * @property string $card_redirect
  * @property string $pix_redirect
@@ -287,6 +287,11 @@ class Project extends Model
     public function orderBumpRules(): HasMany
     {
         return $this->hasMany(OrderBumpRule::class);
+    }
+
+    public function pixelConfigs(): HasOne
+    {
+        return $this->hasOne(PixelConfig::class);
     }
 
     public function getFinalizingPurchaseConfigToogleAttribute()

@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=03') }}">
 @endpush
 
 <div class='card shadow p-30'>
@@ -444,7 +444,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for="pix_discount">Desconto automático em pixs (%)</label>
+                                <label for="pix_discount">Desconto automático em pix (%)</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-pad" id="pix_discount"
                                            maxlength='3'>

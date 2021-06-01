@@ -12,9 +12,9 @@
             <div id="modal-content-pix">
                 <div id="modal-pix-content-0">
                     <div id="header-pix-onboarding-1" class="modal-header flex-wrap">
-                        <div class="w-p100 d-flex flex-column justify-content-center align-items-center pb-40">
-                            <img id="icon" class="mb-50" src="{{ asset('modules/global/img/pix/sirius-icon.svg') }}" width="35">
-                            <img id="icon" src="{{ asset('modules/global/img/pix/presentation.png') }}" width="400">
+                        <div class="w-p100 d-flex flex-column justify-content-center align-items-center">
+                            <img id="icon" class="mb-20" src="{{ asset('modules/global/img/pix/sirius-icon.svg') }}" width="35">
+                            <img class="img-fluid" src="{{ asset('modules/global/img/pix/presentation.png') }}" width="350">
                         </div>
                     </div>
                     <div class="modal-body text-center">
@@ -24,7 +24,7 @@
                             A partir de hoje, você já pode vender com o PIX e receber<br/>
                             o valor das vendas diretamente na sua conta bancária!
                         </div>
-                        <div class="btn btn-primary pix-onboarding-next my-20">Descubra</div>
+                        <div class="btn btn-primary pix-onboarding-next">Descubra</div>
                     </div>
                 </div>
 

@@ -23,7 +23,7 @@
 
             <div class="row">
                 <div class="d-flex flex-wrap align-items-md-baseline align-items-lg-center h-p75">
-                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
@@ -35,7 +35,7 @@
                         </span>
                     </div>
 
-                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
@@ -47,7 +47,7 @@
                         </span>
                     </div>
 
-                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
+                    <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
@@ -58,6 +58,11 @@
                             Seu cliente recebe instruções precisas e práticas para finalizar o pagamento.
                         </span>
                     </div>
+
+                    <div class="col-12 d-flex justify-content-end">
+                        <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
+                        <div class="btn btn-primary pix-onboarding-next">Continuar</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,8 +72,4 @@
                  src="{{asset('modules/global/img/pix/pix-environment.png')}}">
         </div>
     </div>
-</div>
-<div class="modal-footer justify-content-end">
-    <div class="btn btn-link text-secondary pix-onboarding-previous">Voltar</div>
-    <div class="btn btn-primary pix-onboarding-next">Continuar</div>
 </div>

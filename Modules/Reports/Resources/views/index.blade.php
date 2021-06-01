@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css?v=' . uniqid()) !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=' . uniqid()) !!}">
     @endpush
 
     <div class="page mb-0">
@@ -145,7 +145,7 @@
                     </div> --}}
                     <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart"
                          id="ecommerceChartView">
-                        <div class="card card-shadow">
+                        <div class="card">
                             <div class="card-header card-header-transparent py-20">
                                 <!--div class="btn-group dropdown"-->
                                 <!--a href="#" class="text-body dropdown-toggle blue-grey-700" data-toggle="dropdown">PRODUCTS SALES</a-->

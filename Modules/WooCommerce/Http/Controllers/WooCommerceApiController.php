@@ -19,6 +19,7 @@ use Modules\Core\Services\WooCommerceService;
 use Modules\WooCommerce\Transformers\WooCommerceResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\WooCommerceIntegration;
 
 /**
  * Class ApiController
@@ -111,7 +112,7 @@ class WooCommerceApiController extends Controller
             if (!$woocommerceService->verifyPermissions()) {
                 return response()->json(
                     [
-                        'message' => 'Problema ao testar a chave de acesso!'
+                        'message' => 'Chave de acesso incorreta ou sem permissão de escrita!'
                     ],
                     400
                 );
@@ -222,23 +223,23 @@ class WooCommerceApiController extends Controller
             try{
 
                 $products = $woocommerceService->fetchProducts();
-                
+
                 $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
-                
+
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
                     ]
                 );
-                
-                
+
+
             }catch(Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
                 $projectCreated->delete();
-                
+
                 report($e);
-                
+
                 return response()->json(
                     [
                         'message' => 'Problema ao criar integração, tente novamente mais tarde'
