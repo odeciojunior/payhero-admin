@@ -213,9 +213,7 @@ class WooCommerceService
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-        $exists = Product::where('shopify_variant_id', $shopifyVariantId)->first();
-        //if(!empty($exists)) return;
-        
+             
 
         $product = $productModel->create(
             [
