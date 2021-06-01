@@ -16,7 +16,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TransactionsService
 {
 
-    public function verifyGetnetTransactions()
+    public function verifyAutomaticLiquidationTransactions()
     {
         try {
             // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
@@ -33,7 +33,7 @@ class TransactionsService
             ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
             ->where('is_waiting_withdrawal', 0)
             ->whereNull('withdrawal_id')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->where(function ($where) {
                 $where->where('tracking_required', false)
                     ->orWhereHas('sale', function ($query) {
