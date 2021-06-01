@@ -76,11 +76,30 @@ class WooCommerceService
                     'version' => 'wc/v3',
                 ]
             );
-            $this->woocommerce->get('products', ['per_page'=>1]);
-            
-            return true;
+
+            //read test
+            $product = $this->woocommerce->get('products', ['per_page'=>1]);
+
+            if(!empty($product)){ //write test
+
+                $data = [
+                    'name' => $product[0]->name
+                ];
+    
+                $this->woocommerce->put('products/'.$product[0]->id, $data);
+    
+                return true;
+                
+
+            }else{
+    
+                return false;
+
+            }
+
         }catch(Exception $e){
-            report($e);
+
+            //report($e);
 
             return false;
         }
