@@ -100,7 +100,9 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     updateUsedApps();
                 }else{
-                    $("#project-not-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#project-empty").hide();
+
                 }
 
                 loadingOnScreenRemove()
