@@ -541,6 +541,8 @@ class SaleService
                     $product['digital_product_url'] = '';
                 }
 
+                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
+
                 $productsSale[] = $product;
             }
         }
