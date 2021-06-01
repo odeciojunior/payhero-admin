@@ -687,7 +687,7 @@ $(() => {
         }
 
         if (
-            (sale.payment_method == 1 || sale.payment_method == 3) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || sale.payment_method == 4 ) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
