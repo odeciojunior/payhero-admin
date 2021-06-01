@@ -88,6 +88,7 @@ class Sale extends Model
 
     public const CREDIT_CARD_PAYMENT = 1;
     public const BOLETO_PAYMENT = 2;
+    public const PIX_PAYMENT = 4;
 
     public const STATUS_APPROVED = 1;
     public const STATUS_PENDING = 2;
@@ -329,5 +330,13 @@ class Sale extends Model
             ->count();
 
         return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function pixCharges()
+    {
+        return $this->hasMany( PixCharge::class, 'sale_id');
     }
 }

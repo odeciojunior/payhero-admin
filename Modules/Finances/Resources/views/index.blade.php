@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=06'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -83,7 +83,7 @@
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -263,7 +263,7 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
@@ -339,6 +339,7 @@
                                                             <option value="ALL">Todos</option>
                                                             <option value="CREDIT_CARD">Cartão de crédito</option>
                                                             <option value="BANK_SLIP">Boleto</option>
+                                                            <option value="PIX">PIX</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -467,7 +468,7 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <form id="finances-settings-form">
-                                <div class="card shadow p-20">
+                                <div class="card shadow card-tabs p-20">
                                     <div class="row justify-content-start align-items-center">
                                         <div class="col-12 col-sm-8 text-left">
                                             <h5 class="title-pad">Configurações</h5>

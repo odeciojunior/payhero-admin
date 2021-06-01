@@ -87,33 +87,49 @@ $(function () {
                 $("#revenue-generated").html(response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
+                $("#qtd-pix").html(response.contPix);
                 $("#qtd-recusadas").html(response.contRecused);
                 $("#qtd-reembolso").html(response.contRefunded);
                 $("#qtd-chargeback").html(response.contChargeBack);
                 $("#qtd-dispute").html(response.contInDispute);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
-                $("#percent-credit-card").html(
-                    response.totalPercentCartao + "%"
-                );
-                $("#percent-values-boleto").html(
-                    response.totalPercentPaidBoleto + "%"
-                );
+                $("#percent-credit-card").html(`
+                    ${parseFloat(response.totalPercentCartao).toFixed(1)} %
+                `);
+                $("#percent-values-boleto").html(`
+                    ${parseFloat(response.totalPercentPaidBoleto).toFixed(1)} %
+                `);
+                $("#percent-values-pix").html(`
+                    ${parseFloat(response.totalPercentPaidPix).toFixed(1)} %
+                `);
                 $("#credit-card-value").html(response.totalValueCreditCard);
                 $("#boleto-value").html(response.totalValueBoleto);
-                $("#percent-boleto-convert").html(
-                    response.convercaoBoleto + "%"
-                );
-                $("#percent-credit-card-convert").html(
-                    response.convercaoCreditCard + "%"
-                );
-                $("#percent-desktop").html(response.conversaoDesktop + "%");
-                $("#percent-mobile").html(response.conversaoMobile + "%");
+                $("#pix-value").html(response.totalValuePix);
+                $("#percent-boleto-convert").html(`
+                    <span class="money-td"> ${parseFloat(response.convercaoBoleto).toFixed(1)} % </span>
+                `);
+                $("#percent-credit-card-convert").html(`
+                    <span class="money-td"> ${parseFloat(response.convercaoCreditCard).toFixed(1)} % </span>
+                `);
+                $("#percent-pix-convert").html(`
+                    <span class="money-td"> ${parseFloat(response.convercaoPix).toFixed(1)} % </span>
+                `);
+                $("#percent-desktop").html(`
+                    ${parseFloat(response.conversaoDesktop).toFixed(1)} %
+                `);
+                $("#percent-mobile").html(`
+                    ${parseFloat(response.conversaoMobile).toFixed(1)} %
+                `);
                 $("#qtd-cartao-convert").html(response.cartaoConvert);
                 $("#qtd-boleto-convert").html(response.boletoConvert);
+                $("#qtd-pix-convert").html(response.pixConvert);
                 $("#ticket-medio").html(
                     response.currency + " " + response.ticketMedio
                 );
+
+                $('#conversion-items').asScrollable();
+                $('#payment-type-items').asScrollable();
 
                 var table_data_itens = "";
                 if (!isEmpty(response.plans)) {
@@ -144,7 +160,11 @@ $(function () {
                     }
                 });
                 $.each(response.chartData.credit_card_data,function(index,value){
-                    console.log(value);
+                    if (value!=false) {
+                        flag=true;
+                    }
+                });
+                $.each(response.chartData.pix_data,function(index,value){
                     if (value!=false) {
                         flag=true;
                     }
@@ -249,13 +269,14 @@ $(function () {
             id,
             labelList,
             series1List,
-            series2List
+            series2List,
+            series3List
         ) {
             var scoreChart = new Chartist.Line(
                 "#" + id,
                 {
                     labels: labelList,
-                    series: [series1List, series2List],
+                    series: [series1List, series2List, series3List],
                 },
                 {
                     lineSmooth: Chartist.Interpolation.simple({
@@ -271,6 +292,9 @@ $(function () {
                             showArea: !0,
                         },
                         "boleto-data": {
+                            showArea: !0,
+                        },
+                        "pix-data": {
                             showArea: !0,
                         },
                     },
@@ -391,13 +415,18 @@ $(function () {
         boletoSalesData = {
             name: "Boleto",
             data: chartData.credit_card_data,
+        },
+        pixSalesData = {
+            name: "PIX",
+            data: chartData.pix_data,
         };
         (createChart = function createChart(button) {
             scoreChart(
                 "scoreLineToDay",
                 labelList,
                 creditCardSalesData,
-                boletoSalesData
+                boletoSalesData,
+                pixSalesData
             );
         }),
         createChart(),

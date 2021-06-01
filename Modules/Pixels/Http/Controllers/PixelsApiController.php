@@ -4,18 +4,21 @@ namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
 use Modules\Pixels\Transformers\PixelsResource;
+use Sentry\Response;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -103,23 +106,33 @@ class PixelsApiController extends Controller
                 $isApi = true;
             }
 
+            if (empty($validator['value_percentage_purchase_boleto'])) {
+                $validator['value_percentage_purchase_boleto'] = 100;
+            }
+
+            if (empty($validator['value_percentage_purchase_pix'])) {
+                $validator['value_percentage_purchase_pix'] = 100;
+            }
+
             Pixel::create(
                 [
                     'project_id' => $project->id,
                     'name' => $validator['name'],
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
-                    'status' => $validator['status'] == "true",
-                    'checkout' => $validator['checkout'] == "true",
-                    'purchase_boleto' => $validator['purchase_boleto'] == "true",
-                    'purchase_card' => $validator['purchase_card'] == "true",
+                    'status' => (bool) $validator['status'],
+                    'checkout' => $validator['checkout'],
+                    'purchase_boleto' => $validator['purchase_boleto'],
+                    'purchase_card' => $validator['purchase_card'],
+                    'purchase_pix' => $validator['purchase_pix'],
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
                     'purchase_event_name' => $validator['purchase-event-name'],
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
-                    'value_percentage_purchase_boleto' => empty($validator['value_percentage_purchase_boleto']) ? 100 : $validator['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
+                    'value_percentage_purchase_pix' => $validator['value_percentage_purchase_pix']
                 ]
             );
 
@@ -282,15 +295,18 @@ class PixelsApiController extends Controller
                     'status' => $validated['status'] == 'true',
                     'code' => $validated['code'],
                     'apply_on_plans' => $applyPlanEncoded,
-                    'checkout' => $validated['checkout'] == 'true',
-                    'purchase_boleto' => $validated['purchase_boleto'] == 'true',
-                    'purchase_card' => $validated['purchase_card'] == 'true',
+                    'checkout' => $validated['checkout'],
+                    'purchase_boleto' => $validated['purchase_boleto'],
+                    'purchase_card' => $validated['purchase_card'],
+                    'purchase_pix' => $validated['purchase_pix'],
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
                     'is_api' => $validated['is_api'],
-                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
+                    'value_percentage_purchase_pix' => $validated['value_percentage_purchase_pix']
                 ]
             );
+
             if ($pixelUpdated) {
                 return response()->json('Sucesso', 200);
             }
@@ -374,6 +390,81 @@ class PixelsApiController extends Controller
             report($e);
 
             return response()->json('Erro ao buscar pixel', 400);
+        }
+    }
+
+    public function getPixelConfigs($projectId): JsonResponse
+    {
+        try {
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project->pixelConfigs)) {
+                PixelConfig::create(['project_id' => $project->id]);
+            };
+
+            $project->load('pixelConfigs');
+            return response()->json(
+                [
+                    'data' => $project->pixelConfigs->makeHidden(
+                        ['id', 'project_id', 'created_at', 'updated_at', 'deleted_at']
+                    ),
+                    'message' => '',
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'message' => 'Ocorreu um erro tente novamente mais tarde!',
+                    'success' => false,
+                ],
+                400
+            );
+        }
+    }
+
+    public function storePixelConfigs(Request $request, $projectId): JsonResponse
+    {
+        try {
+            $data = $request->all();
+
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project) || empty($project->pixelConfigs)) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                    ]
+                );
+            }
+
+            $project->pixelConfigs->update(
+                [
+                    'metatags_facebook' => $data['metatag-verification-facebook'],
+                ]
+            );
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'success' => true,
+                    'message' => 'Configuração de Pixels atualizada com sucesso'
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                ],
+                400
+            );
         }
     }
 

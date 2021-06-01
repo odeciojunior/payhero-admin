@@ -183,11 +183,14 @@ class ShopifyApiController extends Controller
             }
 
             $shopifyName = $shopifyService->getShopName();
+            $company = Company::find(current(Hashids::decode($dataRequest['company'])));
+            $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
             $projectCreated = $projectModel->create(
                 [
                     'name' => $shopifyName,
                     'status' => $projectModel->present()->getStatus('active'),
                     'visibility' => 'private',
+                    'pix' => $has_pix_key,
                     'percentage_affiliates' => '0',
                     'description' => $shopifyName,
                     'invoice_description' => $shopifyName,

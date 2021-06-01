@@ -358,4 +358,55 @@ class SalesRecoveryApiController extends Controller
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
+
+    public function getPixOverdue(Request $request)
+    {
+        $data                 = $request->all();
+        $salesRecoveryService = new SalesRecoveryService();
+
+        $projectId = null;
+        if (!empty($data['project'])) {
+            $projectId = current(Hashids::decode($data['project']));
+        }
+
+        $client = null;
+        if (!empty($data['client'])) {
+            $client = $data['client'];
+        }
+
+        $clientDocument = null;
+        if (!empty($data['client_document'])) {
+            $clientDocument = $data['client_document'];
+        }
+
+        $plan = null;
+        if (!empty($data['plan'])) {
+            $plan = $data['plan'];
+        }
+
+        $dateStart = null;
+        $dateEnd   = null;
+
+        $dateRange = FoxUtils::validateDateRange($data["date_range"]);
+        if (!empty($data["date_type"]) && $dateRange) {
+            $dateStart = $dateRange[0] . ' 00:00:00';
+            $dateEnd   = $dateRange[1] . ' 23:59:59';
+        }
+
+        $paymentMethod = (new Sale())->present()->getPaymentType('pix');
+        $status        = [5];
+
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused(
+            $paymentMethod,
+            $status,
+            $projectId,
+            $dateStart,
+            $dateEnd,
+            $client,
+            $clientDocument,
+            $plan
+        );
+
+        return SalesRecoveryCardRefusedResource::collection($sales);
+    }
 }
