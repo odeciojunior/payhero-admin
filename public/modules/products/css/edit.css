@@ -29,6 +29,7 @@ a:hover,
 .btn-cancelar,
 .btn-excluir {
     background: transparent;
+    font-weight: bold;
     font-size: 18px;
     border: 0;
 }
