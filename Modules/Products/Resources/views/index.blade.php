@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-lg-3 col-md-6" id='is-projects'>
                             <div class="">
-                                <label id="select-projects-label" class="disabled" for="select-projects">Projeto</label>
+                                <label id="select-projects-label" for="select-projects">Projeto</label>
                                 <select id='select-projects' class="form-control select-pad disabled" disabled>
                                     <option>Carregando...</option>
                                 </select>
@@ -50,7 +50,7 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-6" style="margin-top: 29px">
+                        <div class="col-lg-3 col-md-6 mt-auto">
                             <button id="btn-filtro" class="btn btn-primary w-full p-10">
                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                             </button>
@@ -80,11 +80,11 @@
         </div>
 
         <div class="modal fade" id="new-product-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-dialog modal-dialog-centered" style="width: 350px;max-width: 350px;" role="document">
               <div class="modal-content s-border-radius">
                 <div class="modal-header simple-border-bottom px-20">
                   <h4 class="col-12 modal-title text-center" style="color:#787878; font: normal normal bold 20px Muli;">Criar novo produto</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <button type="button" class="close" data-dismiss="modal" style="margin: -10px 0px -15px -5px;" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -93,13 +93,13 @@
                       <div class="row text-center">
                         <div class="col-6 d-flex flex-column align-items-center">
                           <a href="/products/create/physical" class="mb-2 new-product-icon">
-                            <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}" class="pb-5"  data-value="product_physical" alt="novo produto fisico">
+                            <img src="{{ asset('/modules/global/img/svg/caixa-fisica.svg') }}"  data-value="product_physical" alt="novo produto fisico">
                           </a>
                           <p>Físico</p>
                         </div>
                         <div class="col-6 d-flex flex-column align-items-center">
                           <a href="/products/create/digital" class="mb-2 new-product-icon">
-                            <img src="{{ asset('/modules/global/img/svg/phone.svg') }}" class="pb-5" data-value="product_digital" alt="novo produto digital">
+                            <img src="{{ asset('/modules/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
                           </a>
                           <p>Digital</p>
                         </div>

@@ -55,53 +55,53 @@
                     <h4 class="px-40"> 2. Logística </h4>
                     <hr class="my-20">
                     <div class="px-40 row justify-content-between">
-                        <div class="col-12 col-md-4 text-center">
+                        <div class="col-12 col-md-4 col-lg-2 col-xl-4 text-center">
                             <img id="caixinha-img"
                                  src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
                                  class="img-fluid"
                                  alt="novo produto fisico">
                         </div>
                         
-                        <div class="row col-12 col-md-8">
-                            <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="row col-12 col-md-8 col-lg-10 col-xl-8">
+                            <div class="col-12 col-sm-6 col-lg-3 pl-0">
                                 <label for="height">Altura</label>
                                 <div class="form-group input-group">
                                     <input name="height" type="text" class="form-control" id="height" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">CM</span>
+                                        <span class="input-group-text font-weight-bold">CM</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="col-12 col-sm-6 col-lg-3 pl-0">
                                 <label for="width">Largura</label>
                                 <div class="form-group input-group">
                                     <input name="width" type="text" class="form-control" id="width" placeholder="Ex: 135" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">CM</span>
+                                        <span class="input-group-text font-weight-bold">CM</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="col-12 col-sm-6 col-lg-3 pl-0">
                                 <label for="length">Comprimento</label>
                                 <div class="form-group input-group">
                                     <input name="length" type="text" class="form-control" id="length" placeholder="Ex: 150" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">CM</span>
+                                        <span class="input-group-text font-weight-bold">CM</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="col-12 col-sm-6 col-lg-3 pl-0">
                                 <label for="weight">Peso</label>
                                 <div class="form-group input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">G</span>
+                                        <span class="input-group-text font-weight-bold">G</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-12 mt-0">
                                 <small class="text-muted">
-                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
+                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank" style="color: #2E85EC;">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
                                 <br>
                                 <small class="text-muted">

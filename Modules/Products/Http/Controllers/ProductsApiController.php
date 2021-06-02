@@ -235,7 +235,7 @@ class ProductsApiController extends Controller
 
             if (Str::contains($product->photo, '?v=')) {
                 $productUrl = Str::before($product->photo, '?v=');
-                $product->photo = Http::get($productUrl)->successful() ? $product->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png';
+                $product->photo = Http::get($productUrl)->successful() ? $productUrl : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png';
             }
 
             return EditProductResource::make([

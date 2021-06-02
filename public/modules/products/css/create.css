@@ -59,6 +59,7 @@ a:hover {
     border: 2px dashed #2E85EC;
     border-radius: 8px;
     margin: auto;
+    font-weight: bold;
 }
 
 .dropify-wrapper .dropify-message {
@@ -105,11 +106,4 @@ a:hover {
 
 .input-file {
     display: none;
-}
-
-.input-file:hover + .input-file-trigger,
-.input-file:focus + .input-file-trigger,
-.input-file-trigger:hover,
-.input-file-trigger:focus {
-    color: #39D2B4;
 }

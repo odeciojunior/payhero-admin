@@ -13,13 +13,11 @@ $(document).ready(function () {
     // Comportamentos da tela
     $("#type-products").on("change", function () {
         if ($(this).val() === "1") {
-            $("#is-projects label").removeClass("disabled");
             $("#is-projects select")
                 .prop("disabled", false)
                 .removeClass("disabled");
             $("#opcao-vazia").remove();
         } else {
-            $("#is-projects label").addClass("disabled");
             $("#is-projects select")
                 .prop("disabled", true)
                 .addClass("disabled")
