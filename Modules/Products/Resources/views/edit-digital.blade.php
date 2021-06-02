@@ -60,7 +60,7 @@
                                     <div class="form-group input-group">
                                         <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" min="0" maxlength="5" data-mask="0#">
                                         <div class="input-group-append">
-                                            <span class="input-group-text">HORA(S)</span>
+                                            <span class="input-group-text font-weight-bold">HORA(S)</span>
                                         </div>
                                     </div>
                                 </div>
