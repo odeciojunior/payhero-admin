@@ -181,8 +181,9 @@ $(function () {
 
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
-        $('.percentage-value-boleto').val(pixel.value_percentage_purchase_boleto);
-        $('.percentage-value-pix').val(pixel.value_percentage_purchase_pix);
+        $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
+        //percentage-boleto-value-edit
+        $('.percentage-pix-value-edit').val(pixel.value_percentage_purchase_pix);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -501,8 +502,18 @@ $(function () {
             return false;
         }
 
+        if (isNaN(parseInt(formData.value_percentage_purchase_pix))) {
+            alertCustom('error', 'O campo % Valor Pix permite apenas numeros');
+            return false;
+        }
+
         if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
+            return false;
+        }
+
+        if (formData.value_percentage_purchase_pix > 100 || formData.value_percentage_purchase_pix < 10) {
+            alertCustom('error', 'O valores permitidos para o campo % Valor Pix deve ser entre 10 e 100')
             return false;
         }
 

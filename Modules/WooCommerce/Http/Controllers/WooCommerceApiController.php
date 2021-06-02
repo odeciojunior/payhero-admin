@@ -112,7 +112,7 @@ class WooCommerceApiController extends Controller
             if (!$woocommerceService->verifyPermissions()) {
                 return response()->json(
                     [
-                        'message' => 'Problema ao testar a chave de acesso!'
+                        'message' => 'Chave de acesso incorreta ou sem permissão de escrita!'
                     ],
                     400
                 );

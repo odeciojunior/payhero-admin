@@ -88,7 +88,7 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:getnet-transactions')->dailyAt('06:15');
+        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
@@ -103,10 +103,6 @@ class Kernel extends ConsoleKernel
         /** Benefits: needs to be run after account-health:updates  */
         $schedule->command('user:benefits:update')->dailyAt('09:30');
         $schedule->command('user:benefits:update')->dailyAt('22:30');
-
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
 
         /** Tasks */
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
