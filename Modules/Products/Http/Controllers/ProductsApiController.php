@@ -283,9 +283,9 @@ class ProductsApiController extends Controller
 
             $productPhoto = $request->file('product_photo');
 
-            // if ($productPhoto == null) {
-            //     $product->update(['photo' => null]);
-            // }
+            if ($productPhoto == null && $request->query('product_photo_remove', null) == "true") {
+                $product->update(['photo' => null]);
+            }
 
             if ($productPhoto != null) {
                 try {

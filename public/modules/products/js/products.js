@@ -125,6 +125,7 @@ $(document).ready(function () {
 
                     $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
+                    removeImageButton = false;
                     $("#my-form").submit(function (event) {
                         event.preventDefault();
 
@@ -142,7 +143,7 @@ $(document).ready(function () {
                             loadOnAny('.page', false);
                             $.ajax({
                                 method: 'POST',
-                                url: "/api/products/" + response.data.product.id,
+                                url: "/api/products/" + response.data.product.id + '?product_photo_remove=' + removeImageButton,
                                 processData: false,
                                 cache: false,
                                 contentType: false,
@@ -287,6 +288,10 @@ $(document).ready(function () {
     });
 
     $('#url_expiration_time').mask('0#');
+
+    $('#product_photo').on('dropify.afterClear', function (event, element) {
+        removeImageButton = true;
+    });
 
     /* Produto Fisico */
     alterarCaixinha('#height', 'caixinha-altura');
