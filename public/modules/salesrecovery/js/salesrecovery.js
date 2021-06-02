@@ -207,6 +207,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                const BOLETO_TYPE = '5'
+
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
@@ -252,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if (typeRecovery) {
+                    if (typeRecovery == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -409,7 +411,7 @@ $(document).ready(function () {
             value.whatsapp_link +
             "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
         data +=
-            "<td style='padding:0 !important;' class='display-sm-none text-right' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
+            "<td style='padding:0 !important;' class='display-sm-none text-center' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
             value.link +
             "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
         data +=
