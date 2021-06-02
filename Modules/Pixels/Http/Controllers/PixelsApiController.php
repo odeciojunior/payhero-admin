@@ -110,10 +110,6 @@ class PixelsApiController extends Controller
                 $validator['value_percentage_purchase_boleto'] = 100;
             }
 
-            if (empty($validator['value_percentage_purchase_pix'])) {
-                $validator['value_percentage_purchase_pix'] = 100;
-            }
-
             Pixel::create(
                 [
                     'project_id' => $project->id,
@@ -132,7 +128,6 @@ class PixelsApiController extends Controller
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
                     'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
-                    'value_percentage_purchase_pix' => $validator['value_percentage_purchase_pix']
                 ]
             );
 
@@ -303,7 +298,6 @@ class PixelsApiController extends Controller
                     'facebook_token' => $validated['facebook_token_api'],
                     'is_api' => $validated['is_api'],
                     'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
-                    'value_percentage_purchase_pix' => $validated['value_percentage_purchase_pix']
                 ]
             );
 
