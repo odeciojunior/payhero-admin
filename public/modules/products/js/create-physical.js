@@ -30,7 +30,7 @@ $(document).ready(function () {
     $('#product_photo').dropify({
         messages: {
             'default': 'Arraste e solte uma imagem ou ',
-            'replace': 'Arraste e solte uma imagem ou ',
+            'replace': 'Arraste e solte uma imagem ou selecione um arquivo',
             'remove': 'Remover',
             'error': ''
         },

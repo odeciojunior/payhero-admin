@@ -67,6 +67,8 @@ a:hover,
     border-left: 0px;
 }
 
+/* Dropify - Upload de Imagem */
+
 .dropify-wrapper {
     display: flex;
     flex-direction: column;
@@ -97,6 +99,10 @@ a:hover,
 
 .dropify-wrapper .dropify-message span.file-icon, p {
     color: #0D2C54;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
+    white-space: normal;
 }
 
 /* Upload Digital Product Input */
