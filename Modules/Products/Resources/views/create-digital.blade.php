@@ -41,7 +41,7 @@
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
-                                        <label tabindex="0" for="digital_product_url" class="input-file-trigger mb-0">Escolher arquivos</label>
+                                        <label tabindex="0" for="digital_product_url" class="input-file-trigger mb-0 px-15 py-5">Escolher arquivos</label>
                                         <span id="file_return" class="ml-20 pt-10"></span>
                                     </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>

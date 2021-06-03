@@ -62,6 +62,7 @@ a:hover {
     border-radius: 8px;
     margin: auto;
     font-weight: bold;
+    background-color: #F8FDFF;
 }
 
 .dropify-wrapper .dropify-message {
@@ -108,8 +109,14 @@ a:hover {
     cursor: pointer;
     background-color: #F8FDFF;
     border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .input-file {
     display: none;
+}
+
+.div-expiration-time > .input-group {
+    width: 150px;
 }
