@@ -182,8 +182,6 @@ $(function () {
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
         $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
-        //percentage-boleto-value-edit
-        $('.percentage-pix-value-edit').val(pixel.value_percentage_purchase_pix);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -294,7 +292,6 @@ $(function () {
             'is_api': isApi,
             'code': inputCodeEdit,
             'value_percentage_purchase_boleto': valuePercentagePurchaseBoleto,
-            'value_percentage_purchase_pix': valuePercentagePurchasePix,
             'facebook_token_api': facebookTokenApi,
             'purchase_event_name': inputPurchaseEventName,
             'plans_apply': plansApply
@@ -326,7 +323,6 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
-                value_percentage_purchase_pix: valuePercentagePurchasePix,
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -482,18 +478,8 @@ $(function () {
             return false;
         }
 
-        if (formData.value_percentage_purchase_pix.length > 3) {
-            alertCustom('error', 'O valore do campo % Valor PIX está incorreto!')
-            return false;
-        }
-
         if (formData.value_percentage_purchase_boleto.length < 1) {
             alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_pix.length < 1) {
-            alertCustom('error', 'O campo % Valor PIX é obrigatório')
             return false;
         }
 
@@ -502,18 +488,8 @@ $(function () {
             return false;
         }
 
-        if (isNaN(parseInt(formData.value_percentage_purchase_pix))) {
-            alertCustom('error', 'O campo % Valor Pix permite apenas numeros');
-            return false;
-        }
-
         if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_pix > 100 || formData.value_percentage_purchase_pix < 10) {
-            alertCustom('error', 'O valores permitidos para o campo % Valor Pix deve ser entre 10 e 100')
             return false;
         }
 
@@ -551,7 +527,6 @@ $(function () {
             'is_api': formData.get('api-facebook'),
             'code': formData.get('code'),
             'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
-            'value_percentage_purchase_pix': formData.get('value_percentage_purchase_pix'),
             'facebook_token_api': formData.get('facebook-token-api'),
             'purchase_event_name': formData.get('purchase-event-name'),
             'plans_apply': formData.get('add_pixel_plans[]')

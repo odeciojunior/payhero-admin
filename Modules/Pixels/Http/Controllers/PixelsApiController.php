@@ -110,10 +110,6 @@ class PixelsApiController extends Controller
                 $validator['value_percentage_purchase_boleto'] = 100;
             }
 
-            if (empty($validator['value_percentage_purchase_pix'])) {
-                $validator['value_percentage_purchase_pix'] = 100;
-            }
-
             Pixel::create(
                 [
                     'project_id' => $project->id,
@@ -121,10 +117,10 @@ class PixelsApiController extends Controller
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
                     'status' => (bool) $validator['status'],
-                    'checkout' => $validator['checkout'],
-                    'purchase_boleto' => $validator['purchase_boleto'],
-                    'purchase_card' => $validator['purchase_card'],
-                    'purchase_pix' => $validator['purchase_pix'],
+                    'checkout' => $validator['checkout'] == 'true',
+                    'purchase_boleto' => $validator['purchase_boleto'] == 'true',
+                    'purchase_card' => $validator['purchase_card'] == 'true',
+                    'purchase_pix' => $validator['purchase_pix'] == 'true',
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
@@ -132,7 +128,6 @@ class PixelsApiController extends Controller
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
                     'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
-                    'value_percentage_purchase_pix' => $validator['value_percentage_purchase_pix']
                 ]
             );
 
@@ -295,15 +290,14 @@ class PixelsApiController extends Controller
                     'status' => $validated['status'] == 'true',
                     'code' => $validated['code'],
                     'apply_on_plans' => $applyPlanEncoded,
-                    'checkout' => $validated['checkout'],
-                    'purchase_boleto' => $validated['purchase_boleto'],
-                    'purchase_card' => $validated['purchase_card'],
-                    'purchase_pix' => $validated['purchase_pix'],
+                    'checkout' => $validated['checkout'] == 'true',
+                    'purchase_boleto' => $validated['purchase_boleto'] == 'true',
+                    'purchase_card' => $validated['purchase_card'] == 'true',
+                    'purchase_pix' => $validated['purchase_pix'] == 'true',
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
                     'is_api' => $validated['is_api'],
                     'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
-                    'value_percentage_purchase_pix' => $validated['value_percentage_purchase_pix']
                 ]
             );
 
