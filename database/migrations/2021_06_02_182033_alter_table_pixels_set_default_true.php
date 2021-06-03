@@ -32,11 +32,6 @@ class AlterTablePixelsSetDefaultTrue extends Migration
         $pixels->whereNull('purchase_pix')->withTrashed()->update(['purchase_pix' => 1]);
 
         Schema::table('pixels', function (Blueprint $table) {
-            $table->boolean('checkout')->change();
-            $table->boolean('purchase_boleto')->change();
-            $table->boolean('purchase_card')->change();
-            $table->boolean('purchase_pix')->change();
-
             $table->string('checkout')->default(1)->change();
             $table->string('purchase_boleto')->default(1)->change();
             $table->string('purchase_card')->default(1)->change();
