@@ -81,6 +81,10 @@ a:hover {
     list-style-type: none;
 }
 
+.dropify-filename, .dropify-infos-message::before {
+    display: none;
+}
+
 .dropify-wrapper .dropify-message span.file-icon, p {
     color: #0D2C54;
 }
