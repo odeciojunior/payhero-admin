@@ -91,7 +91,7 @@
                             </div>
                             <div class="form-group col-12 mt-0">
                                 <small class="text-muted">
-                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank" style="color: #2E85EC;">aqui</a> para consultar as regras de dimensões dos Correios.
+                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank" style="color: #2E85EC; font-weight: bold;">aqui</a> para consultar as regras de dimensões dos Correios.
                                 </small>
                                 <br>
                                 <small class="text-muted">
