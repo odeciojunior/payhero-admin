@@ -51,7 +51,7 @@ $(document).ready(function () {
         tpl: {
             message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
         },
-        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
+        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     });
 
     $("#my-form-add-product").submit(function (event) {

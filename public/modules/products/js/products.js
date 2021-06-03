@@ -36,7 +36,7 @@ $(document).ready(function () {
                     tpl: {
                         message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
                     },
-                    imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
+                    imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
                 });
             },
             success: function (response) {
@@ -70,7 +70,7 @@ $(document).ready(function () {
                     $("#product_photo").attr('src', response.data.product.photo);
 
                     $("img").on("error", function () {
-                        $(this).attr("src", "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png");
+                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                     });
 
                     $("#name").val(response.data.product.name);
@@ -114,7 +114,7 @@ $(document).ready(function () {
                         tpl: {
                             message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
                         },
-                        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
+                        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
                         defaultFile: response.data.product.photo,
                     });
                     if (response.data.product.digital_product_url != '') {

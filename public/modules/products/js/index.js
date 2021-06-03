@@ -243,7 +243,7 @@ $(document).ready(function () {
                     $("img").on("error", function () {
                         $(this).attr(
                             "src",
-                            "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png"
+                            "https://cloudfox-files.s3.amazonaws.com/produto.svg"
                         );
                     });
 
