@@ -481,8 +481,16 @@ class GetNetStatementService
             $pix_sales->where('sales.id', $this->filters['sale_id']);
         }
 
-        $pix_sales = $pix_sales->get();
+        if(request('dateRange')) {
 
+            $dates = explode(' - ', request('dateRange') ?? '');
+            $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
+            $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
+            $pix_sales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
+            $pix_sales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
+        }
+
+        $pix_sales = $pix_sales->get();
 
         foreach ($pix_sales as $pix_sale) {
             $details = new Details();
