@@ -37,7 +37,7 @@
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
 
-                                <div class="form-group col-12 col-md-8 input-file-container">  
+                                <div class="form-group col-12 col-md-7 input-file-container">  
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
@@ -47,7 +47,7 @@
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
 
-                                <div class="col-12 col-md-4 div-expiration-time">
+                                <div class="col-12 col-md-5 div-expiration-time">
                                     <label for="url_expiration_time">Expiração do link</label>
                                     <div class="form-group input-group">
                                         <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" placeholder="Ex: 24" min="0" maxlength="5" data-mask="0#" value="24">
