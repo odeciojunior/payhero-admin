@@ -23,7 +23,7 @@ class ProductsResource extends JsonResource
             'id'          => $this->id_code,
             'id_view'     => ($this->shopify == 1 ? $this->shopify_id : $this->id_code),
             'name'        => Str::limit($this->name, 18),
-            'description' => mb_substr($this->description, 0, 20),
+            'description' => Str::limit($this->description, 25),
             'image'       => $this->photo == '' ? 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png' : $this->photo,
             'link'        => '/api/products/' . $this->id_code . '/edit',
             'created_at'  => Carbon::parse($this->created_at)->format('d/m/Y'),

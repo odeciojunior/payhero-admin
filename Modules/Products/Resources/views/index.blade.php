@@ -27,7 +27,7 @@
                 <div class="card" id="filter-products">
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
-                            <div class="">
+                            <div class="mb-10">
                                 <label for="type-products">Tipo</label>
                                 <select class="form-control select-pad" id='type-products'>
                                     <option value="0">Meus Produtos</option>
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6" id='is-projects'>
-                            <div class="">
+                            <div class="mb-10">
                                 <label id="select-projects-label" for="select-projects">Projeto</label>
                                 <select id='select-projects' class="form-control select-pad disabled" disabled>
                                     <option>Carregando...</option>
@@ -44,14 +44,14 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <div class="">
+                            <div class="mb-10">
                                 <label for="name">Nome do produto</label>
                                 <input id="name" class="form-control input-pad" placeholder="Digite o nome" maxlength="100">
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-md-6 mt-auto">
-                            <button id="btn-filtro" class="btn btn-primary w-full p-10">
+                            <button id="btn-filtro" class="btn btn-primary w-full mb-10">
                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                             </button>
                         </div>

@@ -192,7 +192,7 @@ $(document).ready(function () {
                                 : ""
                             }
                                 <hr>
-                                <div class="card-body pt-0">
+                                <div class="card-body py-0">
                                     <h5 class="card-title">${value.name}</h5>
                                     <h5 class="card-description">${value.description}</h5>
                                 </div>
