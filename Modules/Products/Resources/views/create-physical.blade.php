@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="form-group col-12">
                                     <label for="description">Descrição</label>
-                                    <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
+                                    <textarea style="height: 140px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>                            
                             </div>
                         </div>                        
