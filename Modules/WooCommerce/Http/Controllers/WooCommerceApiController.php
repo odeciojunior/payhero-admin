@@ -98,7 +98,7 @@ class WooCommerceApiController extends Controller
                 return response()->json(['message' => 'Projeto já integrado'], 400);
             }
             try {
-                $dataRequest['url_store'] = $dataRequest['url_store'];
+                
                 $urlStore = $dataRequest['url_store'];
                 $woocommerceService = new WooCommerceService($urlStore, $dataRequest['token_user'], $dataRequest['token_pass'],);
                 if (!$woocommerceService->test_url()) {
