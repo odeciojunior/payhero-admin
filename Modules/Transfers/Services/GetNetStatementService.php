@@ -76,7 +76,7 @@ class GetNetStatementService
             $this->preparesNodeAdjustments($adjustments);
         }
 
-        if (in_array($this->filters['payment_method'], ['ALL', 'PIX'])) {
+        if (in_array($this->filters['payment_method'], ['ALL', 'PIX']) && $this->filters['status'] != 'PENDING_DEBIT') {
             $this->preparesDatabasePixWithSaleSearch();
         }
 
