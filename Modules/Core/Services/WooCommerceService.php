@@ -271,6 +271,32 @@ class WooCommerceService
         return $shopifyVariantId;
     }
 
+    
+    public function cancelOrder($sale, $note = null)
+    {
+        try {
+
+            $saleId = $sale->id;
+            
+            $data = [
+                'status' => 'cancelled'
+            ];
+            
+            $this->woocommerce->put('orders/'.$sale->woocommerce_order, $data);
+
+            if(!empty($note)){
+                $data = [
+                    'note' => $note
+                ];
+                
+                $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
+            }
+            
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
     public function createHooks($projectId)
     {
         //Order update.
