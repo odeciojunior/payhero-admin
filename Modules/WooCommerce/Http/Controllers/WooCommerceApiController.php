@@ -8,13 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\UserService;
 use Modules\Core\Services\WooCommerceService;
 use Modules\WooCommerce\Transformers\WooCommerceResource;
 use Spatie\Activitylog\Models\Activity;
@@ -43,7 +40,10 @@ class WooCommerceApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todos as integrações com o woocommerce');
-            $woocommerceIntegrations = $woocommerceIntegrationModel->where('user_id', auth()->user()->account_owner_id)->get();
+            $woocommerceIntegrations = $woocommerceIntegrationModel->where(
+                'user_id',
+                auth()->user()->account_owner_id
+            )->get();
             $projects = [];
             foreach ($woocommerceIntegrations as $woocommerceIntegration) {
                 $project = $projectModel->where('id', $woocommerceIntegration->project_id)
@@ -58,28 +58,32 @@ class WooCommerceApiController extends Controller
             return response()->json(['message' => 'Ocorreu algum erro!'], Response::HTTP_BAD_REQUEST);
         }
     }
+
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request)
     {
         try {
-            $companyService = new CompanyService();
-            $userService = new UserService();
+            $projectModel = new Project();
+            $shippingModel = new Shipping();
+            $userProjectModel = new UserProject();
+            $woocommerceIntegrationModel = new WooCommerceIntegration();
+
+            $projectService = new ProjectService();
+            $projectNotificationService = new ProjectNotificationService();
+
             $dataRequest = $request->all();
+
             if (strlen($dataRequest['token_user']) < 10 || strlen($dataRequest['token_user']) > 100) {
                 return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
             }
-            $companyDocumentPending = $companyService->haveAnyDocumentPending();
-            $userDocumentPending = $userService->haveAnyDocumentPending();
-            if ($companyDocumentPending || $userDocumentPending) {
+
+            if (!auth()->user()->account_is_approved) {
                 return response()->json(['message' => 'Finalize seu cadastro para integrar com WooCommerce'], 400);
             }
-            $projectModel = new Project();
-            $userProjectModel = new UserProject();
-            $woocommerceIntegrationModel = new WooCommerceIntegration();
-            $shippingModel = new Shipping();
+
             if (empty($dataRequest['company'])) {
                 return response()->json(
                     [
@@ -88,19 +92,26 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
+
             $woocommerceIntegration = $woocommerceIntegrationModel
                 ->where('url_store', $dataRequest['url_store'])
                 ->where('token_user', $dataRequest['token_user'])->first();
+
             if ($woocommerceIntegration) {
                 if ($woocommerceIntegration->status == 1) {
                     return response()->json(['message' => 'Integração em andamento'], 400);
                 }
                 return response()->json(['message' => 'Projeto já integrado'], 400);
             }
+
             try {
-                $dataRequest['url_store'] = $dataRequest['url_store'];
                 $urlStore = $dataRequest['url_store'];
-                $woocommerceService = new WooCommerceService($urlStore, $dataRequest['token_user'], $dataRequest['token_pass'],);
+                $woocommerceService = new WooCommerceService(
+                    $urlStore,
+                    $dataRequest['token_user'],
+                    $dataRequest['token_pass'],
+                );
+
                 if (!$woocommerceService->test_url()) {
                     return response()->json(
                         [
@@ -112,6 +123,7 @@ class WooCommerceApiController extends Controller
             } catch (Exception $e) {
                 report($e);
             }
+
             if (!$woocommerceService->verifyPermissions()) {
                 return response()->json(
                     [
@@ -120,9 +132,11 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
+
             $woocommerceName = $urlStore;
             $company = Company::find(current(Hashids::decode($dataRequest['company'])));
             $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
+
             try {
                 $projectCreated = $projectModel->create(
                     [
@@ -140,22 +154,25 @@ class WooCommerceApiController extends Controller
                         'installments_amount' => '12',
                         'installments_interest_free' => '1',
                         'checkout_type' => 2, // checkout de 1 passo
-                        'notazz_configs' => json_encode([
-                            'cost_currency_type' => 1,
-                            //'update_cost_woocommerce' => 1
-                        ])
+                        'notazz_configs' => json_encode(
+                            [
+                                'cost_currency_type' => 1,
+                                //'update_cost_woocommerce' => 1
+                            ]
+                        )
                     ]
                 );
             } catch (Exception  $e) {
                 report($e);
             }
+
             if (empty($projectCreated->id)) {
-                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde!'], 400);
+                return response()->json(
+                    ['message' => 'Problema ao criar integração, tente novamente mais tarde!'],
+                    400
+                );
             }
 
-            
-            $projectNotificationService = new ProjectNotificationService();
-            $projectService = new ProjectService();
             $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
             $projectService->createUpsellConfig($projectCreated->id);
 
@@ -182,6 +199,7 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
+
             $woocommerceIntegrationCreated = $woocommerceIntegrationModel->create(
                 [
                     'token_user' => $dataRequest['token_user'],
@@ -192,6 +210,7 @@ class WooCommerceApiController extends Controller
                     'status' => 1,
                 ]
             );
+
             if (empty($woocommerceIntegrationCreated->id)) {
                 $shippingCreated->delete();
                 $projectCreated->delete();
@@ -202,6 +221,7 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
+
             $userProjectCreated = $userProjectModel->create(
                 [
                     'user_id' => auth()->user()->account_owner_id,
@@ -216,6 +236,7 @@ class WooCommerceApiController extends Controller
                     'status_flag' => $userProjectModel->present()->getStatusFlag('active'),
                 ]
             );
+
             if (empty($userProjectCreated)) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
@@ -228,22 +249,21 @@ class WooCommerceApiController extends Controller
                 );
             }
 
-
-
-            try{
-
+            try {
                 $products = $woocommerceService->fetchProducts();
 
-                $woocommerceService->importProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id, $products);
+                $woocommerceService->importProducts(
+                    $woocommerceIntegrationCreated->project_id,
+                    $woocommerceIntegrationCreated->user_id,
+                    $products
+                );
 
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
                     ]
                 );
-
-
-            }catch(Exception $e) {
+            } catch (Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
                 $projectCreated->delete();
@@ -257,36 +277,43 @@ class WooCommerceApiController extends Controller
                     400
                 );
             }
+
             return response()->json(
                 [
                     'message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'
                 ],
                 200
             );
-
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
     }
+
     public function synchronizeProducts(Request $request)
     {
     }
+
     public function undoIntegration(Request $request)
     {
     }
+
     public function reIntegration(Request $request)
     {
     }
+
     public function synchronizeTrackings(Request $request)
     {
     }
+
     public function updateToken(Request $request)
     {
     }
+
     public function verifyPermission(Request $request)
     {
     }
+
     public function setSkipToCart(Request $request)
     {
     }
