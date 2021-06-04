@@ -27,6 +27,8 @@ use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\WooCommerceService;
 
 /**
  * Class SaleService
@@ -852,6 +854,19 @@ class SaleService
                     $shopifyService->cancelOrder($sale);
                 }
             } catch (Exception $e) {
+            }
+        }
+
+        if (!empty($sale->woocommerce_order)) {
+            try {
+                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                if (!empty($integration)) {
+                    $service = new WooCommerceService($integration->url_store, $integration->user_token, $integration->user_pass);
+                    $service->verifyPermissions();
+                    $service->cancelOrder($sale, 'Estorno');
+                }
+            } catch (Exception $e) {
+                report($e);
             }
         }
 
