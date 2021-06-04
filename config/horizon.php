@@ -153,6 +153,18 @@ return [
             ],
         ],
 
+        'homolog' => [
+            'supervisor-homolog' => [
+                'connection' => 'redis-horizon',
+                'queue' => ['high','default','low'],
+                'balance' => 'false',
+                'processes' => 15,
+                'tries' => 3,
+                'timeout' => 36000,
+                'delay' => 1,
+            ],
+        ],
+
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis-horizon',
