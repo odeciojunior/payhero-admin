@@ -276,9 +276,9 @@ $(document).ready(function () {
                 $(".saldoBloqueado").html(
                     '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">0,00</span>'
                 );
-                $(".saldoDebito").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold debit-balance">0,00</span>'
-                );
+                // $(".saldoDebito").html(
+                //     '<span style="color:#959595">R$ </span><span class="font-size-30 bold debit-balance">0,00</span>'
+                // );
 
                 // Saldo bloqueado
                 $(".saldoBloqueado").html(

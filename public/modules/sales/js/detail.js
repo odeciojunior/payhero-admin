@@ -687,7 +687,7 @@ $(() => {
         }
 
         if (
-            (sale.payment_method == 1 || sale.payment_method == 3) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || sale.payment_method == 4 ) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
@@ -1123,7 +1123,7 @@ $(() => {
         partial = 0,
         refundObservation
     ) {
-        loadingOnScreen();
+        loadingOnChart("#modal-refund");
         $.ajax({
             method: "POST",
             url: "/api/sales/refund/" + sale,
@@ -1138,12 +1138,14 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
             },
             success: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
                 atualizar(currentPage);

@@ -76,11 +76,30 @@ class WooCommerceService
                     'version' => 'wc/v3',
                 ]
             );
-            $this->woocommerce->get('products', ['per_page'=>1]);
-            
-            return true;
+
+            //read test
+            $product = $this->woocommerce->get('products', ['per_page'=>1]);
+
+            if(!empty($product)){ //write test
+
+                $data = [
+                    'name' => $product[0]->name
+                ];
+    
+                $this->woocommerce->put('products/'.$product[0]->id, $data);
+    
+                return true;
+                
+
+            }else{
+    
+                return false;
+
+            }
+
         }catch(Exception $e){
-            report($e);
+
+            //report($e);
 
             return false;
         }
@@ -194,9 +213,7 @@ class WooCommerceService
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-        $exists = Product::where('shopify_variant_id', $shopifyVariantId)->first();
-        //if(!empty($exists)) return;
-        
+             
 
         $product = $productModel->create(
             [
@@ -252,6 +269,32 @@ class WooCommerceService
         
 
         return $shopifyVariantId;
+    }
+
+    
+    public function cancelOrder($sale, $note = null)
+    {
+        try {
+
+            $saleId = $sale->id;
+            
+            $data = [
+                'status' => 'cancelled'
+            ];
+            
+            $this->woocommerce->put('orders/'.$sale->woocommerce_order, $data);
+
+            if(!empty($note)){
+                $data = [
+                    'note' => $note
+                ];
+                
+                $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
+            }
+            
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 
     public function createHooks($projectId)

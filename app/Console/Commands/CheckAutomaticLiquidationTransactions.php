@@ -6,14 +6,14 @@ use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Services\TransactionsService;
 
-class CheckGetnetTransactions extends Command
+class CheckAutomaticLiquidationTransactions extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:getnet-transactions';
+    protected $signature = 'check:automatic-liquidation-transactions';
 
     /**
      * The console command description.
@@ -34,6 +34,6 @@ class CheckGetnetTransactions extends Command
 
     public function handle()
     {
-        (new TransactionsService())->verifyGetnetTransactions();
+        (new TransactionsService())->verifyAutomaticLiquidationTransactions();
     }
 }

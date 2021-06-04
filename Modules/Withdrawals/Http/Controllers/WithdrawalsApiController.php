@@ -102,7 +102,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
-            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+            if ($withdrawalService->isNotFirstWithdrawalToday($company)) {
                 return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
@@ -151,16 +151,9 @@ class WithdrawalsApiController
             }
 
             $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
-            $currentValue = 0;
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
-
-            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,
-                $withdrawalValueRequested));
+            return response()
+                ->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,$withdrawalValueRequested));
 
         } catch (Exception $e) {
             report($e);
@@ -286,7 +279,7 @@ class WithdrawalsApiController
                         $arrayBrand['date'] = $date;
                     }
                 }
-                //dd($arrayBrand);
+
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
@@ -294,7 +287,6 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-
 
             $return = [
                 'id' => $id,
