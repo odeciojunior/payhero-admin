@@ -4,7 +4,6 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
@@ -54,7 +53,7 @@ class TransactionsService
                     $sale = $transaction->sale;
                     $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
 
-                    if($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
+                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
 
                         $transaction->update(
                             [
@@ -62,7 +61,7 @@ class TransactionsService
                             ]
                         );
 
-                    }else{
+                    } else {
 
                         if (FoxUtils::isProduction()) {
                             $subsellerId = $transaction->company->subseller_getnet_id;
@@ -86,11 +85,10 @@ class TransactionsService
                                     'is_waiting_withdrawal' => 1,
                                 ]
                             );
+                        } elseif (empty($result->list_transactions)) {
+                            throw new Exception('TransactionsService: A venda não foi encontrada na getnet!');
                         }
-
                     }
-
-
 
                 } catch (Exception $e) {
                     report($e);
