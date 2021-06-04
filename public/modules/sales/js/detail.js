@@ -1008,14 +1008,53 @@ $(() => {
                         <div class="col-lg-2">
                             <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-md-5 col-lg-6">
                             <h4 class="table-title mb-0">${value.name}</h4>
                             <small>${value.description}</small>
                         </div>
-                        <div class="col-lg-3 text-right">
+                        <div class="col-md-3 col-lg-2 text-right">
                             <p class="sm-text text-muted">${value.amount}x</p>
                         </div>
                     </div>`;
+            if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
+                console.log('passou');
+                div+= `<!-- Customer additional information -->
+                    <div style="box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);" class="panel-group my-30" aria-multiselectable="true" role="tablist">
+                        <div class="panel">
+                            <div class="panel-heading" id="sale-custom-product-accordion${value.id}" role="tab">
+                                <a class="panel-title" data-toggle="collapse" href="#sale-custom-product${value.id}"
+                                data-parent="#custom-product-accordion${value.id}" aria-expanded="true"
+                                aria-controls="exampleCollapseDefaultOne">
+                                    <strong>Informações enviadas pelo cliente</strong>
+                                </a>
+                            </div>
+                            <div class="panel-collapse collapse" id="sale-custom-product${value.id}"
+                                aria-labelledby="sale-custom-product-accordion${value.id}" role="tabpanel" style="">
+                                <div class="panel-body">`;
+                                    $.each(value.custom_products, function (index2,custom) {
+                                        div+=`<div class="row">`;
+                                        if(typeof custom.text != 'undefined' && custom.text !=''){
+                                            div+=`<div class="col-md-12">
+                                                <h5>Texto solicitado:  <strong>${custom.text}</strong></h5>
+                                            </div>`;
+                                        }
+                                        if(typeof custom.file != 'undefined' && custom.file !=''){                                            
+                                            div+=`<div class="col-md-12">
+                                                <h5>Arquivo solicitado <a href="${custom.file}" class="link-download" download target="_blank">Baixar</a></h5>
+                                            </div>`;
+                                        }
+                                        div+=`</div><hr/>`;
+                                    });
+                                
+                div+= `             
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Customer additional information -->
+                `;
+            }
+                    
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code

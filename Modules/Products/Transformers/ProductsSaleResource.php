@@ -30,6 +30,7 @@ class ProductsSaleResource extends JsonResource
             'tracking_code' => $this->tracking_code ?? null,
             'tracking_status_enum' => $this->tracking_status_enum ?? null,
             'tracking_created_at' => $this->tracking_created_at ?? null,
+            'custom_products' => $this->custom_products ?? [],
         ];
     }
 }

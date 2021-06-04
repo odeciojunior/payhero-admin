@@ -371,9 +371,12 @@ $(function () {
                             $('#plan-description_edit').val(response.data.description);
                             //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
                             
+                            var allow_change_in_block = false;
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
-                                    
+                                    if(value.shopify_id>0){
+                                        allow_change_in_block = true;
+                                    }
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
                                     $('.products_row_edit').append(`
@@ -437,10 +440,10 @@ $(function () {
                                         console.log('carregando configs');
                                         $(`#area-custom-products-${index}`).append(`
                                             <div class="row">
-                                                <input type="hidden" name="products[]" value="${value.product_id}">
+                                                <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                 <div class="form-group col-4">
                                                     <label>Tipo:</label>
-                                                    <select name="type[${value.product_id}][]" name="type" class="form-control select-pad">
+                                                    <select name="type[${value.id}][]" name="type" class="form-control select-pad">
                                                         <option value="image" ${valueC.type=='image'?'selected':''}>Imagem</option>    
                                                         <option value="file" ${valueC.type=='file'?'selected':''}>Arquivo</option>
                                                         <option value="text" ${valueC.type=='text'?'selected':''}>Texto</option>
@@ -448,7 +451,7 @@ $(function () {
                                                 </div>
                                                 <div class="form-group col-8">
                                                     <label>Título:</label>
-                                                    <input name="label[${value.product_id}][]" class="form-control input-pad" type="text" 
+                                                    <input name="label[${value.id}][]" class="form-control input-pad" type="text" 
                                                     placeholder="Ex. Verifique a qualidade da imagem antes de enviar" value="${valueC.label}">
                                                 </div>
                                                 <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
@@ -462,10 +465,10 @@ $(function () {
                                         console.log('novo item config '+index);
                                         $('#area-custom-products-'+index).append(`
                                             <div class="row">
-                                                <input type="hidden" name="products[]" value="${value.product_id}">
+                                                <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                 <div class="form-group col-4">
                                                     <label>Tipo:</label>
-                                                    <select name="type[${value.product_id}][]" name="type" class="form-control select-pad">
+                                                    <select name="type[${value.id}][]" name="type" class="form-control select-pad">
                                                         <option value="image">Imagem</option>    
                                                         <option value="file">Arquivo</option>
                                                         <option value="text">Texto</option>
@@ -473,7 +476,7 @@ $(function () {
                                                 </div>
                                                 <div class="form-group col-8">
                                                     <label>Título:</label>
-                                                    <input value="" name="label[${value.product_id}][]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
+                                                    <input value="" name="label[${value.id}][]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
                                                 </div>
                                                 <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
                                                     <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
@@ -482,6 +485,20 @@ $(function () {
                                         `);
                                     });
                                 });
+
+                                if(allow_change_in_block){
+                                    $('#custom_products_checkbox').html('');
+                                    $('#custom_products_checkbox').append(`
+                                    <div class="switch-holder d-inline">
+                                        <label class="switch">
+                                            <input type="checkbox" class="allow_change_in_block" name="allow_change_in_block" value="true">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                        <span>Alterar para os mesmos produtos em outros planos</span>
+                                    `);
+                                }
+
                                 $.each(response.data.products, function (index, value) {
                                     $('#select_currency_' + index).val(value.currency);
                                 });

@@ -56,6 +56,7 @@
                     <div id="custom_products" class='col-md-12 products_row_custom'>
                         {{-- carregado no js--}}
                     </div>
+                    <div id="custom_products_checkbox" class='col-md-12'></div>
                 </div>
             </form>
         </div>

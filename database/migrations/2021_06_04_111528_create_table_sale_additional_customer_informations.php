@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableSaleAditionalCustomerInformations extends Migration
+class CreateTableSaleAdditionalCustomerInformations extends Migration
 {
     /**
      * Run the migrations.
@@ -26,7 +26,7 @@ class CreateTableSaleAditionalCustomerInformations extends Migration
             $table->foreign('plan_id')->references('id')->on('plans');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
-        });        
+        });   
     }
 
     /**

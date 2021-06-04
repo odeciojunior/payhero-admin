@@ -4,13 +4,7 @@ namespace App\Console\Commands;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
-<<<<<<< HEAD
 use Illuminate\Http\Request;
-=======
-use Illuminate\Support\Carbon;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Events\PixExpiredEvent;
->>>>>>> 6e114004348b1d26e4aadba7b8906eda3edbebe7
 use Modules\Core\Services\CloudFlareService;
 use Modules\Plans\Http\Controllers\PlansApiController;
 
@@ -30,9 +24,10 @@ class GenericCommand extends Command
     // }
 
     public function handle()
-<<<<<<< HEAD
     {        
-        $this->testConfigAditionalInformation();
+        //$this->testConfigAditionalInformation();
+        echo current(Hashids::connection('sale_id')->decode('R3AVq0oZ'));
+        
     }
 
     public function testConfigAditionalInformation(){
@@ -88,17 +83,6 @@ class GenericCommand extends Command
         }
 
         dd($itens);
-=======
-    {
-        $lastPixSale = Sale::where('payment_method', Sale::PIX_PAYMENT)->get()->last();
-
-        $lastPixSale->update([
-            'created_at' => Carbon::now()->subHours(2)->toDateTimeString(),
-            'status' => Sale::STATUS_PENDING
-                             ]);
-
-        dd(event(new PixExpiredEvent(Sale::latest()->first())));
->>>>>>> 6e114004348b1d26e4aadba7b8906eda3edbebe7
     }
 }
 

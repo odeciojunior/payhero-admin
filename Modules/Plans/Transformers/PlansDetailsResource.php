@@ -13,6 +13,7 @@ class PlansDetailsResource extends JsonResource
         $products = [];
         foreach ($this->productsPlans as $productsPlan) {
             $products[] = [
+                'id'           => $productsPlan->id,
                 'product_id'   => $productsPlan->product_id,
                 'product_name' => $productsPlan->product->name,
                 'shopify_id'   => $productsPlan->product->shopify_id,
@@ -20,7 +21,7 @@ class PlansDetailsResource extends JsonResource
                 'amount'       => $productsPlan->amount,
                 'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
-                'custom_configs'=> !empty($configProduct[$productsPlan->product_id]) ? $configProduct[$productsPlan->product_id] : []
+                'custom_configs'=> !empty($productsPlan->custom_config) ? $productsPlan->custom_config : []
             ];
         }
 

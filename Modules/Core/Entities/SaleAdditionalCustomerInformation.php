@@ -5,9 +5,9 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SaleAditionalCustomerInformation extends Model
+class SaleAdditionalCustomerInformation extends Model
 {
-
+    protected $table = 'sale_additional_customer_informations';
     /**
      * @return BelongsTo
      */

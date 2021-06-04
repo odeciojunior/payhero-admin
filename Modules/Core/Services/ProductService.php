@@ -12,6 +12,7 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleAdditionalCustomerInformation;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductService
@@ -44,7 +45,7 @@ class ProductService
                 $saleModel = new Sale();
                 $sale = $saleModel->with([
                     'productsPlansSale.tracking',
-                    'productsPlansSale.product',
+                    'productsPlansSale.product'                    
                 ])->find($saleParam);
             } else {
                 if (is_string($saleParam)) {
@@ -52,7 +53,7 @@ class ProductService
                     $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
                     $sale = $saleModel->with([
                         'productsPlansSale.tracking',
-                        'productsPlansSale.product',
+                        'productsPlansSale.product'
                     ])->find($saleId);
                 }
             }
@@ -86,7 +87,11 @@ class ProductService
                 }
 
                 $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
-
+                
+                $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','text','file')
+                ->where('sale_id',$productsPlanSale->sale_id)
+                ->where('plan_id',$productsPlanSale->plan_id)->where('product_id',$productsPlanSale->product_id)->get();
+                
                 $productsSale->add((object) $product);
             }
         }
