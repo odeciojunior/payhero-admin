@@ -279,7 +279,7 @@ class WithdrawalsApiController
                         $arrayBrand['date'] = $date;
                     }
                 }
-                //dd($arrayBrand);
+
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
@@ -287,7 +287,6 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-
 
             $return = [
                 'id' => $id,

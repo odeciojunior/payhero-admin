@@ -20,6 +20,9 @@ use Modules\WooCommerce\Transformers\WooCommerceResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\ProjectNotificationService;
+use Modules\Core\Services\ProjectService;
+
 
 /**
  * Class ApiController
@@ -95,7 +98,7 @@ class WooCommerceApiController extends Controller
                 return response()->json(['message' => 'Projeto já integrado'], 400);
             }
             try {
-                $dataRequest['url_store'] = $dataRequest['url_store'];
+                
                 $urlStore = $dataRequest['url_store'];
                 $woocommerceService = new WooCommerceService($urlStore, $dataRequest['token_user'], $dataRequest['token_pass'],);
                 if (!$woocommerceService->test_url()) {
@@ -149,6 +152,13 @@ class WooCommerceApiController extends Controller
             if (empty($projectCreated->id)) {
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde!'], 400);
             }
+
+            
+            $projectNotificationService = new ProjectNotificationService();
+            $projectService = new ProjectService();
+            $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
+            $projectService->createUpsellConfig($projectCreated->id);
+
             $shippingCreated = $shippingModel->create(
                 [
                     'project_id' => $projectCreated->id,
