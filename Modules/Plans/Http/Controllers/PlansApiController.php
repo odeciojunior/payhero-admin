@@ -563,12 +563,10 @@ class PlansApiController extends Controller
     public function saveConfigCustomProducts(Request $request){
         
         $rules = [
-            'plan'=>'required',
-            'productsPlan'=>'required'            
+            'plan'=>'required',            
         ];
         $messages = [
-            'plan.required'=>'Informe o plano',
-            'productsPlan.required'=>'Informe o produto(s)',            
+            'plan.required'=>'Informe o plano',            
         ];
 
         $validator = Validator::make($request->all(),$rules,$messages);
@@ -577,42 +575,54 @@ class PlansApiController extends Controller
             return response()->json($validator, 400);
         }
 
-        $productsPlanIds = array_unique($request->productsPlan);                   
-
         $planId = current(Hashids::decode($request->plan));
         $plan = Plan::find($planId);
-        
-        $details = [];        
-        foreach($productsPlanIds as $productPlanId){            
-            $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId]: []; 
-            $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId]: []; 
-        }
-
-        $itens = [];
-        foreach($details as $productPlanId=>$detailL1){
-           foreach($detailL1 as $key2=> $detailL2){
-                foreach($detailL2 as $key3=>$detailL3){
-                    $itens[$productPlanId][$key3][$key2] = $detailL3??''; 
-                }
-           }
-        }
 
         $allow_change_in_block = false;
         if(!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true){
             $allow_change_in_block = true;
         }
 
-        foreach($itens as $productPlanId=>$config)
-        {
-            $productPlan = ProductPlan::where('id',$productPlanId)->where('plan_id',$planId)->first();
-            if(!empty($productPlan))
+        if(count($request->input('productsPlan',[]))>0){
+            $productsPlanIds = array_unique($request->productsPlan);                   
+            
+            $details = [];        
+            foreach($productsPlanIds as $productPlanId){            
+                $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId]: []; 
+                $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId]: []; 
+            }
+    
+            $itens = [];
+            foreach($details as $productPlanId=>$detailL1){
+               foreach($detailL1 as $key2=> $detailL2){
+                    foreach($detailL2 as $key3=>$detailL3){
+                        $itens[$productPlanId][$key3][$key2] = $detailL3??''; 
+                    }
+               }
+            }
+
+            foreach($itens as $productPlanId=>$config)
             {
-                $productPlan->update(['custom_config'=>$config]);  
-                if($allow_change_in_block===true){
-                    $this->updateAllConfigCustomProduct($plan->shopify_id,$config);
+                $productPlan = ProductPlan::where('id',$productPlanId)->where('plan_id',$planId)->first();
+                if(!empty($productPlan))
+                {
+                    $productPlan->update(['custom_config'=>$config]);  
+                    if($allow_change_in_block===true){
+                        $this->updateAllConfigCustomProduct($plan->shopify_id,$config);
+                    }
                 }
             }
+        }else{            
+            $productPlans = ProductPlan::where('plan_id', $planId)->get();    
+            foreach ($productPlans as $productPlan) {
+                $productPlan->update(['custom_config' => []]);                            
+            }
+
+            if($allow_change_in_block===true){
+                $this->updateAllConfigCustomProduct($plan->shopify_id,[]);
+            }
         }
+
                
         return response()->json([
             'message' => 'Configurações atualizadas com sucesso',

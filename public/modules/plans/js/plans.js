@@ -341,7 +341,8 @@ $(function () {
                 $(".edit-plan").unbind('click');
                 $(document).on('click','.remove-custom-product',function(){
                     $(this).parent('.card').remove();
-                });
+                });                
+                
                 $(".edit-plan").on('click', function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
@@ -370,6 +371,8 @@ $(function () {
                             $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
                             //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
+
+                            $('.products_row_custom').html('');
                             
                             var allow_change_in_block = false;
                             if (response.data.products != undefined) {
@@ -427,9 +430,10 @@ $(function () {
                                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                                     <h4 class="bold">Produto: ${value.product_name} </h4>
                                                 </div>                                                
-                                                <div class="col-sm-12" id="area-custom-products-${index}"></div>
+                                                <div class="col-sm-12" id="area-custom-products-${value.id+index}"></div>
                                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                                    <button type="button" id="add_custom_product-${index}" class="btn btn-primary col-12">Adicionar item requerido</button>
+                                                    <button type="button" id="add_custom_product-${value.id+index}" class="btn btn-primary col-12 btn-add-item">
+                                                    Adicionar item requerido</button>
                                                 </div>
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
@@ -438,7 +442,7 @@ $(function () {
 
                                     $.each(value.custom_configs, function (indexC,valueC) {
                                         console.log('carregando configs');
-                                        $(`#area-custom-products-${index}`).append(`
+                                        $(`#area-custom-products-${value.id+index}`).append(`
                                             <div class="row">
                                                 <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                 <div class="form-group col-4">
@@ -461,9 +465,10 @@ $(function () {
                                         `);
                                     });
 
-                                    $(document).on('click',`#add_custom_product-${index}`,function(){
-                                        console.log('novo item config '+index);
-                                        $('#area-custom-products-'+index).append(`
+                                    $(document).on('click',`#add_custom_product-${value.id+index}`,function(){
+                                        console.log('novo item config '+value.id+index);
+                                        
+                                        $(`#area-custom-products-${value.id+index}`).append(`
                                             <div class="row">
                                                 <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                 <div class="form-group col-4">
@@ -484,6 +489,7 @@ $(function () {
                                             </div>
                                         `);
                                     });
+                                    
                                 });
 
                                 if(allow_change_in_block){
@@ -505,6 +511,7 @@ $(function () {
                                 // $('.products_cost').bind('keyup', calcularTotal)
                                 bindModalKeys();
                                 card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
+                                
                             } else {
                                 $('.products_row_edit').append(`
                                     <div id="products_div_edit" class='card' >
@@ -998,6 +1005,9 @@ $(function () {
             $('.products_cost_create, .products_cost_edit').maskMoney('mask', 0.00);
         }
     }
+
+    
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             index();
@@ -1168,5 +1178,7 @@ $(function () {
     $(document).on('change', '#cost_currency_type', function (event) {
         $('#div_update_cost_shopify').show();
     });
+
+    
 })
 ;
