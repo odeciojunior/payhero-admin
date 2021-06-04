@@ -129,7 +129,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 pt-1">
-                                                <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal" 
+                                                <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal"
                                                 style="border-radius: 8px;" disabled>
                                                     Sacar dinheiro
                                                 </button>
@@ -211,8 +211,9 @@
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Débitos pendentes </h5>
                                                 <h4 class="saldoDebito" id="debit-value">
-                                                    <span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span>
-                                                    <a href="javascript:;" id="go-to-pending-debt" class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">0,00</a>
+{{--                                                    <span class="currency font-size-30 bold debit-balance" style="color: #E61A1A;">- R$</span>--}}
+                                                    <span style="color:#959595">R$ </span>
+                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>
                                                 </h4>
                                             </div>
                                         </div>

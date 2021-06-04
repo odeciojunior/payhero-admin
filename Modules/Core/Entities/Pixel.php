@@ -70,7 +70,6 @@ class Pixel extends Model
         'is_api',
         'facebook_token',
         'value_percentage_purchase_boleto',
-        'value_percentage_purchase_pix',
         'created_at',
         'updated_at',
         'deleted_at',
