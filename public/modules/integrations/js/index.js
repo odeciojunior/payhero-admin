@@ -3,13 +3,13 @@ $(document).ready(function () {
         admin: 'Admin',
         personal: 'Acesso Pessoal',
         external: 'Integração Externa',
-        checkoutApi: 'Checkout API'
+        checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
         admin: 'default',
         personal: 'primary',
         external: 'warning',
-        checkoutApi: 'warning'
+        checkout_api: 'info'
     };
     let status = {
         active: 'Ativo',
