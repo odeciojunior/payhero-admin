@@ -19,27 +19,29 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $carrier_id
  * @property string $photo
  * @property string $visibility
- * @property boolean $status
+ * @property bool $status
  * @property string $name
  * @property string $description
  * @property string $invoice_description
  * @property string $percentage_affiliates
  * @property string $terms_affiliates
  * @property string $url_page
- * @property boolean $automatic_affiliation
+ * @property bool $automatic_affiliation
  * @property string $shopify_id
+ * @property string $woocommerce_id
  * @property string $installments_amount
  * @property string $installments_interest_free
  * @property string $cookie_duration
- * @property boolean $url_cookies_checkout
+ * @property bool $url_cookies_checkout
  * @property string $contact
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $logo
- * @property boolean $boleto
+ * @property bool $boleto
  * @property string $boleto_redirect
  * @property string $card_redirect
+ * @property string $pix_redirect
  * @property string $analyzing_redirect
  * @property string $support_phone
  * @property bool $countdown_timer_flag
@@ -69,7 +71,13 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Project extends Model
 {
-    use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DESABLE = 2;
 
     /**
      * @var bool
@@ -119,6 +127,7 @@ class Project extends Model
         'url_page',
         'automatic_affiliation',
         'shopify_id',
+        'woocommerce_id',
         'installments_amount',
         'installments_interest_free',
         'cookie_duration',
@@ -128,9 +137,11 @@ class Project extends Model
         'logo',
         'boleto',
         'credit_card',
+        'pix',
         'boleto_due_days',
         'boleto_redirect',
         'card_redirect',
+        'pix_redirect',
         'analyzing_redirect',
         'support_phone',
         'support_phone_verified',
@@ -141,6 +152,7 @@ class Project extends Model
         'whatsapp_button',
         'credit_card_discount',
         'billet_discount',
+        'pix_discount',
         'pre_selected_installment',
         'required_email_checkout',
         'document_type_checkout',
@@ -160,281 +172,235 @@ class Project extends Model
         'deleted_at',
     ];
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Projeto ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Projeto ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Projeto ' . $this->name . ' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = 'Projeto ' . $this->name . ' foi deletedo.';
+                break;
+            case 'updated':
+                $activity->description = 'Projeto ' . $this->name . ' foi atualizado.';
+                break;
+            case 'created':
+                $activity->description = 'Projeto ' . $this->name . ' foi criado.';
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return HasMany
-     */
-    public function affiliateRequests()
+    public function affiliateRequests(): HasMany
     {
         return $this->hasMany(AffiliateRequest::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function affiliates()
+    public function affiliates(): HasMany
     {
         return $this->hasMany(Affiliate::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function checkouts()
+    public function checkouts(): HasMany
     {
         return $this->hasMany(Checkout::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function convertaxIntegrations()
+    public function convertaxIntegrations(): HasMany
     {
         return $this->hasMany(ConvertaxIntegration::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function discountCoupons()
+    public function discountCoupons(): HasMany
     {
         return $this->hasMany(DiscountCoupon::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function domains()
+    public function domains(): HasMany
     {
         return $this->hasMany(Domain::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function hotzappIntegrations()
+    public function hotzappIntegrations(): HasMany
     {
         return $this->hasMany(HotzappIntegration::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function pixels()
+    public function pixels(): HasMany
     {
         return $this->hasMany(Pixel::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function plans()
+    public function plans(): HasMany
     {
         return $this->hasMany(Plan::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function sales()
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function shippings()
+    public function shippings(): HasMany
     {
         return $this->hasMany(Shipping::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function shopifyIntegrations()
+    public function shopifyIntegrations(): HasMany
     {
         return $this->hasMany(ShopifyIntegration::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function usersProjects()
+    public function usersProjects(): HasMany
     {
         return $this->hasMany(UserProject::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users_projects', 'project_id', 'user_id');
     }
 
-    /**
-     * @return HasOne
-     */
-    public function notazzIntegration()
+    public function notazzIntegration(): HasOne
     {
         return $this->hasOne(NotazzIntegration::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function notifications()
+    public function notifications(): HasMany
     {
         return $this->hasMany(ProjectNotification::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function upsellRules()
+    public function upsellRules(): HasMany
     {
         return $this->hasMany(ProjectUpsellRule::class);
     }
 
-    /**
-     * @return HasOne
-     */
-    public function upsellConfig()
+    public function upsellConfig(): HasOne
     {
         return $this->hasOne(ProjectUpsellConfig::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(ProjectReviews::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function orderBumpRules()
+    public function orderBumpRules(): HasMany
     {
         return $this->hasMany(OrderBumpRule::class);
     }
 
+    public function pixelConfigs(): HasOne
+    {
+        return $this->hasOne(PixelConfig::class);
+    }
+
     public function getFinalizingPurchaseConfigToogleAttribute()
     {
-
-        if (empty($this->finalizing_purchase_configs))
+        if (empty($this->finalizing_purchase_configs)) {
             return 0;
+        }
 
         $json_decode = json_decode($this->finalizing_purchase_configs, true);
 
-        if (isset($json_decode['toogle']))
+        if (isset($json_decode['toogle'])) {
             return $json_decode['toogle'];
+        }
 
         return 0;
     }
 
     public function getFinalizingPurchaseConfigTextAttribute()
     {
-
-        if (empty($this->finalizing_purchase_configs))
+        if (empty($this->finalizing_purchase_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->finalizing_purchase_configs, true);
 
-        if (isset($json_decode['text']))
+        if (isset($json_decode['text'])) {
             return $json_decode['text'];
+        }
 
         return null;
     }
 
     public function getFinalizingPurchaseConfigMinValueAttribute()
     {
-        if (empty($this->finalizing_purchase_configs))
+        if (empty($this->finalizing_purchase_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->finalizing_purchase_configs, true);
 
-        if (isset($json_decode['min_value']))
+        if (isset($json_decode['min_value'])) {
             return $json_decode['min_value'];
+        }
 
         return null;
     }
 
     public function getCheckoutNotificationConfigsToogleAttribute()
     {
-
-        if (empty($this->checkout_notification_configs))
+        if (empty($this->checkout_notification_configs)) {
             return 0;
+        }
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
-        if (isset($json_decode['toogle']))
+        if (isset($json_decode['toogle'])) {
             return $json_decode['toogle'];
+        }
 
         return 0;
     }
 
     public function getCheckoutNotificationConfigsTimeAttribute()
     {
-
-        if (empty($this->checkout_notification_configs))
+        if (empty($this->checkout_notification_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
-        if (isset($json_decode['time']))
+        if (isset($json_decode['time'])) {
             return $json_decode['time'];
+        }
 
         return null;
     }
 
     public function getCheckoutNotificationConfigsMobileAttribute()
     {
-        if (empty($this->checkout_notification_configs))
+        if (empty($this->checkout_notification_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
-        if (isset($json_decode['mobile']))
+        if (isset($json_decode['mobile'])) {
             return $json_decode['mobile'];
+        }
 
         return null;
     }
 
     public function getCheckoutNotificationConfigsMessageAttribute()
     {
-        if (empty($this->checkout_notification_configs))
+        if (empty($this->checkout_notification_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
         if (isset($json_decode['messages'])) {
             $message_arr = $json_decode['messages'];
             $messages = array_map(
-                function($message) {
-                    $res = explode('//',$message);
+                function ($message) {
+                    $res = explode('//', $message);
                     return $res[0];
-            },
+                },
                 $message_arr
-        );
+            );
             return $messages;
         }
         return null;
@@ -442,16 +408,17 @@ class Project extends Model
 
     public function getCheckoutNotificationConfigsMessageMinValueAttribute()
     {
-        if (empty($this->checkout_notification_configs))
+        if (empty($this->checkout_notification_configs)) {
             return null;
+        }
 
         $json_decode = json_decode($this->checkout_notification_configs, true);
 
         if (isset($json_decode['messages'])) {
             $message_arr = $json_decode['messages'];
             $messages = array_map(
-                function($message) {
-                    $res = explode('//',$message);
+                function ($message) {
+                    $res = explode('//', $message);
                     return $res[1];
                 },
                 $message_arr

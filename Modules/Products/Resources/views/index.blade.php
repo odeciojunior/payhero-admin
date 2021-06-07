@@ -1,13 +1,13 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=03') }}">
 @endpush
 
 @section('content')
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container pb-0">
             <div class="row align-items-center mb-30" style="min-height:4rem">
                 <div class="col-lg-6">
@@ -28,7 +28,7 @@
                         <div class="col-lg-3 col-md-6">
                             <div class="form-group">
                                 <label for="type-products">Tipo</label>
-                                <select class="form-control" id='type-products'>
+                                <select class="form-control select-pad" id='type-products'>
                                     <option value="0">Meus Produtos</option>
                                     <option value="1">Produtos Shopify</option>
                                 </select>
@@ -37,7 +37,7 @@
                         <div class="col-lg-3 col-md-6" id='is-projects'>
                             <div class="form-group">
                                 <label id="select-projects-label" class="disabled" for="select-projects">Projeto</label>
-                                <select id='select-projects' class="form-control disabled" disabled>
+                                <select id='select-projects' class="form-control select-pad disabled" disabled>
                                     <option>Carregando...</option>
                                 </select>
                             </div>
@@ -49,9 +49,9 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-6" style="margin-top: 30px">
-                            <button id="btn-filtro" class="btn btn-primary w-full">
-                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar
+                        <div class="col-lg-3 col-md-6" style="margin-top: 29px">
+                            <button id="btn-filtro" class="btn btn-primary w-full p-10">
+                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                             </button>
                         </div>
                     </div>
@@ -60,13 +60,15 @@
             <div class="page-content container">
                 <div id='data-table-products' class='row'>
                 </div>
-                <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px; margin-right: 100px;"></div>
+                <div class="row justify-content-center justify-content-md-end">
+                    <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
+                </div>
                 <div class='products-is-empty' style='display:none;'>
                     @push('css')
-                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+                        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
                     @endpush
                     <div class="content-error text-center pt-0">
-                        <img src="{!! asset('modules/global/img/empty.svg') !!}" width="150px">
+                        <img src="{!! asset('modules/global/img/produtos.svg') !!}" width="156px">
                         <h1 class="big gray">Zero produtos por aqui!</h1>
                         {{--                    <div class='product-is-empty-cla'>--}}
                         {{--                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}

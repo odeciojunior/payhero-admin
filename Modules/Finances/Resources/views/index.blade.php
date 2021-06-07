@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=03'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -77,13 +77,13 @@
             <div class="card-show-content-finances" style="display:none">
                 {{-- TABS --}}
                 <div id="tabs-view">
-                    <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-content" id="nav-tabContent" style="min-height: 300px">
                         {{-- TRANSFERENCIAS --}}
                         <div class="tab-pane active"
                              id="nav-transfers"
                              role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
                                 <div class="flex-row justify-content-start align-items-center">
                                     <div class="col-12 mb-3 text-xs-center text-lg-left">
                                         <div class="alert alert-danger alert-dismissible fade show"
@@ -129,9 +129,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 pt-1">
-                                                <button id="bt-withdrawal"
-                                                        class="btn btn-success disabled btn-sacar mt-20"
-                                                        data-toggle="modal" disabled>
+                                                <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal"
+                                                style="border-radius: 8px;" disabled>
                                                     Sacar dinheiro
                                                 </button>
                                             </div>
@@ -176,97 +175,56 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='container col-sm-12 mt-20 d-none d-md-block'>
-                                        <div class='row'>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                        <h4 class="price saldoPendente"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right yellow"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                        <h4 class="price saldoBloqueado"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                        <h4 class="price saltoTotal"></h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right blue"></div>
-                                            </div>
-                                            <div class="col-sm-3 card">
-                                                <div class="card-body">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                        <h4 class="price saldoDebito" id="debit-value">
-                                                            <span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span>
-                                                            <a href="javascript:;" id="go-to-pending-debt" class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">0,00</a>
-                                                        </h4>
-                                                    </div>
-                                                </div>
-                                                <div class="s-border-right red"></div>
+                                </div>
+                            </div>
+                            <div class='container col-sm-12 mt-20 d-lg-block'>
+                                <div class='row'>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h5 class="font-size-14 gray-600"> Saldo Pendente </h5>
+                                                <h4 class="saldoPendente"></h4>
                                             </div>
                                         </div>
+                                        <div class="s-border-right yellow"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h5 class="font-size-14 gray-600"> Saldo Bloqueado </h5>
+                                                <h4 class="saldoBloqueado"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right red"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h5 class="font-size-14 gray-600"> Saldo Total </h5>
+                                                <h4 class="saltoTotal"></h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right blue"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <div class="price-holder">
+                                                <h5 class="font-size-14 gray-600"> Débitos pendentes </h5>
+                                                <h4 class="saldoDebito" id="debit-value">
+{{--                                                    <span class="currency font-size-30 bold debit-balance" style="color: #E61A1A;">- R$</span>--}}
+                                                    <span style="color:#959595">R$ </span>
+                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="s-border-right red"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-content" id="nav-tabContent">
-                                <div class='container col-sm-12 mt-20  d-md-none'>
-                                    <div class='row'>
-                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                    <h4 class="price saldoPendente"></h4>
-                                                </div>
-                                                <div class="s-border-right yellow"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                    <h4 class="price saldoBloqueado"></h4>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pl-0 pl-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                    <h4 class="price saltoTotal"></h4>
-                                                </div>
-                                                <div class="s-border-right blue"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 pr-0 pr-xs-0">
-                                            <div class="card card-body mb-10">
-                                                <div class="price-holder">
-                                                    <h6 class="label-price mb-15"> Débitos pendentes </h6>
-                                                    <h4 class="price saldoDebito" id="debit-value">
-                                                    </h4>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
-                                    Histórico de transferências
-                                </h4>
+                            <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20">
+                                Histórico de transferências
+                            </h4>
+                            <div style="min-height: 300px">
 
                                 <!-- Transferências -->
                                 <div class="tab-pane active"
@@ -274,30 +232,30 @@
                                      role="tabpanel"
                                      aria-labelledby="nav-home-tab">
                                     <table id='withdrawalsTable'
-                                           class="table table-striped table-condensed unify"
-                                           style="margin-bottom: 3.143rem !important">
+                                           class="table table-striped table-condensed unify">
                                         <thead>
                                         <tr>
-                                            <th scope="col">Código Saque</th>
-                                            <th scope="col">Conta</th>
-                                            <th scope="col">Solicitação</th>
-                                            <th scope="col">Liberação</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Valor</th>
-                                            <th style="display: none" id="col_transferred_value" scope="col">Valor
+                                            <td class="table-title" scope="col">Código Saque</td>
+                                            <td class="table-title" scope="col">Conta</td>
+                                            <td class="table-title" scope="col">Solicitação</td>
+                                            <td class="table-title" scope="col">Liberação</td>
+                                            <td class="table-title text-center" scope="col">Status</td>
+                                            <td class="table-title" scope="col">Valor</td>
+                                            <td class="table-title" style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
-                                            </th>
-                                            <th scope="col" class="d-none d-md-block"> &nbsp;</th>
+                                            </td>
+                                            <td scope="col" class="d-none d-md-block table-title"> &nbsp;</td>
                                         </tr>
                                         </thead>
-                                        <tbody id="withdrawals-table-data" class="custom-t-body">
+                                        <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top: 10px;margin-bottom:100px;;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
                                 </div>
+                            </div>
+                            <div class="row justify-content-center justify-content-md-end pr-md-15">
+                                <ul id="pagination-withdrawals" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                                    {{--js carrega...--}}
+                                </ul>
                             </div>
                         </div>
                         {{--EXTRATO--}}
@@ -306,7 +264,7 @@
                             id="nav-statement"
                             role="tabpanel"
                             aria-labelledby="nav-statement-tab">
-                            <div class="card shadow py-15 px-0 px-md-15 mb-50">
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
                                         <div class="d-flex align-items-center">
@@ -374,8 +332,7 @@
                                                                placeholder="Clique para editar..." readonly>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_1">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="payment_method">Forma de pagamento</label>
                                                         <select name='payment_method' id="payment_method"
@@ -383,12 +340,12 @@
                                                             <option value="ALL">Todos</option>
                                                             <option value="CREDIT_CARD">Cartão de crédito</option>
                                                             <option value="BANK_SLIP">Boleto</option>
+                                                            <option value="PIX">PIX</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_2">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="statement_sale">
                                                             Transação <i style="font-weight: normal"
@@ -401,66 +358,56 @@
                                                                class="select-pad" placeholder="Transação">
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-3 collapse bt-collapse d-md-block"
-                                                     id="bt_collapse_3">
-                                                    <div class="input-holder form-group">
-                                                        <label for="statement_status_select">Status</label>
-                                                        <select class="form-control select-pad" name="status"
-                                                                id="statement_status_select">
-                                                            <option value="ALL">Todos</option>
-                                                            <option value="WAITING_FOR_VALID_POST">
-                                                                Aguardando postagem válida
-                                                            </option>
-                                                            <option value="WAITING_LIQUIDATION">Aguardando liquidação
-                                                            </option>
-                                                            <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
-                                                            <option value="WAITING_RELEASE">Aguardando liberação
-                                                            </option>
-                                                            <option value="PAID">Liquidado</option>
-                                                            <option value="REVERSED">Estornado</option>
-                                                            <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                            <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
-                                                            <option value="PENDING_DEBIT">Débitos pendentes</option>
-                                                        </select>
+                                            </div>
+                                            <div class="collapse" id="bt_collapse">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="input-holder form-group">
+                                                            <label for="statement_status_select">Status</label>
+                                                            <select class="form-control select-pad" name="status"
+                                                                    id="statement_status_select">
+                                                                <option value="ALL">Todos</option>
+                                                                <option value="WAITING_FOR_VALID_POST">
+                                                                    Aguardando postagem válida
+                                                                </option>
+                                                                <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                                </option>
+                                                                <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
+                                                                <option value="WAITING_RELEASE">Aguardando liberação
+                                                                </option>
+                                                                <option value="PAID">Liquidado</option>
+                                                                <option value="REVERSED">Estornado</option>
+                                                                <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
+                                                                <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                                <option value="PENDING_DEBIT">Débitos pendentes</option>
+                                                            </select>
+                                                        </div>
+                                                        <input name="withdrawal_id" id="withdrawal_id" type="hidden"
+                                                            class="select-pad" placeholder="Id do Saque">
                                                     </div>
-                                                    <input name="withdrawal_id" id="withdrawal_id" type="hidden"
-                                                           class="select-pad" placeholder="Id do Saque">
-                                                </div>
-
-                                                <div class="mt-30 col-md-4 d-none d-md-block">
-                                                    <button id="bt_filtro_statement"
-                                                            class="btn btn-primary w-p90"
-                                                            style="height: 40px;width: 75%;">
-                                                        <img style="height: 12px; margin-right: 4px"
-                                                             src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                        Filtros
-                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="row d-md-none">
+                                            <div class="row">
                                                 <div class="col-12">
                                                     <div class="row" style="height: 0">
-                                                        <div class="col-6 pr-0">
+                                                        <div class="col-6 col-xl-3 offset-xl-6 pr-0 mt-20">
                                                             <div
                                                                 class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                                                 data-toggle="collapse"
-                                                                data-target=".bt-collapse"
+                                                                data-target="#bt_collapse"
                                                                 aria-expanded="false"
-                                                                aria-controls="bt_collapse_1 bt_collapse_2 bt_collapse_3">
+                                                                aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
-                                                                     src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                                     src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
                                                                 <span id="text-filtro">Filtros avançados</span>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
-                                                            <button id="bt_filtro_statement"
-                                                                    class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                                <img style="height: 12px; margin-right: 4px"
-                                                                     src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                                                Filtros
-                                                            </button>
+                                                        <div class="col-6 col-xl-3 mt-20">
+                                                            <div id="bt_filtro_statement" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                                Aplicar filtros
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -496,20 +443,19 @@
                                    style="margin-bottom: 3.143rem !important;">
                                 <thead>
                                 <tr>
-                                    <th scope="col" class="headCenter">Razão</th>
-                                    <th scope="col" class="headCenter">Data prevista
+                                    <td scope="col" class="headCenter table-title">Razão</td>
+                                    <td scope="col" class="headCenter table-title">Data prevista
                                         <i style="font-weight: normal"
                                            class="o-question-help-1 ml-5 font-size-14"
                                            data-toggle="tooltip"
                                            title=""
                                            data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                    </th>
-                                    <th scope="col" class="headCenter">Status</th>
-                                    <th scope="col" class="headCenter">Valor</th>
+                                    </td>
+                                    <td scope="col" class="headCenter table-title text-center">Status</td>
+                                    <td scope="col" class="headCenter table-title">Valor</td>
                                 </tr>
                                 </thead>
-                                <tbody id="table-statement-body"
-                                       class="custom-t-body table-statement-body-class">
+                                <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}" class="custom-t-body table-statement-body-class">
                                 </tbody>
                             </table>
                             <div id="pagination-statement"
@@ -523,7 +469,7 @@
                              role="tabpanel"
                              aria-labelledby="nav-statement-tab">
                             <form id="finances-settings-form">
-                                <div class="card shadow p-20">
+                                <div class="card shadow card-tabs p-20">
                                     <div class="row justify-content-start align-items-center">
                                         <div class="col-12 col-sm-8 text-left">
                                             <h5 class="title-pad">Configurações</h5>

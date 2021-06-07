@@ -52,24 +52,28 @@ use Spatie\Permission\Traits\HasRoles;
  * @property mixed|null $id_wall_result
  * @property string|null $sex
  * @property string|null $mother_name
- * @property int $has_sale_before_getnet
+ * @property bool $has_sale_before_getnet
+ * @property bool $show_old_finances
  * @property int $onboarding
  * @property string|null $observation
  * @property int $account_is_approved
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @mixin \Eloquent
  * @property string $transaction_rate
- * @property integer $chargeback_rate
- * @property integer $account_score
- * @property integer $chargeback_score
- * @property integer $attendance_score
- * @property integer $tracking_score
- * @property integer $installment_cashback
- * @property integer $level
- * @property integer $total_commission_value
- * @property integer $attendance_average_response_time
+ * @property int $chargeback_rate
+ * @property int $account_score
+ * @property int $chargeback_score
+ * @property int $attendance_score
+ * @property int $tracking_score
+ * @property int $installment_cashback
+ * @property bool $get_faster
+ * @property int $release_count
+ * @property bool $has_security_reserve
+ * @property int $level
+ * @property bool $ignore_automatic_benefits_updates
+ * @property int $total_commission_value
+ * @property int $attendance_average_response_time
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -97,7 +101,10 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
-
+    public const STATUS_ACTIVE=1;
+    public const STATUS_WITHDRAWAL_BLOCKED=2;
+    public const STATUS_ACCOUNT_BLOCKED=3;
+    public const STATUS_ACCOUNT_FROZEN=4;
     /**
      * @var string
      */
@@ -147,8 +154,13 @@ class User extends Authenticable
         'tracking_score',
         'attendance_average_response_time',
         'installment_cashback',
+        'get_faster',
+        'release_count',
+        'has_security_reserve',
         'level',
+        'ignore_automatic_benefits_updates',
         'total_commission_value',
+        'show_old_finances',
         'created_at',
         'updated_at',
         'deleted_at',

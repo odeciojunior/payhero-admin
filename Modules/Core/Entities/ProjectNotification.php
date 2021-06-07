@@ -28,7 +28,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ProjectNotification extends Model
 {
-    use PresentableTrait, FoxModelTrait, LogsActivity, SoftDeletes;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 2;
+
+    public const NOTIFICATION_SMS_BOLETO_GENERATED_IMMEDIATE = 1;
+    public const NOTIFICATION_SMS_BOLETO_DUE_TODAY = 2;
+    public const NOTIFICATION_SMS_ABANDONED_CART_AN_HOUR_LATER = 3;
+    public const NOTIFICATION_SMS_ABANDONED_CART_NEXT_DAY = 4;
+    public const NOTIFICATION_EMAIL_BOLETO_GENERATED_IMMEDIATE = 5;
+    public const NOTIFICATION_EMAIL_BOLETO_GENERATED_NEXT_DAY = 6;
+    public const NOTIFICATION_EMAIL_BOLETO_GENERATED_TWO_DAYS_LATER = 7;
+    public const NOTIFICATION_EMAIL_BOLETO_DUE_TODAY = 8;
+    public const NOTIFICATION_EMAIL_ABANDONED_CART_AN_HOUR_LATER = 9;
+    public const NOTIFICATION_EMAIL_ABANDONED_CART_NEXT_DAY = 10;
+    public const NOTIFICATION_SMS_CREDIT_CARD_PAID_IMMEDIATE = 11;
+    public const NOTIFICATION_EMAIL_CREDIT_CARD_PAID_IMMEDIATE = 12;
+    public const NOTIFICATION_EMAIL_BOLETO_PAID_IMMEDIATE = 13;
+    public const NOTIFICATION_EMAIL_TRACKING_IMMEDIATE = 14;
+    public const NOTIFICATION_SMS_TRACKING_IMMEDIATE = 15;
+    public const NOTIFICATION_EMAIL_PIX_GENERATED_IMMEDIATE = 16;
+    public const NOTIFICATION_EMAIL_PIX_PAID_IMMEDIATE = 17;
+    public const NOTIFICATION_EMAIL_PIX_EXPIRED_AN_HOUR_LATER = 18;
     /**
      * @var array
      */

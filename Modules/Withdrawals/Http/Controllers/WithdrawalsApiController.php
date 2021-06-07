@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
@@ -101,7 +102,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
-            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+            if ($withdrawalService->isNotFirstWithdrawalToday($company)) {
                 return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
@@ -141,58 +142,21 @@ class WithdrawalsApiController
     public function getWithdrawalValues(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
 
             $data = $request->all();
 
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(current(Hashids::decode($data['company_id'])));
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $withdrawalValueRequested = FoxUtils::onlyNumbers($data['withdrawal_value']);
-            $currentValue = 0;
+            $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
+            return response()
+                ->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,$withdrawalValueRequested));
 
-            $transactionsSum->chunk(
-                2000,
-                function ($transactions) use (
-                    &$currentValue,
-                    &$withdrawalValueRequested
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
-
-                        if ($currentValue >= $withdrawalValueRequested) {
-                            return response()->json(
-                                [
-                                    'data' => [
-                                        'lower_value' => $currentValue - $transaction->value,
-                                        'bigger_value' => $currentValue
-                                    ]
-                                ]
-                            )->send();
-                        }
-                    }
-                }
-            );
-
-            return response()->json(
-                [
-                    'data' => [
-                        'lower_value' => 0,
-                        'bigger_value' => 0
-                    ]
-                ]
-            );
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
@@ -202,12 +166,10 @@ class WithdrawalsApiController
         try {
             $userModel = new User();
 
-            return response()->json(
-                [
-                    'allowed' => auth()->user()->status != $userModel->present()
-                            ->getStatus('withdrawal blocked'),
-                ]
-            );
+            return response()->json([
+                'allowed' => auth()->user()->status != $userModel->present()
+                        ->getStatus('withdrawal blocked'),
+            ]);
         } catch (Exception $e) {
             report($e);
 
@@ -249,10 +211,8 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if ((!$transaction->sale->flag || empty($transaction->sale->flag)) && $transaction->sale->payment_method == 1) {
-                    $transaction->sale->flag = 'generico';
-                } elseif ($transaction->sale->payment_method == 2) {
-                    $transaction->sale->flag = 'boleto';
+                if(empty($transaction->sale->flag)){
+                    $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
                 if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
@@ -319,7 +279,7 @@ class WithdrawalsApiController
                         $arrayBrand['date'] = $date;
                     }
                 }
-                //dd($arrayBrand);
+
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
@@ -327,7 +287,6 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-
 
             $return = [
                 'id' => $id,

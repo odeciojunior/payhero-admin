@@ -41,17 +41,12 @@ class SalesApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todas as vendas');
-
             $saleService = new SaleService();
-
             $data = $request->all();
-
             $sales = $saleService->getPaginatedSales($data);
-
             return TransactionResource::collection($sales);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
     }
@@ -62,16 +57,13 @@ class SalesApiController extends Controller
             if (empty($id)) {
                 return response()->json(['message' => 'Erro ao exibir detalhes da venda'], 400);
             }
-
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
                 }
             )->log('Visualizou detalhes da venda #' . $id);
-
             $sale = (new SaleService())->getSaleWithDetails($id);
-
             if (!empty($sale->affiliate)) {
                 $users = [
                     $sale->owner_id,
@@ -82,16 +74,13 @@ class SalesApiController extends Controller
                     $sale->owner_id,
                 ];
             }
-
             if (!in_array(auth()->user()->account_owner_id, $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
-
             return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(['message' => 'Erro ao exibir detalhes da venda'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);//'Erro ao exibir detalhes da venda'
         }
     }
 
@@ -99,23 +88,17 @@ class SalesApiController extends Controller
     {
         try {
             $dataRequest = $request->all();
-
             activity()->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 }
             )->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
-
             $user = auth()->user();
-
             $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
@@ -128,17 +111,12 @@ class SalesApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela exibir resumo das venda ');
-
             $saleService = new SaleService();
-
             $data = $request->all();
-
             $resume = $saleService->getResume($data);
-
             return response()->json($resume);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
     }
@@ -147,37 +125,28 @@ class SalesApiController extends Controller
     {
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
-
             $sale = Sale::find($saleIdDecoded);
-
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
+            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
-
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-
             if (!(new CompanyService())->hasBalanceToRefund($sale)) {
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
             }
-
             $refundObservation = $request->input('refund_observation') ?? null;
-
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
-
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
-
             (new SaleService())->cancel($sale, $result['response'], $refundObservation);
-
             if (!empty($sale->shopify_order)) {
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                 if (!empty($shopifyIntegration)) {
@@ -190,13 +159,10 @@ class SalesApiController extends Controller
                     $shopifyService->saveSaleShopifyRequest();
                 }
             }
-
             event(new SaleRefundedEvent($sale));
-
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao tentar estornar venda.'], 400);
         }
     }
@@ -205,7 +171,6 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-
             if (!(new CompanyService())->hasBalanceToRefund($sale)) {
                 return response()->json(
                     [
@@ -214,9 +179,7 @@ class SalesApiController extends Controller
                     Response::HTTP_BAD_REQUEST
                 );
             }
-
             (new SaleService())->refundBillet($sale);
-
             return response()->json(
                 [
                     'message' => 'Boleto estornado com sucesso'
@@ -237,17 +200,14 @@ class SalesApiController extends Controller
                 $saleModel = new Sale();
                 $sale = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($saleId) {
                         $activity->log_name = 'visualization';
                         $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
                     }
                 )->log('Gerou nova ordem no shopify para transação: #' . $saleId);
-
                 if (!FoxUtils::isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
                     $result = $shopifyService->newOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
@@ -264,12 +224,10 @@ class SalesApiController extends Controller
             }
         } catch (Exception $e) {
             $message = ShopifyErrors::FormatErrors($e->getMessage());
-
             if (empty($message)) {
                 report($e);
                 $message = 'Erro ao tentar gerar ordem no Shopify.';
             }
-
             return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -278,30 +236,26 @@ class SalesApiController extends Controller
     {
         try {
             $saleModel = new Sale();
-            $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
+            $sale = explode(" ", $request->input('sale'));
+            $saleId = current(Hashids::connection('sale_id')->decode($sale[0]));
             $sale = $saleModel->with(['customer', 'project'])->find($saleId);
-
             if (empty($sale)) {
                 return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
             }
-
             activity()->on($saleModel)->tap(
                 function (Activity $activity) use ($saleId, $request) {
                     $activity->log_name = 'created';
                     $activity->subject_id = $saleId;
                 }
             )->log('Reenviou email para a venda: #' . $request->input('sale'));
-
             EmailService::clientSale(
                 $sale->customer,
                 $sale,
                 $sale->project
             );
-
             return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -312,21 +266,16 @@ class SalesApiController extends Controller
             $salesModel = new Sale();
             $saleService = new SaleService();
             $companiesModel = new Company();
-
             //Conta as  requisições diárias da Profitfy
             $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
             settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
-
             $user = auth()->user();
-
             if (!empty($user)) {
                 $userId = $user->account_owner_id;
-
                 $saleStatus = [
                     $salesModel->present()->getStatus('approved'),
                     $salesModel->present()->getStatus('pending'),
                 ];
-
                 $sales = $salesModel->with(
                     [
                         'transactions',
@@ -336,12 +285,9 @@ class SalesApiController extends Controller
                     ->whereDate('start_date', '>=', now()->subDays(30))
                     ->whereIn('status', $saleStatus)
                     ->paginate(100);
-
                 $userCompanies = $companiesModel->where('user_id', $userId)->pluck('id');
-
                 foreach ($sales as $sale) {
                     $saleService->getDetails($sale, $userCompanies);
-
                     $products = [];
                     foreach ($sale->productsPlansSale as $productPlanSale) {
                         $product = $productPlanSale->product;
@@ -359,7 +305,6 @@ class SalesApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['error' => 'Erro ao obter vendas'], 400);
         }
     }
@@ -370,16 +315,12 @@ class SalesApiController extends Controller
             $salesModel = new Sale();
             $saleService = new SaleService();
             $companiesModel = new Company();
-
             //Conta as  requisições diárias da Profitfy
             $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
             settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
-
             $user = auth()->user();
-
             if (!empty($user)) {
                 $saleId = current(Hashids::connection('sale_id')->decode($saleId));
-
                 $sale = $salesModel->with(
                     [
                         'transactions',
@@ -388,11 +329,9 @@ class SalesApiController extends Controller
                 )->where('id', $saleId)
                     ->where('owner_id', $user->account_owner_id)
                     ->first();
-
                 if (!empty($sale)) {
                     $userCompanies = $companiesModel->where('user_id', $sale->owner_id)->pluck('id');
                     $saleService->getDetails($sale, $userCompanies);
-
                     $products = [];
                     foreach ($sale->productsPlansSale as $productPlanSale) {
                         $product = $productPlanSale->product;
@@ -403,7 +342,6 @@ class SalesApiController extends Controller
                         ];
                     }
                     $sale->products = $products;
-
                     return new SalesExternalResource($sale);
                 } else {
                     return response()->json(['error' => 'A venda não foi encontrada'], 404);
@@ -413,7 +351,6 @@ class SalesApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['error' => 'Erro ao obter venda'], 400);
         }
     }
@@ -422,7 +359,6 @@ class SalesApiController extends Controller
     {
         try {
             $saleRefundHistoryModel = new SaleRefundHistory();
-
             $data = $request->all();
             $id = current(Hashids::connection('sale_id')->decode($id));
             if (!empty($id && !empty($data['name']) && !empty($data['value']))) {
@@ -430,7 +366,6 @@ class SalesApiController extends Controller
                 if (!empty($saleRefundHistory)) {
                     $saleRefundHistory->refund_observation = $data['value'];
                     $saleRefundHistory->save();
-
                     return response()->json(['message' => 'Causa do estorno alterado com successo!']);
                 } else {
                     return response()->json(['message' => 'Venda não encontrada!'], 400);
@@ -440,7 +375,6 @@ class SalesApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao alterar causa do estorno!'], 400);
         }
     }
@@ -460,7 +394,6 @@ class SalesApiController extends Controller
                 } else {
                     $plans = $planModel->where('project_id', $projectId)->limit(10)->get();
                 }
-
                 return PlansSelectResource::collection($plans);
             } else {
                 $userId = auth()->user()->account_owner_id;
@@ -472,7 +405,6 @@ class SalesApiController extends Controller
                 } else {
                     $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
                 }
-
                 return PlansSelectResource::collection($plans);
             }
         } catch (Exception $e) {
@@ -491,22 +423,18 @@ class SalesApiController extends Controller
         try {
             if (!empty($id)) {
                 $saleModel = new Sale();
-
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($id) {
                         $activity->log_name = 'updated';
                         $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
                     }
                 )->log('Adicionou observação a venda #' . $id);
-
                 $sale = $saleModel->find(current(Hashids::connection('sale_id')->decode($id)));
-
                 $sale->update(
                     [
                         'observation' => $request->input('observation'),
                     ]
                 );
-
                 return response()->json(
                     [
                         'message' => 'Observaçao atualizada com sucesso!',
@@ -524,7 +452,6 @@ class SalesApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
-
             return response()->json(
                 [
                     'message' => 'Erro ao atualizar observaçao!'

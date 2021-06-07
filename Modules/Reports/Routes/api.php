@@ -19,7 +19,7 @@ Route::group(
 
         Route::post('/reports/projectionsexport', 'ReportsApiController@projectionsExport')->middleware('role:account_owner|admin');
 
-        Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin');
+        Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin|attendance');
 
         Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance')->middleware('role:account_owner|admin');
 

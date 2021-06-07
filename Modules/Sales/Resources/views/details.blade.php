@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
@@ -54,58 +54,58 @@
                     <div id="table-product">
                     </div>
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-                        <div class="col-lg-6 align-items-center">
+                        <div class="col-sm-6 col-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 col-6 text-right">
                             <span class="text-muted ft-12" id="subtotal-value"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6 col-6">
                             <span class="text-muted ft-12"> Frete </span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 col-6 text-right">
                             <span id="shipment-value" class="text-muted ft-12"></span>
                         </div>
-                        <div id="iof-label" class="col-lg-6" style="display:none">
+                        <div id="iof-label" class="col-sm-6 col-6" style="display:none">
                             <span class="text-muted ft-12"> IOF </span>
                         </div>
-                        <div id="iof-value" class="col-lg-6 text-right" style="display:none">
+                        <div id="iof-value" class="col-sm-6 col-6 text-right" style="display:none">
                             <span class="text-muted ft-12"></span>
                         </div>
-                        <div id="discount-title" class="col-lg-6" style="display: none;">
-                            <span class="text-muted ft-12"> Desconto</span>
+                        <div id="discount-title" class="col-sm-6 col-6" style="display: none;">
+                            <span class="text-muted ft-12"> Desconto do cupom</span>
                         </div>
-                        <div id="discount-data" class="col-lg-6 text-right" style="display: none;">
+                        <div id="discount-data" class="col-sm-6 col-6 text-right" style="display: none;">
                             <span id="desconto-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6 cupom-info">
+                        <div class="col-sm-6 col-6 cupom-info">
                             <span class="text-muted ft-12"> Cupom Utilizado</span>
                         </div>
-                        <div class="col-lg-6 text-right cupom-info">
+                        <div class="col-sm-6 col-6 text-right cupom-info">
                             <span id="cupom-code" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6 col-6">
                             <span class="text-muted ft-12 text-discount"></span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 col-6 text-right">
                             <span id="automatic-discount-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6 col-6">
                             <span class="text-muted ft-12 text-partial-refund"> Estorno parcial</span>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 col-6 text-right">
                             <span id="partial-refund-value" class="text-muted ft-12"></span>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-6 col-6">
                             <h4 class="table-title"> Total </h4>
                         </div>
-                        <div class="col-lg-6 text-right">
+                        <div class="col-sm-6 col-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
-                        <div class='col-lg-8'>
+                        <div class='col-sm-8 col-8'>
                             <span id="cashback-label" class="text-muted ft-12 d-none">Cashback</span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 col-4 text-right'>
                             <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
                         </div>
                     </div>
@@ -116,34 +116,93 @@
                         <div id="cambio-value" class='col-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-8'>
+                        <div class='col-sm-8 col-8'>
                             <span id="taxas-label" class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 col-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-8'>
+                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5'
+                             data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
+                            <small data-toggle="tooltip" data-placement="top" title="Clique para obter mais detalhes">Taxa detalhada</small>
+                        </div>
+
+                        <div class='col-lg-12 collapse mb-5'  id="taxas-detail">
+                            <table class="table table-bordered mx-5 border-0">
+                                <tbody>
+                                    <tr>
+                                        <td><div id="tax-subtotal" class="ft-12"></div></td>
+                                        <td><div id="tax-subtotal-value" style="color: black !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-cashback" class="ft-12"></div></td>
+                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-value-total" class="ft-12"></div></td>
+                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-percentage" class="ft-12"></div></td>
+                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-fixed" class="ft-12"></div></td>
+                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-total" class="ft-12"></div></td>
+                                        <td><div id="tax-total-value" style="color: #F41C1C !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><div id="tax-comission" class="ft-12"></div></td>
+                                        <td><div id="tax-comission-value" style="color: black !important;"
+                                                 class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+                                </tbody>
+
+{{--                                <div id="tax-subtotal" class="col-6 ft-12"></div><div id="tax-subtotal-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-cashback" class="col-6 ft-12"></div><div id="tax-cashback-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-total" class="col-6 ft-12"></div><div id="tax-total-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-percentage" class="col-6 ft-12"></div><div id="tax-percentage-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-fixed" class="col-6 ft-12"></div><div id="tax-fixed-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+{{--                                <div id="tax-comission" class="col-6 ft-12"></div><div id="tax-comission-value" class=" text-right text-muted ft-12 col-6"></div>--}}
+                            </table>
+                        </div>
+                        <div class='col-sm-8 col-8'>
                             <span id="taxas-installment-free-label" style='display:none;' class='text-muted ft-12'>Taxa de parcelamento</span>
                         </div>
-                        <div class='col-lg-4 text-right'>
+                        <div class='col-sm-4 col-4 text-right'>
                             <span id="taxa-installment-value" style='display:none;' class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-6 div-user-type-comission' style='display:none;'>
+                        <div class='col-sm-6 col-6 div-user-type-comission' style='display:none;'>
                             <h4 class='table-title'>Comissão do afiliado: </h4>
                         </div>
-                        <div class='col-lg-6 text-right div-user-type-comission-value' style='display:none;'>
+                        <div class='col-sm-6 col-6 text-right div-user-type-comission-value' style='display:none;'>
                         </div>
-                        <div class='col-lg-6 div-anticipated' style='display:none;'>
+                        <div class='col-sm-6 col-6 div-anticipated' style='display:none;'>
                             <span id="anticipated-label" class='text-muted ft-12'>
                                 Valor Antecipado:
                             </span>
                         </div>
-                        <div class='col-lg-6 text-right div-value-anticipated' style='display:none;'>
+                        <div class='col-sm-6 col-6 text-right div-value-anticipated' style='display:none;'>
                         </div>
 
-                        <div class='col-lg-6 div-main-comission'>
+                        <div class='col-sm-6 col-6 div-main-comission'>
                         </div>
-                        <div class='col-lg-6 text-right div-main-comission-value'>
+                        <div class='col-sm-6 col-6 text-right div-main-comission-value'>
                         </div>
                     </div>
                 </div>
@@ -349,5 +408,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=' . uniqid()) }}"></script>
 @endpush

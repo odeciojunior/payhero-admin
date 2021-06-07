@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Facades\Agent;
 use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DashboardNotification;
@@ -30,7 +31,6 @@ use Modules\Core\Services\TaskService;
 use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
-use MongoDB\Driver\Session;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -225,10 +225,10 @@ class DashboardApiController extends Controller
             report($e);
 
             return response()->json(
-            [
-            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ],
-            400
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
             );
         }
     }
@@ -507,12 +507,12 @@ class DashboardApiController extends Controller
                 ->first();
 
             return [
-                'attendance_score' => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
-                'attendance_average_response_time' =>$user->attendance_average_response_time,
-                'total'            => $tickets->total,
-                'open'             => $tickets->open,
-                'closed'           => $tickets->closed,
-                'mediation'        => $tickets->mediation,
+                'attendance_score'                 => $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                'attendance_average_response_time' => $user->attendance_average_response_time,
+                'total'                            => $tickets->total,
+                'open'                             => $tickets->open,
+                'closed'                           => $tickets->closed,
+                'mediation'                        => $tickets->mediation,
             ];
         } catch (Exception $e) {
             report($e);
@@ -640,10 +640,10 @@ class DashboardApiController extends Controller
         try {
             if (!empty(request()->cookie('isManagerUser'))) {
                 return \response()->json([
-                                             'message' => 'Onboarding já lido',
-                                             'read' => true
-                                         ],
-                                         Response::HTTP_OK);
+                    'message' => 'Onboarding já lido',
+                    'read'    => true
+                ],
+                    Response::HTTP_OK);
             }
 
             $user = auth()->user();
@@ -661,12 +661,12 @@ class DashboardApiController extends Controller
                 'user_id' => $user->id,
                 'read_at' => null,
             ])
-            ->whereIn('subject_type', [UpdateUserLevel::class, UpdateUserAchievements::class])
-            ->get([
-                'id',
-                'subject_id',
-                'subject_type'
-            ]);
+                ->whereIn('subject_type', [UpdateUserLevel::class, UpdateUserAchievements::class])
+                ->get([
+                    'id',
+                    'subject_id',
+                    'subject_type'
+                ]);
 
             if (!empty($dashboardNotifications))
                 return DashboardAchievementsResource::collection($dashboardNotifications);
@@ -724,41 +724,46 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function verifyOnboarding()
+    public function verifyPixOnboarding()
     {
         try {
-            if (!empty(request()->cookie('isManagerUser'))) {
+            if (!empty(request()->cookie('isManagerUser')) || Agent::isMobile()) {
                 return \response()->json([
-                                             'message' => 'Onboarding já lido',
-                                             'read' => true
-                                         ],
-                                         Response::HTTP_OK);
+                    'message' => 'Onboarding já lido',
+                    'read'    => true
+                ],
+                    Response::HTTP_OK);
             }
 
             $user = auth()->user();
             $userName = ucfirst(strtolower(current(explode(' ', $user->name))));
 
             $notfication = DashboardNotification::firstOrCreate([
-                                                                    'user_id' => $user->id,
-                                                                    'subject_id' => 1,
-                                                                    'subject_type' => DashboardApiController::class . '/verifyOnboarding'
-                                                                ]);
+                'user_id'      => $user->id,
+                'subject_id'   => 1,
+                'subject_type' => DashboardApiController::class . '/verifyPixOnboarding'
+            ]);
 
             if (!empty($notfication->read_at)) {
                 return \response()->json([
-                                             'message' => 'Onboarding já lido',
-                                             'read' => true
-                                         ],
-                                         Response::HTTP_OK);
+                    'message' => 'Onboarding já lido',
+                    'read'    => true
+                ],
+                    Response::HTTP_OK);
             }
 
+            $userId = Hashids::connection('login')->encode($user->id);
+            $expiration = Hashids::encode(Carbon::now()->addMinute()->unix());
+            $urlAuth = env('ACCOUNT_FRONT_URL') . '/redirect/' . $userId . '/' . (string)$expiration;
+
             return \response()->json([
-                                         'message' => 'Onboarding não lido',
-                                         'read' => false,
-                                         'onboarding' => \hashids()->encode($notfication->id),
-                                         'name' => $userName
-                                     ],
-                                     Response::HTTP_OK);
+                'message'      => 'Onboarding não lido',
+                'read'         => false,
+                'onboarding'   => \hashids()->encode($notfication->id),
+                'name'         => $userName,
+                'accounts_url' => $urlAuth
+            ],
+                Response::HTTP_OK);
 
         } catch (Exception $exception) {
             report($exception);
@@ -773,7 +778,8 @@ class DashboardApiController extends Controller
 
     }
 
-    public function updateOnboarding($onboarding) {
+    public function updatePixOnboarding($onboarding)
+    {
         try {
             $onboardingId = \hashids()->decode($onboarding);
 

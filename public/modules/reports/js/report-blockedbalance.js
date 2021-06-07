@@ -26,10 +26,24 @@ $(document).ready(function () {
         atualizar();
     });
 
+    $('.btn-light-1').click(function () {
+        var collapse = $('#icon-filtro')
+        var text = $('#text-filtro')
+
+        text.fadeOut(10);
+        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
+            collapse.css('transform', 'rotate(180deg)')
+            text.text('Minimizar filtros').fadeIn();
+        } else {
+            collapse.css('transform', 'rotate(0deg)')
+            text.text('Filtros avançados').fadeIn()
+        }
+    });
+
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
     $('#date_range').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
+        startDate: moment('2018-01-01 00:00:00'),
         endDate: moment(),
         opens: 'center',
         maxDate: moment().endOf("day"),
@@ -179,15 +193,33 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-
+                        let start_date='';
+                        if (value.start_date) {
+                            start_date=value.start_date.split(/\s/g);//data inicial
+                            start_date= "<strong class='bold-mobile'>"+
+                                        start_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        start_date[1]
+                                    +" </small>";
+                        }
+                        
+                        let end_date='';
+                        if (value.end_date) {
+                            end_date=value.end_date.split(/\s/g);//data final
+                            end_date= "<strong class='bold-mobile'>"+
+                                        end_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        end_date[1]
+                                    +" </small>";
+                        }
                         dados = `  <tr>
-                                    <td class='display-sm-none display-m-none display-lg-none text-center'>
+                                    <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
                                         ${value.sale_code}
                                         ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
                                     </td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+                                    <td class="text-left font-size-14">${value.project}</td>
+                                    <td class="text-left font-size-14">${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${value.client}</td>
                                     <td>
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
@@ -199,10 +231,10 @@ $(document).ready(function () {
                                                 : ''}
                                         </div>
                                     </td>
-                                    <td class='display-sm-none display-m-none'>${value.start_date}</td>
-                                    <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
+                                    <td class='display-sm-none text-left font-size-14 display-m-none'>${start_date}</td>
+                                    <td class='display-sm-none text-left font-size-14'>${end_date}</td>
+                                    <td style='white-space: nowrap' class="text-left font-size-14"><b>${value.total_paid}</b></td>
+                                    <td class="text-left font-size-14">
                                         ${value.reason_blocked}
                                     </td>
                                 </tr>`;
@@ -213,7 +245,9 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#dados_tabela").attr("img-empty") +
+                        "'>Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response, 'sales', atualizar);
             }
@@ -305,14 +339,14 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total_sales').text('0');
-                $('#commission_blocked, #total').text('R$ 0,00');
+                $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
-                    $('#total_sales').text(response.total_sales);
-                    $('#commission_blocked').text(`R$ ${response.commission}`);
+                    $('#total_sales').html(response.total_sales);
+                    $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
                     $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
                     $('.blocked-balance-icon').attr('data-original-title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
-                    $('#total').text(`R$ ${response.total}`);
+                    $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
                 }
             }
         });

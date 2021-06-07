@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=01') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=03') }}">
 @endpush
 
 <div class='card shadow p-30'>
@@ -174,6 +174,13 @@
                         Configurações Shopify
                     </a>
                 </li>
+                <li class="nav-item listWooCommerceConfiguration" role="presentation" style='display:none;'>
+                    <a class="nav-link" data-toggle="tab" href="#tabWooCommerceConfiguration"
+                       aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
+                        <i class="icon ribbon-woo" aria-hidden="true" style='font-size:15px;'></i>
+                        Configurações WooCommerce
+                    </a>
+                </li>
                 <li class="nav-item listAffiliateConfiguration" role="presentation">
                     <a class="nav-link" data-toggle="tab" href="#tabAffiliateConfiguration"
                        aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
@@ -292,6 +299,19 @@
                         </div>
                         <div class="row">
                             <div class='form-group col-md-6 col-sm-12'>
+                                <label for="document_type_checkout">Aceitar compras de</label>
+                                <select name='document_type_checkout' class='form-control select-pad'
+                                        id="document_type_checkout">
+                                    <option value='1'>CPF</option>
+                                    <option value='2'>CNPJ</option>
+                                    <option value='3'>CPF/CNPJ</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
+                                    aceito no checkout.
+                                </p>
+                            </div>
+                            <div class='form-group col-md-6 col-sm-12'>
                                 <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
                                 <select class='form-control select-pad' id='boleto_due_days' name='boleto_due_days'>
                                     @for($x = 1; $x <= 28; $x++)
@@ -301,17 +321,6 @@
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Dias para vencimento do
                                     boleto
-                                </p>
-                            </div>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="parcelas_sem_juros">Boleto no checkout</label>
-                                <select name='boleto' class='form-control select-pad' id="boleto">
-                                    <option value='1'>Sim</option>
-                                    <option value='0'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
-                                    com boleto no checkout
                                 </p>
                             </div>
                         </div>
@@ -329,20 +338,18 @@
                                     fiscais.
                                 </p>
                             </div> --}}
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad'
-                                        id="document_type_checkout">
-                                    <option value='1'>CPF</option>
-                                    <option value='2'>CNPJ</option>
-                                    <option value='3'>CPF/CNPJ</option>
+                            <div class='form-group col-md-4 col-sm-12'>
+                                <label for="parcelas_sem_juros">Boleto no checkout</label>
+                                <select name='boleto' class='form-control select-pad' id="boleto">
+                                    <option value='1'>Sim</option>
+                                    <option value='0'>Não</option>
                                 </select>
                                 <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
-                                    aceito no checkout.
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
+                                    com boleto no checkout
                                 </p>
                             </div>
-                            <div class='form-group col-md-6 col-sm-12'>
+                            <div class='form-group col-md-4 col-sm-12'>
                                 <label for="credit_card">Cartão de crédito no checkout</label>
                                 <select name='credit_card' class='form-control select-pad' id="credit_card">
                                     <option value='1' class='credit_card_yes'>Sim</option>
@@ -351,6 +358,17 @@
                                 <p class='info pt-5' style='font-size: 10px;'>
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
                                     com cartão de crédito no checkout
+                                </p>
+                            </div>
+                            <div class='form-group col-md-4 col-sm-12'>
+                                <label for="pix">Pix no checkout</label>
+                                <select name='pix' class='form-control select-pad' id="pix">
+                                    <option value='1'>Sim</option>
+                                    <option value='0'>Não</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
+                                    com pix no checkout
                                 </p>
                             </div>
                         </div>
@@ -378,18 +396,24 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class='form-group col-md-6 col-sm-12 col-xs-12'>
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text'
                                        placeholder='URL' maxlength='60'>
                                 <span id='input-pad-error' class='text-danger'></span>
                             </div>
-                            <div class='form-group col-md-6 col-sm-12 col-xs-12'>
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                 <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                                 <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad'
                                        type='text'
                                        placeholder='URL' maxlength='60'>
                                 <span id='boleto_redirect-error' class='text-danger'></span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
+                                <label for='pix_redirect'>Pix (Redirecionamento página obrigado)</label>
+                                <input id='pix_redirect' name='pix_redirect' value='' class='input-pad' type='text'
+                                       placeholder='URL' maxlength='60'>
+                                <span id='pix_redirect-error' class='text-danger'></span>
                             </div>
                             <p class="info mt-5 col-12" style="font-size: 10px;">
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o
@@ -399,7 +423,7 @@
                             </p>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                 <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-pad" id="credit_card_discount"
@@ -409,10 +433,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                 <label for="billet_discount">Desconto automático em boletos (%)</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-pad" id="billet_discount"
+                                           maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
+                                <label for="pix_discount">Desconto automático em pix (%)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-pad" id="pix_discount"
                                            maxlength='3'>
                                     <div class="input-group-append bg-light">
                                         <span class="input-group-text">%</span>
@@ -850,6 +884,26 @@
                     </div>
                     <hr>
                 </div>
+
+                <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
+                    <div class='row justify-content-center mx-20 mt-30'>
+
+                        <div class='col-md-4 pt-20'>
+                            <a id="product" role="button" integration-status=""
+                               class="pointer align-items-center" data-toggle="modal"
+                               data-target="#modal-woocom-integration">
+                                <span class="o-reload-1 font-size-16"></span>
+                                <span class="gray"> Sincronizar produtos com WooCommerce </span>
+                            </a>
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+                </div>
+
+
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
                     <div class='my-30 mx-30'>
                         <div class='row'>

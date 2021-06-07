@@ -47,9 +47,11 @@
         </div>
     </div>
 </div>
-<ul id="pagination-plans" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
-    {{-- js pagination carrega --}}
-</ul>
+<div class="row d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-plans" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
+        {{-- js pagination carrega --}}
+    </ul>
+</div>
 
 <div class="d-none">
     <select name="select-products" id="select-products" name="products[]">

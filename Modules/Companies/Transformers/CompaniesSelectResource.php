@@ -10,7 +10,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class CompaniesSelectResource extends JsonResource
 {
-    public function toArray($request)
+    public function toArray($request): array
     {
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
@@ -23,6 +23,7 @@ class CompaniesSelectResource extends JsonResource
             'capture_transaction_enabled' => $this->capture_transaction_enabled,
             'company_has_sale_before_getnet' => auth()->user()->has_sale_before_getnet,
             'active_flag' => $this->active_flag,
+            'has_pix_key' => $this->has_pix_key,
             'company_type' => $this->present()->getCompanyType($this->company_type),
             'user_address_document_status' => (new User())->present()->getAddressDocumentStatus(
                 $this->user->address_document_status
@@ -30,7 +31,6 @@ class CompaniesSelectResource extends JsonResource
             'user_personal_document_status' => (new User())->present()->getAddressDocumentStatus(
                 $this->user->personal_document_status
             ),
-//            'is_local' => env('APP_ENV') == 'local'
         ];
     }
 }

@@ -1,6 +1,11 @@
 .table-warning-roll {
     color: #EB6707 !important;
     background-color: #FDE2CE !important;
+    padding: 0 !important;
+}
+
+.table-warning-roll td {
+    border-radius: 0 !important;
 }
 
 .table-responsive {
@@ -8,13 +13,13 @@
     overflow-y: hidden;
 }
 
-.detail-input{
+.detail-input {
     padding: 3px 6px;
     flex: 1;
     margin: 2px 0;
 }
 
-.fake-label{
+.fake-label {
     border: 0;
     padding: 0 !important;
     margin: 0 !important;
@@ -84,7 +89,7 @@
 }
 
 .btn-light-1, .btn-primary-1, .btn-success-1 {
-    box-shadow: 0 1px 15px #00000017;
+    border:1px solid #dddddd;
     border-radius: 12px;
     padding: 15px;
     font-size: 14px;

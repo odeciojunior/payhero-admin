@@ -12,8 +12,8 @@ use Intervention\Image\Facades\Image;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
@@ -56,9 +56,11 @@ class ProjectsApiController extends Controller
             }
 
             if (!$pagination) {
-                activity()->on($projectModel)->tap(function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                })->log('Visualizou tela todos os projetos');
+                activity()->on($projectModel)->tap(
+                    function (Activity $activity) {
+                        $activity->log_name = 'visualization';
+                    }
+                )->log('Visualizou tela todos os projetos');
             }
 
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
@@ -85,9 +87,11 @@ class ProjectsApiController extends Controller
     public function create(): JsonResponse
     {
         try {
-            activity()->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela criar projeto');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou tela criar projeto');
 
             $user = auth()->user()->load('companies');
 
@@ -115,38 +119,46 @@ class ProjectsApiController extends Controller
 
             $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
 
-            $project = $projectModel->create([
-                'name' => $requestValidated['name'],
-                'description' => $requestValidated['description'],
-                'installments_amount' => 12,
-                'installments_interest_free' => 1,
-                'visibility' => 'private',
-                'automatic_affiliation' => 0,
-                'boleto' => 1,
-                'status' => $projectModel->present()->getStatus('active'),
-                'checkout_type' => 2, // checkout de 1 passo
-                'notazz_configs' => json_encode([
-                    'cost_currency_type' => 1,
-                    'update_cost_shopify' => 1,
-                ])
-            ]);
+            $project = $projectModel->create(
+                [
+                    'name' => $requestValidated['name'],
+                    'description' => $requestValidated['description'],
+                    'installments_amount' => 12,
+                    'installments_interest_free' => 1,
+                    'visibility' => 'private',
+                    'automatic_affiliation' => 0,
+                    'boleto' => 1,
+                    'status' => $projectModel->present()->getStatus('active'),
+                    'checkout_type' => 2, // checkout de 1 passo
+                    'notazz_configs' => json_encode(
+                        [
+                            'cost_currency_type' => 1,
+                            'update_cost_shopify' => 1,
+                        ]
+                    )
+                ]
+            );
 
             if (empty($project)) {
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
-            $shipping = $shippingModel->create([
-                'project_id'         => $project->id,
-                'name'               => 'Frete gratis',
-                'information'        => 'de 15 até 30 dias',
-                'value'              => '0,00',
-                'type'               => 'static',
-                'type_enum'          => $shippingModel->present()->getTypeEnum('static'),
-                'status'             => '1',
-                'pre_selected'       => '1',
-                'apply_on_plans'     => '["all"]',
-                'not_apply_on_plans' => '[]'
-            ]);
+            PixelConfig::create(['project_id' => $project->id]);
+
+            $shipping = $shippingModel->create(
+                [
+                    'project_id' => $project->id,
+                    'name' => 'Frete gratis',
+                    'information' => 'de 15 até 30 dias',
+                    'value' => '0,00',
+                    'type' => 'static',
+                    'type_enum' => $shippingModel->present()->getTypeEnum('static'),
+                    'status' => '1',
+                    'pre_selected' => '1',
+                    'apply_on_plans' => '["all"]',
+                    'not_apply_on_plans' => '[]'
+                ]
+            );
 
             if (empty($shipping)) {
                 $project->delete();
@@ -168,7 +180,9 @@ class ProjectsApiController extends Controller
 
                     $amazonPath = $amazonFileService
                         ->uploadFile(
-                            "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            "uploads/user/" . Hashids::encode(
+                                auth()->user()->account_owner_id
+                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $photo
                         );
                     $project->update(['photo' => $amazonPath]);
@@ -177,19 +191,21 @@ class ProjectsApiController extends Controller
                 }
             }
 
-            $userProject = $userProjectModel->create([
-                'user_id' => auth()->user()->account_owner_id,
-                'project_id' => $project->id,
-                'company_id' => $requestValidated['company'],
-                'type' => 'producer',
-                'type_enum' => $userProjectModel->present()
-                    ->getTypeEnum('producer'),
-                'access_permission' => 1,
-                'edit_permission' => 1,
-                'status' => 'active',
-                'status_flag' => $userProjectModel->present()
-                    ->getStatusFlag('active'),
-            ]);
+            $userProject = $userProjectModel->create(
+                [
+                    'user_id' => auth()->user()->account_owner_id,
+                    'project_id' => $project->id,
+                    'company_id' => $requestValidated['company'],
+                    'type' => 'producer',
+                    'type_enum' => $userProjectModel->present()
+                        ->getTypeEnum('producer'),
+                    'access_permission' => 1,
+                    'edit_permission' => 1,
+                    'status' => 'active',
+                    'status_flag' => $userProjectModel->present()
+                        ->getStatusFlag('active'),
+                ]
+            );
 
             if (empty($userProject)) {
                 if (!empty($amazonPath)) {
@@ -220,51 +236,50 @@ class ProjectsApiController extends Controller
     public function edit($id): JsonResponse
     {
         try {
-            $projectModel = new Project();
+            $user = auth()->user()->load('companies');
 
-            if (isset($id)) {
-                $userProjectModel = new UserProject();
-                $shopifyIntegrationModel = new ShopifyIntegration();
-                $projectUpsellModel = new ProjectUpsellRule();
+            $project = Project::with(
+                [
+                    'usersProjects',
+                    'usersProjects.company' =>
+                        function ($query) use ($user) {
+                            $query->where('user_id', $user->account_owner_id);
+                        }
+                ]
+            )->find(hashids_decode($id));
 
-                $user = auth()->user()->load('companies');
-
-                $idProject = current(Hashids::decode($id));
-                $project = $projectModel->find($idProject);
-
-                activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
+            activity()->on((new Project()))->tap(
+                function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar configurações do projeto ' . $project->name);
-
-                $userProject = $userProjectModel->where('user_id', $user->account_owner_id)
-                    ->where('project_id', $idProject)->first();
-                $userProject = new UserProjectResource($userProject);
-
-                $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->account_owner_id)
-                    ->where('project_id', $idProject)->get();
-                $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
-
-                $companies = CompaniesSelectResource::collection($user->companies);
-
-                if (Gate::allows('edit', [$project])) {
-                    $project = new ProjectsResource($project);
-
-                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
-                } else {
-                    return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
                 }
-            }
+            )->log('Visualizou tela editar configurações do projeto ' . $project->name);
 
-            return response()->json([
-                'message' => 'Erro ao carregar configuracoes do projeto',
-            ], 400);
+            $userProject = UserProject::where('user_id', $user->account_owner_id)
+                ->where('project_id', hashids_decode($id))->first();
+            $userProject = new UserProjectResource($userProject);
+
+            $shopifyIntegrations = ShopifyIntegration::where('user_id', $user->account_owner_id)
+                ->where('project_id', hashids_decode($id))->get();
+            $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
+
+            $companies = CompaniesSelectResource::collection($user->companies);
+
+            if (Gate::allows('edit', [$project])) {
+                $project = new ProjectsResource($project);
+
+                return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
+            }
+            return response()->json(['message' => 'Erro ao carregar configurações do projeto'], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Erro ao carregar configuracoes do projeto',
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Erro ao carregar configurações do projeto',
+                ],
+                400
+            );
         }
     }
 
@@ -274,10 +289,12 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $projectId = current(Hashids::decode($id));
 
-            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                $activity->log_name = 'deleted';
-                $activity->subject_id = $projectId;
-            })->log('deleted');
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'deleted';
+                    $activity->subject_id = $projectId;
+                }
+            )->log('deleted');
 
             $project = $projectModel->where('id', $projectId)->first();
 
@@ -330,13 +347,13 @@ class ProjectsApiController extends Controller
 
             $requestValidated['status'] = 1;
 
-            $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
+            $requestValidated['invoice_description'] = FoxUtils::removeAccents(
+                $requestValidated['invoice_description']
+            );
 
             // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
 
-
-            if(isset($requestValidated['finalizing_purchase_config_toogle'])) {
-
+            if (isset($requestValidated['finalizing_purchase_config_toogle']) && !empty($requestValidated['finalizing_purchase_config_toogle'])) {
                 $array = [
                     'toogle' => $requestValidated['finalizing_purchase_config_toogle'],
                     'text' => $requestValidated['finalizing_purchase_config_text'],
@@ -344,20 +361,19 @@ class ProjectsApiController extends Controller
                 ];
 
                 $requestValidated['finalizing_purchase_configs'] = json_encode($array);
-
-            }else{
+            } else {
                 $requestValidated['finalizing_purchase_configs'] = null;
             }
 
 
-
-            if(isset($requestValidated['checkout_notification_config_toogle'])) {
-
+            if (isset($requestValidated['checkout_notification_config_toogle']) && !empty($requestValidated['checkout_notification_config_toogle'])) {
                 $messages = [];
 
-                if($requestValidated['checkout_notification_config_messages']){
-                    foreach($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
-                        $messages[$config_message_key] = config('arrays.checkout_notification_config_messages')[$config_message_key]  . '//' . $requestValidated['checkout_notification_config_messages_min_value'][$config_message_key];
+                if (isset($requestValidated['checkout_notification_config_messages']) && !empty($requestValidated['checkout_notification_config_messages'])) {
+                    foreach ($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
+                        $messages[$config_message_key] = config(
+                                'arrays.checkout_notification_config_messages'
+                            )[$config_message_key] . '//' . $requestValidated['checkout_notification_config_messages_min_value'][$config_message_key];
                     }
                 }
 
@@ -369,8 +385,7 @@ class ProjectsApiController extends Controller
                 ];
 
                 $requestValidated['checkout_notification_configs'] = json_encode($array);
-
-            }else{
+            } else {
                 $requestValidated['checkout_notification_configs'] = null;
             }
 
@@ -407,12 +422,16 @@ class ProjectsApiController extends Controller
 
                     $amazonPath = $amazonFileService
                         ->uploadFile(
-                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            'uploads/user/' . Hashids::encode(
+                                auth()->user()->account_owner_id
+                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
                             $projectPhoto
                         );
-                    $project->update([
-                        'photo' => $amazonPath,
-                    ]);
+                    $project->update(
+                        [
+                            'photo' => $amazonPath,
+                        ]
+                    );
                 }
 
                 $projectLogo = $request->file('logo');
@@ -420,21 +439,29 @@ class ProjectsApiController extends Controller
                     $amazonFileService->deleteFile($project->logo);
                     $img = Image::make($projectLogo->getPathname());
 
-                    $img->resize(null, 300, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
+                    $img->resize(
+                        null,
+                        300,
+                        function ($constraint) {
+                            $constraint->aspectRatio();
+                        }
+                    );
 
                     $img->save($projectLogo->getPathname());
 
                     $amazonPathLogo = $amazonFileService
                         ->uploadFile(
-                            'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
+                            'uploads/user/' . Hashids::encode(
+                                auth()->user()->account_owner_id
+                            ) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
                             $projectLogo
                         );
 
-                    $project->update([
-                        'logo' => $amazonPathLogo,
-                    ]);
+                    $project->update(
+                        [
+                            'logo' => $amazonPathLogo,
+                        ]
+                    );
                 }
             } catch (Exception $e) {
                 report($e);
@@ -442,27 +469,51 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
-            $userProject = $userProjectModel->where([
-                ['user_id', auth()->user()->account_owner_id],
-                ['project_id', $project->id],
-            ])->first();
+            $userProject = $userProjectModel->where(
+                [
+                    ['user_id', auth()->user()->account_owner_id],
+                    ['project_id', $project->id],
+                ]
+            )->first();
             if (!empty($requestValidated['company_id'])) {
                 $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+
                 if ($userProject->company_id != $requestValidated['company_id']) {
+                    $old_company = $userProject->company;
                     $userProject->update(['company_id' => $requestValidated['company_id']]);
+                    $new_company = Company::find($requestValidated['company_id']);
+
+                    if ($old_company->has_pix_key != $new_company->has_pix_key) {
+                        $boo_pix = $new_company->has_pix_key;
+                        foreach ($new_company->usersProjects as $userProject) {
+                            $project = $userProject->project;
+                            $project->pix = $boo_pix;
+                            $project->save();
+                        }
+                    }
                 }
+            }
+
+            if (!empty($requestValidated['pix']) && $userProject->project->pix != $requestValidated['pix']) {
+                $project = $userProject->project;
+                $project->pix = $requestValidated['pix'];
+                $project->save();
             }
 
             //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
             if (isset($projectChanges["discount_recovery_status"])) {
-                $project->update([
-                    'discount_recovery_status' => $requestValidated['discount_recovery_status'],
-                    'discount_recovery_value' => $requestValidated['discount_recovery_value'],
-                ]);
+                $project->update(
+                    [
+                        'discount_recovery_status' => $requestValidated['discount_recovery_status'],
+                        'discount_recovery_value' => $requestValidated['discount_recovery_value'],
+                    ]
+                );
             } else {
-                $project->update([
-                    'discount_recovery_status' => 0,
-                ]);
+                $project->update(
+                    [
+                        'discount_recovery_status' => 0,
+                    ]
+                );
             }
 
             return response()->json(['message' => 'Projeto atualizado!'], 200);
@@ -487,57 +538,67 @@ class ProjectsApiController extends Controller
             $userId = auth()->user()->account_owner_id;
             $id = current(Hashids::decode($id));
 
-            $project = $projectModel->where('id', $id)
-                ->where('status', $projectModel->present()->getStatus('active'))
-                ->with([
-                    'affiliates' => function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    }
-                ])->first();
+            $project = Project::where('id', $id)
+                ->where('status', Project::STATUS_ACTIVE)
+                ->with(
+                    [
+                        'affiliates' => function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        },
+                        'usersProjects.company'
+                    ]
+                )->first();
 
             $project->chargeback_count = $saleModel->where('project_id', $project->id)
-                                             ->where('status', $saleModel->present()->getStatus('charge_back'))
-                                             ->count();
+                ->where('status', $saleModel->present()->getStatus('charge_back'))
+                ->count();
 
             $project->without_tracking = $saleModel->where('project_id', $project->id)
-                                             ->where('has_valid_tracking', false)
-                                             ->whereNotNull('delivery_id')
-                                             ->where('status', $saleModel->present()->getStatus('approved'))
-                                             ->count();
+                ->where('has_valid_tracking', false)
+                ->whereNotNull('delivery_id')
+                ->where('status', $saleModel->present()->getStatus('approved'))
+                ->count();
 
             $project->approved_sales = $saleModel->where('project_id', $project->id)
-                                           ->where('status', $saleModel->present()->getStatus('approved'))
-                                           ->count();
+                ->where('status', $saleModel->present()->getStatus('approved'))
+                ->count();
 
             $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
-                                                        ->whereHas('sale', function ($query) use ($saleModel, $project) {
-                                                            $query->where('status', $saleModel->present()->getStatus('approved'));
-                                                            $query->where('project_id', $project->id);
-                                                        })
-                                                        ->sum('value');
+                ->whereHas(
+                    'sale',
+                    function ($query) use ($saleModel, $project) {
+                        $query->where('status', $saleModel->present()->getStatus('approved'));
+                        $query->where('project_id', $project->id);
+                    }
+                )
+                ->sum('value');
 
             $project->open_tickets = $saleModel->where('project_id', $project->id)
-                                         ->whereHas('tickets', function ($query) {
-                                             $query->where('ticket_status_enum', (new Ticket())->present()->getTicketStatusEnum('open'));
-                                         })
-                                        ->count();
+                ->whereHas(
+                    'tickets',
+                    function ($query) {
+                        $query->where('ticket_status_enum', (new Ticket())->present()->getTicketStatusEnum('open'));
+                    }
+                )
+                ->count();
 
-            if (empty($project)) {
-                return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 403);
-            }
-
-            $producer = User::whereHas('usersProjects', function ($query) use ($project, $usersProjectsPresent) {
-                $query->where('project_id', $project->id)
-                    ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
-            })->first();
+            $producer = User::whereHas(
+                'usersProjects',
+                function ($query) use ($project, $usersProjectsPresent) {
+                    $query->where('project_id', $project->id)
+                        ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
+                }
+            )->first();
 
             $project->producer = $producer->name ?? '';
 
             if (Gate::allows('show', [$project])) {
-                activity()->on($projectModel)->tap(function (Activity $activity) use ($id) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = $id;
-                })->log('Visualizou o projeto ' . $project->name);
+                activity()->on($projectModel)->tap(
+                    function (Activity $activity) use ($id) {
+                        $activity->log_name = 'visualization';
+                        $activity->subject_id = $id;
+                    }
+                )->log('Visualizou o projeto ' . $project->name);
 
                 return new ProjectsResource($project);
             }
@@ -584,11 +645,15 @@ class ProjectsApiController extends Controller
             }
             $project = $projectModel->find(Hashids::decode($projectId))->first();
 
-            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                $activity->log_name = 'visualization';
-                $activity->subject_id = current(Hashids::decode($projectId));
-            })
-                ->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($projectId));
+                }
+            )
+                ->log(
+                    'Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name
+                );
 
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
@@ -627,10 +692,12 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                $activity->log_name = 'updated';
-                $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código telefone de contato do projeto ' . $project->name);
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'updated';
+                    $activity->subject_id = current(Hashids::decode($projectId));
+                }
+            )->log('Validação código telefone de contato do projeto ' . $project->name);
 
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
@@ -679,10 +746,12 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->find(Hashids::decode($projectId))->first();
 
-            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                $activity->log_name = 'visualization';
-                $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $project->name);
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($projectId));
+                }
+            )->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $project->name);
 
             $data = $request->all();
             $contact = $data["contact"] ?? null;
@@ -743,10 +812,12 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                $activity->log_name = 'updated';
-                $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Validação código email de contato do projeto: ' . $project->name);
+            activity()->on($projectModel)->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'updated';
+                    $activity->subject_id = current(Hashids::decode($projectId));
+                }
+            )->log('Validação código email de contato do projeto: ' . $project->name);
 
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
@@ -837,9 +908,11 @@ class ProjectsApiController extends Controller
         try {
             $data = $request->all();
             $user = auth()->user();
-            $updated = $user->update([
-                'deleted_project_filter' => $data['deleted_project_filter'],
-            ]);
+            $updated = $user->update(
+                [
+                    'deleted_project_filter' => $data['deleted_project_filter'],
+                ]
+            );
             if ($updated) {
                 return response()->json(['message' => 'Configuração atualizada com sucesso'], 200);
             } else {

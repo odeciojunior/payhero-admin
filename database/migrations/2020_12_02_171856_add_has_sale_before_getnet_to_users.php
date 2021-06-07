@@ -25,7 +25,7 @@ class AddHasSaleBeforeGetnetToUsers extends Migration
                     $q->where('owner_id', $user->account_owner_id)
                         ->orWhere('affiliate_id', $user->account_owner_id);
                 }
-            )->whereNotIn('gateway_id', [14, 15])->exists();
+            )->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])->exists();
 
             if($hasSaleBeforeGetnet) {
                 $user->update([

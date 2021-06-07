@@ -246,7 +246,7 @@ $(function () {
 
             }),
             success: function success(response) {
-
+                $('#pagination-plans').html('');
                 if (isEmpty(response.data)) {
                     $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                     $('#table-plans').addClass('table-striped');
@@ -255,7 +255,7 @@ $(function () {
                     $("#data-table-plan").html('');
                     $('#count-plans').html(response.meta.total);
 
-                    if (response.data[0].document_status == 'approved') {
+                    if (response.data[0].document_status == 'approved') {                   
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';
@@ -325,6 +325,8 @@ $(function () {
                                 $('#plan_price_edit_details').text(response.data.price);
                                 $('#plan_status_edit_details').html('<span class="badge badge-' + statusPlan[response.data.status] + '">' + response.data.status_translated + '</span>');
                                 $("#products_plan_details").html('');
+                                $('#form-cart-shopify input').remove();
+                                let formCartShopify = $('#form-cart-shopify');
                                 $.each(response.data.products, function (index, value) {
                                     data = '';
                                     data += '<tr>';
@@ -332,6 +334,17 @@ $(function () {
                                     data += '<td style="vertical-align: middle;">' + value.amount + '</td>';
                                     data += '</tr>';
                                     $("#products_plan_details").append(data);
+                                    if(formCartShopify.length) {
+                                        if(value.shopify_id){
+                                            let inputs = `<input type="hidden" name="product_id_${index+1}" value="${value.shopify_id}">
+                                                          <input type="hidden" name="variant_id_${index+1}" value="${value.variant_id}">
+                                                          <input type="hidden" name="product_amount_${index+1}" value="${value.amount}">`;
+                                            formCartShopify.append(inputs)
+                                                .show();
+                                        } else {
+                                            formCartShopify.hide();
+                                        }
+                                    }
                                 });
                                 $("#modal_details_plan").modal('show');
                             }

@@ -8,6 +8,6 @@ class PlanService {
 
     function getCheckoutLink(Plan $plan) {
 
-        return 'https://checkout.' . $plan->project->domains[0]->name . '/' . $plan->code;
+        return count($plan->project->domains) > 0 ? 'https://checkout.' . $plan->project->domains[0]->name . '/' . $plan->code : '';
     }
 }

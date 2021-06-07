@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=07') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=08') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -283,6 +283,37 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal para integração com woocommerce -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
+                         id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
+                         role="dialog" tabindex="-1">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                                <div class="modal-body text-center p-20">
+                                    <div class="d-flex justify-content-center">
+                                        <span class="o-reload-1"></span>
+                                    </div>
+                                    <h3 class="black" id="modal-title">Sincronizar produtos com WooCommerce </h3>
+                                    <p class="gray" id="modal-text"></p>
+                                </div>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                    <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
+                                        Cancelar
+                                    </button>
+                                    <button id="bt-modal-sync-woocommerce" type="button"
+                                            class="btn btn-success" style="width: 20%;">Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -306,6 +337,8 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
+
     @endpush
 @endsection
 

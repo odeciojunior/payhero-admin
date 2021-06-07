@@ -6,8 +6,8 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css?v=04') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=04') !!}">
     @endpush
 
     <div class="page">
@@ -28,24 +28,54 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <div class="row align-items-center">
-                                <span class="o-agenda-1"></span>
-                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" style="width: 85%" value="" readonly>
-                        </div>
+                            <div class="row align-items-center form-icons">
+                                <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18" style="right: 10%;"></i>
+                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 pr-30 ml-5" 
+                                value="" readonly style="width: 92%">
+                            </div>
+                        {{-- <div class="row align-items-center">
+                            <span class="o-agenda-1"></span>
+                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 ml-5" 
+                            style="width: 85%" value="" readonly>
+                        </div> --}}
                     </div>
                 </div>
 
                 <div class="tab-content gutter_top mt-15 gutter_bottom mb-30" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-vendas" role="tabpanel">
                         <div class="row justify-content-between">
-                            <div class="col-lg-12">
+                            <div class='container col-sm-12 mt-20 d-lg-block'>
+                                <div class='row' style="margin-left: 0;">
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Total </h6>
+                                            <h4 id='qtd-total-checkouts' class="font-size-30 bold"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Abandonos </h6>
+                                            <h4 id='qtd-abandoned'></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Recuperados </h6>
+                                            <h4 id='qtd-recovered'></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600"> Venda Finalizada </h6>
+                                            <h4 id='qtd-finalized'></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-lg-12">
                                 <div class="card shadow">
                                     <div class="wrap">
                                         <div class="row justify-content-between gutter_top">
-                                            {{-- <div class="col">
-                                                <h6 class="label-price relatorios"> Acessados </h6>
-                                                <h4 id='qtd-acessed' class="number blue-800">0</h4>
-                                            </div> --}}
                                             <div class="col">
                                                 <h6 class="label-price relatorios"> Total </h6>
                                                 <h4 id='qtd-total-checkouts' class="number blue-800">0<i class="fas fa-check"></i>
@@ -69,9 +99,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart" id="ecommerceChartView">
-                                <div class="card card-shadow">
+                                <div class="card">
                                     <div class="card-header card-header-transparent py-20">
                                         <ul class="nav nav-pills nav-pills-rounded chart-action" style="display: none">
                                             <li class="nav-item">
@@ -86,6 +116,10 @@
                                         </ul>
                                     </div>
                                     <div class="widget-content tab-content bg-white p-20">
+                                        <div id="empty-graph" class="row justify-content-center align-items-center d-flex" style="vertical-align: middle">
+                                            <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                            <p style="font-size: 23px" class="gray">Nenhuma venda encontrada</p>
+                                        </div>
                                         <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>
                                         <div class="ct-chart tab-pane" id="scoreLineToWeek"></div>
                                         <div class="ct-chart tab-pane" id="scoreLineToMonth"></div>
@@ -101,7 +135,7 @@
                                     <div style='max-height: 150px; overflow-y: auto; height: 150px;'>
                                         <div style="padding: 0 20px;" class=" card-body data-holder">
                                             <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
-                                                <tbody id="origins-table-itens">
+                                                <tbody id="origins-table-itens"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                                 {{-- js carrega... --}}
                                                 </tbody>
                                             </table>

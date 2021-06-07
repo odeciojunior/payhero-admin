@@ -13,6 +13,9 @@ use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
+use Modules\Core\Events\NotifyUserAchievementEvent;
+use Modules\Core\Events\NotifyUserLevelEvent;
+use Modules\Core\Events\PixExpiredEvent;
 use Modules\Core\Events\ReleasedBalanceEvent;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\SaleApprovedEvent;
@@ -20,7 +23,6 @@ use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
-use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Modules\Core\Events\TicketMessageEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -42,15 +44,17 @@ use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
-use Modules\Core\Listeners\ImportShopifyStoreListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
 use Modules\Core\Listeners\NotifySalesExportedListener;
 use Modules\Core\Listeners\NotifyTrackingsExportedListener;
 use Modules\Core\Listeners\NotifyTrackingsImportedListener;
+use Modules\Core\Listeners\NotifyUserAchievementSendEmailListener;
+use Modules\Core\Listeners\NotifyUserLevelSendEmailListener;
 use Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener;
 use Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener;
 use Modules\Core\Listeners\NotifyWithdrawalsExportedListener;
+use Modules\Core\Listeners\PixExpiredSendEmailListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
@@ -86,9 +90,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         BilletRefundedEvent::class => [
             BilletRefundedSendEmailListener::class,
-        ],
-        ShopifyIntegrationEvent::class => [
-            ImportShopifyStoreListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -168,11 +169,14 @@ class EventServiceProvider extends ServiceProvider
         WithdrawalsExportedEvent::class => [
             NotifyWithdrawalsExportedListener::class,
         ],
-        \Modules\Core\Events\NotifyUserLevelEvent::class => [
-            \Modules\Core\Listeners\NotifyUserLevelSendEmailListener::class
+        NotifyUserLevelEvent::class => [
+            NotifyUserLevelSendEmailListener::class
         ],
-        \Modules\Core\Events\NotifyUserAchievementEvent::class => [
-            \Modules\Core\Listeners\NotifyUserAchievementSendEmailListener::class
+        NotifyUserAchievementEvent::class => [
+            NotifyUserAchievementSendEmailListener::class
+        ],
+        PixExpiredEvent::class => [
+            PixExpiredSendEmailListener::class,
         ]
     ];
 

@@ -29,7 +29,14 @@ use Modules\Core\Presenters\UserProjectsPresenter;
  */
 class UserProject extends Model
 {
-    use LogsActivity, PresentableTrait, FoxModelTrait, SoftDeletes;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
+    public const TYPE_PRODUCER_ENUM = 1;
+    public const TYPE_PARTNER_ENUM = 2;
+
     /**
      * The table associated with the model.
      * @var string

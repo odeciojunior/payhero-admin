@@ -52,16 +52,16 @@ class SalesRecoveryApiController extends Controller
                 return SalesRecoveryIndexResourceTransformer::collection($projects);
             } else {
                 return response()->json([
-                                            'message' => 'Erro ao listar projetos, tente novamente mais tarde',
-                                        ], 400);
+                    'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao listar projetos, tente novamente mais tarde');
             report($e);
 
             return response()->json([
-                                        'message' => 'Erro ao listar projetos, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+            ], 400);
         }
     }
 
@@ -84,8 +84,8 @@ class SalesRecoveryApiController extends Controller
 
             if ($requestValidate->fails()) {
                 return response()->json([
-                                            'message' => 'Erro ao listar projetos, tente novamente mais tarde',
-                                        ], 400);
+                    'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+                ], 400);
             } else {
                 $projectId = null;
                 if ($request->has('project') && !empty($request->input('project'))) {
@@ -114,8 +114,8 @@ class SalesRecoveryApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => 'Erro ao listar projetos, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+            ], 400);
         }
     }
 
@@ -125,7 +125,7 @@ class SalesRecoveryApiController extends Controller
             $data                 = $request->all();
             $salesRecoveryService = new SalesRecoveryService();
 
-            $projectId = null;
+            $projectId = "";
             if (!empty($data['project'])) {
                 $projectId = current(Hashids::decode($data['project']));
             }
@@ -165,8 +165,8 @@ class SalesRecoveryApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ]);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ]);
         }
     }
 
@@ -175,7 +175,7 @@ class SalesRecoveryApiController extends Controller
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
 
-        $projectId = null;
+        $projectId = "all";
         if (!empty($data['project'])) {
             $projectId = current(Hashids::decode($data['project']));
         }
@@ -262,8 +262,8 @@ class SalesRecoveryApiController extends Controller
             ]);
             if ($validator->fails()) {
                 return response()->json([
-                                            'message' => "Preencha os dados corretamente",
-                                        ], 400);
+                    'message' => "Preencha os dados corretamente",
+                ], 400);
             } else {
 
                 $saleModel   = new Sale();
@@ -286,8 +286,8 @@ class SalesRecoveryApiController extends Controller
                         }
 
                         $sale->update([
-                                          'shopify_discount' => $discount,
-                                      ]);
+                            'shopify_discount' => $discount,
+                        ]);
                     }
 
                     $dueDate = $request->input('date');
@@ -297,7 +297,7 @@ class SalesRecoveryApiController extends Controller
                     //                    if (in_array($sale->gateway_id, [7])) {
                     $checkoutService   = new CheckoutService();
                     $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-                                                                                   ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
+                    ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
                     //                    } else {
                     //                        $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
                     //
@@ -312,13 +312,13 @@ class SalesRecoveryApiController extends Controller
                     }
 
                     return response()->json([
-                                                'message' => $message,
-                                            ], $status);
+                        'message' => $message,
+                    ], $status);
                 } else {
 
                     return response()->json([
-                                                'message' => "Ocorreu um erro, tente novamente mais tarde",
-                                            ], 400);
+                        'message' => "Ocorreu um erro, tente novamente mais tarde",
+                    ], 400);
                 }
             }
         } catch (Exception $e) {
@@ -326,8 +326,8 @@ class SalesRecoveryApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => "Ocorreu um erro, tente novamente mais tarde",
-                                    ], 400);
+                'message' => "Ocorreu um erro, tente novamente mais tarde",
+            ], 400);
         }
     }
 
@@ -357,5 +357,56 @@ class SalesRecoveryApiController extends Controller
 
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
+    }
+
+    public function getPixOverdue(Request $request)
+    {
+        $data                 = $request->all();
+        $salesRecoveryService = new SalesRecoveryService();
+
+        $projectId = null;
+        if (!empty($data['project'])) {
+            $projectId = current(Hashids::decode($data['project']));
+        }
+
+        $client = null;
+        if (!empty($data['client'])) {
+            $client = $data['client'];
+        }
+
+        $clientDocument = null;
+        if (!empty($data['client_document'])) {
+            $clientDocument = $data['client_document'];
+        }
+
+        $plan = null;
+        if (!empty($data['plan'])) {
+            $plan = $data['plan'];
+        }
+
+        $dateStart = null;
+        $dateEnd   = null;
+
+        $dateRange = FoxUtils::validateDateRange($data["date_range"]);
+        if (!empty($data["date_type"]) && $dateRange) {
+            $dateStart = $dateRange[0] . ' 00:00:00';
+            $dateEnd   = $dateRange[1] . ' 23:59:59';
+        }
+
+        $paymentMethod = (new Sale())->present()->getPaymentType('pix');
+        $status        = [5];
+
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused(
+            $paymentMethod,
+            $status,
+            $projectId,
+            $dateStart,
+            $dateEnd,
+            $client,
+            $clientDocument,
+            $plan
+        );
+
+        return SalesRecoveryCardRefusedResource::collection($sales);
     }
 }

@@ -3,14 +3,14 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=02') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=45451') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=03') }}">
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-lg-4">
@@ -172,7 +172,7 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project-select">Projeto</label>
                             <select name='project' id="project-select" class="form-control select-pad">
-                                <option value="">Todos</option>
+                                <option value="">Todos projetos</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -196,32 +196,50 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="status_commission">Status da comissão</label>
-                            <select name='status_commission' id="status_commission" class="form-control select-pad">
-                                <option value="">Todos</option>
-                                <option value="transfered">Transferido</option>
-                                <option value="pending">Pendente</option>
-                                <option value="blocked">Não transferido por falta de rastreio</option>
-                            </select>
+
+                    <div class="collapse" id="bt_collapse">
+                        <div class="row pt-15">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <label for="status_commission">Status da comissão</label>
+                                <select name='status_commission' id="status_commission" class="form-control select-pad">
+                                    <option value="">Todos</option>
+                                    <option value="transfered">Transferido</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="blocked">Não transferido por falta de rastreio</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 form-icons">
+                                <label for="date_updated">Data de aprovação venda</label>
+                                <i style="right: 23px;top: 37px;"
+                                   class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
+                                <input name='date_updated' id="date_updated" class="input-pad"
+                                       placeholder="Clique para editar..." readonly>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
+                                <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
+                                <label class="switch">
+                                    <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_updated">Data de aprovação venda</label>
-                            <input name='date_updated' id="date_updated" class="select-pad"
-                                   placeholder="Clique para editar..." readonly>
+                    </div>
+                    <div class="row" style="height: 30px">
+                        <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                 data-toggle="collapse"
+                                 data-target="#bt_collapse"
+                                 aria-expanded="false"
+                                 aria-controls="bt_collapse">
+                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <span id="text-filtro">Filtros avançados</span>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
-                            <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
-                            <label class="switch">
-                                <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
+                        <div class="col-6 col-xl-3 mt-20">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                Aplicar filtros
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,7 +247,7 @@
                 <!-- Aviso Problemas com os Códigos -->
                 <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
                     <div class="d-flex">
-                        <i class="material-icons mr-10">contact_support</i>
+                        <i class="material-icons mr-10">help</i>
                         <div class="w-full">
                             <strong class="font-size-16">Problemas com os códigos?</strong>
                             <p class="font-size-14 pr-md-100 mb-5">
@@ -274,42 +292,61 @@
                     </div>
                 </div>
                 <!-- Resumo -->
-                <div class="card shadow p-20" style='display:block;'>
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="text-center text-success" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
-                            <h4 id="total-trackings" class="number text-center text-success"></h4>
+                <div class='row'>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Total </h6>
+                                <h4 id="total-trackings" class=" font-size-30 bold"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> markunread_mailbox </i> Postado</h6>
-                            <h4 id="percentual-posted" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Postado </h6>
+                                <h4 id="percentual-posted"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
-                            <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Em trânsito</h6>
+                                <h4 id="percentual-dispatched"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> arrow_right_alt </i> Saiu para entrega</h6>
-                            <h4 id="percentual-out" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Saiu para entrega</h6>
+                                <h4 id="percentual-out"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-success" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
-                            <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Entregues</h6>
+                                <h4 id="percentual-delivered"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-warning" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> error </i> Problema na entrega</h6>
-                            <h4 id="percentual-exception" class="number text-center text-warning"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Problema na entrega</h6>
+                                <h4 id="percentual-exception"></h4>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-center text-danger" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> error </i> Não informado</h6>
-                            <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6   style="min-height:35px" class="font-size-14 gray-600"> Não informado</h6>
+                                <h4 id="percentual-unknown"></h4>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -320,24 +357,26 @@
                         <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
                             <thead>
                             <tr>
-                                <th class="table-title">Venda</th>
-                                <th class="table-title">Data de Aprovação</th>
-                                <th class="table-title">Produto</th>
-                                <td class="table-title">Status</td>
-                                <th class="table-title">Código de Rastreio</th>
-                                <th class="table-title" style="width:90px;"></th>
+                                <td class="table-title">Venda</td>
+                                <td class="table-title">Data de Aprovação</td>
+                                <td class="table-title">Produto</td>
+                                <td class="table-title text-center">Status</td>
+                                <td class="table-title">Código de Rastreio</td>
+                                <td class="table-title" style="width:90px;"></td>
                             </tr>
                             </thead>
-                            <tbody id="dados_tabela">
+                            <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
-                    style="margin-top:10px;position:relative;float:right;margin-bottom:100px;margin-right:100px;">
-                    {{-- js carrega... --}}
-                </ul>
+                <div class="row justify-content-center justify-content-md-end">
+                    <ul id="pagination-trackings" class="pl-5 pr-md-15 pb-20"
+                    style="margin-top:10px;position:relative;float:right;">
+                        {{-- js carrega... --}}
+                    </ul>
+                </div>
                 <!-- Modal detalhes da venda-->
                 @include('sales::details')
                 <!-- End Modal -->

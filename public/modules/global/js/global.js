@@ -93,7 +93,7 @@ function loading(elementId, loaderClass) {
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
-            <img style="height: 125px; width: 125px" src="/modules/global/adminremark/assets/images/siriusM.svg"
+            <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -104,7 +104,7 @@ function loadingOnScreen() {
 function loadingOnChart(target) {
     $(target).fadeIn().append(
         `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
-            <img style="height: 125px; width: 125px;" src="/modules/global/adminremark/assets/images/siriusM.svg"
+            <img style="height: 125px; width: 125px;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -113,7 +113,7 @@ function loadingOnChart(target) {
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
         `<div style="z-index: 100; border-radius: 16px;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
-            <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/adminremark/assets/images/siriusM.svg"
+            <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -561,7 +561,7 @@ function ajaxVerifyDocumentPending() {
                     $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
                     $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();  
+                    $('#document-pending').show();
                  }
             }
         },

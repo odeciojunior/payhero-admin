@@ -3,6 +3,14 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/projects/css/index.css') }}">
+        <style>
+            .card{
+                min-height:403px;
+            }
+            .card-title{
+                min-height:56px;
+            }
+        </style>
     @endpush
     <!-- Page -->
     <div class="page">
@@ -18,11 +26,12 @@
             <div class="page-header-actions">
             </div>
         </div>
+        @include('projects::empty')
         <div class="page-content container">
             <div id="data-table-projects" class="row" style="margin-top: 30px">
             </div>
         </div>
-        @include('projects::empty')
+        
     </div>
     <!-- Modal add integração -->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config"

@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use App\Jobs\ImportShopifyProduct;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -38,11 +37,11 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyService
 {
-    const templateKeyNames = [
+    public const templateKeyNames = [
         'sections/cart-template.liquid',
         'templates/cart.liquid',
     ];
-    const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
+    public const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
     /**
      * @var string
      */
@@ -112,6 +111,7 @@ class ShopifyService
         );
 
         if ($getThemes) {
+            sleep(1);
             $this->getAllThemes();
         }
     }
@@ -826,21 +826,10 @@ class ShopifyService
         }
     }
 
-    /**
-     * @param $projectId
-     * @param $userId
-     * @param $shopifyProductId
-     * @return bool
-     */
-    public function importShopifyProduct($projectId, $userId, $shopifyProductId)
+    public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
-        $planModel = new Plan();
-
-        $productModel = new Product();
-
-        $productPlanModel = new ProductPlan();
-
         $storeProduct = $this->getShopProduct($shopifyProductId);
+        sleep(1);
 
         if (empty($storeProduct)) {
             return false;
@@ -873,7 +862,7 @@ class ShopifyService
             } catch (Exception $e) {
                 //
             }
-            $product = $productModel->with('productsPlans')
+            $product = Product::with('productsPlans')
                 ->where('shopify_id', $storeProduct->getId())
                 ->where('shopify_variant_id', $variant->getId())
                 ->where('project_id', $projectId)
@@ -885,7 +874,6 @@ class ShopifyService
                         'name' => $title,
                         'description' => mb_substr($description, 0, 100),
                         'weight' => $variant->getWeight(),
-                        //'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                         'shopify_id' => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
                         'sku' => $variant->getSku(),
@@ -893,14 +881,15 @@ class ShopifyService
                     ]
                 );
 
-                $productPlan = $productPlanModel->where('product_id', $product->id)
+                $productPlan = ProductPlan::where('product_id', $product->id)
                     ->where('amount', 1)
                     ->orderBy('id', 'ASC')
                     ->first();
                 if (!empty($productPlan)) {
-                    $plan = $planModel->find($productPlan->plan_id);
+                    $plan = Plan::find($productPlan->plan_id);
                     if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costProduct = $this->getCostShopify($variant);
+                        sleep(1);
                         if ($costProduct !== '') {
                             $productPlan->update(['cost' => $costProduct * 100]);
                         }
@@ -937,14 +926,13 @@ class ShopifyService
                             try {
                                 $photo = $image->getSrc();
                             } catch (Exception $e) {
-                                Log::warning('Erro ao importar foto do shopify');
                                 report($e);
                             }
                         }
                     }
                     $product->update(['photo' => $photo]);
                 } else {
-                    $plan = $planModel->create(
+                    $plan = Plan::create(
                         [
                             'shopify_id' => $storeProduct->getId(),
                             'shopify_variant_id' => $variant->getId(),
@@ -964,25 +952,18 @@ class ShopifyService
                     ];
                     if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costShopify = $this->getCostShopify($variant);
+                        sleep(1);
                         if ($costShopify !== '') {
                             $dataProductPlan['cost'] = $costShopify * 100;
                         }
                     }
 
-                    $productPlanModel->create($dataProductPlan);
+                    ProductPlan::create($dataProductPlan);
 
-                    $plan->update(['code' => Hashids::encode($plan->id)]);
+                    $plan->update(['code' => hashids_encode($plan->id)]);
                 }
             } else {
-                // try {
-                //     $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                // } catch (Exception $e) {
-                //     if (method_exists($e, 'getCode') && $e->getCode() == 429) {
-                //         sleep(1);
-                //         $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
-                //     }
-                // }
-                $product = $productModel->create(
+                $product = Product::create(
                     [
                         'user_id' => $userId,
                         'name' => $title,
@@ -990,7 +971,6 @@ class ShopifyService
                         'guarantee' => '0',
                         'format' => 1,
                         'category_id' => '11',
-                        // 'cost' => $cost,
                         'shopify' => true,
                         'price' => '',
                         'shopify_id' => $storeProduct->getId(),
@@ -1001,7 +981,7 @@ class ShopifyService
                 );
 
                 $productsArray[] = $product->id;
-                $plan = $planModel->create(
+                $plan = Plan::create(
                     [
                         'shopify_id' => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
@@ -1013,7 +993,7 @@ class ShopifyService
                         'status' => '1',
                     ]
                 );
-                $plan->update(['code' => Hashids::encode($plan->id)]);
+                $plan->update(['code' => hashids_encode($plan->id)]);
 
                 $dataProductPlan = [
                     'product_id' => $product->id,
@@ -1022,12 +1002,13 @@ class ShopifyService
                 ];
                 if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                     $costShopify = $this->getCostShopify($variant);
+                    sleep(1);
                     if ($costShopify !== '') {
                         $dataProductPlan['cost'] = $costShopify * 100;
                     }
                 }
 
-                $productPlanModel->create($dataProductPlan);
+                ProductPlan::create($dataProductPlan);
 
                 $photo = '';
                 if (count($storeProduct->getVariants()) > 1) {
@@ -1050,11 +1031,9 @@ class ShopifyService
                         try {
                             $photo = $image->getSrc();
                         } catch (Exception $e) {
-                            Log::warning('Erro ao importar foto do shopify');
                             report($e);
                         }
                     }
-                    //$photo = $storeProduct->getImage()->getSrc();
                 }
                 $product->update(['photo' => $photo]);
             }
@@ -1093,7 +1072,7 @@ class ShopifyService
                                 $affiliateLink->delete();
                             }
                         }
-                        $planDeleted = $plan->delete();
+                        $plan->delete();
                     }
                 }
             }
@@ -1110,42 +1089,37 @@ class ShopifyService
         return true;
     }
 
-    /**
-     * @param $projectId
-     * @param $userId
-     * @throws PresenterException
-     */
     public function importShopifyStore($projectId, $userId)
     {
-        $projectModel = new Project();
-
-        $userModel = new User();
-
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $shopifyIntegrationModel->where('project_id', $projectId)
+        ShopifyIntegration::where('project_id', $projectId)
             ->update(
                 [
-                    'status' => $shopifyIntegrationModel->present()->getStatus('pending'),
+                    'status' => ShopifyIntegration::STATUS_PENDING,
                 ]
             );
 
-        $project = $projectModel->find($projectId);
+        $project = Project::find($projectId);
 
         $pagination = $this->getShopProducts();
+        sleep(1);
         $storeProducts = $pagination->current();
+        sleep(1);
+
         $nextPagination = true;
 
         while ($nextPagination) {
             foreach ($storeProducts as $shopifyProduct) {
                 try {
-                    ImportShopifyProduct::dispatch($project, $userId,$shopifyProduct->getId());
+                    $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
                 } catch (Exception $e) {
                     report($e);
                 }
             }
 
             if ($pagination->hasNext()) {
+                sleep(1);
                 $nextPageInfo = $pagination->getNextPageInfo();
+                sleep(1);
                 $storeProducts = $pagination->current($nextPageInfo);
             } else {
                 $nextPagination = false;
@@ -1156,16 +1130,14 @@ class ShopifyService
             $this->createShopifyIntegrationWebhook($projectId, "https://sirius.cloudfox.net/postback/shopify/");
         }
 
-
-        $user = $userModel->find($userId);
+        $user = User::find($userId);
         if (!empty($project) && !empty($user)) {
-            event(new ShopifyIntegrationReadyEvent($user, $project));
-            $shopifyIntegrationModel->where('project_id', $projectId)
-                ->update(
-                    [
-                        'status' => $shopifyIntegrationModel->present()->getStatus('approved'),
-                    ]
-                );
+            if (FoxUtils::isProduction()) {
+                event(new ShopifyIntegrationReadyEvent($user, $project));
+            }
+
+            ShopifyIntegration::where('project_id', $projectId)
+                ->update(['status' => ShopifyIntegration::STATUS_APPROVED]);
         }
     }
 
@@ -2154,11 +2126,10 @@ class ShopifyService
 
             foreach ($products as $product) {
                 foreach ($product->getVariants() as $variant) {
-                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))){
+                    if (!empty($this->getShopInventoryItem($variant->getInventoryItemId()))) {
                         $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
                         break;
                     }
-
                 }
 
                 return [

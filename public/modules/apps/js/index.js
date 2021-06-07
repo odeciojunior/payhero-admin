@@ -91,15 +91,19 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-
-                    updateUsedApps();
-                }
+                
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }
                 $("#project-not-empty").show();
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    updateUsedApps();
+                }else{
+                    $("#project-not-empty").show();
+                    $("#project-empty").hide();
+
+                }
 
                 loadingOnScreenRemove()
             }

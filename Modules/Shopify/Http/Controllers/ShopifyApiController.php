@@ -2,6 +2,7 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use App\Jobs\ImportShopifyProductsStore;
 use App\Jobs\ImportShopifyTrackingCodesJob;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Company;
@@ -18,7 +20,6 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
@@ -182,11 +183,14 @@ class ShopifyApiController extends Controller
             }
 
             $shopifyName = $shopifyService->getShopName();
+            $company = Company::find(current(Hashids::decode($dataRequest['company'])));
+            $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
             $projectCreated = $projectModel->create(
                 [
                     'name' => $shopifyName,
                     'status' => $projectModel->present()->getStatus('active'),
                     'visibility' => 'private',
+                    'pix' => $has_pix_key,
                     'percentage_affiliates' => '0',
                     'description' => $shopifyName,
                     'invoice_description' => $shopifyName,
@@ -197,10 +201,12 @@ class ShopifyApiController extends Controller
                     'installments_amount' => '12',
                     'installments_interest_free' => '1',
                     'checkout_type' => 2, // checkout de 1 passo
-                    'notazz_configs' => json_encode([
-                        'cost_currency_type' => 1,
-                        'update_cost_shopify' => 1
-                    ])
+                    'notazz_configs' => json_encode(
+                        [
+                            'cost_currency_type' => 1,
+                            'update_cost_shopify' => 1
+                        ]
+                    )
                 ]
             );
 
@@ -210,15 +216,15 @@ class ShopifyApiController extends Controller
 
             $shippingCreated = $shippingModel->create(
                 [
-                    'project_id'         => $projectCreated->id,
-                    'name'               => 'Frete gratis',
-                    'information'        => 'de 15 até 30 dias',
-                    'value'              => '0,00',
-                    'type'               => 'static',
-                    'type_enum'          => $shippingModel->present()->getTypeEnum('static'),
-                    'status'             => '1',
-                    'pre_selected'       => '1',
-                    'apply_on_plans'     => '["all"]',
+                    'project_id' => $projectCreated->id,
+                    'name' => 'Frete gratis',
+                    'information' => 'de 15 até 30 dias',
+                    'value' => '0,00',
+                    'type' => 'static',
+                    'type_enum' => $shippingModel->present()->getTypeEnum('static'),
+                    'status' => '1',
+                    'pre_selected' => '1',
+                    'apply_on_plans' => '["all"]',
                     'not_apply_on_plans' => '[]'
                 ]
             );
@@ -290,7 +296,8 @@ class ShopifyApiController extends Controller
             $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
             $projectService->createUpsellConfig($projectCreated->id);
 
-            event(new ShopifyIntegrationEvent($shopifyIntegrationCreated, auth()->user()->account_owner_id));
+            dispatch((new ImportShopifyProductsStore($shopifyIntegrationCreated, auth()->user()->account_owner_id)));
+
             TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             return response()->json(
@@ -444,10 +451,12 @@ class ShopifyApiController extends Controller
 
                                 $htmlCart = null;
                                 $templateKeyName = null;
-                                foreach ($shopify::templateKeyNames as $template){
+                                foreach ($shopify::templateKeyNames as $template) {
                                     $templateKeyName = $template;
                                     $htmlCart = $shopify->getTemplateHtml($template);
-                                    if($htmlCart) break;
+                                    if ($htmlCart) {
+                                        break;
+                                    }
                                 }
 
                                 if ($htmlCart) {
@@ -549,47 +558,37 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function synchronizeProducts(Request $request)
+    public function synchronizeProducts(Request $request): JsonResponse
     {
         try {
             $requestData = $request->all();
 
-            $projectId = current(Hashids::decode($requestData['project_id']));
-            $shopifyModel = new ShopifyIntegration();
-            $projectModel = new Project();
-            $project = $projectModel->find($projectId);
+            $projectId = hashids_decode($requestData['project_id']);
+            $project = Project::find($projectId);
 
-            activity()->on($shopifyModel)->tap(
+            activity()->on((new ShopifyIntegration()))->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'updated';
                 }
             )->log('Sicronizou produtos do shopify para o projeto ' . $project->name);
 
-            if (!empty($projectId)) {
-                $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
-                if (!empty($shopifyIntegration)) {
-                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-
-                    return response()->json(
-                        ['message' => 'Os Produtos do shopify estão sendo sincronizados.'],
-                        Response::HTTP_OK
-                    );
-                } else {
-                    return response()->json(
-                        ['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'],
-                        Response::HTTP_BAD_REQUEST
-                    );
-                }
-            } else {
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $projectId)->first();
+            if (empty($shopifyIntegration)) {
                 return response()->json(
                     ['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
-        } catch (Exception $e) {
-            Log::critical(
-                'Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts'
+
+            dispatch(
+                (new ImportShopifyProductsStore($shopifyIntegration, auth()->user()->account_owner_id))
             );
+
+            return response()->json(
+                ['message' => 'Os Produtos do shopify estão sendo sincronizados.'],
+                Response::HTTP_OK
+            );
+        } catch (Exception $e) {
             report($e);
 
             return response()->json(
@@ -691,10 +690,12 @@ class ShopifyApiController extends Controller
 
                     $htmlCart = null;
                     $templateKeyName = null;
-                    foreach ($shopify::templateKeyNames as $template){
+                    foreach ($shopify::templateKeyNames as $template) {
                         $templateKeyName = $template;
                         $htmlCart = $shopify->getTemplateHtml($template);
-                        if($htmlCart) break;
+                        if ($htmlCart) {
+                            break;
+                        }
                     }
 
                     if ($htmlCart) {
@@ -972,72 +973,66 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function setSkipToCart(Request $request)
+    public function setSkipToCart(Request $request): JsonResponse
     {
-        $data = $request->all();
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
+        try {
+            if (!foxutils()->isProduction()) {
+                return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
+            }
 
-        if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
-            $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->with(['domains'])->find($projectId);
+            $data = $request->all();
 
-            if ($projectId) {
-                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
-
-                try {
-                    if (FoxUtils::isProduction()) {
-                        $shopify = new ShopifyService($integration->url_store, $integration->token);
-
-                        $shopify->setSkipToCart(boolval($data['skip_to_cart']));
-
-                        $shopify->setThemeByRole('main');
-
-                        $htmlCart = null;
-                        $templateKeyName = null;
-                        foreach ($shopify::templateKeyNames as $template){
-                            $templateKeyName = $template;
-                            $htmlCart = $shopify->getTemplateHtml($template);
-                            if($htmlCart) break;
-                        }
-
-                        $domain = $project->domains->first();
-                        $domainName = $domain ? $domain->name : null;
-
-                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
-
-                        $integration->skip_to_cart = boolval($data['skip_to_cart']);
-                        $integration->save();
-
-                        activity()->on($projectModel)->tap(
-                            function (Activity $activity) use ($projectId) {
-                                $activity->log_name = 'updated';
-                                $activity->subject_id = current(Hashids::decode($projectId));
-                            }
-                        )->log('Skip to cart atualizado no projeto ' . $project->name);
-
-                        return response()->json(['message' => 'Skip to cart atualizado no projeto']);
-                    } else {
-                        return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
-                    }
-                } catch (Exception $e) {
-                    if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404])) {
-                        return response()->json(
-                            ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
-                            400
-                        );
-                    }
-                    report($e);
-
-                    return response()->json(
-                        ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
-                        400
-                    );
-                }
-            } else {
+            if (empty($data['project_id']) || !isset($data['skip_to_cart'])) {
                 return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
             }
-        } else {
+
+            $project = Project::with(['domains', 'shopifyIntegrations'])->find(hashids_decode($data['project_id']));
+
+            $integration = $project->shopifyIntegrations->first();
+
+            $shopify = new ShopifyService($integration->url_store, $integration->token);
+
+            $shopify->setSkipToCart(boolval($data['skip_to_cart']));
+
+            $shopify->setThemeByRole('main');
+
+            $htmlCart = null;
+            $templateKeyName = null;
+            foreach ($shopify::templateKeyNames as $template) {
+                $templateKeyName = $template;
+                $htmlCart = $shopify->getTemplateHtml($template);
+                if ($htmlCart) {
+                    break;
+                }
+            }
+
+            $domain = $project->domains->where('status', Domain::STATUS_APPROVED)->first();
+            $domainName = $domain ? $domain->name : null;
+
+            DB::beginTransaction();
+
+            $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
+            $integration->update(
+                [
+                    'skip_to_cart' => boolval($data['skip_to_cart'])
+                ]
+            );
+
+            activity()->on((new Project()))->tap(
+                function (Activity $activity) use ($project) {
+                    $activity->log_name = 'updated';
+                    $activity->subject_id = $project->id;
+                }
+            )->log('Skip to cart atualizado no projeto ' . $project->name);
+
+            DB::commit();
+            return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            if (!method_exists($e, 'getCode') || !in_array($e->getCode(), [401, 402, 403, 404])) {
+                report($e);
+            }
+
             return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
         }
     }

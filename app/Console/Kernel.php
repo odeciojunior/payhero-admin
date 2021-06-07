@@ -31,14 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
         // transfer money from transactions for user companies
-        $schedule->command('verify:transfers')->dailyAt('05:00');
-
-        // transfer money from transactions for user companies on getnet
-        $schedule->command('verify:transfersgetnet')->dailyAt('11:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('14:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('16:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('20:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('23:30');
+//        $schedule->command('verify:transfers')->dailyAt('05:00');
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
@@ -88,7 +81,7 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:getnet-transactions')->dailyAt('06:15');
+        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
@@ -100,9 +93,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('account-health:update')->dailyAt('09:00');
         $schedule->command('account-health:update')->dailyAt('22:00');
 
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('03:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('15:30');
-        $schedule->command('cloudfox:getnet-get-statement')->dailyAt('21:30');
+        /** Benefits: needs to be run after account-health:updates  */
+        $schedule->command('user:benefits:update')->dailyAt('09:30');
+        $schedule->command('user:benefits:update')->dailyAt('22:30');
 
         /** Tasks */
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
@@ -115,6 +108,12 @@ class Kernel extends ConsoleKernel
         /** Achievements */
         $schedule->command('achievements:update')->dailyAt('09:00');
         $schedule->command('achievements:update')->dailyAt('21:00');
+
+        /** Pix Expired */
+        $schedule->command('change:pixpending')->everyMinute();
+
+//        /** Check GatewayTax invitations Diogo */
+        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
     }
 
     /**

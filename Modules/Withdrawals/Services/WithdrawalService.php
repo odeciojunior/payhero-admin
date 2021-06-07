@@ -4,6 +4,7 @@ namespace Modules\Withdrawals\Services;
 
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Transaction;
@@ -12,6 +13,8 @@ use PDOException;
 
 class WithdrawalService
 {
+
+    private int $biggerValue, $lowerValue, $currentValue;
 
     public function requestWithdrawal($company, $withdrawalValue): Withdrawal
     {
@@ -73,7 +76,10 @@ class WithdrawalService
     {
         $currentValue = 0;
         $withdrawal->company->transactions()
-            ->whereIn('gateway_id', [14, 15])
+            ->whereIn(
+                'gateway_id',
+                [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
+            )
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
             ->orderBy('id')
@@ -132,7 +138,14 @@ class WithdrawalService
             );
 
             $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [14, 15])
+                ->whereIn(
+                    'gateway_id',
+                    [
+                        Gateway::GETNET_SANDBOX_ID,
+                        Gateway::GETNET_PRODUCTION_ID,
+                        Gateway::GERENCIANET_PRODUCTION_ID
+                    ]
+                )
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
@@ -194,10 +207,47 @@ class WithdrawalService
         }
     }
 
-    public function isFirstWithdrawalToday(Company $company)
+    public function isNotFirstWithdrawalToday(Company $company)
     {
         return (new Withdrawal())->where('company_id', $company->id)
             ->whereDate('created_at', now())
             ->exists();
+    }
+
+    public function getLowerAndBiggerAvailableValues(Company $company, int $withdrawalValueRequested): array
+    {
+        $gateways = [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID];
+
+        $transactionsSum = $company->transactions()
+            ->whereIn('gateway_id', $gateways)
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->orderBy('id');
+
+        $this->currentValue = 0;
+        $this->lowerValue = 0;
+        $this->biggerValue = 0;
+
+        $transactionsSum->chunk(
+            2000,
+            function ($transactions) use ($withdrawalValueRequested) {
+                foreach ($transactions as $transaction) {
+                    $this->currentValue += $transaction->value;
+                    if ($this->currentValue >= $withdrawalValueRequested) {
+                        $this->lowerValue = $this->currentValue - $transaction->value;
+                        $this->biggerValue = $this->currentValue;
+
+                        return;
+                    }
+                }
+            }
+        );
+
+        return [
+            'data' => [
+                'lower_value' => $this->lowerValue,
+                'bigger_value' => $this->biggerValue,
+            ]
+        ];
     }
 }

@@ -6,11 +6,11 @@ use Aws\S3\S3Client;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Exception;
-use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
+use Symfony\Component\HttpFoundation\File\File;
 use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
@@ -25,7 +25,7 @@ class FoxUtils
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
             $variant = INTL_IDNA_VARIANT_UTS46;
         }
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.').'.';
+        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
 
         $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');
@@ -100,8 +100,8 @@ class FoxUtils
 
     /**
      * @param $telephone
-     * @param  bool  $ddd
-     * @param  bool  $number
+     * @param bool $ddd
+     * @param bool $number
      * @return string
      */
     public static function getTelephone($telephone, $ddd = false, $number = false)
@@ -111,35 +111,35 @@ class FoxUtils
         if (!$ddd && !$number) {
             $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
             if ($length == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
-                return "+".substr($telephone, 0, $length - 11)."(".substr(
+                return "+" . substr($telephone, 0, $length - 11) . "(" . substr(
                         $telephone,
                         $length - 11,
                         2
-                    ).")".substr($telephone, $length - 9, 5)."-".substr($telephone, -4);
+                    ) . ")" . substr($telephone, $length - 9, 5) . "-" . substr($telephone, -4);
             }
             if ($length == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
-                return "+".substr($telephone, 0, $length - 10)."(".substr(
+                return "+" . substr($telephone, 0, $length - 10) . "(" . substr(
                         $telephone,
                         $length - 10,
                         2
-                    ).")".substr($telephone, $length - 8, 4)."-".substr($telephone, -4);
+                    ) . ")" . substr($telephone, $length - 8, 4) . "-" . substr($telephone, -4);
             }
             if ($length == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
-                return "(".substr($telephone, 0, 2).")".substr($telephone, 2, 5)."-".substr(
+                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 5) . "-" . substr(
                         $telephone,
                         7,
                         11
                     );
             }
             if ($length == 10) { // COM CÓDIGO DE ÁREA NACIONAL
-                return "(".substr($telephone, 0, 2).")".substr($telephone, 2, 4)."-".substr(
+                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 4) . "-" . substr(
                         $telephone,
                         6,
                         10
                     );
             }
             if ($length <= 9) { // SEM CÓDIGO DE ÁREA
-                return substr($telephone, 0, $length - 4)."-".substr($telephone, -4);
+                return substr($telephone, 0, $length - 4) . "-" . substr($telephone, -4);
             }
         } else {
             if ($ddd) {
@@ -148,10 +148,10 @@ class FoxUtils
                 $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
 
                 if ($length == 11) {
-                    return substr($telephone, 2, 5)."-".substr($telephone, 7, 11);
+                    return substr($telephone, 2, 5) . "-" . substr($telephone, 7, 11);
                 }
                 if ($length == 10) {
-                    return substr($telephone, 2, 4)."-".substr($telephone, 6, 10);
+                    return substr($telephone, 2, 4) . "-" . substr($telephone, 6, 10);
                 }
 
                 return '';
@@ -167,7 +167,7 @@ class FoxUtils
      */
     public static function getCep($zipCode)
     {
-        return substr($zipCode, 0, 5).'-'.substr($zipCode, 5, 3);
+        return substr($zipCode, 0, 5) . '-' . substr($zipCode, 5, 3);
     }
 
     /**
@@ -180,7 +180,7 @@ class FoxUtils
             return null;
         }
 
-        return substr($cep, 0, 5)."-".substr($cep, 5);
+        return substr($cep, 0, 5) . "-" . substr($cep, 5);
     }
 
     /**
@@ -241,7 +241,7 @@ class FoxUtils
     }
 
     /**
-     * @param  mixed  $var
+     * @param mixed $var
      * @return bool
      */
     public static function isEmpty($var)
@@ -294,7 +294,7 @@ class FoxUtils
 
     /**
      * @param $value
-     * @param  string  $type
+     * @param string $type
      * @return null
      */
     public static function xorEncrypt($value, $type = "encrypt")
@@ -352,8 +352,8 @@ class FoxUtils
 
     /**
      * @param $value
-     * @param  string  $locale
-     * @param  string  $currency
+     * @param string $locale
+     * @param string $currency
      * @return string
      * https://www.php.net/manual/pt_BR/class.numberformatter.php
      */
@@ -383,7 +383,7 @@ class FoxUtils
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      * @return array
      */
     public static function splitName($value)
@@ -416,22 +416,26 @@ class FoxUtils
     {
         try {
             if (!empty($url)) {
-
                 $urlKey = str_replace("https://cloudfox-${type}.s3.amazonaws.com/", '', $url);
 
-                $client = new S3Client([
-                    'credentials' => [
-                        'key' => env('AWS_ACCESS_KEY_ID'),
-                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-                    ],
-                    'region' => env('AWS_DEFAULT_REGION'),
-                    'version' => '2006-03-01',
-                ]);
+                $client = new S3Client(
+                    [
+                        'credentials' => [
+                            'key' => env('AWS_ACCESS_KEY_ID'),
+                            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                        ],
+                        'region' => env('AWS_DEFAULT_REGION'),
+                        'version' => '2006-03-01',
+                    ]
+                );
 
-                $command = $client->getCommand('GetObject', [
-                    'Bucket' => "cloudfox-${type}",
-                    'Key' => $urlKey,
-                ]);
+                $command = $client->getCommand(
+                    'GetObject',
+                    [
+                        'Bucket' => "cloudfox-${type}",
+                        'Key' => $urlKey,
+                    ]
+                );
 
                 $urlExpirationTime = $expiration ?? 24;
 
@@ -524,46 +528,36 @@ class FoxUtils
         return $length != null ? substr($string, $start, $length) : substr($string, $start);
     }
 
-    public static function calcTime($time) {
+    public static function calcTime($time)
+    {
         $currentDate = date("Y-m-d H:i:s");
         $dateDiff = $time->diff($currentDate);
 
         $return = '';
-        if ( $dateDiff->y > 1 ) {
-            $return = 'Há ' . $dateDiff->y .' anos';
-        }
-        elseif ( $dateDiff->y === 1 ) {
+        if ($dateDiff->y > 1) {
+            $return = 'Há ' . $dateDiff->y . ' anos';
+        } elseif ($dateDiff->y === 1) {
             $return = 'Há um ano';
-        }
-        elseif ( $dateDiff->m > 1 ) {
-            $return = 'Há ' . $dateDiff->m .' meses';
-        }
-        elseif ( $dateDiff->m === 1 ) {
+        } elseif ($dateDiff->m > 1) {
+            $return = 'Há ' . $dateDiff->m . ' meses';
+        } elseif ($dateDiff->m === 1) {
             $return = 'Há um mês';
-        }
-        elseif ( $dateDiff->d >= 14 ) {
-             $semanas = floor($dateDiff->d / 7);
-            $return = 'Há ' . $semanas .' semanas';
-        }
-        elseif ( $dateDiff->d >= 7 ) {
-           $return = 'Há uma semana';
-       }
-       elseif ( $dateDiff->d > 1 ) {
-            $return = 'Há ' . $dateDiff->d .' dias';
-        }
-        elseif ( $dateDiff->d === 1 ) {
+        } elseif ($dateDiff->d >= 14) {
+            $semanas = floor($dateDiff->d / 7);
+            $return = 'Há ' . $semanas . ' semanas';
+        } elseif ($dateDiff->d >= 7) {
+            $return = 'Há uma semana';
+        } elseif ($dateDiff->d > 1) {
+            $return = 'Há ' . $dateDiff->d . ' dias';
+        } elseif ($dateDiff->d === 1) {
             $return = 'Há um dia';
-        }
-        elseif ( $dateDiff->h > 1 ) {
-            $return = 'Há ' . $dateDiff->h .' horas';
-        }
-        elseif ( $dateDiff->h === 1 ) {
+        } elseif ($dateDiff->h > 1) {
+            $return = 'Há ' . $dateDiff->h . ' horas';
+        } elseif ($dateDiff->h === 1) {
             $return = 'Há um hora';
-        }
-        elseif ( $dateDiff->i >= 1 ) {
-            $return = 'Há ' . $dateDiff->i  . ' minutos';
-        }
-        elseif ( $dateDiff->i < 1 ) {
+        } elseif ($dateDiff->i >= 1) {
+            $return = 'Há ' . $dateDiff->i . ' minutos';
+        } elseif ($dateDiff->i < 1) {
             $return = 'Há um minuto';
         }
 
@@ -572,7 +566,7 @@ class FoxUtils
 
     public static function getnetReasonByCode($code)
     {
-        switch($code) {
+        switch ($code) {
             case '4837':
             case '4863':
             case '81':
@@ -646,7 +640,6 @@ class FoxUtils
                 return 'Transação fraudulenta/sem autorização';
             default:
                 return isset($reason) ? str_replace("?", "Ã", $reason) : '';
-
         }
     }
 
@@ -658,11 +651,11 @@ class FoxUtils
     {
         $parts = [];
 
-        while ( strlen( trim($name)) > 0 ) {
+        while (strlen(trim($name)) > 0) {
             $name = trim($name);
             $string = preg_replace('#.*\s([\w-]*)$#', '$1', $name);
             $parts[] = $string;
-            $name = trim( preg_replace('#'.preg_quote($string,'#').'#', '', $name ) );
+            $name = trim(preg_replace('#' . preg_quote($string, '#') . '#', '', $name));
         }
 
         if (empty($parts)) {
@@ -673,8 +666,56 @@ class FoxUtils
         $name = array();
         $name['first_name'] = $parts[0];
         $name['middle_name'] = (isset($parts[2])) ? $parts[1] : '';
-        $name['last_name'] = (isset($parts[2])) ? $parts[2] : ( isset($parts[1]) ? $parts[1] : '');
+        $name['last_name'] = (isset($parts[2])) ? $parts[2] : (isset($parts[1]) ? $parts[1] : '');
 
         return $name;
+    }
+
+    public static function getApplyPlans($plansApply): array
+    {
+        $applyPlanArray = [];
+        if (in_array('all', $plansApply)) {
+            $applyPlanArray[] = 'all';
+        } else {
+            foreach ($plansApply as $value) {
+                $applyPlanArray[] = hashids_decode($value);
+            }
+        }
+
+        return $applyPlanArray;
+    }
+
+    public static function saveImageS3($path, $pathFile, $fileName)
+    {
+        $s3drive = Storage::disk('s3_documents');
+        $s3drive->putFileAs(
+            $path,
+            new File(storage_path($pathFile)),
+            $fileName,
+            'public'
+        );
+        $urlPath = $s3drive->url($path . $fileName);
+        dd($urlPath);
+    }
+
+    public static function checkFileExistUrl(string $url = null, array $types = []): bool
+    {
+        if (empty($url)) {
+            return false;
+        }
+
+        $handle = @fopen($url, 'r');
+        $typeFile = pathinfo($url, PATHINFO_EXTENSION);
+        if (!$handle) {
+            return false;
+        }
+
+        if (!empty($types) && !empty($typeFile)) {
+            if (!in_array($typeFile, $types)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

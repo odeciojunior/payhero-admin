@@ -4,8 +4,9 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/coupons.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     @endpush
 
         <div class="page">
@@ -23,7 +24,7 @@
                         <div class="col-lg-12">
                             <form id='filter_form'>
                                 <div id="" class="card shadow p-20">
-                                    <div class="row align-items-baseline">
+                                    <div class="row">
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label for="projeto">Projeto</label>
                                             <select name='select_project' id="projeto" class="form-control select-pad">
@@ -44,21 +45,43 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <label for="date_type" >Data</label>
-                                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly >
+                                            <div class="form-group form-icons">
+                                                <label for="date_range" >Data</label>
+                                                <i style="right: 25px;bottom: 9px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-20"></i>
+                                                <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly >
+                                            </div>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <label> </label>
-                                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                            <button id="bt_filtro" class="btn btn-primary w-full" style="padding: 11px 15px;margin-top: 27px !important;">
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
                                             </button>
                                         </div>
-                                        <div class="col-2">
-                                        </div>
+                                    </div>
+                                    <div class="collapse" id="bt_collapse">
+                                        <div class="row"></div>
+                                    </div>
+                                    <div class="row" style="height: 30px">
+                                        {{-- <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                                data-toggle="collapse"
+                                                data-target="#bt_collapse"
+                                                aria-expanded="false"
+                                                aria-controls="bt_collapse">
+                                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                <span id="text-filtro">Filtros avançados</span>
+                                            </div>
+                                        </div> --}}
+                                        {{-- <div class="col-6 col-xl-3 mt-20 offset-xl-9">
+                                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                                Aplicar filtros
+                                            </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </form>
                         </div>
+                        <div class="fixhalf"></div>
 
                         <div class="col-lg-12">
                             <div class="card shadow" style="min-height: 300px;">
@@ -66,20 +89,22 @@
                                     <table class="table-coupons table table-striped" style="width:100%;margin: auto;">
                                         <thead>
                                         <tr>
-                                            <th>Código cupom</th>
-                                            <th>Projeto</th>
-                                            <th>Quantidade utilizada</th>
+                                            <td class="table-title">Código cupom</td>
+                                            <td class="table-title">Projeto</td>
+                                            <td class="table-title">Quantidade utilizada</td>
                                         </tr>
                                         </thead>
-                                        <tbody id="body-table-coupons">
+                                        <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                                         {{-- js carrega... --}}
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <ul id="pagination-coupons" class="pagination-sm text-right margin-chat-pagination" style="position:relative;float:right">
-                                {{-- js carrega... --}}
-                            </ul>
+                            <div class="row d-flex justify-content-center justify-content-md-end">
+                                <ul id="pagination-coupons" class="pagination-sm text-right margin-chat-pagination" style="position:relative;float:right">
+                                    {{-- js carrega... --}}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

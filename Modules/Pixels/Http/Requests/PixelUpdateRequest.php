@@ -21,13 +21,13 @@ class PixelUpdateRequest extends FormRequest
             'checkout' => 'nullable',
             'purchase_boleto' => 'nullable',
             'purchase_card' => 'nullable',
+            'purchase_pix' => 'nullable',
             'project_id' => 'nullable',
             'campaign' => 'nullable',
             'purchase_event_name' => 'nullable|max:255',
             'is_api' => 'nullable|string',
             'facebook_token_api' => 'nullable|string',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
-
         ];
     }
 

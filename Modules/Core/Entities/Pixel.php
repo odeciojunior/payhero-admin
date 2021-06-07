@@ -3,35 +3,48 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PixelPresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property int $id
  * @property int $project_id
- * @property integer $campaign_id
  * @property string $name
  * @property string $code
  * @property string $platform
- * @property boolean $status
+ * @property bool $status
  * @property string $checkout
  * @property string $purchase_boleto
  * @property string $purchase_card
- * @property biginteger $affiliate_id
+ * @property int $affiliate_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Campaign $campaign
  * @property Project $project
  */
 class Pixel extends Model
 {
-    use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 0;
+
+    public const FACEBOOK_PLATFORM = 'facebook';
+    public const GOOGLE_ADWORDS_PLATFORM = 'google_adwords';
+    public const GOOGLE_ANALYTICS_PLATFORM = 'google_analytics';
+    public const GOOGLE_ANALYTICS_FOUR_PLATFORM = 'google_analytics_four';
+    public const TABOOLA_PLATFORM = 'taboola';
+    public const OUTBRAIN_PLATFORM = 'outbrain';
+    public const PINTEREST_PLATFORM = 'pinterest';
+
     /**
      * @var string
      */
@@ -49,6 +62,7 @@ class Pixel extends Model
         'checkout',
         'purchase_boleto',
         'purchase_card',
+        'purchase_pix',
         'affiliate_id',
         'apply_on_plans',
         'code_meta_tag_facebook',
@@ -85,38 +99,28 @@ class Pixel extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Pixel ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Pixel ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Pixel ' . $this->name . ' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = 'Pixel ' . $this->name . ' foi deletedo.';
+                break;
+            case 'updated':
+                $activity->description = 'Pixel ' . $this->name . ' foi atualizado.';
+                break;
+            case 'created':
+                $activity->description = 'Pixel ' . $this->name . ' foi criado.';
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function campaign()
+    public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Campaign');
+        return $this->belongsTo(Project::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function affiliate(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function affiliate()
-    {
-        return $this->belongsTo('Modules\Core\Entities\Affiliate');
+        return $this->belongsTo(Affiliate::class);
     }
 }
