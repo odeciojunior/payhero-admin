@@ -12,23 +12,23 @@ class ProjectNotificationPresenter extends Presenter
 
         if (is_numeric($event)) {
             switch ($event) {
-                case ProjectNotificationService::SELECT_BOLETO_GENERATED:
+                case ProjectNotificationService::BOLETO_GENERATED:
                     return 'billet_generated';
-                case ProjectNotificationService::SELECT_BOLETO_COMPENSATED:
+                case ProjectNotificationService::BOLETO_COMPENSATED:
                     return 'billet_paid';
-                case ProjectNotificationService::SELECT_CARD_PAYMENT:
+                case ProjectNotificationService::CARD_PAYMENT:
                     return 'credit_card_paid';
-                case ProjectNotificationService::SELECT_ABANDONED_CART:
+                case ProjectNotificationService::ABANDONED_CART:
                     return 'abandoned_cart';
-                case ProjectNotificationService::SELECT_BOLETO_EXPIRED:
+                case ProjectNotificationService::BOLETO_EXPIRED:
                     return 'billet_due_today';
-                case ProjectNotificationService::SELECT_TRACKING_CODE:
+                case ProjectNotificationService::TRACKING_CODE:
                     return 'tracking';
-                case ProjectNotificationService::SELECT_PIX_GENERATED:
+                case ProjectNotificationService::PIX_GENERATED:
                     return 'pix_generated';
-                case ProjectNotificationService::SELECT_PIX_COMPENSATED:
+                case ProjectNotificationService::PIX_COMPENSATED:
                     return 'pix_compensated';
-                case ProjectNotificationService::SELECT_PIX_EXPIRED:
+                case ProjectNotificationService::PIX_EXPIRED:
                     return 'pix_expired';
             }
 
@@ -36,23 +36,23 @@ class ProjectNotificationPresenter extends Presenter
         } else {
             switch ($event) {
                 case 'billet_generated':
-                    return ProjectNotificationService::SELECT_BOLETO_GENERATED;
+                    return ProjectNotificationService::BOLETO_GENERATED;
                 case 'billet_paid':
-                    return ProjectNotificationService::SELECT_BOLETO_COMPENSATED;
+                    return ProjectNotificationService::BOLETO_COMPENSATED;
                 case 'credit_card_paid':
-                    return ProjectNotificationService::SELECT_CARD_PAYMENT;
+                    return ProjectNotificationService::CARD_PAYMENT;
                 case 'abandoned_cart':
-                    return ProjectNotificationService::SELECT_ABANDONED_CART;
+                    return ProjectNotificationService::ABANDONED_CART;
                 case 'billet_due_today':
-                    return ProjectNotificationService::SELECT_BOLETO_EXPIRED;
+                    return ProjectNotificationService::BOLETO_EXPIRED;
                 case 'tracking':
-                    return ProjectNotificationService::SELECT_TRACKING_CODE;
+                    return ProjectNotificationService::TRACKING_CODE;
                 case 'pix_generated':
-                    return ProjectNotificationService::SELECT_PIX_GENERATED;
+                    return ProjectNotificationService::PIX_GENERATED;
                 case 'pix_compensated':
-                    return ProjectNotificationService::SELECT_PIX_COMPENSATED;
+                    return ProjectNotificationService::PIX_COMPENSATED;
                 case 'pix_expired':
-                    return ProjectNotificationService::SELECT_PIX_EXPIRED;
+                    return ProjectNotificationService::PIX_EXPIRED;
             }
 
             return '';
