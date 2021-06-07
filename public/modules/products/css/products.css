@@ -66,8 +66,8 @@ label {
 }
 
 .card-img-top {
-    height: 200px;
-    object-fit: contain;
+    height: 230px;
+    object-fit: cover;
 }
 
 .card-description {
@@ -75,4 +75,53 @@ label {
     white-space: nowrap;
     text-overflow: ellipsis;
     line-height: 20px;
+}
+
+/* Menu flutuante do produto */
+
+.menu_product {
+    cursor: pointer;
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    opacity: 0.5;
+}
+
+button.menu_product {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+}
+
+.menu_product_tooltip {
+	position: absolute;
+	display: none;
+	flex-direction: column;
+	top: 40px;
+	right: 30px;
+	gap: 10px;
+	/* width: 200px; */
+	/* height: 150px; */
+	padding: 5px 0;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 10px 30px rgba(#414856, 0.05);
+	transition: opacity .15s ease-in, top .15s ease-in, width .15s ease-in;
+}
+
+.menu_product_tooltip a,
+.menu_product_tooltip a span {
+    color: #4C4C4C;
+}
+
+.menu_product_tooltip a:hover,
+.menu_product_tooltip a span:hover {
+    color: #4C4C4C;
+}
+
+.menu_product_tooltip a span {
+    -webkit-text-stroke: .5px;
 }

@@ -179,65 +179,77 @@ $(document).ready(function () {
                     let dados = "";
 
                     $.each(response.data, function (index, value) {
+                        shopifyProduct = value.id != value.id_view;
                         dados = `
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
                             <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%">
-                                <img style="min-height: 200px; cursor: pointer;"
-                                    class="card-img-top product-image p-15" src="${value.image}" data-link="${value.link}"
-                                    alt="Imagem do produto" data-code="${value.id}">
+                                <div style="margin: 10px 10px 0px 0px;position: absolute;right: 0px;">
+                                    <button type="button" class="menu_product" data-id="${value.id}">&#8942;</button>
+                                </div>
+                                <img class="card-img-top product-image" src="${value.image}" alt="Imagem do produto">
                                 ${value.type_enum == 2
                                 ? `<span class="ribbon-inner ribbon-primary" 
                                             style="background-color:${badgeList[value.status_enum]}"> ${statusList[value.status_enum]}
                                         </span>`
                                 : ""
                             }
-                                <hr>
+                                <hr class="mt-0">
                                 <div class="card-body py-0">
                                     <h5 class="card-title">${value.name}</h5>
                                     <h5 class="card-description">${value.description}</h5>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <p class="text-muted card-text sm">Criado em  ${value.created_at}</p>
+                                    <p class="text-muted card-text sm">Criado em ${value.created_at}</p>
                                 </div>
+                            </div>
+                            <div class="menu_product_tooltip" data-id="${value.id}">
+                                <a id="bt_editar" href="/products/${value.id}/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
+                                <hr class="my-5">
+                                ${shopifyProduct == false
+                                ? `
+                                <a id="bt_excluir" href="#" class="mx-20" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
+                                <hr class="my-5">
+                                `
+                                : ""
+                            }
+                                <a id="bt_copiar" href="#" id="copyID" data-clipboard-text="${value.id}" class="clipboard mx-20"><span class="o-paper-1 mr-10" />Copiar ID</a>
                             </div>
                         </div>
                         `;
-                        // dados = '';
-                        // dados += '<div class="col-xl-3 col-md-6 d-flex align-items-stretch">';
-                        // dados += '<div class="card shadow" style="cursor:pointer;width:100%; ">';
-                        // dados += '<img style="min-height: 200px;" class="card-img-top product-image" src="' + value.image + '"  ' +
-                        //     'data-link=" + value.link + " alt="Imagem do produto" data-code="' + value.id + '">' +
-                        //     '<span class="ribbon-inner ribbon-primary" style="background-color:' + badgeList[value.status_enum] + '">' + statusList[value.status_enum] + '</span>' +
-                        //     '<div class="card-body">' +
-                        //     '<div class="row align-items-end justify-content-between">' +
-                        //     '<div class="col-10">' +
-                        //     '<h5 class="card-title">' + value.name + '</h5>' +
-                        //     '<h5 class="">' + value.description + '</h5>' +
-                        //     '<p class="card-text sm">Criado em  ' + value.created_at + '</p>' +
-                        //     '<p class="card-text sm">ID: ' + value.id_view + '</p>' +
-                        //     '</div>' +
-                        //     '</div>' +
-                        //     '</div>' +
-                        //     '</div>' +
-                        //     '</div>';
-
                         $("#data-table-products").append(dados);
+                        new Clipboard('.clipboard');
                     });
 
-                    $(".product-image").on("click", function () {
-                        var product = {
-                            type: $("#type-products option:selected").val(),
-                            project: $(
-                                "#select-projects option:selected"
-                            ).val(),
-                            nameProduct: $("#name").val(),
-                            page: pageCurrent !== null ? pageCurrent : null,
-                        };
-                        setCookie("filterProduct", 1, product);
-                        if (verifyAccountFrozen() == false) {
-                            window.location.href =
-                                "/products/" + $(this).data("code") + "/edit";
-                        }
+                    $('.menu_product').on('click', function () {
+                        $(this).toggleClass('active');
+                        $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`).toggle();
+                        return;
+                    });
+
+                    $('#bt_excluir').on('click', function (event) {
+                        event.preventDefault();
+                    });
+
+                    $('#bt_excluir').on('click', function (event) {
+                        event.preventDefault();
+
+                        $.ajax({
+                            method: 'DELETE',
+                            url: '/api/products/' + this.dataset.id,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function (response) {
+                                errorAjaxResponse(response);
+                            },
+                            success: function success(response) {
+                                alertCustom('success', response.message);
+
+                                window.location = "/products";
+                            }
+                        });
                     });
 
                     $("img").on("error", function () {
@@ -272,6 +284,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         $('#new-product-modal').show();
-    })
+    });
+
 
 });

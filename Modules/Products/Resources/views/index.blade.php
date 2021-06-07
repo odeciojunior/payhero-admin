@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=06') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=07') }}">
 @endpush
 
 @section('content')
@@ -115,8 +115,9 @@
         {{-- FIM projeto nao existem projetos--}}
     </div>
 
-    @push('scripts')
-        <script src='{{asset('/modules/products/js/index.js?v=' . random_int(100, 10000))}}'></script>
+    @push('scripts')    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
+        <script src='{{asset('/modules/products/js/index.js?v=01')}}'></script>
     @endpush
 
 @endsection
