@@ -95,7 +95,7 @@
                                 <div class="form-group input-group">
                                     <input name="weight" type="text" class="form-control" id="weight" placeholder="Ex: 950" data-mask="0#">
                                     <div class="input-group-append">
-                                        <span class="input-group-text font-weight-bold">G</span>
+                                        <span class="input-group-text font-weight-bold px-20">G</span>
                                     </div>
                                 </div>
                             </div>
