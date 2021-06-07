@@ -102,7 +102,7 @@ $(document).ready(function () {
         }
     });
 
-    var p = $("#preview-image-project");
+    var p = $("#product_photo");
     $("#project-photo").on("change", function () {
 
         var imageReader = new FileReader();
@@ -113,7 +113,7 @@ $(document).ready(function () {
 
             p.on('load', function () {
 
-                var img = document.getElementById('preview-image-project');
+                var img = document.getElementById('product_photo');
                 var x1, x2, y1, y2;
 
                 if (img.naturalWidth > img.naturalHeight) {
@@ -140,7 +140,7 @@ $(document).ready(function () {
                 $('input[name="photo_w"]').val(x2 - x1);
                 $('input[name="photo_h"]').val(y2 - y1);
 
-                $('#preview-image-project').imgAreaSelect({
+                $('#product_photo').imgAreaSelect({
                     x1: x1, y1: y1, x2: x2, y2: y2,
                     aspectRatio: '1:1',
                     handles: true,
@@ -157,7 +157,29 @@ $(document).ready(function () {
         };
     });
 
-    $("#preview-image-project").on("click", function () {
+    $("#product_photo").on("click", function () {
         $("#project-photo").click();
     });
+
+    $('#product_photo').dropify({
+        messages: {
+            'default': 'Arraste e solte uma imagem ou ',
+            'replace': 'Arraste e solte uma imagem ou selecione um arquivo',
+            'remove': 'Remover',
+            'error': ''
+        },
+        error: {
+            'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
+            'minWidth': 'A imagem deve ter largura maior que 650px.',
+            'maxWidth': 'A imagem deve ter largura menor que 650px.',
+            'minHeight': 'A imagem deve ter altura maior que 650px.',
+            'maxHeight': 'A imagem deve ter altura menor que 650px.',
+            'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
+        },
+        tpl: {
+            message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
+        },
+        imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
+    });
+
 });
