@@ -38,7 +38,7 @@ class ProjectNotificationService
         try {
             ProjectNotification::insert([
                                             [
-                                                'type_enum'         => self::SMS_TYPE, // sms
+                                                'type_enum'         => self::SMS_TYPE,
                                                 'event_enum'        => self::BOLETO_GENERATED,
                                                 'time'              => 'Imediato',
                                                 'message'           => 'Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}',
