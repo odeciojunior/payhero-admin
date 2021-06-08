@@ -26,6 +26,12 @@ label {
     border-radius: 8px;
 }
 
+.card-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .form-control {
     color: #828282;
     font-size: 16px;
@@ -97,19 +103,19 @@ button.menu_product {
 }
 
 .menu_product_tooltip {
-	position: absolute;
-	display: none;
-	flex-direction: column;
-	top: 40px;
-	right: 30px;
-	gap: 10px;
-	/* width: 200px; */
-	/* height: 150px; */
-	padding: 5px 0;
-	background: #fff;
-	border-radius: 10px;
-	box-shadow: 0 10px 30px rgba(#414856, 0.05);
-	transition: opacity .15s ease-in, top .15s ease-in, width .15s ease-in;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    top: 40px;
+    right: 30px;
+    gap: 10px;
+    /* width: 200px; */
+    /* height: 150px; */
+    padding: 5px 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(#414856, 0.05);
+    transition: opacity .15s ease-in, top .15s ease-in, width .15s ease-in;
 }
 
 .menu_product_tooltip a,

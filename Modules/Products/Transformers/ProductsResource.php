@@ -22,8 +22,8 @@ class ProductsResource extends JsonResource
         return [
             'id'          => $this->id_code,
             'id_view'     => ($this->shopify == 1 ? $this->shopify_id : $this->id_code),
-            'name'        => Str::limit($this->name, 18),
-            'description' => Str::limit($this->description, 25),
+            'name'        => $this->name,
+            'description' => $this->description,
             'image'       => $this->photo == '' ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $this->photo,
             'link'        => '/api/products/' . $this->id_code . '/edit',
             'created_at'  => Carbon::parse($this->created_at)->format('d/m/Y'),
