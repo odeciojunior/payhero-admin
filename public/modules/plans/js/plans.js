@@ -424,6 +424,7 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
+
                                     $('.products_row_custom').append(`
                                         <div class='card container '>
                                             <div class="row">
@@ -466,7 +467,6 @@ $(function () {
                                     });
 
                                     $(document).on('click',`#add_custom_product-${value.id+index}`,function(){
-                                        console.log('novo item config '+value.id+index);
                                         
                                         $(`#area-custom-products-${value.id+index}`).append(`
                                             <div class="row">
