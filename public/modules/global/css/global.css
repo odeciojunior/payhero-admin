@@ -711,3 +711,28 @@ a.label {
 tbody td{
     font-size:14px;
 }
+
+.panel-custom-product{
+    background: #F8F8F8;
+    border-radius: 8px !important;
+}
+.panel-custom-product .panel-group{
+    box-shadow: none !important;
+}
+
+img.border-icon{
+    background: #FFFFFF;
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    padding: 20%;
+}
+
+.py-13{
+    padding-top: 13px !important;    
+    padding-bottom: 13px !important;    
+}
+.py-11{
+    padding-top: 11px !important;    
+    padding-bottom: 11px !important;    
+}

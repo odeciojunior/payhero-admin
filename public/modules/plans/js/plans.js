@@ -501,7 +501,7 @@ $(function () {
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
-                                        <span>Alterar para os mesmos produtos em outros planos</span>
+                                        <span>Aplicar personalização nas outras variantes deste produto</span>
                                     `);
                                 }
 

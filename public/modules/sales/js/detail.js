@@ -51,6 +51,15 @@ $(() => {
         alertCustom("success", "Link copiado!");
     });
 
+    $(document).on("click", ".btn-copy-custom-text", function () {
+        let temp = $("<input>");
+        $("#nav-tabContent").append(temp);
+        temp.val($(this).attr("link")).select();
+        document.execCommand("copy");
+        temp.remove();
+        alertCustom("success", "Link copiado!");
+    });
+
     $(".btn-edit-client").on("click", function () {
         let container = $(this).parent();
         container
@@ -1019,31 +1028,74 @@ $(() => {
             if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
                 console.log('passou');
                 div+= `<!-- Customer additional information -->
-                    <div style="box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);" class="panel-group my-30" aria-multiselectable="true" role="tablist">
-                        <div class="panel">
+                    <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
+                        <div class="panel panel-custom-product">
                             <div class="panel-heading" id="sale-custom-product-accordion${value.id}" role="tab">
                                 <a class="panel-title" data-toggle="collapse" href="#sale-custom-product${value.id}"
                                 data-parent="#custom-product-accordion${value.id}" aria-expanded="true"
                                 aria-controls="exampleCollapseDefaultOne">
-                                    <strong>Informações enviadas pelo cliente</strong>
+                                    <strong>Personalizações enviadas pelo cliente</strong>
                                 </a>
                             </div>
                             <div class="panel-collapse collapse" id="sale-custom-product${value.id}"
                                 aria-labelledby="sale-custom-product-accordion${value.id}" role="tabpanel" style="">
                                 <div class="panel-body">`;
+                                    
+                                    var file_name = null;
                                     $.each(value.custom_products, function (index2,custom) {
-                                        div+=`<div class="row">`;
-                                        if(typeof custom.text != 'undefined' && custom.text !=''){
-                                            div+=`<div class="col-md-12">
-                                                <h5>Texto solicitado:  <strong>${custom.text}</strong></h5>
-                                            </div>`;
-                                        }
-                                        if(typeof custom.file != 'undefined' && custom.file !=''){                                            
-                                            div+=`<div class="col-md-12">
-                                                <h5>Arquivo solicitado <a href="${custom.file}" class="link-download" download target="_blank">Baixar</a></h5>
-                                            </div>`;
-                                        }
-                                        div+=`</div><hr/>`;
+                                        console.log(custom);
+                                        div+=`<div class="row mt-2">`;
+                                        if(typeof custom.type_enum != 'undefined'){
+                                            if(custom.type_enum!='Text'){
+                                                file_name = custom.value.substr(-20);                                            
+                                            }
+                                            switch(custom.type_enum){
+                                                case 'Text':
+                                                    div+=`
+                                                        <div class="col-md-3">
+                                                            <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon"> 
+                                                        </div>
+                                                        <div class="col-md-6 px-0 py-13">                                                            
+                                                            <h5>${custom.value}</h5>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0 py-11" align="right">                                                            
+                                                            <a role="button" class="copy_link btn-copy-custom-text" style="cursor: pointer;"  link="${custom.value}" title="Copiar link">
+                                                                <span class="material-icons icon-copy-1"> content_copy </span>
+                                                            </a>
+                                                        </div>`;
+                                                break;
+                                                case 'File':
+                                                    div+=`
+                                                    <div class="col-md-3">
+                                                        <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" /> 
+                                                    </div>
+                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                        <h5>...${file_name}</h5>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                        <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Arquivo" target="_blank">
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                        </a>
+                                                    </div>`;                                                    
+                                                break;
+                                                case 'Image':
+                                                    div+=`
+                                                    <div class="col-md-3">
+                                                        <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon"> 
+                                                    </div>
+                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                        <h5>...${file_name}</h5>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                        <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Imagem"  target="_blank">
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                        </a>
+                                                    </div>`;
+                                                break;
+                                            }
+                                            
+                                        }                                        
+                                        div+=`</div>`;
                                     });
                                 
                 div+= `             

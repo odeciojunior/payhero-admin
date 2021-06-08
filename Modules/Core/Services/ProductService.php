@@ -88,7 +88,7 @@ class ProductService
 
                 $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
                 
-                $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','text','file')
+                $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value')
                 ->where('sale_id',$productsPlanSale->sale_id)
                 ->where('plan_id',$productsPlanSale->plan_id)->where('product_id',$productsPlanSale->product_id)->get();
                 
