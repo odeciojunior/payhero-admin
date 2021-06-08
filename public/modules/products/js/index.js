@@ -220,13 +220,33 @@ $(document).ready(function () {
                         new Clipboard('.clipboard');
                     });
 
+                    function closeTooltips(except = "") {
+                        $('.menu_product_tooltip[style*="display: block"]').each(function (_, tooltip) {
+                            if (except[0] == tooltip) {
+                                return;
+                            }
+
+                            tooltip.style.display = 'none';
+                        });
+                    }
+
                     $('.menu_product').on('click', function () {
-                        $(this).toggleClass('active');
-                        $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`).toggle();
-                        return;
+                        var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`)
+
+                        closeTooltips(tooltip);
+
+                        tooltip.toggle();
                     });
 
-                    $('#bt_excluir').on('click', function (event) {
+                    $('.menu_product').on('focusout', function (event) {
+                        if ($(event.relatedTarget).hasClass('menu_product')) {
+                            return;
+                        }
+
+                        setTimeout(() => closeTooltips(), 200);
+                    });
+
+                    $('#bt_copiar').on('click', function (event) {
                         event.preventDefault();
                     });
 
