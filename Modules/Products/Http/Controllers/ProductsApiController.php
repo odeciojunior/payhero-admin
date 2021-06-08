@@ -140,7 +140,7 @@ class ProductsApiController extends Controller
                 try {
                     $img = Image::make($productPhoto->getPathname());
                     // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
+                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $amazonPath = $this->getAmazonFileService()
@@ -293,7 +293,7 @@ class ProductsApiController extends Controller
 
                     $img = Image::make($productPhoto->getPathname());
                     // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
+                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $productPath = $this->getAmazonFileService()
