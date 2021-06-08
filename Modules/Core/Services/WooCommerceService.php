@@ -222,7 +222,7 @@ class WooCommerceService
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-             
+        $_product->price = empty($_product->price)?0:$_product->price;
 
         $product = $productModel->create(
             [
