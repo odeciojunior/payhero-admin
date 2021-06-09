@@ -63,7 +63,7 @@ return [
             'connection' => 'default',
             'queue' => 'default',
             'retry_after' => 11000,
-            'timeout' => 10800,
+            'timeout' => 36000,
             'block_for' => null,
         ],
 
