@@ -8,7 +8,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page p-50" style="margin-bottom: 0 !important;">
         <div style="display: none" class="page-header container">
             <h1 class="page-title">
                 <a href="/products">
@@ -17,7 +17,7 @@
             </h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
-        <div class="page-content container">
+        <div class="page-content container pb-20">
             <form id='my-form'>
                 @method('PUT')
                 <div class="panel px-40 p-20" style="border-radius: 16px">

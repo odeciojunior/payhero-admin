@@ -8,12 +8,12 @@
     @endpush
 
     <!-- Page -->
-    <div class="page">
+    <div class="page p-50" style="margin-bottom: 0 !important;">
         <div class="page-header container">
             <h1 class="page-title" style="color: #707070;">Novo produto físico</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
-        <div class="page-content container">
+        <div class="page-content container pb-20">
             <form id='my-form-add-product'>
                 <div class="panel pt-10 pb-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <h4 class="px-40">1. Informações básicas</h4>
