@@ -115,8 +115,7 @@
         {{-- FIM projeto nao existem projetos--}}
     </div>
 
-    @push('scripts')    
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
+    @push('scripts')
         <script src='{{ asset('/modules/products/js/index.js?v=02') }}'></script>
     @endpush
 

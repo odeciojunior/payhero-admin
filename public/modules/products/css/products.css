@@ -121,6 +121,7 @@ button.menu_product {
 .menu_product_tooltip a,
 .menu_product_tooltip a span {
     color: #4C4C4C;
+    vertical-align: middle;
 }
 
 .menu_product_tooltip a:hover,

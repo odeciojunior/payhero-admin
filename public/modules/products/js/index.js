@@ -204,20 +204,17 @@ $(document).ready(function () {
                             </div>
                             <div class="menu_product_tooltip" data-id="${value.id}">
                                 <a id="bt_editar" href="/products/${value.id}/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
-                                <hr class="my-5">
                                 ${shopifyProduct == false
                                 ? `
-                                <a id="bt_excluir" href="#" class="mx-20" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
-                                <hr class="my-5">
+                                    <hr class="my-5">
+                                    <a id="bt_excluir" href="#" class="mx-20" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
                                 `
                                 : ""
                             }
-                                <a id="bt_copiar" href="#" id="copyID" data-clipboard-text="${value.id}" class="clipboard mx-20"><span class="o-paper-1 mr-10" />Copiar ID</a>
                             </div>
                         </div>
                         `;
                         $("#data-table-products").append(dados);
-                        new Clipboard('.clipboard');
                     });
 
                     function closeTooltips(except = "") {
@@ -244,10 +241,6 @@ $(document).ready(function () {
                         }
 
                         setTimeout(() => closeTooltips(), 200);
-                    });
-
-                    $('#bt_copiar').on('click', function (event) {
-                        event.preventDefault();
                     });
 
                     $('#bt_excluir').on('click', function (event) {
