@@ -1040,11 +1040,15 @@ $(() => {
                             <div class="panel-collapse collapse" id="sale-custom-product${value.id}"
                                 aria-labelledby="sale-custom-product-accordion${value.id}" role="tabpanel" style="">
                                 <div class="panel-body">`;
-                                    
-                                    var file_name = null;
+                                var file_name = null;
+                                    line_temp = 0;
                                     $.each(value.custom_products, function (index2,custom) {
-                                        console.log(custom);
+                                        if(line_temp != custom.line){
+                                            div+=`<hr/>`;
+                                            line_temp = custom.line;
+                                        }
                                         div+=`<div class="row mt-2">`;
+                                        
                                         if(typeof custom.type_enum != 'undefined'){
                                             if(custom.type_enum!='Text'){
                                                 file_name = custom.value.substr(-20);                                            
@@ -1070,7 +1074,7 @@ $(() => {
                                                         <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" /> 
                                                     </div>
                                                     <div class="col-md-6 px-0 py-13">                                                        
-                                                        <h5>...${file_name}</h5>
+                                                        <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">                                                        
                                                         <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Arquivo" target="_blank">
@@ -1084,7 +1088,7 @@ $(() => {
                                                         <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon"> 
                                                     </div>
                                                     <div class="col-md-6 px-0 py-13">                                                        
-                                                        <h5>...${file_name}</h5>
+                                                        <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">                                                        
                                                         <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Imagem"  target="_blank">
@@ -1094,8 +1098,10 @@ $(() => {
                                                 break;
                                             }
                                             
-                                        }                                        
+                                        }
+                                        
                                         div+=`</div>`;
+                                        
                                     });
                                 
                 div+= `             
