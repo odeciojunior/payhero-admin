@@ -36,13 +36,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=04') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=20') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=2545') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=20') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=5') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=20') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=20') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
 
@@ -54,17 +54,17 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=2') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=20') }}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=14') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=20') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=123') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=72') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=33') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=20') }}">
     @stack('css')
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>

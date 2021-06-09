@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Events\PixExpiredEvent;
+use Modules\Core\Services\CloudFlareService;
 
 class GenericCommand extends Command
 {
@@ -12,27 +14,17 @@ class GenericCommand extends Command
 
     protected $description = 'Command description';
 
+    private $cloudflareService;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->cloudflareService = new CloudFlareService();
     }
 
     public function handle()
     {
-        $sales = Sale::with('transactions')
-            ->whereHas('transactions', function ($query) {
-            $query->where('tracking_required', false);
-        })->get();
-
-        foreach ($sales as $sale) {
-            try {
-                Redis::connection('redis-statement')->set(
-                    "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()
-                );
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-            }
-        }
     }
 }
 

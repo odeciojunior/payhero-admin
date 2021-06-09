@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
@@ -408,5 +408,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=' . random_int(100, 10000)) }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=' . uniqid()) }}"></script>
 @endpush

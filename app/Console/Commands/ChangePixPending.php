@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
-use Modules\Core\Services\TransactionsService;
+use Modules\Core\Services\PixService;
 
-class CheckGetnetTransactions extends Command
+class ChangePixPending extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:getnet-transactions';
+    protected $signature = 'change:pixpending';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command set pix expired';
 
     /**
      * Create a new command instance.
@@ -34,6 +33,9 @@ class CheckGetnetTransactions extends Command
 
     public function handle()
     {
-        (new TransactionsService())->verifyGetnetTransactions();
+        $pixService = new PixService();
+        $pixService->changePixPending();
+        $this->line('feitoo');
     }
+
 }

@@ -171,11 +171,14 @@ $(document).ready(function () {
             ).val()}&plan=${$("#plan").val()}`;
         }
 
-        if ($("#type_recovery option:selected").val() == 1) {
+        let typeRecoverySelected = $("#type_recovery option:selected").val();
+        if (typeRecoverySelected == 1) {
             return `/api/checkout${url}`;
-        } else if ($("#type_recovery option:selected").val() == 3) {
+        } else if (typeRecoverySelected == 3) {
             return `/api/recovery/getrefusedcart${url}`;
-        } else if ($("#type_recovery option:selected").val() == 5) {
+        } else if (typeRecoverySelected == 4) {
+            return `/api/recovery/get-pix${url}`;
+        } else if (typeRecoverySelected == 5) {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
@@ -204,10 +207,13 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                const BOLETO_TYPE = '5'
+
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                if (response.data == "" && $("#type_recovery").val() == 1) {
+                let typeRecovery = $('#type_recovery').val();
+                if (response.data == "" && typeRecovery) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
                         "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
@@ -216,7 +222,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    $("#type_recovery").val() == 5
+                    typeRecovery
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -226,7 +232,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    $("#type_recovery").val() == 3
+                    typeRecovery
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -248,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if ($("#type_recovery").val() == "5") {
+                    if (typeRecovery == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -405,7 +411,7 @@ $(document).ready(function () {
             value.whatsapp_link +
             "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
         data +=
-            "<td style='padding:0 !important;' class='display-sm-none text-right' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
+            "<td style='padding:0 !important;' class='display-sm-none text-center' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
             value.link +
             "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
         data +=
@@ -525,7 +531,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img src='" +
+                "<img onerror=this.src='/modules/global/img/produto.png' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +

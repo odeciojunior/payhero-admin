@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Transfers\Getnet\Details;
@@ -73,6 +74,10 @@ class GetNetStatementService
 
             $this->preparesNodeTransactions($transactions);
             $this->preparesNodeAdjustments($adjustments);
+        }
+
+        if (in_array($this->filters['payment_method'], ['ALL', 'PIX']) && $this->filters['status'] != 'PENDING_DEBIT') {
+            $this->preparesDatabasePixWithSaleSearch();
         }
 
         $this->preparesDatabasePendingDebtsWithSaleSearch();
@@ -455,6 +460,94 @@ class GetNetStatementService
                 }
 
             }
+        }
+    }
+
+    private function preparesDatabasePixWithSaleSearch(): void
+    {
+
+        $companyId = $this->filters['company_id'];
+
+        $pix_sales = Sale::select('transactions.value as transaction_value', 'transactions.status as transaction_status',
+            'transactions.release_date', 'transactions.withdrawal_id',
+            'sales.start_date', 'sales.end_date', 'sales.has_valid_tracking', 'sales.id', 'sales.delivery_id', 'transactions.gateway_released_at')
+            ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('payment_method', Sale::PIX_PAYMENT)
+            ->where('transactions.type', Transaction::TYPE_PRODUCER)
+            ->where('sales.status', Sale::STATUS_APPROVED)
+            ->whereCompanyId($companyId);
+
+        if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
+            $pix_sales->where('sales.id', $this->filters['sale_id']);
+        }
+
+        if(request('dateRange')) {
+
+            $dates = explode(' - ', request('dateRange') ?? '');
+            $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
+            $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
+            $pix_sales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
+            $pix_sales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
+        }
+
+        $pix_sales = $pix_sales->get();
+
+        foreach ($pix_sales as $pix_sale) {
+            $details = new Details();
+
+            if (!empty($pix_sale->delivery_id)) {
+
+                if ($pix_sale->has_valid_tracking == false) {
+                    $details->setStatus('Aguardando postagem válida')
+                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
+                } elseif ($pix_sale->transaction_status == 'transfered') {
+                    $details->setStatus('Liquidado')
+                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_PAID);
+                } else {
+                    $details->setStatus('Aguardando saque')
+                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_WAITING_WITHDRAWAL);
+                }
+
+            } else {
+                if (empty($pix_sale->release_date) || $pix_sale->release_date <= \Carbon\Carbon::now()->format('Y-m-d')) {
+                    $details->setStatus('Aguardando liquidação')
+                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_WAITING_LIQUIDATION);
+                } elseif (empty($pix_sale->withdrawal_id)) {
+                    $details->setStatus('Aguardando saque')
+                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_WAITING_WITHDRAWAL);
+                } else {
+                    $details->setStatus('Liquidado')
+                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setType(Details::STATUS_PAID);
+                }
+            }
+
+            $sequence = $pix_sale->end_date ? Carbon::parse($pix_sale->end_date)->format('Ymd') : 0;
+            $value = $pix_sale->transaction_value / 100;
+
+            $order = new Order();
+            $order = $order->setSaleId($pix_sale->id)
+                ->setHashId(Hashids::connection('sale_id')->encode($pix_sale->id))
+                ->setOrderId('');
+
+            $statementItem = new StatementItem();
+            $statementItem->amount = $value;
+            $statementItem->order = $order;
+            $statementItem->details = $details;
+            $statementItem->type = StatementItem::TYPE_TRANSACTION;
+            $statementItem->transactionDate = $pix_sale->end_date ? \Carbon\Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
+            $statementItem->date = $pix_sale->end_date ? \Carbon\Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
+            $statementItem->subSellerRateConfirmDate = $pix_sale->gateway_released_at ?? '';
+            $statementItem->sequence = $sequence;
+
+            $this->totalInPeriod += $value;
+            $this->totalChargeback += $value;
+            $this->statementItems[] = $statementItem;
         }
     }
 

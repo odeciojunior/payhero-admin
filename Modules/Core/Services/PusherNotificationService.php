@@ -32,7 +32,7 @@ class PusherNotificationService
     /**
      * @var string
      */
-    private static $appId = '0ec01e912688856aef6b';
+    private static $appId = '1205078';
 
     /**
      * @param Sale $sale

@@ -1,8 +1,9 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=01') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=07') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=08') }}">
 @endpush
 
 @section('content')
@@ -31,7 +32,8 @@
                                     <div class="col-md-6">
                                         <div class="row row-flex row-title">
                                             <h4 class="title-pad mr-5"></h4>
-                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
+                                            <span id="show-status"
+                                                  class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
                                         </div>
                                         <small class="card-text gray" id="created_at"></small>
                                     </div>
@@ -65,11 +67,13 @@
                             </a>
                         </li>
                         <li class="nav-item tab_links-panel" role="presentation">
-                            <a id="tab_links" class="nav-link" data-toggle="tab" href="#tab_links-panel" aria-controls="tab_links" role="tab">
+                            <a id="tab_links" class="nav-link" data-toggle="tab" href="#tab_links-panel"
+                               aria-controls="tab_links" role="tab">
                                 Links
                             </a>
                         </li>
-                        <li class="nav-item tab_settings_affiliate-panel" role="presentation" style="margin-left: auto;margin-right: 10px">
+                        <li class="nav-item tab_settings_affiliate-panel" role="presentation"
+                            style="margin-left: auto;margin-right: 10px">
                             <a id="tab_settings_affiliate" class="nav-link"
                                data-toggle="tab" href="#tab_settings_affiliate-panel"
                                aria-controls="tab_settings_affiliate" role="tab">
@@ -107,9 +111,10 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=s0')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=s01')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=s04')}}"></script>
+        <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v='. uniqid())}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v='. uniqid())}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v='. uniqid())}}"></script>
+        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
     @endpush
 @endsection
 

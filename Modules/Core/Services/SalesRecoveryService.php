@@ -85,16 +85,19 @@ class SalesRecoveryService
                 $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('customers as customer', function ($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
-            })->whereIn('sales.status', $status)->where([
-                ['sales.payment_method', $paymentMethod],
-            ])->with([
+            })
+            ->whereIn('sales.status', $status)
+            ->where('sales.payment_method', $paymentMethod)
+            ->with([
                 'project',
                 'customer',
                 'project.domains' => function ($query) {
-                    $query->where('status', 3)//dominio aprovado
+                    $query->where('status', 3) //dominio aprovado
                     ->first();
                 },
             ]);
+
+
 
         if (!empty($customer)) {
             $customerSearch = $customerModel->where('name', 'like', '%' . $customer . '%')->pluck('id')->toArray();

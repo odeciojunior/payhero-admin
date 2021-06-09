@@ -62,6 +62,7 @@ class Pixel extends Model
         'checkout',
         'purchase_boleto',
         'purchase_card',
+        'purchase_pix',
         'affiliate_id',
         'apply_on_plans',
         'code_meta_tag_facebook',

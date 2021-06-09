@@ -412,6 +412,26 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#export-excel").show();
                     $.each(response.data, function (index, value) {
+                        let start_date='';
+                        if (value.start_date) {
+                            start_date=value.start_date.split(/\s/g);//data inicial
+                            start_date= "<strong class='bold-mobile'>"+
+                                        start_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        start_date[1]
+                                    +" </small>";
+                        }
+                        
+                        let end_date='';
+                        if (value.end_date) {
+                            end_date=value.end_date.split(/\s/g);//data final
+                            end_date= "<strong class='bold-mobile'>"+
+                                        end_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        end_date[1]
+                                    +" </small>";
+                        }
+                        
                         let tableClass = "";
                         if (
                             value.has_shopify_integration != null &&
@@ -491,12 +511,14 @@ $(document).ready(function () {
                                             ${cupomCode}
                                         </div>
                                     </td>
-                                    <td>${value.product}${
-                                value.affiliate != null &&
-                                value.user_sale_type == "producer"
-                                    ? `<br><small>(Afiliado: ${value.affiliate})</small>`
-                                    : ""
-                            } <br> <small>${value.project}</small></td>
+                                    <td><strong class="bold-mobile">${value.product}</strong>
+                                    ${
+                                        value.affiliate != null &&
+                                        value.user_sale_type == "producer"
+                                            ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
+                                            : ""
+                                    } 
+                                    <br> <small class="gray font-size-12">${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${
                                         value.client
                                     }</td>
@@ -505,12 +527,11 @@ $(document).ready(function () {
                                             value.brand
                                         }.png'  style='width: 45px'>
                                     </td>
-                                    <td>
-                                       <div class="text-sm-center text-md-left">
-                                            <span class="badge badge-${
+                                    <td class='text-center'>
+                                            <span class="status-sale badge badge-${
                                                 statusArray[value.status]
                                             } ${
-                                value.status_translate === "Pendente"
+                                value.status_translate === "Pendente" && value.brand !='pix'
                                     ? "boleto-pending"
                                     : ""
                             }" ${
@@ -530,13 +551,12 @@ $(document).ready(function () {
                                                 <img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
                                                        : ""
                                                }
-                                        </div>
                                     </td>
-                                    <td class='display-sm-none display-m-none'>${
-                                        value.start_date
+                                    <td class='display-sm-none display-m-none text-left font-size-14'>${
+                                        start_date
                                     }</td>
-                                    <td class='display-sm-none'>${
-                                        value.end_date
+                                    <td class='display-sm-none text-left font-size-14'>${
+                                        end_date
                                     }</td>
                                     <td style='white-space: nowrap;' class="text-center text-md-right">
                                         ${
@@ -647,7 +667,7 @@ $(document).ready(function () {
                     '<span class="font-size-30 bold">0</span>'
                 );
                 $("#commission, #total").html(
-                    '<span class="font-size-30 bold">R$ 0,00</span>'
+                    '<span style="color:#959595">R$</span> <span class="font-size-30 bold">0,00</span>'
                 );
 
                 if (response.total_sales) {
@@ -656,10 +676,10 @@ $(document).ready(function () {
                         `<span class="font-size-30 bold"> ${response.total_sales} </span>`
                     );
                     $("#commission").html(
-                        `R$ <span class="font-size-30 bold"> ${response.commission} </span>`
+                        `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.commission} </span>`
                     );
                     $("#total").html(
-                        `R$ <span class="font-size-30 bold"> ${response.total} </span>`
+                        `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.total} </span>`
                     );
                 }
             },

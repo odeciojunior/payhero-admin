@@ -3,11 +3,11 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
-        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=01') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
         <style>
             .fas {
                 color: #9c47fc;

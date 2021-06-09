@@ -175,13 +175,14 @@
                                     </div>
                                     {{-- INPUT PERCENTAGE BOLETO VALUE --}}
                                     <div class="form-group col-3">
-                                        <label for="percentage-value" class="font-text">% Boleto</label>
+                                        <label for="percentage-boleto-value" class="font-text">% Boleto</label>
                                         <input name="value_percentage_purchase_boleto"
-                                               id="percentage-value"
+                                               id="percentage-boleto-value"
                                                type="text"
                                                class="form-control"
                                                placeholder="100" maxlength='3'>
                                     </div>
+
                                     {{-- INPUT SELECT PLANS --}}
                                     <div class='form-group col-12'>
                                         <label for="add_pixel_plans" class="form-control-label">
@@ -201,35 +202,45 @@
                                     <div class='mb-1 col-12'>
                                         <label>Rodar Pixel:</label>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="checkout" class='mb-10'>Checkout</label>
+                                            <label for="checkout" class='mb-10'>Checkout (venda)</label>
                                             <br>
                                             <label class="switch">
-                                                <input type="checkbox" value="true" name='checkout'
-                                                       class='check pixel-checkout' checked>
+                                                <input type="checkbox" value="" name='checkout'
+                                                       class='checkout' checked>
                                                 <span class="slider round"></span>
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="cartao">Purchase (cartão)</label>
+                                            <label for="purchase_card">Purchase (cartão)</label>
                                             <br>
                                             <label class='switch'>
-                                                <input type="checkbox" value="true" name='purchase_card'
-                                                       class='check pixel-purchase-card'
+                                                <input type="checkbox" value="" name='purchase_card'
+                                                       class='purchase-card'
                                                        checked>
                                                 <span class='slider round'></span>
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="boleto">Purchase (boleto)</label>
+                                            <label for="purchase_boleto">Purchase (boleto)</label>
                                             <label class='switch'>
-                                                <input type="checkbox" value="true" name='purchase_boleto'
-                                                       class='check pixel-purchase-boleto' checked>
+                                                <input type="checkbox" value="" name='purchase_boleto'
+                                                       class='purchase-boleto' checked>
+                                                <span class='slider round'></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="switch-holder">
+                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;‎ <br> (pix)</label>
+                                            <label class='switch'>
+                                                <input type="checkbox" value="" name='purchase_pix'
+                                                       class='purchase-pix' checked>
                                                 <span class='slider round'></span>
                                             </label>
                                         </div>

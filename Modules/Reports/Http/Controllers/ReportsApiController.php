@@ -100,8 +100,11 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN 1 ELSE 0 END) AS contCreditCardAproved,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueBoleto,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN 1 ELSE 0 END) AS contBoletoAproved,
+                                                        SUM(CASE WHEN sales.payment_method = 4 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalValuePix,
+                                                        SUM(CASE WHEN sales.payment_method = 4 AND sales.status = 1 THEN 1 ELSE 0 END) AS contPixAproved,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status != 99 THEN 1 ELSE 0 END) AS contCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status != 99 THEN 1 ELSE 0 END) AS contBoleto,
+                                                        SUM(CASE WHEN sales.payment_method = 4 AND sales.status != 99 THEN 1 ELSE 0 END) AS contPix,
                                                         SUM(CASE WHEN sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalPaidValueAproved,
                                                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS contMobile,
                                                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS contDesktop")
@@ -134,9 +137,12 @@ class ReportsApiController extends Controller
                 $totalValueCreditCard = $details->totalValueCreditCard;
                 $contCreditCardAproved = $details->contCreditCardAproved;
                 $totalValueBoleto = $details->totalValueBoleto;
+                $totalValuePix = $details->totalValuePix;
                 $contBoletoAproved = $details->contBoletoAproved;
+                $contPixAproved = $details->contPixAproved;
                 $contCreditCard = $details->contCreditCard;
                 $contBoleto = $details->contBoleto;
+                $contPix = $details->contPix;
                 $totalPaidValueAproved = $details->totalPaidValueAproved;
                 $contMobile = $details->contMobile;
                 $contDesktop = $details->contDesktop;
@@ -150,6 +156,7 @@ class ReportsApiController extends Controller
 
                 $cartaoConvert = $contCreditCardAproved.'/'.$contCreditCard;
                 $boletoConvert = $contBoletoAproved.'/'.$contBoleto;
+                $pixConvert = $contPixAproved.'/'.$contPix;
 
                 if ($contBoleto != 0) {
                     $convercaoBoleto = number_format((intval($contBoletoAproved) * 100) / intval($contBoleto), 2, ',',
@@ -158,6 +165,11 @@ class ReportsApiController extends Controller
 
                 if ($contCreditCard != 0) {
                     $convercaoCreditCard = number_format((intval($contCreditCardAproved) * 100) / intval($contCreditCard),
+                        2, ',', ' . ');
+                }
+
+                if ($contPixAproved != 0) {
+                    $convercaoPix = number_format((intval($contPixAproved) * 100) / intval($contPix),
                         2, ',', ' . ');
                 }
 
@@ -174,6 +186,8 @@ class ReportsApiController extends Controller
                         2, ',', ' . ');
                     $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved),
                         2, ',', ' . ');
+                    $totalPercentPaidPix = number_format((intval($totalValuePix) * 100) / intval($totalPaidValueAproved),
+                                                            2, ',', ' . ');
                     $ticketMedio = number_format($totalPaidValueAproved / $countSalesAproved, 2, ',', '.');
                 }
             }
@@ -182,6 +196,7 @@ class ReportsApiController extends Controller
                     'label_list' => ['', ''],
                     'credit_card_data' => [0, 0],
                     'boleto_data' => [0, 0],
+                    'pix_data' => [0, 0],
                     'currency' => '',
                 ];
             }
@@ -198,16 +213,20 @@ class ReportsApiController extends Controller
                 'contInDispute' => $countSalesInDispute ?? 0,
                 'totalPercentCartao' => $totalPercentPaidCredit ?? 0,
                 'totalPercentPaidBoleto' => $totalPercentPaidBoleto ?? 0,
+                'totalPercentPaidPix' => $totalPercentPaidPix ?? 0,
                 'totalValueBoleto' => isset($totalValueBoleto) ? FoxUtils::formatMoney($totalValueBoleto) : 00,
                 'totalValueCreditCard' => isset($totalValueCreditCard) ? FoxUtils::formatMoney($totalValueCreditCard) : 00,
+                'totalValuePix' => isset($totalValuePix) ? FoxUtils::formatMoney($totalValuePix) : 00,
                 'chartData' => $chartData,
                 'currency' => $currency ?? 0,
                 'convercaoBoleto' => $convercaoBoleto ?? 0,
                 'convercaoCreditCard' => $convercaoCreditCard ?? 0,
+                'convercaoPix' => $convercaoPix ?? 0,
                 'conversaoMobile' => $conversaoMobile ?? 0,
                 'conversaoDesktop' => $conversaoDesktop ?? 0,
                 'cartaoConvert' => $cartaoConvert ?? 0,
                 'boletoConvert' => $boletoConvert ?? 0,
+                'pixConvert' => $pixConvert ?? 0,
                 'plans' => $plans ?? 0,
                 'ticketMedio' => $ticketMedio ?? number_format(0,2, ',', '.)'),
             ]);

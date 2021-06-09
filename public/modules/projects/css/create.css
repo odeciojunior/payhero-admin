@@ -31,7 +31,7 @@ a:hover {
 .input-group-text {
     color: #828282;
     font-size: 16px;
-    padding: 16px 14px 16px 16px;
+    padding: 16px 14px 16px 16px !important;
     border-radius: 8px;
     border-color: #7070704D;
     height: auto;

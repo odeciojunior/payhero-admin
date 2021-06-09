@@ -284,7 +284,19 @@ $(() => {
 
     function renderSale(sale) {
         //Dados da venda
-        $("#sale-code").text(sale.id);
+        let paymentMethod = '';
+
+        if (sale.payment_method == 1) {
+            paymentMethod = 'Cartão';
+        } else if (sale.payment_method == 3) {
+            paymentMethod = 'Debito';
+        } else if (sale.payment_method == 4) {
+            paymentMethod = 'PIX';
+        } else {
+            paymentMethod = 'Boleto';
+        }
+
+        $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
             $("#sale-code").append(
                 `<span class="text-muted font-size-16 d-block mt-1"> Upsell → ${sale.upsell}</span>`
@@ -295,16 +307,9 @@ $(() => {
                 `<span class="text-muted font-size-16 d-block mt-1"> Order Bump </span>`
             );
         }
-        $("#payment-type").text(
-            "Pagamento via " +
-                (sale.payment_method === 2 ? "Boleto" : "Cartão " + sale.flag) +
-                " em " +
-                sale.start_date +
-                " às " +
-                sale.hours
-        );
-        if (sale.release_date != "") {
-            $("#release-date").text("Data de liberação: " + sale.release_date);
+        $('#payment-type').text('Pagamento via ' + paymentMethod + ' em ' + sale.start_date + ' às ' + sale.hours);
+        if (sale.release_date != '') {
+            $('#release-date').text('Data de liberação: ' + sale.release_date);
         } else {
             $("#release-date").text("");
         }
@@ -671,6 +676,11 @@ $(() => {
             $("#details-boleto").show();
         }
 
+        if (sale.payment_method === 4) {
+            $("#details-card").hide();
+            $("#details-boleto").hide();
+        }
+
         $("#checkout-attempts").hide();
         if (sale.payment_method === 1) {
             $("#checkout-attempts")
@@ -679,7 +689,7 @@ $(() => {
         }
 
         if (
-            (sale.payment_method == 1 || sale.payment_method == 3) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || sale.payment_method == 4 ) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
@@ -738,7 +748,7 @@ $(() => {
             $(".div-refund-observation").hide();
         }
         if (sale.thank_page_url != "") {
-            $("#thank-page-url").text("Link página de obrigado:").show();
+            $("#thank-page-url").text(sale.thank_label_text).show();
             $(".btn-copy-thank-page-url").attr("link", sale.thank_page_url);
             $(".btn-copy-thank-page-url").show();
         } else {
@@ -998,7 +1008,7 @@ $(() => {
             }
             div += `<div class="row align-items-baseline justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-lg-5">
                             <h4 class="table-title mb-0">${value.name}</h4>
@@ -1115,7 +1125,7 @@ $(() => {
         partial = 0,
         refundObservation
     ) {
-        loadingOnScreen();
+        loadingOnChart("#modal-refund");
         $.ajax({
             method: "POST",
             url: "/api/sales/refund/" + sale,
@@ -1130,12 +1140,14 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
             },
             success: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove("#modal-refund");
+                $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
                 atualizar(currentPage);

@@ -265,37 +265,36 @@ $(document).ready(function () {
             success: (response) => {
                 loadOnAnyEllipsis(".price", true);
                 $(".saldoPendente").html(
-                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="pending-balance">0,00</span> </strong>'
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold pending-balance">0,00</span>'
                 );
                 $(".saldoDisponivel").html(
-                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span> </strong>'
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold available-balance">0,00</span>'
                 );
                 $(".saltoTotal").html(
-                    '<span class="currency" style="color:#687089"> <small class="font-size-12">R$ </small> <strong> </span><span class="total-balance">0,00</span> </strong>'
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold total-balance">0,00</span>'
                 );
                 $(".saldoBloqueado").html(
-                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="blocked-balance">0,00</span> </strong>'
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">0,00</span>'
                 );
-                $(".saldoDebito").html(
-                    '<span class="currency"> <small class="font-size-12">R$ </small> <strong> </span><span class="debit-balance">0,00</span> </strong>'
-                );
+                // $(".saldoDebito").html(
+                //     '<span style="color:#959595">R$ </span><span class="font-size-30 bold debit-balance">0,00</span>'
+                // );
 
                 // Saldo bloqueado
                 $(".saldoBloqueado").html(
-                    '<span class="currency"><small class="font-size-12"> R$ </small> </span> <strong> <span class="blocked-balance">' +
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">' +
                         response.blocked_balance +
-                        "</span> </strong>"
+                        "</span>"
                 );
                 // Saldo Debito Pendente
-                //$('.saldoDebito').html(`<span class="currency" style="font-size: 13px; color: #E61A1A;">- R$</span> <span class="debit-balance" style="font-weight: bold;letter-spacing: 0.07px;color: #E61A1A;">${response.pending_debt_balance}</span>`);
                 $("#go-to-pending-debt").show();
                 $("#go-to-pending-debt").html(response.pending_debt_balance);
 
                 $(".totalConta").html(
-                    '<span class="currency">R$ </span><span class="total-balance">0,00</span>'
+                    '<span style="color:#959595">R$ </span><span class="total-balance">0,00</span>'
                 );
                 $(".total_available").html(
-                    '<span class="currency">R$ </span>' +
+                    '<span style="color:#959595">R$ </span>' +
                         isEmpty(response.available_balance)
                 );
 
@@ -964,25 +963,25 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, data) {
                         tableData += `<tr class="s-table table-finance-transfers">
-                            <td class="text-center" style="grid-area: codigo">#${
+                            <td style="grid-area: codigo">#${
                                 data.id
                             }</td>
-                            <td class="text-left font-md-size-18" style="grid-area: sale"> ${
+                            <td class="text-left font-size-14" style="grid-area: sale"> <strong>${
                                 data.account_information_bank
-                            } <br> <small class="gray">${
+                            }</strong> <br> <small class="gray font-size-12">${
                             data.account_information
                         }</small> </td>
-                            <td class="text-left" style="grid-area: date-start"> <strong class="bold-mobile">${
+                            <td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">${
                                 data.date_request
-                            } </strong> <br> <small class="gray"> ${
+                            } </strong> <br> <small class="gray font-size-12"> ${
                             data.date_request_time
                         } </small></td>
-                            <td class="text-left" style="grid-area: date-end"> <strong class="bold-mobile">${
+                            <td class="text-left font-size-14" style="grid-area: date-end"> <strong class="bold-mobile">${
                                 data.date_release
-                            } </strong> <br> <small class="gray"> ${
+                            } </strong> <br> <small class="gray font-size-12"> ${
                             data.date_release_time
                         } </small></td>
-                            <td class="text-right text-sm-right" style="grid-area: status" class="shipping-status">
+                            <td class="text-center" style="grid-area: status" class="shipping-status">
                                 <span data-toggle="tooltip" data-placement="left" title="${
                                     data.status_translated
                                 }" class="badge badge-${
@@ -1261,7 +1260,7 @@ $(document).ready(function () {
                         <td style="vertical-align: middle; grid-area: date">
                             ${item.date}
                         </td>
-                         <td class="text-xs-right text-md-left" style="grid-area: status">
+                         <td style="grid-area: status" class="text-center">
                             <span data-toggle="tooltip" data-placement="left" title="${
                                 item.details.status
                             }" class="badge badge-sm badge-${

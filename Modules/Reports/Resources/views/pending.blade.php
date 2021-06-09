@@ -5,9 +5,26 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
+        <style>
+            @media only screen and (min-width: 768px){
+                .col-md-4.card {
+                    margin-right: 10px;
+                    max-width: calc(33.33% - 10px);
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width : 767px){
+                .col-sm-6.card {
+                    margin-right: 10px;
+                    max-width: calc(50% - 10px);
+                }
+            }
+            strong span{
+                color: #57617c;
+            }
+        </style>
     @endpush
 
     <div class="page mb-0">
@@ -56,11 +73,12 @@
                                                 <option value="">Boleto e cartão de crédito</option>
                                                 <option value="1">Cartão de crédito</option>
                                                 <option value="2">Boleto</option>
+                                                <option value="4">PIX</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-3">
                                             <label for="sale_code">Transação</label>
-                                            <input type="text" id="sale_code" placeholder="transação">
+                                            <input type="text" id="sale_code" placeholder="transação" class="input-pad">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
                                             <label for="date_type">Data</label>
@@ -71,8 +89,8 @@
                                         </div>
                                         <div class="col-sm-6 col-md-3 form-icons">
                                             <label for="date_range">‏‏‎ ‎</label>
-                                            <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-18"></i>
-                                            <input name='date_range' id="date_range" class="select-pad"
+                                            <i style="right: 25px;top: 37px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-18"></i>
+                                            <input name='date_range' id="date_range" class="input-pad"
                                             placeholder="Clique para editar..." readonly>
                                         </div>
                                     </div>
@@ -121,29 +139,28 @@
                         <!-- Resumo -->
                         <div class="fixhalf"></div>
                         @if(!auth()->user()->hasRole('attendance'))
-                            <div class="card shadow p-20" style='display:block;'>
-                                <div class="row justify-content-center">
-                                    <div class="col-md-4">
-                                        <h6 class="text-center green-gradient">
-                                            <i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i>
-                                            Quantidade de vendas
-                                        </h6>
-                                        <h4 id="total_sales" class="number text-center green-gradient"></h4>
+                            <div class='container col-sm-12 d-lg-block'>
+                                <div class='row'>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Quantidade de vendas</h6>
+                                            <h4 id="total_sales" class="font-size-30 bold"></h4>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h6 class="text-center orange-gradient">
-                                            <i class="material-icons align-middle mr-1 orange-gradient">
-                                                attach_money </i>
-                                            Comissão
-                                        </h6>
-                                        <h4 id="commission_pending" class="number text-center orange-gradient"></h4>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Comissão</h6>
+                                            <h4 id="commission_pending"></h4>
+                                        </div>
+                                        <div class="s-border-right yellow"></div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h6 class="text-center green-gradient">
-                                            <i class="material-icons align-middle green-gradient mr-1"> trending_up </i>
-                                            Valor Total </h6>
-                                        <h4 id="total" class="number text-center green-gradient">
-                                        </h4>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Valor Total</h6>
+                                            <h4 id="total">
+                                            </h4>
+                                        </div>
+                                        <div class="s-border-right red"></div>
                                     </div>
                                 </div>
                             </div>
@@ -157,15 +174,15 @@
                                 <table class="table-vendas table unify table-striped">
                                     <thead>
                                     <tr>
-                                        <th class="table-title">Transação</th>
-                                        <th class="table-title">Projeto</th>
-                                        <th class="table-title">Cliente</th>
-                                        <th class="table-title display-sm-none display-m-none display-lg-none">Forma
-                                        </th>
-                                        <th class="table-title display-sm-none display-m-none display-lg-none">Data</th>
-                                        <th class="table-title">Pagamento</th>
-                                        <th class="table-title">Comissão</th>
-                                        <th class="table-title"></th>
+                                        <td class="table-title">Transação</td>
+                                        <td class="table-title">Projeto</td>
+                                        <td class="table-title">Cliente</td>
+                                        <td class="table-title display-sm-none display-m-none display-lg-none">Forma
+                                        </td>
+                                        <td class="table-title display-sm-none display-m-none display-lg-none">Data</td>
+                                        <td class="table-title">Pagamento</td>
+                                        <td class="table-title">Comissão</td>
+                                        <td class="table-title"></td>
                                     </tr>
                                     </thead>
                                     <tbody id="body-table-pending"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
@@ -196,7 +213,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/reports/js/detail.js?v=s08') }}"></script>
+    <script src="{{ asset('modules/reports/js/detail.js?v=' . uniqid()) }}"></script>
     <script src='{{ asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000)) }}'></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>

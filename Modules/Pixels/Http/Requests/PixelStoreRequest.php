@@ -20,6 +20,7 @@ class PixelStoreRequest extends FormRequest
             'checkout' => 'nullable',
             'purchase_card' => 'nullable',
             'purchase_boleto' => 'nullable',
+            'purchase_pix' => 'nullable',
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',

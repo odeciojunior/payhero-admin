@@ -4,17 +4,21 @@ namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
 use Modules\Pixels\Transformers\PixelsResource;
+use Sentry\Response;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -69,7 +73,7 @@ class PixelsApiController extends Controller
 
             if (!empty($validator['affiliate_id'])) {
                 $validator['affiliate_id'] = hashids_decode($validator['affiliate_id']);
-                $affiliateId = hashids_decode($validator['affiliate_id']);
+                $affiliateId = $validator['affiliate_id'];
             } else {
                 $affiliateId = 0;
                 $validator['affiliate_id'] = null;
@@ -78,7 +82,7 @@ class PixelsApiController extends Controller
             $project = Project::find(hashids_decode($projectId));
 
             if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => __('controller.pixel.create.permission')], 403);
+                return response()->json(['message' => __('controller.pixel.permission.create')], 403);
             }
 
             $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($validator['add_pixel_plans']));
@@ -102,23 +106,28 @@ class PixelsApiController extends Controller
                 $isApi = true;
             }
 
+            if (empty($validator['value_percentage_purchase_boleto'])) {
+                $validator['value_percentage_purchase_boleto'] = 100;
+            }
+
             Pixel::create(
                 [
                     'project_id' => $project->id,
                     'name' => $validator['name'],
                     'code' => $validator['code'],
                     'platform' => $validator['platform'],
-                    'status' => $validator['status'] == "true",
-                    'checkout' => $validator['checkout'] == "true",
-                    'purchase_boleto' => $validator['purchase_boleto'] == "true",
-                    'purchase_card' => $validator['purchase_card'] == "true",
+                    'status' => (bool) $validator['status'],
+                    'checkout' => $validator['checkout'] == 'true',
+                    'purchase_boleto' => $validator['purchase_boleto'] == 'true',
+                    'purchase_card' => $validator['purchase_card'] == 'true',
+                    'purchase_pix' => $validator['purchase_pix'] == 'true',
                     'affiliate_id' => $validator['affiliate_id'],
                     'campaign_id' => $validator['campaign'] ?? null,
                     'apply_on_plans' => $applyPlanEncoded,
                     'purchase_event_name' => $validator['purchase-event-name'],
                     'facebook_token' => $facebookToken,
                     'is_api' => $isApi,
-                    'value_percentage_purchase_boleto' => empty($validator['value_percentage_purchase_boleto']) ? 100 : $validator['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
                 ]
             );
 
@@ -284,12 +293,14 @@ class PixelsApiController extends Controller
                     'checkout' => $validated['checkout'] == 'true',
                     'purchase_boleto' => $validated['purchase_boleto'] == 'true',
                     'purchase_card' => $validated['purchase_card'] == 'true',
+                    'purchase_pix' => $validated['purchase_pix'] == 'true',
                     'purchase_event_name' => $validated['purchase_event_name'] ?? null,
                     'facebook_token' => $validated['facebook_token_api'],
                     'is_api' => $validated['is_api'],
-                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto']
+                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
                 ]
             );
+
             if ($pixelUpdated) {
                 return response()->json('Sucesso', 200);
             }
@@ -353,6 +364,11 @@ class PixelsApiController extends Controller
 
             $project = $projectModel->find(current(Hashids::decode($projectId)));
             $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+            $pixel->platform_enum = Lang::get('definitions.enum.pixel.platform.' . $pixel->platform);
+
+            if (!Gate::allows('edit', [$project, $affiliateId])) {
+                return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
+            }
 
             activity()->on($pixelModel)->tap(
                 function (Activity $activity) use ($id) {
@@ -361,10 +377,6 @@ class PixelsApiController extends Controller
                 }
             )->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
 
-            if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
-            }
-
             $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
 
             return response()->json($pixel);
@@ -372,6 +384,81 @@ class PixelsApiController extends Controller
             report($e);
 
             return response()->json('Erro ao buscar pixel', 400);
+        }
+    }
+
+    public function getPixelConfigs($projectId): JsonResponse
+    {
+        try {
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project->pixelConfigs)) {
+                PixelConfig::create(['project_id' => $project->id]);
+            };
+
+            $project->load('pixelConfigs');
+            return response()->json(
+                [
+                    'data' => $project->pixelConfigs->makeHidden(
+                        ['id', 'project_id', 'created_at', 'updated_at', 'deleted_at']
+                    ),
+                    'message' => '',
+                    'success' => true,
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'message' => 'Ocorreu um erro tente novamente mais tarde!',
+                    'success' => false,
+                ],
+                400
+            );
+        }
+    }
+
+    public function storePixelConfigs(Request $request, $projectId): JsonResponse
+    {
+        try {
+            $data = $request->all();
+
+            $project = Project::with('pixelConfigs')->find(hashids_decode($projectId));
+
+            if (empty($project) || empty($project->pixelConfigs)) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                    ]
+                );
+            }
+
+            $project->pixelConfigs->update(
+                [
+                    'metatags_facebook' => $data['metatag-verification-facebook'],
+                ]
+            );
+
+            return response()->json(
+                [
+                    'data' => '',
+                    'success' => true,
+                    'message' => 'Configuração de Pixels atualizada com sucesso'
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                ],
+                400
+            );
         }
     }
 

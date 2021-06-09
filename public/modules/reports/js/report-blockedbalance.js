@@ -193,15 +193,33 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
+                        let start_date='';
+                        if (value.start_date) {
+                            start_date=value.start_date.split(/\s/g);//data inicial
+                            start_date= "<strong class='bold-mobile'>"+
+                                        start_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        start_date[1]
+                                    +" </small>";
+                        }
 
+                        let end_date='';
+                        if (value.end_date) {
+                            end_date=value.end_date.split(/\s/g);//data final
+                            end_date= "<strong class='bold-mobile'>"+
+                                        end_date[0]
+                                    +" </strong> <br> <small class='gray font-size-12'>"+
+                                        end_date[1]
+                                    +" </small>";
+                        }
                         dados = `  <tr>
-                                    <td class='display-sm-none display-m-none display-lg-none text-center'>
+                                    <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
                                         ${value.sale_code}
                                         ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
                                     </td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+                                    <td class="text-left font-size-14">${value.project}</td>
+                                    <td class="text-left font-size-14">${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${value.client}</td>
                                     <td>
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
@@ -321,14 +339,14 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total_sales').text('0');
-                $('#commission_blocked, #total').text('R$ 0,00');
+                $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
-                    $('#total_sales').text(response.total_sales);
-                    $('#commission_blocked').text(`R$ ${response.commission}`);
+                    $('#total_sales').html(response.total_sales);
+                    $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
                     $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
                     $('.blocked-balance-icon').attr('data-original-title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
-                    $('#total').text(`R$ ${response.total}`);
+                    $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
                 }
             }
         });

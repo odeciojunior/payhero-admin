@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=02') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=45451') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=04') }}">
     @endpush
 
     <!-- Page -->
@@ -215,223 +215,242 @@
                                 <input name='date_updated' id="date_updated" class="select-pad"
                                        placeholder="Clique para editar..." readonly>
                             </div>
-                            <div class="col-sm-6 col-md-4 d-flex flex-column justify-content-center">
-                                <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
-                                <label class="switch">
-                                    <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="height: 30px">
-                        <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
-                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
-                                 data-toggle="collapse"
-                                 data-target="#bt_collapse"
-                                 aria-expanded="false"
-                                 aria-controls="bt_collapse">
-                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                <span id="text-filtro">Filtros avançados</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-xl-3 mt-20">
-                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
-                                Aplicar filtros
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="fixhalf"></div>
-                <!-- Aviso Problemas com os Códigos -->
-                <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
-                    <div class="d-flex">
-                        <i class="material-icons mr-10">help</i>
-                        <div class="w-full">
-                            <strong class="font-size-16">Problemas com os códigos?</strong>
-                            <p class="font-size-14 pr-md-100 mb-5">
-                                Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
-                            </p>
-                        </div>
-                        <i class="material-icons pointer" data-dismiss="alert">close</i>
-                    </div>
-                </div>
-                <!-- Aviso de Saldo Bloqueado -->
-                <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10"
-                     style="display:none;">
-                    <div class="d-flex">
-                        <span class="o-info-help-1"></span>
-                        <div class="w-full">
-                            <strong class="font-size-16">Saldo Bloqueado</strong>
-                            <p class="font-size-14 pr-md-100 mb-5">
-                                Você possui <b>R$
-                                    <span id="blocked-balance"></span>
-                                    de saldo bloqueado</b> por não informar os códigos de rastreios de <b>
-                                    <span id="blocked-balance-sales"></span>
-                                    vendas</b>. Informe os códigos de rastreio dessas vendas para que o dinheiro seja
-                                transferido.
-                            </p>
-                        </div>
-                        <i class="material-icons pointer" data-dismiss="alert">close</i>
-                    </div>
-                </div>
-                <!-- Aviso de Exportação -->
-                <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
-                     style="display:none;">
-                    <div class="d-flex">
-                        <span class="o-info-help-1"></span>
-                        <div class="w-full">
-                            <strong class="font-size-16">Exportando seu relatório</strong>
-                            <p class="font-size-14 pr-md-100 mb-5">Sua exportação será entregue por e-mail para:
-                                <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
-                                tempo, dependendo de quantos registros você estiver exportando.
-                            </p>
-                        </div>
-                        <i class="material-icons pointer" data-dismiss="alert">close</i>
-                    </div>
-                </div>
-                <!-- Resumo -->
-                <div class="card shadow p-20" style='display:block;'>
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="text-center text-success" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
-                            <h4 id="total-trackings" class="number text-center text-success"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> markunread_mailbox </i> Postado</h6>
-                            <h4 id="percentual-posted" class="number text-center text-info"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
-                            <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-info" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> arrow_right_alt </i> Saiu para entrega</h6>
-                            <h4 id="percentual-out" class="number text-center text-info"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-success" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
-                            <h4 id="percentual-delivered" class="number text-center text-success"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-warning" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> error </i> Problema na entrega</h6>
-                            <h4 id="percentual-exception" class="number text-center text-warning"></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-center text-danger" style="white-space: nowrap;">
-                                <i class="material-icons align-middle mr-1"> error </i> Não informado</h6>
-                            <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tabela -->
-                <div class="fixhalf"></div>
-                <div class="card shadow " style="min-height: 300px">
-                    <div class="page-invoice-table table-responsive">
-                        <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
-                            <thead>
-                            <tr>
-                                <th class="table-title">Venda</th>
-                                <th class="table-title">Data de Aprovação</th>
-                                <th class="table-title">Produto</th>
-                                <th class="table-title">Status</th>
-                                <th class="table-title">Código de Rastreio</th>
-                                <th class="table-title" style="width:90px;"></th>
-                            </tr>
-                            </thead>
-                            <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
-                            {{-- js carrega... --}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination-trackings" class="pl-5 pr-md-15 pb-20"
-                    style="margin-top:10px;position:relative;float:right;">
-                        {{-- js carrega... --}}
-                    </ul>
-                </div>
-                <!-- Modal detalhes da venda-->
-                @include('sales::details')
-                <!-- End Modal -->
-                <!-- Modal detalhes tracking -->
-                <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog"
-                     tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg"
-                         style="width: 500px;">
-                        <div id='modal-tracking-details' class="modal-content">
-                            <div class="modal-header simple-border-bottom justify-content-center">
-                                <h4> Detalhes do rastreamento </h4>
-                            </div>
-                            <a data-dismiss="modal" role="button" style="position: absolute;right: 20px;top: 25px;">
-                                <i class="material-icons pointer">close</i>
-                            </a>
-                            <div class="modal-body">
-                                <h3 id="tracking-code" class="text-uppercase"></h3>
-                                <div class="p-10">
-                                    <div class="row">
-                                        <div class="col-lg-10 col-9"><p class="table-title"> Produto </p></div>
-                                        <div class="col-lg-2 col-3 text-center"><p class="table-title"> Qtde </p></div>
-                                    </div>
-                                    <div class="row align-items-center mb-20">
-                                        <div class="col-lg-10 col-9">
-                                            <div class="row align-items-center pl-10">
-                                                <img id="tracking-product-image" src="" width="50px"
-                                                     style="border-radius: 6px;">
-                                                <h4 id="tracking-product-name" class="table-title ml-10 ellipsis"
-                                                    style="flex: 1"></h4>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2 col-3 text-center">
-                                            <span id="tracking-product-amount" class="sm-text text-muted"></span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h4> Destino </h4>
-                                        <span id="tracking-delivery-address" class="table-title gray"></span>
-                                        <br>
-                                        <span id="tracking-delivery-neighborhood" class="table-title gray"></span>
-                                        <br>
-                                        <span id="tracking-delivery-zipcode" class="table-title gray"></span>
-                                        <br>
-                                        <span id="tracking-delivery-city" class="table-title gray"></span>
-                                    </div>
-                                    <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode'
-                                       title='Enviar e-mail com codigo de rastreio para o cliente'>
-                                        <i class='icon wb-envelope'></i> Enviar e-mail/sms para o cliente
-                                    </a>
-                                    <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
-                                        <a target="_blank" class="pointer text-body">Acessar link de rastreio</a>
-                                    </p>
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Status</th>
-                                            <th>Evento</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="table-checkpoint"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Modal -->
-            </div>
+                              <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
+                                  <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
+                                  <label class="switch">
+                                      <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
+                                      <span class="slider round"></span>
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row" style="height: 30px">
+                          <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                              <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                  data-toggle="collapse"
+                                  data-target="#bt_collapse"
+                                  aria-expanded="false"
+                                  aria-controls="bt_collapse">
+                                  <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                  <span id="text-filtro">Filtros avançados</span>
+                              </div>
+                          </div>
+                          <div class="col-6 col-xl-3 mt-20">
+                              <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                  <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                  Aplicar filtros
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="fixhalf"></div>
+                  <!-- Aviso Problemas com os Códigos -->
+                  <div id="alert-tracking-issues" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10">
+                      <div class="d-flex">
+                          <i class="material-icons mr-10">help</i>
+                          <div class="w-full">
+                              <strong class="font-size-16">Problemas com os códigos?</strong>
+                              <p class="font-size-14 pr-md-100 mb-5">
+                                  Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
+                              </p>
+                          </div>
+                          <i class="material-icons pointer" data-dismiss="alert">close</i>
+                      </div>
+                  </div>
+                  <!-- Aviso de Saldo Bloqueado -->
+                  <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10"
+                      style="display:none;">
+                      <div class="d-flex">
+                          <span class="o-info-help-1"></span>
+                          <div class="w-full">
+                              <strong class="font-size-16">Saldo Bloqueado</strong>
+                              <p class="font-size-14 pr-md-100 mb-5">
+                                  Você possui <b>R$
+                                      <span id="blocked-balance"></span>
+                                      de saldo bloqueado</b> por não informar os códigos de rastreios de <b>
+                                      <span id="blocked-balance-sales"></span>
+                                      vendas</b>. Informe os códigos de rastreio dessas vendas para que o dinheiro seja
+                                  transferido.
+                              </p>
+                          </div>
+                          <i class="material-icons pointer" data-dismiss="alert">close</i>
+                      </div>
+                  </div>
+                  <!-- Aviso de Exportação -->
+                  <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                      style="display:none;">
+                      <div class="d-flex">
+                          <span class="o-info-help-1"></span>
+                          <div class="w-full">
+                              <strong class="font-size-16">Exportando seu relatório</strong>
+                              <p class="font-size-14 pr-md-100 mb-5">Sua exportação será entregue por e-mail para:
+                                  <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
+                                  tempo, dependendo de quantos registros você estiver exportando.
+                              </p>
+                          </div>
+                          <i class="material-icons pointer" data-dismiss="alert">close</i>
+                      </div>
+                  </div>
+                  <!-- Resumo -->
+                  <div class='row'>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Total </h6>
+                                  <h4 id="total-trackings" class=" font-size-30 bold"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Postado </h6>
+                                  <h4 id="percentual-posted"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Em trânsito</h6>
+                                  <h4 id="percentual-dispatched"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Saiu para entrega</h6>
+                                  <h4 id="percentual-out"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Entregues</h6>
+                                  <h4 id="percentual-delivered"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Problema na entrega</h6>
+                                  <h4 id="percentual-exception"></h4>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h6   style="min-height:35px" class="font-size-14 gray-600"> Não informado</h6>
+                                  <h4 id="percentual-unknown"></h4>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Tabela -->
+                  <div class="fixhalf"></div>
+                  <div class="card shadow " style="min-height: 300px">
+                      <div class="page-invoice-table table-responsive">
+                          <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
+                              <thead>
+                              <tr>
+                                  <td class="table-title">Venda</td>
+                                  <td class="table-title">Data de Aprovação</td>
+                                  <td class="table-title">Produto</td>
+                                  <td class="table-title text-center">Status</td>
+                                  <td class="table-title">Código de Rastreio</td>
+                                  <td class="table-title" style="width:90px;"></td>
+                              </tr>
+                              </thead>
+                              <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
+                              {{-- js carrega... --}}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="row justify-content-center justify-content-md-end">
+                      <ul id="pagination-trackings" class="pl-5 pr-md-15 pb-20"
+                      style="margin-top:10px;position:relative;float:right;">
+                          {{-- js carrega... --}}
+                      </ul>
+                  </div>
+                  <!-- Modal detalhes da venda-->
+                  @include('sales::details')
+                  <!-- End Modal -->
+                  <!-- Modal detalhes tracking -->
+                  <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog"
+                      tabindex="-1">
+                      <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg"
+                          style="width: 500px;">
+                          <div id='modal-tracking-details' class="modal-content">
+                              <div class="modal-header simple-border-bottom justify-content-center">
+                                  <h4> Detalhes do rastreamento </h4>
+                              </div>
+                              <a data-dismiss="modal" role="button" style="position: absolute;right: 20px;top: 25px;">
+                                  <i class="material-icons pointer">close</i>
+                              </a>
+                              <div class="modal-body">
+                                  <h3 id="tracking-code" class="text-uppercase"></h3>
+                                  <div class="p-10">
+                                      <div class="row">
+                                          <div class="col-lg-10 col-9"><p class="table-title"> Produto </p></div>
+                                          <div class="col-lg-2 col-3 text-center"><p class="table-title"> Qtde </p></div>
+                                      </div>
+                                      <div class="row align-items-center mb-20">
+                                          <div class="col-lg-10 col-9">
+                                              <div class="row align-items-center pl-10">
+                                                  <img id="tracking-product-image" src="" width="50px"
+                                                      style="border-radius: 6px;">
+                                                  <h4 id="tracking-product-name" class="table-title ml-10 ellipsis"
+                                                      style="flex: 1"></h4>
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-2 col-3 text-center">
+                                              <span id="tracking-product-amount" class="sm-text text-muted"></span>
+                                          </div>
+                                      </div>
+                                      <div>
+                                          <h4> Destino </h4>
+                                          <span id="tracking-delivery-address" class="table-title gray"></span>
+                                          <br>
+                                          <span id="tracking-delivery-neighborhood" class="table-title gray"></span>
+                                          <br>
+                                          <span id="tracking-delivery-zipcode" class="table-title gray"></span>
+                                          <br>
+                                          <span id="tracking-delivery-city" class="table-title gray"></span>
+                                      </div>
+                                      <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode'
+                                        title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                          <i class='icon wb-envelope'></i> Enviar e-mail/sms para o cliente
+                                      </a>
+                                      <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
+                                          <a target="_blank" class="pointer text-body">Acessar link de rastreio</a>
+                                      </p>
+                                      <table class="table">
+                                          <thead>
+                                          <tr>
+                                              <th>Data</th>
+                                              <th>Status</th>
+                                              <th>Evento</th>
+                                          </tr>
+                                          </thead>
+                                          <tbody id="table-checkpoint"></tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- End Modal -->
+              </div>
+          </div>
+          {{-- Quando não tem projeto cadastrado  --}}
+              @include('projects::empty')
+          {{-- FIM projeto nao existem projetos--}}
         </div>
-
-        {{-- Quando não tem projeto cadastrado  --}}
-            @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
     </div>
 
     @push('scripts')

@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
@@ -64,6 +64,7 @@
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
+                                <option value="4">PIX Vencido</option>
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
@@ -345,7 +346,7 @@
     <!-- End Modal -->
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . uniqid()) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

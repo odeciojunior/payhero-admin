@@ -15,15 +15,6 @@ class TransactionResource extends JsonResource
     {
         $sale = $this->sale;
 
-        if (!empty($sale->flag)) {
-            $flag = $sale->flag;
-        } elseif ($sale->payment_method == 1 && empty($sale->flag)) {
-            $flag = 'generico';
-        } elseif ($sale->payment_method == 3 && empty($sale->flag)) {
-            $flag = 'debito';
-        } else {
-            $flag = 'boleto';
-        }
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
@@ -38,8 +29,8 @@ class TransactionResource extends JsonResource
                     ->getStatus($sale->status)),
             'start_date'              => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
             'end_date'                => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
-            'total_paid'              => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
-            'brand'                   => $flag,
+            'total_paid'              => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
+            'brand'                   => !empty($sale->flag)?$sale->flag:$this->sale->present()->getPaymentFlag(),
             'email_status'            => $sale->checkout ? $sale->checkout->present()->getEmailSentAmount() : 'Não enviado',
             'sms_status'              => $sale->checkout ? $sale->checkout->present()->getSmsSentAmount() : 'Não enviado',
             'recovery_status'         => $sale->checkout ? ($sale->checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado') : '',
@@ -64,7 +55,9 @@ class TransactionResource extends JsonResource
         if ($sale->owner_id == auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {
-                $data['cashback_value'] = FoxUtils::formatMoney($sale->cashback->value / 100);
+                if($sale->payment_method <> 4){
+                    $data['cashback_value'] = FoxUtils::formatMoney($sale->cashback->value / 100);
+                }
                 $data['total_paid'] = FoxUtils::formatMoney($this->value / 100);
             }
         } else {

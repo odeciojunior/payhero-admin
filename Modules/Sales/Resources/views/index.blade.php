@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=06') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=02') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4545') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -42,6 +42,9 @@
 
             .badge.badge-success  {
                 background-color: #5EE2A1;
+            }
+            .status-sale{
+                min-width: 84px;
             }
         </style>
     @endpush
@@ -100,9 +103,10 @@
                                 <div class="col-sm-12 col-md">
                                     <label for="forma">Forma de pagamento</label>
                                     <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                        <option value="">Boleto e cartão de crédito</option>
+                                        <option value="">Todas formas de pagamento</option>
                                         <option value="1">Cartão de crédito</option>
                                         <option value="2">Boleto</option>
+                                        <option value="4">Pix</option>
                                     </select>
                                 </div>
 
@@ -241,17 +245,16 @@
                             <div class="col-md-3">
                                 <div class="card shadow" style='display:block;'>
                                     <div class="card-body">
-                                        <h5 class="gray font-size-16"> Quantidade de vendas </h5>
+                                        <h5 class="font-size-14 gray-600">Quantidade</h5>
                                         <h4 id="total-sales" class="number"></h4>
                                     </div>
-                                    <div class="s-border-right green"></div>
                                 </div>
                             </div>
 
                                 <div class="col-md-3">
                                     <div class="card shadow" style='display:block;'>
                                         <div class="card-body">
-                                            <h5 class="gray font-size-16"> Comissão </h5>
+                                            <h5 class="font-size-14 gray-600"> Comissão </h5>
                                             <h4 id="commission" class="number"></h4>
                                         </div>
                                         <div class="s-border-right green"></div>
@@ -261,7 +264,7 @@
                             <div class="col-md-3">
                                 <div class="card shadow" style='display:block;'>
                                     <div class="card-body">
-                                        <h5 class="gray font-size-16"> Total</h5>
+                                        <h5 class="font-size-14 gray-600"> Total</h5>
                                         <h4 id="total" class="number"></h4>
                                     </div>
                                     <div class="s-border-right green"></div>
@@ -271,7 +274,7 @@
                             <div class="col-md-3 d-sm-none d-md-block">
                                 <div style='display:block;'>
                                     <div>
-                                        <h5 class="gray font-size-16"> Acesso rápido </h5>
+                                        <h5 class="font-size-14 gray-600"> Acesso rápido </h5>
                                         <ul class="quick-list">
                                             <li>
                                                  <a href="{{ route('recovery.index') }}">Recuperação</a>
@@ -297,15 +300,15 @@
                                 <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                                     <thead>
                                     <tr>
-                                        <th class="table-title display-sm-none display-m-none  display-lg-none">Transação</th>
-                                        <th class="table-title">Descrição</th>
-                                        <th class="table-title display-sm-none display-m-none display-lg-none">Cliente</th>
-                                        <th class="table-title">Forma</th>
-                                        <th class="table-title">Status</th>
-                                        <th class="table-title display-sm-none display-m-none">Iniciada em</th>
-                                        <th class="table-title display-sm-none">Pagamento</th>
-                                        <th class="table-title">Comissão</th>
-                                        <th class="table-title" width="80px;"> &nbsp;</th>
+                                        <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
+                                        <td class="table-title">Descrição</td>
+                                        <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
+                                        <td class="table-title">Forma</td>
+                                        <td class="table-title text-center">Status</td>
+                                        <td class="table-title display-sm-none display-m-none">Iniciada em</td>
+                                        <td class="table-title display-sm-none">Pagamento</td>
+                                        <td class="table-title">Comissão</td>
+                                        <td class="table-title" width="80px;"> &nbsp;</td>
                                     </tr>
                                     </thead>
                                     <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
@@ -385,7 +388,7 @@
     <!-- Modal estonar transação-->
     <div id="modal-refund-transaction" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-simple">
-            <div class="modal-content p-10">
+            <div class="modal-content p-10" id="modal-refund">
                 <div class="modal-header simple-border-bottom mb-10">
                     <h4 class="modal-title" id="modal-title">Estornar transação</h4>
                     <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
@@ -426,7 +429,7 @@
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" data-dismiss="modal">
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" >
                         Estornar
                     </button>
                 </div>
