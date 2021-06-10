@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=08') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=09') }}">
 @endpush
 
 @section('content')
@@ -143,7 +143,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('/modules/products/js/index.js?v=02') }}'></script>
+        <script src='{{ asset('/modules/products/js/index.js?v=03') }}'></script>
     @endpush
 
 @endsection
