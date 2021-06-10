@@ -1,4 +1,5 @@
 $(() => {
+    const max_count_files = 10;
     let contestation = '';
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.contetation_file', function () {
@@ -38,7 +39,7 @@ $(() => {
 
                 $('#latest_files').html("");
                 let qty = response.data.files.length
-                if(qty > 3) {
+                if(qty > max_count_files) {
                     $("#sendfilesform").hide()
                 }else{
                     $("#sendfilesform").show()
@@ -111,7 +112,7 @@ $(() => {
                 $('#latest_files').html('');
 
                 let qty = response.data.length
-                if(qty > 3) {
+                if(qty > max_count_files) {
                     $("#sendfilesform").hide()
                 }else{
                     $("#sendfilesform").show()
@@ -166,7 +167,7 @@ $(() => {
                 $("#"+contestationfile).remove()
                 let qty = $('#latest_files tr').length;
 
-                if(qty > 3) {
+                if(qty > max_count_files) {
                     $("#sendfilesform").hide()
                 }else{
                     $("#sendfilesform").show()

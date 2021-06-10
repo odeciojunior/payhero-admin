@@ -6,7 +6,6 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -33,47 +32,29 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class DomainsApiController extends Controller
 {
-    /**
-     * @param $projectId
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index($projectId)
     {
         try {
-            $domainModel = new Domain();
-            $projectModel = new Project();
+            $projectId = hashids_decode($projectId);
+            $project = Project::find($projectId);
 
-            if (!empty($projectId)) {
-                $projectId = current(Hashids::decode($projectId));
-                $project = $projectModel->find($projectId);
-
-                activity()->on($domainModel)->tap(
-                    function (Activity $activity) use ($projectId) {
-                        $activity->log_name = 'visualization';
-                    }
-                )->log('Visualizou tela todos os domínios para o projeto: ' . $project->name);
-
-                if (Gate::allows('index', [$project])) {
-                    $domains = $domainModel->with('project')
-                        ->where('project_id', $projectId);
-
-                    return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Sem permissão para visualizar os domínios',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Erro ao listar dados de domínios',
-                    ],
-                    400
-                );
+            if (empty($project)) {
+                return response()->json(['message' => 'Erro ao listar dados de domínios'], 400);
             }
+
+            activity()->on((new Domain()))->tap(
+                function (Activity $activity) use ($projectId) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou tela todos os domínios para o projeto: ' . $project->name);
+
+            if (!Gate::allows('index', [$project])) {
+                return response()->json(['message' => 'Sem permissão para visualizar os domínios'], 400);
+            }
+
+            $domains = Domain::with('project')->where('project_id', $projectId);
+
+            return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {
             report($e);
 
