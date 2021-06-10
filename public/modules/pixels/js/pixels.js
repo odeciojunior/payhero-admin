@@ -478,17 +478,7 @@ $(function () {
             return false;
         }
 
-        if (formData.value_percentage_purchase_boleto.length < 1) {
-            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-
-        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
-            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
+        if (formData.value_percentage_purchase_boleto.length > 0 && (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10)) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
             return false;
         }
@@ -552,13 +542,9 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 loadingOnScreenRemove();
-                if (response.success) {
-                    $("#modal-create-pixel").modal('hide');
-                    alertCustom("success", response.message);
-                    atualizarPixel();
-                } else {
-                    alertCustom("error", response.message);
-                }
+                $("#modal-create-pixel").modal('hide');
+                alertCustom("success", response.message);
+                atualizarPixel();
             }
         });
     });

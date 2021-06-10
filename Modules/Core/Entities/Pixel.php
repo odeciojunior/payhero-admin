@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +14,8 @@ use Modules\Core\Presenters\PixelPresenter;
 use Spatie\Activitylog\Models\Activity;
 
 /**
+ * Modules\Core\Entities\Pixel
+ *
  * @property int $id
  * @property int $project_id
  * @property string $name
@@ -26,6 +30,46 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Project $project
+ * @property int|null $purchase_pix
+ * @property int|null $campaign_id
+ * @property mixed|null $apply_on_plans
+ * @property string|null $code_meta_tag_facebook
+ * @property string|null $purchase_event_name
+ * @property int $is_api
+ * @property string|null $facebook_token
+ * @property int $value_percentage_purchase_boleto
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read Affiliate|null $affiliate
+ * @property-read string $id_code
+ * @method static Builder|Pixel newModelQuery()
+ * @method static Builder|Pixel newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Pixel onlyTrashed()
+ * @method static Builder|Pixel query()
+ * @method static Builder|Pixel whereAffiliateId($value)
+ * @method static Builder|Pixel whereApplyOnPlans($value)
+ * @method static Builder|Pixel whereCampaignId($value)
+ * @method static Builder|Pixel whereCheckout($value)
+ * @method static Builder|Pixel whereCode($value)
+ * @method static Builder|Pixel whereCodeMetaTagFacebook($value)
+ * @method static Builder|Pixel whereCreatedAt($value)
+ * @method static Builder|Pixel whereDeletedAt($value)
+ * @method static Builder|Pixel whereFacebookToken($value)
+ * @method static Builder|Pixel whereId($value)
+ * @method static Builder|Pixel whereIsApi($value)
+ * @method static Builder|Pixel whereName($value)
+ * @method static Builder|Pixel wherePlatform($value)
+ * @method static Builder|Pixel whereProjectId($value)
+ * @method static Builder|Pixel wherePurchaseBoleto($value)
+ * @method static Builder|Pixel wherePurchaseCard($value)
+ * @method static Builder|Pixel wherePurchaseEventName($value)
+ * @method static Builder|Pixel wherePurchasePix($value)
+ * @method static Builder|Pixel whereStatus($value)
+ * @method static Builder|Pixel whereUpdatedAt($value)
+ * @method static Builder|Pixel whereValuePercentagePurchaseBoleto($value)
+ * @method static \Illuminate\Database\Query\Builder|Pixel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Pixel withoutTrashed()
+ * @mixin Eloquent
  */
 class Pixel extends Model
 {

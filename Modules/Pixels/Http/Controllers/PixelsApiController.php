@@ -14,11 +14,11 @@ use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\PixelService;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelEditResource;
 use Modules\Pixels\Transformers\PixelsResource;
-use Sentry\Response;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -71,80 +71,15 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => __('controller.error.generic')], 400);
             }
 
-            if (!empty($validator['affiliate_id'])) {
-                $validator['affiliate_id'] = hashids_decode($validator['affiliate_id']);
-                $affiliateId = $validator['affiliate_id'];
-            } else {
-                $affiliateId = 0;
-                $validator['affiliate_id'] = null;
-            }
+            $result = (new PixelService())->store($projectId, $validator);
 
-            $project = Project::find(hashids_decode($projectId));
-
-            if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => __('controller.pixel.permission.create')], 403);
-            }
-
-            $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($validator['add_pixel_plans']));
-
-            if ($validator['platform'] == 'google_adwords') {
-                $validator['code'] = str_replace(['AW-'], '', $validator['code']);
-            }
-
-            if (!in_array($validator['platform'], ['taboola', 'outbrain'])) {
-                $validator['purchase-event-name'] = null;
-            }
-
-            if (in_array($validator['platform'], ['taboola', 'outbrain']) && empty($validator['purchase-event-name'])) {
-                $validator['purchase-event-name'] = $validator['platform'] == 'taboola' ? 'make_purchase' : 'Purchase';
-            }
-
-            $facebookToken = null;
-            $isApi = false;
-            if ($validator['platform'] == 'facebook' && !empty($validator['api-facebook']) && $validator['api-facebook'] == 'api') {
-                $facebookToken = $validator['facebook-token-api'];
-                $isApi = true;
-            }
-
-            if (empty($validator['value_percentage_purchase_boleto'])) {
-                $validator['value_percentage_purchase_boleto'] = 100;
-            }
-
-            Pixel::create(
-                [
-                    'project_id' => $project->id,
-                    'name' => $validator['name'],
-                    'code' => $validator['code'],
-                    'platform' => $validator['platform'],
-                    'status' => (bool) $validator['status'],
-                    'checkout' => $validator['checkout'] == 'true',
-                    'purchase_boleto' => $validator['purchase_boleto'] == 'true',
-                    'purchase_card' => $validator['purchase_card'] == 'true',
-                    'purchase_pix' => $validator['purchase_pix'] == 'true',
-                    'affiliate_id' => $validator['affiliate_id'],
-                    'campaign_id' => $validator['campaign'] ?? null,
-                    'apply_on_plans' => $applyPlanEncoded,
-                    'purchase_event_name' => $validator['purchase-event-name'],
-                    'facebook_token' => $facebookToken,
-                    'is_api' => $isApi,
-                    'value_percentage_purchase_boleto' => $validator['value_percentage_purchase_boleto'],
-                ]
-            );
-
-            return response()->json(
-                [
-                    'message' => 'Pixel ' . __('controller.success.create'),
-                    'success' => true
-                ],
-                200
-            );
+            return response()->json(['message' => $result['message']], $result['status']);
         } catch (Exception $e) {
             report($e);
 
             return response()->json(
                 [
-                    'message' => __('controller.error.generic'),
-                    'success' => false
+                    'message' => __('controller.error.generic')
                 ],
                 400
             );
