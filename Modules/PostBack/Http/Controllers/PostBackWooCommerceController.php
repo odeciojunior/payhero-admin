@@ -15,6 +15,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Sale;
 
 /**
  * Class PostBackWooCommerceController
@@ -201,28 +202,24 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            $postBackLogModel = new PostbackLog();
+            
             $projectModel = new Project();
 
-            $requestData = $request->all();
-
-            $postBackLogModel->create(
-                [
-                    'origin' => 5,
-                    'data' => json_encode($requestData),
-                    'description' => 'woocommerce-tracking',
-                ]
-            );
-
+            
             $projectId = current(Hashids::decode($request->project_id));
-            //$projectId = $request->project_id;
+            
             $project = $projectModel->find($projectId);
 
             if (!empty($project)) {
-                //Log::debug($requestData);
-
+                
                 // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
                 //     ->onQueue('high');
+                $sale = Sale::where("woocommerce_order", $request->id)->first();
+
+                if(!empty($sale) && !empty($request->correios_tracking_code)){
+                    // $data = ['']
+                    // $sale
+                }
 
                 return response()->json(
                     [
@@ -231,7 +228,6 @@ class PostBackWooCommerceController extends Controller
                     200
                 );
             } else {
-                //Log::warning('WooCommerce atualizar código de rastreio - projeto não encontrado');
 
                 //projeto nao existe
                 return response()->json(
