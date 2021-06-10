@@ -442,9 +442,10 @@ function errorAjaxResponse(response) {
         } else {
             alertCustom('error', response.responseJSON.message);
         }
-    } else {
-        alertCustom('error', 'Erro ao executar esta ação!');
     }
+    // else {
+    //     alertCustom('error', 'Erro ao executar esta ação!');
+    // }
 }
 
 function extractIdFromPathName() {
