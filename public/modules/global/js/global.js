@@ -96,7 +96,7 @@ function loadingOnScreen() {
             <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
-    )
+    ).fadeIn()
 
     $('body').css('overflow-y', 'hidden')
 }
@@ -180,7 +180,7 @@ function loadingOnScreenRemove() {
             $(this).html('')
             $('body').css('overflow-y', 'unset')
         });
-    },2000)
+    }, 2000)
     $('.page-header').fadeIn();
     $('#btn-modal').fadeIn();
 }

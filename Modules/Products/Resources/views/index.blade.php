@@ -109,7 +109,34 @@
               </div>
             </div>
         </div>
-        
+
+        <!-- Modal padrão para excluir -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="excluirModal" role="dialog" tabindex="-1">
+            <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                <div class="modal-content">
+                    <div id="modal_excluir_body" class="modal-body text-center p-20">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class=" justify-content-center">
+                            <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                        </div>
+                        <h3 class="black"> Você tem certeza? </h3>
+                        <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                    </div>
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <button id="bt_cancelar" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                            <b>Cancelar</b>
+                        </button>
+                        <button id="bt_excluir_modal" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                            <b class="mr-2" style="color: #fff">Excluir </b>
+                            <span class="o-bin-1"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Quando não tem projeto cadastrado  --}}
         @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}

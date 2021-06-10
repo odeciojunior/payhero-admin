@@ -246,6 +246,16 @@ $(document).ready(function () {
                     $('#bt_excluir').on('click', function (event) {
                         event.preventDefault();
 
+                        $("#bt_excluir_modal").attr('data-id', this.dataset.id);
+
+                        $("#modal-delete").modal();
+                    });
+
+                    $('#bt_excluir_modal').on('click', function (event) {
+                        event.preventDefault();
+
+                        loadingOnScreen();
+
                         $.ajax({
                             method: 'DELETE',
                             url: '/api/products/' + this.dataset.id,
@@ -256,6 +266,9 @@ $(document).ready(function () {
                             },
                             error: function (response) {
                                 errorAjaxResponse(response);
+
+                                $("#bt_excluir_modal").attr('data-id', "");
+                                loadingOnScreenRemove();
                             },
                             success: function success(response) {
                                 alertCustom('success', response.message);
