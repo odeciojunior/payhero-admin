@@ -162,85 +162,8 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => 'Pixel nao encontrado'], 400);
             }
 
-            $validated = $request->validated();
-
-            $pixelModel = new Pixel();
-
-            $pixel = $pixelModel->find(current(Hashids::decode($id)));
-
-            if (empty($pixel)) {
-                return response()->json(['message' => 'Pixel nao encontrado'], 400);
-            }
-
-            $projectModel = new Project();
-            $project = $projectModel->find(current(Hashids::decode($projectId)));
-            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
-
-            if (!Gate::allows('edit', [$project, $affiliateId])) {
-                return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
-            }
-
-            if ($validated['platform'] == 'google_adwords') {
-                $order = ['AW-'];
-                $validated['code'] = str_replace($order, '', $validated['code']);
-            }
-
-            $applyPlanArray = [];
-            if (in_array('all', $validated['edit_pixel_plans'])) {
-                $applyPlanArray[] = 'all';
-            } else {
-                foreach ($validated['edit_pixel_plans'] as $key => $value) {
-                    $applyPlanArray[] = current(Hashids::decode($value));
-                }
-            }
-
-            $applyPlanEncoded = json_encode($applyPlanArray);
-            if (!in_array($validated['platform'], ['taboola', 'outbrain'])) {
-                $validated['purchase_event_name'] = null;
-            }
-
-
-            if ($validated['platform'] == 'taboola' && empty($validated['purchase_event_name'] && empty($pixel->taboola_conversion_name))) {
-                $validated['purchase_event_name'] = 'make_purchase';
-            } elseif ($validated['platform'] == 'outbrain' && empty($validated['purchase_event_name']) && empty($pixel->outbrain_conversion_name)) {
-                $validated['purchase_event_name'] = 'Purchase';
-            } elseif ($validated['platform'] == 'facebook') {
-                $validated['purchase_event_name'] = '';
-                if ($validated['is_api'] == 'api') {
-                    $validated['is_api'] = true;
-                } else {
-                    $validated['is_api'] = false;
-                    $validated['facebook_token_api'] = null;
-                }
-            }
-
-            if ($validated['platform'] != 'facebook') {
-                $validated['is_api'] = false;
-            }
-
-            $pixelUpdated = $pixel->update(
-                [
-                    'name' => $validated['name'],
-                    'platform' => $validated['platform'],
-                    'status' => $validated['status'] == 'true',
-                    'code' => $validated['code'],
-                    'apply_on_plans' => $applyPlanEncoded,
-                    'checkout' => $validated['checkout'] == 'true',
-                    'purchase_boleto' => $validated['purchase_boleto'] == 'true',
-                    'purchase_card' => $validated['purchase_card'] == 'true',
-                    'purchase_pix' => $validated['purchase_pix'] == 'true',
-                    'purchase_event_name' => $validated['purchase_event_name'] ?? null,
-                    'facebook_token' => $validated['facebook_token_api'],
-                    'is_api' => $validated['is_api'],
-                    'value_percentage_purchase_boleto' => $validated['value_percentage_purchase_boleto'],
-                ]
-            );
-
-            if ($pixelUpdated) {
-                return response()->json('Sucesso', 200);
-            }
-
-            return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
+            $result = (new PixelService())->update($id, $request->validated());
+            return response()->json(['message' => $result['message']], $result['status']);
         } catch (Exception $e) {
             report($e);
 

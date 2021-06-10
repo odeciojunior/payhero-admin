@@ -81,4 +81,74 @@ class PixelService
             'message' => 'Pixel ' . __('controller.success.create')
         ];
     }
+
+    public function update($pixelId, $dataValidated): array
+    {
+        $pixel = Pixel::with('project')->find(hashids_decode($pixelId));
+
+        if (empty($pixel)) {
+            return [
+                'message' => 'Pixel não encontrado',
+                'status' => 400
+            ];
+        }
+
+        $project = $pixel->project;
+
+        $affiliateId = !empty($pixel->affiliate_id) ? $pixel->affiliate_id : 0;
+
+        if (!Gate::allows('edit', [$project, $affiliateId])) {
+            return ['message' => 'Sem permissão para atualizar pixels', 'status' => 403];
+        }
+
+        if ($dataValidated['platform'] == 'google_adwords') {
+            $dataValidated['code'] = str_replace(['AW-'], '', $dataValidated['code']);
+        }
+
+        if (!in_array($dataValidated['platform'], ['taboola', 'outbrain'])) {
+            $dataValidated['purchase_event_name'] = null;
+        }
+
+        if (empty($dataValidated['purchase_event_name'])) {
+            if ($dataValidated['platform'] == 'taboola' && empty($pixel->taboola_conversion_name)) {
+                $dataValidated['purchase_event_name'] = 'make_purchase';
+            } elseif ($dataValidated['platform'] == 'outbrain' && empty($pixel->outbrain_conversion_name)) {
+                $dataValidated['purchase_event_name'] = 'Purchase';
+            }
+        }
+
+        if ($dataValidated['platform'] == 'facebook') {
+            $dataValidated['purchase_event_name'] = '';
+            if ($dataValidated['is_api'] == 'api') {
+                $dataValidated['is_api'] = true;
+            } else {
+                $dataValidated['is_api'] = false;
+                $dataValidated['facebook_token_api'] = null;
+            }
+        } else {
+            $dataValidated['is_api'] = false;
+        }
+
+        $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated['edit_pixel_plans']));
+
+        $pixel->update(
+            [
+                'name' => $dataValidated['name'],
+                'platform' => $dataValidated['platform'],
+                'status' => $dataValidated['status'] == 'true',
+                'code' => $dataValidated['code'],
+                'apply_on_plans' => $applyPlanEncoded,
+                'checkout' => $dataValidated['checkout'] == 'true',
+                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
+                'purchase_card' => $dataValidated['purchase_card'] == 'true',
+                'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
+                'purchase_event_name' => $dataValidated['purchase_event_name'] ?? null,
+                'facebook_token' => $dataValidated['facebook_token_api'],
+                'is_api' => $dataValidated['is_api'],
+                'value_percentage_purchase_boleto' => $dataValidated['value_percentage_purchase_boleto'],
+            ]
+        );
+
+        return ['message' => 'Sucesso', 'status' => 200];
+    }
 }
