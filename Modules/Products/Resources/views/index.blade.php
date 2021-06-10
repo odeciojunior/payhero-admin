@@ -128,7 +128,7 @@
                         <button id="bt_cancelar" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                             <b>Cancelar</b>
                         </button>
-                        <button id="bt_excluir_modal" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                        <button type="button" class="bt_excluir_modal col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                             <b class="mr-2" style="color: #fff">Excluir </b>
                             <span class="o-bin-1"></span>
                         </button>
