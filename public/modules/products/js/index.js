@@ -207,7 +207,7 @@ $(document).ready(function () {
                                 ${shopifyProduct == false
                                 ? `
                                     <hr class="my-5">
-                                    <a id="bt_excluir" href="#" class="mx-20" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
+                                    <a href="#" class="mx-20 bt_excluir" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
                                 `
                                 : ""
                             }
@@ -243,7 +243,7 @@ $(document).ready(function () {
                         setTimeout(() => closeTooltips(), 200);
                     });
 
-                    $('#bt_excluir').on('click', function (event) {
+                    $('.bt_excluir').on('click', function (event) {
                         event.preventDefault();
 
                         $("#bt_excluir_modal").attr('data-id', this.dataset.id);
@@ -251,7 +251,7 @@ $(document).ready(function () {
                         $("#modal-delete").modal();
                     });
 
-                    $('#bt_excluir_modal').on('click', function (event) {
+                    $('.bt_excluir_modal').on('click', function (event) {
                         event.preventDefault();
 
                         loadingOnScreen();
