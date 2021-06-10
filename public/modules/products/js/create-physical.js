@@ -39,7 +39,7 @@ $(document).ready(function () {
             'maxWidth': 'A imagem deve ter largura menor que 651px.',
             'minHeight': 'A imagem deve ter altura maior que 651px.',
             'maxHeight': 'A imagem deve ter altura menor que 651px.',
-            'imageFormat': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
+            'fileExtension': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
         },
         tpl: {
             message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',

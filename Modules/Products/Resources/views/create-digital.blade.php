@@ -72,7 +72,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create-digital.js?v=13') }}"></script>
+        <script src="{{ asset('modules/products/js/create-digital.js?v=14') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
