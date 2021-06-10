@@ -143,7 +143,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('/modules/products/js/index.js?v=04') }}'></script>
+        <script src='{{ asset('/modules/products/js/index.js?v=06') }}'></script>
     @endpush
 
 @endsection

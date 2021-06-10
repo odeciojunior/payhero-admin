@@ -246,7 +246,7 @@ $(document).ready(function () {
                     $('.bt_excluir').on('click', function (event) {
                         event.preventDefault();
 
-                        $("#bt_excluir_modal").attr('data-id', this.dataset.id);
+                        $(".bt_excluir_modal").attr('data-id', this.dataset.id);
 
                         $("#modal-delete").modal();
                     });
@@ -267,7 +267,7 @@ $(document).ready(function () {
                             error: function (response) {
                                 errorAjaxResponse(response);
 
-                                $("#bt_excluir_modal").attr('data-id', "");
+                                $(".bt_excluir_modal").attr('data-id', "");
                                 loadingOnScreenRemove();
                             },
                             success: function success(response) {
