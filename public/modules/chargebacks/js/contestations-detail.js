@@ -38,7 +38,7 @@ $(() => {
 
                 $('#latest_files').html("");
                 let qty = response.data.files.length
-                if(qty > 3) {
+                if(qty > 10) {
                     $("#sendfilesform").hide()
                 }else{
                     $("#sendfilesform").show()
