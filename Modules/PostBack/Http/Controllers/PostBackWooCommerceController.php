@@ -29,7 +29,7 @@ class PostBackWooCommerceController extends Controller
         if (empty($request->project_id)) {
             return response()->json(
                 [
-                    'message' => 'success',
+                    'message' => 'invalid data',
                 ],
                 200
             );
@@ -44,16 +44,16 @@ class PostBackWooCommerceController extends Controller
         if (empty($wooCommerceIntegration)) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'process fail',
                 ],
                 200
             );
         }
 
-        if (empty($product->name)) {
+        if (empty($product->name) || empty($product->id) || empty($product->price) ) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'invalid data',
                 ],
                 200
             );
@@ -210,7 +210,7 @@ class PostBackWooCommerceController extends Controller
             
             $project = $projectModel->find($projectId);
 
-            if (!empty($project)) {
+            if (!empty($project) && !empty($request->correios_tracking_code) ) {
                 
                 // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
                 //     ->onQueue('high');
