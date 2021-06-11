@@ -33,7 +33,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int|null $purchase_pix
  * @property int|null $campaign_id
  * @property mixed|null $apply_on_plans
- * @property string|null $code_meta_tag_facebook
  * @property string|null $purchase_event_name
  * @property int $is_api
  * @property string|null $facebook_token
@@ -109,10 +108,10 @@ class Pixel extends Model
         'purchase_pix',
         'affiliate_id',
         'apply_on_plans',
-        'code_meta_tag_facebook',
         'purchase_event_name',
         'is_api',
         'facebook_token',
+        'url_facebook_domain',
         'value_percentage_purchase_boleto',
         'created_at',
         'updated_at',
