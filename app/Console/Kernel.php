@@ -33,13 +33,6 @@ class Kernel extends ConsoleKernel
         // transfer money from transactions for user companies
 //        $schedule->command('verify:transfers')->dailyAt('05:00');
 
-        // transfer money from transactions for user companies on getnet
-        $schedule->command('verify:transfersgetnet')->dailyAt('11:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('14:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('16:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('20:00');
-        $schedule->command('verify:transfersgetnet')->dailyAt('23:30');
-
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
 
@@ -88,7 +81,7 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:getnet-transactions')->dailyAt('06:15');
+        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 

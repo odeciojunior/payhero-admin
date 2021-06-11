@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectNotification;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
@@ -91,6 +92,12 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
             }
 
+            if(FoxUtils::isProduction()) {
+                $link = 'https://checkout.' . $domain->name;
+            } else {
+                $link = env('APP_URL', 'http://dev.checkout.com.br');
+            }
+
             //Traz o assunto, titulo e texto do email formatados
             $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
                 ->where(
@@ -120,15 +127,17 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 $sale,
                 $project
             );
+
             $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
 
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
+                'pix_link' => $link . '/pix/' . Hashids::connection('sale_id')->encode($sale->id),
                 "store_logo" => $project->logo,
                 "project_contact" => $project->contact,
                 'sale_code' => $saleCode,
                 "products" => $products,
-                "total_paid_value" => $sale->total_paid_value,
+                "total_value" => $sale->total_paid_value,
                 "shipment_value" => $sale->present()->getFormattedShipmentValue(),
                 "subtotal" => $subTotal,
                 "subject" => $subjectMessage,

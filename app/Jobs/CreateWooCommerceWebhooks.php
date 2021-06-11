@@ -15,22 +15,21 @@ use Modules\Core\Entities\WooCommerceIntegration;
 
 
 
-class ImportWooCommerceProduct implements ShouldQueue
+class CreateWooCommerceWebhooks implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
+    private $data;
     private $projectId;
-    private $userId;
-    private $_product;
-
-    public function __construct($projectId, $userId, $_product)
+    
+    public function __construct($projectId, $data)
     {
+        $this->data = $data;
         $this->projectId = $projectId;
-        $this->userId = $userId;
-        $this->_product = $_product;
+        
     }
 
     public function handle()
@@ -41,11 +40,11 @@ class ImportWooCommerceProduct implements ShouldQueue
 
             if(!empty($integration)){
 
-                $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $woocommerceService = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $woocommerce->verifyPermissions();
+                $woocommerceService->verifyPermissions();
                 
-                $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
+                $woocommerceService->woocommerce->post('webhooks', $this->data);
 
             }
 

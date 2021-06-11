@@ -181,8 +181,7 @@ $(function () {
 
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
-        $('.percentage-value-boleto').val(pixel.value_percentage_purchase_boleto);
-        $('.percentage-value-pix').val(pixel.value_percentage_purchase_pix);
+        $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -293,7 +292,6 @@ $(function () {
             'is_api': isApi,
             'code': inputCodeEdit,
             'value_percentage_purchase_boleto': valuePercentagePurchaseBoleto,
-            'value_percentage_purchase_pix': valuePercentagePurchasePix,
             'facebook_token_api': facebookTokenApi,
             'purchase_event_name': inputPurchaseEventName,
             'plans_apply': plansApply
@@ -325,7 +323,6 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
-                value_percentage_purchase_pix: valuePercentagePurchasePix,
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -481,18 +478,8 @@ $(function () {
             return false;
         }
 
-        if (formData.value_percentage_purchase_pix.length > 3) {
-            alertCustom('error', 'O valore do campo % Valor PIX está incorreto!')
-            return false;
-        }
-
         if (formData.value_percentage_purchase_boleto.length < 1) {
             alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_pix.length < 1) {
-            alertCustom('error', 'O campo % Valor PIX é obrigatório')
             return false;
         }
 
@@ -540,7 +527,6 @@ $(function () {
             'is_api': formData.get('api-facebook'),
             'code': formData.get('code'),
             'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
-            'value_percentage_purchase_pix': formData.get('value_percentage_purchase_pix'),
             'facebook_token_api': formData.get('facebook-token-api'),
             'purchase_event_name': formData.get('purchase-event-name'),
             'plans_apply': formData.get('add_pixel_plans[]')
