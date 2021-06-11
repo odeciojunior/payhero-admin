@@ -466,7 +466,7 @@ class SaleService
             'transaction_rate' => FoxUtils::formatMoney($transactionRate / 100),
             'percentage_rate' => $userTransaction->percentage_rate ?? 0,
             'totalTax' => FoxUtils::formatMoney($totalTax / 100),
-            'total' => FoxUtils::formatMoney($total / 100),
+            'total' => FoxUtils::formatMoney(intval($total) / 100),
             'subTotal' => FoxUtils::formatMoney(intval($subTotal) / 100),
             'discount' => FoxUtils::formatMoney(intval($discount) / 100),
             'automatic_discount' => FoxUtils::formatMoney(intval($sale->automatic_discount) / 100),
