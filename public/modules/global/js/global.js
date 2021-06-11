@@ -91,12 +91,13 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
+    $('.page').addClass('d-none')
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
             <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
-    )
+    ).fadeIn()
 
     $('body').css('overflow-y', 'hidden')
 }
@@ -176,11 +177,14 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
+        $('.page').removeClass('d-none')
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
             $('body').css('overflow-y', 'unset')
         });
-    },2000)
+    }, 2000)
+
+
     $('.page-header').fadeIn();
     $('#btn-modal').fadeIn();
 }
@@ -442,9 +446,10 @@ function errorAjaxResponse(response) {
         } else {
             alertCustom('error', response.responseJSON.message);
         }
-    } else {
-        alertCustom('error', 'Erro ao executar esta ação!');
     }
+    // else {
+    //     alertCustom('error', 'Erro ao executar esta ação!');
+    // }
 }
 
 function extractIdFromPathName() {
