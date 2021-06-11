@@ -1,15 +1,15 @@
-<div class="container-fluid" id="form-update-plan" style="display:none">
+<div class="container-fluid px-0" id="form-update-plan" style="display:none">
     <div class="nav-tabs-horizontal">
         <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
+            <a class="nav-item nav-link active mx-0" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
                 role="tab" style="width:48%;">Dados gerais
             </a>
-            <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
+            <a class="nav-item nav-link mx-0" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
                 role="tab" style="width:48%;">Produtos personalizados
             </a>
         </div>
     </div>
-    <div class="tab-content p-10" id="nav-tabContent">                    
+    <div class="tab-content p-15" id="nav-tabContent">                    
         <div class="tab-pane fade show active" id="nav-geral" role="tabpanel" aria-labelledby="nav-geral-tab">
             <form id="form-update-plan-tab-1" method="PUT" action="/plans" enctype="multipart/form-data">
                 @csrf

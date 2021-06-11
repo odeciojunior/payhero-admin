@@ -428,14 +428,50 @@ $(function () {
                                     $('.products_row_custom').append(`
                                         <div class='card container '>
                                             <div class="row">
-                                                <div class="col-sm-12 col-md-12 col-lg-12">
-                                                    <h4 class="bold">Produto: ${value.product_name} </h4>
-                                                </div>                                                
-                                                <div class="col-sm-12" id="area-custom-products-${value.id+index}"></div>
-                                                <div class="col-sm-12 col-md-12 col-lg-12">
-                                                    <button type="button" id="add_custom_product-${value.id+index}" class="btn btn-primary col-12 btn-add-item">
-                                                    Adicionar item requerido</button>
+                                                <div class="col-sm-2">
+                                                    <img src="${value.photo}" height="45px">
                                                 </div>
+                                                <div class="col-sm-7">
+                                                    <h4 class="bold">Produto: ${value.product_name} </h4>
+                                                </div>                                     
+                                                <div class="col-sm-3" align="right">
+                                                    <div class="switch-holder d-inline">
+                                                        <label class="switch">
+                                                            <input type="checkbox" class="active_custom" name="active_custom" value="true">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>      
+                                            </div> 
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-outline-secondary p-3">
+                                                        <img src="/modules/global/img/pix/icon_text.svg">
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary  p-3">
+                                                        <img src="/modules/global/img/pix/icon_image.svg">
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary  p-3">
+                                                        <img src="/modules/global/img/pix/icon_attachment.svg">
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" name="custom[${value.id}]">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <button type="button" class="btn btn-outline-success" id="add_custom_product-${value.id+index}">+</button>
+                                                </div>
+                                                <div class="col-12">
+                                                    <small>ATENÇÃO: Seja claro e objetivo. O campo de “nome” aparecerá como a descrição do arquivo ou texto que seu cliente preencherá na página de obrigado.</small>
+                                                </div>
+                                            </div>
+                                            <div class="row my-5">
+                                                <div class="col-12">
+                                                    <h5 class="bold">Personalizações adicionadas</h5>
+                                                </div>
+                                            </div>
+                                            <div class="row">                                         
+                                                <div class="col-sm-12" id="area-custom-products-${value.id+index}"></div>                                                
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>

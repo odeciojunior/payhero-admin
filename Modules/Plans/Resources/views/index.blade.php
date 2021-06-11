@@ -55,14 +55,14 @@
 <!-- Modal padrão para adicionar Adicionar e Editar -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_plan" role="dialog" tabindex="-1">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10" id="conteudo_modal_add">
-            <div class="modal-header simple-border-bottom mb-10">
+        <div class="modal-content" id="conteudo_modal_add">
+            <div class="modal-header simple-border-bottom mb-10" align="center">
                 <h4 class="modal-title" id="modal-title-plan"></h4>
                 <a id="modal-button-close" class="close-card pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            <div id="modal-add-plan-body" class="modal-body" style='min-height: 100px'>
+            <div id="modal-add-plan-body" class="modal-body px-0" style='min-height: 100px'>
                 @include('plans::create')
                 @include('plans::edit')
             </div>
