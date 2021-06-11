@@ -61,7 +61,8 @@ class PostBackWooCommerceController extends Controller
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
-                $description .= $attribute['option'] . ' ';
+                if(!empty($attribute['option']))
+                    $description .= $attribute['option'] . ' ';
             }
         }
 
@@ -155,20 +156,32 @@ class PostBackWooCommerceController extends Controller
                 ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
                 ->where('project_id', hashids_decode($request->project_id))
                 ->first()->user;
+            
+            $productExists = Product::where('shopify_variant_id', $request['sku'])->first();
 
+            if(!empty($productExists)){
 
-            Product::where("user_id", $user->id)
-                ->where('shopify_variant_id', $request['sku'])
-                ->first()
-                ->update($newValues);
+                Product::where("user_id", $user->id)
+                    ->where('shopify_variant_id', $request['sku'])
+                    ->first()
+                    ->update($newValues);
+    
+                    
+                unset($newValues['photo']);
+                    
+                Plan::where('project_id', hashids_decode($request->project_id))
+                    ->where('shopify_variant_id', $request['sku'])
+                    ->first()
+                    ->update($newValues);
 
-                
-            unset($newValues['photo']);
-                
-            Plan::where('project_id', hashids_decode($request->project_id))
-                ->where('shopify_variant_id', $request['sku'])
-                ->first()
-                ->update($newValues);
+            }else{
+                return response()->json(
+                    [
+                        'message' => 'Product not found!',
+                    ],
+                    200
+                );
+            }
             
             
         }

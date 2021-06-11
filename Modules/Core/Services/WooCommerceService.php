@@ -25,6 +25,7 @@ use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Selector\Selector;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\ImportWooCommerceProduct;
+use App\Jobs\ImportWooCommerceProductVariation;
 
 use Automattic\WooCommerce\Client;
 
@@ -171,33 +172,41 @@ class WooCommerceService
                 
                 foreach($variations as $variation){
 
-                    
-
-                    foreach($variation->attributes as $attribute){
-                        $description .= $attribute->option.' ';
-                    }
-                    
-                    
-                    $_product->price = $variation->price;
-                    $_product->images[0]->src = $variation->image->src;
-                    
-                    $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
-                    
-                    $data = [
-                        'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
-                    ];
-                    
-                    $res = $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-                    
-
-                    $description = '';
+                    ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variation);
 
                 }
+
             }
+            
         }catch(Exception $e){
             //Log::debug($e);
             report($e);
         }
+    }
+
+    public function importProductVariation($variation, $_product, $projectId, $userId)
+    {
+        $hashedProjectId = Hashids::encode($projectId);
+
+        $description = '';
+
+        foreach($variation->attributes as $attribute){
+            $description .= $attribute->option.' ';
+        }
+        
+        
+        $_product->price = $variation->price;
+        $_product->images[0]->src = $variation->image->src;
+        
+        $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
+        
+        $data = [
+            'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
+        ];
+        
+        $res = $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+        
+
     }
 
     public function createProduct($projectId, $userId, $_product, $description, $variationId = null)
@@ -213,7 +222,7 @@ class WooCommerceService
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-             
+        $_product->price = empty($_product->price)?0:$_product->price;
 
         $product = $productModel->create(
             [
