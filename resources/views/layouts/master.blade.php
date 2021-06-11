@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=20') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=27') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=20') }}">
     <!-- Plugins -->
@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=20') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=21') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=31') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=20') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=20') }}">
     @stack('css')
