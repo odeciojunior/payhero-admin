@@ -1,9 +1,9 @@
 $(document).ready(function () {
     var pageCurrent;
     let badgeList = {
-        1: "#3E8EF7",
-        2: "#41C26D",
-        3: "#F54C52",
+        1: "#2E85EC",
+        2: "#5EE2A1",
+        3: "#F41C1C",
     };
     let statusList = {
         1: "Em análise",
