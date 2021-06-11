@@ -151,10 +151,10 @@
                                     </div>
                                     {{-- INPUT URL FACEBOOK API --}}
                                     <div class="form-group col-12 url_facebook_api_div" style="display:none;">
-                                        <label for="url_facebook_api" class="font-text">Domínio URL:</label>
-                                        <input name="url_facebook_api"
+                                        <label for="url_facebook_domain" class="font-text">Domínio URL:</label>
+                                        <input name="url_facebook_domain"
                                                type="text"
-                                               class="form-control url_facebook_api">
+                                               class="form-control url_facebook_domain">
                                     </div>
                                     {{-- INPUT DESCRIPTION--}}
                                     <div class="form-group col-12">

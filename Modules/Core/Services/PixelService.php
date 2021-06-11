@@ -46,9 +46,11 @@ class PixelService
 
         $facebookToken = null;
         $isApi = false;
+        $facebookDomainUrl = null;
         if ($dataValidated['platform'] == 'facebook' && !empty($dataValidated['api-facebook']) && $dataValidated['api-facebook'] == 'api') {
             $facebookToken = $dataValidated['facebook-token-api'];
             $isApi = true;
+            $facebookDomainUrl = $dataValidated['url_facebook_domain'];
         }
 
         if (empty($dataValidated['value_percentage_purchase_boleto'])) {
@@ -67,12 +69,13 @@ class PixelService
                 'purchase_card' => $dataValidated['purchase_card'] == 'true',
                 'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
                 'affiliate_id' => $dataValidated['affiliate_id'],
-                'campaign_id' => $dataValidated['campaign'] ?? null,
+                'campaign_id' => null,
                 'apply_on_plans' => $applyPlanEncoded,
                 'purchase_event_name' => $dataValidated['purchase-event-name'],
                 'facebook_token' => $facebookToken,
                 'is_api' => $isApi,
                 'value_percentage_purchase_boleto' => $dataValidated['value_percentage_purchase_boleto'],
+                'url_facebook_domain' => $facebookDomainUrl
             ]
         );
 
