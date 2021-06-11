@@ -446,7 +446,9 @@ $(function () {
         }
 
         $("input[type=radio]").change(function () {
+            $(".url_facebook_api_div").hide();
             if (this.value === 'api') {
+                $(".url_facebook_api_div").show();
                 $("#facebook-token-api").attr('readonly', false)
             } else {
                 $("#facebook-token-api").attr('readonly', true)

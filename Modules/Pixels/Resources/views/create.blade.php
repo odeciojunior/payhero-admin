@@ -149,6 +149,13 @@
                                                placeholder="Purchase"
                                                maxlength='255'>
                                     </div>
+                                    {{-- INPUT URL FACEBOOK API --}}
+                                    <div class="form-group col-12 url_facebook_api_div" style="display:none;">
+                                        <label for="url_facebook_api" class="font-text">Domínio URL:</label>
+                                        <input name="url_facebook_api"
+                                               type="text"
+                                               class="form-control url_facebook_api">
+                                    </div>
                                     {{-- INPUT DESCRIPTION--}}
                                     <div class="form-group col-12">
                                         <label for="name" class="font-text">Descrição</label>
@@ -237,7 +244,8 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;‎ <br> (pix)</label>
+                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;‎ <br>
+                                                (pix)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_pix'
                                                        class='purchase-pix' checked>
