@@ -26,7 +26,7 @@ use PHPHtmlParser\Selector\Selector;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\ImportWooCommerceProduct;
 use App\Jobs\ImportWooCommerceProductVariation;
-
+use App\Jobs\CreateWooCommerceWebhooks;
 use Automattic\WooCommerce\Client;
 
 
@@ -157,7 +157,7 @@ class WooCommerceService
 
             $description = '';
             if(empty($_product->variations)){
-
+                
                 $this->createProduct($projectId, $userId, $_product, $description);
                 
                 $data = [
@@ -222,7 +222,7 @@ class WooCommerceService
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-        $_product->price = empty($_product->price)?0:$_product->price;
+        $_product->price = empty($_product->price)?1:$_product->price;
 
         $product = $productModel->create(
             [
@@ -308,13 +308,17 @@ class WooCommerceService
 
     public function createHooks($projectId)
     {
+        $decodedProjectId = Hashids::decode($projectId);
+
         //Order update.
         $data = [
             'name' => "$projectId",
             'topic' => 'order.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
-        $this->woocommerce->post('webhooks', $data);
+        
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+        
 
         //Product update
         $data = [
@@ -322,7 +326,9 @@ class WooCommerceService
             'topic' => 'product.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
-        $this->woocommerce->post('webhooks', $data);
+        
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+
 
         //Product create
         $data = [
@@ -330,7 +336,9 @@ class WooCommerceService
             'topic' => 'product.created',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
-        $this->woocommerce->post('webhooks', $data);
+        
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+
     }
 
     public function deleteHooks($projectId)

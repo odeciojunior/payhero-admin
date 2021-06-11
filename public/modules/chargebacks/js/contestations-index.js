@@ -393,7 +393,7 @@ $(document).ready(function () {
                                                       : "Enviar arquivo") +
                                                   '"   style="margin-right:5px" contestation="' +
                                                   value.id +
-                                                  '"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completado">done</span></a>'
+                                                  '"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completo">done</span></a>'
                                                 : '<a  role="button" class="contetation_file pointer  ' +
                                                   (value.has_expired
                                                       ? "disabled"
