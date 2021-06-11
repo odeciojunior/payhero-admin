@@ -3,7 +3,7 @@ let tracking_id = 'undefined';
 $(() => {
 
     $('#tracking-product-image').on('error', function () {
-        $(this).attr('src', 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png')
+        $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
     });
 
     $('#sale').on('change paste keyup select', function () {

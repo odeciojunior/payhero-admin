@@ -1,9 +1,32 @@
 $(document).ready(function () {
     let code = window.location.href.split('/')[4];
     let typeEnum;
+
     getDataProducts();
     function getDataProducts() {
         loadingOnScreen();
+
+        dropifyOptions = {
+            messages: {
+                'default': 'Arraste e solte uma imagem ou ',
+                'replace': 'Arraste e solte uma imagem ou selecione um arquivo',
+                'remove': 'Remover',
+                'error': ''
+            },
+            error: {
+                'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
+                'minWidth': 'A imagem deve ter largura maior que 651px.',
+                'maxWidth': 'A imagem deve ter largura menor que 651px.',
+                'minHeight': 'A imagem deve ter altura maior que 651px.',
+                'maxHeight': 'A imagem deve ter altura menor que 651px.',
+                'fileExtension': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
+            },
+            tpl: {
+                message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
+                clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
+            },
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg']
+        };
 
         $.ajax({
             method: 'GET',
@@ -16,24 +39,11 @@ $(document).ready(function () {
             error: function error(response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
+
+                $('#product_photo').dropify(dropifyOptions);
             },
             success: function (response) {
                 if (!isEmpty(response.data.product)) {
-
-                    /**
-                     * Se for produto shopify o botao delete nao aparece
-                     *//*
-                    if (!response.data.product.shopify_id) {
-                        $(".delete-product").show();
-                        $('.delete-product').attr('product', response.data.product.id);
-                        $('.delete-product').attr('productname', response.data.product.name);
-
-                    }*/
-
-                    $(".delete-product").show();
-                    $('.delete-product').attr('product', response.data.product.id);
-                    $('.delete-product').attr('productname', response.data.product.name);
-
                     /**
                      * Select com as categorias
                      */
@@ -44,16 +54,26 @@ $(document).ready(function () {
                         }));
 
                     });
-
                     $("#select-categories  option[value='" + response.data.product.category_id + "']").prop("selected", true);
+
+                    /**
+                     * Se for produto shopify o botao delete nao aparece
+                     *
+                    */
+                    if (response.data.product.shopify_id) {
+                        $(".delete-product").hide();
+                    }
+                    $('.delete-product').attr('product', response.data.product.id);
+                    $('.delete-product').attr('productname', response.data.product.name);
+
 
                     /**
                      * Image
                      */
-                    $("#previewimage").attr('src', response.data.product.photo);
+                    $("#product_photo").attr('src', response.data.product.photo);
 
                     $("img").on("error", function () {
-                        $(this).attr("src", "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/product-default.png");
+                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                     });
 
                     $("#name").val(response.data.product.name);
@@ -79,120 +99,37 @@ $(document).ready(function () {
                     }
                     typeEnum = response.data.product.type_enum;
 
-                    //seleciona radio button product type
-                    if (response.data.product.type_enum == 1) {
-                        $('#physical').attr('checked', true);
-                        $('#div_digital_product_upload').css('visibility', 'hidden');
-                        $('#nav-logistic-tab').css('visibility', 'visible');
-                        $("#div_digital_product_upload").addClass('d-none');
-                        $('#digital_product_url').dropify();
-                    } else {
-                        $('#digital').attr('checked', true);
-                        $('#div_digital_product_upload').css('visibility', 'visible');
-                        $('#nav-logistic-tab').css('visibility', 'hidden');
-                        $("#div_digital_product_upload").removeClass('d-none');
-                        $('#digital_product_url').dropify({
-                            messages: {
-                                'default': 'Arraste e solte ou clique para adicionar um arquivo',
-                                'replace': 'Arraste e solte ou clique para substituir',
-                            },
-                            defaultFile: response.data.product.digital_product_url,
-                        });
-                        if (response.data.product.digital_product_url != '') {
-                            $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
-                            $(".btn-view-product-url").show();
-                        }
-                        $('.div-expiration-time').show();
+                    if (response.data.product.photo != '') {
+                        dropifyOptions.defaultFile = response.data.product.photo;
                     }
+                    $('#product_photo').dropify(dropifyOptions);
+                    if (response.data.product.digital_product_url != '') {
+                        $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
+                        $(".btn-view-product-url").show();
+                    }
+                    $('.div-expiration-time').show();
 
                     $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
-                    var p = $("#previewimage");
-                    $("#photo").on("change", function () {
-
-                        var imageReader = new FileReader();
-                        imageReader.readAsDataURL(document.getElementById("photo").files[0]);
-
-                        imageReader.onload = function (oFREvent) {
-                            p.attr('src', oFREvent.target.result).fadeIn();
-
-                            p.on('load', function () {
-
-                                var img = document.getElementById('previewimage');
-                                var x1, x2, y1, y2;
-
-                                if (img.naturalWidth > img.naturalHeight) {
-                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                    x2 = x1 + (y2 - y1);
-                                } else {
-                                    if (img.naturalWidth < img.naturalHeight) {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                        y2 = y1 + (x2 - x1);
-                                    } else {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    }
-                                }
-
-                                $('input[name="photo_x1"]').val(x1);
-                                $('input[name="photo_y1"]').val(y1);
-                                $('input[name="photo_w"]').val(x2 - x1);
-                                $('input[name="photo_h"]').val(y2 - y1);
-
-                                $('#previewimage').imgAreaSelect({
-                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                    aspectRatio: '1:1',
-                                    handles: true,
-                                    imageHeight: this.naturalHeight,
-                                    imageWidth: this.naturalWidth,
-                                    onSelectEnd: function onSelectEnd(img, selection) {
-                                        $('input[name="photo_x1"]').val(selection.x1);
-                                        $('input[name="photo_y1"]').val(selection.y1);
-                                        $('input[name="photo_w"]').val(selection.width);
-                                        $('input[name="photo_h"]').val(selection.height);
-                                    }
-                                });
-
-                            });
-                        };
-                    });
-
-                    $("#previewimage").on("click", function () {
-                        $("#photo").click();
-                    });
-
+                    removeImageButton = false;
                     $("#my-form").submit(function (event) {
-                        if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
-                            alertCustom('error', 'Selecione as dimensões da imagem');
-                            return false;
-                        }
-                        if ($('#digital').is(':checked') && $('#url_expiration_time').val() == '') {
-                            alertCustom('error', 'Preencha o campo Tempo de expiração da url');
-                            return false;
-                        }
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
 
                         let formData = new FormData(myForm);
 
-                        if ($('#physical').is(':checked')) {
+                        if (response.data.product.type_enum == 1) {
                             formData.append('type_enum', 'physical');
                         } else {
                             formData.append('type_enum', 'digital');
                         }
 
-                        if (verify()) {
+                        if (verify(response.data.product.type_enum)) {
                             loadOnAny('.page', false);
                             $.ajax({
                                 method: 'POST',
-                                url: "/api/products/" + response.data.product.id,
+                                url: "/api/products/" + response.data.product.id + '?product_photo_remove=' + removeImageButton,
                                 processData: false,
                                 cache: false,
                                 contentType: false,
@@ -207,10 +144,12 @@ $(document).ready(function () {
 
                                     errorAjaxResponse(response);
 
-                                }, success: function (response) {
+                                },
+                                success: function (response) {
                                     loadOnAny('.page', true);
                                     alertCustom('success', response.message);
-                                    // window.location = "/products";
+                                    $(".btn-view-product-url").attr('link', response.digital_product_url);
+                                    window.location = "/products";
                                 }
                             });
                         }
@@ -230,7 +169,7 @@ $(document).ready(function () {
      * Helper verifica campos
      * @returns {boolean}
      */
-    function verify() {
+    function verify(type_enum) {
         let ver = true;
         if ($.trim($('#name').val()) === '') {
             $("#nav-basic-tab").click();
@@ -244,43 +183,28 @@ $(document).ready(function () {
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
         }
+
+        if (type_enum == 1) {
+
+        }
+        if (type_enum == 2) {
+            if ($.trim($('#url_expiration_time').val()) === '') {
+                alertCustom('error', 'Preencha o campo Tempo de expiração da url');
+                ver = false;
+                $("#url_expiration_time").focus();
+            }
+        }
         return ver;
     }
 
     $('.money').mask('#.###,#0', {reverse: true});
 
     $("#shipping").on("change", function () {
-
         if ($(this).val() == 'proprio') {
             $("#div_carrier_id").hide();
         } else {
             $("#div_carrier_id").show();
         }
-    });
-
-    $('input[type=radio][name=format]').change(function () {
-        if (this.value == '1') {
-            $("#nav-logistic-tab").show();
-            $("#div_next_step").show();
-            $("#div_save_digital_product").hide();
-            $("#div_digital_product_upload").css('visibility', 'hidden');
-            $("#div_digital_product_upload").addClass('d-none');
-        } else if (this.value == '0') {
-            $("#nav-logistic-tab").hide();
-            $("#div_next_step").hide();
-            $("#div_save_digital_product").show();
-            $("#div_digital_product_upload").css('visibility', 'visible');
-            $("#div_digital_product_upload").removeClass('d-none');
-        }
-    });
-
-    $("#next_step").on("click", function () {
-        if ($("#nav-logistic-tab").css('visibility') == "visible") {
-            $("#nav-logistic-tab").click();
-        } else {
-            $("#nav-logistic-tab").submit();
-        }
-        $("#previewimage").imgAreaSelect({remove: true});
     });
 
     $(".delete-product").on('click', function (event) {
@@ -318,7 +242,7 @@ $(document).ready(function () {
                     loadingOnScreenRemove();
 
                     alertCustom('success', response.message);
-                    // window.location = "/products";
+                    window.location = "/products";
                 }
             });
         });
@@ -351,48 +275,28 @@ $(document).ready(function () {
 
     $('#url_expiration_time').mask('0#');
 
-    $("#physical").on("change", function () {
-        $('#div_digital_product_upload').css('visibility', 'hidden');
-        $('#nav-logistic-tab').css('visibility', 'visible');
-        $("#div_digital_product_upload").addClass('d-none');
-        $('.div-expiration-time').hide();
-        $('#url_expiration_time').val('');
+    $('#product_photo').on('dropify.afterClear', function (event, element) {
+        removeImageButton = true;
     });
 
-    $("#digital").on("change", function () {
-        if (typeEnum == 1) {
-            $.ajax({
-                method: 'POST',
-                url: '/api/products/verifyproductinplan',
-                dataType: "json",
-                data: {product_id: code},
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: function (response) {
-                    errorAjaxResponse(response)
-                },
-                success: function (response) {
-                    if (response.product_in_plan) {
-                        $('#modal-plan-already-created').modal('show');
-                        $('#physical').click();
-                    } else {
-                        $('#div_digital_product_upload').css('visibility', 'visible');
-                        $('#nav-logistic-tab').css('visibility', 'hidden');
-                        $("#div_digital_product_upload").removeClass('d-none');
-                        $('.div-expiration-time').show();
-                    }
-                },
-            });
-        } else {
-            $('#div_digital_product_upload').css('visibility', 'visible');
-            $('#nav-logistic-tab').css('visibility', 'hidden');
-            $("#div_digital_product_upload").removeClass('d-none');
-            $('.div-expiration-time').show();
-        }
-    });
-    // $(".btn-close-modal-plan").on("change", function () {
-    //
-    // });
+    /* Produto Fisico */
+    alterarCaixinha('#height', 'caixinha-altura');
+    alterarCaixinha('#width', 'caixinha-largura');
+    alterarCaixinha('#length', 'caixinha-comprimento');
+    alterarCaixinha('#weight', 'caixinha-peso');
+
+    function alterarCaixinha(input, newValue) {
+        $(input).on('focus', function () { $('#caixinha-img')[0].src = $('#caixinha-img')[0].src.replace('caixinha', newValue) });
+        $(input).on('focusout', function () { $('#caixinha-img')[0].src = $('#caixinha-img')[0].src.replace(newValue, 'caixinha') });
+    }
+
+    /* Upload Digital Product Input */
+    if ($('#digital_product_url')[0] != undefined) {
+        $('#digital_product_url')[0].addEventListener("change", function () {
+            productName = this.value.split('\\')[2] || '';
+            $('#file_return')[0].innerHTML = productName.length > 25
+                ? productName.substring(0, 21) + productName.substring(productName.length - 4)
+                : productName;
+        });
+    }
 });
