@@ -409,11 +409,6 @@ class SaleService
             $totalTax += $transactionRate;
         }
 
-        if ($value > 0 && $sale->status != Sale::STATUS_REFUNDED) {
-            $comission = FoxUtils::formatMoney($value);
-        } else {
-            $comission = FoxUtils::formatMoney(0);
-        }
 
         if (FoxUtils::onlyNumbers($sale->installment_tax_value) > 0) {
             $taxaReal = $totalToCalcTaxReal
@@ -429,6 +424,12 @@ class SaleService
 
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
+        }
+
+        if ($total > 0 && $sale->status != Sale::STATUS_REFUNDED) {
+            $total = FoxUtils::formatMoney(intval($total) / 100);
+        } else {
+            $total = FoxUtils::formatMoney(0);
         }
 
         //set flag
