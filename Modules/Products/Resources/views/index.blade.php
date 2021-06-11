@@ -7,8 +7,8 @@
 @section('content')
 
     <!-- Page -->
-    <div class="page mb-0">
-        <div style="display: none" class="page-header container pb-0">
+    <div class="page" style="margin-bottom: 0 !important">
+        <div style="display: none" class="page-header container">
             <div class="row align-items-center" style="min-height:4rem">
                 <div class="col-6">
                     <h1 class="page-title" style="color: #707070">Produtos</h1>
@@ -23,7 +23,7 @@
         </div>
 
         <div id="project-not-empty" style="display:none">
-           <div style="display: none" class="page-header container pb-0">
+           <div style="display: none" class="page-header container">
                 <div class="card" id="filter-products">
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
            </div>
-            <div class="page-content container">
+            <div class="page-content container pb-40">
                 <div id='data-table-products' class='row g-2'></div>
                 <div class="row justify-content-center justify-content-md-end">
                     <div id='pagination-products' class="pl-5 pr-md-15 mb-20"></div>
