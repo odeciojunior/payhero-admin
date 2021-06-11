@@ -216,6 +216,7 @@ $(document).ready(function () {
                         $("#data-table-products").append(dados);
                     });
 
+                    $(".product-image").off("click");
                     $(".product-image").on("click", function () {
                         window.location.href = $(this).attr('data-link');
                     });
@@ -230,6 +231,7 @@ $(document).ready(function () {
                         });
                     }
 
+                    $('.menu_product').off('click');
                     $('.menu_product').on('click', function () {
                         var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`)
 
@@ -238,6 +240,7 @@ $(document).ready(function () {
                         tooltip.toggle();
                     });
 
+                    $('.menu_product').off('focusout');
                     $('.menu_product').on('focusout', function (event) {
                         if ($(event.relatedTarget).hasClass('menu_product')) {
                             return;
@@ -246,6 +249,7 @@ $(document).ready(function () {
                         setTimeout(() => closeTooltips(), 200);
                     });
 
+                    $('.bt_excluir').off('click');
                     $('.bt_excluir').on('click', function (event) {
                         event.preventDefault();
 
@@ -254,6 +258,7 @@ $(document).ready(function () {
                         $("#modal-delete").modal();
                     });
 
+                    $('.bt_excluir_modal').off('click');
                     $('.bt_excluir_modal').on('click', function (event) {
                         event.preventDefault();
 
