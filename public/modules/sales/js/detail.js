@@ -458,7 +458,7 @@ $(() => {
             $(".automatic-discount-value").hide();
             $(".text-discount").hide();
         }
-        $("#total-value").html(sale.total);
+        $("#total-value").html(sale.total_paid_value);
 
         if (sale.refund_value != "0,00" && sale.status == 8) {
             $(".text-partial-refund").show();
