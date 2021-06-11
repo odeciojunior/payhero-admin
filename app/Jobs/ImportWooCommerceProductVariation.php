@@ -15,7 +15,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 
 
 
-class ImportWooCommerceProduct implements ShouldQueue
+class ImportWooCommerceProductVariation implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -25,41 +25,50 @@ class ImportWooCommerceProduct implements ShouldQueue
     private $projectId;
     private $userId;
     private $_product;
+    private $variation;
 
-    public function __construct($projectId, $userId, $_product)
+    public function __construct($projectId, $userId, $_product, $variation)
     {
         $this->projectId = $projectId;
         $this->userId = $userId;
         $this->_product = $_product;
+        $this->variation = $variation;
     }
 
     public function handle()
     {
         try {
-
+            
             $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
 
             if(!empty($integration)){
 
                 $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-
+                
                 $woocommerce->verifyPermissions();
+                
 
-                $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
+                $woocommerce->importProductVariation(
+                    $this->variation,
+                    $this->_product,
+                    $this->projectId, 
+                    $this->userId, 
+                );
+                
 
             }
 
+            
 
-
-
+            
 
         } catch (Exception $e) {
-
-
+            
+            
 
             report($e);
 
-
+            
         }
     }
 }

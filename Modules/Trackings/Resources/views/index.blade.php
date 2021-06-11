@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=45451') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=04') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=03') }}">
     @endpush
 
     <!-- Page -->
@@ -199,7 +199,7 @@
 
                     <div class="collapse" id="bt_collapse">
                         <div class="row pt-15">
-                            <div class="col-sm-6 col-md-4">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="status_commission">Status da comissão</label>
                                 <select name='status_commission' id="status_commission" class="form-control select-pad">
                                     <option value="">Todos</option>
@@ -208,11 +208,11 @@
                                     <option value="blocked">Não transferido por falta de rastreio</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 col-md-4 form-icons">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 form-icons">
                                 <label for="date_updated">Data de aprovação venda</label>
-                                <i style="right: 30px;"
+                                <i style="right: 23px;top: 37px;"
                                    class="form-control-icon form-control-icon-right o-agenda-1 mt-10 font-size-25"></i>
-                                <input name='date_updated' id="date_updated" class="select-pad"
+                                <input name='date_updated' id="date_updated" class="input-pad"
                                        placeholder="Clique para editar..." readonly>
                             </div>
                               <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">

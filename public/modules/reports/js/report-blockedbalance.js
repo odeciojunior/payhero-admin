@@ -202,7 +202,6 @@ $(document).ready(function () {
                                         start_date[1]
                                     +" </small>";
                         }
-
                         let end_date='';
                         if (value.end_date) {
                             end_date=value.end_date.split(/\s/g);//data final
@@ -231,11 +230,11 @@ $(document).ready(function () {
                                                 : ''}
                                         </div>
                                     </td>
-                                    <td class='display-sm-none display-m-none'>${value.start_date}</td>
-                                    <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <span class="ajust-font">${value.reason_blocked}</span>
+                                    <td class='display-sm-none text-left font-size-14 display-m-none'>${start_date}</td>
+                                    <td class='display-sm-none text-left font-size-14'>${end_date}</td>
+                                    <td style='white-space: nowrap' class="text-left font-size-14"><b>${value.total_paid}</b></td>
+                                    <td class="text-left font-size-14">
+                                        ${value.reason_blocked}
                                     </td>
                                 </tr>`;
 
