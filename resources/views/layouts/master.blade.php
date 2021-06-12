@@ -12,7 +12,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @if(getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'false')
 
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     @elseif(getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'true')
         <style>
@@ -36,13 +36,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=21') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=21') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=27') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=28') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=21') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
 
@@ -54,17 +54,17 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=21') }}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=21') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=31') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=21') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=20') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=32') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
@@ -130,16 +130,16 @@
 </script>
 
 
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=1') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=1') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
 
 
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
 
-    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=11') }}"></script>
-    <script src="{{ asset('modules/global/js/notifications.js?v=11') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=12') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=12') }}"></script>
 
 
     <style>
