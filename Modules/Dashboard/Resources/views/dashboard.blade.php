@@ -234,7 +234,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('modules/dashboard/js/gauge.js') }}'></script>
+        <script src='{{ asset('modules/dashboard/js/gauge.js?v=231') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
