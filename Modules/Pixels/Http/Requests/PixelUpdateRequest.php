@@ -28,6 +28,7 @@ class PixelUpdateRequest extends FormRequest
             'is_api' => 'nullable|string',
             'facebook_token_api' => 'nullable|string',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
+            'url_facebook_domain_edit' => 'nullable|string|max:255',
         ];
     }
 

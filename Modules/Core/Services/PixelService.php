@@ -1,59 +1,158 @@
 <?php
 
-
 namespace Modules\Core\Services;
 
-
-use Exception;
-use Modules\Core\Entities\Affiliate;
+use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\Project;
 
 class PixelService
 {
-
-    public function getPixelFacebookByProject(int $projectId)
+    public function store($projectId, $dataValidated): array
     {
-        $pixelModel = new Pixel();
-        $affiliate = Affiliate::where('project_id', $projectId)
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->first();
+        if (!empty($dataValidated['affiliate_id'])) {
+            $dataValidated['affiliate_id'] = hashids_decode($dataValidated['affiliate_id']);
+            $affiliateId = $dataValidated['affiliate_id'];
+        } else {
+            $affiliateId = 0;
+            $dataValidated['affiliate_id'] = null;
+        }
 
-        $affiliateId = $affiliate->id ?? null;
+        $project = Project::find(hashids_decode($projectId));
 
-        return $pixelModel->where('project_id', $projectId)
-            ->where('platform', 'facebook')
-            ->where('affiliate_id', $affiliateId)
-            ->get();
+        if (!Gate::allows('edit', [$project, $affiliateId])) {
+            return [
+                'status' => 403,
+                'message' => __('controller.pixel.permission.create')
+            ];
+        }
+
+        $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($dataValidated['add_pixel_plans']));
+
+        if ($dataValidated['platform'] == 'google_adwords') {
+            $dataValidated['code'] = str_replace(['AW-'], '', $dataValidated['code']);
+        }
+
+        if (in_array(
+                $dataValidated['platform'],
+                ['taboola', 'outbrain']
+            ) && empty($dataValidated['purchase-event-name'])) {
+            $dataValidated['purchase-event-name'] = $dataValidated['platform'] == 'taboola' ? 'make_purchase' : 'Purchase';
+        }
+
+        if (!in_array($dataValidated['platform'], ['taboola', 'outbrain'])) {
+            $dataValidated['purchase-event-name'] = null;
+        }
+
+        $facebookToken = null;
+        $isApi = false;
+        $facebookDomainUrl = null;
+        if ($dataValidated['platform'] == 'facebook' && !empty($dataValidated['api-facebook']) && $dataValidated['api-facebook'] == 'api') {
+            $facebookToken = $dataValidated['facebook-token-api'];
+            $isApi = true;
+            $facebookDomainUrl = $dataValidated['url_facebook_domain'];
+        }
+
+        if (empty($dataValidated['value_percentage_purchase_boleto'])) {
+            $dataValidated['value_percentage_purchase_boleto'] = 100;
+        }
+
+        Pixel::create(
+            [
+                'project_id' => $project->id,
+                'name' => $dataValidated['name'],
+                'code' => $dataValidated['code'],
+                'platform' => $dataValidated['platform'],
+                'status' => (bool)$dataValidated['status'],
+                'checkout' => $dataValidated['checkout'] == 'true',
+                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
+                'purchase_card' => $dataValidated['purchase_card'] == 'true',
+                'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
+                'affiliate_id' => $dataValidated['affiliate_id'],
+                'campaign_id' => null,
+                'apply_on_plans' => $applyPlanEncoded,
+                'purchase_event_name' => $dataValidated['purchase-event-name'],
+                'facebook_token' => $facebookToken,
+                'is_api' => $isApi,
+                'value_percentage_purchase_boleto' => $dataValidated['value_percentage_purchase_boleto'],
+                'url_facebook_domain' => $facebookDomainUrl
+            ]
+        );
+
+        return [
+            'status' => 200,
+            'message' => 'Pixel ' . __('controller.success.create')
+        ];
     }
 
-    public function updateCodeMetaTagFacebook(int $projectId, $metaTag): bool
+    public function update($pixelId, $dataValidated): array
     {
-        try {
-            $pixels = $this->getPixelFacebookByProject($projectId);
+        $pixel = Pixel::with('project')->find(hashids_decode($pixelId));
 
-            if (empty($metaTag)) {
-                $pixel = Pixel::where('project_id', $projectId)
-                    ->where('platform', 'facebook')
-                    ->whereNotNull('code_meta_tag_facebook')->first();
-                if (!empty($pixel) && !empty($pixel->code_meta_tag_facebook)){
-                    $metaTag = $pixel->code_meta_tag_facebook;
-                }
-            }
-
-            if (!empty($metaTag)) {
-                foreach ($pixels as $pixel) {
-                    $pixel->update(
-                        [
-                            'code_meta_tag_facebook' => $metaTag
-                        ]
-                    );
-                }
-            }
-            return true;
-        } catch (Exception $e) {
-            report($e);
-
-            return false;
+        if (empty($pixel)) {
+            return [
+                'message' => 'Pixel não encontrado',
+                'status' => 400
+            ];
         }
+
+        $project = $pixel->project;
+
+        $affiliateId = !empty($pixel->affiliate_id) ? $pixel->affiliate_id : 0;
+
+        if (!Gate::allows('edit', [$project, $affiliateId])) {
+            return ['message' => 'Sem permissão para atualizar pixels', 'status' => 403];
+        }
+
+        if ($dataValidated['platform'] == 'google_adwords') {
+            $dataValidated['code'] = str_replace(['AW-'], '', $dataValidated['code']);
+        }
+
+        if (!in_array($dataValidated['platform'], ['taboola', 'outbrain'])) {
+            $dataValidated['purchase_event_name'] = null;
+        }
+
+        if (empty($dataValidated['purchase_event_name'])) {
+            if ($dataValidated['platform'] == 'taboola' && empty($pixel->taboola_conversion_name)) {
+                $dataValidated['purchase_event_name'] = 'make_purchase';
+            } elseif ($dataValidated['platform'] == 'outbrain' && empty($pixel->outbrain_conversion_name)) {
+                $dataValidated['purchase_event_name'] = 'Purchase';
+            }
+        }
+
+        if ($dataValidated['platform'] == 'facebook') {
+            $dataValidated['purchase_event_name'] = '';
+            if ($dataValidated['is_api'] == 'api') {
+                $dataValidated['is_api'] = true;
+            } else {
+                $dataValidated['is_api'] = false;
+                $dataValidated['facebook_token_api'] = null;
+            }
+        } else {
+            $dataValidated['is_api'] = false;
+        }
+
+        $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated['edit_pixel_plans']));
+
+        $pixel->update(
+            [
+                'name' => $dataValidated['name'],
+                'platform' => $dataValidated['platform'],
+                'status' => $dataValidated['status'] == 'true',
+                'code' => $dataValidated['code'],
+                'apply_on_plans' => $applyPlanEncoded,
+                'checkout' => $dataValidated['checkout'] == 'true',
+                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
+                'purchase_card' => $dataValidated['purchase_card'] == 'true',
+                'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
+                'purchase_event_name' => $dataValidated['purchase_event_name'] ?? null,
+                'facebook_token' => $dataValidated['facebook_token_api'],
+                'is_api' => $dataValidated['is_api'],
+                'value_percentage_purchase_boleto' => $dataValidated['value_percentage_purchase_boleto'],
+                'url_facebook_domain' => $dataValidated['url_facebook_domain_edit']
+            ]
+        );
+
+        return ['message' => 'Sucesso', 'status' => 200];
     }
 }
