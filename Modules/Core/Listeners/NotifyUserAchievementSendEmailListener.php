@@ -43,7 +43,7 @@ class NotifyUserAchievementSendEmailListener
         $data = $event->achievement->toArray();
 
         $sendgrindService->sendEmail(
-            'noreply@cloudfox.net',
+            'help@cloudfox.net',
             'cloudfox',
             $event->user->email,
             $event->user->name,

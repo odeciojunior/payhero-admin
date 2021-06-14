@@ -60,7 +60,7 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
              * Verifica se o usuario habilitou notificação email
              */
             if ($user->userNotification->affiliation) {
-                $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
+                $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
             }
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de avaliação de afiliado para o projeto ' . $project->id);
