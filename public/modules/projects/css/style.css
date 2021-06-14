@@ -237,20 +237,6 @@
     border-radius: 4px;
 }
 
-#products {
-    height: 300px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-#form-register-plan #products {
-    padding: 25px;
-}
-
 @media (min-width: 768px) {
     .s-control-magin {
         margin-top: calc(10% - 10px) !important;

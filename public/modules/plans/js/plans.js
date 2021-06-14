@@ -138,7 +138,6 @@ $(function () {
 
                         var formData = new FormData(document.getElementById('form-register-plan'));
                         formData.append("project_id", projectId);
-                        loadingOnScreen();
                         $.ajax({
                             method: "POST",
                             url: '/api/project/' + projectId + '/plans',
@@ -153,11 +152,9 @@ $(function () {
                             cache: false,
                             error: function error(response) {
                                 clearFields();
-                                loadingOnScreenRemove();
                                 errorAjaxResponse(response);
                             },
                             success: function success(response) {
-                                loadingOnScreenRemove();
                                 index();
                                 clearFields();
                                 bindModalKeys();
@@ -295,8 +292,6 @@ $(function () {
                             return error;
                         }(function (response) {
                             errorAjaxResponse(response);
-
-                            loadingOnScreenRemove();
                         }), success: function success(response) {
                             if (response.message == 'error') {
                                 alertCustom('error', 'Ocorreu um erro ao tentar buscar dados plano!');
@@ -355,8 +350,6 @@ $(function () {
                         },
                         error: function error() {
                             errorAjaxResponse(response);
-
-                            loadingOnScreenRemove()
                         }, success: function success(response) {
                             $("#form-update-plan").html('');
                             $("#form-update-plan").html(form_update_plan);
@@ -528,8 +521,6 @@ $(function () {
                                 findElementsEdit(this);
                             });
 
-                            loadingOnScreenRemove()
-
                             $(document).on('click', '.btnDelete', function (event) {
                                 event.preventDefault();
                                 $(this).parent().parent().remove();
@@ -581,7 +572,6 @@ $(function () {
                                 }
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project_id", projectId);
-                                loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
                                     // url: "/api/plans/" + plan,
@@ -606,13 +596,11 @@ $(function () {
 
                                         return error;
                                     }(function (response) {
-                                        loadingOnScreenRemove();
                                         errorAjaxResponse(response);
 
                                         index(pageCurrent);
                                     }),
                                     success: function success(data) {
-                                        loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
                                         index(pageCurrent);
                                     }
@@ -632,7 +620,6 @@ $(function () {
                     $("#btn-delete-plan").unbind('click');
                     $("#btn-delete-plan").on('click', function () {
                         $("#modal-delete-plan").modal('hide');
-                        loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
                             url: '/api/project/' + projectId + '/plans/' + plan,
@@ -652,12 +639,10 @@ $(function () {
 
                                 return error;
                             }(function (response) {
-                                loadingOnScreenRemove();
                                 errorAjaxResponse(response);
 
                             }),
                             success: function success(response) {
-                                loadingOnScreenRemove();
                                 alertCustom('success', response.message);
                                 index();
                             }
@@ -932,8 +917,6 @@ $(function () {
 
     $(document).on('click', '.bt-update-cost-block', function (event) {
 
-        loadingOnScreen();
-        console.log($('#add_cost_on_plans').val());
         $.ajax({
             method: "POST",
             url: '/api/plans/update-bulk-cost',
@@ -957,11 +940,9 @@ $(function () {
 
                 return error;
             }(function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }),
             success: function success(data) {
-                loadingOnScreenRemove();
                 alertCustom("success", "Configuração atualizada com sucesso");
             }
         });
@@ -969,7 +950,6 @@ $(function () {
     });
 
     $(document).on('click', '.bt-update-cost-configs', function (event) {
-        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: '/api/plans/update-config-cost',
@@ -995,16 +975,13 @@ $(function () {
 
                 return error;
             }(function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }),
             success: function success(data) {
-                loadingOnScreenRemove();
                 var prefixCurrency = ($('#cost_currency_type').val() == 'USD') ? 'US$' : 'R$';
                 $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
                 $('#currency_type_project').val(($('#cost_currency_type').val() == 'USD') ? 2 : 1);
                 alertCustom("success", "Configuração atualizada com sucesso");
-                // index(pageCurrent);
             }
         });
 
