@@ -142,7 +142,7 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
+            'supervisor-production' => [
                 'connection' => 'redis-horizon',
                 'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
@@ -151,7 +151,7 @@ return [
                 'timeout' => 3600,
                 'delay' => 1,
             ],
-            'supervisor-long-running' => [
+            'supervisor-production-long-running' => [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
@@ -163,7 +163,7 @@ return [
         ],
 
         'homolog' => [
-            'supervisor-1' => [
+            'supervisor-homolog' => [
                 'connection' => 'redis-horizon',
                 'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
@@ -172,7 +172,7 @@ return [
                 'timeout' => 3600,
                 'delay' => 1,
             ],
-            'supervisor-long-running' => [
+            'supervisor-homolog-long-running' => [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
@@ -184,7 +184,7 @@ return [
         ],
 
         'local' => [
-            'supervisor-1' => [
+            'supervisor-local' => [
                 'connection' => 'redis-horizon',
                 'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
