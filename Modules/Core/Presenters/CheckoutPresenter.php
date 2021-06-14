@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -70,11 +71,15 @@ class CheckoutPresenter extends Presenter
     public function getCheckoutLink($domain)
     {
 
-        if (!empty($domain)) {
-            return "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($this->id);
+        $link = '';
+        if(FoxUtils::isProduction()) {
+            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($this->id) : 'Domínio não configurado';
+            //$link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado';
         } else {
-            return '';
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . Hashids::encode($this->id);
         }
+
+        return $link;
     }
 
     /**
