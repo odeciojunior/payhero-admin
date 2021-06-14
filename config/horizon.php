@@ -193,7 +193,7 @@ return [
                 'timeout' => 3600,
                 'delay' => 1,
             ],
-            'supervisor-long-running' => [
+            'supervisor-local-long-running' => [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
