@@ -160,5 +160,11 @@
 
 @endif
 
+@if(!Modules\Core\Services\FoxUtils::isProduction())
+    <script>
+        console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
+    </script>
+@endif
+
 </body>
 </html>
