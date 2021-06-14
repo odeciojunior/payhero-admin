@@ -33,11 +33,6 @@ class SalesRecoveryCardRefusedResource extends JsonResource
             $type   = 'expired';
         }
 
-//        $link = 'Domínio não configurado';
-//        if (!empty($domain)) {
-//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($this->checkout_id);
-//        }
-
         if($this->payment_method === Sale::PIX_PAYMENT) {
             if(FoxUtils::isProduction()) {
                 $link = isset($domain->name) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($this->id) : 'Domínio não configurado';
