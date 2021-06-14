@@ -303,8 +303,6 @@ $(function () {
             return false;
         }
 
-        loadingOnScreen();
-
         $.ajax({
             method: "PUT",
             url: `/api/project/${projectId}/pixels/${pixelEdit.id_code}`,
@@ -330,11 +328,9 @@ $(function () {
                 url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val()
             },
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success() {
-                loadingOnScreenRemove();
                 $("#modal-edit-pixel").modal('hide');
                 alertCustom("success", "Pixel atualizado com sucesso");
                 atualizarPixel(currentPage);
@@ -354,7 +350,6 @@ $(function () {
 
     // Delete Pixel
     $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
-        loadingOnScreen();
         const pixel = $(this).attr('pixel');
         $.ajax({
             method: "DELETE",
@@ -375,11 +370,9 @@ $(function () {
 
                 return error;
             }(function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }),
             success: function success() {
-                loadingOnScreenRemove();
                 alertCustom("success", "Pixel Removido com sucesso");
                 atualizarPixel(currentPage);
             }
@@ -538,7 +531,6 @@ $(function () {
             return false;
         }
 
-        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/pixels",
@@ -552,10 +544,8 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }, success: function success(response) {
-                loadingOnScreenRemove();
                 $("#modal-create-pixel").modal('hide');
                 alertCustom("success", response.message);
                 atualizarPixel();

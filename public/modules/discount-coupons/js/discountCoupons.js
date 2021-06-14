@@ -20,10 +20,10 @@ $(function () {
 
     $('.rule-value').on('blur', function () {
         if ($(this).val().length == 1) {
-            let val = '0,0'+$(this).val();
+            let val = '0,0' + $(this).val();
             $('.rule-value').val(val);
-        } else if($(this).val().length == 2) {
-            let val = '0,'+$(this).val();
+        } else if ($(this).val().length == 2) {
+            let val = '0,' + $(this).val();
             $('.rule-value').val(val);
         }
     });
@@ -109,7 +109,7 @@ $(function () {
     //cria novo cupom
     $('#modal-create-coupon .btn-save').on('click', function () {
         let formData = new FormData(document.getElementById('form-register-coupon'));
-        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts",
@@ -123,11 +123,11 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success() {
-                loadingOnScreenRemove();
+
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Cupom Adicionado!");
                 atualizarCoupon();
@@ -140,7 +140,7 @@ $(function () {
     $("#modal-edit-coupon .btn-update").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-coupon'));
         let coupon = $('#modal-edit-coupon .coupon-id').val();
-        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
@@ -157,11 +157,11 @@ $(function () {
                 if (response.status === 400) {
                     atualizarCoupon();
                 }
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
+
                 alertCustom("success", data.message);
                 atualizarCoupon();
             }
@@ -171,7 +171,7 @@ $(function () {
     //deletar cupom
     $('#modal-delete-coupon .btn-delete').on('click', function () {
         let coupon = $(this).attr('coupon');
-        loadingOnScreen();
+
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
@@ -184,7 +184,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
+
                 alertCustom("success", "Cupom Removido com sucesso");
                 atualizarCoupon();
             }

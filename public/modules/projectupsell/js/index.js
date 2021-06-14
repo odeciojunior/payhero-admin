@@ -4,22 +4,22 @@ $(document).ready(function () {
     let descriptionconfig;
 
     ClassicEditor
-        .create( document.querySelector( '#description_config' ), {
+        .create(document.querySelector('#description_config'), {
             language: 'pt-br',
             uiColor: '#F1F4F5',
             toolbar: [
                 'heading', '|',
-                'bold', 'italic','|',
+                'bold', 'italic', '|',
                 'link', '|',
                 'undo', 'redo'
             ]
         })
-        .then( newEditor => {
+        .then(newEditor => {
             descriptionconfig = newEditor;
         })
-        .catch( error => {
-            console.error( error );
-        } );
+        .catch(error => {
+            console.error(error);
+        });
 
     $('.tab_upsell').on('click', function () {
         loadUpsell();
@@ -147,7 +147,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.bt-upsell-save', function () {
-        loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_add_upsell'));
         form_data.append('project_id', projectId);
         $.ajax({
@@ -162,12 +161,10 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#modal_add_upsell').modal('hide');
-                loadingOnScreenRemove();
                 loadUpsell();
                 alertCustom('success', response.message);
                 $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger('change');
@@ -180,7 +177,7 @@ $(document).ready(function () {
         let upsellId = $(this).data('upsell');
         $('.btn-delete-upsell').unbind('click');
         $('.btn-delete-upsell').on('click', function () {
-            loadingOnScreen();
+
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,
@@ -193,7 +190,6 @@ $(document).ready(function () {
                     loadingOnScreenRemove()
                 },
                 success: function (response) {
-                    loadingOnScreenRemove();
                     loadUpsell();
                     alertCustom('success', response.message);
                 }
@@ -203,7 +199,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.bt-upsell-update', function (event) {
         event.preventDefault();
-        loadingOnScreen();
+
         var form_data = new FormData(document.getElementById('form_edit_upsell'));
         let upsellId = $('#form_edit_upsell .upsell-id').val();
         $.ajax({
@@ -218,12 +214,10 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#modal_add_upsell').modal('hide');
-                loadingOnScreenRemove();
                 loadUpsell();
                 alertCustom('success', response.message);
             }
@@ -299,7 +293,7 @@ $(document).ready(function () {
             },
             processResults: function (res) {
                 let elemId = this.$element.attr('id');
-                if (['add_apply_on_plans','edit_apply_on_plans'].includes(elemId) && res.meta.current_page === 1) {
+                if (['add_apply_on_plans', 'edit_apply_on_plans'].includes(elemId) && res.meta.current_page === 1) {
                     let allObject = {
                         id: 'all',
                         name: 'Qualquer plano',
@@ -328,7 +322,6 @@ $(document).ready(function () {
 
     $(document).on('click', '#config-upsell', function (event) {
         event.preventDefault();
-        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -339,11 +332,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
-                loadingOnScreenRemove();
                 let upsellConfig = response.data;
                 $('#header_config').val(`${upsellConfig.header}`);
                 $('#title_config').val(`${upsellConfig.title}`);
@@ -369,7 +360,7 @@ $(document).ready(function () {
             alertCustom('error', 'Preencha o campo Contagem');
             return false;
         }
-        loadingOnScreen();
+
         var form_data = new FormData(document.getElementById('form_config_upsell'));
         let description = descriptionconfig.getData();
         form_data.set('description', description);
@@ -386,12 +377,12 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 // $('#modal_config_upsell').modal('hide');
-                loadingOnScreenRemove();
+
                 alertCustom('success', response.message);
             }
         });
@@ -404,7 +395,7 @@ $(document).ready(function () {
     $(document).on('click', '.btn-view-config', function (event) {
         event.preventDefault();
         $('#modal_config_upsell').modal('hide');
-        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: "/api/projectupsellconfig/previewupsell",
@@ -417,11 +408,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
-                loadingOnScreenRemove();
+
                 let upsell = response.data;
 
                 $('#div-upsell-products').html('');
