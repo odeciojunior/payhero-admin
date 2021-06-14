@@ -330,10 +330,10 @@
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v=87'.uniqid())}}"></script>
+        <script src="{{asset('modules/projectupsell/js/index.js?v=87'.uniqid())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/projectreviews/js/index.js?v=87'.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
