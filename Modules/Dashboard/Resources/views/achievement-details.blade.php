@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/achievement-details.css?v=06') }}">
+    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/achievement-details.css?v=07') }}">
 @endpush
 <div id="modal-achievement-container">
 {{--  JS  --}}

@@ -26,6 +26,7 @@ $(function () {
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
     }
+
     function clearFields() {
         $('#name').val('');
         $('#price').val('');
@@ -33,7 +34,8 @@ $(function () {
         $("#form-register-plan").html('');
         $("#form-register-plan").html(form_register_plan);
     }
-    function create() {console.log('modal create');
+
+    function create() {
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -68,7 +70,7 @@ $(function () {
 
                     $('.products_amount').mask('0#');
 
-                    if($('#currency_type_project').val() == 1) {
+                    if ($('#currency_type_project').val() == 1) {
                         $('#select_currency').prop('selectedIndex', 0);
                     } else {
                         $('#select_currency').prop('selectedIndex', 1);
@@ -111,7 +113,7 @@ $(function () {
                         $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
                         $('.products_amount').mask('0#');
 
-                        if($('#currency_type_project').val() == 1) {
+                        if ($('#currency_type_project').val() == 1) {
                             $('.card.container .select_currency_create').prop('selectedIndex', 0);
                         } else {
                             $('.card.container .select_currency_create').prop('selectedIndex', 1);
@@ -238,7 +240,7 @@ $(function () {
                     $("#data-table-plan").html('');
                     $('#count-plans').html(response.meta.total);
 
-                    if (response.data[0].document_status == 'approved') {                   
+                    if (response.data[0].document_status == 'approved') {
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';
@@ -317,11 +319,11 @@ $(function () {
                                     data += '<td style="vertical-align: middle;">' + value.amount + '</td>';
                                     data += '</tr>';
                                     $("#products_plan_details").append(data);
-                                    if(formCartShopify.length) {
-                                        if(value.shopify_id){
-                                            let inputs = `<input type="hidden" name="product_id_${index+1}" value="${value.shopify_id}">
-                                                          <input type="hidden" name="variant_id_${index+1}" value="${value.variant_id}">
-                                                          <input type="hidden" name="product_amount_${index+1}" value="${value.amount}">`;
+                                    if (formCartShopify.length) {
+                                        if (value.shopify_id) {
+                                            let inputs = `<input type="hidden" name="product_id_${index + 1}" value="${value.shopify_id}">
+                                                          <input type="hidden" name="variant_id_${index + 1}" value="${value.variant_id}">
+                                                          <input type="hidden" name="product_amount_${index + 1}" value="${value.amount}">`;
                                             formCartShopify.append(inputs)
                                                 .show();
                                         } else {
@@ -666,7 +668,7 @@ $(function () {
                             
                             $('.products_amount').mask('0#');
 
-                            $('#products .card.container .row').each(function( index ) {
+                            $('#products .card.container .row').each(function (index) {
                                 findElementsEdit(this);
                             });
 
@@ -933,6 +935,7 @@ $(function () {
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
     }
+
     function getElementsCreate(element) {
         let custoUnitario = $(element).parent().parent().find('.products_cost_create')
         let custoTotal = $(element).parent().parent().find('.products_total_create')
@@ -941,9 +944,11 @@ $(function () {
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
     }
+
     function clickElementEdit(element) {
         $(element).parent().parent().find('.products_cost_edit').focus();
     }
+
     function clickElementCreate(element) {
         $(element).parent().parent().find('.products_cost_create').focus();
     }
@@ -1042,8 +1047,6 @@ $(function () {
         }
     }
 
-    
-
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             index();
@@ -1053,7 +1056,6 @@ $(function () {
 
     $(document).on('click', '#config-cost-plan', function (event) {
         event.preventDefault();
-        loadingOnScreen();
 
         $('#add_cost_on_plans').select2({
             placeholder: 'Nome do plano',
@@ -1088,8 +1090,6 @@ $(function () {
                     'Accept': 'application/json',
                 },
                 processResults: function (res) {
-                    let elemId = this.$element.attr('id');
-
                     return {
                         results: $.map(res.data, function (obj) {
                             return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
@@ -1102,11 +1102,9 @@ $(function () {
             }
         });
 
-        $('#modal_config_cost_plan').modal('show');
-
         $.ajax({
             method: "GET",
-            url: '/api/projects/' + projectId,
+            url: `/api/projects/${projectId}`,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -1114,19 +1112,19 @@ $(function () {
             },
             error: function error() {
                 errorAjaxResponse(response);
-
-                loadingOnScreenRemove()
             }, success: function success(response) {
-                if(response.data.shopify_id == null) {
+                if (response.data.shopify_id == null) {
                     $('#tab_update_cost_block').prop('disabled', true);
                 } else {
                     $('#tab_update_cost_block').prop('disabled', false);
                 }
-                var indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
+                const indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
                 $('#cost_currency_type').prop('selectedIndex', indexCurrency);
-                $('#update_cost_shopify').prop('selectedIndex',response.data.update_cost_shopify);
-                var prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
+                $('#update_cost_shopify').prop('selectedIndex', response.data.update_cost_shopify);
+                const prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
                 $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
+
+                $('#modal_config_cost_plan').modal('show');
             },
         });
     });

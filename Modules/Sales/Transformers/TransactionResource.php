@@ -14,7 +14,7 @@ class TransactionResource extends JsonResource
     public function toArray($request)
     {
         $sale = $this->sale;
-        
+
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
@@ -51,7 +51,7 @@ class TransactionResource extends JsonResource
             $data['has_shopify_integration'] = null;
         }
 
-        $data['cashback_value'] = '0.00';        
+        $data['cashback_value'] = '0.00';
         if ($sale->owner_id == auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {

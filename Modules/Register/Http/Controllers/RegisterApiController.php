@@ -716,7 +716,7 @@ class RegisterApiController extends Controller
         $sendgridService = app(SendgridService::class);
 
         return $sendgridService->sendEmail(
-            'noreply@cloudfox.net',
+            'help@cloudfox.net',
             'Cloudfox',
             $email,
             isset($data['firstname']) ? $data['firstname'] : 'Cliente',
