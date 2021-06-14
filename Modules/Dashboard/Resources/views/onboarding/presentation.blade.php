@@ -2,7 +2,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=07') }}">
+    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/onboarding-details.css?v=08') }}">
 @endpush
 
 <div id="modal-onboarding" class="modal fade modal-fade-in-scale-up show">

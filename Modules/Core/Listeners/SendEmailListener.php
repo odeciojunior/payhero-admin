@@ -35,7 +35,7 @@ class SendEmailListener implements ShouldQueue
     public function handle(SendEmailEvent $event)
     {
         $data      = $event->request;
-        $smsReturn = $this->emailService->sendEmail('noreply@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
+        $smsReturn = $this->emailService->sendEmail('help@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
         if ($smsReturn) {
             $data['checkout']->increment('email_sent_amount');
         }

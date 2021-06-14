@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=05'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=06'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -694,8 +694,8 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=') . random_int(100, 10000)}}"></script>
-            <script src="{{ asset('modules/finances/js/settings.js?v=') . random_int(100, 10000)}}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=58') }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v=62') }}"></script>
         @endpush
     </div>
 

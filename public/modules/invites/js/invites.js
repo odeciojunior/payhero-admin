@@ -1,6 +1,6 @@
 var statusInvite = {
     1: 'success',
-    2: 'danger',
+    2: 'pendente',
     3: 'warning',
 };
 

@@ -291,7 +291,7 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
                     'download_link' => $downloadLink,
                 ];
 
-                $sendGridService->sendEmail('noreply@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+                $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
             },
         ];
     }
