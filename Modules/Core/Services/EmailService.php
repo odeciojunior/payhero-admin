@@ -38,7 +38,7 @@ class EmailService
                 $to = env('APP_EMAIL_TEST');
 
             $email = new Mail();
-            $email->setFrom("noreply@cloudfox.net", "Cloudfox");
+            $email->setFrom("help@cloudfox.net", "Cloudfox");
             $email->setSubject("Convite para o CloudFox");
             $email->addTo($to, "CloudFox");
             $email->addContent(

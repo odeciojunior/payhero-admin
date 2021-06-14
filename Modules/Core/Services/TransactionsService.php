@@ -86,7 +86,7 @@ class TransactionsService
                                 ]
                             );
                         } elseif (empty($result->list_transactions)) {
-                            throw new Exception('TransactionsService: A venda não foi encontrada na getnet!');
+                            throw new Exception("TransactionsService: A venda {$sale->id} não foi encontrada na getnet!");
                         }
                     }
 

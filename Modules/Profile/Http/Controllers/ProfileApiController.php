@@ -326,7 +326,7 @@ class ProfileApiController
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
             if ($sendgridService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 'cloudfox',
                 $email,
                 auth()->user()->name,
