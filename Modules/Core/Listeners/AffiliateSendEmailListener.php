@@ -53,7 +53,7 @@ class AffiliateSendEmailListener implements ShouldQueue
              * Verifica se o usuario habilitou notificação email de nova afiliação para produtor
              */
             if ($producer->userNotification->affiliation) {
-                $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-d8c9706d9d064f38a0a203174d1d43a8', $data);
+                $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-d8c9706d9d064f38a0a203174d1d43a8', $data);
             }
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de nova afiliação ao para o projeto ' . $project->id);

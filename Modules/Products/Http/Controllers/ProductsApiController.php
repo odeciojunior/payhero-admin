@@ -8,7 +8,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
@@ -137,8 +139,8 @@ class ProductsApiController extends Controller
             if ($productPhoto != null) {
                 try {
                     $img = Image::make($productPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
+                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $amazonPath = $this->getAmazonFileService()
@@ -169,8 +171,7 @@ class ProductsApiController extends Controller
                 }
             }
 
-            return response()->json([
-                'message' => 'Produto salvo com sucesso!',
+            return response()->json(['message' => 'Produto salvo com sucesso!'
             ], 200);
         } catch (Exception $e) {
             report($e);
@@ -232,6 +233,11 @@ class ProductsApiController extends Controller
 
             $categories = $categoryModel->all();
 
+            if (Str::contains($product->photo, '?v=')) {
+                $productUrl = Str::before($product->photo, '?v=');
+                $product->photo = Http::get($productUrl)->successful() ? $productUrl : '';
+            }
+
             return EditProductResource::make([
                 'product' => $product,
                 'categories' => $categories,
@@ -277,13 +283,17 @@ class ProductsApiController extends Controller
 
             $productPhoto = $request->file('product_photo');
 
+            if ($productPhoto == null && $request->query('product_photo_remove', null) == "true") {
+                $product->update(['photo' => null]);
+            }
+
             if ($productPhoto != null) {
                 try {
                     $this->getAmazonFileService()->deleteFile($product->photo);
 
                     $img = Image::make($productPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
+                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $productPath = $this->getAmazonFileService()
@@ -311,7 +321,7 @@ class ProductsApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Produto Atualizado com sucesso!'], 200);
+            return response()->json(['message' => 'Produto Atualizado com sucesso!', 'digital_product_url' => $product->digital_product_url], 200);
         } catch (Exception $e) {
             report($e);
 

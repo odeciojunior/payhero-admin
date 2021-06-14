@@ -15,6 +15,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Sale;
 
 /**
  * Class PostBackWooCommerceController
@@ -24,40 +25,40 @@ class PostBackWooCommerceController extends Controller
 {
     public function postBackProductCreate(Request $request)
     {
-        
+
         if (empty($request->project_id)) {
             return response()->json(
                 [
-                    'message' => 'success',
+                    'message' => 'invalid data',
                 ],
                 200
             );
         }
-        
+
         $projectId = current(Hashids::decode($request->project_id));
         $wooCommerceIntegration = WooCommerceIntegration::where('project_id', $projectId)->first();
-        
+
         $product = (object)$request;
 
-        
+
         if (empty($wooCommerceIntegration)) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'process fail',
                 ],
                 200
             );
         }
 
-        if (empty($product->name)) {
+        if (empty($product->name) || empty($product->id) || empty($product->price) ) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'invalid data',
                 ],
                 200
             );
         }
-        
+
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
@@ -85,7 +86,7 @@ class PostBackWooCommerceController extends Controller
                 200
             );
         }
-                
+
 
 
         $wooCommerceService = new WooCommerceService(
@@ -129,7 +130,7 @@ class PostBackWooCommerceController extends Controller
 
     public function postBackProductUpdate(Request $request)
     {
-               
+
         if (empty($request->project_id) || empty($request['sku'])) {
             return response()->json(
                 [
@@ -156,7 +157,7 @@ class PostBackWooCommerceController extends Controller
                 ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
                 ->where('project_id', hashids_decode($request->project_id))
                 ->first()->user;
-            
+
             $productExists = Product::where('shopify_variant_id', $request['sku'])->first();
 
             if(!empty($productExists)){
@@ -165,10 +166,10 @@ class PostBackWooCommerceController extends Controller
                     ->where('shopify_variant_id', $request['sku'])
                     ->first()
                     ->update($newValues);
-    
-                    
+
+
                 unset($newValues['photo']);
-                    
+
                 Plan::where('project_id', hashids_decode($request->project_id))
                     ->where('shopify_variant_id', $request['sku'])
                     ->first()
@@ -182,8 +183,8 @@ class PostBackWooCommerceController extends Controller
                     200
                 );
             }
-            
-            
+
+
         }
 
         return response()->json(
@@ -201,28 +202,23 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            $postBackLogModel = new PostbackLog();
             $projectModel = new Project();
 
-            $requestData = $request->all();
-
-            $postBackLogModel->create(
-                [
-                    'origin' => 5,
-                    'data' => json_encode($requestData),
-                    'description' => 'woocommerce-tracking',
-                ]
-            );
 
             $projectId = current(Hashids::decode($request->project_id));
-            //$projectId = $request->project_id;
+
             $project = $projectModel->find($projectId);
 
-            if (!empty($project)) {
-                //Log::debug($requestData);
+            if (!empty($project) && !empty($request->correios_tracking_code) ) {
 
                 // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
                 //     ->onQueue('high');
+                $sale = Sale::where("woocommerce_order", $request->id)->first();
+
+                if(!empty($sale) && !empty($request->correios_tracking_code)){
+                    // $data = ['']
+                    // $sale
+                }
 
                 return response()->json(
                     [
@@ -231,7 +227,6 @@ class PostBackWooCommerceController extends Controller
                     200
                 );
             } else {
-                //Log::warning('WooCommerce atualizar código de rastreio - projeto não encontrado');
 
                 //projeto nao existe
                 return response()->json(

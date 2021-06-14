@@ -39,7 +39,7 @@ class NotifyUserLevelSendEmailListener
                 'subject_type' => UpdateUserLevel::class,
             ]
         );
-        
+
         $sendgrindService = new SendgridService();
 
         $data = (new UserLevel())->getLevelData($event->user->level);
@@ -52,7 +52,7 @@ class NotifyUserLevelSendEmailListener
         }
 
         $sendgrindService->sendEmail(
-            'noreply@cloudfox.net',
+            'help@cloudfox.net',
             'cloudfox',
             $event->user->email,
             $event->user->name,
@@ -65,7 +65,7 @@ class NotifyUserLevelSendEmailListener
                 "nome" => ucfirst(strtolower(current(explode(' ', $event->user->name))))
             ];
             $sendgrindService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 'cloudfox',
                 $event->user->email,
                 $event->user->name,
