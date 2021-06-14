@@ -153,7 +153,13 @@
                                                placeholder="Purchase"
                                                maxlength='255'>
                                     </div>
-
+                                    {{-- INPUT URL FACEBOOK API --}}
+                                    <div class="form-group col-12 url_facebook_api_div_edit" style="display:none;">
+                                        <label for="url_facebook_domain_edit" class="font-text">Domínio URL:</label>
+                                        <input name="url_facebook_domain_edit"
+                                               type="text"
+                                               class="form-control url_facebook_domain_edit">
+                                    </div>
                                     {{-- INPUT DESCRIPTION--}}
                                     <div class="form-group col-12">
                                         <label for="name" class="font-text">Descrição</label>

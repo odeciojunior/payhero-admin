@@ -149,6 +149,7 @@ class PixelService
                 'facebook_token' => $dataValidated['facebook_token_api'],
                 'is_api' => $dataValidated['is_api'],
                 'value_percentage_purchase_boleto' => $dataValidated['value_percentage_purchase_boleto'],
+                'url_facebook_domain' => $dataValidated['url_facebook_domain_edit']
             ]
         );
 

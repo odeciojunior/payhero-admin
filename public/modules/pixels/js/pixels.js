@@ -178,7 +178,6 @@ $(function () {
 
         imgPlatform.attr('src', srcPlatforms[newPlatform]);
 
-
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
         $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
@@ -230,8 +229,12 @@ $(function () {
     function pixelFacebook(pixel) {
         if (pixel.is_api) {
             $("#facebook-token-api-edit").prop('readonly', false).val(pixel.facebook_token);
-            $(".facebook-api-edit").prop('checked', 'checked')
+            $(".facebook-api-edit").prop('checked', 'checked');
+            $(".url_facebook_domain_edit").val(pixel.url_facebook_domain);
+            $(".url_facebook_api_div_edit").show();
         } else {
+            $(".url_facebook_domain_edit").val('');
+            $(".url_facebook_api_div_edit").hide();
             $(".facebook-api-default-edit").prop('checked', 'checked')
             $("#facebook-token-api-edit").prop('readonly', true).val('');
         }
@@ -248,8 +251,10 @@ $(function () {
 
     $("#modal-edit-pixel input[type=radio]").change(function () {
         if (this.value === 'api') {
+            $(".url_facebook_api_div_edit").show();
             $("#facebook-token-api-edit").prop('readonly', false).val(pixelEdit.facebook_token);
         } else {
+            $(".url_facebook_api_div_edit").hide();
             $("#facebook-token-api-edit").prop('readonly', true).val();
         }
     });
@@ -281,7 +286,6 @@ $(function () {
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
         const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
-        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -323,6 +327,7 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                url_facebook_domain_edit : $("#modal-edit-pixel .url_facebook_domain_edit").val()
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -435,12 +440,19 @@ $(function () {
         $("#platform").val('').val(platform);
         $(".img-logo").attr('src', this.src);
 
-        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
 
         changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"));
 
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
+            if ($("input[type=radio]").val() == 'api') {
+                $(".url_facebook_api_div").show();
+                $("#facebook-token-api").attr('readonly', false)
+            } else if ($("input[type=radio]").val() == 'default') {
+                $(".select-default-facebook").attr('checked', true);
+                $("#facebook-token-api").attr('readonly', true)
+            }
         } else if (['taboola', 'outbrain'].includes(platform)) {
             $(".purchase-event-name-div").show();
         }

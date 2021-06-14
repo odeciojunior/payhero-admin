@@ -116,13 +116,13 @@
                                         <label class="font-text">Tipo</label><br>
                                         <label class="col-md-5 form-check-label">
                                             <input type="radio" name="api-facebook" value="default"
-                                                   class="col-md-2 form-check-input"
+                                                   class="col-md-2 form-check-input select-default-facebook"
                                                    checked>
                                             Padrão
                                         </label>
                                         <label class="col-md-5 form-check-label">
                                             <input type="radio" name="api-facebook" value="api"
-                                                   class="col-md-2 form-check-input">
+                                                   class="col-md-2 form-check-input select-api-facebook">
                                             API
                                         </label>
                                     </div>
