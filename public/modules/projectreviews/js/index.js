@@ -240,8 +240,6 @@ $(document).ready(function () {
         form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         previewImageReview.imgAreaSelect({remove: true});
 
-        loadingOnScreen();
-
         $.ajax({
             method: "GET",
             url: "/api/projectreviews/" + reviewId + '/edit',
@@ -270,7 +268,6 @@ $(document).ready(function () {
 
                 initStarsPlugin('#review_stars', review.stars, false);
 
-                loadingOnScreenRemove();
                 $('#modal_review').modal('show');
                 setTimeout(() => {
                     form.find('#previewimagereview').imgAreaSelect({remove: true});

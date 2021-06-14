@@ -103,7 +103,6 @@ $(document).ready(function () {
         $('#edit_description_upsell').val('');
         $('#edit_discount_upsell').val('');
         $('#form_edit_upsell .upsell-id').val(upsellId);
-        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -141,7 +140,6 @@ $(document).ready(function () {
                 }
                 $('#edit_offer_on_plans').val(offerOnPlans);
 
-                loadingOnScreenRemove();
                 $('#modal_add_upsell').modal('show');
                 // END
             }
