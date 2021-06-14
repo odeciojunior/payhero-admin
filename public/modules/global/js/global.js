@@ -177,7 +177,7 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $('.page').removeClass('d-none')
+        // $('.page').removeClass('d-none')
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
             $('body').css('overflow-y', 'unset')

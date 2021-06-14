@@ -51,17 +51,18 @@ class TrackingService
 
         $apiTracking = $trackingmoreService->find($trackingCode);
 
-        $collection = $refresh
-            ? $trackingModel->with(['productPlanSale'])
-                ->where('tracking_code', $trackingCode)
-                ->where('id', '!=', $tracking->id)
-                ->get()
-            : collect();
-        $collection->push($tracking);
-
-        $status = $this->parseStatusApi($apiTracking->status);
-
         if ($apiTracking) {
+
+            $collection = $refresh
+                ? $trackingModel->with(['productPlanSale'])
+                    ->where('tracking_code', $trackingCode)
+                    ->where('id', '!=', $tracking->id)
+                    ->get()
+                : collect();
+            $collection->push($tracking);
+
+            $status = $this->parseStatusApi($apiTracking->status);
+
             foreach ($collection as $item) {
                 if (isset($apiTracking->status)) {
                     if ($item->tracking_status_enum != $status) {
