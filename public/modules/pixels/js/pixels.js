@@ -327,7 +327,7 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
-                url_facebook_domain_edit : $("#modal-edit-pixel .url_facebook_domain_edit").val()
+                url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val()
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -450,7 +450,7 @@ $(function () {
                 $(".url_facebook_api_div").show();
                 $("#facebook-token-api").attr('readonly', false)
             } else if ($("input[type=radio]").val() == 'default') {
-                $(".select-default-facebook").attr('checked', true);
+                $(".select-default-facebook").click();
                 $("#facebook-token-api").attr('readonly', true)
             }
         } else if (['taboola', 'outbrain'].includes(platform)) {
