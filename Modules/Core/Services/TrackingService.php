@@ -60,22 +60,25 @@ class TrackingService
         $collection->push($tracking);
 
         $status = $this->parseStatusApi($apiTracking->status);
-        foreach ($collection as $item) {
-            if (isset($apiTracking->status)) {
-                if ($item->tracking_status_enum != $status) {
-                    $item->tracking_status_enum = $status;
-                }
-            }
-            if ($refresh && !in_array($item->system_status_enum, [
-                    $trackingModel->present()->getSystemStatusEnum('checked_manually'),
-                ])) {
-                $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
-                    $item->productPlanSale);
-            }
 
-            if ($item->isDirty()) {
-                $item->save();
-                event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+        if ($apiTracking) {
+            foreach ($collection as $item) {
+                if (isset($apiTracking->status)) {
+                    if ($item->tracking_status_enum != $status) {
+                        $item->tracking_status_enum = $status;
+                    }
+                }
+                if ($refresh && !in_array($item->system_status_enum, [
+                        $trackingModel->present()->getSystemStatusEnum('checked_manually'),
+                    ])) {
+                    $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
+                        $item->productPlanSale);
+                }
+
+                if ($item->isDirty()) {
+                    $item->save();
+                    event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+                }
             }
         }
 
