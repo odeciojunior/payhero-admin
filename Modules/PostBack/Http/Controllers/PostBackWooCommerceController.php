@@ -16,6 +16,9 @@ use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
+use App\Jobs\ProcessWooCommercePostbackTracking;
+
+use function GuzzleHttp\json_decode;
 
 /**
  * Class PostBackWooCommerceController
@@ -207,18 +210,26 @@ class PostBackWooCommerceController extends Controller
 
             $projectId = current(Hashids::decode($request->project_id));
 
-            $project = $projectModel->find($projectId);
-
+            $project = $projectModel->find($projectId)->first();
             if (!empty($project) && !empty($request->correios_tracking_code) ) {
-
-                // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
-                //     ->onQueue('high');
-                $sale = Sale::where("woocommerce_order", $request->id)->first();
-
-                if(!empty($sale) && !empty($request->correios_tracking_code)){
-                    // $data = ['']
-                    // $sale
+                
+                foreach($request->line_items as $item){
+                    $line_items[] = [
+                        'sku'=> $item['sku'],
+                        'name'=> $item['name'],
+                        'quantity'=> $item['quantity'],
+                    ];
                 }
+                $data = [
+                    'id'=>$request->id,
+                    'correios_tracking_code' => $request->correios_tracking_code,
+                    'line_items' => $line_items
+                ];
+                
+                ProcessWooCommercePostbackTracking::dispatch($projectId, $data)
+                    ->onQueue('high');
+
+                
 
                 return response()->json(
                     [
