@@ -39,6 +39,10 @@ class ProductService
     {
         if ($saleParam instanceof Sale) {
             $sale = $saleParam;
+            $sale->load([
+                'productsPlansSale.tracking',
+                'productsPlansSale.product',
+            ]);
         } else {
             if (is_int($saleParam)) {
                 $saleModel = new Sale();
