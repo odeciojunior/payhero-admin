@@ -30,6 +30,8 @@ use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
 {
@@ -157,6 +159,19 @@ class SalesApiController extends Controller
                     );
                     $shopifyService->refundOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
+                }
+            }
+            //WooCommerce
+            if (!empty($sale->woocommerce_order)) {
+                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                if (!empty($integration)) {
+                    $service = new WooCommerceService(
+                        $integration->url_store,
+                        $integration->token_user,
+                        $integration->token_pass
+                    );
+                    $service->verifyPermissions();
+                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
                 }
             }
             event(new SaleRefundedEvent($sale));

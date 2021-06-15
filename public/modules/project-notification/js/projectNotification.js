@@ -107,7 +107,7 @@ $(function () {
     $("#modal-edit-project-notification .btn-update").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-project-notification'));
         let projectNotification = $('#modal-edit-project-notification .project-notification-id').val();
-        loadingOnScreen();
+        
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -121,11 +121,11 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
+                
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
+                
                 alertCustom("success", "Notificação atualizada com sucesso");
                 atualizarProjectNotification();
             }
@@ -206,7 +206,7 @@ $(function () {
             status = 0;
         }
         let projectNotification = this.getAttribute('data-id');
-        loadingOnScreen();
+        
         $.ajax({
             method: "PUT",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -218,11 +218,11 @@ $(function () {
             data: {status: status},
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
+                
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
+                
                 alertCustom("success", "Notificação atualizada com sucesso");
                 if (data.status == 1) {
                     $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
