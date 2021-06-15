@@ -24,6 +24,7 @@ class PixelStoreRequest extends FormRequest
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
+            'url_facebook_domain' => 'nullable|string|max:255',
         ];
     }
 

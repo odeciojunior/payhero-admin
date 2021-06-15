@@ -51,31 +51,35 @@ class TrackingService
 
         $apiTracking = $trackingmoreService->find($trackingCode);
 
-        $collection = $refresh
-            ? $trackingModel->with(['productPlanSale'])
-                ->where('tracking_code', $trackingCode)
-                ->where('id', '!=', $tracking->id)
-                ->get()
-            : collect();
-        $collection->push($tracking);
+        if ($apiTracking) {
 
-        $status = $this->parseStatusApi($apiTracking->status);
-        foreach ($collection as $item) {
-            if (isset($apiTracking->status)) {
-                if ($item->tracking_status_enum != $status) {
-                    $item->tracking_status_enum = $status;
+            $collection = $refresh
+                ? $trackingModel->with(['productPlanSale'])
+                    ->where('tracking_code', $trackingCode)
+                    ->where('id', '!=', $tracking->id)
+                    ->get()
+                : collect();
+            $collection->push($tracking);
+
+            $status = $this->parseStatusApi($apiTracking->status);
+
+            foreach ($collection as $item) {
+                if (isset($apiTracking->status)) {
+                    if ($item->tracking_status_enum != $status) {
+                        $item->tracking_status_enum = $status;
+                    }
                 }
-            }
-            if ($refresh && !in_array($item->system_status_enum, [
-                    $trackingModel->present()->getSystemStatusEnum('checked_manually'),
-                ])) {
-                $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
-                    $item->productPlanSale);
-            }
+                if ($refresh && !in_array($item->system_status_enum, [
+                        $trackingModel->present()->getSystemStatusEnum('checked_manually'),
+                    ])) {
+                    $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
+                        $item->productPlanSale);
+                }
 
-            if ($item->isDirty()) {
-                $item->save();
-                event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+                if ($item->isDirty()) {
+                    $item->save();
+                    event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+                }
             }
         }
 

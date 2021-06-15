@@ -293,6 +293,10 @@ class DomainRecordsApiController extends Controller
                 $proxy = false;
             }
 
+            if ($domainRecord->type == 'CNAME' && $domainRecord->name === 'www' && $domainRecord->content == 'shops.myshopify.com'){
+                $proxy = false;
+            }
+
             $data = [
                 'type' => $domainRecord->type,
                 'name' => $domainRecord->name,

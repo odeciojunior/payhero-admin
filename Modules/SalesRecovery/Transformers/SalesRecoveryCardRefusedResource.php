@@ -7,7 +7,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
+use Monolog\Handler\SlackHandler;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryCardRefusedResource extends JsonResource
@@ -31,9 +33,18 @@ class SalesRecoveryCardRefusedResource extends JsonResource
             $type   = 'expired';
         }
 
-        $link = 'Domínio não configurado';
-        if (!empty($domain)) {
-            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($this->checkout_id);
+        if($this->payment_method === Sale::PIX_PAYMENT) {
+            if(FoxUtils::isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($this->id) : 'Domínio não configurado';
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($this->id);
+            }
+        } else {
+            if(FoxUtils::isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($this->checkout_id) : 'Domínio não configurado';
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($this->checkout_id);
+            }
         }
 
         $emailStatus = 'Email inválido';

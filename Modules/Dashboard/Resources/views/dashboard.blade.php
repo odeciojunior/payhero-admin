@@ -4,12 +4,12 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=11') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=10') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=10') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=11') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=11') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=11') }}">
     @endpush
 
     <div class="page dashboard">
@@ -234,7 +234,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('modules/dashboard/js/gauge.js') }}'></script>
+        <script src='{{ asset('modules/dashboard/js/gauge.js?v=231') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
