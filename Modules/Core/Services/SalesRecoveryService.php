@@ -196,14 +196,8 @@ class SalesRecoveryService
             ['project_id', $checkout->project_id],
         ])->first();
 
-//        if (!empty($domain)) {
-//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
-//        } else {
-//            $link = 'Domínio removido';
-//        }
-
         if(FoxUtils::isProduction()) {
-            $link = isset($domain->name) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio não configurado';
+            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
         } else {
             $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
         }
@@ -293,17 +287,23 @@ class SalesRecoveryService
             ->where('status', $domainModel->present()->getStatus('approved'))->first();
 
 
+//        if (!empty($domain)) {
+//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+//        } else {
+//            $link = 'Domínio removido';
+//        }
+
         $link = '';
         if($sale->payment_method === Sale::PIX_PAYMENT) {
             if(FoxUtils::isProduction()) {
-                $link = isset($domain->name) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio não configurado';
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio removido';
             } else {
                 $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
             }
         }
         else {
             if(FoxUtils::isProduction()) {
-                $link = isset($domain->name) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
             } else {
                 $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
             }

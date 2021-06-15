@@ -36,7 +36,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Editar Notificação</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -62,7 +62,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Detalhes da Notificação</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>

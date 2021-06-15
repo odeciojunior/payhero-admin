@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-center justify-content-md-end">
-                                <ul id="pagination-coupons" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
+                                <ul id="pagination-coupons" class="pagination-sm text-right margin-chat-pagination" style="position:relative;float:right">
                                     {{-- js carrega... --}}
                                 </ul>
                             </div>
