@@ -287,6 +287,12 @@ class SalesRecoveryService
             ->where('status', $domainModel->present()->getStatus('approved'))->first();
 
 
+//        if (!empty($domain)) {
+//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+//        } else {
+//            $link = 'Domínio removido';
+//        }
+
         $link = '';
         if($sale->payment_method === Sale::PIX_PAYMENT) {
             if(FoxUtils::isProduction()) {
