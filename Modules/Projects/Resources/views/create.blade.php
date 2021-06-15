@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/projects/css/create.css?v=03') }}">
     @endpush
 
-    <div class="page" style="display: none">
+    <div class="page" style="display: none; margin-bottom: 0 !important;">
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a href="/projects">
@@ -15,7 +15,7 @@
                 </a>
             </h1>
         </div>
-        <div class="page-content container">
+        <div class="page-content container pb-50">
             <form id='form-create-project'>
                 <div class="panel px-40 p-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
@@ -23,7 +23,7 @@
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do projeto</label>
-                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651">
+                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
@@ -54,8 +54,12 @@
                 </div>
 
                 <div class="row pr-15 form-buttons">
-                <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
-                    <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
+
+                    <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15">
+                        <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar
+                    </button>
+
                 </div>
             </form>
         </div>
