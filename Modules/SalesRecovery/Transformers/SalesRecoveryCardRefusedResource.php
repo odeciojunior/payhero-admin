@@ -35,14 +35,13 @@ class SalesRecoveryCardRefusedResource extends JsonResource
 
         if($this->payment_method === Sale::PIX_PAYMENT) {
             if(FoxUtils::isProduction()) {
-                $link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/pix/' . Hashids::connection('sale_id')->encode($this->id) : 'Domínio não configurado';
-                //$link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado';
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($this->id) : 'Domínio não configurado';
             } else {
                 $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($this->id);
             }
         } else {
             if(FoxUtils::isProduction()) {
-                $link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/recovery/' . Hashids::encode($this->checkout_id) : 'Domínio não configurado';
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($this->checkout_id) : 'Domínio não configurado';
             } else {
                 $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($this->checkout_id);
             }
