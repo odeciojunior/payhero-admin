@@ -407,7 +407,6 @@ class SalesRecoveryApiController extends Controller
             $plan
         );
 
-        //dd($sales);
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
 }
