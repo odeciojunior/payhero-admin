@@ -146,6 +146,7 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: resp => {
+                alertCustom('success', resp.message);
                 $('#modal-store-order-bump').modal('hide');
                 $('#store-description-order-bump, #store-discount-order-bump').val('');
                 $("#store-apply-on-plans-order-bump, #store-offer-plans-order-bump")
@@ -175,6 +176,7 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: resp => {
+                alertCustom('success', resp.message);
                 $('#modal-update-order-bump').modal('hide');
                 index();
             }
