@@ -17,6 +17,7 @@ class ImportShopifyProductsStore implements ShouldQueue
     use SerializesModels;
 
     public $shopifyIntegrantion;
+
     public $userId;
 
     /**
@@ -28,6 +29,8 @@ class ImportShopifyProductsStore implements ShouldQueue
     {
         $this->shopifyIntegrantion = $shopifyIntegration;
         $this->userId = $userId;
+
+        $this->onQueue('long');
     }
 
     public function handle()

@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Aws\S3\S3Client;
+use Carbon\Carbon;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Exception;
@@ -717,5 +718,14 @@ class FoxUtils
         }
 
         return true;
+    }
+
+    public static function gitInfo()
+    {
+        $output = exec("git log -1 --pretty=format:'%D|%h|%cn (%ce)|%s|%ci'");
+        $data = explode('|', $output);
+        $data[0] = preg_replace("/HEAD -> ([^,]+).*/", '$1', $data[0]);
+        $data[4] = Carbon::parse($data[4])->format('d/m/Y H:i:s');
+        return "CURRENT BRANCH: $data[0] | LAST COMMIT: $data[1] - $data[3] | AUTHOR: $data[2] | DATE: $data[4]";
     }
 }

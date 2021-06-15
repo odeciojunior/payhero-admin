@@ -76,6 +76,14 @@ return [
             'block_for' => null,
         ],
 
+        'redis-horizon-long-running' => [
+            'driver' => 'redis',
+            'connection' => 'redis-horizon',
+            'queue' => 'long',
+            'retry_after' => 36300, // 5 minutes after timeout
+            'timeout' => 36000,
+            'block_for' => null,
+        ],
     ],
 
     /*
