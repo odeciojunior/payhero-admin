@@ -73,7 +73,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             ->whereHas('productsPlansSale', function ($query) {
                 $query->whereDoesntHave('tracking');
             })
-            ->where('status', 1)
+            ->where('status', Sale::STATUS_APPROVED)
             ->whereNotNull('shopify_order')
             ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyService) {
                 foreach ($sales as $sale) {
@@ -82,9 +82,16 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                         if (!empty($fulfillments)) {
                             $saleProducts = $productService->getProductsBySale($sale);
                             foreach ($fulfillments as $fulfillment) {
-                                $trackingCode = $fulfillment->getTrackingNumber();
-                                if (!empty($trackingCode)) {
-                                    foreach ($fulfillment->getLineItems() as $lineItem) {
+                                $trackingCodes = $fulfillment->getTrackingNumbers();
+                                if (!empty($trackingCodes)) {
+                                    $lineItems = $fulfillment->getLineItems();
+                                    $fulfillmentWithMultipleTracking = count($trackingCodes) == count($lineItems);
+                                    foreach ($lineItems as $key => $lineItem) {
+                                        if($fulfillmentWithMultipleTracking) {
+                                            $trackingCode = $trackingCodes[$key];
+                                        } else {
+                                            $trackingCode = $trackingCodes[0];
+                                        }
                                         $products = $saleProducts
                                             ->where('shopify_variant_id', $lineItem->getVariantId())
                                             ->where('amount', $lineItem->getQuantity());
