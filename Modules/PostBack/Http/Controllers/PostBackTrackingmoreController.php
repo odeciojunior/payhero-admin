@@ -42,8 +42,7 @@ class PostBackTrackingmoreController extends Controller
 
         } catch (\Exception $ex) {
             report($ex);
-            Log:
-            info($ex->getMessage());
+            Log:info($ex->getMessage());
             return response()->json(['message' => 'Postback listerner error']);
         }
     }

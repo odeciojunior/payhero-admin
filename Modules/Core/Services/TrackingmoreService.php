@@ -45,64 +45,46 @@ class TrackingmoreService
 
     /**
      * @param $trackingNumber
-     * @param  null  $optionalParams
+     * @param null $optionalParams
      * @return mixed
      * @see https://www.trackingmore.com/api-track-create-a-tracking-item.html#post
      */
     public function createTracking($trackingNumber, $optionalParams = null)
     {
+
+        switch (true) {
+            case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
+                $carrierCode = 'dpd-brazil'; //jadlog
+                break;
+            case preg_match('/^[A-Z]{2}[0-9]{9}BR$/', $trackingNumber):
+                $carrierCode = 'brazil-correios';
+                break;
+            default:
+                $carrierCode = "cainiao";
+                break;
+        }
+
+        $data = [
+            'tracking_number' => $trackingNumber,
+            'carrier_code' => $carrierCode,
+        ];
+
+        if ($optionalParams) {
+            $data += $optionalParams;
+        }
+
+        $result = $this->doRequest('/trackings/post', $data, 'POST');
+        $metaCode = $result->meta->code ?? 0;
+
         $result = $this->find($trackingNumber);
 
         if (!empty($result)) {
-            $result->already_exists = true;
             return $result;
         } else {
-
-            switch (true) {
-                case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
-                    $carrierCode = 'dpd-brazil'; //jadlog
-                    break;
-                case preg_match('/^[A-Z]{2}[0-9]{9}BR$/', $trackingNumber):
-                    $carrierCode = 'brazil-correios';
-                    break;
-//                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
-//                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
-//                case preg_match('/^LZ{2}[0-9]{9}CN$/', $trackingNumber): // new zeland post
-//                    $carrierCode = "cainiao";
-//                    break;
-                default:
-                    $carrierCode = "cainiao";
-                    break;
-//                    $carrierCode = $this->detectCarrier($trackingNumber);
-//
-//                    if ($carrierCode == "china-ems") {
-//                        $carrierCode = "china-post";
-//                    }
-//                    break;
+            if ($metaCode == 4032 || $metaCode == 4015) {
+                Log::error('TrackingmoreService - Cannot detect courier - ' . $trackingNumber);
             }
-
-            $data = [
-                'tracking_number' => $trackingNumber,
-                'carrier_code' => $carrierCode,
-            ];
-
-            if ($optionalParams) {
-                $data += $optionalParams;
-            }
-
-            $result = $this->doRequest('/trackings/post', $data, 'POST');
-            $metaCode = $result->meta->code ?? 0;
-
-            $result = $this->find($trackingNumber);
-
-            if (!empty($result)) {
-                return $result;
-            } else {
-                if ($metaCode == 4032 || $metaCode == 4015) {
-                    Log::error('TrackingmoreService - Cannot detect courier - '.$trackingNumber);
-                }
-                return null;
-            }
+            return null;
         }
     }
 
