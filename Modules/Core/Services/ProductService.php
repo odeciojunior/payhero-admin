@@ -39,7 +39,7 @@ class ProductService
     {
         if ($saleParam instanceof Sale) {
             $sale = $saleParam;
-            $sale->load([
+            $sale->loadMissing([
                 'productsPlansSale.tracking',
                 'productsPlansSale.product',
             ]);
