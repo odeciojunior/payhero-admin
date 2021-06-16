@@ -53,12 +53,10 @@ class ProcessShopifyPostbackJob implements ShouldQueue
 
         $shopifyOrder = $this->postback['id'];
 
-        $sales = Sale::with(
-            [
-                'productsPlansSale',
-                'productsPlansSale.product'
-            ]
-        )->where('shopify_order', $shopifyOrder)
+        $sales = Sale::with([
+            'productsPlansSale.tracking',
+            'productsPlansSale.product'
+        ])->where('shopify_order', $shopifyOrder)
             ->where('project_id', $this->projectId)
             ->where('status', Sale::STATUS_APPROVED)
             ->get();
@@ -75,7 +73,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                         //percorre os produtos que vieram no postback
                         foreach ($lineItems as $key => $line_item) {
                             //se o processamento tem mais de um rastreio, pega o rastreio referente ao produto
-                            if($fulfillmentWithMultipleTracking) {
+                            if ($fulfillmentWithMultipleTracking) {
                                 $trackingCode = $trackingCodes[$key];
                             } else {
                                 $trackingCode = $trackingCodes[0];
