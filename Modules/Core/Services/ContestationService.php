@@ -172,6 +172,21 @@ class ContestationService
         return $getnetChargebacks->count();
     }
 
+    public function getTotalWonContestations($filters)
+    {
+        $wonContestations = $this->getQuery($filters)->where('sale_contestations.status', SaleContestation::STATUS_WIN);
+        return $wonContestations->count();
+    }
+
+    public function getWonContestationsTax($totalContestations, $totalWonContestations)
+    {
+        if ($totalWonContestations == 0)
+            return '0,00%';
+
+        $totalContestationsTax = $totalWonContestations > 0 ? number_format(($totalWonContestations * 100) / $totalContestations, 2, ',', '.') . '%' : '0,00%';
+        return $totalContestationsTax;
+    }
+
     public function getTotalApprovedSales($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);

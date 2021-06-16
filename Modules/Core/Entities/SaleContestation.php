@@ -22,6 +22,10 @@ class SaleContestation extends Model
 {
     use SoftDeletes;
 
+    public const STATUS_IN_PROGRESS = 1;
+    public const STATUS_LOST = 2;
+    public const STATUS_WIN = 3;
+
     /**
      * @var string
      */

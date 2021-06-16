@@ -517,21 +517,17 @@ $(document).ready(function () {
             },
             success: function (response) {
                 loadOnAny(".total-number", true);
+
                 $("#total-contestation").html(response.total_contestation);
-                $("#total-contestation-value").html(
-                    response.total_contestation_value
-                );
-                $("#total-contestation-tax").html(
-                    " (" +
-                        response.total_contestation_tax +
-                        " de " +
-                        response.total_sale_approved +
-                        ")"
-                );
-                $("#total-chargeback-tax").html(
-                    " (" + response.total_chargeback_tax + ")"
-                );
+                $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");
+
                 $("#total-chargeback-tax-val").html(response.total_chargeback);
+                $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+
+                $("#total-contestation-value").html(response.total_contestation_value);
+
+                $("#total-contestations-won-val").html(response.total_contestations_won);
+                $("#total-contestations-won-tax").html(" (" + response.total_contestations_won_tax + ")");
             },
         });
     }
