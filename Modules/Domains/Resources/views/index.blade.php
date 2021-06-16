@@ -41,7 +41,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-add-domain"></h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -77,7 +77,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-edit-domain">Gerenciador de registros DNS </h4>
-                <a id="modal-button-close-edit-domain-record" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close-edit-domain-record" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -160,7 +160,7 @@
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content" id='modal-content-domain-delete' style="height: 294px;">
             <div class="modal-header text-center">
-                <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete-domain">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete-domain">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -295,7 +295,7 @@
             <div id='content-modal-recheck-dns'>
                 <div class='modal-header' id='modal-dns-header'>
                     <h4 class='modal-title' id='modal-title-dns-recheck'>Verificação</h4>
-                    <a id='modal-button-close-dns-rechek' class='close-card pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+                    <a id='modal-button-close-dns-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
@@ -332,7 +332,7 @@
             <div id='content-modal-recheck-dns-error' style='display:none;'>
                 <div class='modal-header' id='modal-dns-header'>
                     <h4 class='modal-title' id='modal-title-dns-recheck'>Oppsssss...</h4>
-                    <a id='modal-button-close-dns-rechek' class='close-card pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+                    <a id='modal-button-close-dns-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
@@ -359,7 +359,7 @@
             <div id='content-modal-recheck-dns-success' style='display:none;'>
                 <div class='modal-header' id='modal-dns-success-header'>
                     <h4 class='modal-title' id='modal-title-dns-success-recheck'>Verificação</h4>
-                    <a id='modal-button-close-dns-success-rechek' class='close-card pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+                    <a id='modal-button-close-dns-success-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
