@@ -60,7 +60,11 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
                 ->where('project_id', $this->projectId)
                 ->where('status', Sale::STATUS_APPROVED)
                 ->first();
-        
+
+        if(empty($sale)){
+            return;
+        }
+
         foreach ($sales as $sale) {
             try {
                 $saleProducts = $productService->getProductsBySale($sale);
