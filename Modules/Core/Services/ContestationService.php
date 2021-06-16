@@ -149,7 +149,7 @@ class ContestationService
         });
 
         $contestations->when(request('customer'), function ($query, $search) {
-            return $query->where('sales.customer_id', $search);
+            return $query->where('customers.name', 'like', '%' . $search . '%');
         });
 
         $contestations->when(request('customer_document'), function ($query, $search) {

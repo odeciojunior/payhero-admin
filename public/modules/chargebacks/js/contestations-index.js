@@ -134,42 +134,6 @@ $(document).ready(function () {
             },
         },
     });
-    //Search client
-    $("#customer").select2({
-        placeholder: "Nome do cliente",
-        allowClear: true,
-        language: {
-            noResults: function () {
-                return "Nenhum cliente encontrado";
-            },
-            searching: function () {
-                return "Procurando...";
-            },
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: "client",
-                    search: params.term,
-                };
-            },
-            method: "POST",
-            url: "/customers/searchcustomer",
-            delay: 300,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            processResults: function (res) {
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return { id: obj.id, text: obj.name };
-                    }),
-                };
-            },
-        },
-    });
 
     $(".btn-light-1").click(function () {
         var collapse = $("#icon-filtro");

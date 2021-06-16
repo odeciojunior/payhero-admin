@@ -152,10 +152,7 @@
 
                                 <div class="col-sm-12 col-md mt-sm-10">
                                     <label for='customer'>Cliente</label>
-                                    <select id="customer" name="customer" class="form-control select-pad"
-                                            style='width:100%;height:100%' data-plugin="select2">
-                                        <option value="">Selecione</option>
-                                    </select>
+                                    <input id="customer" name="customer" class="form-control select-pad">
                                 </div>
                             </div>
                         </div>
