@@ -161,6 +161,7 @@ class SalesApiController extends Controller
                     $shopifyService->saveSaleShopifyRequest();
                 }
             }
+            
             //WooCommerce
             if (!empty($sale->woocommerce_order)) {
                 $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
@@ -171,7 +172,7 @@ class SalesApiController extends Controller
                         $integration->token_pass
                     );
                     $service->verifyPermissions();
-                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
+                    $service->cancelOrder($sale, 'Estorno');
                 }
             }
             event(new SaleRefundedEvent($sale));
