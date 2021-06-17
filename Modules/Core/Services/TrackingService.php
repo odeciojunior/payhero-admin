@@ -273,10 +273,11 @@ class TrackingService
                 $oldTracking = (object)$tracking->getAttributes();
 
                 //atualiza
-                $tracking->update($newAttributes);
-
-                //verifica se existem duplicatas do antigo código
-                if ($oldTracking->tracking_code != $trackingCode) {
+                if ($oldTracking->tracking_code == $trackingCode) {
+                    $tracking->update($newAttributes);
+                    $notify = false;
+                } else {
+                    //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::with(['productPlanSale'])
                         ->where('tracking_code', $oldTracking->tracking_code)
                         ->orderBy('id')
