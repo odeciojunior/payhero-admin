@@ -31,7 +31,7 @@ class PostBackTrackingmoreController extends Controller
             $postBackLogModel = new PostbackLog();
 
             $postBackLogModel->create([
-                    'origin' => 6,
+                    'origin' => 7,
                     'data' => json_encode($data),
                     'description' => 'trackingmore',
                 ]);
