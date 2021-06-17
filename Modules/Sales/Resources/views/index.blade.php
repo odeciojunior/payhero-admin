@@ -318,7 +318,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-20">
+                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-60">
                     <ul id="pagination-sales" class="pagination-sm margin-chat-pagination " style="position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>

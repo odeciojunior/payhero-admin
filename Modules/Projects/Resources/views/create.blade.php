@@ -23,7 +23,7 @@
                             <div class="d-flex flex-column" id="div_img" style="position: relative">
                                 <div class="d-flex flex-column" id="div_digital_product_upload">
                                     <label for="product_photo">Imagem do projeto</label>
-                                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                    <input type="file" id="product_photo" name="photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                     <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                 </div>
                             </div>
