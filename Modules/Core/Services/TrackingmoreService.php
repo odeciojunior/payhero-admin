@@ -163,7 +163,7 @@ class TrackingmoreService
         while ($retry) {
             $result = curl_exec($curl);
             $result = json_decode($result);
-            if (!empty($resul) && !empty($result->meta) && !empty($result->meta->code) && $result->meta->code == 429) {
+            if (!empty($result) && !empty($result->meta) && !empty($result->meta->code) && $result->meta->code == 429) {
                 sleep(1);
             } else {
                 $retry = false;
