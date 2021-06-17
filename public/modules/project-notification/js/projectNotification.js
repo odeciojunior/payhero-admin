@@ -107,7 +107,7 @@ $(function () {
     $("#modal-edit-project-notification .btn-update").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-project-notification'));
         let projectNotification = $('#modal-edit-project-notification .project-notification-id').val();
-        
+
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -121,11 +121,11 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                
+
                 alertCustom("success", "Notificação atualizada com sucesso");
                 atualizarProjectNotification();
             }
@@ -206,7 +206,7 @@ $(function () {
             status = 0;
         }
         let projectNotification = this.getAttribute('data-id');
-        
+
         $.ajax({
             method: "PUT",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -218,11 +218,11 @@ $(function () {
             data: {status: status},
             cache: false,
             error: function (response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                
+
                 alertCustom("success", "Notificação atualizada com sucesso");
                 if (data.status == 1) {
                     $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
@@ -276,7 +276,7 @@ $(function () {
                             <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
-                            <td style="text-align:center" class="d-flex justify-content-between align-items-center mb-0">
+                            <td style="text-align:center" class="flex justify-content-between align-items-center mb-0">
                                 <a role="button" title='Visualizar' class="details-project-notification pointer" project-notification="${value.id}">
                                     <span class="o-eye-1"></span>
                                 </a>
@@ -286,7 +286,7 @@ $(function () {
                                  </button>` :
                             `<a role="button" title="Editar" class="edit-project-notification pointer" project-notification='${value.id}'>
                                     <span class="o-edit-1"></span>
-                                 </a>` 
+                                 </a>`
                         }
                                 <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
                                    <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
