@@ -205,7 +205,9 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            if (empty($request->correios_tracking_code) || empty($request->shipping->company) ){
+            
+            
+            if (empty($request->correios_tracking_code) || empty($request->shipping['company']) ){
                 return response()->json(
                     [
                         'message' => 'invalid data',
