@@ -50,6 +50,9 @@
             strong span{
                 color: #57617c;
             }
+            td.text-left.font-size-14 {
+                padding: 15px !important;
+            }
         </style>
     @endpush
 
