@@ -272,11 +272,14 @@ class TrackingService
             if (!empty($tracking)) {
                 $oldTracking = (object)$tracking->getAttributes();
 
-                //atualiza
-                $tracking->update($newAttributes);
+                $tracking->fill($newAttributes);
+                if($tracking->isDirty()){
+                    $tracking->save();
+                }
 
-                //verifica se existem duplicatas do antigo código
+                //atualiza
                 if ($oldTracking->tracking_code != $trackingCode) {
+                    //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::with(['productPlanSale'])
                         ->where('tracking_code', $oldTracking->tracking_code)
                         ->orderBy('id')
@@ -285,6 +288,8 @@ class TrackingService
                     foreach ($duplicates as $duplicate) {
                         $this->createOrUpdateTracking($duplicate->tracking_code, $duplicate->productPlanSale);
                     }
+                } else {
+                    $notify = false;
                 }
             } else { //senão cria o tracking
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);

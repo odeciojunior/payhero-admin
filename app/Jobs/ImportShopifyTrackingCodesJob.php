@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -71,9 +72,10 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         ])->where('project_id', $project->id)
             ->where('status', Sale::STATUS_APPROVED)
             ->whereNotNull('shopify_order')
-            ->where('has_valid_tracking', false)
             ->whereNotNull('delivery_id')
-            ->whereHas('transactions', function ($query) {
+            ->whereHas('productsPlansSale', function ($query) {
+                $query->whereDoesntHave('tracking');
+            })->whereHas('transactions', function ($query) {
                 $query->where('tracking_required', true);
             })
             ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyService) {

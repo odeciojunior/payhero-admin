@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
@@ -39,10 +38,11 @@ class VerifyTrackingsWithoutInfo extends Command
         $trackingService = new TrackingService();
 
         $trackingModel->with('productPlanSale')
-        ->whereIn('system_status_enum', [
-            $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
-            $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
-        ])->chunk(100, function ($trackings) use ($trackingService) {
+            ->whereIn('system_status_enum', [
+                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
+                $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
+            ])->whereDate('created_at', '<=', now()->subMonths(4))
+            ->chunk(100, function ($trackings) use ($trackingService) {
                 foreach ($trackings as $tracking) {
                     try {
                         $trackingCode = $tracking->tracking_code;
@@ -53,7 +53,5 @@ class VerifyTrackingsWithoutInfo extends Command
                     }
                 }
             });
-
-        return;
     }
 }
