@@ -383,7 +383,7 @@ class TrackingsApiController extends Controller
                 if (in_array($extension, ['csv', 'xlsx'])) {
                     $user = auth()->user();
                     Excel::queueImport(new TrackingsImport($user), request()->file('import_xlsx'))
-                        ->onQueue('long');
+                        ->allOnQueue('long');
 
                     return response()->json(['message' => 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!']);
                 } else {
