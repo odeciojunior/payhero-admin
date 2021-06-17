@@ -15,7 +15,7 @@
                 </a>
             </h1>
         </div>
-        <div class="page-content container pb-50">
+        <div class="page-content container">
             <form id='form-create-project'>
                 <div class="panel px-40 p-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="row pr-15 form-buttons">
+                <div class="row pr-15 form-buttons pb-40">
                     <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
 
                     <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15">
