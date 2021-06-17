@@ -178,7 +178,6 @@ $(function () {
 
         imgPlatform.attr('src', srcPlatforms[newPlatform]);
 
-
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
         $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
@@ -230,8 +229,12 @@ $(function () {
     function pixelFacebook(pixel) {
         if (pixel.is_api) {
             $("#facebook-token-api-edit").prop('readonly', false).val(pixel.facebook_token);
-            $(".facebook-api-edit").prop('checked', 'checked')
+            $(".facebook-api-edit").prop('checked', 'checked');
+            $(".url_facebook_domain_edit").val(pixel.url_facebook_domain);
+            $(".url_facebook_api_div_edit").show();
         } else {
+            $(".url_facebook_domain_edit").val('');
+            $(".url_facebook_api_div_edit").hide();
             $(".facebook-api-default-edit").prop('checked', 'checked')
             $("#facebook-token-api-edit").prop('readonly', true).val('');
         }
@@ -248,8 +251,10 @@ $(function () {
 
     $("#modal-edit-pixel input[type=radio]").change(function () {
         if (this.value === 'api') {
+            $(".url_facebook_api_div_edit").show();
             $("#facebook-token-api-edit").prop('readonly', false).val(pixelEdit.facebook_token);
         } else {
+            $(".url_facebook_api_div_edit").hide();
             $("#facebook-token-api-edit").prop('readonly', true).val();
         }
     });
@@ -281,7 +286,6 @@ $(function () {
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
         const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
-        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -298,8 +302,6 @@ $(function () {
         })) {
             return false;
         }
-
-        loadingOnScreen();
 
         $.ajax({
             method: "PUT",
@@ -323,13 +325,12 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val()
             },
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success() {
-                loadingOnScreenRemove();
                 $("#modal-edit-pixel").modal('hide');
                 alertCustom("success", "Pixel atualizado com sucesso");
                 atualizarPixel(currentPage);
@@ -349,7 +350,6 @@ $(function () {
 
     // Delete Pixel
     $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
-        loadingOnScreen();
         const pixel = $(this).attr('pixel');
         $.ajax({
             method: "DELETE",
@@ -370,11 +370,9 @@ $(function () {
 
                 return error;
             }(function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }),
             success: function success() {
-                loadingOnScreenRemove();
                 alertCustom("success", "Pixel Removido com sucesso");
                 atualizarPixel(currentPage);
             }
@@ -435,18 +433,27 @@ $(function () {
         $("#platform").val('').val(platform);
         $(".img-logo").attr('src', this.src);
 
-        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
 
         changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"));
 
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
+            if ($("input[type=radio]").val() == 'api') {
+                $(".url_facebook_api_div").show();
+                $("#facebook-token-api").attr('readonly', false)
+            } else if ($("input[type=radio]").val() == 'default') {
+                $(".select-default-facebook").click();
+                $("#facebook-token-api").attr('readonly', true)
+            }
         } else if (['taboola', 'outbrain'].includes(platform)) {
             $(".purchase-event-name-div").show();
         }
 
         $("input[type=radio]").change(function () {
+            $(".url_facebook_api_div").hide();
             if (this.value === 'api') {
+                $(".url_facebook_api_div").show();
                 $("#facebook-token-api").attr('readonly', false)
             } else {
                 $("#facebook-token-api").attr('readonly', true)
@@ -478,17 +485,7 @@ $(function () {
             return false;
         }
 
-        if (formData.value_percentage_purchase_boleto.length < 1) {
-            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-
-        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
-            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
+        if (formData.value_percentage_purchase_boleto.length > 0 && (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10)) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
             return false;
         }
@@ -534,7 +531,6 @@ $(function () {
             return false;
         }
 
-        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/pixels",
@@ -548,17 +544,11 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             }, success: function success(response) {
-                loadingOnScreenRemove();
-                if (response.success) {
-                    $("#modal-create-pixel").modal('hide');
-                    alertCustom("success", response.message);
-                    atualizarPixel();
-                } else {
-                    alertCustom("error", response.message);
-                }
+                $("#modal-create-pixel").modal('hide');
+                alertCustom("success", response.message);
+                atualizarPixel();
             }
         });
     });

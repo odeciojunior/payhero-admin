@@ -52,13 +52,19 @@
         {{-- js pagination carrega --}}
     </ul>
 </div>
+
+<div class="d-none">
+    <select name="select-products" id="select-products" name="products[]">
+        {{-- js carregando dados --}}
+    </select>
+</div>
 <!-- Modal padrão para adicionar Adicionar e Editar -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_plan" role="dialog" tabindex="-1">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content" id="conteudo_modal_add">
             <div class="modal-header simple-border-bottom mb-10" align="center">
                 <h4 class="modal-title" id="modal-title-plan"></h4>
-                <a id="modal-button-close" class="close-card pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -83,7 +89,7 @@
         <div class="modal-content p-10" id="content-modal-plan-error">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-plan-error"></h4>
-                <a id="modal-button-close" class="close-card pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -106,7 +112,7 @@
         <div class="modal-content p-10" id="conteudo_modal_add">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-details"></h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -121,7 +127,7 @@
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>

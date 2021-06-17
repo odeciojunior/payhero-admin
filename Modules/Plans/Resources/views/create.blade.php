@@ -15,6 +15,7 @@
                                 <label for="price">Preço</label>
                                 <input name="price" type="text" class="form-control" id="price" placeholder="99,99" required>
                             </div>
+                            <hr class='mb-30 display-lg-none display-xlg-none'>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12">

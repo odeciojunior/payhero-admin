@@ -580,9 +580,7 @@ class ShopifyApiController extends Controller
                 );
             }
 
-            dispatch(
-                (new ImportShopifyProductsStore($shopifyIntegration, auth()->user()->account_owner_id))
-            );
+            dispatch((new ImportShopifyProductsStore($shopifyIntegration, auth()->user()->account_owner_id)));
 
             return response()->json(
                 ['message' => 'Os Produtos do shopify estão sendo sincronizados.'],

@@ -285,8 +285,6 @@ class WooCommerceService
     {
         try {
 
-            $saleId = $sale->id;
-
             $data = [
                 'status' => 'cancelled'
             ];
