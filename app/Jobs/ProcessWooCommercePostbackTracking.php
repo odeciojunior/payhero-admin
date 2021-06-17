@@ -54,23 +54,24 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
 
         $order = $this->postback['id'];
 
-        
-        
         $sales = Sale::where('woocommerce_order', $order)
                 ->where('project_id', $this->projectId)
                 ->where('status', Sale::STATUS_APPROVED)
                 ->get();
 
-        if(empty($sale)){
+        if(empty($sales)){
             return;
         }
 
         foreach ($sales as $sale) {
             try {
                 $saleProducts = $productService->getProductsBySale($sale);
+
                 foreach ($this->postback['line_items'] as $line_item) {
                     $trackingCode = $this->postback["correios_tracking_code"];
                     if (!empty($trackingCode)) {
+
+
                         //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
                         $products = $saleProducts->where('shopify_variant_id', $line_item["sku"])
                             ->where('amount', $line_item["quantity"])
@@ -85,7 +86,8 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
                             foreach ($products as $product) {
                                 $productPlanSale = $sale->productsPlansSale->find(
                                     $product->product_plan_sale_id
-                                );
+                                );   
+
                                 $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
                             }
                         }
