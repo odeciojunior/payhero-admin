@@ -7,6 +7,7 @@ namespace Modules\PostBack\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Services\TrackingmoreService;
@@ -27,6 +28,13 @@ class PostBackTrackingmoreController extends Controller
 
             $trackingService = new TrackingService();
             $trackingModel = new Tracking();
+            $postBackLogModel = new PostbackLog();
+
+            $postBackLogModel->create([
+                    'origin' => 6,
+                    'data' => json_encode($data),
+                    'description' => 'trackingmore',
+                ]);
 
             $trackingCode = $data['data']['tracking_number'] ?? '';
 
