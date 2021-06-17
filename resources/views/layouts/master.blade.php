@@ -135,7 +135,7 @@
 
 @stack('scripts')
 
-@if(env('APP_ENV', 'production') == 'production')
+@if(env('APP_ENV', 'production') == 'local')
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=12') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=12') }}"></script>
