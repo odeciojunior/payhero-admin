@@ -160,6 +160,7 @@ class CloudFlareService
         try {
             return $this->zones->addZone($zone);
         } catch (Exception $exception) {
+            report($exception);
             return false;
         }
     }
