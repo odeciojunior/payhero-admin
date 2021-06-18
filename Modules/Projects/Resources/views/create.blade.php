@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="row pr-15 form-buttons pb-20">
+                <div class="row pr-15 form-buttons pb-30">
                     <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
 
                     <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15">
