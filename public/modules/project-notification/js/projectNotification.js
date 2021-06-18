@@ -277,14 +277,14 @@ $(function () {
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center" class="flex justify-content-between align-items-center mb-0">
-                                <a role="button" title='Visualizar' class="details-project-notification pointer" project-notification="${value.id}">
+                                <a role="button" title='Visualizar' class="details-project-notification pointer pr-20" project-notification="${value.id}">
                                     <span class="o-eye-1"></span>
                                 </a>
                                  ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
                             `<button style="background-color: transparent;" role="button" class="btn  disabled="">
                                      <span class="o-edit-1"></span>
                                  </button>` :
-                            `<a role="button" title="Editar" class="edit-project-notification pointer" project-notification='${value.id}'>
+                            `<a role="button" title="Editar" class="edit-project-notification pointer pr-20" project-notification='${value.id}'>
                                     <span class="o-edit-1"></span>
                                  </a>`
                         }
