@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Jobs\RevalidateTrackingDuplicateJob;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -236,9 +237,9 @@ class TrackingService
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false,
-        $notify = true
-    )
+        bool $logging = false,
+        bool $notify = true
+    ): ?Tracking
     {
         try {
             $logging ? activity()->enableLogging() : activity()->disableLogging();
@@ -270,25 +271,31 @@ class TrackingService
 
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
-                $oldTracking = (object)$tracking->getAttributes();
+                $oldTracking = (object) $tracking->getAttributes();
+                $oldTrackingCode = $oldTracking->tracking_code;
 
                 //atualiza
-                if ($oldTracking->tracking_code == $trackingCode) {
-                    $notify = false;
-                } else {
-                    $tracking->update($newAttributes);
+                $tracking->fill($newAttributes);
+                if ($tracking->isDirty()) {
+                    $tracking->save();
+                }
 
+                if ($oldTrackingCode != $trackingCode) {
                     //verifica se existem duplicatas do antigo código
-                    $duplicates = Tracking::with(['productPlanSale'])
-                        ->where('tracking_code', $oldTracking->tracking_code)
-                        ->orderBy('id')
-                        ->get();
+                    $duplicates = ProductPlanSale::with([
+                        'sale.delivery',
+                        'tracking'
+                    ])->whereHas('tracking', function ($query) use ($oldTrackingCode) {
+                        $query->where('tracking_code', $oldTrackingCode);
+                    })->get();
                     //caso existam recria/revalida os códigos
                     foreach ($duplicates as $duplicate) {
-                        $this->createOrUpdateTracking($duplicate->tracking_code, $duplicate->productPlanSale);
+                        RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicate);
                     }
+                } else {
+                    $notify = false;
                 }
-            } else { //senão cria o tracking
+            } else { //senão cria um novo tracking
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
             }
 
