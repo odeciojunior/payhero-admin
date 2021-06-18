@@ -138,11 +138,9 @@ class WooCommerceService
 
         }
 
-        $hashedProjectId = Hashids::encode($projectId);
+        
 
-        $this->createHooks($hashedProjectId);
-
-        return $createdProdcts;
+        return;
 
     }
 
@@ -308,13 +306,14 @@ class WooCommerceService
 
     public function createHooks($projectId)
     {
-        $this->deleteHooks(1);
+        //$this->woocommerce->deleteHooks($projectId, true);
+
 
         $decodedProjectId = Hashids::decode($projectId);
 
         //Order update.
         $data = [
-            'name' => "cf-$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'order.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
@@ -324,7 +323,7 @@ class WooCommerceService
 
         //Product update
         $data = [
-            'name' => "cf-$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
@@ -334,7 +333,7 @@ class WooCommerceService
 
         //Product create
         $data = [
-            'name' => "cf-$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.created',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
@@ -348,7 +347,9 @@ class WooCommerceService
         $hashedProjectId = Hashids::encode($projectId);
 
         $webhooks = $this->woocommerce->get('webhooks');
-
+        
+        $ids = array();
+        
         foreach($webhooks as $webhook){
 
             if($webhook->name == 'cf-'.$hashedProjectId){
