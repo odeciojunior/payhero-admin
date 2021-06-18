@@ -44,8 +44,6 @@ class CreateWooCommerceWebhooks implements ShouldQueue
                 
                 $woocommerceService->verifyPermissions();
                 
-                $woocommerceService->deleteHooks($this->projectId, true);
-
                 $woocommerceService->woocommerce->post('webhooks', $this->data);
 
             }

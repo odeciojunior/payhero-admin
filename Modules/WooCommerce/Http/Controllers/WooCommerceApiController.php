@@ -259,6 +259,11 @@ class WooCommerceApiController extends Controller
                         'status' => 2,
                     ]
                 );
+
+                $hashedProjectId = Hashids::encode($woocommerceIntegrationCreated->project_id);
+
+                $woocommerceService->createHooks($hashedProjectId);
+
             } catch (Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
