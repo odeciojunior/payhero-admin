@@ -45,7 +45,7 @@ class TrackingmoreService
 
     /**
      * @param $trackingNumber
-     * @param  null  $optionalParams
+     * @param null $optionalParams
      * @return mixed
      * @see https://www.trackingmore.com/api-track-create-a-tracking-item.html#post
      */
@@ -57,7 +57,6 @@ class TrackingmoreService
             $result->already_exists = true;
             return $result;
         } else {
-
             switch (true) {
                 case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
                     $carrierCode = 'dpd-brazil'; //jadlog
@@ -65,20 +64,9 @@ class TrackingmoreService
                 case preg_match('/^[A-Z]{2}[0-9]{9}BR$/', $trackingNumber):
                     $carrierCode = 'brazil-correios';
                     break;
-//                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
-//                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
-//                case preg_match('/^LZ{2}[0-9]{9}CN$/', $trackingNumber): // new zeland post
-//                    $carrierCode = "cainiao";
-//                    break;
                 default:
                     $carrierCode = "cainiao";
                     break;
-//                    $carrierCode = $this->detectCarrier($trackingNumber);
-//
-//                    if ($carrierCode == "china-ems") {
-//                        $carrierCode = "china-post";
-//                    }
-//                    break;
             }
 
             $data = [
@@ -99,7 +87,7 @@ class TrackingmoreService
                 return $result;
             } else {
                 if ($metaCode == 4032 || $metaCode == 4015) {
-                    Log::error('TrackingmoreService - Cannot detect courier - '.$trackingNumber);
+                    Log::error('TrackingmoreService - Cannot detect courier - ' . $trackingNumber);
                 }
                 return null;
             }
@@ -143,14 +131,14 @@ class TrackingmoreService
     }
 
     /**
-     * @param  string  $uri
-     * @param  null  $data
-     * @param  string  $method
+     * @param string $uri
+     * @param null $data
+     * @param string $method
      * @return object
      */
     private function doRequest($uri = '/', $data = null, $method = 'GET')
     {
-        $url = self::API_URL.'/'.self::API_VERSION.$uri;
+        $url = self::API_URL . '/' . self::API_VERSION . $uri;
 
         $curl = curl_init();
 
@@ -172,7 +160,7 @@ class TrackingmoreService
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Trackingmore-Api-Key: '.$this->apiKey,
+            'Trackingmore-Api-Key: ' . $this->apiKey,
             'Content-Type: application/json',
         ]);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -181,7 +169,7 @@ class TrackingmoreService
         while ($retry) {
             $result = curl_exec($curl);
             $result = json_decode($result);
-            if ($result->meta->code == 429) {
+            if (!empty($result) && !empty($result->meta) && !empty($result->meta->code) && $result->meta->code == 429) {
                 sleep(1);
             } else {
                 $retry = false;

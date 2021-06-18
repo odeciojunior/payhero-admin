@@ -53,12 +53,10 @@ class ProcessShopifyPostbackJob implements ShouldQueue
 
         $shopifyOrder = $this->postback['id'];
 
-        $sales = Sale::with(
-            [
-                'productsPlansSale',
-                'productsPlansSale.product'
-            ]
-        )->where('shopify_order', $shopifyOrder)
+        $sales = Sale::with([
+            'productsPlansSale.tracking',
+            'productsPlansSale.product'
+        ])->where('shopify_order', $shopifyOrder)
             ->where('project_id', $this->projectId)
             ->where('status', Sale::STATUS_APPROVED)
             ->get();
@@ -67,10 +65,19 @@ class ProcessShopifyPostbackJob implements ShouldQueue
             try {
                 $saleProducts = $productService->getProductsBySale($sale);
                 foreach ($this->postback['fulfillments'] as $fulfillment) {
-                    $trackingCode = $fulfillment["tracking_number"];
-                    if (!empty($trackingCode)) {
+                    $trackingCodes = $fulfillment["tracking_numbers"];
+                    if (!empty($trackingCodes)) {
+                        $lineItems = $fulfillment["line_items"];
+                        //verifica se tem a mesma quantidade de rastreios e trackings
+                        $fulfillmentWithMultipleTracking = count($trackingCodes) == count($lineItems);
                         //percorre os produtos que vieram no postback
-                        foreach ($fulfillment["line_items"] as $line_item) {
+                        foreach ($lineItems as $key => $line_item) {
+                            //se o processamento tem mais de um rastreio, pega o rastreio referente ao produto
+                            if ($fulfillmentWithMultipleTracking) {
+                                $trackingCode = $trackingCodes[$key];
+                            } else {
+                                $trackingCode = $trackingCodes[0];
+                            }
                             //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
                             $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
                                 ->where('amount', $line_item["quantity"])

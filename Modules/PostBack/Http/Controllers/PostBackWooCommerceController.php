@@ -205,12 +205,24 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
+            
+            
+            if (empty($request->correios_tracking_code) || empty($request->shipping['company']) ){
+                return response()->json(
+                    [
+                        'message' => 'invalid data',
+                    ],
+                    200
+                );
+            }
+
             $projectModel = new Project();
 
 
             $projectId = current(Hashids::decode($request->project_id));
 
             $project = $projectModel->find($projectId)->first();
+
             if (!empty($project) && !empty($request->correios_tracking_code) ) {
                 
                 foreach($request->line_items as $item){
