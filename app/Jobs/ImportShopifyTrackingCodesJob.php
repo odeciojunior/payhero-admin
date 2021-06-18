@@ -29,6 +29,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
     public function __construct(Project $project)
     {
         $this->project = $project;
+        $this->allOnQueue('long');
     }
 
     /**
