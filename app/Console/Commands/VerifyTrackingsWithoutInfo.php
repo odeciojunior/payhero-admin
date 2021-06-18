@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
@@ -38,22 +37,28 @@ class VerifyTrackingsWithoutInfo extends Command
         $trackingModel = new Tracking();
         $trackingService = new TrackingService();
 
-        $trackingModel->with('productPlanSale')
-        ->whereIn('system_status_enum', [
-            $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
-            $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
-        ])->chunk(100, function ($trackings) use ($trackingService) {
-                foreach ($trackings as $tracking) {
-                    try {
-                        $trackingCode = $tracking->tracking_code;
-                        $pps = $tracking->productPlanSale;
-                        $trackingService->createOrUpdateTracking($trackingCode, $pps);
-                    } catch (\Exception $e) {
-                        continue;
-                    }
-                }
-            });
+        $query = $trackingModel->with('productPlanSale')
+            ->whereIn('system_status_enum', [
+                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
+                $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
+            ])->whereDate('created_at', '>=', now()->subMonths(4));
 
-        return;
+        $total = $query->count();
+        $count = 0;
+
+        $query->chunk(100, function ($trackings) use ($total, &$count, $trackingService) {
+            foreach ($trackings as $tracking) {
+                try {
+                    $count++;
+                    $this->line("T {$count} de {$total}: {$tracking->tracking_code}");
+                    $trackingCode = $tracking->tracking_code;
+                    $pps = $tracking->productPlanSale;
+                    $trackingService->createOrUpdateTracking($trackingCode, $pps);
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage());
+                    continue;
+                }
+            }
+        });
     }
 }
