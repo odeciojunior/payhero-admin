@@ -238,8 +238,7 @@ class PostBackWooCommerceController extends Controller
                     'line_items' => $line_items
                 ];
                 
-                ProcessWooCommercePostbackTracking::dispatch($projectId, $data)
-                    ->onQueue('high');
+                ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
 
                 
 
