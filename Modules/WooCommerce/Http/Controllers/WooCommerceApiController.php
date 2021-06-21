@@ -19,7 +19,8 @@ use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
-
+use Illuminate\Support\Facades\Log;
+use Modules\WooCommerce\Transformers\WooCommerceIntegrationsResource;
 
 /**
  * Class ApiController
@@ -250,19 +251,19 @@ class WooCommerceApiController extends Controller
             }
 
             try {
-                $products = $woocommerceService->fetchProducts();
-
-                $woocommerceService->importProducts(
-                    $woocommerceIntegrationCreated->project_id,
-                    $woocommerceIntegrationCreated->user_id,
-                    $products
-                );
-
+                
+                $woocommerceService->fetchProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id);
+                
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
                     ]
                 );
+
+                $hashedProjectId = Hashids::encode($woocommerceIntegrationCreated->project_id);
+
+                $woocommerceService->createHooks($hashedProjectId);
+
             } catch (Exception $e) {
                 $woocommerceIntegrationCreated->delete();
                 $shippingCreated->delete();
@@ -292,6 +293,14 @@ class WooCommerceApiController extends Controller
 
     public function synchronizeProducts(Request $request)
     {
+        
+        $projectId = current(Hashids::decode($request->projectId));
+        
+        $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+
+        $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+
+        return $service->syncProducts();
     }
 
     public function undoIntegration(Request $request)
@@ -303,18 +312,6 @@ class WooCommerceApiController extends Controller
     }
 
     public function synchronizeTrackings(Request $request)
-    {
-    }
-
-    public function updateToken(Request $request)
-    {
-    }
-
-    public function verifyPermission(Request $request)
-    {
-    }
-
-    public function setSkipToCart(Request $request)
     {
     }
 }
