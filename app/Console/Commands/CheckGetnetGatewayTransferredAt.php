@@ -60,9 +60,10 @@ class CheckGetnetGatewayTransferredAt extends Command
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
             ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
             ->whereNull('withdrawal_id')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
+            ->whereNull('gateway_transferred_at')
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->orderBy('id', 'desc');
 
-        $transactions->chunkById(50, function ($transactions) use ($getnetService, $transactionsCount) {
+        $transactions->chunk(50, function ($transactions) use ($getnetService, $transactionsCount) {
             foreach ($transactions as $transaction) {
                 try {
                     $this->line($transactionsCount . ' Atualizando a transação: ' . $transaction->id );
