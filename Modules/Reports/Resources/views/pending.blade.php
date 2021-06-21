@@ -191,7 +191,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row justify-content-center justify-content-md-end">
+                        <div class="row justify-content-center justify-content-md-end pb-50">
                             <ul id="pagination-pending" class="pl-5 pr-md-15 mb-20"
                             style="position:relative;float:right">
                                 {{-- js carrega... --}}
