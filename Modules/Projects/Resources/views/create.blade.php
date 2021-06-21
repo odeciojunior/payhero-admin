@@ -3,7 +3,7 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/projects/css/create.css?v=03') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/projects/css/create.css?v=06') }}">
     @endpush
 
     <div class="page" style="display: none; margin-bottom: 0 !important;">
@@ -15,7 +15,7 @@
                 </a>
             </h1>
         </div>
-        <div class="page-content container pb-50">
+        <div class="page-content container">
             <form id='form-create-project'>
                 <div class="panel px-40 p-20" data-plugin="matchHeight" style="border-radius: 16px">
                     <div class="row justify-content-between align-items-baseline">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="row pr-15 form-buttons">
+                <div class="row pr-15 form-buttons pb-30">
                     <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
 
                     <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15">

@@ -107,7 +107,7 @@ $(function () {
     $("#modal-edit-project-notification .btn-update").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-project-notification'));
         let projectNotification = $('#modal-edit-project-notification .project-notification-id').val();
-        
+
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -121,11 +121,11 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                
+
                 alertCustom("success", "Notificação atualizada com sucesso");
                 atualizarProjectNotification();
             }
@@ -206,7 +206,7 @@ $(function () {
             status = 0;
         }
         let projectNotification = this.getAttribute('data-id');
-        
+
         $.ajax({
             method: "PUT",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
@@ -218,11 +218,11 @@ $(function () {
             data: {status: status},
             cache: false,
             error: function (response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                
+
                 alertCustom("success", "Notificação atualizada com sucesso");
                 if (data.status == 1) {
                     $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
@@ -270,33 +270,52 @@ $(function () {
                         let check = (value.status == 1) ? 'checked' : '';
                         let data = `<tr>
                             <td class="project-notification-id">${value.type}</td>
+
                             <td class="project-notification-type">${value.event}</td>
+
                             <td class="project-notification-value">${value.time}</td>
+
                             <td class="project-notification-zip-code-origin">${value.message}</td>
+
                             <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
-                            <td style="text-align:center" class="d-flex justify-content-between align-items-center mb-0">
-                                <a role="button" title='Visualizar' class="details-project-notification pointer" project-notification="${value.id}">
-                                    <span class="o-eye-1"></span>
-                                </a>
-                                 ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
-                            `<button style="background-color: transparent;" role="button" class="btn  disabled="">
-                                     <span class="o-edit-1"></span>
-                                 </button>` :
-                            `<a role="button" title="Editar" class="edit-project-notification pointer" project-notification='${value.id}'>
-                                    <span class="o-edit-1"></span>
-                                 </a>` 
-                        }
-                                <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
-                                   <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
-                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
-                                        ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'disabled' : ''}>
-                                       <span class="slider round" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}></span>
-                                   </label>
-                               </div>
+
+                            <td style="text-align:center" class="justify-content-between align-items-center mb-0">
+
+                                <div style="display: flex; justify-content: center; flex-direction: row;">
+
+                                    <a role="button" title='Visualizar' class="details-project-notification pointer pt-5 mr-30" project-notification="${value.id}">
+                                        <span class="o-eye-1"></span>
+                                    </a>
+
+                                    ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
+
+                                        `<button style="background-color: transparent;" role="button" class="px-0 pb-0 mr-30 btn  disabled="">
+                                            <span class="o-edit-1"></span>
+                                        </button>`
+                                        :
+                                        `<a role="button" title="Editar" class="edit-project-notification pointer pt-10 mr-30" project-notification='${value.id}'>
+                                            <span class="o-edit-1"></span>
+                                        </a>`
+                                    }
+                                    <div class="switch-holder d-inline pt-20 mr-10" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+
+                                        <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
+
+                                            <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
+                                            ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'disabled' : ''}>
+
+
+                                            <span class="slider round" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}></span>
+                                        </label>
+
+                                    </div>
+                                </div>
                             </td>
+
                         </tr>`;
+
                         $("#data-table-sms").append(data);
                     });
                     pagination(response, 'project-notification', atualizarProjectNotification);
