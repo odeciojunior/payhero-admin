@@ -101,6 +101,7 @@ class Transaction extends Model
         'is_waiting_withdrawal',
         'withdrawal_id',
         'gateway_transferred',
+        'gateway_transferred_at',
         'tracking_required',
         'is_security_reserve',
     ];

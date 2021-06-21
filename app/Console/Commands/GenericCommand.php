@@ -17,4 +17,3 @@ class GenericCommand extends Command
 }
 
 
-
