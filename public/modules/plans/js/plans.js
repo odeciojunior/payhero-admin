@@ -421,7 +421,7 @@ $(function () {
 
                                     $('.products_row_custom').append(`
                                         <div class='card container '>
-                                            <div class="row">
+                                            <div class="row mb-3">
                                                 <div class="col-sm-2">
                                                     <img src="${value.photo}" height="45px">
                                                 </div>
@@ -436,21 +436,29 @@ $(function () {
                                                         </label>
                                                     </div>
                                                 </div>      
-                                            </div> 
-                                            <div class="row">
+                                            </div>                                            
+                                            <div class="row mb-3">
                                                 <div class="col-sm-4">
-                                                    <button type="button" class="btn btn-outline-secondary p-3">
-                                                        <img src="/modules/global/img/pix/icon_text.svg">
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary  p-3">
-                                                        <img src="/modules/global/img/pix/icon_image.svg">
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary  p-3">
-                                                        <img src="/modules/global/img/pix/icon_attachment.svg">
-                                                    </button>
+                                                    <div class="form-group">
+                                                        <label for="type">Tipo</label>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-secondary p-3">
+                                                                <img src="/modules/global/img/pix/icon_text.svg">
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-secondary  p-3">
+                                                                <img src="/modules/global/img/pix/icon_image.svg">
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-secondary  p-3">
+                                                                <img src="/modules/global/img/pix/icon_attachment.svg">
+                                                            </button>
+                                                        </div>
+                                                    </div>                                                    
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control" name="custom[${value.id}]">
+                                                    <div class="form-group">
+                                                        <label for="title">Nome da personalização</label>
+                                                        <input type="text" class="form-control" name="custom[${value.id}]">
+                                                    </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <button type="button" class="btn btn-outline-success" id="add_custom_product-${value.id+index}">+</button>
