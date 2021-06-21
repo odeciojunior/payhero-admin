@@ -278,6 +278,7 @@ class TrackingService
                 $tracking->fill($newAttributes);
                 if ($tracking->isDirty()) {
                     $tracking->save();
+                    event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
                 if ($oldTrackingCode != $trackingCode) {
@@ -289,19 +290,19 @@ class TrackingService
                         $query->where('tracking_code', $oldTrackingCode);
                     })->get();
                     //caso existam recria/revalida os códigos
-                    foreach ($duplicates as $duplicate) {
-                        RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicate);
+                    if($duplicates->isNotEmpty()){
+                        RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicates);
                     }
                 } else {
                     $notify = false;
                 }
             } else { //senão cria um novo tracking
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
+                event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
-            if (!empty($tracking)) {
-                if ($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
-                event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
+            if (!empty($tracking) && $notify) {
+               event(new TrackingCodeUpdatedEvent($tracking->id));
             }
 
             return $tracking;
