@@ -299,8 +299,9 @@ class WooCommerceApiController extends Controller
         $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-
-        return $service->syncProducts();
+        
+        return $service->syncProducts($projectId, $integration);
+        
     }
 
     public function undoIntegration(Request $request)
