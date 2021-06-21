@@ -293,14 +293,14 @@ $(document).ready(function () {
                     <div id="levels">
                     </div>
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
-                        <span class="mb-10 title-performance">Benefícios ativos</span>
+                        <span class="mb-10 title-performance">Benefícios atuais</span>
                         <div id="benefits-active-container" class="benefits-empty">
                             <img src="/modules/global/adminremark/assets/images/empty-benefits.png" alt="Não há benefício">
                             <div>
                                 <strong class="benefits-name">Você ainda não tem nenhum benefício ativo em sua conta.</strong>
-                                <p class="benefits-description">
-                                  Suba de nível para mudar isso :)
-                                </p>
+<!--                                <p class="benefits-description">-->
+<!--                                  Suba de nível para mudar isso :)-->
+<!--                                </p>-->
                               </div>
                         </div>
                     </div>

@@ -144,9 +144,18 @@ return [
         'production' => [
             'supervisor-production' => [
                 'connection' => 'redis-horizon',
-                'queue' => ['high','default','low'],
+                'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
-                'processes' => 15,
+                'processes' => 10,
+                'tries' => 3,
+                'timeout' => 3600,
+                'delay' => 1,
+            ],
+            'supervisor-production-long-running' => [
+                'connection' => 'redis-horizon-long-running',
+                'queue' => 'long',
+                'balance' => 'false',
+                'processes' => 7,
                 'tries' => 3,
                 'timeout' => 36000,
                 'delay' => 1,
@@ -156,9 +165,18 @@ return [
         'homolog' => [
             'supervisor-homolog' => [
                 'connection' => 'redis-horizon',
-                'queue' => ['high','default','low'],
+                'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
-                'processes' => 15,
+                'processes' => 10,
+                'tries' => 3,
+                'timeout' => 3600,
+                'delay' => 1,
+            ],
+            'supervisor-homolog-long-running' => [
+                'connection' => 'redis-horizon-long-running',
+                'queue' => 'long',
+                'balance' => 'false',
+                'processes' => 7,
                 'tries' => 3,
                 'timeout' => 36000,
                 'delay' => 1,
@@ -166,13 +184,22 @@ return [
         ],
 
         'local' => [
-            'supervisor-1' => [
+            'supervisor-local' => [
                 'connection' => 'redis-horizon',
-                'queue' => ['high','default'],
+                'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
                 'processes' => 3,
+                'tries' => 1,
+                'timeout' => 3600,
+                'delay' => 1,
+            ],
+            'supervisor-local-long-running' => [
+                'connection' => 'redis-horizon-long-running',
+                'queue' => 'long',
+                'balance' => 'false',
+                'processes' => 15,
                 'tries' => 3,
-                'timeout' => 10800,
+                'timeout' => 36000,
                 'delay' => 1,
             ],
         ],

@@ -408,7 +408,9 @@ $(document).ready(function () {
                     24: "antifraude",
                 };
 
+
                 if (!isEmpty(response.data)) {
+                    $("#export-excel").show();
                     $.each(response.data, function (index, value) {
                         let start_date='';
                         if (value.start_date) {
@@ -593,9 +595,11 @@ $(document).ready(function () {
                             $("#dados_tabela").attr("img-empty") +
                             "'>Nenhuma venda encontrada</td></tr>"
                     );
+                    $("#export-excel").hide();
+
                 }
                 pagination(response, "sales", atualizar);
-                $("#export-excel").show();
+
             },
         });
 

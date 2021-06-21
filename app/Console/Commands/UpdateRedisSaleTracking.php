@@ -22,17 +22,18 @@ class UpdateRedisSaleTracking extends Command
     {
         try {
 
-            Sale::where('gateway_id', 15)->chunk(
-                1000,
-                function ($sales) {
-                    foreach ($sales as $sale) {
-                        $this->info(' - ' . $sale->id . ' :: Database: ' . $sale->has_valid_tracking . ' | getValidTrackingForRedis: ' . $sale->getValidTrackingForRedis());
-                        Redis::connection('redis-statement')->set(
-                            "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()
-                        );
+            Sale::with('transactions')
+                ->where('gateway_id', 15)->chunk(
+                    1000,
+                    function ($sales) {
+                        foreach ($sales as $sale) {
+                            $this->info(' - ' . $sale->id . ' :: Database: ' . $sale->has_valid_tracking . ' | getValidTrackingForRedis: ' . $sale->getValidTrackingForRedis());
+                            Redis::connection('redis-statement')->set(
+                                "sale:has:tracking:{$sale->id}", $sale->getValidTrackingForRedis()
+                            );
+                        }
                     }
-                }
-            );
+                );
 
             return 0;
         } catch (Exception $e) {

@@ -190,7 +190,7 @@ $(document).ready(function () {
         var btReviewSave = $('.bt-review-save');
         btReviewSave.attr("disabled", "disabled");
 
-        loadingOnScreen();
+
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('project_id', projectId);
 
@@ -207,12 +207,12 @@ $(document).ready(function () {
             data: form_data,
             dataType: 'json',
             error: function error(response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#modal_review').modal('hide');
-                loadingOnScreenRemove();
+
                 loadReviews();
                 alertCustom('success', response.message);
                 $("#review_apply_on_plans").val(null).trigger('change');
@@ -239,8 +239,6 @@ $(document).ready(function () {
         form.find('.review-id').val(reviewId);
         form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
         previewImageReview.imgAreaSelect({remove: true});
-
-        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -270,7 +268,6 @@ $(document).ready(function () {
 
                 initStarsPlugin('#review_stars', review.stars, false);
 
-                loadingOnScreenRemove();
                 $('#modal_review').modal('show');
                 setTimeout(() => {
                     form.find('#previewimagereview').imgAreaSelect({remove: true});
@@ -285,7 +282,7 @@ $(document).ready(function () {
         let reviewId = $(this).data('review');
         $('.btn-delete-review').unbind('click');
         $('.btn-delete-review').on('click', function () {
-            loadingOnScreen();
+
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectreviews/" + reviewId,
@@ -298,7 +295,7 @@ $(document).ready(function () {
                     loadingOnScreenRemove()
                 },
                 success: function (response) {
-                    loadingOnScreenRemove();
+
                     loadReviews();
                     alertCustom('success', response.message);
                 }
@@ -312,7 +309,7 @@ $(document).ready(function () {
         var btReviewUpdate = $('.bt-review-update');
         btReviewUpdate.attr("disabled", "disabled");
 
-        loadingOnScreen();
+
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('_method', 'PUT');
 
@@ -329,12 +326,12 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#modal_review').modal('hide');
-                loadingOnScreenRemove();
+
                 loadReviews();
                 alertCustom('success', response.message);
             },
@@ -443,7 +440,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#config-review', function (event) {
         event.preventDefault();
-        loadingOnScreen();
+
 
         $.ajax({
             method: "GET",
@@ -454,11 +451,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
-                loadingOnScreenRemove();
+
                 let reviewConfig = response.data;
                 let formConfigReview = $('#form_config_review');
 
@@ -488,7 +485,7 @@ $(document).ready(function () {
         //     alertCustom('error', 'Preencha o campo Contagem');
         //     return false;
         // }
-        loadingOnScreen();
+
         var form_data = new FormData(document.getElementById('form_config_review'));
 
         $.ajax({
@@ -503,14 +500,14 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-                loadingOnScreenRemove();
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 localStorage.setItem('reviews_config_icon_type', form_data.get('reviews_config_icon_type'))
                 localStorage.setItem('reviews_config_icon_color', form_data.get('reviews_config_icon_color'))
                 loadReviews();
-                loadingOnScreenRemove();
+
                 alertCustom('success', response.message);
             }
         });

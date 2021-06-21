@@ -14,7 +14,7 @@ class TransactionResource extends JsonResource
     public function toArray($request)
     {
         $sale = $this->sale;
-        
+
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
@@ -29,7 +29,7 @@ class TransactionResource extends JsonResource
                     ->getStatus($sale->status)),
             'start_date'              => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
             'end_date'                => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
-            'total_paid'              => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
+            'total_paid'              => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'brand'                   => !empty($sale->flag)?$sale->flag:$this->sale->present()->getPaymentFlag(),
             'email_status'            => $sale->checkout ? $sale->checkout->present()->getEmailSentAmount() : 'Não enviado',
             'sms_status'              => $sale->checkout ? $sale->checkout->present()->getSmsSentAmount() : 'Não enviado',
@@ -51,7 +51,7 @@ class TransactionResource extends JsonResource
             $data['has_shopify_integration'] = null;
         }
 
-        $data['cashback_value'] = '0.00';        
+        $data['cashback_value'] = '0.00';
         if ($sale->owner_id == auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {

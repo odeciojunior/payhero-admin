@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=02') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=08') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=10') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -325,20 +325,19 @@
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
-
     @endpush
 @endsection
 

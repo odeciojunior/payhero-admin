@@ -32,6 +32,9 @@
             .select2-container--open .select2-selection__arrow b {
                 border-color: transparent transparent #8f9ca2 transparent !important;
             }
+            .ajust-font{
+                font-size: 15px;
+            }
             @media only screen and (min-width: 768px){
                 .col-md-4.card {
                     margin-right: 10px;
@@ -224,7 +227,7 @@
                     </div>
                 </div>
                 <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination-sales" class="pl-5 pr-md-15 mb-30">
+                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination " style="position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

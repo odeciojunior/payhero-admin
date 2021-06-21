@@ -62,8 +62,8 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => 'default',
-            'retry_after' => 11000,
-            'timeout' => 36000,
+            'retry_after' => 3700,
+            'timeout' => 3600,
             'block_for' => null,
         ],
 
@@ -71,11 +71,19 @@ return [
             'driver' => 'redis',
             'connection' => 'redis-horizon',
             'queue' => 'default',
-            'retry_after' => 7200,
+            'retry_after' => 3700,
             'timeout' => 3600,
             'block_for' => null,
         ],
 
+        'redis-horizon-long-running' => [
+            'driver' => 'redis',
+            'connection' => 'redis-horizon',
+            'queue' => 'long',
+            'retry_after' => 36300, // 5 minutes after timeout
+            'timeout' => 36000,
+            'block_for' => null,
+        ],
     ],
 
     /*

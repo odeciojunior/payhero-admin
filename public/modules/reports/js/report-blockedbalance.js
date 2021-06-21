@@ -202,7 +202,6 @@ $(document).ready(function () {
                                         start_date[1]
                                     +" </small>";
                         }
-                        
                         let end_date='';
                         if (value.end_date) {
                             end_date=value.end_date.split(/\s/g);//data final

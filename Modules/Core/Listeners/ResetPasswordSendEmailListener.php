@@ -33,6 +33,6 @@ class ResetPasswordSendEmailListener implements ShouldQueue
             'name'       => $userName,
             'reset_link' => $resetLink,
         ];
-        $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-190c876dba7a4e94bcb767a95f398ae0', $data);
+        $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-190c876dba7a4e94bcb767a95f398ae0', $data);
     }
 }

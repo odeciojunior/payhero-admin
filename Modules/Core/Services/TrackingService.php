@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Jobs\RevalidateTrackingDuplicateJob;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -51,31 +52,35 @@ class TrackingService
 
         $apiTracking = $trackingmoreService->find($trackingCode);
 
-        $collection = $refresh
-            ? $trackingModel->with(['productPlanSale'])
-                ->where('tracking_code', $trackingCode)
-                ->where('id', '!=', $tracking->id)
-                ->get()
-            : collect();
-        $collection->push($tracking);
+        if ($apiTracking) {
 
-        $status = $this->parseStatusApi($apiTracking->status);
-        foreach ($collection as $item) {
-            if (isset($apiTracking->status)) {
-                if ($item->tracking_status_enum != $status) {
-                    $item->tracking_status_enum = $status;
+            $collection = $refresh
+                ? $trackingModel->with(['productPlanSale'])
+                    ->where('tracking_code', $trackingCode)
+                    ->where('id', '!=', $tracking->id)
+                    ->get()
+                : collect();
+            $collection->push($tracking);
+
+            $status = $this->parseStatusApi($apiTracking->status);
+
+            foreach ($collection as $item) {
+                if (isset($apiTracking->status)) {
+                    if ($item->tracking_status_enum != $status) {
+                        $item->tracking_status_enum = $status;
+                    }
                 }
-            }
-            if ($refresh && !in_array($item->system_status_enum, [
-                    $trackingModel->present()->getSystemStatusEnum('checked_manually'),
-                ])) {
-                $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
-                    $item->productPlanSale);
-            }
+                if ($refresh && !in_array($item->system_status_enum, [
+                        $trackingModel->present()->getSystemStatusEnum('checked_manually'),
+                    ])) {
+                    $item->system_status_enum = $this->getSystemStatus($trackingCode, $apiTracking,
+                        $item->productPlanSale);
+                }
 
-            if ($item->isDirty()) {
-                $item->save();
-                event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+                if ($item->isDirty()) {
+                    $item->save();
+                    event(new CheckSaleHasValidTrackingEvent($item->sale_id));
+                }
             }
         }
 
@@ -232,9 +237,9 @@ class TrackingService
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false,
-        $notify = true
-    )
+        bool $logging = false,
+        bool $notify = true
+    ): ?Tracking
     {
         try {
             $logging ? activity()->enableLogging() : activity()->disableLogging();
@@ -266,29 +271,38 @@ class TrackingService
 
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
-                $oldTracking = (object)$tracking->getAttributes();
+                $oldTracking = (object) $tracking->getAttributes();
+                $oldTrackingCode = $oldTracking->tracking_code;
 
                 //atualiza
-                $tracking->update($newAttributes);
-
-                //verifica se existem duplicatas do antigo código
-                if ($oldTracking->tracking_code != $trackingCode) {
-                    $duplicates = Tracking::with(['productPlanSale'])
-                        ->where('tracking_code', $oldTracking->tracking_code)
-                        ->orderBy('id')
-                        ->get();
-                    //caso existam recria/revalida os códigos
-                    foreach ($duplicates as $duplicate) {
-                        $this->createOrUpdateTracking($duplicate->tracking_code, $duplicate->productPlanSale);
-                    }
+                $tracking->fill($newAttributes);
+                if ($tracking->isDirty()) {
+                    $tracking->save();
+                    event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
-            } else { //senão cria o tracking
+
+                if ($oldTrackingCode != $trackingCode) {
+                    //verifica se existem duplicatas do antigo código
+                    $duplicates = ProductPlanSale::with([
+                        'sale.delivery',
+                        'tracking'
+                    ])->whereHas('tracking', function ($query) use ($oldTrackingCode) {
+                        $query->where('tracking_code', $oldTrackingCode);
+                    })->get();
+                    //caso existam recria/revalida os códigos
+                    if($duplicates->isNotEmpty()){
+                        RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicates);
+                    }
+                } else {
+                    $notify = false;
+                }
+            } else { //senão cria um novo tracking
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
+                event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
-            if (!empty($tracking)) {
-                if ($notify) event(new TrackingCodeUpdatedEvent($tracking->id));
-                event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
+            if (!empty($tracking) && $notify) {
+               event(new TrackingCodeUpdatedEvent($tracking->id));
             }
 
             return $tracking;

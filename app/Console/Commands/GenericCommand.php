@@ -10,7 +10,7 @@ use Modules\Plans\Http\Controllers\PlansApiController;
 
 class GenericCommand extends Command
 {
-    protected $signature = 'generic {user?}';
+    protected $signature = 'generic';
 
     protected $description = 'Command description';
 
@@ -25,6 +25,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
+
     }
 }
 

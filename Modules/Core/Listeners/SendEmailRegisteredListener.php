@@ -36,7 +36,7 @@ class SendEmailRegisteredListener implements ShouldQueue
 
         try {
             $this->emailService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 $data['domainName'],
                 $data['clientEmail'],
                 $data['clientName'],

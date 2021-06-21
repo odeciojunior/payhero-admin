@@ -1267,6 +1267,10 @@ $(() => {
         }
     })
 
+    $('.slick-track').on('click', function() {
+        $('.nav-tabs-horizontal .tab-pane').removeClass('active show');
+    });
+
     function formatMoney(value) {
         return ((value / 100).toLocaleString('pt-BR', {
             style: 'currency',

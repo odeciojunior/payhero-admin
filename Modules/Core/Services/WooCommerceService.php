@@ -27,19 +27,20 @@ use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\ImportWooCommerceProduct;
 use App\Jobs\ImportWooCommerceProductVariation;
 use App\Jobs\CreateWooCommerceWebhooks;
+use App\Jobs\ImportWooCommerceProducts;
 use Automattic\WooCommerce\Client;
 
 
 class WooCommerceService
 {
-    
+
     private $project = "admin";
     private $url;
     private $user;
     private $pass;
     private $endPoint = "/wp-json/wc/v3/";
     public $woocommerce;
-    
+
     /**
      * constructor.
      * @param string $urlStore
@@ -50,11 +51,15 @@ class WooCommerceService
         $this->url = $urlStore;
         $this->user = $tokenUser;
         $this->pass = $tokenPass;
+
+        if(!$this->woocommerce){
+            $this->verifyPermissions();
+        }
     }
 
     public function test_url()
     {
-        
+
         $file = $this->url;
         $file_headers = @get_headers($file);
         if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
@@ -66,37 +71,43 @@ class WooCommerceService
         return $exists;
     }
 
-    public function verifyPermissions()
+    public function verifyPermissions($testWrite=null)
     {
         try{
             $this->woocommerce = new Client(
-                $this->url, 
-                $this->user, 
+                $this->url,
+                $this->user,
                 $this->pass,
                 [
                     'version' => 'wc/v3',
                 ]
             );
 
-            //read test
             $product = $this->woocommerce->get('products', ['per_page'=>1]);
 
-            if(!empty($product)){ //write test
+            //write test
+            if($testWrite){
 
-                $data = [
-                    'name' => $product[0]->name
-                ];
+                if(!empty($product)){
     
-                $this->woocommerce->put('products/'.$product[0]->id, $data);
+                    $data = [
+                        'name' => $product[0]->name
+                    ];
     
-                return true;
-                
-
+                    $this->woocommerce->put('products/'.$product[0]->id, $data);
+    
+                    return true;
+    
+    
+                }else{
+    
+                    return false;
+    
+                }
             }else{
-    
-                return false;
-
+                return true;
             }
+
 
         }catch(Exception $e){
 
@@ -106,45 +117,30 @@ class WooCommerceService
         }
     }
 
-    public function fetchProducts()
+    public function fetchProducts($projectId, $userId)
     {
-        $loop = true;
+        // Will loop pages until it finishes;
         $page = 1;
-        $products = array();
-        while($loop){
-            $result = $this->woocommerce->get('products', ['status'=>'publish', 'page'=> $page]);
-            
-            if(empty($result)){
-                $loop = false;
-            }else{
-                $products = array_merge($products, $result);
-                $page++;
-            }
-        }
+
+        ImportWooCommerceProducts::dispatch($projectId, $userId, $page);
         
-        return $products;
     }
-    
+
     public function importProducts($projectId, $userId, $products)
-    {   
+    {
         $createdProdcts = 0;
 
         foreach($products as $_product){
-        
+
             if($_product->status != 'publish') continue;
 
             ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
-            
-            
 
-            
         }
 
-        $hashedProjectId = Hashids::encode($projectId);
+        
 
-        $this->createHooks($hashedProjectId);
-
-        return $createdProdcts;
+        return;
 
     }
 
@@ -153,23 +149,23 @@ class WooCommerceService
         try{
 
             $hashedProjectId = Hashids::encode($projectId);
-            
+
 
             $description = '';
             if(empty($_product->variations)){
-                
+
                 $this->createProduct($projectId, $userId, $_product, $description);
-                
+
                 $data = [
                     'sku' => $_product->id.'-'.$hashedProjectId.'-'
                 ];
                 $res = $this->woocommerce->put('products/'.$_product->id, $data);
-                
+
 
             }else{
-                
+
                 $variations = $this->woocommerce->get('products/'.$_product->id.'/variations');
-                
+
                 foreach($variations as $variation){
 
                     ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variation);
@@ -177,7 +173,7 @@ class WooCommerceService
                 }
 
             }
-            
+
         }catch(Exception $e){
             //Log::debug($e);
             report($e);
@@ -193,29 +189,33 @@ class WooCommerceService
         foreach($variation->attributes as $attribute){
             $description .= $attribute->option.' ';
         }
-        
-        
+
+
         $_product->price = $variation->price;
         $_product->images[0]->src = $variation->image->src;
-        
+
         $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
-        
+
         $data = [
             'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
         ];
-        
-        $res = $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-        
+
+        try{
+            $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+        }catch(Exception $e){
+            //Log::debug($e);
+        }
+
 
     }
 
     public function createProduct($projectId, $userId, $_product, $description, $variationId = null)
     {
-        
+
         $hashedProjectId = Hashids::encode($projectId);
 
         $planModel = new Plan();
-    
+
         $productModel = new Product();
 
         $productPlanModel = new ProductPlan();
@@ -232,7 +232,7 @@ class WooCommerceService
                 'guarantee' => '0',
                 'format' => 1,
                 'category_id' => '11',
-                
+
                 'price' => $_product->price,
                 'shopify_id' => $variationId,
                 'shopify_variant_id' => $shopifyVariantId,
@@ -261,10 +261,10 @@ class WooCommerceService
             'plan_id' => $plan->id,
             'amount' => '1',
         ];
-        
+
 
         $productPlanModel->create($dataProductPlan);
-        
+
         if(!empty($_product->images)){
 
             if(gettype($_product->images[0])=='array'){
@@ -275,32 +275,30 @@ class WooCommerceService
             $product->update(['photo' => $src]);
         }
 
-        
+
 
         return $shopifyVariantId;
     }
 
-    
+
     public function cancelOrder($sale, $note = null)
     {
         try {
 
-            $saleId = $sale->id;
-            
             $data = [
                 'status' => 'cancelled'
             ];
-            
+
             $this->woocommerce->put('orders/'.$sale->woocommerce_order, $data);
 
             if(!empty($note)){
                 $data = [
                     'note' => $note
                 ];
-                
+
                 $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
             }
-            
+
         } catch (Exception $e) {
             report($e);
         }
@@ -308,59 +306,79 @@ class WooCommerceService
 
     public function createHooks($projectId)
     {
+        //$this->woocommerce->deleteHooks($projectId, true);
+
+
         $decodedProjectId = Hashids::decode($projectId);
 
         //Order update.
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'order.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
-        
+
         CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
-        
+
 
         //Product update
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
-        
+
         CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
 
 
         //Product create
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.created',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
-        
+
         CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
 
     }
 
-    public function deleteHooks($projectId)
+    public function deleteHooks($projectId=null, $anyCloudFoxProject=null)
     {
         $hashedProjectId = Hashids::encode($projectId);
-        
-        $webhooks = $this->woocommerce->get('webhooks');
 
+        $webhooks = $this->woocommerce->get('webhooks');
+        
+        $ids = array();
+        
         foreach($webhooks as $webhook){
-            
-            if($webhook->name == ''.$hashedProjectId){
-                
+
+            if($webhook->name == 'cf-'.$hashedProjectId){
+
                 $ids[] = $webhook->id;
+
+            }elseif($anyCloudFoxProject && strpos($webhook->name, 'cf-')){
+
+                $ids[] = $webhook->id;
+
             }
         }
-        $data = [
-            'delete' => $ids
-        ];
-        
-        $this->woocommerce->post('webhooks/batch', $data);
+
+        if(!empty($ids)){
+            
+            $data = [
+                'delete' => $ids
+            ];
+    
+            $this->woocommerce->post('webhooks/batch', $data);
+        }
 
 
+    }
+
+
+    public function syncProducts()
+    {
+        return 'in development!';
     }
 
 }
