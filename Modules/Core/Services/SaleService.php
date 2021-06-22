@@ -878,8 +878,8 @@ class SaleService
                 if (!empty($integration)) {
                     $service = new WooCommerceService(
                         $integration->url_store,
-                        $integration->user_token,
-                        $integration->user_pass
+                        $integration->token_user,
+                        $integration->token_pass
                     );
                     $service->verifyPermissions();
                     $service->cancelOrder($sale, 'Estorno');
