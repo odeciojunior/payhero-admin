@@ -206,8 +206,8 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if (!$transaction->sale->flag || empty($transaction->sale->flag)) {
-                    $transaction->sale->flag = $transaction->sale->present()->getFlagPaymentMethod();
+                if(empty($transaction->sale->flag)){
+                    $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
                 if (!$transaction->gateway_transferred) {

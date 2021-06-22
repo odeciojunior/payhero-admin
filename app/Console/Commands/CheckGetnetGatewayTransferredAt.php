@@ -52,16 +52,19 @@ class CheckGetnetGatewayTransferredAt extends Command
 
         $transactionsCount = $transactionModel->with('sale')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
-            ->whereNull('withdrawal_id')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->count();
+            ->whereIn('status_enum', [ Transaction::STATUS_TRANSFERRED])
+            ->whereNotNull('withdrawal_id')
+            ->whereNull('gateway_transferred_at')
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+            ->count();
 
         $transactions = $transactionModel->with('sale')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
-            ->whereNull('withdrawal_id')
+            ->whereIn('status_enum', [ Transaction::STATUS_TRANSFERRED])
+            ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->orderBy('id', 'desc');
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+            ->orderBy('id', 'desc');
 
         $transactions->chunk(50, function ($transactions) use ($getnetService, $transactionsCount) {
             foreach ($transactions as $transaction) {
@@ -95,10 +98,9 @@ class CheckGetnetGatewayTransferredAt extends Command
 
                         $result = json_decode($getnetService->getStatement());
 
-                        if (!empty($result->list_transactions) &&
-                            !is_null($result->list_transactions[0]) &&
-                            !is_null($result->list_transactions[0]->details[0]) &&
-                            !is_null($result->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                        if (!empty($result->list_transactions[0]) &&
+                            !empty($result->list_transactions[0]->details[0]) &&
+                            !empty($result->list_transactions[0]->details[0]->subseller_rate_confirm_date)
                         ) {
 
 
