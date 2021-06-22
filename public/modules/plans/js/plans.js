@@ -1,9 +1,10 @@
+var projectId = $(window.location.pathname.split('/')).get(-1);
+var planId=  '';
 $(function () {
     var statusPlan = {
         0: "danger",
         1: "success",
     }
-    var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").html();
     var form_update_plan = $("#form-update-plan").html();
 
@@ -33,6 +34,10 @@ $(function () {
         $('#description').val('');
         $("#form-register-plan").html('');
         $("#form-register-plan").html(form_register_plan);
+    }
+
+    function activeButtonCustomProduct(idProduct){
+
     }
 
     function create() {
@@ -271,7 +276,7 @@ $(function () {
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
                     var plan = $(this).attr('plan');
-                    // var data = {planId: plan, project: projectId};
+                    // var data = {planId plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
@@ -343,6 +348,7 @@ $(function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
+                    planId = plan;
                     $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
                     console.log('modal edit plan');
 
@@ -438,30 +444,34 @@ $(function () {
                                                 </div>      
                                             </div>                                            
                                             <div class="row mb-3">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3 pr-0">
                                                     <div class="form-group">
                                                         <label for="type">Tipo</label>
                                                         <div>
-                                                            <button type="button" class="btn btn-outline-secondary p-3">
-                                                                <img src="/modules/global/img/pix/icon_text.svg">
+                                                            <input type="hidden" id="type-${value.id}" value="">
+                                                            <button type="button" class="btn btn-outline-secondary p-2" id="pro-type-t${value.id}" >                                                                
+                                                                <svg class="teste" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M3.9 1.8C2.7402 1.8 1.8 2.7402 1.8 3.9V7.5C1.8 7.99705 1.39705 8.4 0.9 8.4C0.402948 8.4 0 7.99705 0 7.5V3.9C0 1.74608 1.74608 0 3.9 0H7.5C7.99705 0 8.4 0.402948 8.4 0.9C8.4 1.39705 7.99705 1.8 7.5 1.8H3.9ZM3.9 22.2C2.7402 22.2 1.8 21.2598 1.8 20.1V16.5C1.8 16.003 1.39705 15.6 0.9 15.6C0.402948 15.6 0 16.003 0 16.5V20.1C0 22.2539 1.74608 24 3.9 24H7.5C7.99705 24 8.4 23.597 8.4 23.1C8.4 22.603 7.99705 22.2 7.5 22.2H3.9ZM22.2 3.9C22.2 2.7402 21.2598 1.8 20.1 1.8H16.5C16.003 1.8 15.6 1.39705 15.6 0.9C15.6 0.402948 16.003 0 16.5 0H20.1C22.2539 0 24 1.74608 24 3.9V7.5C24 7.99705 23.597 8.4 23.1 8.4C22.603 8.4 22.2 7.99705 22.2 7.5V3.9ZM20.1 22.2C21.2598 22.2 22.2 21.2598 22.2 20.1V16.5C22.2 16.003 22.603 15.6 23.1 15.6C23.597 15.6 24 16.003 24 16.5V20.1C24 22.2539 22.2539 24 20.1 24H16.5C16.003 24 15.6 23.597 15.6 23.1C15.6 22.603 16.003 22.2 16.5 22.2H20.1ZM6.9 4.8C6.40295 4.8 6 5.20295 6 5.7V7.2C6 7.69705 6.40295 8.1 6.9 8.1C7.39705 8.1 7.8 7.69705 7.8 7.2V6.6H11.1V17.4H9.3C8.80295 17.4 8.4 17.803 8.4 18.3C8.4 18.797 8.80295 19.2 9.3 19.2H14.7C15.197 19.2 15.6 18.797 15.6 18.3C15.6 17.803 15.197 17.4 14.7 17.4H12.9V6.6H16.2V7.2C16.2 7.69705 16.603 8.1 17.1 8.1C17.597 8.1 18 7.69705 18 7.2V5.7C18 5.20295 17.597 4.8 17.1 4.8H6.9Z" fill="#636363"/>
+                                                                </svg>
                                                             </button>
-                                                            <button type="button" class="btn btn-outline-secondary  p-3">
+                                                            <button type="button" class="btn btn-outline-secondary p-2" id="pro-type-i${value.id}" >
                                                                 <img src="/modules/global/img/pix/icon_image.svg">
                                                             </button>
-                                                            <button type="button" class="btn btn-outline-secondary  p-3">
+                                                            <button type="button" class="btn btn-outline-secondary p-2" id="pro-type-f${value.id}" >
                                                                 <img src="/modules/global/img/pix/icon_attachment.svg">
                                                             </button>
                                                         </div>
                                                     </div>                                                    
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-7">
                                                     <div class="form-group">
                                                         <label for="title">Nome da personalização</label>
-                                                        <input type="text" class="form-control" name="custom[${value.id}]">
+                                                        <input type="text" class="form-control input-pad" id="pro-title-${value.id}">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <button type="button" class="btn btn-outline-success" id="add_custom_product-${value.id+index}">+</button>
+                                                    <button type="button" class="btn btn-outline-success btn-plus" id="add-item-custom-product-${value.id}">
+                                                    <img src="/modules/global/img/pix/icon_plus.svg"></button>
                                                 </div>
                                                 <div class="col-12">
                                                     <small>ATENÇÃO: Seja claro e objetivo. O campo de “nome” aparecerá como a descrição do arquivo ou texto que seu cliente preencherá na página de obrigado.</small>
@@ -478,6 +488,25 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
+
+                                    $(document).on('click',`#pro-type-t${value.id}`,function(){
+                                        $(`#pro-type-i${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-f${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-t${value.id}`).addClass('btn-active');
+                                        $(`#type-${value.id}`).val('Text');
+                                    });
+                                    $(document).on('click',`#pro-type-i${value.id}`,function(){
+                                        $(`#pro-type-t${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-f${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-i${value.id}`).addClass('btn-active');
+                                        $(`#type-${value.id}`).val('Image');
+                                    });
+                                    $(document).on('click',`#pro-type-f${value.id}`,function(){
+                                        $(`#pro-type-i${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-t${value.id}`).removeClass('btn-active');
+                                        $(`#pro-type-f${value.id}`).addClass('btn-active');
+                                        $(`#type-${value.id}`).val('File');
+                                    });
 
                                     $.each(value.custom_configs, function (indexC,valueC) {
                                         console.log('carregando configs');
@@ -497,35 +526,54 @@ $(function () {
                                                     <input name="label[${value.id}][]" class="form-control input-pad" type="text" 
                                                     placeholder="Ex. Verifique a qualidade da imagem antes de enviar" value="${valueC.label}">
                                                 </div>
-                                                <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
+                                                <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4"><br/>
                                                     <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
                                                 </div>
                                             </div>
                                         `);
                                     });
 
-                                    $(document).on('click',`#add_custom_product-${value.id+index}`,function(){
+                                    $(document).on('click',`#add-item-custom-product-${value.id}`,function(){
                                         
-                                        $(`#area-custom-products-${value.id+index}`).append(`
-                                            <div class="row">
-                                                <input type="hidden" name="productsPlan[]" value="${value.id}">
-                                                <div class="form-group col-4">
-                                                    <label>Tipo:</label>
-                                                    <select name="type[${value.id}][]" name="type" class="form-control select-pad">
-                                                        <option value="image">Imagem</option>    
-                                                        <option value="file">Arquivo</option>
-                                                        <option value="text">Texto</option>
-                                                    </select>
+                                        var proType = $(`#type-${value.id}`).val();
+                                        var proTitle = $(`#pro-title-${value.id}`).val();
+                                        if(proTitle != '' && proType!=''){
+                                            var inputType = '';
+                                            switch(proType){
+                                                case 'Text':
+                                                    inputType= `<button type="button" class="btn btn-outline-secondary p-2">
+                                                        <img src="/modules/global/img/pix/icon_text.svg">
+                                                    </button>`;
+                                                break;
+                                                case 'Image':
+                                                    inputType= `<button type="button" class="btn btn-outline-secondary p-2" >
+                                                        <img src="/modules/global/img/pix/icon_image.svg">
+                                                    </button>`;
+                                                break;
+                                                case 'File':
+                                                    inputType= `<button type="button" class="btn btn-outline-secondary p-2">
+                                                        <img src="/modules/global/img/pix/icon_attachment.svg">
+                                                    </button>`;
+                                                break;
+                                            }                                        
+    
+                                            $(`#area-custom-products-${value.id+index}`).append(`
+                                                <div class="row">
+                                                    <input type="hidden" name="productsPlan[]" value="${value.id}">
+                                                    <div class="col-1">
+                                                        <input type="hidden" name="type[${value.id}][]" class="form-control input-pad" value="${proType}">
+                                                        ${inputType}
+                                                    </div>
+                                                    <div class="col-10">                                                    
+                                                        <input type="text" name="label[${value.id}][]" class="form-control input-pad" 
+                                                        placeholder="Ex. Verifique a qualidade da imagem antes de enviar" value="${proTitle}">
+                                                    </div>
+                                                    <div class="form-group col-1">
+                                                        <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-8">
-                                                    <label>Título:</label>
-                                                    <input value="" name="label[${value.id}][]" class="form-control input-pad" type="text" placeholder="Ex. Verifique a qualidade da imagem antes de enviar">
-                                                </div>
-                                                <div class="form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4">
-                                                    <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><b>Remover </b><span class="o-bin-1"></span></button>
-                                                </div>
-                                            </div>
-                                        `);
+                                            `);
+                                        }                                        
                                     });
                                     
                                 });
@@ -1197,6 +1245,4 @@ $(function () {
         $('#div_update_cost_shopify').show();
     });
 
-    
-})
-;
+});

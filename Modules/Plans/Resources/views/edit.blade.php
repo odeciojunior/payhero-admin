@@ -1,10 +1,34 @@
+<style>
+    .mb-3{
+        margin-bottom: 1rem!important;
+    }
+    .btn{border-width: 1px !important;}
+    .nav-tabs .nav-link:not(.active) {    
+        border-bottom-color: #c3c3c3;
+    }
+    .nav-tabs .nav-link {        
+        background-color: #ffffff;     
+    }
+    .btn-plus{
+        margin-top: 28px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .btn-active{
+        background-color: #2E85EC;
+        color:white;
+    }
+    .btn-active .teste{
+        filter: invert(99%) sepia(11%) saturate(235%) hue-rotate(5deg) brightness(117%) contrast(100%);
+    }
+</style>
 <div class="container-fluid px-0" id="form-update-plan" style="display:none">
     <div class="nav-tabs-horizontal">
         <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active mx-0" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
                 role="tab" style="width:48%;">Dados gerais
             </a>
-            <a class="nav-item nav-link mx-0" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
+            <a class="nav-item nav-link mx-0" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"  ng-click="init()"
                 role="tab" style="width:48%;">Produtos personalizados
             </a>
         </div>
@@ -48,7 +72,7 @@
                 </div>
             </form>
         </div>
-        <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">                
+        <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab" >
             <form id="form-update-plan-tab-2" method="POST" action="/plans/config-custom-product" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
