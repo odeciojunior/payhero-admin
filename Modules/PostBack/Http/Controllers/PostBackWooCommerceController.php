@@ -180,12 +180,22 @@ class PostBackWooCommerceController extends Controller
                 $planExists = Plan::where('project_id', hashids_decode($request->project_id))
                     ->where('shopify_variant_id', $request['sku'])
                     ->first();
-                    
-                if($planExists){
+                
+                if(!empty($planExists)){
                     $planExists->update($newValues);
                 }else{
-                    $newValues['sku'] = $request['sku'];
-                    $planExists->create($newValues);
+                    $newValues['shopify_variant_id'] = $request['sku'];
+                    
+                    if(!empty($request['parent_id'])){
+                        $newValues['shopify_id'] = $request['parent_id'];
+                    }
+                    
+                    $newValues['project_id'] = hashids_decode($request->project_id);
+                    $newValues['description'] = $newValues['name'];
+                    $newValues['code'] = '';
+                    $newValues['status'] = '1';
+                    
+                    Plan::create($newValues);
                 }
 
             }else{
