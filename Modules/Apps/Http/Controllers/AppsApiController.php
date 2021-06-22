@@ -5,6 +5,7 @@ namespace Modules\Apps\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\HotzappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
@@ -36,6 +37,7 @@ class AppsApiController extends Controller
         $reportanaIntegrationModel      = new ReportanaIntegration();
         $unicodropIntegrationModel      = new UnicodropIntegration();
         $smartfunnelIntegrationModel    = new SmartfunnelIntegration();
+        $melhorenvioIntegrationModel    = new MelhorenvioIntegration();
 
 
         return response()->json([
@@ -50,6 +52,7 @@ class AppsApiController extends Controller
             'reportanaIntegrations'      => $reportanaIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'unicodropIntegrations'      => $unicodropIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'smartfunnelIntegrations'    => $smartfunnelIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'melhorenvioIntegrations'    => $melhorenvioIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
           ]);
     }
 

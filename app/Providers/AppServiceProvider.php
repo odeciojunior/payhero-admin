@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
         TicketMessage::observe(TicketMessageObserver::class);
 
         Paginator::useBootstrap();
+
+        //TODO: remover
+        \URL::forceScheme('https');
     }
 
     /**
