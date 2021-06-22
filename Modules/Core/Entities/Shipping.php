@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ShippingPresenter;
 use App\Traits\LogsActivity;
@@ -28,7 +29,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Project $project
- * @property Sale[] $sales
+ * @property Collection $sales
+ * @property MelhorenvioIntegration $melhorenvioIntegration
  */
 class Shipping extends Model
 {
@@ -127,10 +129,10 @@ class Shipping extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function melhorenvioIntegrations()
+    public function melhorenvioIntegration()
     {
-        return $this->hasMany(MelhorenvioIntegration::class);
+        return $this->belongsTo(MelhorenvioIntegration::class);
     }
 }
