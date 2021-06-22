@@ -23,7 +23,8 @@ class ContestationService
     public function getTotalValueContestations($filters)
     {
 
-        $qty_total_paid_value = $this->getQuery($filters)->sum('transactions.value');
+        $qty_total_paid_value = $this->getQuery($filters)->where('sale_contestations.status', SaleContestation::STATUS_WIN)->sum('transactions.value');
+
         return trim(str_replace("R$", "", FoxUtils::formatMoney($qty_total_paid_value / 100)));
 
     }

@@ -301,10 +301,10 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                                <tr>
+                                <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
                                     <td id='${value.id}'><span>${value.sale_code}</span></td>
-                                    <td title="${value.company}">${value.company_limit}<br><small class="text-muted">(${value.project})</small></td>
-                                    <td>${value.customer}<br><small class="text-muted"> Pagamento em ${value.adjustment_date}</small></td>
+                                    <td class="line-overflow" title="${value.company}">${value.company_limit}<br><small class="text-muted">${value.project}</small></td>
+                                    <td class="line-overflow" title="${value.customer}">${value.customer}<br><small class="text-muted"> Pagamento em ${value.adjustment_date}</small></td>
                                    `;
 
                     if (value.sale_status in statusObject) {
@@ -316,7 +316,7 @@ $(document).ready(function () {
                             value.sale_status === 10
                                 ? "pointer"
                                 : "cursor-default"
-                        }' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${
+                            } font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${
                             statusObject[value.sale_status]
                         }</span>
                                         ${
@@ -338,9 +338,8 @@ $(document).ready(function () {
                         dados += `<td><span class='badge badge-danger'> Vazio</span></td>`;
                     }
                     dados += `
-                                    <td>${value.expiration_user}
-                                    </td>
-                                    <td>${value.reason}</td>
+                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                                    <td class="font-size-12 bold line-overflow" style="white-space: normal;">${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${
                         value.amount
                     }</b></td>-->
@@ -452,6 +451,7 @@ $(document).ready(function () {
         });
     }
 
+    const addZeroLeft = (value) => value > 0 && value < 10 ? String(value).padStart(2, '0') : value
     function getTotalValues() {
         loadOnAny(".total-number", false, {
             styles: {
@@ -482,16 +482,16 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(response.total_contestation);
+                $("#total-contestation").html(addZeroLeft(response.total_contestation));
                 $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");
 
-                $("#total-chargeback-tax-val").html(response.total_chargeback);
+                $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
                 $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
 
-                $("#total-contestation-value").html(response.total_contestation_value);
-
-                $("#total-contestations-won-val").html(response.total_contestations_won);
+                $("#total-contestations-won-val").html(addZeroLeft(response.total_contestations_won));
                 $("#total-contestations-won-tax").html(" (" + response.total_contestations_won_tax + ")");
+
+                $("#total-contestation-value").html(response.total_contestation_value);
             },
         });
     }

@@ -21,6 +21,16 @@
 	height: auto;
 }
 
+.text-muted {
+	color: #959595 !important;
+}
+
+/* Contestation Alert */
+
+.alert-contestation {
+	background-color: #F6FAFF;
+}
+
 .alert-contestation span.alert-text {
 	vertical-align: middle;
 	padding-left: 5px;
@@ -28,4 +38,20 @@
 
 .alert-contestation img {
 	width: 24px;
+}
+
+.text-muted {
+	color: #959595 !important;
+}
+
+/* Contestation Table */
+
+#chargebacks-table-data .line-overflow {
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#chargebacks-table-data .won-contestation > td {
+	background-color: #ECFFE8 !important;
 }

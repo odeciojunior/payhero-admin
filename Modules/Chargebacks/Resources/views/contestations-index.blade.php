@@ -76,12 +76,12 @@
                     @csrf
                     <div id="filter-contestations" class="card">
                         <div class="row align-items-baseline">
-                            <div class="col-sm-12 col-md mt-sm-10">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="transaction">Transação</label>
                                 <input name="transaction" id="transaction" class="form-control input-pad" placeholder="Transação">
                             </div>
 
-                            <div class="col-sm-12 col-md mt-sm-10">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="form-control select-pad">
@@ -91,7 +91,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md mt-sm-10">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="date_type">Data</label>
                                 <select name='date_type' id="date_type" class="form-control select-pad">
                                     <option value="expiration_date">Data da expiração</option>
@@ -100,7 +100,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md mt-sm-10">
+                            <div class="col-sm-12 col-md mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
                                     <i style="right: 24px;top: 41px;"
@@ -112,14 +112,14 @@
                         </div>
                         <div class="collapse" id="bt_collapse">
                             <div class="row">
-                                <div class="col-sm-12 col-md mt-sm-10">
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for="project">Projeto</label><br>
                                     <select name='project' id="project" class="form-control select-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-sm-10">
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="form-control select-pad">
@@ -129,7 +129,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-sm-10">
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for="status">Status</label>
                                     <select name='sale_status' id="status" class="form-control select-pad">
                                         <option value="0">Todos status</option>
@@ -150,7 +150,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-sm-10">
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for='customer'>Cliente</label>
                                     <input id="customer" name="customer" class="form-control select-pad">
                                 </div>
@@ -166,13 +166,13 @@
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
                                     <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                    <span id="text-filtro">Filtros avançados</span>
+                                    <span id="text-filtro" class="text-break">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
                                     <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
-                                    Aplicar filtros
+                                    <span class="text-break">Aplicar filtros</span>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                 <div class="fixhalf"></div>
 
                 <div class="row justify-content-center">
-                    <div class="col-md-3">
+                    <div class="col-md-3 mt-10">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body ">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
@@ -208,25 +208,25 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="font-size-16 text-muted">Total em R$</h5>
-                                <h4 class="total-number">
-                                    <span class="text-muted">R$ </span>
-                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation-value"></span>
-                                </h4>
-                            </div>
-                            <div class="s-border-right yellow"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Disputas ganhas</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestations-won-val"></span>
                                     <span id="total-contestations-won-tax" class="text-muted"></span>
                                 </h4>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card shadow" style='display:block;'>
+                            <div class="card-body">
+                                <h5 class="font-size-16 text-muted">Total recuperado</h5>
+                                <h4 class="total-number">
+                                    <span class="text-muted">R$ </span>
+                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation-value"></span>
+                                </h4>
+                            </div>
+                            <div class="s-border-right green"></div>
                         </div>
                     </div>
                 </div>
@@ -252,8 +252,8 @@
                                 <td class="table-title">Transação</td>
                                 <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
                                 <td class="table-title">Compra</td>
-                                <td class="table-title" style="min-width: 150px;">Status</td>
-                                <td class="table-title" style="min-width: 170px;">Prazo para recurso</td>
+                                <td class="table-title text-center" style="min-width: 100px;">Status</td>
+                                <td class="table-title">Situação</td>
                                 <td class="table-title">Motivo</td>
                                 {{--                            <td class="table-title">Valor</td>--}}
                                 <td class="table-title" style="min-width: 100px;"></td>
