@@ -23,9 +23,17 @@ $(document).ready(function () {
                 $("#modal-content").hide();
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: function success(r) {
                 
-                console.log(response.data);
+                
+                if(r.status == true){
+                    alertCustom('success', r.msg);
+
+                }else{
+                    alertCustom('error', r.msg);
+
+                }
+                
 
                 
                 
@@ -36,7 +44,6 @@ $(document).ready(function () {
         
         $('#close-modal').click()
 
-        alertCustom('success', 'A sincronização está em andamento!');
 
     })
 

@@ -24,11 +24,11 @@ class PusherNotificationService
     /**
      * @var string
      */
-    private static $authKey = '774967990ce1211af067';
+    private static $authKey = 'ee4529bae28bb85defaf';
     /**
      * @var string
      */
-    private static $secret = '0ec01e912688856aef6b';
+    private static $secret = '063f6f00d573777448fe';
     /**
      * @var string
      */
