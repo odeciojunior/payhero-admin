@@ -39,7 +39,7 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
                 'first_name'  => $user->name,
             ];
 
-            $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-b387f185f29a45b6a2009ba94f63ed1a', $data);
+            $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-b387f185f29a45b6a2009ba94f63ed1a', $data);
         }
     }
 }

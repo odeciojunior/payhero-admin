@@ -39,10 +39,10 @@ $(() => {
                             project.id
                         }">
                                         <div class="card">
-                                            
+
                                             ${project.woocommerce_id != null ? '<div class="ribbon ribbon-woo"><span >WooCommerce <a class="ribbon-woocommerce-default"></a></span></div>' : ''}
-                                            
-                                            
+
+
                                             ${
                                                 project.shopify_id != null &&
                                                 !project.affiliated

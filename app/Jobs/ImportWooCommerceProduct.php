@@ -37,27 +37,29 @@ class ImportWooCommerceProduct implements ShouldQueue
     {
         try {
 
-            
-
             $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
 
-            $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+            if(!empty($integration)){
 
-            $woocommerce->verifyPermissions();
-            
-            $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
+                $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
-            
+                $woocommerce->verifyPermissions();
 
-            
+                $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
+
+            }
+
+
+
+
 
         } catch (Exception $e) {
-            
-            
+
+
 
             report($e);
 
-            
+
         }
     }
 }

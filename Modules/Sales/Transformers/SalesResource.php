@@ -77,7 +77,7 @@ class SalesResource extends JsonResource
             'taxaReal'                 => $this->details->taxaReal ?? null,
             'taxaDiscount'             => $this->details->taxaDiscount ?? null,
             'totalTax'                 => $this->details->totalTax ?? null,
-            'installment_tax_value'    => $this->present()->getInstallmentValue,
+            'installment_tax_value'    => FoxUtils::formatMoney($this->installment_tax_value / 100,),
             'release_date'             => $this->details->release_date,
             'affiliate_comission'      => $this->details->affiliate_comission,
             'shopify_order'            => $this->shopify_order ?? null,

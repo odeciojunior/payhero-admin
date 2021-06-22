@@ -25,20 +25,22 @@ use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Selector\Selector;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\ImportWooCommerceProduct;
-
+use App\Jobs\ImportWooCommerceProductVariation;
+use App\Jobs\CreateWooCommerceWebhooks;
+use App\Jobs\ImportWooCommerceProducts;
 use Automattic\WooCommerce\Client;
-
+use Modules\Core\Entities\WooCommerceIntegration;
 
 class WooCommerceService
 {
-    
+
     private $project = "admin";
     private $url;
     private $user;
     private $pass;
     private $endPoint = "/wp-json/wc/v3/";
     public $woocommerce;
-    
+
     /**
      * constructor.
      * @param string $urlStore
@@ -49,11 +51,15 @@ class WooCommerceService
         $this->url = $urlStore;
         $this->user = $tokenUser;
         $this->pass = $tokenPass;
+
+        if(!$this->woocommerce){
+            $this->verifyPermissions();
+        }
     }
 
     public function test_url()
     {
-        
+
         $file = $this->url;
         $file_headers = @get_headers($file);
         if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
@@ -65,37 +71,43 @@ class WooCommerceService
         return $exists;
     }
 
-    public function verifyPermissions()
+    public function verifyPermissions($testWrite=null)
     {
         try{
             $this->woocommerce = new Client(
-                $this->url, 
-                $this->user, 
+                $this->url,
+                $this->user,
                 $this->pass,
                 [
                     'version' => 'wc/v3',
                 ]
             );
 
-            //read test
             $product = $this->woocommerce->get('products', ['per_page'=>1]);
 
-            if(!empty($product)){ //write test
+            //write test
+            if($testWrite){
 
-                $data = [
-                    'name' => $product[0]->name
-                ];
+                if(!empty($product)){
     
-                $this->woocommerce->put('products/'.$product[0]->id, $data);
+                    $data = [
+                        'name' => $product[0]->name
+                    ];
     
-                return true;
-                
-
+                    $this->woocommerce->put('products/'.$product[0]->id, $data);
+    
+                    return true;
+    
+    
+                }else{
+    
+                    return false;
+    
+                }
             }else{
-    
-                return false;
-
+                return true;
             }
+
 
         }catch(Exception $e){
 
@@ -105,45 +117,30 @@ class WooCommerceService
         }
     }
 
-    public function fetchProducts()
+    public function fetchProducts($projectId, $userId)
     {
-        $loop = true;
+        // Will loop pages until it finishes;
         $page = 1;
-        $products = array();
-        while($loop){
-            $result = $this->woocommerce->get('products', ['status'=>'publish', 'page'=> $page]);
-            
-            if(empty($result)){
-                $loop = false;
-            }else{
-                $products = array_merge($products, $result);
-                $page++;
-            }
-        }
+
+        ImportWooCommerceProducts::dispatch($projectId, $userId, $page);
         
-        return $products;
     }
-    
+
     public function importProducts($projectId, $userId, $products)
-    {   
+    {
         $createdProdcts = 0;
 
         foreach($products as $_product){
-        
+
             if($_product->status != 'publish') continue;
 
             ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
-            
-            
 
-            
         }
 
-        $hashedProjectId = Hashids::encode($projectId);
+        
 
-        $this->createHooks($hashedProjectId);
-
-        return $createdProdcts;
+        return;
 
     }
 
@@ -152,170 +149,363 @@ class WooCommerceService
         try{
 
             $hashedProjectId = Hashids::encode($projectId);
-            
+
 
             $description = '';
             if(empty($_product->variations)){
 
-                $this->createProduct($projectId, $userId, $_product, $description);
-                
-                $data = [
-                    'sku' => $_product->id.'-'.$hashedProjectId.'-'
-                ];
-                $res = $this->woocommerce->put('products/'.$_product->id, $data);
-                
+                $created = $this->createProduct($projectId, $userId, $_product, $description);
 
-            }else{
-                
-                $variations = $this->woocommerce->get('products/'.$_product->id.'/variations');
-                
-                foreach($variations as $variation){
-
-                    
-
-                    foreach($variation->attributes as $attribute){
-                        $description .= $attribute->option.' ';
-                    }
-                    
-                    
-                    $_product->price = $variation->price;
-                    $_product->images[0]->src = $variation->image->src;
-                    
-                    $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
+                if($created == true){
                     
                     $data = [
-                        'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
+                        'sku' => $_product->id.'-'.$hashedProjectId.'-'
                     ];
+                    $this->woocommerce->put('products/'.$_product->id, $data);
                     
-                    $res = $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-                    
+                }
 
-                    $description = '';
+
+            }else{
+
+                $variations = $this->woocommerce->get('products/'.$_product->id.'/variations');
+
+                foreach($variations as $variation){
+
+                    ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variation);
 
                 }
+
             }
+
         }catch(Exception $e){
             //Log::debug($e);
             report($e);
         }
     }
 
+    public function importProductVariation($variation, $_product, $projectId, $userId)
+    {
+        $hashedProjectId = Hashids::encode($projectId);
+
+        $description = '';
+
+        foreach($variation->attributes as $attribute){
+            $description .= $attribute->option.' ';
+        }
+
+
+        $_product->price = $variation->price;
+        $_product->images[0]->src = $variation->image->src;
+
+        $created = $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
+
+        if($created == true){
+
+            $data = [
+                'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
+            ];
+    
+            try{
+                $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+            }catch(Exception $e){
+                //Log::debug($e);
+            }
+        }
+
+
+    }
+
     public function createProduct($projectId, $userId, $_product, $description, $variationId = null)
     {
-        
+
         $hashedProjectId = Hashids::encode($projectId);
 
         $planModel = new Plan();
-    
+
         $productModel = new Product();
 
         $productPlanModel = new ProductPlan();
 
         $shopifyVariantId = ($_product->parent_id?$_product->parent_id:$_product->id).'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description));
 
-             
+        $_product->price = empty($_product->price)?1:$_product->price;
 
-        $product = $productModel->create(
-            [
-                'user_id' => $userId,
-                'name' => $_product->name,
-                'description' => mb_substr($description, 0, 100),
-                'guarantee' => '0',
-                'format' => 1,
-                'category_id' => '11',
-                
-                'price' => $_product->price,
-                'shopify_id' => $variationId,
-                'shopify_variant_id' => $shopifyVariantId,
-                'sku' => $_product->sku,
-                'project_id' => $projectId,
-            ]
-        );
+        $productExists = $productModel->where('shopify_variant_id', $shopifyVariantId)->first();
 
-        $productsArray[] = $product->id;
-        $plan = $planModel->create(
-            [
-                'shopify_id' => $variationId,
-                'shopify_variant_id' => $shopifyVariantId,
-                'project_id' => $projectId,
-                'name' => $_product->name,
-                'description' => mb_substr($description, 0, 100),
-                'code' => '',
-                'price' => $_product->price,
-                'status' => '1',
-            ]
-        );
-        $plan->update(['code' => Hashids::encode($plan->id)]);
+        if(!empty($productExists)){
+            
+            $newValues = false;
 
-        $dataProductPlan = [
-            'product_id' => $product->id,
-            'plan_id' => $plan->id,
-            'amount' => '1',
-        ];
-        
-
-        $productPlanModel->create($dataProductPlan);
-        
-        if(!empty($_product->images)){
-
-            if(gettype($_product->images[0])=='array'){
-                $src = $_product->images[0]['src'];
-            }else{
-                $src = $_product->images[0]->src;
+            //sync product
+            if($productExists->name != $_product->name){
+                $productExists->name = $_product->name;
+                $newValues = true;
             }
-            $product->update(['photo' => $src]);
+            
+            if($productExists->description != mb_substr($description, 0, 100) ){
+                $productExists->description = mb_substr($description, 0, 100);
+                $newValues = true;
+            }
+
+            if($productExists->price != $_product->price){
+                $productExists->price = $_product->price;
+                $newValues = true;
+            }
+            
+            if(!empty($_product->images)){
+    
+                if(gettype($_product->images[0])=='array'){
+                    $src = $_product->images[0]['src'];
+                }else{
+                    $src = $_product->images[0]->src;
+                }
+                
+                if($productExists->photo != $src){            
+                    $productExists->photo = $src;
+                    $newValues = true;
+                }
+            }
+
+            
+            if($newValues == true){
+                $productExists->save();
+            }
+
+            //sync plan
+            $newValues = false;
+
+            $planExists = $planModel->where('shopify_variant_id', $shopifyVariantId)->first();
+            
+            if($planExists->name != $_product->name){
+                $planExists->name = $_product->name;
+                $newValues = true;
+            }
+            
+            if($planExists->description != mb_substr($description, 0, 100) ){
+                $planExists->description = mb_substr($description, 0, 100);
+                $newValues = true;
+            }
+            
+            if($planExists->price != $_product->price){
+                $planExists->price = $_product->price;
+                $newValues = true;
+            }
+            
+            if($newValues == true){
+                $planExists->save();
+            }
+
+            return false;
+
+
+        }else{
+
+            $product = $productModel->create(
+                [
+                    'user_id' => $userId,
+                    'name' => $_product->name,
+                    'description' => mb_substr($description, 0, 100),
+                    'guarantee' => '0',
+                    'format' => 1,
+                    'category_id' => '11',
+    
+                    'price' => $_product->price,
+                    'shopify_id' => $variationId,
+                    'shopify_variant_id' => $shopifyVariantId,
+                    'sku' => $_product->sku,
+                    'project_id' => $projectId,
+                ]
+            );
+    
+            
+            $plan = $planModel->create(
+                [
+                    'shopify_id' => $variationId,
+                    'shopify_variant_id' => $shopifyVariantId,
+                    'project_id' => $projectId,
+                    'name' => $_product->name,
+                    'description' => mb_substr($description, 0, 100),
+                    'code' => '',
+                    'price' => $_product->price,
+                    'status' => '1',
+                ]
+            );
+            $plan->update(['code' => Hashids::encode($plan->id)]);
+    
+            $dataProductPlan = [
+                'product_id' => $product->id,
+                'plan_id' => $plan->id,
+                'amount' => '1',
+            ];
+    
+    
+            $productPlanModel->create($dataProductPlan);
+    
+            if(!empty($_product->images)){
+    
+                if(gettype($_product->images[0])=='array'){
+                    $src = $_product->images[0]['src'];
+                }else{
+                    $src = $_product->images[0]->src;
+                }
+                $product->update(['photo' => $src]);
+            }
+
+            return $shopifyVariantId;
         }
 
         
 
-        return $shopifyVariantId;
+    }
+
+
+    public function cancelOrder($sale, $note = null)
+    {
+        try {
+
+            $data = [
+                'status' => 'cancelled'
+            ];
+
+            $this->woocommerce->put('orders/'.$sale->woocommerce_order, $data);
+
+            if(!empty($note)){
+                $data = [
+                    'note' => $note
+                ];
+
+                $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
+            }
+
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 
     public function createHooks($projectId)
     {
+        
+        $decodedProjectId = Hashids::decode($projectId);
+
         //Order update.
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'order.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/tracking'
         ];
-        $this->woocommerce->post('webhooks', $data);
+
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+
 
         //Product update
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.updated',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/update'
         ];
-        $this->woocommerce->post('webhooks', $data);
+
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+
 
         //Product create
         $data = [
-            'name' => "$projectId",
+            'name' => "cf-".$projectId,
             'topic' => 'product.created',
             'delivery_url' => env('APP_URL').'/postback/woocommerce/'.$projectId.'/product/create'
         ];
-        $this->woocommerce->post('webhooks', $data);
+
+        CreateWooCommerceWebhooks::dispatch($decodedProjectId, $data);
+
     }
 
-    public function deleteHooks($projectId)
+    public function deleteHooks($projectId=null, $anyCloudFoxProject=null)
     {
         $hashedProjectId = Hashids::encode($projectId);
-        
-        $webhooks = $this->woocommerce->get('webhooks');
 
+        $webhooks = $this->woocommerce->get('webhooks');
+        $ids = array();
+        
+        
         foreach($webhooks as $webhook){
-            
-            if($webhook->name == ''.$hashedProjectId){
-                
+
+            if($webhook->name == 'cf-'.$hashedProjectId){
+        
+
                 $ids[] = $webhook->id;
+
+            }
+            
+            if($anyCloudFoxProject && strpos($webhook->name, 'cf-') === 0){
+
+                $ids[] = $webhook->id;
+
             }
         }
-        $data = [
-            'delete' => $ids
-        ];
+
+        if(!empty($ids)){
+            
+            $data = [
+                'delete' => $ids
+            ];
+            
+            $this->woocommerce->post('webhooks/batch', $data);
+        }
+
+
+    }
+
+    
+
+    public function commitSyncProducts($projectId, $integration){       
+
+        //start sync, freeze action for 45 minutes 
+
+        $integration->synced_at = now();
+        $integration->save();
+
+        $this->url = $integration->url_store;
+        $this->user = $integration->token_user;
+        $this->pass = $integration->token_pass;
+        $this->verifyPermissions();
         
-        $this->woocommerce->post('webhooks/batch', $data);
+        $this->deleteHooks($projectId, true);
+
+        $hashedProjectId = Hashids::encode($projectId);
+
+        $this->createHooks($hashedProjectId);
+        
+        $this->fetchProducts($projectId, $integration->user_id);
+        
+    }
+
+    public function syncProducts($projectId, $integration)
+    {
+        
+        if(empty($integration->synced_at)){
+
+            $this->commitSyncProducts($projectId, $integration);
+
+            return '{"status":true,"msg":"Sincronização de produtos foi iniciada pela primeira vez!"}';
+
+        }else{
+            $start_date = strtotime($integration->synced_at);
+            $diff = (time() - $start_date) / 60;
+
+            if($diff < 45){
+
+                return '{"status":false,"msg":"Existe uma sincronização de produtos em andamento!"}';
+                // ! 
+
+            }else{
+
+                $this->commitSyncProducts($projectId, $integration);
+
+                return '{"status":true,"msg":"Sincronização de produtos foi iniciada!"}';
+
+            }
+            
+        }
 
 
     }

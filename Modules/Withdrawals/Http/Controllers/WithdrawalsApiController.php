@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -102,7 +103,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
             }
 
-            if ($withdrawalService->isFirstWithdrawalToday($company)) {
+            if ($withdrawalService->isNotFirstWithdrawalToday($company)) {
                 return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
@@ -151,16 +152,9 @@ class WithdrawalsApiController
             }
 
             $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
-            $currentValue = 0;
 
-            $transactionsSum = $company->transactions()
-                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
-
-            return response()->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,
-                $withdrawalValueRequested));
+            return response()
+                ->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,$withdrawalValueRequested));
 
         } catch (Exception $e) {
             report($e);
@@ -195,11 +189,6 @@ class WithdrawalsApiController
             }
 
             $withdrawal = $withdrawalModel->with('company')->find($withdrawalId);
-            if (FoxUtils::isProduction()) {
-                $subsellerGetnetId = $withdrawal->company->subseller_getnet_id;
-            } else {
-                $subsellerGetnetId = $withdrawal->company->subseller_getnet_homolog_id;
-            }
 
             if (!Gate::allows('edit', [$withdrawal->company])) {
                 return response()->json(
@@ -214,7 +203,6 @@ class WithdrawalsApiController
 
             $arrayBrands = [];
             $total_withdrawal = 0;
-
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
@@ -222,71 +210,43 @@ class WithdrawalsApiController
                     $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
-                if (!$transaction->gateway_transferred and ($withdrawal->status == 3 or $withdrawal->status == 9 or $withdrawal->status == 8)) {
-                    $getNetBackOfficeService = new GetnetBackOfficeService();
-
-                    $getNetBackOfficeService->setStatementSubSellerId($subsellerGetnetId)
-                        ->setStatementSaleHashId($transaction->sale->hash_id);
-
-                    $originalResult = $getNetBackOfficeService->getStatement();
-
-                    $gatewaySale = json_decode($originalResult);
-                    if (!empty($gatewaySale->list_transactions[0]) &&
-                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
-                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-                    ) {
-                        $date = str_replace(
-                            'T',
-                            ' ',
-                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
-                        );
-                        $date = date("d/m/Y", strtotime($date));
-
-                        $transaction->update(
-                            [
-                                'gateway_transferred' => true,
-                            ]
-                        );
-
-                        $this->updateArrayBrands($arrayBrands, $transaction, true, $date);
-                    } else {
-                        $this->updateArrayBrands($arrayBrands, $transaction, false);
-                    }
+                if (!$transaction->gateway_transferred) {
+                    $this->updateArrayBrands($arrayBrands, $transaction, false);
                 } else {
-                    $this->updateArrayBrands($arrayBrands, $transaction, true);
+                    $this->updateArrayBrands($arrayBrands, $transaction, true, $transaction->gateway_transferred_at);
                 }
             }
 
             $arrayTransactions = [];
 
             foreach ($arrayBrands as $arrayBrand) {
-                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
-                    $subSeller = $subsellerGetnetId;
+//                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
+//                    $subSeller = $subsellerGetnetId;
+//
+//                    $getNetBackOfficeService = new GetnetBackOfficeService();
+//
+//                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
+//                        ->setStatementSaleHashId($arrayBrand['hash_id']);
+//
+//
+//                    $originalResult = $getNetBackOfficeService->getStatement();
+//
+//                    $gatewaySale = json_decode($originalResult);
+//                    if (!empty($gatewaySale->list_transactions[0]) &&
+//                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+//                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+//                    ) {
+//                        $date = str_replace(
+//                            'T',
+//                            ' ',
+//                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+//                        );
+//                        $date = date("d/m/Y", strtotime($date));
+//
+//                        $arrayBrand['date'] = $date;
+//                    }
+//                }
 
-                    $getNetBackOfficeService = new GetnetBackOfficeService();
-
-                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-                        ->setStatementSaleHashId($arrayBrand['hash_id']);
-
-
-                    $originalResult = $getNetBackOfficeService->getStatement();
-
-                    $gatewaySale = json_decode($originalResult);
-                    if (!empty($gatewaySale->list_transactions[0]) &&
-                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
-                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-                    ) {
-                        $date = str_replace(
-                            'T',
-                            ' ',
-                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
-                        );
-                        $date = date("d/m/Y", strtotime($date));
-
-                        $arrayBrand['date'] = $date;
-                    }
-                }
-                //dd($arrayBrand);
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
                     'value' => 'R$' . number_format(intval($arrayBrand['value']) / 100, 2, ',', '.'),
@@ -294,7 +254,6 @@ class WithdrawalsApiController
                     'date' => $arrayBrand['date'] ?? ' - ',
                 ];
             }
-
 
             $return = [
                 'id' => $id,
@@ -325,7 +284,7 @@ class WithdrawalsApiController
                 'brand' => $transaction->sale->flag,
                 'value' => $transaction->value,
                 'liquidated' => $isLiquidated,
-                'date' => $date,
+                'date' => $date ? with(new Carbon($date))->format('d/m/Y'): '-',
                 'hash_id' => $transaction->sale->hash_id,
 
             ];

@@ -1099,7 +1099,7 @@ class NotazzService
             ];
 
             $sendGridService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 'Cloudfox',
                 $notazzInvoice->sale->user->email,
                 $notazzInvoice->sale->user->name,

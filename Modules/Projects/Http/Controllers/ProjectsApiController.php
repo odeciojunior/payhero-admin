@@ -106,6 +106,7 @@ class ProjectsApiController extends Controller
     public function store(ProjectStoreRequest $request): JsonResponse
     {
         try {
+
             $requestValidated = $request->validated();
 
             $projectModel = new Project();
@@ -166,25 +167,14 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
-            $photo = $request->file('photo-main');
+            $photo = $request->file('photo');
             if ($photo != null) {
                 try {
                     $img = Image::make($photo->getPathname());
-                    $img->crop(
-                        $requestValidated['photo_w'],
-                        $requestValidated['photo_h'],
-                        $requestValidated['photo_x1'],
-                        $requestValidated['photo_y1']
-                    );
                     $img->save($photo->getPathname());
 
                     $amazonPath = $amazonFileService
-                        ->uploadFile(
-                            "uploads/user/" . Hashids::encode(
-                                auth()->user()->account_owner_id
-                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
-                            $photo
-                        );
+                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
                     $project->update(['photo' => $amazonPath]);
                 } catch (Exception $e) {
                     report($e);
@@ -778,7 +768,7 @@ class ProjectsApiController extends Controller
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                'noreply@cloudfox.net',
+                'help@cloudfox.net',
                 'cloudfox',
                 $contact,
                 auth()->user()->name,

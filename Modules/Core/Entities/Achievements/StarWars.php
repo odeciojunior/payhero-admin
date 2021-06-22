@@ -33,6 +33,10 @@ class StarWars extends Achievement implements AchievementCheck
                     ->orWhere('affiliate_id', $user->id);
             })->count();
 
+        if ($totalBankSlipSales == 0) {
+            return false;
+        }
+
         $totalBankSlipApprovedSales = Sale::where('payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
             ->whereIn('status', [
                 Sale::STATUS_APPROVED,

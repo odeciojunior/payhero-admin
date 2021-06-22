@@ -15,6 +15,10 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Sale;
+use App\Jobs\ProcessWooCommercePostbackTracking;
+
+use function GuzzleHttp\json_decode;
 
 /**
  * Class PostBackWooCommerceController
@@ -24,44 +28,45 @@ class PostBackWooCommerceController extends Controller
 {
     public function postBackProductCreate(Request $request)
     {
-        
+
         if (empty($request->project_id)) {
             return response()->json(
                 [
-                    'message' => 'success',
+                    'message' => 'invalid data',
                 ],
                 200
             );
         }
-        
+
         $projectId = current(Hashids::decode($request->project_id));
         $wooCommerceIntegration = WooCommerceIntegration::where('project_id', $projectId)->first();
-        
+
         $product = (object)$request;
 
-        
+
         if (empty($wooCommerceIntegration)) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'process fail',
                 ],
                 200
             );
         }
 
-        if (empty($product->name)) {
+        if (empty($product->name) || empty($product->id) || empty($product->price) ) {
             return response()->json(
                 [
-                    'message' => 'fail',
+                    'message' => 'invalid data',
                 ],
                 200
             );
         }
-        
+
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
-                $description .= $attribute['option'] . ' ';
+                if(!empty($attribute['option']))
+                    $description .= $attribute['option'] . ' ';
             }
         }
 
@@ -84,7 +89,7 @@ class PostBackWooCommerceController extends Controller
                 200
             );
         }
-                
+
 
 
         $wooCommerceService = new WooCommerceService(
@@ -105,16 +110,20 @@ class PostBackWooCommerceController extends Controller
             $variationId
         );
 
-        $data = [
-            'sku' => $sku
-        ];
-        if (empty($product->parent_id)) {
-            $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
-        } else {
-            $wooCommerceService->woocommerce->put(
-                'products/' . $product->parent_id . '/variations/' . $product->id,
-                $data
-            );
+        if(!empty($sku)){
+
+            $data = [
+                'sku' => $sku
+            ];
+            if (empty($product->parent_id)) {
+                $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
+            } else {
+                $wooCommerceService->woocommerce->put(
+                    'products/' . $product->parent_id . '/variations/' . $product->id,
+                    $data
+                );
+            }
+
         }
 
 
@@ -128,7 +137,7 @@ class PostBackWooCommerceController extends Controller
 
     public function postBackProductUpdate(Request $request)
     {
-               
+
         if (empty($request->project_id) || empty($request['sku'])) {
             return response()->json(
                 [
@@ -156,21 +165,49 @@ class PostBackWooCommerceController extends Controller
                 ->where('project_id', hashids_decode($request->project_id))
                 ->first()->user;
 
+            $productExists = Product::where('shopify_variant_id', $request['sku'])->first();
 
-            Product::where("user_id", $user->id)
-                ->where('shopify_variant_id', $request['sku'])
-                ->first()
-                ->update($newValues);
+            if(!empty($productExists)){
 
+                Product::where("user_id", $user->id)
+                    ->where('shopify_variant_id', $request['sku'])
+                    ->first()
+                    ->update($newValues);
+
+
+                unset($newValues['photo']);
+
+                $planExists = Plan::where('project_id', hashids_decode($request->project_id))
+                    ->where('shopify_variant_id', $request['sku'])
+                    ->first();
                 
-            unset($newValues['photo']);
-                
-            Plan::where('project_id', hashids_decode($request->project_id))
-                ->where('shopify_variant_id', $request['sku'])
-                ->first()
-                ->update($newValues);
-            
-            
+                if(!empty($planExists)){
+                    $planExists->update($newValues);
+                }else{
+                    $newValues['shopify_variant_id'] = $request['sku'];
+                    
+                    if(!empty($request['parent_id'])){
+                        $newValues['shopify_id'] = $request['parent_id'];
+                    }
+                    
+                    $newValues['project_id'] = hashids_decode($request->project_id);
+                    $newValues['description'] = $newValues['name'];
+                    $newValues['code'] = '';
+                    $newValues['status'] = '1';
+                    
+                    Plan::create($newValues);
+                }
+
+            }else{
+                return response()->json(
+                    [
+                        'message' => 'Product not found!',
+                    ],
+                    200
+                );
+            }
+
+
         }
 
         return response()->json(
@@ -188,28 +225,42 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            $postBackLogModel = new PostbackLog();
+            
+            
+            if (empty($request->correios_tracking_code) || empty($request->shipping['company']) ){
+                return response()->json(
+                    [
+                        'message' => 'invalid data',
+                    ],
+                    200
+                );
+            }
+
             $projectModel = new Project();
 
-            $requestData = $request->all();
-
-            $postBackLogModel->create(
-                [
-                    'origin' => 5,
-                    'data' => json_encode($requestData),
-                    'description' => 'woocommerce-tracking',
-                ]
-            );
 
             $projectId = current(Hashids::decode($request->project_id));
-            //$projectId = $request->project_id;
-            $project = $projectModel->find($projectId);
 
-            if (!empty($project)) {
-                //Log::debug($requestData);
+            $project = $projectModel->find($projectId)->first();
 
-                // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
-                //     ->onQueue('high');
+            if (!empty($project) && !empty($request->correios_tracking_code) ) {
+                
+                foreach($request->line_items as $item){
+                    $line_items[] = [
+                        'sku'=> $item['sku'],
+                        'name'=> $item['name'],
+                        'quantity'=> $item['quantity'],
+                    ];
+                }
+                $data = [
+                    'id'=>$request->id,
+                    'correios_tracking_code' => $request->correios_tracking_code,
+                    'line_items' => $line_items
+                ];
+                
+                ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
+
+                
 
                 return response()->json(
                     [
@@ -218,7 +269,6 @@ class PostBackWooCommerceController extends Controller
                     200
                 );
             } else {
-                //Log::warning('WooCommerce atualizar código de rastreio - projeto não encontrado');
 
                 //projeto nao existe
                 return response()->json(

@@ -8,6 +8,8 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\PixExpiredEvent;
+use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\WooCommerceService;
 
 /**
  * Class PixService
@@ -71,6 +73,19 @@ class PixService
                             );
 
                             $shopifyService->cancelOrder($sale);
+                        }
+                    } catch (Exception $e) {
+                        report($e);
+                    }
+                }
+
+                if (!empty($sale->woocommerce_order)) {
+                    try {
+                        $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                        if (!empty($integration)) {
+                            $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                            $service->verifyPermissions();
+                            $service->cancelOrder($sale, 'Pix');
                         }
                     } catch (Exception $e) {
                         report($e);

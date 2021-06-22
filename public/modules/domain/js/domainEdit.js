@@ -163,7 +163,6 @@ $(document).ready(function () {
     btnAddDomain.on('click', function () {
         $("#btn-modal-add-input").show();
         $("#loaderModal").remove();
-        loadingOnScreenRemove();
 
         $("#modal-title-add-domain").html('Novo domínio').show();
         $("#form-add-domain, #btn-modal-add-domain").show();
@@ -245,7 +244,6 @@ $(document).ready(function () {
      * Remove Loads
      */
     function removeLoad() {
-        loadingOnScreenRemove();
         $("#loaderModal").remove();
         $('#especialModalTitle').remove();
     }
@@ -540,6 +538,7 @@ $(document).ready(function () {
             $("#empty-info").show();
         }
         $("#table-body-new-records").append(data);
+
     }
 
     /**
@@ -659,7 +658,6 @@ $(document).ready(function () {
                 $(".swal2-container").remove();
                 removeLoad();
                 $("#loaderModal").remove();
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
                 $("#content-modal-recheck-dns").hide();
                 $("#content-modal-recheck-dns-error").show();
@@ -669,7 +667,6 @@ $(document).ready(function () {
                 $(".swal2-container").remove();
                 removeLoad();
                 $("#loaderModal").remove();
-                loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 $("#content-modal-recheck-dns").hide();
                 $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();

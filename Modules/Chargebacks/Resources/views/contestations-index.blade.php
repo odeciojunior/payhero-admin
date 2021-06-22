@@ -218,7 +218,7 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="font-size-14 gray-600">Total em R$</h5>
+                                <h5 class="font-size-14 gray-600">Total</h5>
                                 <h4 class="total-number" style=""><span style="color:#959595">R$ </span><span class="font-size-30 bold"
                                                                            id="total-contestation-value"></span></h4>
                             </div>

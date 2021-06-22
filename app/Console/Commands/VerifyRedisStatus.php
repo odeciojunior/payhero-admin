@@ -66,7 +66,7 @@ class VerifyRedisStatus extends Command
 
                 try{
                     $sendgridMail = new \SendGrid\Mail\Mail();
-                    $sendgridMail->setFrom('noreply@cloudfox.net', 'cloudfox');
+                    $sendgridMail->setFrom('help@cloudfox.net', 'cloudfox');
                     $sendgridMail->addTo($email, 'cloudfox');
                     $sendgridMail->addDynamicTemplateDatas([
                         'server' => 'ADMIN'
