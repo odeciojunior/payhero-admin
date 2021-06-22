@@ -117,11 +117,10 @@ class MelhorenvioService
         return $this->expiration;
     }
 
-    private function setExpiration(?string $accessToken = null): void
+    private function setExpiration(): void
     {
-        $accessToken = $accessToken ?? $this->accessToken;
-        if ($accessToken) {
-            $payloadBase64 = explode('.', $accessToken)[1];
+        if ($this->accessToken) {
+            $payloadBase64 = explode('.', $this->accessToken)[1];
             $payloadJson = base64_decode($payloadBase64);
             $payload = json_decode($payloadJson);
             $this->expiration = $payload->exp;
@@ -180,8 +179,6 @@ class MelhorenvioService
         return implode(' ', self::SCOPES);
     }
 
-
-
     public function getAuthorizationUrl()
     {
         $data = [
@@ -210,7 +207,7 @@ class MelhorenvioService
         if ($method !== 'GET') {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
             if (!empty($data)) {
-                if($this->getAccessToken()) {
+                if ($this->getAccessToken()) {
                     $data = json_encode($data);
                 }
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -230,7 +227,26 @@ class MelhorenvioService
         return json_decode($result);
     }
 
-    public function requestAccessToken(string $code): \stdClass
+    private function updateCredentials(\stdClass $credentials): bool
+    {
+        if (!empty($credentials->access_token) && !empty($credentials->refresh_token)) {
+
+            $this->setAccessToken($credentials->access_token);
+            $this->setRefreshToken($credentials->refresh_token);
+            $this->setExpiration();
+
+            $this->integration->access_token = $this->getAccessToken();
+            $this->integration->refresh_token = $this->getRefreshToken();
+            $this->integration->expiration = Carbon::createFromTimestamp($this->getExpiration());
+            $this->integration->completed = true;
+            $this->integration->save();
+
+            return true;
+        }
+        return false;
+    }
+
+    public function requestAccessToken(string $code): bool
     {
         $data = [
             'grant_type' => 'authorization_code',
@@ -240,7 +256,9 @@ class MelhorenvioService
             'code' => $code
         ];
 
-        return $this->doRequest('/oauth/token', $data, 'POST');
+        $result = $this->doRequest('/oauth/token', $data, 'POST');
+
+        return $this->updateCredentials($result);
     }
 
     private function refreshToken(): bool
@@ -254,18 +272,6 @@ class MelhorenvioService
 
         $result = $this->doRequest('/oauth/token', $data, 'POST');
 
-        if (!empty($result->access_token) && !empty($result->refresh_token) && !empty($result->expires_in)) {
-            $this->integration->access_token = $result->access_token;
-            $this->integration->refresh_token = $result->refresh_token;
-            $this->integration->expiration = Carbon::createFromTimestamp($result->expires_in);
-            $this->integration->save();
-
-            $this->setAccessToken($this->integration->access_token);
-            $this->setRefreshToken($this->integration->refresh_token);
-            $this->setExpiration();
-
-            return true;
-        }
-        return false;
+        return $this->updateCredentials($result);
     }
 }

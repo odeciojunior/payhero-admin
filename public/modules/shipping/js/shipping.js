@@ -12,6 +12,32 @@ $(document).ready(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
+    loadMelhorEnvioOptions();
+
+    function loadMelhorEnvioOptions() {
+        $.ajax({
+            url: "/api/apps/melhorenvio",
+            data: {
+              completed: 1
+            },
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            success: resp => {
+                let options = ``;
+                for (let integration of resp.data) {
+                    options += `<option class="menv${integration.id}" value="melhorenvio-${integration.id}">${integration.name} (integração com a API do Melhor Envio)</option>`;
+                }
+                $('.shipping-type').each(function () {
+                    $(this).append(options);
+                });
+            },
+            error: resp => {
+            }
+        });
+    }
+
     //comportamentos da tela
     $(".tab-fretes").on('click', function () {
         $(this).off();
@@ -23,17 +49,25 @@ $(document).ready(function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
         if (selected === 'static') {
+            $('.information-shipping-row').show();
+            $('.value-shipping-row').show();
+            $('.zip-code-origin-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'Frete grátis');
-            $(".value-shipping-row").css('display', 'block');
-            $(".zip-code-origin-shipping-row").css('display', 'none');
-        } else if (selected == 'pac') {
+        } else if (selected === 'pac') {
+            $('.information-shipping-row').show();
+            $('.value-shipping-row').hide();
+            $('.zip-code-origin-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'PAC');
-            $(".value-shipping-row").css('display', 'none');
-            $(".zip-code-origin-shipping-row").css('display', 'block');
-        } else if (selected == 'sedex') {
+        } else if (selected === 'sedex') {
+            $('.information-shipping-row').show();
+            $('.value-shipping-row').hide();
+            $('.zip-code-origin-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'SEDEX');
-            $(".value-shipping-row").css('display', 'none');
-            $(".zip-code-origin-shipping-row").css('display', 'block');
+        } else if (selected.includes('melhorenvio')) {
+            $('.information-shipping-row').hide();
+            $('.value-shipping-row').hide();
+            $('.zip-code-origin-shipping-row').show();
+            $('.shipping-description').attr('placeholder', 'Melhor Envio');
         }
     });
 
@@ -173,6 +207,10 @@ $(document).ready(function () {
                         break;
                     case 'static':
                         $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 2).change();
+                        break;
+                    case 'melhorenvio':
+                        $('#modal-edit-shipping .menv'+response.melhorenvio_integration_id).prop('selected', true);
+                        $('#modal-edit-shipping .shipping-type').change();
                         break;
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);

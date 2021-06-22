@@ -20,6 +20,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $value
  * @property string $type
  * @property string $zip_code_origin
+ * @property integer|null $melhorenvio_integration_id
  * @property boolean $status
  * @property boolean $pre_selected
  * @property string $apply_on_plans
@@ -57,6 +58,7 @@ class Shipping extends Model
         'type',
         'type_enum',
         'zip_code_origin',
+        'melhorenvio_integration_id',
         'status',
         'rule_value',
         'pre_selected',
@@ -122,5 +124,13 @@ class Shipping extends Model
     public function sales()
     {
         return $this->hasMany('Modules\Core\Entities\Sale');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function melhorenvioIntegrations()
+    {
+        return $this->hasMany(MelhorenvioIntegration::class);
     }
 }

@@ -5,20 +5,20 @@
         <div class='form-group col-12'>
             <label for='type'>Tipo</label>
             <select name='type' class='form-control input-pad type shipping-type'>
+                <option value='static'>Frete fixo (você define um valor fixo para o frete)</option>
                 <option value='pac'>PAC (Calculado automaticamente pela API)</option>
                 <option value='sedex'>SEDEX (Calculado automaticamente pela API)</option>
-                <option value='static'>Frete fixo (você define um valor fixo para o frete)</option>
             </select>
         </div>
     </div>
-    <div class='row'>
+    <div class='row name-shipping-row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
             <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='PAC'
                    maxlength='60'>
         </div>
     </div>
-    <div class='row'>
+    <div class='row information-shipping-row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega apresentado</label>
             <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias'
