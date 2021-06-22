@@ -210,42 +210,17 @@ class WithdrawalsApiController
                     $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
-                if (!$transaction->gateway_transferred) {
-                    $this->updateArrayBrands($arrayBrands, $transaction, false);
-                } else {
+                if (!empty($transaction->gateway_transferred_at)) {
                     $this->updateArrayBrands($arrayBrands, $transaction, true, $transaction->gateway_transferred_at);
+                } else {
+                    $this->updateArrayBrands($arrayBrands, $transaction, false);
+
                 }
             }
 
             $arrayTransactions = [];
 
             foreach ($arrayBrands as $arrayBrand) {
-//                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
-//                    $subSeller = $subsellerGetnetId;
-//
-//                    $getNetBackOfficeService = new GetnetBackOfficeService();
-//
-//                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-//                        ->setStatementSaleHashId($arrayBrand['hash_id']);
-//
-//
-//                    $originalResult = $getNetBackOfficeService->getStatement();
-//
-//                    $gatewaySale = json_decode($originalResult);
-//                    if (!empty($gatewaySale->list_transactions[0]) &&
-//                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
-//                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-//                    ) {
-//                        $date = str_replace(
-//                            'T',
-//                            ' ',
-//                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
-//                        );
-//                        $date = date("d/m/Y", strtotime($date));
-//
-//                        $arrayBrand['date'] = $date;
-//                    }
-//                }
 
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
