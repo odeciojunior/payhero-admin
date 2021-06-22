@@ -52,7 +52,7 @@ class CheckGetnetGatewayTransferredAt extends Command
 
         $transactionsCount = $transactionModel->with('sale')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [ Transaction::STATUS_TRANSFERRED])
+            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
@@ -60,7 +60,7 @@ class CheckGetnetGatewayTransferredAt extends Command
 
         $transactions = $transactionModel->with('sale')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [ Transaction::STATUS_TRANSFERRED])
+            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
