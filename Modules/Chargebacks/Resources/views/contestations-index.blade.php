@@ -103,7 +103,7 @@
                             <div class="col-sm-12 col-md mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <i style="right: 24px;top: 41px;"
+                                    <i style="right: 24px;top: 35px;"
                                        class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
                                     <input name='date_range' id="date_range" class="form-control input-pad pr-30"
                                            placeholder="Clique para editar..." readonly style="">
@@ -152,7 +152,7 @@
 
                                 <div class="col-sm-12 col-md mt-10">
                                     <label for='customer'>Cliente</label>
-                                    <input id="customer" name="customer" class="form-control select-pad">
+                                    <input id="customer" name="customer" class="form-control select-pad" placeholder="Nome do cliente">
                                 </div>
                             </div>
                         </div>
@@ -180,8 +180,8 @@
                 </form>
                 <div class="fixhalf"></div>
 
-                <div class="row justify-content-center">
-                    <div class="col-md-3 mt-10">
+                <div class="row justify-content-center mt-10">
+                    <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body ">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>

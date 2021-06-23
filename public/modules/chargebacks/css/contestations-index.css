@@ -12,6 +12,10 @@
 	color: #707070;
 }
 
+#filter-contestations label {
+	margin-bottom: 0;
+}
+
 #filter-contestations .form-control {
 	color: #828282;
 	font-size: 16px;
@@ -54,4 +58,8 @@
 
 #chargebacks-table-data .won-contestation > td {
 	background-color: #ECFFE8 !important;
+}
+
+#chargebacks-table .table {
+	border: 16px !important;
 }
