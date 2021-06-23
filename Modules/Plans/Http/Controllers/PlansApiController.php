@@ -602,41 +602,40 @@ class PlansApiController extends Controller
             }
 
             foreach($itens as $productPlanId=>$config)
-            {
+            {                
                 $productPlan = ProductPlan::where('id',$productPlanId)->where('plan_id',$planId)->first();
                 if(!empty($productPlan))
                 {
-                    $productPlan->update(['custom_config'=>$config]);  
+                    $productPlan->update(['custom_config'=>$config,'is_custom'=>!empty($request->is_custom[$productPlanId]) ? 1:0]);  
                     if($allow_change_in_block===true){
-                        $this->updateAllConfigCustomProduct($plan->shopify_id,$config);
+                        $this->updateAllConfigCustomProduct($plan->shopify_id,$config,!empty($request->is_custom[$productPlanId]) ? 1:0);
                     }
                 }
             }
         }else{            
             $productPlans = ProductPlan::where('plan_id', $planId)->get();    
             foreach ($productPlans as $productPlan) {
-                $productPlan->update(['custom_config' => []]);                            
+                $productPlan->update(['custom_config' => [],'is_custom'=>!empty($request->is_custom[$productPlan->id]) ? 1:0]);
             }
 
             if($allow_change_in_block===true){
-                $this->updateAllConfigCustomProduct($plan->shopify_id,[]);
+                $this->updateAllConfigCustomProduct($plan->shopify_id,[],!empty($request->is_custom[$productPlan->id]) ? 1:0);
             }
         }
-
                
         return response()->json([
             'message' => 'Configurações atualizadas com sucesso',
         ], 200);
     }
 
-    private function updateAllConfigCustomProduct($shopify_id,$config)
+    private function updateAllConfigCustomProduct($shopify_id,$config,$is_custom)
     {        
         $planIds = Plan::where('shopify_id', $shopify_id)->get()->pluck('id');
 
         $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
         
         foreach ($productPlans as $productPlan) {
-            $productPlan->update(['custom_config' => $config]);            
+            $productPlan->update(['custom_config' => $config,'is_custom'=>$is_custom]);            
         }
     }
 }

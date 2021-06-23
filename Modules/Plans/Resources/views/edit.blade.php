@@ -9,18 +9,10 @@
     .nav-tabs .nav-link {        
         background-color: #ffffff;     
     }
-    .btn-plus{
-        margin-top: 28px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    .btn-active{
-        background-color: #2E85EC;
-        color:white;
-    }
-    .btn-active .teste{
-        filter: invert(99%) sepia(11%) saturate(235%) hue-rotate(5deg) brightness(117%) contrast(100%);
-    }
+    .btn-plus{margin-top: 28px;padding-top: 10px;padding-bottom: 10px;}
+    .btn-active{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
+    .btn-active svg path{fill:#ffffff;}
+    .btn-edit svg path{fill:#2E85EC;}
 </style>
 <div class="container-fluid px-0" id="form-update-plan" style="display:none">
     <div class="nav-tabs-horizontal">

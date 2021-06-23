@@ -47,6 +47,7 @@ class ProductPlan extends Model
         'plan_id',
         'amount',
         'cost',
+        'is_custom',
         'custom_config',
         'currency_type_enum',
         'created_at',
