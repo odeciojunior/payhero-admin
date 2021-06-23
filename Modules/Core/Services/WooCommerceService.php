@@ -458,7 +458,7 @@ class WooCommerceService
 
     public function commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes){       
 
-        //start sync, freeze action for 45 minutes 
+        //starts to sync, freezes this action for 45 minutes 
 
         $integration->synced_at = now();
         $integration->save();
@@ -523,7 +523,7 @@ class WooCommerceService
 
             $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
 
-            return '{"status":true,"msg":"Sincronização de dados foi iniciada!"}';
+            return '{"status":true,"msg":""}';
 
         }else{
             $start_date = strtotime($integration->synced_at);
@@ -531,14 +531,14 @@ class WooCommerceService
 
             if($diff < 45){
 
-                return '{"status":false,"msg":"Existe uma sincronização de dados em andamento!"}';
+                return '{"status":false,"msg":""}';
                 // ! 
 
             }else{
 
                 $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
 
-                return '{"status":true,"msg":"Sincronização de dados foi iniciada!"}';
+                return '{"status":true,"msg":""}';
 
             }
             

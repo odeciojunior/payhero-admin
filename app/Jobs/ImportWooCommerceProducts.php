@@ -44,8 +44,6 @@ class ImportWooCommerceProducts implements ShouldQueue
 
                 $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $service->verifyPermissions();
-
                 $products = $service->woocommerce->get('products', ['status'=>'publish', 'page'=> $this->page, 'per_page'=>5]);
                 
                 if(empty($products)){

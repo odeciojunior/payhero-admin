@@ -43,8 +43,6 @@ class ImportWooCommerceOrders implements ShouldQueue
 
                 $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $service->verifyPermissions();
-
                 $orders = $service->woocommerce->get('orders', 
                     [
                         'status'=>'processing', 

@@ -37,10 +37,10 @@ $(document).ready(function () {
                 
                 
                 if(r.status == true){
-                    alertCustom('success', r.msg);
+                    alertCustom('success', 'Sincronização de dados foi iniciada!');
 
                 }else{
-                    alertCustom('error', r.msg);
+                    alertCustom('error', 'Já existe uma sincronização de dados em andamento!');
 
                 }
                 

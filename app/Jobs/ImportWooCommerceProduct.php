@@ -43,8 +43,6 @@ class ImportWooCommerceProduct implements ShouldQueue
 
                 $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
-                $woocommerce->verifyPermissions();
-
                 $woocommerce->importProduct($this->projectId, $this->userId, $this->_product);
 
             }

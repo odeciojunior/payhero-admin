@@ -20,7 +20,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Illuminate\Support\Facades\Log;
-use Modules\WooCommerce\Transformers\WooCommerceIntegrationsResource;
+
 
 /**
  * Class ApiController

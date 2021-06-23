@@ -308,7 +308,7 @@
                                             <input type="checkbox" id="opt_prod" name="product_amount_selector" class="check" value="1">
                                             <span class="slider round"></span>
                                         </label>
-                                        <label class="text-left" for="opt_prod" style="margin-right:15px;margin-bottom: 3px; width:326px">
+                                        <label class="text-left" for="opt_prod" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                             Sincronizar produtos com WooCommerce</label>
                                     </div>
 
@@ -317,7 +317,7 @@
                                             <input type="checkbox" id="opt_track" name="product_amount_selector" class="check" value="1">
                                             <span class="slider round"></span>
                                         </label>
-                                        <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:326px">
+                                        <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                             Sincronizar códigos de rastreio com WooCommerce</label>
                                     </div>
                                     

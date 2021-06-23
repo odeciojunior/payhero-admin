@@ -42,8 +42,6 @@ class CreateWooCommerceWebhooks implements ShouldQueue
 
                 $woocommerceService = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $woocommerceService->verifyPermissions();
-                
                 $woocommerceService->woocommerce->post('webhooks', $this->data);
 
             }
