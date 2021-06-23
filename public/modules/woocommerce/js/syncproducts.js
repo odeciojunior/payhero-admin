@@ -8,11 +8,21 @@ $(document).ready(function () {
         
         var projectId = $(window.location.pathname.split('/')).get(-1);
         
+        var opt_prod = $('#opt_prod').is(':checked')
+        var opt_track = $('#opt_track').is(':checked')
+
         
+        
+        if(!opt_prod && !opt_track){
+            alertCustom('error', 'Selecione uma ou mais categorias de dados para sincronizar!');
+            $('#close-modal').click()
+
+            return false;
+        }
 
         $.ajax({
             method: "POST",
-            
+            data: {"opt_prod":opt_prod, "opt_track":opt_track},
             url: "/api/apps/woocommerce/synchronize/products?projectId="+projectId,
             dataType: "json",
             headers: {

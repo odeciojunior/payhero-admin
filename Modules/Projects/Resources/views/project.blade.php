@@ -300,8 +300,28 @@
                                     <div class="d-flex justify-content-center">
                                         <span class="o-reload-1"></span>
                                     </div>
-                                    <h3 class="black" id="modal-title">Sincronizar produtos com WooCommerce </h3>
-                                    <p class="gray" id="modal-text"></p>
+                                    <h3 class="black" id="modal-title">Selecione as opções para sincronizar</h3>
+                                    <p class="gray" id="modal-text">
+                                    
+                                    <div class="switch-holder">
+                                        <label class="switch" style="top:3px">
+                                            <input type="checkbox" id="opt_prod" name="product_amount_selector" class="check" value="1">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <label class="text-left" for="opt_prod" style="margin-right:15px;margin-bottom: 3px; width:326px">
+                                            Sincronizar produtos com WooCommerce</label>
+                                    </div>
+
+                                    <div class="switch-holder" style="margin-top:4px">
+                                        <label class="switch" style="top:3px">
+                                            <input type="checkbox" id="opt_track" name="product_amount_selector" class="check" value="1">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:326px">
+                                            Sincronizar código de rastreio com WooCommerce</label>
+                                    </div>
+                                    
+                                    </p>
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                     <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
