@@ -110,16 +110,20 @@ class PostBackWooCommerceController extends Controller
             $variationId
         );
 
-        $data = [
-            'sku' => $sku
-        ];
-        if (empty($product->parent_id)) {
-            $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
-        } else {
-            $wooCommerceService->woocommerce->put(
-                'products/' . $product->parent_id . '/variations/' . $product->id,
-                $data
-            );
+        if(!empty($sku)){
+
+            $data = [
+                'sku' => $sku
+            ];
+            if (empty($product->parent_id)) {
+                $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
+            } else {
+                $wooCommerceService->woocommerce->put(
+                    'products/' . $product->parent_id . '/variations/' . $product->id,
+                    $data
+                );
+            }
+
         }
 
 
@@ -173,10 +177,26 @@ class PostBackWooCommerceController extends Controller
 
                 unset($newValues['photo']);
 
-                Plan::where('project_id', hashids_decode($request->project_id))
+                $planExists = Plan::where('project_id', hashids_decode($request->project_id))
                     ->where('shopify_variant_id', $request['sku'])
-                    ->first()
-                    ->update($newValues);
+                    ->first();
+                
+                if(!empty($planExists)){
+                    $planExists->update($newValues);
+                }else{
+                    $newValues['shopify_variant_id'] = $request['sku'];
+                    
+                    if(!empty($request['parent_id'])){
+                        $newValues['shopify_id'] = $request['parent_id'];
+                    }
+                    
+                    $newValues['project_id'] = hashids_decode($request->project_id);
+                    $newValues['description'] = $newValues['name'];
+                    $newValues['code'] = '';
+                    $newValues['status'] = '1';
+                    
+                    Plan::create($newValues);
+                }
 
             }else{
                 return response()->json(

@@ -352,8 +352,10 @@ class WooCommerceService
                 $product->update(['photo' => $src]);
             }
 
-            return true;
+            return $shopifyVariantId;
         }
+
+        
 
     }
 
