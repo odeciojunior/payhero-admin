@@ -54,13 +54,13 @@ class CheckGetnetGatewayTransferredAt extends Command
         $transactionsCount = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
-            ->where('gateway_id', Gateway::GERENCIANET_PRODUCTION_ID)
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->count();
 
         $transactions = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
-            ->where('gateway_id', Gateway::GERENCIANET_PRODUCTION_ID)
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->orderBy('id', 'desc');
 
         $transactions->chunk(50, function ($transactions) use ($getnetService, $transactionsCount) {
@@ -106,9 +106,9 @@ class CheckGetnetGatewayTransferredAt extends Command
 
 
                             $transaction->update([
-                                                     'gateway_transferred_at' => $date, //date transferred
-                                                     'gateway_transferred' => 1
-                                                 ]);
+                                 'gateway_transferred_at' => $date, //date transferred
+                                 'gateway_transferred' => 1
+                             ]);
 
 
                         }
