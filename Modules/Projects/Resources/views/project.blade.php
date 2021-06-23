@@ -318,7 +318,7 @@
                                             <span class="slider round"></span>
                                         </label>
                                         <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:326px">
-                                            Sincronizar código de rastreio com WooCommerce</label>
+                                            Sincronizar códigos de rastreio com WooCommerce</label>
                                     </div>
                                     
                                     </p>

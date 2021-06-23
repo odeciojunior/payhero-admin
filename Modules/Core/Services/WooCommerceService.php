@@ -531,7 +531,7 @@ class WooCommerceService
 
             if($diff < 45){
 
-                return '{"status":false,"msg":"Existe uma sincronização de produtos em andamento!"}';
+                return '{"status":false,"msg":"Existe uma sincronização de dados em andamento!"}';
                 // ! 
 
             }else{
