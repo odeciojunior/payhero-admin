@@ -174,12 +174,7 @@ class ProjectsApiController extends Controller
                     $img->save($photo->getPathname());
 
                     $amazonPath = $amazonFileService
-                        ->uploadFile(
-                            "uploads/user/" . Hashids::encode(
-                                auth()->user()->account_owner_id
-                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
-                            $photo
-                        );
+                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
                     $project->update(['photo' => $amazonPath]);
                 } catch (Exception $e) {
                     report($e);
@@ -231,7 +226,8 @@ class ProjectsApiController extends Controller
     public function edit($id): JsonResponse
     {
         try {
-            $user = auth()->user()->load('companies');
+
+            $user= User::with('companies')->find(auth()->user()->account_owner_id);
 
             $project = Project::with(
                 [

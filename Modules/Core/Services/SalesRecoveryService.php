@@ -196,11 +196,12 @@ class SalesRecoveryService
             ['project_id', $checkout->project_id],
         ])->first();
 
-        if (!empty($domain)) {
-            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+        if(FoxUtils::isProduction()) {
+            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
         } else {
-            $link = 'Domínio removido';
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
         }
+
         $checkout->id = '';
         $log->id = '';
 
@@ -285,11 +286,29 @@ class SalesRecoveryService
         $domain = $domainModel->where('project_id', $sale->project_id)
             ->where('status', $domainModel->present()->getStatus('approved'))->first();
 
-        if (!empty($domain)) {
-            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
-        } else {
-            $link = 'Domínio removido';
+
+//        if (!empty($domain)) {
+//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+//        } else {
+//            $link = 'Domínio removido';
+//        }
+
+        $link = '';
+        if($sale->payment_method === Sale::PIX_PAYMENT) {
+            if(FoxUtils::isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio removido';
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+            }
         }
+        else {
+            if(FoxUtils::isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
+            }
+        }
+
 
         $products = $saleService->getProducts($checkout->sale_id);
 

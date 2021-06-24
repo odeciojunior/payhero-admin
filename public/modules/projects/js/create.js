@@ -116,14 +116,15 @@ $(document).ready(function () {
         },
         error: {
             'fileSize': 'O tamanho máximo do arquivo deve ser {{ value }}.',
-            'minWidth': 'A imagem deve ter largura maior que 650px.',
-            'maxWidth': 'A imagem deve ter largura menor que 650px.',
-            'minHeight': 'A imagem deve ter altura maior que 650px.',
-            'maxHeight': 'A imagem deve ter altura menor que 650px.',
-            'imageFormat': 'A imagem deve ser algum dos formatos permitidos. Apenas ({{ value }}).'
+            'minWidth': 'A imagem deve ter largura maior que 651px.',
+            'maxWidth': 'A imagem deve ter largura menor que 651px.',
+            'minHeight': 'A imagem deve ter altura maior que 651px.',
+            'maxHeight': 'A imagem deve ter altura menor que 651px.',
+            'fileExtension': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
         },
         tpl: {
             message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">selecione um arquivo</span></p></div>',
+            clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     });

@@ -97,7 +97,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Detalhes do pixel</h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal"
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal"
                    aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
@@ -115,7 +115,7 @@
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close"
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close"
                    id="fechar_modal_excluir">
                     <i class="material-icons md-16">close</i>
                 </a>

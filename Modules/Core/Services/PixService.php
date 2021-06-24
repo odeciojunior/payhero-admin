@@ -83,8 +83,9 @@ class PixService
                     try {
                         $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
                         if (!empty($integration)) {
-                            $service = new WooCommerceService($integration->url_store, $integration->user_token, $integration->user_pass);
-                            $service->verifyPermissions();
+                            
+                            $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                            
                             $service->cancelOrder($sale, 'Pix');
                         }
                     } catch (Exception $e) {

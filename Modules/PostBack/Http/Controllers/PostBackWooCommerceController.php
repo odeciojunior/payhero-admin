@@ -16,6 +16,9 @@ use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
+use App\Jobs\ProcessWooCommercePostbackTracking;
+
+use function GuzzleHttp\json_decode;
 
 /**
  * Class PostBackWooCommerceController
@@ -94,9 +97,7 @@ class PostBackWooCommerceController extends Controller
             $wooCommerceIntegration->token_user,
             $wooCommerceIntegration->token_pass
         );
-        $wooCommerceService->verifyPermissions();
-
-
+        
         $variationId = !empty($product->parent_id) ? $product->id : null;
 
         $sku = $wooCommerceService->createProduct(
@@ -107,16 +108,20 @@ class PostBackWooCommerceController extends Controller
             $variationId
         );
 
-        $data = [
-            'sku' => $sku
-        ];
-        if (empty($product->parent_id)) {
-            $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
-        } else {
-            $wooCommerceService->woocommerce->put(
-                'products/' . $product->parent_id . '/variations/' . $product->id,
-                $data
-            );
+        if(!empty($sku)){
+
+            $data = [
+                'sku' => $sku
+            ];
+            if (empty($product->parent_id)) {
+                $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
+            } else {
+                $wooCommerceService->woocommerce->put(
+                    'products/' . $product->parent_id . '/variations/' . $product->id,
+                    $data
+                );
+            }
+
         }
 
 
@@ -170,10 +175,26 @@ class PostBackWooCommerceController extends Controller
 
                 unset($newValues['photo']);
 
-                Plan::where('project_id', hashids_decode($request->project_id))
+                $planExists = Plan::where('project_id', hashids_decode($request->project_id))
                     ->where('shopify_variant_id', $request['sku'])
-                    ->first()
-                    ->update($newValues);
+                    ->first();
+                
+                if(!empty($planExists)){
+                    $planExists->update($newValues);
+                }else{
+                    $newValues['shopify_variant_id'] = $request['sku'];
+                    
+                    if(!empty($request['parent_id'])){
+                        $newValues['shopify_id'] = $request['parent_id'];
+                    }
+                    
+                    $newValues['project_id'] = hashids_decode($request->project_id);
+                    $newValues['description'] = $newValues['name'];
+                    $newValues['code'] = '';
+                    $newValues['status'] = '1';
+                    
+                    Plan::create($newValues);
+                }
 
             }else{
                 return response()->json(
@@ -202,23 +223,42 @@ class PostBackWooCommerceController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
+            
+            
+            if (empty($request->correios_tracking_code) || empty($request->shipping['company']) ){
+                return response()->json(
+                    [
+                        'message' => 'invalid data',
+                    ],
+                    200
+                );
+            }
+
             $projectModel = new Project();
 
 
             $projectId = current(Hashids::decode($request->project_id));
 
-            $project = $projectModel->find($projectId);
+            $project = $projectModel->find($projectId)->first();
 
             if (!empty($project) && !empty($request->correios_tracking_code) ) {
-
-                // ProcessWooCommercePostbackJob::dispatch($projectId, $requestData)
-                //     ->onQueue('high');
-                $sale = Sale::where("woocommerce_order", $request->id)->first();
-
-                if(!empty($sale) && !empty($request->correios_tracking_code)){
-                    // $data = ['']
-                    // $sale
+                
+                foreach($request->line_items as $item){
+                    $line_items[] = [
+                        'sku'=> $item['sku'],
+                        'name'=> $item['name'],
+                        'quantity'=> $item['quantity'],
+                    ];
                 }
+                $data = [
+                    'id'=>$request->id,
+                    'correios_tracking_code' => $request->correios_tracking_code,
+                    'line_items' => $line_items
+                ];
+                
+                ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
+
+                
 
                 return response()->json(
                     [

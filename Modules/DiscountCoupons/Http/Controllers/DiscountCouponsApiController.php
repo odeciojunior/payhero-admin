@@ -3,6 +3,7 @@
 namespace Modules\DiscountCoupons\Http\Controllers;
 
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
@@ -35,13 +36,13 @@ class DiscountCouponsApiController extends Controller
             if (isset($projectId)) {
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($discountCouponsModel)->tap(function(Activity $activity) {
+                activity()->on($discountCouponsModel)->tap(function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os cupons para o projeto ' . $project->name);
 
                 if (Gate::allows('edit', [$project])) {
                     $projectId = $project->id;
-                    $coupons   = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
+                    $coupons   = $discountCouponsModel->whereHas('project', function ($query) use ($projectId) {
                         $query->where('project_id', $projectId);
                     });
 
@@ -75,52 +76,61 @@ class DiscountCouponsApiController extends Controller
     {
         try {
             if (isset($projectId)) {
-                $discountCouponsModel = new DiscountCoupon();
-                $projectModel         = new Project();
-
                 $requestData               = $request->validated();
                 $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData['value']      = preg_replace("/[^0-9]/", "", $requestData['value']);
                 $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
+
                 if (empty($requestData['rule_value'])) {
                     $requestData['rule_value'] = 0;
                 }
 
-                $project = $projectModel->find($requestData["project_id"]);
+                $project = Project::find($requestData["project_id"]);
 
-                if (Gate::allows('edit', [$project])) {
-                    $discountCouponSaved = $discountCouponsModel->create($requestData);
-                    if ($discountCouponSaved) {
-                        return response()->json([
-                                                    'message' => 'Cupom criado com sucesso!',
-
-                                                ], 200);
-                    } else {
-                        return response()->json([
-                                                    'message' => 'Erro ao tentar salvar cupom!',
-
-                                                ], 400);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para criar cupom neste projeto',
-
-                                            ], 400);
+                if (!Gate::allows('edit', [$project])) {
+                    return response()->json(
+                        [
+                            'message' => 'Sem permissão para criar cupom neste projeto',
+                        ],
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                    );
                 }
+
+                $couponExists = DiscountCoupon::where(
+                    [
+                        'project_id' => $requestData["project_id"],
+                        'code' => $requestData["code"],
+                        'status' => 1
+                    ]
+                )->exists();
+
+                if ($couponExists) {
+                    $requestData["status"] = 0;
+                }
+
+                DiscountCoupon::create($requestData);
+
+                return response()->json(
+                    [
+                        'message' => 'Cupom criado com sucesso!',
+                    ],
+                    \Symfony\Component\HttpFoundation\Response::HTTP_OK
+                );
             }
 
-            return response()->json([
-                                        'message' => 'Erro ao tentar salvar cupom!',
-
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Erro ao tentar salvar cupom!',
+                ],
+                \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
             Log::warning('Erro ao tentar cadastrar novo cupom de desconto (DiscountCouponsController - store)');
             report($e);
 
             return response()->json([
                                         'message' => 'Erro ao tentar salvar cupom!',
-
-                                    ], 400);
+                                    ], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -139,7 +149,7 @@ class DiscountCouponsApiController extends Controller
                 $coupon  = $discountCouponsModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use ($coupon) {
+                activity()->on($projectModel)->tap(function (Activity $activity) use ($coupon) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = $coupon->id;
                 })->log('Visualizou tela detalhes do cupon ' . $coupon->name);
@@ -175,14 +185,13 @@ class DiscountCouponsApiController extends Controller
     {
         try {
             if (isset($projectId) && isset($id)) {
-
                 $discountCouponsModel = new DiscountCoupon();
                 $projectModel         = new Project();
 
                 $coupon  = $discountCouponsModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use ($coupon) {
+                activity()->on($projectModel)->tap(function (Activity $activity) use ($coupon) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = $coupon->id;
                 })->log('Visualizou tela editar configuração do cupom ' . $coupon->name);
@@ -222,37 +231,66 @@ class DiscountCouponsApiController extends Controller
     {
         try {
             if (isset($projectId) && isset($id)) {
-                $discountCouponsModel = new DiscountCoupon();
-                $projectModel         = new Project();
-
                 $requestValidated = $request->validated();
 
-                $coupon  = $discountCouponsModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
+                $coupon  = DiscountCoupon::find(current(Hashids::decode($id)));
+                $project = Project::find(current(Hashids::decode($projectId)));
 
-                if (Gate::allows('edit', [$project])) {
-
-                    $requestValidated['value']      = preg_replace("/[^0-9]/", "", $requestValidated['value']);
-                    $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
-                    if (empty($requestValidated['rule_value'])) {
-                        $requestValidated['rule_value'] = 0;
-                    }
-                    $couponUpdated = $coupon->update($requestValidated);
-
-                    if ($couponUpdated) {
-                        return response()->json('Sucesso', 200);
-                    } else {
-                        return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para atualizar este cupom',
-
-                                            ], 400);
+                if (!Gate::allows('edit', [$project])) {
+                    return response()->json(
+                        [
+                            'message' => 'Sem permissão para atualizar este cupom',
+                        ],
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                    );
                 }
+
+                $requestValidated['value']      = preg_replace("/[^0-9]/", "", $requestValidated['value']);
+                $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
+
+                if (empty($requestValidated['rule_value'])) {
+                    $requestValidated['rule_value'] = 0;
+                }
+
+                $couponExists = DiscountCoupon::where(
+                    [
+                        'project_id' => Hashids::decode($projectId),
+                        'code' => $requestValidated["code"],
+                        'status' => 1
+                    ]
+                )
+                    ->where('id', '!=', $coupon->id)
+                    ->exists();
+
+                if ($couponExists && $requestValidated['status'] == 1) {
+                    $requestValidated['status'] = 0;
+
+                    $coupon->update($requestValidated);
+
+                    return response()->json(
+                        [
+                            'message' => 'Não é possível ter mais de 1 cupom ativo com o mesmo código'
+                        ],
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                    );
+                }
+
+                $coupon->update($requestValidated);
+
+                return response()->json(
+                    [
+                        'message' => 'Cupom atualizado com sucesso'
+                    ],
+                    \Symfony\Component\HttpFoundation\Response::HTTP_OK
+                );
             }
 
-            return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
+            return response()->json(
+                [
+                    'message' => 'Erro ao atualizar Cupom'
+                ],
+                \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar cupom de desconto  (DescountCouponController - update)');
             report($e);

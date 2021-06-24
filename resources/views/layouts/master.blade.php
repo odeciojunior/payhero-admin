@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=32') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=33') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
@@ -71,7 +71,6 @@
     <script>
         Breakpoints();
     </script>
-    <script src="//fast.appcues.com/60650.js"></script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
 
@@ -124,7 +123,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=575') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=576') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -138,8 +137,8 @@
 
 @if(env('APP_ENV', 'production') == 'production')
 
-    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=12') }}"></script>
-    <script src="{{ asset('modules/global/js/notifications.js?v=12') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
 
 
     <style>
@@ -159,6 +158,12 @@
         @endif
     </script>
 
+@endif
+
+@if(!Modules\Core\Services\FoxUtils::isProduction())
+    <script>
+        console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
+    </script>
 @endif
 
 </body>

@@ -218,7 +218,6 @@ $(document).ready(function () {
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
         let formData = new FormData(document.getElementById('form-add-shipping'));
-        loadingOnScreen();
 
         $.ajax({
             method: "POST",
@@ -233,11 +232,9 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
                 alertCustom("success", data.message);
                 atualizarFrete();
                 clearFields();
@@ -251,7 +248,7 @@ $(document).ready(function () {
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
-        loadingOnScreen();
+
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/shippings/" + frete,
@@ -265,11 +262,9 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success() {
-                loadingOnScreenRemove();
                 alertCustom("success", "Frete atualizado com sucesso");
                 atualizarFrete();
             }
@@ -288,11 +283,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnScreenRemove();
                 alertCustom("success", "Frete Removido com sucesso");
                 atualizarFrete();
             }

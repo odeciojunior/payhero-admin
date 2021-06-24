@@ -19,10 +19,10 @@ class PixelEditResource extends JsonResource
             'purchase_card' => $this->purchase_card ? 'true' : 'false',
             'purchase_pix' => $this->purchase_pix ? 'true' : 'false',
             'apply_on_plans' => $this->apply_on_plans,
-            'code_meta_tag_facebook' => $this->code_meta_tag_facebook,
             'purchase_event_name' => $this->purchase_event_name,
             'is_api' => $this->is_api,
             'facebook_token' => $this->facebook_token,
+            'url_facebook_domain' => $this->url_facebook_domain,
             'value_percentage_purchase_boleto' => $this->value_percentage_purchase_boleto,
         ];
     }

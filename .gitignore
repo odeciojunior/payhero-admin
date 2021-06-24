@@ -58,7 +58,7 @@ laravel-worker*
 projeto/core
 
 auth.json
-storage/*
+*Zone.Identifier
 
 *.icloud
 *.DS_Store
