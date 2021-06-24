@@ -77,6 +77,7 @@
                             <th>Tipo</th>
                             <th>Status</th>
                             <th>Token</th>
+                            <th>Antifraude</th>
                             <th></th>
                         </thead>
                         <tbody id='table-body-integrates'>
