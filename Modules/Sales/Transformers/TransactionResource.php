@@ -14,14 +14,21 @@ class TransactionResource extends JsonResource
     public function toArray($request)
     {
         $sale = $this->sale;
+        if ($sale->api_flag) {
+            $planName = 'Checkout API';
+        } elseif (count($sale->getRelation('plansSales')) > 1) {
+            $planName = 'Carrinho';
+        } else {
+            $planName = $sale->plansSales->first()->plan->name;
+        }
 
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'              => Hashids::encode($this->sale->id),
             'upsell'                  => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
-            'project'                 => $sale->project->name,
-            'product'                 => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $sale->plansSales->first()->plan->name,
+            'project'                 => $sale->project->name ?? $sale->user->name,
+            'product'                 => $planName,
             'client'                  => $sale->customer->name,
             'method'                  => $sale->payment_method,
             'status'                  => $sale->status,
@@ -43,7 +50,7 @@ class TransactionResource extends JsonResource
             'has_order_bump'          => $sale->has_order_bump,
             'has_contestation'        => $sale->contestations->count() ? true : false,
         ];
-        $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
+        $shopifyIntegrations = $sale->api_flag ? [] : $sale->project->shopifyIntegrations->where('status', 2);
 
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;

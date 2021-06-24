@@ -43,6 +43,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property int $installments_amount
  * @property string $installments_value
  * @property string $flag
+ * @property boolean $api_flag
  * @property string $boleto_link
  * @property string $boleto_digitable_line
  * @property string $boleto_due_date
@@ -169,6 +170,7 @@ class Sale extends Model
         'installments_amount',
         'installments_value',
         'flag',
+        'api_flag',
         'boleto_link',
         'boleto_digitable_line',
         'boleto_due_date',
