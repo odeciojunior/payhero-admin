@@ -967,9 +967,13 @@ class CloudFlareService
             $this->deleteRecord($domainsRecord->cloudflare_record_id);
         }
 
-        $this->getSendgridService()->deleteZone($domain->name);
+        try {
+            $this->getSendgridService()->deleteLinkBrand($domain->name);
+            $this->getSendgridService()->deleteZone($domain->name);
+        }catch (Exception $e){
+            $this->deleteZone($domain->name);
 
-        $this->getSendgridService()->deleteLinkBrand($domain->name);
+        }
 
         $this->deleteZone($domain->name);
     }
