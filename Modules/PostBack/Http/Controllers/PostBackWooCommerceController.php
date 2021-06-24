@@ -97,9 +97,7 @@ class PostBackWooCommerceController extends Controller
             $wooCommerceIntegration->token_user,
             $wooCommerceIntegration->token_pass
         );
-        $wooCommerceService->verifyPermissions();
-
-
+        
         $variationId = !empty($product->parent_id) ? $product->id : null;
 
         $sku = $wooCommerceService->createProduct(

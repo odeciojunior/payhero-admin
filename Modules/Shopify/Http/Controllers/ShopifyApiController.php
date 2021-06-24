@@ -245,7 +245,7 @@ class ShopifyApiController extends Controller
                     'token' => $dataRequest['token'],
                     'shared_secret' => '',
                     'url_store' => $urlStore . '.myshopify.com',
-                    'user_id' => auth()->user()->id,
+                    'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $projectCreated->id,
                     'status' => 1,
                 ]
