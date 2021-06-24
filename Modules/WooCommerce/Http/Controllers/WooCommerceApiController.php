@@ -206,7 +206,7 @@ class WooCommerceApiController extends Controller
                     'token_user' => $dataRequest['token_user'],
                     'token_pass' => $dataRequest['token_pass'],
                     'url_store' => $urlStore,
-                    'user_id' => auth()->user()->id,
+                    'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $projectCreated->id,
                     'status' => 1,
                 ]
