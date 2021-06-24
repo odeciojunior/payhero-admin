@@ -106,7 +106,7 @@
                                     <i style="right: 24px;top: 35px;"
                                        class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
                                     <input name='date_range' id="date_range" class="form-control input-pad pr-30"
-                                           placeholder="Clique para editar..." readonly style="background-color: #fff;">
+                                           placeholder="Clique para editar..." readonly style="">
                                 </div>
                             </div>
                         </div>
