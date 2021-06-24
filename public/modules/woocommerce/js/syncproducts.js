@@ -20,6 +20,13 @@ $(document).ready(function () {
             return false;
         }
 
+        
+
+
+        $("#_content").hide();
+        $("#_loading").show();
+
+
         $.ajax({
             method: "POST",
             data: {"opt_prod":opt_prod, "opt_track":opt_track},
@@ -36,6 +43,13 @@ $(document).ready(function () {
             success: function success(r) {
                 
                 
+                $('#close-modal').click()
+                
+                setTimeout(function(){
+                    $("#_loading").hide();
+                    $("#_content").show();
+                },200);
+
                 if(r.status == true){
                     alertCustom('success', 'Sincronização de dados foi iniciada!');
 
@@ -44,15 +58,11 @@ $(document).ready(function () {
 
                 }
                 
-
-                
-                
             }
         });
 
 
         
-        $('#close-modal').click()
 
 
     })
