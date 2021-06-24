@@ -206,15 +206,17 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if(empty($transaction->sale->flag)){
+                if (!$transaction->sale->flag || empty($transaction->sale->flag)) {
+//                    $transaction->sale->flag = $transaction->sale->present()->getFlagPaymentMethod();
                     $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
                 if (!empty($transaction->gateway_transferred_at)) {
-                    $this->updateArrayBrands($arrayBrands, $transaction, true, $transaction->gateway_transferred_at);
-                } else {
+                    $date = \Carbon\Carbon::parse($transaction->gateway_transferred_at)->format('d/m/Y');
+                    $this->updateArrayBrands($arrayBrands, $transaction, true, $date);
+                }
+                else {
                     $this->updateArrayBrands($arrayBrands, $transaction, false);
-
                 }
             }
 
@@ -251,17 +253,16 @@ class WithdrawalsApiController
         if (array_key_exists($transaction->sale->flag, $arrayBrands)) {
             if (!$isLiquidated) {
                 $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
+                $arrayBrands[$transaction->sale->flag]['date'] = null;
             }
-
             $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
         } else {
             $arrayBrands[$transaction->sale->flag] = [
                 'brand' => $transaction->sale->flag,
                 'value' => $transaction->value,
                 'liquidated' => $isLiquidated,
-                'date' => $date ? with(new Carbon($date))->format('d/m/Y'): '-',
-                'hash_id' => $transaction->sale->hash_id,
-
+                'date' => $date,
+                'gateway_order_id' => $transaction->sale->gateway_order_id,
             ];
         }
     }
