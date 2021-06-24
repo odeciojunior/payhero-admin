@@ -280,9 +280,9 @@ class ProjectService
                         $wooCommerceIntegration->token_user,
                         $wooCommerceIntegration->token_pass,
                     );
-                    if($wooCommerceService->verifyPermissions()){
-                        $wooCommerceService->deleteHooks($project->id);
-                    }
+                    
+                    $wooCommerceService->deleteHooks($project->id);
+                    
                 }
                 //end woo
 

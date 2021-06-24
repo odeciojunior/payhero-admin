@@ -20,7 +20,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Illuminate\Support\Facades\Log;
-use Modules\WooCommerce\Transformers\WooCommerceIntegrationsResource;
+
 
 /**
  * Class ApiController
@@ -293,14 +293,16 @@ class WooCommerceApiController extends Controller
 
     public function synchronizeProducts(Request $request)
     {
-        
+        $doProducts = $request->opt_prod;
+        $doTrackingCodes = $request->opt_track;
+
         $projectId = current(Hashids::decode($request->projectId));
         
         $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
         
-        return $service->syncProducts($projectId, $integration);
+        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
         
     }
 
