@@ -15,7 +15,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 
 
 
-class ImportWooCommerceProducts implements ShouldQueue
+class ImportWooCommerceOrders implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -36,23 +36,27 @@ class ImportWooCommerceProducts implements ShouldQueue
     public function handle()
     {
         try {
-            
-            
+                        
             $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
 
             if(!empty($integration)){
 
                 $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $products = $service->woocommerce->get('products', ['status'=>'publish', 'page'=> $this->page, 'per_page'=>5]);
+                $orders = $service->woocommerce->get('orders', 
+                    [
+                        'status'=>'processing', 
+                        'page'=> $this->page, 
+                        'per_page'=>5
+                    ]);
                 
-                if(empty($products)){
+                if(empty($orders)){
                    
                     return false;
 
                 }else{
                     
-                    $service->importProducts($this->projectId, $this->userId, $products);
+                    $service->importTrackingCodes($this->projectId, $orders);
                     
                     $page = $this->page;
 
@@ -63,20 +67,12 @@ class ImportWooCommerceProducts implements ShouldQueue
                 
                 return true;
                 
-                
-
             }
-
             
 
-            
-
-        } catch (Exception $e) {
-            
-            
+        } catch (Exception $e) {    
 
             report($e);
-
             
         }
     }
