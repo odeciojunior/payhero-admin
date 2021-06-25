@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Transformers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Services\FoxUtils;
@@ -30,36 +31,10 @@ class WithdrawalTransactionsResource extends JsonResource
         $date = '';
         $saleIdEncoded =Hashids::connection('sale_id')->encode($this->sale->id);
 
-
-        //logica da getnet
-        $getnetService = new GetnetBackOfficeService();
-
-        if (FoxUtils::isProduction()) {
-            $subsellerId = $this->company->subseller_getnet_id;
-        } else {
-            $subsellerId = $this->company->subseller_getnet_homolog_id;
-        }
-
-        $getnetService->setStatementSubSellerId($subsellerId)
-            ->setStatementSaleHashId($this->sale->hash_id);
-
-        $originalResult = $getnetService->getStatement();
-
-        $gatewaySale = json_decode($originalResult);
-        if (!empty($gatewaySale->list_transactions[0]) &&
-            !empty($gatewaySale->list_transactions[0]->details[0]) &&
-            !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-        ) {
+        if (!empty($this->gateway_transferred_at)) {
             $isLiquidated = true;
-            $date = str_replace('T', ' ', $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
-            $date = date("d/m/Y", strtotime($date));
-            if(!$this->gateway_transferred) {
-                $this->update([
-                    'gateway_transferred' => 1
-                ]);
-            }
+            $date = with(new Carbon($this->gateway_transferred_at))->format('d/m/Y');
         }
-
         if(empty($this->sale->flag)){
             $this->sale->flag = $this->sale->present()->getPaymentFlag();
         }
@@ -70,7 +45,6 @@ class WithdrawalTransactionsResource extends JsonResource
             'brand'            => $this->sale->flag,
             'date'             => $date,
             'value'            => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
-
         ];
     }
 

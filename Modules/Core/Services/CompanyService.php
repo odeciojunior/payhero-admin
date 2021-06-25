@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Illuminate\Auth\Access\Gate;
 use LogicException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
@@ -368,15 +369,13 @@ class CompanyService
             );
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn(
-                    'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
-                );
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn(
-                    'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
-                );
+                if (!$company->user->show_old_finances){
+                    return 0;
+                }
+
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id',[Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             }
         }
         return $blockedBalance->sum('value');
@@ -395,9 +394,9 @@ class CompanyService
             );
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             }
         }
         return $blockedBalance->sum('value');
@@ -416,9 +415,9 @@ class CompanyService
             );
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
+                $blockedBalance = $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]);
+                $blockedBalance = $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
             }
         }
         return $blockedBalance->sum('value');
@@ -518,10 +517,15 @@ class CompanyService
                     ->where('is_waiting_withdrawal', 0)
                     ->whereNull('withdrawal_id');
             } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+                if (!$company->user->show_old_finances){
+                    return 0;
+                }
+
                 $pendingBalance = $pendingBalance->whereNotIn(
                     'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
                 );
+
             }
         }
         return $pendingBalance->sum('value');
@@ -544,12 +548,17 @@ class CompanyService
             $transactionsValue = $company->transactions()
                 ->whereIn(
                     'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
                 )
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->sum('value');
-            return $transactionsValue + $company->balance;
+
+            if ($company->user->show_old_finances){
+                return $transactionsValue + $company->balance;
+            }
+
+            return $transactionsValue;
         }
         throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
     }
