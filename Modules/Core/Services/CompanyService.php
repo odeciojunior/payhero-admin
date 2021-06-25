@@ -534,6 +534,9 @@ class CompanyService
     public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
     {
         if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
+            if (!$company->user->show_old_finances){
+                return 0;
+            }
             return $company->balance;
         } elseif ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $company->transactions()
