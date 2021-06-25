@@ -12,12 +12,26 @@
     .btn-plus{margin-top: 28px;padding-top: 10px;padding-bottom: 10px;}
     .btn-active{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
     .btn-active svg path{fill:#ffffff;}
+    .btn-edit{background-color: #F4F4F4; border:1px solid #f4f4f4;}
     .btn-edit svg path{fill:#2E85EC;}
+    .btn-edit-row{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
+    .btn-edit-row svg path{fill:#2E85EC;}
     .modal-footer{justify-content:center;}
     .btn-update-config-custom{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
     .btn-update-config-custom:hover{background-color: #2E85EC;border: 1px solid #2E85EC;}
     .mb-4p{margin-bottom: 4%;}
+    .mt-15{margin-top: 15px;}
     #form-update-plan .nav-link{font-size: 16px !important;}
+    .btnDelete[readonly] span{color:#333333; -webkit-text-stroke: 0.6px #333333;}
+    .btnDelete[readonly]{border-color: #6c757d;}
+    .form-control:disabled, .form-control[readonly] {background-color: #F4F4F4;}
+    .remove-custom-product{height: 43px;}
+    .border-light-gray{border:1px solid #f4f4f4; background-color:#f4f4f4; height: 44px;}
+    .btn-outline-secondary{height: 44px;border:1px solid #C4C4C4;}
+    .btn-plus{color: #41DC8F;background-color: transparent;border-color: #41DC8F;}    
+    .btn-plus:disabled{color: #333333;background-color: transparent;border-color: #333333;}    
+    .btn-plus:disabled svg path{stroke:#333333;}
+    .btn-plus:hover{background-color:transparent;}    
 </style>
 <div class="container-fluid px-0" id="form-update-plan" style="display:none">
     <div class="nav-tabs-horizontal">

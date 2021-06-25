@@ -206,6 +206,21 @@ $(function () {
         return inputType;
     }
 
+    function enableDisabledCustomProduct(checked,productId){
+        if (checked) {
+            $(`.type-${productId}`).removeAttr('disabled');
+            $(`#pro-title-${productId}`).removeAttr('disabled');
+            $(`#add-list-custom-product-${productId}`).removeAttr('disabled');
+            $(`.fc-${productId}`).removeAttr('readonly');
+        }   else{
+            $(`.type-${productId}`).removeClass('btn-active');
+            $(`.type-${productId}`).attr('disabled',"disabled");
+            $(`#pro-title-${productId}`).attr('disabled',"disabled");
+            $(`#add-list-custom-product-${productId}`).attr('disabled',"disabled");
+            $(`.fc-${productId}`).attr('readonly',"readonly");
+        }
+    }
+
     /**
      * Update Table Plan
      */
@@ -385,6 +400,7 @@ $(function () {
                             //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
                             var allow_change_in_block = false;
+                            idxProducts = [];
 
                             if (response.data.products != undefined) {                                    
                                 $.each(response.data.products, function (index, value) {
@@ -445,7 +461,8 @@ $(function () {
                                     if(value.shopify_id>0){
                                         allow_change_in_block = true;
                                     }
-
+                                    idxProducts[value.id] = value.id*10;
+                                    
                                     $('.products_row_custom').append(`
                                         <div class='card container '>
                                             <div class="row mb-3">
@@ -457,8 +474,8 @@ $(function () {
                                                 </div>
                                                 <div class="col-sm-3" align="right">
                                                     <div class="switch-holder d-inline">
-                                                        <label class="switch">
-                                                            <input type="checkbox" class="active_custom" name="is_custom[${value.id}]" value="true" ${value.is_custom ? 'checked':''}>
+                                                        <label class="switch mt-15">
+                                                            <input type="checkbox" class="active_custom" productId="${value.id}" name="is_custom[${value.id}]" value="true" ${value.is_custom ? 'checked':''}>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -495,8 +512,11 @@ $(function () {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <button type="button" class="btn btn-outline-success btn-plus" id="add-list-custom-product-${value.id}">
-                                                    <img src="/modules/global/img/pix/icon_plus.svg"></button>
+                                                    <button type="button" class="btn btn-plus" id="add-list-custom-product-${value.id}">                                                    
+                                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M18 9.5H1M9.5 1V18V1Z" stroke="#41DC8F" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                                 <div class="col-12">
                                                     <small>ATENÇÃO: Seja claro e objetivo. O campo de “nome” aparecerá como a descrição do arquivo ou texto que seu cliente preencherá na página de obrigado.</small>
@@ -513,7 +533,7 @@ $(function () {
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
-                                    `);
+                                    `);                                    
 
                                     $(document).on('click',`.type-${value.id}`,function(){                                        
                                         $(`.type-${value.id}`).removeClass('btn-active');                                        
@@ -522,7 +542,7 @@ $(function () {
                                     });
 
                                     $.each(value.custom_configs, function (indexC,valueC) {
-                                        
+                                        idxProducts[value.id]++;
                                         var inputType = getIconTypeCustomProduct(valueC.type);
                                         
                                         $(`#list-custom-products-${value.id}`).append(`
@@ -530,23 +550,25 @@ $(function () {
                                                 <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                 <div class="col-1">
                                                     <input type="hidden" name="type[${value.id}][]" class="form-control input-pad" value="${valueC.type}">
-                                                    <button type="button" class="btn btn-outline-secondary p-2">                                                            
+                                                    <button type="button" id="btn-type-${idxProducts[value.id]}" class="btn btn-outline-secondary p-2 fc-${value.id} border-light-gray">
                                                         ${inputType}
                                                     </button>
                                                 </div>
                                                 <div class="col-10">
-                                                    <input type="text" name="label[${value.id}][]" class="form-control input-pad"  
-                                                    placeholder="Nome para personalização" value="${valueC.label}">
+                                                    <input type="text" name="label[${value.id}][]" class="form-control input-pad fc-${value.id} edit-input"  
+                                                    placeholder="Nome para personalização" value="${valueC.label}" index="${idxProducts[value.id]}">
                                                 </div>
-                                                <div class="form-group col-1">
-                                                    <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
+                                                <div class="form-group col-1 px-0">
+                                                    <button type="button" id="btn-trash-${idxProducts[value.id]}"
+                                                    class="remove-custom-product btn btn-outline btnDelete form-control fc-${value.id} 
+                                                    d-flex justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
                                                 </div>
                                             </div>                                            
                                         `);
                                     });
 
                                     $(document).on('click',`#add-list-custom-product-${value.id}`,function(){
-                                        
+                                        idxProducts[value.id]++;
                                         var proType = $(`#type-custom-${value.id}`).val();
                                         var proTitle = $(`#pro-title-${value.id}`).val();
                                         if(proTitle != '' && proType!=''){
@@ -556,17 +578,19 @@ $(function () {
                                                 <div class="row">
                                                     <input type="hidden" name="productsPlan[]" value="${value.id}">
                                                     <div class="col-1">
-                                                        <input type="hidden" name="type[${value.id}][]" class="form-control input-pad" value="${proType}">
-                                                        <button type="button" class="btn btn-outline-secondary p-2">                                                            
+                                                        <input type="hidden" name="type[${value.id}][]" class="form-control input-pad fc-${value.id}" value="${proType}">
+                                                        <button type="button" class="btn btn-outline-secondary p-2 border-light-gray" id="btn-type-${idxProducts[value.id]}">
                                                             ${inputType}
                                                         </button>
                                                     </div>
                                                     <div class="col-10">
-                                                        <input type="text" name="label[${value.id}][]" class="form-control input-pad"  
-                                                        placeholder="Nome para personalização" value="${proTitle}">
+                                                        <input type="text" name="label[${value.id}][]" class="form-control input-pad fc-${value.id} edit-input"  
+                                                        placeholder="Nome para personalização" value="${proTitle}" index="${idxProducts[value.id]}">
                                                     </div>
-                                                    <div class="form-group col-1">
-                                                        <button type="button" class="remove-custom-product btn btn-outline btnDelete form-control d-flex justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
+                                                    <div class="form-group col-1 px-0">
+                                                        <button type="button" id="btn-trash-${idxProducts[value.id]}"
+                                                        class="remove-custom-product btn btn-outline btnDelete form-control d-flex fc-${value.id} 
+                                                        justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
                                                     </div>
                                                 </div>
                                             `);
@@ -574,6 +598,8 @@ $(function () {
                                             $(`#pro-title-${value.id}`).val('');
                                         }                                        
                                     });
+
+                                    enableDisabledCustomProduct(value.is_custom,value.id);
 
                                 });
 
@@ -589,6 +615,36 @@ $(function () {
                                         <span>Aplicar personalização nas outras variantes deste produto</span>
                                     `);
                                 }
+                                
+                                $('.active_custom').off('change');
+                                $('.active_custom').on('change', function () {
+                                
+                                    var productId= $(this).attr('productId');                                                                        
+                                    enableDisabledCustomProduct(this.checked,productId);
+                                });
+
+                                $(document).on('click', '.edit-input', function () {                                
+                                    console.log('editando');
+                                    var index = $(this).attr('index');
+                                    $(`#btn-type-${index}`).addClass('btn-edit');                                    
+                                    $(`#btn-trash-${index}`).removeClass('btnDelete').attr('index',index);
+                                    $(`#btn-trash-${index}`).addClass('btn-edit-row').html(`                                        
+                                        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20 2L8.92308 14L2 7.33333" stroke="white" stroke-width="2.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    `);                                    
+                                });
+
+                                $(document).on('click', '.btn-edit-row', function () {                                
+                                    console.log('salvando');
+                                    var index = $(this).attr('index');
+                                    $(`#btn-type-${index}`).removeClass('btn-edit');                                    
+                                    $(`#btn-trash-${index}`).addClass('btnDelete');
+                                    $(`#btn-trash-${index}`).removeClass('btn-edit-row')
+                                    .html(`<span class="o-bin-1"></span>`);                                    
+                                });
+
+                                
 
                             } else {
                                 $('.products_row_edit').append(`
