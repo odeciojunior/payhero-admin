@@ -1,6 +1,6 @@
 <form id="form-register-plan" method="post" action="/plans" enctype="multipart/form-data" style="display:none">
     @csrf
-    <div class="container-fluid px-0">
+    <div class="container-fluid p-15">
         <div class="row">
             <div class="col-md-12">
                 <div class="" data-plugin="matchHeight">

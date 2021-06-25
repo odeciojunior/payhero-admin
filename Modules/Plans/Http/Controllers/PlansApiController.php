@@ -312,12 +312,14 @@ class PlansApiController extends Controller
                         return response()->json(['message' => 'Impossível editar os produtos do plano pois possui vendas associadas.'], 400);
                     }
 
-                    if (count($productPlans) > 0) {
-                        foreach ($productPlans as $productPlan) {
-                            $productPlan->forceDelete();
-                        }
-                    }
+                    // if (count($productPlans) > 0) {
+                    //     foreach ($productPlans as $productPlan) {
 
+                    //         $productPlan->forceDelete();
+                    //     }
+                    // }
+
+                    $idsProductPlan = [];
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
                             if (empty($requestData['product_cost'][$keyProduct]) || $requestData['product_cost'][$keyProduct] == '0.00'){
@@ -326,15 +328,29 @@ class PlansApiController extends Controller
                                 $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
                             }
 
-                            $productPlan->create([
-                                'product_id'         => $requestData['products'][$keyProduct],
-                                'plan_id'            => $plan->id,
-                                'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
-                                'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
-                                'currency_type_enum' => $productPlan->present()
-                                                                    ->getCurrency($requestData['currency'][$keyProduct]),
-                            ]);
+                            $productPlan = ProductPlan::where('product_id',$requestData['products'][$keyProduct])->where('plan_id',$plan->id)->first();
+                            if(!empty($productPlan)){
+                                $productPlan->amount = $requestData['product_amounts'][$keyProduct] ?? 1;
+                                $productPlan->cost = $requestData['product_cost'][$keyProduct] ?? 0;
+                                $productPlan->currency_type_enum = $productPlan->present()->getCurrency($requestData['currency'][$keyProduct]);
+                                $productPlan->update();
+                                $idsProductPlan[] = $productPlan->id;
+                            }else{
+                                $productPlan->create([
+                                    'product_id'         => $requestData['products'][$keyProduct],
+                                    'plan_id'            => $plan->id,
+                                    'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                    'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                    'currency_type_enum' => $productPlan->present()
+                                                            ->getCurrency($requestData['currency'][$keyProduct]),
+                                ]);
+                                $idsProductPlan[] = $productPlan->id;
+                            }
                         }
+                    }
+
+                    if(count($idsProductPlan)>0){
+                        ProductPlan::where('plan_id',$plan->id)->whereNotIn('id',$idsProductPlan)->forceDelete();
                     }
 
                     return response()->json('Sucesso', 200);
@@ -544,6 +560,7 @@ class PlansApiController extends Controller
                 $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
                 $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
                 foreach ($productPlans as $productPlan) {
+                    dd($productPlan);
                     $productPlan->update(['currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency)]);
                 }
             }
@@ -606,7 +623,9 @@ class PlansApiController extends Controller
                 $productPlan = ProductPlan::where('id',$productPlanId)->where('plan_id',$planId)->first();
                 if(!empty($productPlan))
                 {
-                    $productPlan->update(['custom_config'=>$config,'is_custom'=>!empty($request->is_custom[$productPlanId]) ? 1:0]);  
+                    $productPlan->custom_config = $config;
+                    $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1:0;  
+                    $productPlan->update();
                     if($allow_change_in_block===true){
                         $this->updateAllConfigCustomProduct($plan->shopify_id,$config,!empty($request->is_custom[$productPlanId]) ? 1:0);
                     }
@@ -615,7 +634,9 @@ class PlansApiController extends Controller
         }else{            
             $productPlans = ProductPlan::where('plan_id', $planId)->get();    
             foreach ($productPlans as $productPlan) {
-                $productPlan->update(['custom_config' => [],'is_custom'=>!empty($request->is_custom[$productPlan->id]) ? 1:0]);
+                $productPlan->custom_config = [];
+                $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1:0;
+                $productPlan->update();
             }
 
             if($allow_change_in_block===true){
@@ -635,7 +656,9 @@ class PlansApiController extends Controller
         $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
         
         foreach ($productPlans as $productPlan) {
-            $productPlan->update(['custom_config' => $config,'is_custom'=>$is_custom]);            
+            $productPlan->custom_config = $config;
+            $productPlan->is_custom = $is_custom;
+            $productPlan->update();
         }
     }
 }

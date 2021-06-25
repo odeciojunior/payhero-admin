@@ -359,7 +359,9 @@ $(function () {
                 $(".edit-plan").on('click', function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
-                    var plan = $(this).attr('plan');
+                    
+                    var plan = $(this).attr('plan');                    
+                    
                     $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
 
                     $.ajax({
@@ -384,7 +386,7 @@ $(function () {
 
                             var allow_change_in_block = false;
 
-                            if (response.data.products != undefined) {
+                            if (response.data.products != undefined) {                                    
                                 $.each(response.data.products, function (index, value) {
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
@@ -456,7 +458,7 @@ $(function () {
                                                 <div class="col-sm-3" align="right">
                                                     <div class="switch-holder d-inline">
                                                         <label class="switch">
-                                                            <input type="checkbox" class="active_custom" name="is_custom[${value.id}]" value="true">
+                                                            <input type="checkbox" class="active_custom" name="is_custom[${value.id}]" value="true" ${value.is_custom ? 'checked':''}>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -502,9 +504,10 @@ $(function () {
                                             </div>
                                             <div class="row my-5">
                                                 <div class="col-12">
-                                                    <h5 class="bold">Personalizações adicionadas</h5>
+                                                    <h5 class="bold mb-0">Personalizações adicionadas</h5>
                                                 </div>
                                             </div>
+                                            <hr class="mb-4p">
                                             <div class="row">                                         
                                                 <div class="col-sm-12" id="list-custom-products-${value.id}"></div>
                                             </div>
@@ -574,6 +577,19 @@ $(function () {
 
                                 });
 
+                                if(allow_change_in_block){
+                                    $('#custom_products_checkbox').html('');
+                                    $('#custom_products_checkbox').append(`
+                                    <div class="switch-holder d-inline">
+                                        <label class="switch">
+                                            <input type="checkbox" class="allow_change_in_block" name="allow_change_in_block" value="true">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                        <span>Aplicar personalização nas outras variantes deste produto</span>
+                                    `);
+                                }
+
                             } else {
                                 $('.products_row_edit').append(`
                                     <div id="products_div_edit" class='card' >
@@ -639,6 +655,7 @@ $(function () {
                                     }
                                 });
                             }
+
                             $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                             $.ajax({
@@ -673,8 +690,20 @@ $(function () {
                             $("#form-update-plan").show();
 
                             $("#btn-modal-plan").removeClass('btn-save-plan');
+                            $("#btn-modal-plan").removeClass('btn-update-config-custom');
                             $("#btn-modal-plan").addClass('btn-update-plan');
-                            $("#btn-modal-plan").text('Atualizar');
+
+                            $("#nav-custom-tab").on('click', function () {                        
+                                $("#btn-modal-plan").removeClass('btn-update-plan');
+                                $("#btn-modal-plan").addClass('btn-update-config-custom');
+                            });
+
+                            $("#nav-geral-tab").on('click', function () {
+                                $("#btn-modal-plan").removeClass('btn-update-config-custom');
+                                $("#btn-modal-plan").addClass('btn-update-plan');                                
+                            });
+
+                            $("#btn-modal-plan").html('Salvar');
                             $("#btn-modal-plan").show();
                             $('.products_amount').mask('0#');
 
@@ -696,7 +725,7 @@ $(function () {
                             //product
                             //$('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
-
+                            $('.add_product_plan_edit').off('click');
                             $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
                                 var div_products = card_div_edit;
@@ -714,59 +743,7 @@ $(function () {
                                 $('.products_amount').mask('0#');
                                 bindModalKeys();
                             });
-
-                            /**
-                             * Update Plan
-                             */
-                            $(".btn-update-plan").unbind('click');
-                            $(".btn-update-plan").on('click', function () {
-                                var hasNoValue;
-                                $('.products_amount').each(function () {
-                                    if ($(this).val() == '' || $(this).val() == 0) {
-                                        hasNoValue = true;
-                                    }
-                                });
-
-                                if (hasNoValue) {
-                                    alertCustom('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-                                var formData = new FormData(document.getElementById('form-update-plan-tab-1'));
-                                formData.append("project_id", projectId);
-                                $.ajax({
-                                    method: "POST",
-                                    // url: "/api/plans/" + plan,
-                                    url: '/api/project/' + projectId + '/plans/' + plan,
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    error: function (_error4) {
-                                        function error(_x4) {
-                                            return _error4.apply(this, arguments);
-                                        }
-
-                                        error.toString = function () {
-                                            return _error4.toString();
-                                        };
-
-                                        return error;
-                                    }(function (response) {
-                                        errorAjaxResponse(response);
-
-                                        index(pageCurrent);
-                                    }),
-                                    success: function success(data) {
-                                        alertCustom("success", "Plano atualizado com sucesso");
-                                        index(pageCurrent);
-                                    }
-                                });
-                            });
+                            
                         }
                     });
                 });
@@ -774,6 +751,7 @@ $(function () {
                 /**
                  * Delete Plan
                  */
+                $('.delete-plan').off('click');
                 $('.delete-plan').on('click', function (event) {
                     event.preventDefault();
                     var plan = $(this).attr('plan');
@@ -1150,5 +1128,106 @@ $(function () {
 
     $(document).on('change', '#cost_currency_type', function (event) {
         $('#div_update_cost_shopify').show();
+    });
+
+    /**
+                             * Update Plan
+                             */
+
+     $(document).on('click','.btn-update-plan',function(){
+         var hasNoValue;
+         $('.products_amount').each(function () {
+             if ($(this).val() == '' || $(this).val() == 0) {
+                 hasNoValue = true;
+             }
+         });
+
+         if (hasNoValue) {
+             alertCustom('error', 'Dados informados inválidos');
+             return false;
+         }
+         var formData = new FormData(document.getElementById('form-update-plan-tab-1'));
+         formData.append("project_id", projectId);
+         $.ajax({
+             method: "POST",
+             // url: "/api/plans/" + plan,
+             url: '/api/project/' + projectId + '/plans/' + $('#plan_id').val(),
+             dataType: "json",
+             headers: {
+                 'Authorization': $('meta[name="access-token"]').attr('content'),
+                 'Accept': 'application/json',
+             },
+             data: formData,
+             processData: false,
+             contentType: false,
+             cache: false,
+             error: function (_error4) {
+                 function error(_x4) {
+                     return _error4.apply(this, arguments);
+                 }
+
+                 error.toString = function () {
+                     return _error4.toString();
+                 };
+
+                 return error;
+             }(function (response) {
+                 errorAjaxResponse(response);
+
+                 index(pageCurrent);
+             }),
+             success: function success(data) {
+                 alertCustom("success", "Plano atualizado com sucesso");
+                 index(pageCurrent);
+             }
+         });
+     });
+
+    /**
+     * Update custom Config
+     */
+     $(document).on('click','.btn-update-config-custom',function(){
+        console.log('atualizando config');
+        var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));        
+        formDataCP.append('plan',$('#plan_id').val());
+        console.log(formDataCP);
+
+        //loadingOnScreen();
+
+        $.ajax({
+            method: "POST",                                    
+            url: '/api/plans/config-custom-product',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: formDataCP,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (_error4) {
+                function error(_x4) {
+                    return _error4.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error4.toString();
+                };
+
+                return error;
+            }(function (response) {
+                //loadingOnScreenRemove();
+                errorAjaxResponse(response);
+
+                //index(pageCurrent);
+            }),
+            success: function success(data) {
+                //loadingOnScreenRemove();
+                alertCustom("success", "Configurações do Plano atualizado com sucesso");
+                //index(pageCurrent);
+            }
+        });
+
     });
 });

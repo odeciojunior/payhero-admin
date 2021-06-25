@@ -22,7 +22,8 @@ class PlansDetailsResource extends JsonResource
                 'amount'       => $productsPlan->amount,
                 'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
-                'custom_configs'=> !empty($productsPlan->custom_config) ? $productsPlan->custom_config : []
+                'custom_configs'=> !empty($productsPlan->custom_config) ? $productsPlan->custom_config : [],
+                'is_custom'     => $productsPlan->is_custom > 0 
             ];
         }
 

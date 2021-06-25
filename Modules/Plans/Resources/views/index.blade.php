@@ -68,7 +68,7 @@
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            <div id="modal-add-plan-body" class="modal-body px-0" style='min-height: 100px'>
+            <div id="modal-add-plan-body" class="modal-body px-0 pb-0" style='min-height: 100px'>
                 @include('plans::create')
                 @include('plans::edit')
             </div>
@@ -76,7 +76,7 @@
                 <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                     Fechar
                 </a>
-                <button id="btn-modal-plan" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">
+                <button id="btn-modal-plan" type="button" class="col-sm-6 col-md-3 btn-lg col-lg-3 btn btn-success" data-dismiss="modal">
                     <i class="material-icons btn-fix"> save </i> Salvar
                 </button>
             </div>
