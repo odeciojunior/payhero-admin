@@ -5,6 +5,7 @@ namespace Modules\Melhorenvio\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\MelhorenvioIntegration;
+use Modules\Core\Entities\Shipping;
 use Modules\Core\Services\MelhorenvioService;
 use Modules\Melhorenvio\Http\Requests\MelhorenvioStoreRequest;
 use Modules\Melhorenvio\Transformers\MelhorenvioIntegrationResource;
@@ -39,6 +40,7 @@ class MelhorenvioApiController extends Controller
             $data['user_id'] = auth()->user()->account_owner_id;
             $data['access_token'] = null;
             $data['refresh_token'] = null;
+            $data['expiration'] = null;
             $data['completed'] = false;
 
             $integration = MelhorenvioIntegration::updateOrCreate($data);
@@ -58,12 +60,26 @@ class MelhorenvioApiController extends Controller
 
             $id = hashids_decode($id);
 
+            $shippings = Shipping::withCount('sales')
+                ->where('melhorenvio_integration_id', $id)
+                ->get();
+
+            foreach ($shippings as $shipping) {
+                if ($shipping->sales_count) {
+                    $shipping->update([
+                        'status' => 0
+                    ]);
+                } else {
+                    $shipping->delete();
+                }
+            }
+
             MelhorenvioIntegration::find($id)->delete();
 
             return response()->json(['message' => 'Integração excluída com sucesso!']);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao continuar integração! Verifique os dados e tente novamente.'], 400);
+            return response()->json(['message' => 'Erro ao excluir integração!'], 400);
         }
     }
 

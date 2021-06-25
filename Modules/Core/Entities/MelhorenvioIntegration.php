@@ -4,6 +4,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Nwidart\Modules\Collection;
 
 /**
@@ -23,6 +24,8 @@ use Nwidart\Modules\Collection;
  */
 class MelhorenvioIntegration extends Model
 {
+
+    use SoftDeletes;
 
     protected $fillable = [
         'id',

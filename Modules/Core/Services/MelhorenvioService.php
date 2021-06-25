@@ -12,21 +12,11 @@ class MelhorenvioService
 
     private const BASE_URL_SANDBOX = "https://sandbox.melhorenvio.com.br";
 
-    // TODO: ajustar para usar somente os escopos necessários
     private const SCOPES = [
         'cart-read', // Visualização dos itens do carrinho
-        'cart-write', // Cadastro e edição dos itens do carrinhocompanies-read (Visualização das informações de empresas)
-        'companies-write', // Cadastro e edição das informações de empresascoupons-read (Visualização dos cupons cadastrados)
-        'coupons-write', // Cadastro de novos cuponsnotifications-read (Visualização das notificações)
-        'orders-read', // Visualização das etiquetasproducts-read (Visualização de produtos)
-        'products-write', // Cadastro e edição de produtospurchases-read (Visualização das compras)
-        'shipping-calculate', // Cotação de fretesshipping-cancel (Cancelamento de etiquetas)
-        'shipping-checkout', // Checkout para compra de fretes, utiliza saldo da carteirashipping-companies (Consulta de transaportadoras)
-        'shipping-generate', // Geração de novas etiquetasshipping-preview (Pré-visualização de etiquetas)
-        'shipping-print', // Impressão de etiquetasshipping-share (Compartilhamento de etiquetas)
-        'shipping-tracking', // Rastreio de fretesecommerce-shipping (Cotação e compra de fretes para sua loja)
-        'transactions-read', // Visualização das transações da carteirausers-read (Visualização das informações pessoais)
-        'users-write', // (Edição das informações pessoais)
+        'cart-write', // Cadastro e edição dos itens do carrinho
+        'orders-read', // Visualização das etiquetas
+        'shipping-calculate', // Cotação de fretes
     ];
 
     private string $baseUrl;
@@ -39,7 +29,7 @@ class MelhorenvioService
 
     private ?string $refreshToken;
 
-    private int $expiration;
+    private int $expiration = 0;
 
     private string $callbackUrl;
 
@@ -50,16 +40,15 @@ class MelhorenvioService
     public function __construct(MelhorenvioIntegration $integration = null)
     {
         if ($integration) {
-            $this->setIntegration($integration);
-            $this->setClientId($integration->client_id);
-            $this->setClientSecret($integration->client_secret);
-            $this->setAccessToken($integration->access_token);
-            $this->setRefreshToken($integration->refresh_token);
-            $this->setExpiration();
+            $this->setIntegration($integration)
+                ->setClientId($integration->client_id)
+                ->setClientSecret($integration->client_secret)
+                ->setAccessToken($integration->access_token)
+                ->setRefreshToken($integration->refresh_token);
         }
-        $this->setBaseUrl();
-        $this->setDefaultHeaders();
-        $this->setCallbackUrl();
+        $this->setBaseUrl()
+            ->setDefaultHeaders()
+            ->setCallbackUrl();
     }
 
     public function getIntegration(): MelhorenvioIntegration
@@ -67,9 +56,10 @@ class MelhorenvioService
         return $this->integration;
     }
 
-    private function setIntegration(MelhorenvioIntegration $integration): void
+    public function setIntegration(MelhorenvioIntegration $integration): MelhorenvioService
     {
         $this->integration = $integration;
+        return $this;
     }
 
     public function getClientId(): string
@@ -77,9 +67,10 @@ class MelhorenvioService
         return $this->clientId;
     }
 
-    private function setClientId(string $clientId): void
+    private function setClientId(string $clientId): MelhorenvioService
     {
         $this->clientId = $clientId;
+        return $this;
     }
 
     public function getClientSecret(): string
@@ -87,9 +78,10 @@ class MelhorenvioService
         return $this->clientSecret;
     }
 
-    private function setClientSecret(string $clientSecret): void
+    private function setClientSecret(string $clientSecret): MelhorenvioService
     {
         $this->clientSecret = $clientSecret;
+        return $this;
     }
 
     public function getAccessToken(): ?string
@@ -97,9 +89,18 @@ class MelhorenvioService
         return $this->accessToken;
     }
 
-    private function setAccessToken(string $accessToken = null): void
+    private function setAccessToken(string $accessToken = null): MelhorenvioService
     {
         $this->accessToken = $accessToken;
+
+        if ($this->getAccessToken()) {
+            $payloadBase64 = explode(".", $this->accessToken)[1];
+            $payloadJson = base64_decode($payloadBase64);
+            $payload = json_decode($payloadJson);
+            $this->setExpiration($payload->exp);
+        }
+
+        return $this;
     }
 
     public function getRefreshToken(): string
@@ -107,9 +108,10 @@ class MelhorenvioService
         return $this->refreshToken;
     }
 
-    private function setRefreshToken(string $refreshToken = null): void
+    private function setRefreshToken(string $refreshToken = null): MelhorenvioService
     {
         $this->refreshToken = $refreshToken;
+        return $this;
     }
 
     public function getExpiration(): int
@@ -117,16 +119,10 @@ class MelhorenvioService
         return $this->expiration;
     }
 
-    private function setExpiration(): void
+    private function setExpiration(int $expiration): MelhorenvioService
     {
-        if ($this->accessToken) {
-            $payloadBase64 = explode('.', $this->accessToken)[1];
-            $payloadJson = base64_decode($payloadBase64);
-            $payload = json_decode($payloadJson);
-            $this->expiration = $payload->exp;
-        } else {
-            $this->expiration = 0;
-        }
+        $this->expiration = $expiration;
+        return $this;
     }
 
     private function getBaseUrl(): string
@@ -134,11 +130,12 @@ class MelhorenvioService
         return $this->baseUrl;
     }
 
-    private function setBaseUrl(): void
+    private function setBaseUrl(): MelhorenvioService
     {
-        $this->baseUrl = env('MELHORENVIO_SANDBOX', false) === true
+        $this->baseUrl = env("MELHORENVIO_SANDBOX", false) === true
             ? self::BASE_URL_SANDBOX
             : self::BASE_URL;
+        return $this;
     }
 
     private function getDefaultHeaders(): array
@@ -146,11 +143,11 @@ class MelhorenvioService
         return $this->defaultHeaders;
     }
 
-    private function setDefaultHeaders(): void
+    private function setDefaultHeaders(): MelhorenvioService
     {
         $this->defaultHeaders = [
-            'User-Agent: Cloudfox Sirius (help@cloudfox.net)',
-            'Accept: application/json',
+            "User-Agent: Cloudfox Sirius (help@cloudfox.net)",
+            "Accept: application/json",
         ];
 
         if ($this->getExpiration() > 0 && $this->getExpiration() < time()) {
@@ -159,9 +156,11 @@ class MelhorenvioService
 
         $accessToken = $this->getAccessToken();
         if (!empty($accessToken)) {
-            $this->defaultHeaders[] = 'Content-Type: application/json';
-            $this->defaultHeaders[] = 'Authorization: Bearer ' . $accessToken;
+            $this->defaultHeaders[] = "Content-Type: application/json";
+            $this->defaultHeaders[] = "Authorization: Bearer " . $accessToken;
         }
+
+        return $this;
     }
 
     public function getCallbackUrl(): string
@@ -196,7 +195,7 @@ class MelhorenvioService
         return $this->getBaseUrl() . '/oauth/authorize?' . http_build_query($data);
     }
 
-    private function doRequest(string $uri = '/', array $data = null, string $method = 'GET', array $headers = [])
+    private function doRequest(string $uri = "/", array $data = null, string $method = "GET", array $headers = [])
     {
         $curl = curl_init();
 
@@ -204,7 +203,7 @@ class MelhorenvioService
 
         $method = strtoupper($method);
 
-        if ($method !== 'GET') {
+        if ($method !== "GET") {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
             if (!empty($data)) {
                 if ($this->getAccessToken()) {
@@ -233,7 +232,6 @@ class MelhorenvioService
 
             $this->setAccessToken($credentials->access_token);
             $this->setRefreshToken($credentials->refresh_token);
-            $this->setExpiration();
 
             $this->integration->access_token = $this->getAccessToken();
             $this->integration->refresh_token = $this->getRefreshToken();
@@ -264,14 +262,17 @@ class MelhorenvioService
     private function refreshToken(): bool
     {
         $data = [
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $this->getRefreshToken(),
-            'client_id' => $this->getClientId(),
-            'client_secret' => $this->getClientSecret(),
+            "grant_type" => "refresh_token",
+            "refresh_token" => $this->getRefreshToken(),
+            "client_id" => $this->getClientId(),
+            "client_secret" => $this->getClientSecret(),
         ];
 
-        $result = $this->doRequest('/oauth/token', $data, 'POST');
+        $result = $this->doRequest("/oauth/token", $data, "POST");
 
         return $this->updateCredentials($result);
     }
 }
+
+
+
