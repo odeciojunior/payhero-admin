@@ -535,7 +535,16 @@ class CompanyService
     {
         if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
             return $company->balance;
-        } elseif ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE || empty($liquidationType)) {
+        } elseif ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
+            return $company->transactions()
+                ->whereIn(
+                    'gateway_id',
+                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
+                )
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->sum('value');
+        } elseif (empty($liquidationType)) {
             $transactionsValue = $company->transactions()
                 ->whereIn(
                     'gateway_id',
