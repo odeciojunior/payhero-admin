@@ -320,6 +320,11 @@ $(document).ready(function () {
                     }
                 );
 
+                $("#go-to-pending-debt").on("click", function () {
+                    selectPendingDebt();
+                    $("#bt_filtro_statement").click();
+                });
+
                 updateWithdrawalsTable();
             },
         });
@@ -1559,10 +1564,10 @@ $(document).ready(function () {
     $("#bt_filtro_statement").click();
 });*/
 
-$("#go-to-pending-debt").on("click", function () {
-    selectPendingDebt();
-    $("#bt_filtro_statement").click();
-});
+// $("#go-to-pending-debt").on("click", function () {
+//     selectPendingDebt();
+//     $("#bt_filtro_statement").click();
+// });
 
 $(document).on("click", ".pending_debit_withdrawal_id", function () {
     selectPendingDebt();
