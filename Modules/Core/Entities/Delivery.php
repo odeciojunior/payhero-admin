@@ -14,7 +14,6 @@ use App\Traits\LogsActivity;
 /**
  * @property integer $id
  * @property integer $customer_id
- * @property int $carrier_id
  * @property string $receiver_name
  * @property string $zip_code
  * @property string $country
@@ -24,14 +23,12 @@ use App\Traits\LogsActivity;
  * @property string $street
  * @property string $number
  * @property string $complement
- * @property integer $id_order_carrier
- * @property string $status_carrier
- * @property string $tracking_code
  * @property string $type
+ * @property integer $melhorenvio_carrier_id
+ * @property string $melhorenvio_order_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Carrier $carrier
  * @property Sale[] $sales
  * @property Customer $customer
  */
@@ -52,7 +49,6 @@ class Delivery extends Model
      */
     protected $fillable = [
         'customer_id',
-        'carrier_id',
         'receiver_name',
         'zip_code',
         'country',
@@ -62,10 +58,9 @@ class Delivery extends Model
         'street',
         'number',
         'complement',
-        'id_order_carrier',
-        'status_carrier',
-        'tracking_code',
         'type',
+        'melhorenvio_carrier_id',
+        'melhorenvio_order_id',
         'created_at',
         'updated_at',
         'deleted_at',

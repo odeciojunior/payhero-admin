@@ -76,6 +76,8 @@ class ShippingResource extends JsonResource
             'status_translated' => Lang::get('definitions.enum.shipping.status.' . $this->present()->getStatus($this->status)),
             'pre_selected' => $this->pre_selected,
             'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->present()->getPreSelectedStatus($this->pre_selected)),
+            'receipt' => $this->receipt,
+            'own_hand' => $this->own_hand,
             'apply_on_plans' => $applyPlanArray,
             'not_apply_on_plans' => $notApplyPlanArray,
         ];

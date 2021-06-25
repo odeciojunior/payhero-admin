@@ -149,7 +149,7 @@ class MelhorenvioService
     private function setDefaultHeaders(): void
     {
         $this->defaultHeaders = [
-            'User-Agent: Cloudfox Sirius (jeancastro@cloudfox.net)',
+            'User-Agent: Cloudfox Sirius (help@cloudfox.net)',
             'Accept: application/json',
         ];
 
@@ -196,7 +196,7 @@ class MelhorenvioService
         return $this->getBaseUrl() . '/oauth/authorize?' . http_build_query($data);
     }
 
-    private function doRequest(string $uri = '/', array $data = null, string $method = 'GET', array $headers = []): \stdClass
+    private function doRequest(string $uri = '/', array $data = null, string $method = 'GET', array $headers = [])
     {
         $curl = curl_init();
 
@@ -227,7 +227,7 @@ class MelhorenvioService
         return json_decode($result);
     }
 
-    private function updateCredentials(\stdClass $credentials): bool
+    private function updateCredentials(object $credentials): bool
     {
         if (!empty($credentials->access_token) && !empty($credentials->refresh_token)) {
 

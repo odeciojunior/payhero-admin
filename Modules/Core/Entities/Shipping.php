@@ -22,6 +22,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $type
  * @property string $zip_code_origin
  * @property integer|null $melhorenvio_integration_id
+ * @property boolean $receipt
+ * @property boolean $own_hand
  * @property boolean $status
  * @property boolean $pre_selected
  * @property string $apply_on_plans
@@ -61,6 +63,8 @@ class Shipping extends Model
         'type_enum',
         'zip_code_origin',
         'melhorenvio_integration_id',
+        'receipt',
+        'own_hand',
         'status',
         'rule_value',
         'pre_selected',

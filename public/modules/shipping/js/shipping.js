@@ -52,21 +52,25 @@ $(document).ready(function () {
             $('.information-shipping-row').show();
             $('.value-shipping-row').show();
             $('.zip-code-origin-shipping-row').hide();
+            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'Frete grátis');
         } else if (selected === 'pac') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
+            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'PAC');
         } else if (selected === 'sedex') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
+            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'SEDEX');
         } else if (selected.includes('melhorenvio')) {
             $('.information-shipping-row').hide();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
+            $('.options-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'Melhor Envio');
         }
     });
@@ -199,13 +203,13 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-id').val(response.id_code);
 
                 switch (response.type) {
-                    case 'pac':
+                    case 'static':
                         $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 0).change();
                         break;
-                    case 'sedex':
+                    case 'pac':
                         $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 1).change();
                         break;
-                    case 'static':
+                    case 'sedex':
                         $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 2).change();
                         break;
                     case 'melhorenvio':
@@ -216,11 +220,12 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-description').val(response.name);
                 $('#modal-edit-shipping .shipping-info').val(response.information);
                 $('#modal-edit-shipping .shipping-value').val(response.value);
-                $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value);
-                $('#modal-edit-shipping .rule-shipping-value').trigger('input');
+                $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value).trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
                 $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
+                $('#modal-edit-shipping .shipping-receipt').prop('checked', !!response.receipt).change();
+                $('#modal-edit-shipping .shipping-ownhand').prop('checked', !!response.own_hand).change();
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 var applyOnPlansEl = $('#modal-edit-shipping .shipping-plans-edit')

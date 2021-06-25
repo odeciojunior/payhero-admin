@@ -20,7 +20,7 @@ $(() => {
                     for (let integration of resp.data){
                         let data =`<div class="col-sm-6 col-md-4 col-lg-3 integration-container">
                                        <div class="card shadow">
-                                           <svg class="card-img-top" width="255" height="255" data-jdenticon-value="${integration.name}"></svg>
+                                           <img class="card-img-top img-fluid w-full" src="/modules/global/img/melhorenvio-mono.png" alt=""/>
                                            ${ !integration.completed
                                                 ? `<div class="btn-authorize" data-id="${integration.id}"><b>INTEGRAÇÃO NÃO AUTORIZADA.</b> <br> Clique para autorizar </div>`
                                                 : ''
@@ -45,19 +45,6 @@ $(() => {
                     }
 
                     $('#no-integration-found').hide();
-
-                    jdenticon.configure({
-                        hues: [213],
-                        lightness: {
-                            color: [0.11, 0.53],
-                            grayscale: [0.11, 0.54]
-                        },
-                        saturation: {
-                            color: 0.92,
-                            grayscale: 1.00
-                        },
-                    });
-                    jdenticon();
                 }
                 else {
                     $('#no-integration-found').show();

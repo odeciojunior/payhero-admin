@@ -113,10 +113,10 @@ class ShippingApiController extends Controller
                         $hashid = str_replace('melhorenvio-', '', $shippingValidated['type']);
                         $melhorenvioId = hashids_decode($hashid);
                         $shippingValidated['melhorenvio_integration_id'] = $melhorenvioId;
-                        $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum('melhorenvio');
-                    } else {
-                        $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
+                        $shippingValidated['type'] = 'melhorenvio';
                     }
+
+                    $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
 
                     $applyPlanArray = $this->getDecodedPlanIds($shippingValidated['apply_on_plans']);
                     $shippingValidated['apply_on_plans'] = json_encode($applyPlanArray);
@@ -298,10 +298,10 @@ class ShippingApiController extends Controller
                     }
 
                     if (Str::contains($requestValidated['type'], 'melhorenvio')) {
-                        $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum('melhorenvio');
-                    } else {
-                        $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
+                        $requestValidated['type'] = 'melhorenvio';
                     }
+
+                    $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
 
                     $shippingUpdated = $shipping->update($requestValidated);
 

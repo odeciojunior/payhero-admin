@@ -103,7 +103,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/global/js/jdenticon.min.js') }}"></script>
         <script src="{{ asset('modules/melhorenvio/js/index.js?v='. uniqid()) }}"></script>
     @endpush
 

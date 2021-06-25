@@ -26,16 +26,41 @@
         </div>
     </div>
     <div class='row value-shipping-row' style="display:none">
-        <div class='form-group col-12'>
+        <div class='form-group col-12 mb-0'>
             <label for='value'>Valor</label>
             <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
         </div>
     </div>
     <div class='row zip-code-origin-shipping-row' style="display:block">
-        <div class='form-group col-12'>
+        <div class='form-group col-12 mb-0'>
             <label for='zip-code-origin'>CEP de origem</label>
             <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' data-mask="00000-000" value=''
                    placeholder='12345-678'>
+        </div>
+    </div>
+    <div class="row options-shipping-row mt-20" style="display:none">
+        <div class="col-6">
+            <div class="switch-holder">
+                <label for="receipt" class='mb-10'>Aviso de Recebimento (AR):</label>
+                <br>
+                <label class="switch">
+                    <input type="checkbox" name="receipt" class='check shipping-receipt' value='0'>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="switch-holder">
+                <label for="own_hand" class='mb-10'>Mão própria:
+                    <i class="material-icons font-size-16" data-toggle="tooltip"
+                       title="Serviço adicional dos Correios que faz com que apenas o destinatário possa receber o objeto.">help</i>
+                </label>
+                <br>
+                <label class="switch">
+                    <input type="checkbox" name="own_hand" class='check shipping-ownhand' value='0'>
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
     </div>
     <div class="row mt-20">
@@ -60,7 +85,7 @@
             </div>
         </div>
     </div>
-    <div class='row'>
+    <div class='row mt-20'>
         <div class='form-group col-12'>
             <label for='zip-code-origin'>Disponível para compras acima de: </label>
             <input name='rule_value' type='text' class='input-pad rule-shipping-value' value='0' placeholder=''>
