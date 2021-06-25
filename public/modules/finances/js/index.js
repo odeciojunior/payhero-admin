@@ -230,18 +230,17 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-        loadOnAnyEllipsis(".price", false, {
+        // loadOnTable("#withdrawals-table-data", "#transfersTable");
+        loadOnAny(".number", false, {
             styles: {
                 container: {
-                    minHeight: "30px",
-                    width: "30px",
+                    minHeight: "32px",
                     height: "auto",
-                    margin: "auto",
                 },
                 loader: {
-                    width: "30px",
-                    height: "30px",
-                    borderWidth: "6px",
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
                 },
             },
         });
@@ -259,11 +258,12 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadOnAnyEllipsis(".price", true);
+                loadOnAny(".number", true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAnyEllipsis(".price", true);
+                //loadOnAnyEllipsis(".price", true);
+                loadOnAny(".number", true);
                 $(".saldoPendente").html(
                     '<span style="color:#959595">R$ </span><span class="font-size-30 bold pending-balance">0,00</span>'
                 );
@@ -276,9 +276,10 @@ $(document).ready(function () {
                 $(".saldoBloqueado").html(
                     '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">0,00</span>'
                 );
-                // $(".saldoDebito").html(
-                //     '<span style="color:#959595">R$ </span><span class="font-size-30 bold debit-balance">0,00</span>'
-                // );
+                $(".saldoDebito").html(
+                    //'<span style="color:#959595">R$ </span><span class="font-size-30 bold debit-balance">0,00</span>'
+                    '<span style="color:#959595">R$ </span><a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>'
+                );
 
                 // Saldo bloqueado
                 $(".saldoBloqueado").html(

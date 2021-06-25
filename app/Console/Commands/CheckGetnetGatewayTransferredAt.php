@@ -53,12 +53,14 @@ class CheckGetnetGatewayTransferredAt extends Command
 
         $transactionsCount = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
+//            ->where('withdrawal_id', 12024)
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->count();
 
         $transactions = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
+//            ->where('withdrawal_id', 12024)
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->orderBy('id', 'desc');
