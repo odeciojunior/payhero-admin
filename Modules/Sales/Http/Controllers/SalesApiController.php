@@ -171,7 +171,7 @@ class SalesApiController extends Controller
                         $integration->token_user,
                         $integration->token_pass
                     );
-                    $service->verifyPermissions();
+                    
                     $service->cancelOrder($sale, 'Estorno');
                 }
             }
