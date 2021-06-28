@@ -32,10 +32,10 @@
     .btn-plus:disabled svg path{stroke:#333333;}
     .btn-plus:hover{background-color:transparent;}   
     .modal-content{border-radius: 12px;} 
-    .card img{border: 1px solid #C4C4C4;
+    #custom_products img{border: 1px solid #C4C4C4;
     border-radius: 8px;}
-    .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
-    .nav-tabs .nav-link {margin: 0px !important;}
+    #modal-add-plan-body .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
+    #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
     .edit-input{background-color: #F4F4F4;}
     .edit-input:focus{background-color: #FFFFFF;}
 </style>
