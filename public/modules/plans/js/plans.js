@@ -465,12 +465,10 @@ $(function () {
                                     
                                     $('.products_row_custom').append(`
                                         <div class='card container '>
-                                            <div class="row mb-3">
-                                                <div class="col-sm-2">
-                                                    <img src="${value.photo}" height="45px">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <h4 class="bold">Produto: ${value.product_name} </h4>
+                                            <div class="row mb-3">                                                
+                                                <div class="col-sm-9">
+                                                    <img src="${value.photo}" height="45px" class="float-left">
+                                                    <h4 class="bold float-left pl-10">Produto: ${value.product_name} </h4>
                                                 </div>
                                                 <div class="col-sm-3" align="right">
                                                     <div class="switch-holder d-inline">
@@ -535,7 +533,9 @@ $(function () {
                                         </div>
                                     `);                                    
 
-                                    $(document).on('click',`.type-${value.id}`,function(){                                        
+                                    $(`.type-${value.id}`).off('click');
+                                    $(`.type-${value.id}`).on('click', function () {
+                                    // $(document).on('click',`.type-${value.id}`,function(){                                        
                                         $(`.type-${value.id}`).removeClass('btn-active');                                        
                                         $(this).addClass('btn-active');
                                         $(`#type-custom-${value.id}`).val($(this).attr('typeCustom'));
@@ -554,20 +554,22 @@ $(function () {
                                                         ${inputType}
                                                     </button>
                                                 </div>
-                                                <div class="col-10">
+                                                <div class="col-9">
                                                     <input type="text" name="label[${value.id}][]" class="form-control input-pad fc-${value.id} edit-input"  
                                                     placeholder="Nome para personalização" value="${valueC.label}" index="${idxProducts[value.id]}">
                                                 </div>
-                                                <div class="form-group col-1 px-0">
+                                                <div class="form-group col-2">
                                                     <button type="button" id="btn-trash-${idxProducts[value.id]}"
-                                                    class="remove-custom-product btn btn-outline btnDelete form-control fc-${value.id} 
+                                                    class="remove-custom-product btn btn-outline btnDelete fc-${value.id} 
                                                     d-flex justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
                                                 </div>
                                             </div>                                            
                                         `);
                                     });
 
-                                    $(document).on('click',`#add-list-custom-product-${value.id}`,function(){
+                                    $(`#add-list-custom-product-${value.id}`).off('click');
+                                    $(`#add-list-custom-product-${value.id}`).on('click', function () {
+                                    //$(document).on('click',`#add-list-custom-product-${value.id}`,function(){
                                         idxProducts[value.id]++;
                                         var proType = $(`#type-custom-${value.id}`).val();
                                         var proTitle = $(`#pro-title-${value.id}`).val();
@@ -583,13 +585,13 @@ $(function () {
                                                             ${inputType}
                                                         </button>
                                                     </div>
-                                                    <div class="col-10">
+                                                    <div class="col-9">
                                                         <input type="text" name="label[${value.id}][]" class="form-control input-pad fc-${value.id} edit-input"  
                                                         placeholder="Nome para personalização" value="${proTitle}" index="${idxProducts[value.id]}">
                                                     </div>
-                                                    <div class="form-group col-1 px-0">
+                                                    <div class="form-group col-2">
                                                         <button type="button" id="btn-trash-${idxProducts[value.id]}"
-                                                        class="remove-custom-product btn btn-outline btnDelete form-control d-flex fc-${value.id} 
+                                                        class="remove-custom-product btn btn-outline btnDelete d-flex fc-${value.id} 
                                                         justify-content-around align-items-center align-self-center flex-row"><span class="o-bin-1"></span></button>
                                                     </div>
                                                 </div>
@@ -606,24 +608,27 @@ $(function () {
                                 if(allow_change_in_block){
                                     $('#custom_products_checkbox').html('');
                                     $('#custom_products_checkbox').append(`
-                                    <div class="switch-holder d-inline">
-                                        <label class="switch">
-                                            <input type="checkbox" class="allow_change_in_block" name="allow_change_in_block" value="true">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="switch-holder d-inline">
+                                            <label class="switch">
+                                                <input type="checkbox" class="allow_change_in_block" name="allow_change_in_block" value="true">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
                                         <span>Aplicar personalização nas outras variantes deste produto</span>
+                                    </div>
                                     `);
                                 }
                                 
                                 $('.active_custom').off('change');
-                                $('.active_custom').on('change', function () {
-                                
+                                $('.active_custom').on('change', function () {                                
                                     var productId= $(this).attr('productId');                                                                        
                                     enableDisabledCustomProduct(this.checked,productId);
                                 });
 
-                                $(document).on('click', '.edit-input', function () {                                
+                                $('.edit-input').off('click');
+                                $('.edit-input').on('click', function () {   
+                                //$(document).on('click', '.edit-input', function () {                                
                                     console.log('editando');
                                     var index = $(this).attr('index');
                                     $(`#btn-type-${index}`).addClass('btn-edit');                                    
@@ -644,7 +649,6 @@ $(function () {
                                     .html(`<span class="o-bin-1"></span>`);                                    
                                 });
 
-                                
 
                             } else {
                                 $('.products_row_edit').append(`
@@ -800,6 +804,7 @@ $(function () {
                                 bindModalKeys();
                             });
                             
+                            
                         }
                     });
                 });
@@ -845,6 +850,7 @@ $(function () {
                         });
                     });
                 });
+                
             }
         });
 
@@ -1187,10 +1193,10 @@ $(function () {
     });
 
     /**
-                             * Update Plan
-                             */
-
-     $(document).on('click','.btn-update-plan',function(){
+     * Update Plan
+     */
+     
+    $(document).on('click','.btn-update-plan',function(){
          var hasNoValue;
          $('.products_amount').each(function () {
              if ($(this).val() == '' || $(this).val() == 0) {
@@ -1239,51 +1245,52 @@ $(function () {
          });
      });
 
-    /**
-     * Update custom Config
-     */
+     /**
+      * Update custom Config
+      */     
      $(document).on('click','.btn-update-config-custom',function(){
-        console.log('atualizando config');
-        var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));        
-        formDataCP.append('plan',$('#plan_id').val());
-        console.log(formDataCP);
+         console.log('atualizando config');
+         var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));        
+         formDataCP.append('plan',$('#plan_id').val());
+         console.log(formDataCP);
 
-        //loadingOnScreen();
+         //loadingOnScreen();
 
-        $.ajax({
-            method: "POST",                                    
-            url: '/api/plans/config-custom-product',
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: formDataCP,
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (_error4) {
-                function error(_x4) {
-                    return _error4.apply(this, arguments);
-                }
+         $.ajax({
+             method: "POST",                                    
+             url: '/api/plans/config-custom-product',
+             dataType: "json",
+             headers: {
+                 'Authorization': $('meta[name="access-token"]').attr('content'),
+                 'Accept': 'application/json',
+             },
+             data: formDataCP,
+             processData: false,
+             contentType: false,
+             cache: false,
+             error: function (_error4) {
+                 function error(_x4) {
+                     return _error4.apply(this, arguments);
+                 }
 
-                error.toString = function () {
-                    return _error4.toString();
-                };
+                 error.toString = function () {
+                     return _error4.toString();
+                 };
 
-                return error;
-            }(function (response) {
-                //loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                 return error;
+             }(function (response) {
+                 //loadingOnScreenRemove();
+                 errorAjaxResponse(response);
 
-                //index(pageCurrent);
-            }),
-            success: function success(data) {
-                //loadingOnScreenRemove();
-                alertCustom("success", "Configurações do Plano atualizado com sucesso");
-                //index(pageCurrent);
-            }
-        });
+                 //index(pageCurrent);
+             }),
+             success: function success(data) {
+                 //loadingOnScreenRemove();
+                 alertCustom("success", "Configurações do Plano atualizado com sucesso");
+                 //index(pageCurrent);
+             }
+         });
 
-    });
+     });
+
 });
