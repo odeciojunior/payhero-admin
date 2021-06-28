@@ -6,6 +6,7 @@ use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -117,5 +118,10 @@ class Withdrawal extends Model
     public function pendingDebts(): BelongsToMany
     {
         return $this->belongsToMany(PendingDebt::class, 'pending_debt_withdrawals');
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }
