@@ -54,7 +54,6 @@ class BenefitsService
         // User only has cashback if it has full installment tax (at this time 2.99%)
         // and account score greater than or equal 6
         if ($fullInstallmentTax && $user->account_score >= 6) {
-
             if ($user->level >= 3) {
                 $user->installment_cashback = 1;
                 $cashback1->enabled = 0;
@@ -68,7 +67,6 @@ class BenefitsService
                 $cashback1->enabled = 0;
                 $cashback2->enabled = 0;
             }
-
         } else {
             $user->installment_cashback = 0;
             $cashback1->enabled = 0;
@@ -91,13 +89,34 @@ class BenefitsService
     {
         $benefits = $user->benefits;
 
-        $getFaster = !!$benefits->where('name', 'get_faster')
-            ->where('enabled', 1)
-            ->count();
+        $getFasterBenefit = $benefits->where('name', 'get_faster')->first();
+        if (!$getFasterBenefit) {
+            return;
+        }
 
-        if ($user->get_faster != $getFaster) {
-            $user->get_faster = $getFaster;
-            $user->save();
+        $getFasterEnabled = false;
+        if ($user->account_score >= 6) {
+            $getFasterEnabled = true;
+        }
+
+        $benefitChanged = $user->get_faster != $getFasterEnabled;
+
+        $user->get_faster = $getFasterEnabled;
+        $user->save();
+        $getFasterBenefit->enabled = $getFasterEnabled;
+        $getFasterBenefit->save();
+
+        if ($benefitChanged) {
+            activity()->on($user)->tap(
+                function (Activity $activity) use ($user) {
+                    $activity->log_name = 'benefits_change';
+                    $activity->subject_id = $user->id;
+                }
+            )->log(
+                'Receba mais Rápido '
+                . ($getFasterEnabled ? '' : 'des') . 'ativado por nota da conta '
+                . ($getFasterEnabled ? 'maior ou igual a' : 'menor que') . ' 6'
+            );
         }
     }
 

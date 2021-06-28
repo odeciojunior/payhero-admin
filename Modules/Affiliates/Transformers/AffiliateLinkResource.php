@@ -33,7 +33,13 @@ class AffiliateLinkResource extends JsonResource
 
         if (!empty($this->affiliate->project->domains[0]->name)) {
             $linkPlan      = (!empty($this->plan->code)) ? 'https://checkout.' . $this->affiliate->project->domains[0]->name . '/' . $this->plan->code : null;
-            $linkAffiliate = (!empty($this->parameter)) ? 'https://affiliate.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : null;
+
+            if (!foxutils()->isProduction()){
+                $linkAffiliate = (!empty($this->parameter)) ? getenv('CHECKOUT_URL') .'/affiliate/' . $this->parameter : null;
+            }else{
+                $linkAffiliate = (!empty($this->parameter)) ? 'https://affiliate.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : null;
+            }
+
         }
 
         return [

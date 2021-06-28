@@ -807,12 +807,12 @@
                 </div>
 
                 <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
-                    <div class='row justify-content-center mx-20 mt-30'>
+                    <div class='row justify-left mx-20 mt-30'>
 
-                        <div class='col-md-4 pt-20'>
+                        <div class='col-md-4 pt-20 mb-40'>
                             <a id="product" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration">
                                 <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Sincronizar produtos com WooCommerce </span>
+                                <span class="gray"> Sincronizar dados com WooCommerce </span>
                             </a>
                         </div>
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Entities\Gateway;
@@ -51,25 +52,28 @@ class CheckGetnetGatewayTransferredAt extends Command
         $getnetService = new GetnetBackOfficeService();
 
         $transactionsCount = $transactionModel->with('sale')
-            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
             ->whereNotNull('withdrawal_id')
+//            ->where('withdrawal_id', 12024)
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->count();
 
         $transactions = $transactionModel->with('sale')
-            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
             ->whereNotNull('withdrawal_id')
+//            ->where('withdrawal_id', 12024)
             ->whereNull('gateway_transferred_at')
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->orderBy('id', 'desc');
 
-        $transactions->chunk(50, function ($transactions) use ($getnetService, $transactionsCount) {
+        $transactions->chunk(200, function ($transactions) use ($getnetService, $transactionsCount) {
+            $i = 0;
             foreach ($transactions as $transaction) {
+                    if ( $i > 5) {
+                        sleep(1);
+                        $i = 0;
+                    }
                 try {
-                    $this->line($transactionsCount . ' Atualizando a transação: ' . $transaction->id );
+                    $this->line($transactionsCount . ' Atualizando a transação: ' . $transaction->id . "Count: ". $i );
 
                     if (empty($transaction->company_id)) {
                         continue;
@@ -77,7 +81,7 @@ class CheckGetnetGatewayTransferredAt extends Command
                     $sale = $transaction->sale;
                     $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
 
-                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
+                    if ($transaction->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
 
                         if($transaction->gateway_transferred === 1) {
                             $transaction->update([
@@ -85,8 +89,9 @@ class CheckGetnetGatewayTransferredAt extends Command
                             ]);
                         }
 
-                    } else {
-
+                    }
+                    else {
+                        $i ++;
                         if (FoxUtils::isProduction()) {
                             $subsellerId = $transaction->company->subseller_getnet_id;
                         } else {
@@ -107,10 +112,10 @@ class CheckGetnetGatewayTransferredAt extends Command
                             $date = Carbon::parse($result->list_transactions[0]->details[0]->subseller_rate_confirm_date);
 
 
-                                $transaction->update([
-                                    'gateway_transferred_at' => $date, //date transferred
-                                    'gateway_transferred' => 1
-                                ]);
+                            $transaction->update([
+                                 'gateway_transferred_at' => $date, //date transferred
+                                 'gateway_transferred' => 1
+                             ]);
 
 
                         }

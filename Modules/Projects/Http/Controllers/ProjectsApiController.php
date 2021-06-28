@@ -226,7 +226,8 @@ class ProjectsApiController extends Controller
     public function edit($id): JsonResponse
     {
         try {
-            $user = auth()->user()->load('companies');
+
+            $user= User::with('companies')->find(auth()->user()->account_owner_id);
 
             $project = Project::with(
                 [
