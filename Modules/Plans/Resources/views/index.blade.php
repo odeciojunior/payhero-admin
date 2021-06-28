@@ -122,6 +122,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal padrão para excluir -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-plan" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
