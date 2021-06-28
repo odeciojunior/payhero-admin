@@ -1028,7 +1028,7 @@ $(() => {
                         </div>
                     </div>`;
             if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
-                console.log('passou');
+                // console.log('passou');
                 div+= `<!-- Customer additional information -->
                     <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
                         <div class="panel panel-custom-product">
@@ -1053,7 +1053,7 @@ $(() => {
                                         
                                         if(typeof custom.type_enum != 'undefined'){
                                             if(custom.type_enum!='Text'){
-                                                file_name = custom.value.substr(-20);                                            
+                                                file_name = custom.file_name.substr(-20);                                            
                                             }
                                             switch(custom.type_enum){
                                                 case 'Text':
@@ -1079,7 +1079,7 @@ $(() => {
                                                         <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">                                                        
-                                                        <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Arquivo" target="_blank">
+                                                        <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Arquivo" target="_blank">
                                                             <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
                                                         </a>
                                                     </div>`;                                                    
@@ -1093,7 +1093,7 @@ $(() => {
                                                         <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">                                                        
-                                                        <a href="${custom.value}" style="cursor: pointer;" download title="Baixar Imagem"  target="_blank">
+                                                        <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Imagem"  target="_blank">
                                                             <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
                                                         </a>
                                                     </div>`;
