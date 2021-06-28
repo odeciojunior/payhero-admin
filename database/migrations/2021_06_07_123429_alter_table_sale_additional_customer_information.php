@@ -13,9 +13,9 @@ class AlterTableSaleAdditionalCustomerInformation extends Migration
      */
     public function up()
     {        
-        DB::statement("ALTER TABLE `sale_additional_customer_informations` 
-        CHANGE COLUMN `text` `type_enum` ENUM('File', 'Image', 'Text') NULL DEFAULT 'Text' AFTER `product_id`,
-        CHANGE COLUMN `file` `value` VARCHAR(250) NULL DEFAULT NULL ;");
+        // DB::statement("ALTER TABLE `sale_additional_customer_informations` 
+        // CHANGE COLUMN `text` `type_enum` ENUM('File', 'Image', 'Text') NULL DEFAULT 'Text' AFTER `product_id`,
+        // CHANGE COLUMN `file` `value` VARCHAR(250) NULL DEFAULT NULL ;");
 
     }
 
