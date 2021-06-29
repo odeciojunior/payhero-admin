@@ -75,11 +75,11 @@ class SendgridService
      * @param $domain
      * @return bool
      */
-    public function deleteZone($domain)
+    public function deleteZone($domain, $retryOnLimit = false)
     {
         $zone = $this->getZone($domain);
         if (!empty($zone)) {
-            $response = $this->sendgrid()->client->whitelabel()->domains()->_($zone->id)->delete();
+            $response = $this->sendgrid()->client->whitelabel()->domains()->_($zone->id)->delete(null, null, null, $retryOnLimit);
             if ($response->statusCode() == 204) {
                 return true;
             } else {
@@ -93,9 +93,13 @@ class SendgridService
     /**
      * @return mixed
      */
-    public function getZones()
+    public function getZones($limit = 50, $offset = 0, $retryOnLimit = false)
     {
-        $response = $this->sendgrid()->client->whitelabel()->domains()->get();
+        $queryParams = [
+            'limit' => $limit,
+            'offset' => $offset
+        ];
+        $response = $this->sendgrid()->client->whitelabel()->domains()->get(null, $queryParams, null, $retryOnLimit);
 
         return json_decode($response->body());
     }
