@@ -177,8 +177,10 @@ $(function () {
 
     $("#modal-edit-pixel input[type=radio]").change(function () {
         if (this.value === 'api') {
+            $(".url_facebook_api_div_edit").show();
             $("#facebook-token-api-edit").prop('readonly', false).val(pixelEdit.facebook_token);
         } else {
+            $(".url_facebook_api_div_edit").hide();
             $("#facebook-token-api-edit").prop('readonly', true).val();
         }
     });
@@ -198,7 +200,7 @@ $(function () {
         const inputPlatformEdit = $("#modal-edit-pixel .platform-edit").val();
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
-        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-value-edit").val();
+        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -216,8 +218,6 @@ $(function () {
             return false;
         }
 
-        loadingOnScreen();
-        let pixel = $('#modal-edit-pixel .pixel-id').val();
         $.ajax({
             method: "PUT",
             url: `/api/project/${projectId}/pixels/${pixelEdit.id_code}`,
@@ -234,19 +234,18 @@ $(function () {
                 checkout: $("#modal-edit-pixel .checkout-edit").is(':checked'),
                 purchase_card: $("#modal-edit-pixel .purchase-card-edit").is(':checked'),
                 purchase_boleto: $("#modal-edit-pixel .purchase-boleto-edit").is(':checked'),
+                purchase_pix: $("#modal-edit-pixel .purchase-pix-edit").is(':checked'),
                 edit_pixel_plans: plansApply,
                 purchase_event_name: inputPurchaseEventName,
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val()
             },
             error: function (response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
-
             },
             success: function success() {
-                loadingOnScreenRemove();
                 $("#modal-edit-pixel").modal('hide');
                 alertCustom("success", "Pixel atualizado com sucesso");
                 atualizarPixel(currentPage);
@@ -270,7 +269,8 @@ $(function () {
 
         $(".description-edit").val(pixel.name);
         codeEditInput.val(pixel.code);
-        $(".percentage-value-edit").val(pixel.value_percentage_purchase_boleto);
+
+        $(".percentage-boleto-value-edit").val(pixel.value_percentage_purchase_boleto);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -292,6 +292,7 @@ $(function () {
         isChecked($(".checkout-edit"), pixel.checkout);
         isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
         isChecked($(".purchase-card-edit"), pixel.purchase_card);
+        isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
 
         // Manipulation Modal pixel
         changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"));
@@ -318,8 +319,13 @@ $(function () {
     function pixelFacebook(pixel) {
         if (pixel.is_api) {
             $("#facebook-token-api-edit").prop('readonly', false).val(pixel.facebook_token);
-            $(".facebook-api-edit").prop('checked', 'checked')
+            $(".facebook-api-edit").prop('checked', 'checked');
+            $(".url_facebook_domain_edit").val(pixel.url_facebook_domain);
+            $(".url_facebook_api_div_edit").show();
+
         } else {
+            $(".url_facebook_domain_edit").val('');
+            $(".url_facebook_api_div_edit").hide();
             $(".facebook-api-default-edit").prop('checked', 'checked')
             $("#facebook-token-api-edit").prop('readonly', true).val('');
         }
@@ -410,18 +416,28 @@ $(function () {
         $("#platform").val('').val(platform);
         $(".img-logo").attr('src', this.src);
 
-        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div").hide();
+        $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
 
         changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"));
 
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
+            if ($("input[type=radio]").val() == 'api') {
+                $(".url_facebook_api_div").show();
+                $("#facebook-token-api").attr('readonly', false)
+            } else if ($("input[type=radio]").val() == 'default') {
+                $(".select-default-facebook").click();
+                $("#facebook-token-api").attr('readonly', true)
+            }
+
         } else if (['taboola', 'outbrain'].includes(platform)) {
             $(".purchase-event-name-div").show();
         }
 
         $("input[type=radio]").change(function () {
+            $(".url_facebook_api_div").hide();
             if (this.value === 'api') {
+                $(".url_facebook_api_div").show();
                 $("#facebook-token-api").attr('readonly', false)
             } else {
                 $("#facebook-token-api").attr('readonly', true)
@@ -435,9 +451,10 @@ $(function () {
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
         formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
-        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").is(':checked'));
-        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").is(':checked'));
-        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").is(':checked'));
+        formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
+        formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
+        formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
+        formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
         formData.append('affiliate_id', affiliateId);
 
         if (!validateDataPixelForm({
@@ -471,13 +488,9 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function (response) {
                 loadingOnScreenRemove();
-                if (response.success) {
-                    $("#modal-create-pixel").modal('hide');
-                    alertCustom("success", response.message);
-                    atualizarPixel();
-                } else {
-                    alertCustom("error", response.message);
-                }
+                $("#modal-create-pixel").modal('hide');
+                alertCustom("success", response.message);
+                atualizarPixel();
             }
         });
     });
@@ -504,16 +517,7 @@ $(function () {
             return false;
         }
 
-        if (formData.value_percentage_purchase_boleto.length < 1) {
-            alertCustom('error', 'O campo % Valor Boleto é obrigatório')
-            return false;
-        }
-        if (isNaN(parseInt(formData.value_percentage_purchase_boleto))) {
-            alertCustom('error', 'O campo % Valor Boleto permite apenas numeros');
-            return false;
-        }
-
-        if (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10) {
+        if (formData.value_percentage_purchase_boleto.length > 0 && (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10)) {
             alertCustom('error', 'O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100')
             return false;
         }

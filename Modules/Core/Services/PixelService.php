@@ -132,6 +132,10 @@ class PixelService
             $dataValidated['is_api'] = false;
         }
 
+        if (empty($dataValidated['value_percentage_purchase_boleto'])) {
+            $dataValidated['value_percentage_purchase_boleto'] = 100;
+        }
+
         $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated['edit_pixel_plans']));
 
         $pixel->update(
