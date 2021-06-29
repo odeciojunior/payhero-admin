@@ -32,6 +32,7 @@ use Automattic\WooCommerce\Client;
 use Modules\Core\Entities\WooCommerceIntegration;
 use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ImportWooCommerceOrders;
+use App\Jobs\ProcessWooCommerceOrderNotes;
 
 class WooCommerceService
 {
@@ -276,23 +277,26 @@ class WooCommerceService
 
             $planExists = $planModel->where('shopify_variant_id', $shopifyVariantId)->first();
             
-            if($planExists->name != $_product->name){
-                $planExists->name = $_product->name;
-                $newValues = true;
-            }
-            
-            if($planExists->description != mb_substr($description, 0, 100) ){
-                $planExists->description = mb_substr($description, 0, 100);
-                $newValues = true;
-            }
-            
-            if($planExists->price != $_product->price){
-                $planExists->price = $_product->price;
-                $newValues = true;
-            }
-            
-            if($newValues == true){
-                $planExists->save();
+            if(!empty($planExists)){
+
+                if($planExists->name != $_product->name){
+                    $planExists->name = $_product->name;
+                    $newValues = true;
+                }
+                
+                if($planExists->description != mb_substr($description, 0, 100) ){
+                    $planExists->description = mb_substr($description, 0, 100);
+                    $newValues = true;
+                }
+                
+                if($planExists->price != $_product->price){
+                    $planExists->price = $_product->price;
+                    $newValues = true;
+                }
+                
+                if($newValues == true){
+                    $planExists->save();
+                }
             }
 
             return false;
@@ -493,16 +497,19 @@ class WooCommerceService
     {
         
         foreach($orders as $order){
+
+            $data = array();
+            foreach($order->line_items as $item){
+                $line_items[] = [
+                    'sku'=> $item->sku,
+                    'name'=> $item->name,
+                    'quantity'=> $item->quantity,
+                ];
+            }
+
             if(!empty($order->correios_tracking_code)){
                 
-                $data = array();
-                foreach($order->line_items as $item){
-                    $line_items[] = [
-                        'sku'=> $item->sku,
-                        'name'=> $item->name,
-                        'quantity'=> $item->quantity,
-                    ];
-                }
+                
                 $data = [
                     'id'=>$order->id,
                     'correios_tracking_code' => $order->correios_tracking_code,
@@ -511,6 +518,16 @@ class WooCommerceService
                 
                 ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
                 
+            }else{
+
+                // Check the notes for aliexpress codes
+                $data = [
+                    'id'=>$order->id,
+                    'correios_tracking_code' => '?',
+                    'line_items' => $line_items
+                ];
+                ProcessWooCommerceOrderNotes::dispatch($projectId, $data);
+
             }
         }
         return;
