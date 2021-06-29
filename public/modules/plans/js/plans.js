@@ -311,7 +311,7 @@ $(function () {
                  */
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
-                    console.log('details-plan');
+                    
                     var plan = $(this).attr('plan');
                     // var data = {planId: plan, project: projectId};
 
@@ -378,7 +378,7 @@ $(function () {
                  */
                 $(".edit-plan").off('click');
                 $(".edit-plan").on('click', function () {
-                    console.log('click edit-plan '+$(this).attr('plan'));
+                    
                     loadOnModal('#modal-add-plan-body');
                     $("#modal-add-plan-body").html("");
                     
