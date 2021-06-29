@@ -31,8 +31,8 @@ $(function () {
         $('#name').val('');
         $('#price').val('');
         $('#description').val('');
-        $("#form-register-plan").html('');
-        $("#form-register-plan").html(form_register_plan);
+        $("#modal-add-plan-body").html('');
+        $("#modal-add-plan-body").html(form_register_plan);
     }
 
     function create() {
@@ -375,8 +375,8 @@ $(function () {
                 $(".edit-plan").off('click');
                 $(".edit-plan").on('click', function () {
                     console.log('click edit-plan '+$(this).attr('plan'));
-                    loadOnModal('#modal-add-body');
-                    $("#modal-add-body").html("");
+                    loadOnModal('#modal-add-plan-body');
+                    $("#modal-add-plan-body").html("");
                     
                     var plan = $(this).attr('plan');                    
                     
@@ -393,8 +393,9 @@ $(function () {
                         error: function error() {
                             errorAjaxResponse(response);
                         }, success: function success(response) {
-                            $("#form-update-plan").html('');
-                            $("#form-update-plan").html(form_update_plan);
+                            $("#modal-add-plan-body").html(form_update_plan);
+                            $("#form-update-plan").css('display','block');
+                            
 
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
