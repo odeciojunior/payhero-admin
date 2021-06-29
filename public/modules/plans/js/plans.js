@@ -171,6 +171,7 @@ $(function () {
      * Add new Plan
      */
     $("#add-plan").on('click', function () {
+        console.log('add-plan');
         $('#modal_add_plan').attr('data-backdrop', 'static');
         create();
         $('.btn-close-add-plan').on('click', function () {
@@ -306,6 +307,7 @@ $(function () {
                  */
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
+                    console.log('details-plan');
                     var plan = $(this).attr('plan');
                     // var data = {planId: plan, project: projectId};
 
@@ -372,6 +374,7 @@ $(function () {
                  */
                 $(".edit-plan").unbind('click');
                 $(".edit-plan").on('click', function () {
+                    console.log('click edit-plan');
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     
@@ -1197,6 +1200,7 @@ $(function () {
      */
      
     $(document).on('click','.btn-update-plan',function(){
+        console.log('update plan');
          var hasNoValue;
          $('.products_amount').each(function () {
              if ($(this).val() == '' || $(this).val() == 0) {
@@ -1249,7 +1253,7 @@ $(function () {
       * Update custom Config
       */     
      $(document).on('click','.btn-update-config-custom',function(){
-         console.log('atualizando config');
+         console.log('update custom config');
          var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));        
          formDataCP.append('plan',$('#plan_id').val());
          console.log(formDataCP);
