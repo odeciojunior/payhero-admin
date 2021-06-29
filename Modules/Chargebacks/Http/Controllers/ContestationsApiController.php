@@ -41,7 +41,6 @@ class ContestationsApiController extends Controller
 
     public function getContestations(Request $request)
     {
-
         try {
             $contestationService = new ContestationService();
             $request->request->add(['from_contestation' => true]);

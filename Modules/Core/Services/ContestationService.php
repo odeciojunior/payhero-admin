@@ -76,19 +76,14 @@ class ContestationService
             return $query->where('sale_contestations.sale_id', $sale_id[0]);
         });
 
-        $contestations->when(request('status'), function ($query, $status) {
-            if (in_array($status, [1, 2, 3, 4, 5, 6, 7, 10, 20, 21, 22, 24, 99])) {
-                if ($status == 7) {
-                    return $query->whereIn('sales.status', [7, 22]);
-                } else {
-                    return $query->where('sales.status', $status);
-                }
-            } else {
-                if ($status == 'chargeback_recovered')
-                    return $query->where('sales.is_chargeback_recovered', true)->where('sales.status', 1);
-                if ($status == '')
-                    return $query->where('sales.status', null);
-            }
+        $contestations->when(request('contestation_situation'), function ($query, $situation) {
+            $situationStatus = [
+                '0' => null,
+                '1' => SaleContestation::STATUS_WIN,
+                '2' => SaleContestation::STATUS_LOST
+            ];
+
+            return $query->where('sale_contestations.status', $situationStatus[$situation]);
         });
 
         $contestations->when(request('is_contested'), function ($query, $val) {

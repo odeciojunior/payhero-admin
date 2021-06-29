@@ -130,23 +130,11 @@
                                 </div>
 
                                 <div class="col-sm-12 col-md mt-10">
-                                    <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control select-pad">
-                                        <option value="0">Todos status</option>
-                                        <option value="1">Aprovado</option>
-                                        <option value="2">Aguardando pagamento</option>
-                                        <option value="3">Recusado</option>
-                                        <option value="4">ChargeBack</option>
-                                        {{--                                <option value="6">Em análise</option>--}}
-                                        <option value="7">Estornado</option>
-                                        <option value="5">Cancelada</option>
-                                        <option value="10">BlackList</option>
-                                        <option value="20">Revisão Antifraude</option>
-                                        <option value="21">Cancelada antifraude</option>
-                                        <option value="chargeback_recovered">Chargeback recuperado</option>
-                                        <option value="99">Erro Sistema</option>
-                                        <option value='24'>Em Disputa</option>
-                                        <option value='6'>Em Processo</option>
+                                    <label for="contestation_situation">Situação</label>
+                                    <select name='contestation_situation' id="contestation_situation" class="form-control select-pad">
+                                        <option value="0">Ambos</option>
+                                        <option value="1">Ganha</option>
+                                        <option value="2">Perdida</option>
                                     </select>
                                 </div>
 

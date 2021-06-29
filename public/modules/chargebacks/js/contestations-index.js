@@ -247,7 +247,7 @@ $(document).ready(function () {
             order_by_expiration_date: $("#expiration_date").is(":checked")
                 ? 1
                 : 0,
-            status: $("#status").val() ?? "",
+            contestation_situation: $("#contestation_situation").val() ?? "",
             is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
         };
