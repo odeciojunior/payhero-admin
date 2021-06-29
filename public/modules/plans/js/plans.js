@@ -4,7 +4,7 @@ $(function () {
         1: "success",
     }
     var projectId = $(window.location.pathname.split('/')).get(-1);
-    var form_register_plan = $("#form-register-plan").html();
+    var form_register_plan = $("#form-register-plan").clone();
     var form_update_plan = $("#form-update-plan").html();
 
     var card_div_edit;
@@ -36,6 +36,9 @@ $(function () {
     }
 
     function create() {
+        $("#modal-add-plan-body").html(form_register_plan);
+        $("#btn-modal-plan").removeClass('btn-update-plan');
+        $("#btn-modal-plan").removeClass('btn-update-config-custom');
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -123,8 +126,9 @@ $(function () {
                     /**
                      * Save new Plan
                      */
-                    $(".btn-save-plan").unbind('click');
+                    $(".btn-save-plan").off('click');
                     $(".btn-save-plan").on('click', function () {
+                        console.log('btn-save-plan');
                         var hasNoValue;
                         $('.products_amount_create').each(function () {
                             if ($(this).val() == '' || $(this).val() == 0) {
