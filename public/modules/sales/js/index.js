@@ -421,7 +421,7 @@ $(document).ready(function () {
                                         start_date[1]
                                     +" </small>";
                         }
-                        
+
                         let end_date='';
                         if (value.end_date) {
                             end_date=value.end_date.split(/\s/g);//data final
@@ -431,7 +431,7 @@ $(document).ready(function () {
                                         end_date[1]
                                     +" </small>";
                         }
-                        
+
                         let tableClass = "";
                         if (
                             value.has_shopify_integration != null &&
@@ -517,7 +517,7 @@ $(document).ready(function () {
                                         value.user_sale_type == "producer"
                                             ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
                                             : ""
-                                    } 
+                                    }
                                     <br> <small class="gray font-size-12">${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${
                                         value.client
