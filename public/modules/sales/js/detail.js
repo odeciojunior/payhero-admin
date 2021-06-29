@@ -737,11 +737,11 @@ $(() => {
             sale.status == 1 &&
             sale.userPermissionRefunded
         ) {
-            $("#div_refund_billet").html(
+            /*$("#div_refund_billet").html(
                 '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
                     sale.id +
                     ">Estornar boleto</button>"
-            );
+            );*/
         } else {
             $("#div_refund_billet").html("");
         }
