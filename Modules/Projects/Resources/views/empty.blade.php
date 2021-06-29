@@ -1,14 +1,4 @@
-<div id="project-empty" class="content-error text-center" style="display:none;
-                                                                height: 100%; 
-                                                                width: 100%; 
-                                                                position: absolute;
-                                                                display: -webkit-flex;
-                                                                display: flex;
-                                                                -webkit-align-items: center;
-                                                                align-items: center;
-                                                                -webkit-justify-content: center;
-                                                                justify-content: center;
-                                                                padding-bottom:116px">
+<div id="project-empty" class="content-error text-center d-none">
     <img src="{!! asset('modules/global/img/projetos.svg') !!}" width="156px">
     <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
     <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
