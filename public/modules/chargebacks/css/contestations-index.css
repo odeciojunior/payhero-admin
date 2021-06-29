@@ -29,6 +29,12 @@
 	color: #959595 !important;
 }
 
+/* Alinhar valores nos cards */
+
+.card-body h4 span.font-size-30 {
+	vertical-align: sub;
+}
+
 /* Contestation Alert */
 
 .alert-contestation {
@@ -62,4 +68,10 @@
 
 #chargebacks-table .table {
 	border: 16px !important;
+}
+
+/* Alinhar icones da tabela */
+
+#chargebacks-table-data span.o-upload-to-cloud-1, #chargebacks-table-data span.o-eye-1 {
+	font-size: 27px;
 }

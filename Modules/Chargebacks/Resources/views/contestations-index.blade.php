@@ -62,7 +62,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page mb-0">
+    <div class="page" style="margin-bottom: 0 !important;">
         <div style="display: none" class="page-header container pt-35" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
@@ -245,7 +245,7 @@
 
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0"
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
                             <tr class="">
@@ -266,8 +266,8 @@
                     </div>
 
                 </div>
-                <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination" class="pl-5 pr-md-15 mb-25">
+                <div class="row justify-content-center justify-content-md-end pb-60">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-10">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
