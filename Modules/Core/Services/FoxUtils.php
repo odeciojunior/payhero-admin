@@ -728,4 +728,15 @@ class FoxUtils
         $data[4] = Carbon::parse($data[4])->format('d/m/Y H:i:s');
         return "CURRENT BRANCH: $data[0] | LAST COMMIT: $data[1] - $data[3] | AUTHOR: $data[2] | DATE: $data[4]";
     }
+
+    public static function remoteUrlExists($url) {
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        return ($code == 200); // verifica se recebe "status OK"
+    }
 }
