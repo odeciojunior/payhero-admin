@@ -45,7 +45,7 @@ class ImportWooCommerceOrders implements ShouldQueue
                 
                 $orders = $service->woocommerce->get('orders', 
                     [
-                        'status'=>'processing', 
+                        'status'=>'completed', 
                         'page'=> $this->page, 
                         'per_page'=>5
                     ]);
