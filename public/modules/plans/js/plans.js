@@ -372,9 +372,9 @@ $(function () {
                 /**
                  * Edit Plan
                  */
-                $(".edit-plan").unbind('click');
+                $(".edit-plan").off('click');
                 $(".edit-plan").on('click', function () {
-                    console.log('click edit-plan');
+                    console.log('click edit-plan '+$(this).attr('plan'));
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     
