@@ -204,11 +204,16 @@ class TrackingService
                 $query->where('tracking_code', $trackingCode)
                     ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('duplicated'));
             })->where('id', '!=', $sale->id)
-            ->where('upsell_id', '!=', $sale->id);
+            ->where(function ($query) use ($sale) {
+                $query->where('upsell_id', '!=', $sale->id)
+                    ->orWhereNull('upsell_id');
+            });
 
         if (!empty($sale->upsell_id)) {
-            $existsQuery->where('upsell_id', '!=', $sale->upsell_id)
-                ->where('id', '!=', $sale->upsell_id);
+            $existsQuery->where(function ($query) use ($sale) {
+                $query->where('upsell_id', '!=', $sale->id)
+                    ->orWhereNull('upsell_id');
+            })->where('id', '!=', $sale->upsell_id);
         }
 
         $exists = $existsQuery->where(function ($query) use ($sale) {
@@ -271,7 +276,7 @@ class TrackingService
 
             //atualiza e faz outras verificações caso já exista
             if (!empty($tracking)) {
-                $oldTracking = (object) $tracking->getAttributes();
+                $oldTracking = (object)$tracking->getAttributes();
                 $oldTrackingCode = $oldTracking->tracking_code;
 
                 //atualiza
@@ -290,7 +295,7 @@ class TrackingService
                         $query->where('tracking_code', $oldTrackingCode);
                     })->get();
                     //caso existam recria/revalida os códigos
-                    if($duplicates->isNotEmpty()){
+                    if ($duplicates->isNotEmpty()) {
                         RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicates);
                     }
                 } else {
@@ -302,7 +307,7 @@ class TrackingService
             }
 
             if (!empty($tracking) && $notify) {
-               event(new TrackingCodeUpdatedEvent($tracking->id));
+                event(new TrackingCodeUpdatedEvent($tracking->id));
             }
 
             return $tracking;
