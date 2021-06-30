@@ -140,6 +140,8 @@ return [
     |
     */
 
+    'defaults' => [],
+
     'environments' => [
         'production' => [
             'supervisor-production' => [
