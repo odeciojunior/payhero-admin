@@ -211,7 +211,7 @@ class TrackingService
 
         if (!empty($sale->upsell_id)) {
             $existsQuery->where(function ($query) use ($sale) {
-                $query->where('upsell_id', '!=', $sale->id)
+                $query->where('upsell_id', '!=', $sale->upsell_id)
                     ->orWhereNull('upsell_id');
             })->where('id', '!=', $sale->upsell_id);
         }
