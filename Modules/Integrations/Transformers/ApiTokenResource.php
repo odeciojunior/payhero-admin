@@ -36,13 +36,15 @@ class ApiTokenResource extends JsonResource
         $this->defineTimezone();
         $token = $this->resource->token;
         $revoked = $token->revoked ?? null;
-        $antifraudUrl = env('CHECKOUT_URL') . '/api/v1/antifraud/' . hashids()->encode($this->resource->company->id);
-        $antifraudUrl = 'https://' . str_replace(['http://', 'https://'], '', $antifraudUrl);
+        if ($this->resource->company) {
+            $antifraudUrl = env('CHECKOUT_URL') . '/api/v1/antifraud/' . hashids()->encode($this->resource->company->id);
+            $antifraudUrl = 'https://' . str_replace(['http://', 'https://'], '', $antifraudUrl);
+        }
 
         return [
             'id_code'          => Hashids::encode($this->resource->id),
             'access_token'     => $this->resource->access_token,
-            'antifraud_url'    => $antifraudUrl,
+            'antifraud_url'    => $this->resource->company ? $antifraudUrl : "",
             'status'           => $this->resource->present()->status(),
             'revoked'          => $revoked,
             'register_date'    => $this->getFormatDate($this->resource->created_at),

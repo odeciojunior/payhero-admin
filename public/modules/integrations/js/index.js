@@ -93,15 +93,19 @@ $(document).ready(function () {
             dados += '</div>';
             //Antifraud URL
             dados += '<td style="vertical-align: middle;">';
-            dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
-            dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptAntifraud" id="inptAntifraud' + value.id_code + '" value="' + value.antifraud_url + '" disabled="disabled">';
-            dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
-            dados += '<a href="#" class="btnCopiarLinkAntifraud" data-toggle="tooltip" title="Copiar URL Antifraud">';
-            dados += '<span class="o-copy-1"></span>'
-            dados += '</a></div></div></div>';
-            dados += '</div>';
-            //-----------------------------------
+                if (value.integration_type == 'checkout_api') {
+                    dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
+                    dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptAntifraud" id="inptAntifraud' + value.id_code + '" value="' + value.antifraud_url + '" disabled="disabled">';
+                    dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
+                    dados += '<a href="#" class="btnCopiarLinkAntifraud" data-toggle="tooltip" title="Copiar URL Antifraud">';
+                    dados += '<span class="o-copy-1"></span>'
+                    dados += '</a></div></div></div>';
+                    dados += '</div>';
+                } else {
+                    dados += 'Antifraud indisponível para ' + integrationTypeEnum[value.integration_type];
+                }
             dados += '</td>';
+            //-----------------------------------
             dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
             dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button></td>';
             dados += '</tr>';
@@ -326,11 +330,14 @@ $(document).ready(function () {
     function handleIntegrationTypeChange(e) {
         let type = e.target.value;
         let companiesContainer = $('.companies-container');
+        let postbackContainer = $('.postback-container');
         // type = 4 is Checkout API type
         if (type == 4) {
             companiesContainer.addClass('d-flex').removeClass('d-none');
+            postbackContainer.addClass('d-flex').removeClass('d-none');
         } else {
             companiesContainer.addClass('d-none').removeClass('d-flex');
+            postbackContainer.addClass('d-none').removeClass('d-flex');
         }
     }
 

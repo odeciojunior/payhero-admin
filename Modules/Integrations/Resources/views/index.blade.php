@@ -103,14 +103,14 @@
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label for="description">Descrição</label>
-                                        <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
+                                        <input name="description" type="text" class="form-control input-pad" id="description" placeholder="Descrição">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label for="token_type_enum">Tipo de Integração</label>
                                         <div id="enum-list">
-                                            <select name="token_type_enum" class="select-enum-list">
+                                            <select name="token_type_enum" class="form-control select-pad select-enum-list">
                                                 <option value="2">Acesso Pessoal</option>
                                                 <option value="3">Integração Externa</option>
                                                 <option value="4">Checkout API</option>
@@ -119,11 +119,18 @@
                                     </div>
                                 </div>
                                 <div class="row companies-container d-none">
-                                    <div class="col-sm-12 col-md">
+                                    <div class="form-group col-sm-12 col-md">
                                         <label for="empresa">Empresa</label>
                                         <select name="company_id" id="companies" class="form-control select-pad">
                                             <option value="">Todas empresas</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row postback-container d-none">
+                                    <div class="form-group col-sm-12 col-md">
+                                        <label for="postback">Postback</label>
+                                        <input name="postback" type="text" class="form-control input-pad" id="postback" placeholder="Postback">
+                                        <small class="text-muted">Insira uma url válida para receber as notificações referentes a integração</small>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 35px">

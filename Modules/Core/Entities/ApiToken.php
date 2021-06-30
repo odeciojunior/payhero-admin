@@ -27,6 +27,7 @@ use Modules\Core\Presenters\ApiTokenPresenter;
  * @property string $scopes
  * @property int $integration_type_enum
  * @property string $description
+ * @property string $postback
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
@@ -79,6 +80,7 @@ class ApiToken extends Model
         'scopes',
         'integration_type_enum',
         'description',
+        'postback',
         'created_at',
         'updated_at',
         'deleted_at',
