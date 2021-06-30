@@ -17,6 +17,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
 use App\Jobs\ProcessWooCommercePostbackTracking;
+use App\Jobs\ProcessWooCommerceOrderNotes;
 
 use function GuzzleHttp\json_decode;
 
@@ -225,7 +226,7 @@ class PostBackWooCommerceController extends Controller
         try {
             
             
-            if (empty($request->correios_tracking_code) || empty($request->shipping['company']) ){
+            if (empty($request->shipping['company']) ){
                 return response()->json(
                     [
                         'message' => 'invalid data',
@@ -241,8 +242,9 @@ class PostBackWooCommerceController extends Controller
 
             $project = $projectModel->find($projectId)->first();
 
-            if (!empty($project) && !empty($request->correios_tracking_code) ) {
-                
+            if (!empty($project)){
+
+
                 foreach($request->line_items as $item){
                     $line_items[] = [
                         'sku'=> $item['sku'],
@@ -250,15 +252,32 @@ class PostBackWooCommerceController extends Controller
                         'quantity'=> $item['quantity'],
                     ];
                 }
-                $data = [
-                    'id'=>$request->id,
-                    'correios_tracking_code' => $request->correios_tracking_code,
-                    'line_items' => $line_items
-                ];
-                
-                ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
 
-                
+
+                if(!empty($request->correios_tracking_code)) {
+                    
+                    
+                    $data = [
+                        'id'=>$request->id,
+                        'correios_tracking_code' => $request->correios_tracking_code,
+                        'line_items' => $line_items
+                    ];
+                    
+                    ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
+    
+
+                }else{
+
+                    $data = [
+                        'id'=>$request->id,
+                        'correios_tracking_code' => '?',
+                        'line_items' => $line_items
+                    ];
+
+                    // Process Aliexpress trackingcodes on notes
+                    ProcessWooCommerceOrderNotes::dispatch($projectId, $data);
+
+                }
 
                 return response()->json(
                     [
@@ -266,6 +285,8 @@ class PostBackWooCommerceController extends Controller
                     ],
                     200
                 );
+
+
             } else {
 
                 //projeto nao existe

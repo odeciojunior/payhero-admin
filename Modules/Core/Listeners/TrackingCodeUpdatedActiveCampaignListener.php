@@ -20,7 +20,7 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
 
     /**
      * @param TrackingCodeUpdatedEvent $event
-     * @return JsonResponse
+     * @return void
      */
     public function handle(TrackingCodeUpdatedEvent $event)
     {
@@ -35,20 +35,21 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
                 'sale.productsPlansSale.product',
             ])->find($event->trackingId);
 
-            $sale                  = $tracking->sale;
-            $customer              = $sale->customer;
+            if ($tracking) {
 
-            $dataCustom = [
-                'url_boleto' => $sale->boleto_link,
-                'sub_total'  => $sale->sub_total,
-                'frete'      => $sale->shipment_value,
-            ];
+                $sale = $tracking->sale;
+                $customer = $sale->customer;
 
-            return $activeCampaignService->execute($sale->id, 6, $customer->name, $customer->telephone, $customer->email, $sale->project_id, 'sale', $dataCustom, $sale->checkout_id); // 6 - tracking
+                $dataCustom = [
+                    'url_boleto' => $sale->boleto_link,
+                    'sub_total' => $sale->sub_total,
+                    'frete' => $sale->shipment_value,
+                ];
+
+                $activeCampaignService->execute($sale->id, 6, $customer->name, $customer->telephone, $customer->email, $sale->project_id, 'sale', $dataCustom, $sale->checkout_id); // 6 - tracking
+            }
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
 }

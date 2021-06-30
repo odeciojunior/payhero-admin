@@ -1,6 +1,7 @@
+{{--<div id="project-empty" class="content-error text-center d-none">--}}
 <div id="project-empty" class="content-error text-center" style="display:none;
-                                                                height: 100%; 
-                                                                width: 100%; 
+                                                                height: 100%;
+                                                                width: 100%;
                                                                 position: absolute;
                                                                 display: -webkit-flex;
                                                                 display: flex;
@@ -17,5 +18,5 @@
     </a>
 </div>
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=06') !!}">
 @endpush

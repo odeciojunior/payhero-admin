@@ -241,7 +241,7 @@
         <script src='{{ asset('modules/global/js/confetti.browser.min.js') }}'></script>
 {{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
         <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=1' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=2' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=1' . random_int(100, 10000)) }}"></script>
     @endpush
 
