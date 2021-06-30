@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\TrackingsImportedEvent;
 use Modules\Core\Services\TrackingService;
@@ -23,7 +23,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
 
     /**
      * TrackingsImport constructor.
-     * @param  User  $user
+     * @param User $user
      */
     public function __construct(User $user)
     {
@@ -31,11 +31,10 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     }
 
     /**
-     * @param  Collection  $collection
+     * @param Collection $collection
      */
     public function collection(Collection $collection)
     {
-        $saleModel = new Sale();
         $trackingService = new TrackingService();
 
         foreach ($collection as $key => $value) {
@@ -53,18 +52,13 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                 $saleId = current(Hashids::connection('sale_id')->decode($saleId));
                 $productId = current(Hashids::decode($productId));
 
-                $sale = $saleModel->with([
-                    'productsPlansSale.tracking',
-                    'productsPlansSale.sale.delivery'
-                ])->where('id', $saleId)
-                    ->where('owner_id', $this->user->account_owner_id)
+                $pps = ProductPlanSale::select('id')
+                    ->where('sale_id', $saleId)
+                    ->where('product_id', $productId)
                     ->first();
 
-                if (!empty($sale)) {
-                    $productPlanSale = $sale->productsPlansSale->where('product_id', $productId)->first();
-                    if (!empty($productPlanSale)) {
-                        $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
-                    }
+                if (!empty($pps) && !empty($trackingCode)) {
+                    $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
                 }
             }
         }
