@@ -33,12 +33,14 @@
         .btn-plus:disabled svg path{stroke:#333333;}
         .btn-plus:hover{background-color:transparent;}   
         .modal-content{border-radius: 12px;} 
-        #custom_products img{border: 1px solid #C4C4C4;
+        #custom_products img{ border-radius: 8px;border: 1px solid #C4C4C4;}
+        #custom_products .img-preview{width:47px;height:45px;float:left;background:url(/modules/global/img/produto.svg) no-repeat center center; background-size:contain;
         border-radius: 8px;}
         #modal-add-plan-body .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
         #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
         .edit-input{background-color: #F4F4F4;}
         .edit-input:focus{background-color: #FFFFFF;}
+        
     </style>
     <div class="container-fluid px-0" >
         <div class="nav-tabs-horizontal">

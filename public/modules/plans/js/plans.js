@@ -3,6 +3,7 @@ $(function () {
         0: "danger",
         1: "success",
     }
+    console.log('pegando form register');
     var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").clone();
     var form_update_plan = $("#form-update-plan").html();
@@ -475,7 +476,9 @@ $(function () {
                                         <div class='card container '>
                                             <div class="row mb-3">                                                
                                                 <div class="col-sm-9">
-                                                    <img src="${value.photo}" height="45px" class="float-left">
+                                                    <div class="img-preview">
+                                                        <img src="${value.photo}" onerror="this.src='/modules/global/img/produto.svg'" height="45px" class="float-left">
+                                                    </div>
                                                     <h4 class="bold float-left pl-10">Produto: ${value.product_name} </h4>
                                                 </div>
                                                 <div class="col-sm-3" align="right">

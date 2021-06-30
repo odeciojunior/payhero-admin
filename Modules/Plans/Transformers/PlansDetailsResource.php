@@ -9,16 +9,14 @@ use Vinkla\Hashids\Facades\Hashids;
 class PlansDetailsResource extends JsonResource
 {
     public function toArray($request)
-    {
+    {        
         $configProduct = $this->config_personalization_product;
         $products = [];
         $photo = '';
         foreach ($this->productsPlans as $productsPlan) {
             $photo = '/modules/global/img/produto.svg';
             if(!empty($productsPlan->product->photo)){
-                if(FoxUtils::remoteUrlExists($productsPlan->product->photo)){
-                    $photo = $productsPlan->product->photo;
-                }
+                $photo = $productsPlan->product->photo;                
             }
             $products[] = [
                 'id'           => $productsPlan->id,

@@ -320,6 +320,7 @@ class PlansApiController extends Controller
                     // }
 
                     $idsProductPlan = [];
+                    $objProductPlan = new ProductPlan();
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
                             if (empty($requestData['product_cost'][$keyProduct]) || $requestData['product_cost'][$keyProduct] == '0.00'){
@@ -334,23 +335,26 @@ class PlansApiController extends Controller
                                 $productPlan->cost = $requestData['product_cost'][$keyProduct] ?? 0;
                                 $productPlan->currency_type_enum = $productPlan->present()->getCurrency($requestData['currency'][$keyProduct]);
                                 $productPlan->update();
-                                $idsProductPlan[] = $productPlan->id;
-                            }else{
-                                $productPlan->create([
+                                $idsProductPlan[] = $productPlan->id;                                
+                            }else{                               
+                                $productPlan = ProductPlan::create([
                                     'product_id'         => $requestData['products'][$keyProduct],
                                     'plan_id'            => $plan->id,
                                     'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
                                     'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
-                                    'currency_type_enum' => $productPlan->present()
+                                    'currency_type_enum' => $objProductPlan->present()
                                                             ->getCurrency($requestData['currency'][$keyProduct]),
                                 ]);
-                                $idsProductPlan[] = $productPlan->id;
+                                $idsProductPlan[] = $productPlan->id;                                
                             }
                         }
                     }
 
                     if(count($idsProductPlan)>0){
-                        ProductPlan::where('plan_id',$plan->id)->whereNotIn('id',$idsProductPlan)->forceDelete();
+                        $rowsProductPlan = ProductPlan::where('plan_id',$plan->id)->whereNotIn('id',$idsProductPlan)->get();
+                        foreach($rowsProductPlan as $productPlanD){
+                            $productPlanD->forceDelete();
+                        }
                     }
 
                     return response()->json('Sucesso', 200);

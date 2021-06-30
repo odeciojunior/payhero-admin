@@ -1,6 +1,9 @@
 <form id="form-register-plan" method="post" action="/plans" enctype="multipart/form-data" style="display:none">
     @csrf
     <div class="container-fluid p-15">
+        <style>
+        .modal-footer {justify-content: center;}
+        </style>
         <div class="row">
             <div class="col-md-12">
                 <div class="" data-plugin="matchHeight">
@@ -9,18 +12,18 @@
                         <div class="row mt-2">
                             <div class="form-group col-md-6 col-lg-6">
                                 <label for="name">Nome</label>
-                                <input name="name" type="text" class="form-control" id="name" placeholder="Nome" maxlength='50' required>
+                                <input name="name" type="text" class="form-control" id="name" autocomplete="off" placeholder="Nome" maxlength='50' required>
                             </div>
                             <div class="form-group col-md-6 col-lg-6">
                                 <label for="price">Preço</label>
-                                <input name="price" type="text" class="form-control" id="price" placeholder="99,99" required>
+                                <input name="price" type="text" class="form-control" id="price" autocomplete="off" placeholder="99,99" required>
                             </div>
                             <hr class='mb-30 display-lg-none display-xlg-none'>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label for="description">Descrição</label>
-                                <input name="description" type="text" class="form-control" id="description" maxlength='50' placeholder="Descrição">
+                                <input name="description" type="text" class="form-control" autocomplete="off" id="description" maxlength='50' placeholder="Descrição">
                             </div>
                         </div>
                         <hr class='display-lg-none display-xlg-none'>
@@ -37,16 +40,16 @@
                                 <div class='col-sm-3 col-md-3 col-lg-3'>
                                     <div class="form-group">
                                         <label>Quantidade:</label>
-                                        <input class="form-control products_amount_create" type="text" name="product_amounts[]" id="products_amount" placeholder="quantidade" data-mask="0#" value="1">
+                                        <input class="form-control products_amount_create" type="text" autocomplete="off" name="product_amounts[]" id="products_amount" placeholder="quantidade" data-mask="0#" value="1">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4 col-md-4 col-lg-4">
                                     <label>Custo (<b>Un</b>):</label>
-                                    <input value="" id="product_cost_1" class="form-control products_cost products_cost_create" type="text" data-mask='0#' name="product_cost[]" placeholder="Unitario">
+                                    <input value="" id="product_cost_1" class="form-control products_cost products_cost_create" autocomplete="off" type="text" data-mask='0#' name="product_cost[]" placeholder="Unitario">
                                 </div>
                                 <div class="form-group col-sm-5 col-md-5 col-lg-5">
                                     <label>Custo Total:</label>
-                                    <input value="" id="product_total_1" class="form-control products_total products_total_create" type="text" data-mask='0#' name="product_total[]" placeholder="Total" readonly>
+                                    <input value="" id="product_total_1" class="form-control products_total products_total_create" autocomplete="off" type="text" data-mask='0#' name="product_total[]" placeholder="Total" readonly>
                                 </div>
                                 <div class="form-group col-sm-3 col-md-3 col-lg-3">
                                     <label>Moeda:</label>
