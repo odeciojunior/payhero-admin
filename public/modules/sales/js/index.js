@@ -174,6 +174,12 @@ $(document).ready(function () {
     }
 
     function getFilters(urlParams = false) {
+        let transaction = $("#transaction").val().replace('#', '');
+        let date_range = $("#date_range").val();
+        if (transaction.length > 0){
+            date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
+        }
+
         let data = {
             'project': $("#projeto").val(),
             'payment_method': $("#forma").val(),
@@ -181,8 +187,8 @@ $(document).ready(function () {
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
             'date_type': $("#date_type").val(),
-            'date_range': $("#date_range").val(),
-            'transaction': $("#transaction").val().replace('#', ''),
+            'date_range': date_range,
+            'transaction': transaction,
             'cashback': $("#cashback").val(),
             'plan': $('#plan').val(),
             'coupon': $("#cupom").val(),

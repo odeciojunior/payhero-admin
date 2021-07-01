@@ -140,6 +140,8 @@ return [
     |
     */
 
+    'defaults' => [],
+
     'environments' => [
         'production' => [
             'supervisor-production' => [
@@ -155,7 +157,7 @@ return [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
-                'processes' => 7,
+                'processes' => 4,
                 'tries' => 3,
                 'timeout' => 36000,
                 'delay' => 1,
@@ -176,7 +178,7 @@ return [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
-                'processes' => 7,
+                'processes' => 4,
                 'tries' => 3,
                 'timeout' => 36000,
                 'delay' => 1,
@@ -188,7 +190,7 @@ return [
                 'connection' => 'redis-horizon',
                 'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
-                'processes' => 3,
+                'processes' => 1,
                 'tries' => 1,
                 'timeout' => 3600,
                 'delay' => 1,
@@ -197,7 +199,7 @@ return [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
-                'processes' => 15,
+                'processes' => 1,
                 'tries' => 3,
                 'timeout' => 36000,
                 'delay' => 1,

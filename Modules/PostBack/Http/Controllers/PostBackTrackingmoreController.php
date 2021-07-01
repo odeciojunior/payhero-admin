@@ -5,13 +5,11 @@ namespace Modules\PostBack\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessTrackingmorePostbackJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\PostbackLog;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
-use Modules\Core\Services\TrackingmoreService;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Entities\ProductPlanSale;
 
 class PostBackTrackingmoreController extends Controller
 {
@@ -26,31 +24,26 @@ class PostBackTrackingmoreController extends Controller
         try {
             $data = $request->all();
 
-            $trackingService = new TrackingService();
-            $trackingModel = new Tracking();
             $postBackLogModel = new PostbackLog();
 
             $postBackLogModel->create([
-                    'origin' => 7,
-                    'data' => json_encode($data),
-                    'description' => 'trackingmore',
-                ]);
+                'origin' => 7,
+                'data' => json_encode($data),
+                'description' => 'trackingmore',
+            ]);
 
             $trackingCode = $data['data']['tracking_number'] ?? '';
 
-            $trackings = $trackingModel->with('productPlanSale')
-                ->where('tracking_code', $trackingCode)
-                ->get();
-
-            foreach ($trackings as $tracking) {
-                $trackingService->createOrUpdateTracking($trackingCode, $tracking->productPlanSale, false, false);
+            if ($trackingCode) {
+                ProcessTrackingmorePostbackJob::dispatch($trackingCode);
             }
 
             return response()->json(['message' => 'Postback received!']);
 
         } catch (\Exception $ex) {
             report($ex);
-            Log:info($ex->getMessage());
+            Log:
+            info($ex->getMessage());
             return response()->json(['message' => 'Postback listerner error']);
         }
     }
