@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -270,17 +269,14 @@ class TrackingsApiController extends Controller
     {
         try {
             $data = $request->all();
-            $productPlanSaleModel = new ProductPlanSale();
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['product_plan_sale_id'])) {
                 $ppsId = current(Hashids::decode($data['product_plan_sale_id']));
                 if ($ppsId) {
-                    $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.delivery'])
-                        ->find($ppsId);
 
-                    $tracking = $trackingService->createOrUpdateTracking($data['tracking_code'], $productPlanSale, true);
+                    $tracking = $trackingService->createOrUpdateTracking($data['tracking_code'], $ppsId, true);
 
                     return response()->json([
                         'message' => 'Código de rastreio salvo',
