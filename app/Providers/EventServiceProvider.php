@@ -68,6 +68,7 @@ use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
+use Modules\Core\Listeners\HotBilletPixExpiredListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
 /**
@@ -177,6 +178,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
+            HotBilletPixExpiredListener::class,
         ]
     ];
 
