@@ -6,7 +6,7 @@ $(function () {
     console.log('pegando form register');
     var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").clone();
-    var form_update_plan = $("#form-update-plan").html();
+    var form_update_plan = $("#form-update-plan").clone();
 
     var card_div_edit;
     var pageCurrent;
@@ -29,17 +29,20 @@ $(function () {
     }
 
     function clearFields() {
+        
         $('#name').val('');
         $('#price').val('');
         $('#description').val('');
         $("#modal-add-plan-body").html('');
         $("#modal-add-plan-body").html(form_register_plan);
+        form_register_plan['0'].reset();
     }
 
     function create() {
-        $("#modal-add-plan-body").html(form_register_plan);
+        clearFields();
         $("#btn-modal-plan").removeClass('btn-update-plan');
         $("#btn-modal-plan").removeClass('btn-update-config-custom');
+        $("#form-register-plan").css('display','block');   
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -69,8 +72,8 @@ $(function () {
                     $("#btn-modal-plan").addClass('btn-save-plan');
                     $("#btn-modal-plan").html('<i class="material-icons btn-fix"> save </i>Salvar')
                     $("#modal_add_plan").modal('show');
-                    $("#form-update-plan").hide();
-                    $("#form-register-plan").show();
+                    // $("#form-update-plan").hide();
+                    // $("#form-register-plan").show();
 
                     $('.products_amount').mask('0#');
 
@@ -379,14 +382,20 @@ $(function () {
                  */
                 $(".edit-plan").off('click');
                 $(".edit-plan").on('click', function () {
+                    console.log('edit-plan click');
                     
-                    loadOnModal('#modal-add-plan-body');
-                    $("#modal-add-plan-body").html("");
-                    
-                    var plan = $(this).attr('plan');                    
-                    
-                    $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
+                    loadOnModal('#modal-add-body');
+                    $("#modal-add-body").html("");                    
 
+                    var plan = $(this).attr('plan');                                        
+                    $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
+                    $(".btn-save-plan").off('click');
+                    
+                    $("#modal-add-plan-body").html('');
+                    $("#modal-add-plan-body").html(form_update_plan);
+                    $("#form-update-plan").css('display','block');  
+
+                    console.log('edit-plan iniciando request');
                     $.ajax({
                         method: "GET",
                         url: '/api/project/' + projectId + '/plans/' + plan,
@@ -398,15 +407,14 @@ $(function () {
                         error: function error() {
                             errorAjaxResponse(response);
                         }, success: function success(response) {
-                            $("#modal-add-plan-body").html(form_update_plan);
-                            $("#form-update-plan").css('display','block');
-                            
-
+                            console.log('respondendo request edit-plan');
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
                             $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
                             //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
+                            $('.products_row_edit').html('');
+                            $('.products_row_custom').html('');                            
 
                             var allow_change_in_block = false;
                             idxProducts = [];

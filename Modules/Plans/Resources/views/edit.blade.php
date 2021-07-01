@@ -1,4 +1,4 @@
-<div id="form-update-plan" style="display:none">
+<div id="form-update-plan">
     <style>
         .mb-3{margin-bottom: 1rem!important;}
         .btn{border-width: 1px !important;}
