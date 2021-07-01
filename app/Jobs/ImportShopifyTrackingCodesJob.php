@@ -107,9 +107,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                         }
                                         if ($products->count()) {
                                             foreach ($products as $product) {
-                                                $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-
-                                                $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
+                                                $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
                                             }
                                         }
                                     }

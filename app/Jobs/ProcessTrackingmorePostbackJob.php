@@ -7,22 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
 
-class RevalidateTrackingDuplicateJob implements ShouldQueue
+class ProcessTrackingmorePostbackJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private string $trackingCode;
 
-    private array $productPlanSales;
-
     private TrackingService $trackingService;
 
-    public function __construct(string $trackingCode, array $productPlanSales)
+    public function __construct(string $trackingCode)
     {
         $this->trackingCode = $trackingCode;
-        $this->productPlanSales = $productPlanSales;
         $this->trackingService = new TrackingService();
 
         $this->allOnQueue('low');
@@ -30,13 +28,19 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
 
     public function tags()
     {
-        return ['revalidate-tracking-duplicate'];
+        return ['process-trackingmore-postback'];
     }
 
     public function handle()
     {
-        foreach ($this->productPlanSales as $productPlanSale) {
-            $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale->id, false, false);
+        $trackingCode = $this->trackingCode;
+
+        $trackings =  Tracking::select('product_plan_sale_id')
+            ->where('tracking_code', $trackingCode)
+            ->get();
+
+        foreach ($trackings as $tracking) {
+            $this->trackingService->createOrUpdateTracking($trackingCode, $tracking->product_plan_sale_id, false, false);
         }
     }
 }
