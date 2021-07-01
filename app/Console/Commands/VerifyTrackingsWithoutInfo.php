@@ -39,8 +39,8 @@ class VerifyTrackingsWithoutInfo extends Command
 
         $query = $trackingModel->with('productPlanSale')
             ->whereIn('system_status_enum', [
-                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
-                $trackingModel->present()->getSystemStatusEnum('unknown_carrier')
+                Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
             ])->whereDate('created_at', '>=', now()->subMonths(4));
 
         $total = $query->count();
@@ -53,7 +53,7 @@ class VerifyTrackingsWithoutInfo extends Command
                     $this->line("T {$count} de {$total}: {$tracking->tracking_code}");
                     $trackingCode = $tracking->tracking_code;
                     $pps = $tracking->productPlanSale;
-                    $trackingService->createOrUpdateTracking($trackingCode, $pps);
+                    $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
                 } catch (\Exception $e) {
                     $this->error($e->getMessage());
                     continue;
