@@ -376,6 +376,7 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
     @endpush
 @endsection
