@@ -30,7 +30,13 @@ class PostBackWooCommerceController extends Controller
     public function postBackProductCreate(Request $request)
     {
 
-        if (empty($request->project_id)) {
+        
+        return $this->createProduct($request);
+    }
+
+    public function createProduct($request){
+
+        if (empty($request->project_id) || !empty($request->variations)) {
             return response()->json(
                 [
                     'message' => 'invalid data',
@@ -79,6 +85,7 @@ class PostBackWooCommerceController extends Controller
         $tmpSku = ($product->parent_id?$product->parent_id:$product->id).'-'.$request->project_id.'-'.str_replace(' ','',strtoupper($description));
 
         $ifProductExists = Product::where("user_id", $user->id)
+                ->where('project_id', hashids_decode($request->project_id))
                 ->where('shopify_variant_id', $tmpSku)
                 ->first();
 
@@ -114,7 +121,7 @@ class PostBackWooCommerceController extends Controller
             $data = [
                 'sku' => $sku
             ];
-            if (empty($product->parent_id)) {
+            if (empty($product->parent_id) && empty($product->variations)) {
                 $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
             } else {
                 $wooCommerceService->woocommerce->put(
@@ -137,7 +144,7 @@ class PostBackWooCommerceController extends Controller
     public function postBackProductUpdate(Request $request)
     {
 
-        if (empty($request->project_id) || empty($request['sku'])) {
+        if (empty($request->project_id)) {
             return response()->json(
                 [
                     'message' => 'invalid data',
@@ -164,7 +171,11 @@ class PostBackWooCommerceController extends Controller
                 ->where('project_id', hashids_decode($request->project_id))
                 ->first()->user;
 
-            $productExists = Product::where('shopify_variant_id', $request['sku'])->first();
+            
+            $productExists = Product::where('shopify_variant_id', $request['sku'])
+                ->where('project_id', hashids_decode($request->project_id))
+                ->where("user_id", $user->id)
+                ->first();
 
             if(!empty($productExists)){
 
@@ -190,7 +201,16 @@ class PostBackWooCommerceController extends Controller
                     }
                     
                     $newValues['project_id'] = hashids_decode($request->project_id);
-                    $newValues['description'] = $newValues['name'];
+
+                    $description = '';
+
+                    if(!empty($request['attributes'])){
+                        foreach($request['attributes'] as $attribute){
+                            $description .= $attribute['option'].' ';
+                        }
+                    }
+                    $newValues['description'] = $description;
+                    
                     $newValues['code'] = '';
                     $newValues['status'] = '1';
                     
@@ -198,14 +218,11 @@ class PostBackWooCommerceController extends Controller
                 }
 
             }else{
-                // Criar produto?
                 
-                return response()->json(
-                    [
-                        'message' => 'Product not found!',
-                    ],
-                    200
-                );
+                // Criar produto
+                return $this->createProduct($request);
+
+                
             }
 
 
