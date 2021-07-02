@@ -1204,6 +1204,8 @@ $(function () {
      
       $(document).on('click','.btn-update-plan',function(){
         console.log('update plan');
+        $("#tab_plans-panel").loading({message: 'Salvando...',start:true});
+
          var hasNoValue;
          $('.products_amount').each(function () {
              if ($(this).val() == '' || $(this).val() == 0) {
@@ -1241,11 +1243,13 @@ $(function () {
 
                  return error;
              }(function (response) {
+                $("#tab_plans-panel").loading('stop');
                  errorAjaxResponse(response);
 
                  index(pageCurrent);
              }),
              success: function success(data) {
+                $("#tab_plans-panel").loading('stop');
                  alertCustom("success", "Plano atualizado com sucesso");
                  index(pageCurrent);
              }
