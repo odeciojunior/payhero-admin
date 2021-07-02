@@ -654,15 +654,17 @@ class PlansApiController extends Controller
     }
 
     private function updateAllConfigCustomProduct($shopify_id,$config,$is_custom)
-    {        
-        $planIds = Plan::where('shopify_id', $shopify_id)->get()->pluck('id');
-
-        $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
-        
-        foreach ($productPlans as $productPlan) {
-            $productPlan->custom_config = $config;
-            $productPlan->is_custom = $is_custom;
-            $productPlan->update();
+    { 
+        if(!empty($shopify_id)){
+            $planIds = Plan::where('shopify_id', $shopify_id)->get()->pluck('id');
+    
+            $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
+            
+            foreach ($productPlans as $productPlan) {
+                $productPlan->custom_config = $config;
+                $productPlan->is_custom = $is_custom;
+                $productPlan->update();
+            }
         }
     }
 }
