@@ -19,6 +19,7 @@ class CreateAntifraudWarningsTable extends Migration
                 $table->id();
                 $table->unsignedBigInteger("sale_id")->nullable();
                 $table->foreign('sale_id')->references('id')->on('sales');
+                $table->tinyInteger('status')->index();
                 $table->string('column');
                 $table->string('value');
                 $table->string('level', 20);
