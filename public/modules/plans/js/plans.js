@@ -377,7 +377,7 @@ $(function () {
                  */
                 $(".edit-plan").unbind('click');
                 $(".edit-plan").on('click', function () {
-                    $("#tab_plans-panel").loading({message: 'Carregando...',start:true});
+                    $("#tab_plans-panel").loading({message: '...',start:true});
 
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
@@ -1204,7 +1204,7 @@ $(function () {
      
       $(document).on('click','.btn-update-plan',function(){
         console.log('update plan');
-        $("#tab_plans-panel").loading({message: 'Salvando...',start:true});
+        $("#tab_plans-panel").loading({message: '...',start:true});
 
          var hasNoValue;
          $('.products_amount').each(function () {
@@ -1262,7 +1262,7 @@ $(function () {
      $(document).on('click','.btn-update-config-custom',function(){
          console.log('update custom config');
 
-         $("#tab_plans-panel").loading({message: 'Salvando...',start:true});
+         $("#tab_plans-panel").loading({message: '...',start:true});
          var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));        
          formDataCP.append('plan',$('#plan_id').val());
          
