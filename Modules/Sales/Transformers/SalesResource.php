@@ -40,7 +40,6 @@ class SalesResource extends JsonResource
             $thankLabelText = 'Link página de Qrcode:';
         }
 
-
         $data = [
             //hide ids
             'id'                       => Hashids::connection('sale_id')->encode($this->id),
@@ -54,6 +53,7 @@ class SalesResource extends JsonResource
             'start_date'               => $this->start_date,
             'hours'                    => $this->hours,
             'status'                   => $this->status,
+            'status_name'              => $this->present()->getStatus($this->status),
             'dolar_quotation'          => $this->dolar_quotation,
             'installments_amount'      => $this->installments_amount,
             'boleto_link'              => $this->boleto_link,

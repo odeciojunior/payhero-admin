@@ -376,7 +376,6 @@ class SaleService
         }
 
         $total -= $sale->automatic_discount;
-        $total -= $sale->refund_value;
 
         //valor do produtor
         $value = $userTransaction->value;
@@ -426,10 +425,8 @@ class SaleService
             $taxaReal -= $affiliateValue;
         }
 
-        if ($total > 0 && $sale->status != Sale::STATUS_REFUNDED) {
-            $total = FoxUtils::formatMoney(intval($total) / 100);
-        } else {
-            $total = FoxUtils::formatMoney(0);
+        if ($sale->status == Sale::STATUS_REFUNDED) {
+            $comission = FoxUtils::formatMoney(0);
         }
 
         //set flag
@@ -466,7 +463,7 @@ class SaleService
             'transaction_rate' => FoxUtils::formatMoney($transactionRate / 100),
             'percentage_rate' => $userTransaction->percentage_rate ?? 0,
             'totalTax' => FoxUtils::formatMoney($totalTax / 100),
-            'total' => $total,
+            'total' => FoxUtils::formatMoney($total / 100),
             'subTotal' => FoxUtils::formatMoney(intval($subTotal) / 100),
             'discount' => FoxUtils::formatMoney(intval($discount) / 100),
             'automatic_discount' => FoxUtils::formatMoney(intval($sale->automatic_discount) / 100),

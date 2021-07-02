@@ -110,6 +110,9 @@ class HotBilletApiController extends Controller
                 if (empty($data['pix_generated'])) {
                     $data['pix_generated'] = 0;
                 }
+                if (empty($data['pix_expired'])) {
+                    $data['pix_expired'] = 0;
+                }
 
                 $integrationCreated = $hotBilletIntegrationModel->create([
                                                                            'link'                => $data['link'],
@@ -120,6 +123,7 @@ class HotBilletApiController extends Controller
                                                                            'abandoned_cart'      => $data['abandoned_cart'],
                                                                            'pix_generated'       => $data['pix_generated'],
                                                                            'pix_paid'            => $data['pix_paid'],
+                                                                           'pix_expired'         => $data['pix_expired'],
                                                                            'project_id'          => $projectId,
                                                                            'user_id'             => auth()->user()->account_owner_id,
                                                                        ]);
