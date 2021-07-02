@@ -418,7 +418,7 @@ $(() => {
 
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
         if (
-            sale.installment_tax_value !== "0,00" &&
+            parseFloat(sale.installment_tax_value.replace(/[^\d]/g, "")) !== 0 &&
             sale.user_sale_type == "producer"
         ) {
             $("#taxa-installment-value").html(sale.installment_tax_value);
@@ -458,7 +458,12 @@ $(() => {
             $(".automatic-discount-value").hide();
             $(".text-discount").hide();
         }
-        $("#total-value").html(sale.total_paid_value);
+
+        if (sale.status_name != 'refunded') {
+            $("#total-value").html(sale.total);
+        } else {
+            $("#total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+        }
 
         if (sale.refund_value != "0,00" && sale.status == 8) {
             $(".text-partial-refund").show();
@@ -482,7 +487,13 @@ $(() => {
         $("#taxareal-value").html(sale.taxaReal ? sale.taxaReal : "");
 
         $("#tax-value-total").html(`Valor total: `);
-        $("#tax-value-total-value").html(sale.total);
+
+        if (sale.status_name != 'refunded') {
+            $("#tax-value-total-value").html(sale.total);
+        } else {
+            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+        }
+
 
         $("#tax-percentage").html(`Taxa (${sale.percentage_rate}%)`);
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
