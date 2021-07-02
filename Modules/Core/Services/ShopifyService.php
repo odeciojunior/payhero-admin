@@ -1498,7 +1498,7 @@ class ShopifyService
 
         $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
         if ($shippingValue <= 0) {
-            $shippingTitle = 'Free Shipping';
+            $shippingTitle = 'Frete Grátis para Todo Brasil';
         } else {
             $shippingTitle = 'Standard Shipping';
             $totalValue += $shippingValue;
