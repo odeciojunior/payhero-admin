@@ -117,7 +117,7 @@ $(document).ready(function () {
 
     //edit
     $(document).on("click", ".card-edit", function () {
-        $(".modal-title").html("Editar nova Integração com HotZapp");
+        $(".modal-title").html("Editar Integração com HotZapp");
         $("#bt_integration").addClass("btn-update");
         $("#bt_integration").removeClass("btn-save");
         $("#bt_integration").text("Atualizar");
