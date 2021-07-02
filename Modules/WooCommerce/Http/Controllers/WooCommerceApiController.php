@@ -295,6 +295,7 @@ class WooCommerceApiController extends Controller
     {
         $doProducts = $request->opt_prod;
         $doTrackingCodes = $request->opt_track;
+        $doWebhooks = $request->opt_webhooks;
 
         $projectId = current(Hashids::decode($request->projectId));
         
@@ -302,7 +303,7 @@ class WooCommerceApiController extends Controller
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
         
-        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
+        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
         
     }
 
