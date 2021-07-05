@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 use Modules\Core\Services\TrackingService;
 
 class RevalidateTrackingDuplicateJob implements ShouldQueue
@@ -16,11 +15,11 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
 
     private string $trackingCode;
 
-    private Collection $productPlanSales;
+    private array $productPlanSales;
 
     private TrackingService $trackingService;
 
-    public function __construct(string $trackingCode, Collection $productPlanSales)
+    public function __construct(string $trackingCode, array $productPlanSales)
     {
         $this->trackingCode = $trackingCode;
         $this->productPlanSales = $productPlanSales;
@@ -37,7 +36,7 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
     public function handle()
     {
         foreach ($this->productPlanSales as $productPlanSale) {
-            $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale, false, false);
+            $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale->id, false, false);
         }
     }
 }
