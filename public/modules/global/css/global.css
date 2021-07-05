@@ -736,3 +736,39 @@ img.border-icon{
     padding-top: 11px !important;    
     padding-bottom: 11px !important;    
 }
+
+#form-update-plan .nav-tabs .nav-link:not(.active) {border-bottom-color: #c3c3c3;}
+#form-update-plan .nav-tabs .nav-link {background-color: #ffffff;}
+#form-update-plan .nav-tabs .nav-link:not(.active) {margin: 0 !important;}
+#modal_add_plan .btn-plus{margin-top: 28px;padding-top: 10px;padding-bottom: 10px;}
+#modal_add_plan .btn-active{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
+#modal_add_plan .btn-active svg path{fill:#ffffff;}
+#modal_add_plan .btn-edit{background-color: #F4F4F4; border:1px solid #f4f4f4;}
+#modal_add_plan .btn-edit svg path{fill:#2E85EC;}
+#modal_add_plan .btn-edit-row{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
+#modal_add_plan .btn-edit-row svg path{fill:#2E85EC;}
+#modal_add_plan .modal-footer{justify-content:center;}
+#modal_add_plan .btn-update-config-custom{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
+#modal_add_plan .btn-update-config-custom:hover{background-color: #2E85EC;border: 1px solid #2E85EC;}
+#modal_add_plan .mb-4p{margin-bottom: 4%;}
+#modal_add_plan .mt-15{margin-top: 15px;}
+#modal_add_plan .pl-10{padding-left: 10px;}
+#modal_add_plan #form-update-plan .nav-link{font-size: 16px !important;}
+#modal_add_plan .btnDelete[readonly] span{color:#333333; -webkit-text-stroke: 0.6px #333333;}
+#modal_add_plan .btnDelete[readonly]{border-color: #6c757d;}
+#modal_add_plan .form-control:disabled, .form-control[readonly] {background-color: #F4F4F4;}
+#modal_add_plan .remove-custom-product{height: 43px;}
+#modal_add_plan .border-light-gray{border:1px solid #f4f4f4; background-color:#f4f4f4; height: 44px;}
+#modal_add_plan .btn-outline-secondary{height: 44px;border:1px solid #C4C4C4;}
+#modal_add_plan .btn-plus{color: #41DC8F;background-color: transparent;border-color: #41DC8F;}    
+#modal_add_plan .btn-plus:disabled{color: #333333;background-color: transparent;border-color: #333333;}    
+#modal_add_plan .btn-plus:disabled svg path{stroke:#333333;}
+#modal_add_plan .btn-plus:hover{background-color:transparent;}   
+#modal_add_plan .modal-content{border-radius: 12px;} 
+#modal_add_plan #custom_products img{ border-radius: 8px;border: 1px solid #C4C4C4;}
+#modal_add_plan #custom_products .img-preview{width:47px;height:45px;float:left;background:url(/modules/global/img/produto.svg) no-repeat center center; 
+    background-size:contain; border-radius: 8px; margin-right: 10px;}
+#modal_add_plan #modal-add-plan-body .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
+#modal_add_plan #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
+#modal_add_plan .edit-input{background-color: #F4F4F4;}
+#modal_add_plan .edit-input:focus{background-color: #FFFFFF;}

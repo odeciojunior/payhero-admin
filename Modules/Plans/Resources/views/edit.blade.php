@@ -1,54 +1,11 @@
-<div id="form-update-plan">
-    <style>
-        .mb-3{margin-bottom: 1rem!important;}
-        .btn{border-width: 1px !important;}
-        .nav-tabs .nav-link:not(.active) {    
-            border-bottom-color: #c3c3c3;
-        }
-        .nav-tabs .nav-link {        
-            background-color: #ffffff;     
-        }
-        .btn-plus{margin-top: 28px;padding-top: 10px;padding-bottom: 10px;}
-        .btn-active{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
-        .btn-active svg path{fill:#ffffff;}
-        .btn-edit{background-color: #F4F4F4; border:1px solid #f4f4f4;}
-        .btn-edit svg path{fill:#2E85EC;}
-        .btn-edit-row{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
-        .btn-edit-row svg path{fill:#2E85EC;}
-        .modal-footer{justify-content:center;}
-        .btn-update-config-custom{background-color: #2E85EC;color:white;border: 1px solid #2E85EC;}
-        .btn-update-config-custom:hover{background-color: #2E85EC;border: 1px solid #2E85EC;}
-        .mb-4p{margin-bottom: 4%;}
-        .mt-15{margin-top: 15px;}
-        .pl-10{padding-left: 10px;}
-        #form-update-plan .nav-link{font-size: 16px !important;}
-        .btnDelete[readonly] span{color:#333333; -webkit-text-stroke: 0.6px #333333;}
-        .btnDelete[readonly]{border-color: #6c757d;}
-        .form-control:disabled, .form-control[readonly] {background-color: #F4F4F4;}
-        .remove-custom-product{height: 43px;}
-        .border-light-gray{border:1px solid #f4f4f4; background-color:#f4f4f4; height: 44px;}
-        .btn-outline-secondary{height: 44px;border:1px solid #C4C4C4;}
-        .btn-plus{color: #41DC8F;background-color: transparent;border-color: #41DC8F;}    
-        .btn-plus:disabled{color: #333333;background-color: transparent;border-color: #333333;}    
-        .btn-plus:disabled svg path{stroke:#333333;}
-        .btn-plus:hover{background-color:transparent;}   
-        .modal-content{border-radius: 12px;} 
-        #custom_products img{ border-radius: 8px;border: 1px solid #C4C4C4;}
-        #custom_products .img-preview{width:47px;height:45px;float:left;background:url(/modules/global/img/produto.svg) no-repeat center center; background-size:contain;
-        border-radius: 8px;}
-        #modal-add-plan-body .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
-        #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
-        .edit-input{background-color: #F4F4F4;}
-        .edit-input:focus{background-color: #FFFFFF;}
-        
-    </style>
+<div id="form-update-plan" style="display:none">
     <div class="container-fluid px-0" >
         <div class="nav-tabs-horizontal">
             <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-geral-tab" data-toggle="tab" href="#nav-geral"
                     role="tab" style="width:50%;"><strong>Dados gerais</strong>
                 </a>
-                <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"  ng-click="init()"
+                <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom"
                     role="tab" style="width:50%;"><strong>Personalizações</strong>
                 </a>
             </div>
@@ -103,7 +60,7 @@
                         <div id="custom_products" class='col-md-12 products_row_custom'>
                             {{-- carregado no js--}}
                         </div>
-                        <div id="custom_products_checkbox" class="card container "></div>
+                        <div id="custom_products_checkbox" class="card container mb-0"></div>
                     </div>
                 </form>
             </div>

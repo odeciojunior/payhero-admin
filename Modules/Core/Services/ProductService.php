@@ -66,6 +66,7 @@ class ProductService
         $productsSale = collect();
 
         if (!empty($sale)) {
+            $photo = '';
             foreach ($sale->productsPlansSale as $productsPlanSale) {
                 $product = $productsPlanSale->product->toArray();
                 $tracking = $productsPlanSale->tracking;
@@ -89,12 +90,12 @@ class ProductService
                     $product['tracking_status_enum'] = 'Não Informado';
                     $product['tracking_created_at'] = '';
                 }
-
+                
                 $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
                 
                 $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
-                ->where('sale_id',$productsPlanSale->sale_id)
-                ->where('plan_id',$productsPlanSale->plan_id)->where('product_id',$productsPlanSale->product_id)->get();
+                ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
+                ->where('product_id',$productsPlanSale->product_id)->get();
                 
                 $productsSale->add((object) $product);
             }

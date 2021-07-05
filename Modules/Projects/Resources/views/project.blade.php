@@ -338,6 +338,15 @@
                                                 <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar códigos de rastreio com WooCommerce</label>
                                             </div>
+
+                                            <div class="switch-holder" style="margin-top:4px">
+                                                <label class="switch" style="top:3px">
+                                                    <input type="checkbox" id="opt_webhooks" name="product_amount_selector" class="check" value="1">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
+                                                    Sincronizar webhooks com WooCommerce</label>
+                                            </div>
                                             
                                         </p>
                                     </div>
@@ -376,6 +385,7 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
     @endpush
 @endsection

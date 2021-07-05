@@ -582,7 +582,7 @@ class PlansApiController extends Controller
     }
 
     public function saveConfigCustomProducts(Request $request){
-        
+        set_time_limit(0);
         $rules = [
             'plan'=>'required',            
         ];
@@ -656,14 +656,15 @@ class PlansApiController extends Controller
     private function updateAllConfigCustomProduct($shopify_id,$config,$is_custom)
     { 
         if(!empty($shopify_id)){
-            $planIds = Plan::where('shopify_id', $shopify_id)->get()->pluck('id');
-    
-            $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
-            
-            foreach ($productPlans as $productPlan) {
-                $productPlan->custom_config = $config;
-                $productPlan->is_custom = $is_custom;
-                $productPlan->update();
+            $planIds = Plan::select('id')->where('shopify_id', $shopify_id)->get();
+           
+            foreach($planIds as $plan){
+                $productPlans = ProductPlan::where('plan_id', $plan->id)->get();
+                foreach ($productPlans as $productPlan) {
+                    $productPlan->custom_config = $config;
+                    $productPlan->is_custom = $is_custom;
+                    $productPlan->update();
+                }
             }
         }
     }
