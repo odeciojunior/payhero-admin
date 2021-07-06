@@ -205,7 +205,8 @@ class WooCommerceService
             $data = [
                 'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
             ];
-    
+            
+            $tries = 3;
             try{
                 $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
             }catch(Exception $e){
