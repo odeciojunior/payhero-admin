@@ -94,3 +94,15 @@
 .o-add-1:hover {
     color: #FFF
 }
+
+.show-empty {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding-bottom: 116px;
+}

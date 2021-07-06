@@ -130,6 +130,7 @@ class Company extends Model
         'address_document_status',
         'contract_document_status',
         'company_type',
+        'pix_key_situation',
         'has_pix_key',
         'order_priority',
         'get_net_status',

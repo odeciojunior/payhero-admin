@@ -26,7 +26,6 @@ class BenefitsService
         }
 
         self::updateUserCashback($user);
-        self::updateUserGetFaster($user);
     }
 
     private static function updateUserCashback(User $user)
@@ -83,41 +82,6 @@ class BenefitsService
         $cashback1->save();
         $cashback2->save();
         $user->save();
-    }
-
-    private static function updateUserGetFaster(User $user)
-    {
-        $benefits = $user->benefits;
-
-        $getFasterBenefit = $benefits->where('name', 'get_faster')->first();
-        if (!$getFasterBenefit) {
-            return;
-        }
-
-        $getFasterEnabled = false;
-        if ($user->account_score >= 6) {
-            $getFasterEnabled = true;
-        }
-
-        $benefitChanged = $user->get_faster != $getFasterEnabled;
-
-        $user->get_faster = $getFasterEnabled;
-        $user->save();
-        $getFasterBenefit->enabled = $getFasterEnabled;
-        $getFasterBenefit->save();
-
-        if ($benefitChanged) {
-            activity()->on($user)->tap(
-                function (Activity $activity) use ($user) {
-                    $activity->log_name = 'benefits_change';
-                    $activity->subject_id = $user->id;
-                }
-            )->log(
-                'Receba mais Rápido '
-                . ($getFasterEnabled ? '' : 'des') . 'ativado por nota da conta '
-                . ($getFasterEnabled ? 'maior ou igual a' : 'menor que') . ' 6'
-            );
-        }
     }
 
     public function getUserBenefits(User $user): array
