@@ -343,13 +343,15 @@ class ReportsApiController extends Controller
                     $plans = [];
                     foreach ($itens as $key => $iten) {
                         $plan = $planModel->with('products')->find($iten['plan_id']);
-                        if(!empty($plan->description)){
-                            $plans[$key]['name'] = $plan->name.' - '.$plan->description;
-                        } else{
-                            $plans[$key]['name'] = $plan->name;
+                        if (!FoxUtils::isEmpty($plan)){
+                            if(!empty($plan->description)){
+                                $plans[$key]['name'] = $plan->name.' - '.$plan->description;
+                            } else{
+                                $plans[$key]['name'] = $plan->name;
+                            }
+                            $plans[$key]['photo'] = $plan->products[0]->photo;
+                            $plans[$key]['quantidade'] = $iten['count'];
                         }
-                        $plans[$key]['photo'] = $plan->products[0]->photo;
-                        $plans[$key]['quantidade'] = $iten['count'];
                         unset($plan);
                     }
 
