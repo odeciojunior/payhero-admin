@@ -61,7 +61,7 @@ class PostBackWooCommerceController extends Controller
         if (empty($product->name) || empty($product->id) || empty($product->price) ) {
             return response()->json(
                 [
-                    'message' => 'invalid data',
+                    'message' => 'invalid data 2',
                 ],
                 200
             );
