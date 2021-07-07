@@ -563,8 +563,7 @@ class PlansApiController extends Controller
             if($updateAllCurrency) {
                 $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
                 $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
-                foreach ($productPlans as $productPlan) {
-                    dd($productPlan);
+                foreach ($productPlans as $productPlan) {                    
                     $productPlan->update(['currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency)]);
                 }
             }
@@ -655,9 +654,8 @@ class PlansApiController extends Controller
 
     private function updateAllConfigCustomProduct($shopify_id,$config,$is_custom)
     { 
-        if(!empty($shopify_id)){
-            $planIds = Plan::select('id')->where('shopify_id', $shopify_id)->get();
-           
+        if(!empty($shopify_id)){            
+            $planIds = Plan::select('id')->where('shopify_id', $shopify_id)->get();           
             foreach($planIds as $plan){
                 $productPlans = ProductPlan::where('plan_id', $plan->id)->get();
                 foreach ($productPlans as $productPlan) {

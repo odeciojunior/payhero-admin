@@ -91,14 +91,13 @@ class ProductService
                     $product['tracking_created_at'] = '';
                 }
                 
-                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
-                
+                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';                
                 $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
                 ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
-                ->where('product_id',$productsPlanSale->product_id)->get();
-                
+                ->where('product_id',$productsPlanSale->product_id)->orderBy('order','asc')->get();
+                $product['sale_id'] = $productsPlanSale->sale_id;
                 $productsSale->add((object) $product);
-            }
+            }         
         }
 
         return $productsSale;

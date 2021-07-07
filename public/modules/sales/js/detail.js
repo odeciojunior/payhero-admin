@@ -1022,6 +1022,7 @@ $(() => {
         $("#data-tracking-products").html("");
         let div = "";
         let photo = "/modules/global/img/produto.png";
+        console.log(products);
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -1042,15 +1043,15 @@ $(() => {
                 div+= `<!-- Customer additional information -->
                     <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
                         <div class="panel panel-custom-product">
-                            <div class="panel-heading" id="sale-custom-product-accordion${value.id}${index}" role="tab">
-                                <a class="panel-title" data-toggle="collapse" href="#sale-custom-product${value.id}${index}"
+                            <div class="panel-heading" id="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tab">
+                                <a class="panel-title" data-toggle="collapse" href="#sale-custom-product-${value.sale_id}${value.id}${index}"
                                 data-parent="#custom-product-accordion${value.id}" aria-expanded="true"
                                 aria-controls="exampleCollapseDefaultOne">
                                     <strong>Personalizações enviadas pelo cliente</strong>
                                 </a>
                             </div>
-                            <div class="panel-collapse collapse" id="sale-custom-product${value.id}${index}"
-                                aria-labelledby="sale-custom-product-accordion${value.id}${index}" role="tabpanel" style="">
+                            <div class="panel-collapse collapse" id="sale-custom-product-${value.sale_id}${value.id}${index}"
+                                aria-labelledby="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tabpanel" style="">
                                 <div class="panel-body">`;
                                 var file_name = null;
                                     line_temp = 0;

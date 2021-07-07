@@ -730,14 +730,18 @@ class FoxUtils
     }
 
     public static function remoteUrlExists($url) {
-        
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); # handles 301/2 redirects
-        curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if( $httpCode == 200 ){return true;}
-        return false;
+        try{
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_NOBODY, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); # handles 301/2 redirects
+            curl_setopt($ch,CURLOPT_TIMEOUT,5);
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            return $httpCode == 200;
+
+        }catch(Exception $e){
+            return false;
+        }        
     }
 }

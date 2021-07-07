@@ -25,6 +25,7 @@ class ProductsSaleResource extends JsonResource
             'name' => $this->name,
             'description' => !empty($this->description) ? Str::limit($this->description, 23) : '',
             'sale_status' => $this->sale_status ?? null,
+            'sale_id' => $this->sale_id ?? null,
             'amount' => $this->amount ?? null,
             'tracking_id' => $this->tracking_id ?? null,
             'tracking_code' => $this->tracking_code ?? null,
