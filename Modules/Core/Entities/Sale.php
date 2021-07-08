@@ -306,6 +306,11 @@ class Sale extends Model
         return $this->hasMany(BlockReasonSale::class);
     }
 
+    public function additionalCustomerInformation(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\SaleAdditionalCustomerInformation');
+    }
+
     public function getHashIdAttribute()
     {
         return Hashids::connection('sale_id')->encode($this->id);
