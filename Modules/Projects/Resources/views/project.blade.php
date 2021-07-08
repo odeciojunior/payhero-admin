@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=10') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
     <style>
         @font-face {
@@ -367,7 +367,7 @@
         </div>
     </div>
 
-    @push('scripts')
+    @push('scripts')    
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
@@ -385,7 +385,7 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
     @endpush
 @endsection
-
