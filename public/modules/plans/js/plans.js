@@ -7,6 +7,8 @@ $(function () {
     var form_register_plan = $("#form-register-plan").html();
     var form_update_plan = $("#form-update-plan").html();
 
+    var switch_modal = 'Create';
+
     var card_div_edit;
     var pageCurrent;
     // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
@@ -73,6 +75,7 @@ $(function () {
     }
 
     function create() {
+        switch_modal = 'Create';
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -167,6 +170,8 @@ $(function () {
                      */
                     $(".btn-save-plan").unbind('click');
                     $(".btn-save-plan").on('click', function () {
+
+                        if(switch_modal!='Create') return false;
                         var hasNoValue;
                         $('.products_amount_create').each(function () {
                             if ($(this).val() == '' || $(this).val() == 0) {
@@ -377,6 +382,7 @@ $(function () {
                  */
                 $(".edit-plan").unbind('click');
                 $(".edit-plan").on('click', function () {
+                    switch_modal = 'Edit';
                     $("#tab_plans-panel").loading({message: '...',start:true});
 
                     loadOnModal('#modal-add-body');
@@ -768,10 +774,12 @@ $(function () {
                             $("#nav-custom-tab").on('click', function () {                        
                                 $("#btn-modal-plan").removeClass('btn-update-plan');
                                 $("#btn-modal-plan").addClass('btn-update-config-custom');
+                                switch_modal = 'Custom';
                             });
                             $("#nav-geral-tab").on('click', function () {
                                 $("#btn-modal-plan").removeClass('btn-update-config-custom');
-                                $("#btn-modal-plan").addClass('btn-update-plan');                                
+                                $("#btn-modal-plan").addClass('btn-update-plan');        
+                                switch_modal = 'Edit';                       
                             });
                             
                             $('.products_amount').mask('0#');

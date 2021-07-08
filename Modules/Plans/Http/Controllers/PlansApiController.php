@@ -621,6 +621,8 @@ class PlansApiController extends Controller
                }
             }
 
+            //atualizando personalização existente
+            $idsProductPlans = [];
             foreach($itens as $productPlanId=>$config)
             {                
                 $productPlan = ProductPlan::where('id',$productPlanId)->where('plan_id',$planId)->first();
@@ -632,8 +634,20 @@ class PlansApiController extends Controller
                     if($allow_change_in_block===true){
                         $this->updateAllConfigCustomProduct($plan->shopify_id,$config,!empty($request->is_custom[$productPlanId]) ? 1:0);
                     }
+                    $idsProductPlans[] = $productPlan->id;
                 }
             }
+            //atualizando personalização eliminada
+            $productPlans = ProductPlan::where('plan_id', $planId)->whereNotIn('id',$idsProductPlans)->get();    
+            foreach ($productPlans as $productPlan) {
+                $productPlan->custom_config = [];
+                $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1:0;
+                $productPlan->update();
+                if($allow_change_in_block===true){
+                    $this->updateAllConfigCustomProduct($plan->shopify_id,[],!empty($request->is_custom[$productPlanId]) ? 1:0);
+                }
+            }
+
         }else{            
             $productPlans = ProductPlan::where('plan_id', $planId)->get();    
             foreach ($productPlans as $productPlan) {
