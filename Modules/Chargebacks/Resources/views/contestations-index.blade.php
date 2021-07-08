@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
-        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v=11') }}">
+        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v=12') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -218,11 +218,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
                     <img src="{{ asset('modules/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
                     <span class="alert-text">
-                        <span class="bold">Contestações</span> 
+                        <span class="bold">Contestações</span>
                         são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular do cartão.
                     </span>
                     <button type="button" class="close text-primary" data-dismiss="alert" aria-label="Close" style="opacity: 1">

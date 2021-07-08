@@ -60,6 +60,7 @@
 	overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    max-width: 250px;
 }
 
 #chargebacks-table-data .won-contestation > td {
