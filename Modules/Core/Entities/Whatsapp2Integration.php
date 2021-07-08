@@ -2,13 +2,15 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
+ * Class Whatsapp2Integration
+ * @package Modules\Core\Entities
  * @property integer $id
  * @property int $user_id
  * @property int $project_id
@@ -20,6 +22,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property boolean $credit_card_refused
  * @property boolean $credit_card_paid
  * @property boolean $abandoned_cart
+ * @property boolean $pix_expired
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -29,14 +32,14 @@ use Spatie\Activitylog\Models\Activity;
 class Whatsapp2Integration extends Model
 {
     use SoftDeletes, LogsActivity;
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PAID = 'paid';
+    public const STATUS_CANCELLED = 'order_cancelled';
+    public const STATUS_VOIDED = 'voided';
+
     protected $keyType = 'integer';
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'user_id',
         'project_id',
@@ -48,17 +51,14 @@ class Whatsapp2Integration extends Model
         'credit_card_refused',
         'credit_card_paid',
         'abandoned_cart',
+        'pix_expired',
         'deleted_at',
         'created_at',
         'updated_at',
     ];
-    /**
-     * @var bool
-     */
+
     protected static $logFillable = true;
-    /**
-     * @var bool
-     */
+
     protected static $logUnguarded = true;
     /**
      * Registra apenas os atributos alterados
@@ -71,36 +71,30 @@ class Whatsapp2Integration extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi deletedo.";
+                break;
+            case 'created':
+                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi criado";
+                break;
+            case 'updated':
+                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi atualizada.";
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo(Project::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo(User::class);
     }
 }

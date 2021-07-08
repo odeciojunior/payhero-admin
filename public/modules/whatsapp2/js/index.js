@@ -1,5 +1,6 @@
 $(document).ready(function () {
     index();
+
     function index() {
         loadingOnScreen();
         $.ajax({
@@ -21,32 +22,25 @@ $(document).ready(function () {
                     $("#integration-actions").hide();
                 } else {
                     $(".select-pad").html("");
-                    let projects = response.projects;
+
                     $("#inputTokenWhats2").val(response.token_whatsapp2);
 
-                    for (let i = 0; i < projects.length; i++) {
-                        $(".select-pad").append(
-                            '<option value="' +
-                                projects[i].id +
-                                '">' +
-                                projects[i].name +
-                                "</option>"
-                        );
+                    for (let project of response.projects) {
+                        $(".select-pad").append(`<option value="${project.id}">${project.name}</option>`);
                     }
+
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
                         $("#content").html("");
-                        let integrations = response.integrations;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
+                        for (let integration of response.integrations) {
+                            renderIntegration(integration);
                         }
                         $("#no-integration-found").hide();
                     }
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
-
                 loadingOnScreenRemove();
             },
         });
@@ -82,27 +76,27 @@ $(document).ready(function () {
             `
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` +
-                data.id +
-                ` style='cursor:pointer;'>
+            data.id +
+            ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
-                data.project_photo +
-                ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` +
-                data.project_name +
-                `"/>
+            data.project_photo +
+            ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` +
+            data.project_name +
+            `"/>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
                                                 <h4 class="card-title">` +
-                data.project_name +
-                `</h4>
+            data.project_name +
+            `</h4>
                                                 <p class="card-text sm">Criado em ` +
-                data.created_at +
-                `</p>
+            data.created_at +
+            `</p>
                                             </div>
                                             <div class='col-md-2'>
                                                 <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
-                data.id +
-                `>
+            data.id +
+            `>
                                                     <span class='o-bin-1 pointer'></span>
                                                 </a>
                                             </div>
@@ -184,19 +178,19 @@ $(document).ready(function () {
                     "checked",
                     $("#abandoned_cart_edit").val() == "1"
                 );
+
+                $("#pix_expired_edit").val(response.data.pix_expired);
+                $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
             },
         });
     });
 
     //store
     $(document).on("click", ".btn-save", function () {
-        if ($("#url_checkout").val() == "" || $("#url_order").val() == "") {
+        if ($("#url_checkout").val().length < 0 || $("#url_order").val().length < 0) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(
-            document.getElementById("form_add_integration")
-        );
 
         $.ajax({
             method: "POST",
@@ -209,7 +203,7 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
-            data: form_data,
+            data: new FormData(document.getElementById("form_add_integration")),
             error: (response) => {
                 errorAjaxResponse(response);
             },
@@ -222,21 +216,14 @@ $(document).ready(function () {
 
     //update
     $(document).on("click", ".btn-update", function () {
-        if (
-            $("#url_checkout_edit").val() == "" ||
-            $("#url_order_edit").val() == ""
-        ) {
+        if ($("#url_checkout_edit").val().length < 0 || $("#url_order_edit").val().length < 0) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
-        );
 
         $.ajax({
             method: "POST",
-            url: "/api/apps/whatsapp2/" + integrationId,
+            url: "/api/apps/whatsapp2/" + $("#integration_id").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -245,7 +232,7 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
-            data: form_data,
+            data: new FormData(document.getElementById("form_update_integration")),
             error: (response) => {
                 errorAjaxResponse(response);
             },
@@ -271,8 +258,8 @@ $(document).ready(function () {
             var project = $(this).attr("project");
             var card = $(
                 "a[class='delete-integration float-right mt-35'][project='" +
-                    project +
-                    "']"
+                project +
+                "']"
             )
                 .parent()
                 .parent()
