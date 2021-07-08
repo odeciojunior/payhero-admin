@@ -19,16 +19,14 @@ class CreateTableSaleAdditionalCustomerInformations extends Migration
             $table->unsignedBigInteger('plan_id');
             $table->unsignedBigInteger('product_id');
             
-            $table->enum('type_enum',['Text','File','Image'])->default('Text');
-            $table->string('value',250)->nullable()->default(null);
-            $table->string('file_name',100)->nullable()->default(null);
-            $table->string('label',100)->nullable()->default(null);
+            $table->string('file',1000)->nullable()->default(null);
+            $table->string('text',250)->nullable()->default(null);
 
             $table->foreign('sale_id')->references('id')->on('sales');
             $table->foreign('plan_id')->references('id')->on('plans');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
-        });   
+        });
     }
 
     /**
