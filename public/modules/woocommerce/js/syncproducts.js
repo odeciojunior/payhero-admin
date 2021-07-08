@@ -10,10 +10,11 @@ $(document).ready(function () {
         
         var opt_prod = $('#opt_prod').is(':checked')
         var opt_track = $('#opt_track').is(':checked')
+        var opt_webhooks = $('#opt_webhooks').is(':checked')
 
         
         
-        if(!opt_prod && !opt_track){
+        if(!opt_prod && !opt_track && !opt_webhooks){
             alertCustom('error', 'Selecione uma ou mais categorias de dados para sincronizar!');
             $('#close-modal').click()
 
@@ -29,7 +30,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            data: {"opt_prod":opt_prod, "opt_track":opt_track},
+            data: {"opt_prod":opt_prod, "opt_track":opt_track, "opt_webhooks":opt_webhooks},
             url: "/api/apps/woocommerce/synchronize/products?projectId="+projectId,
             dataType: "json",
             headers: {

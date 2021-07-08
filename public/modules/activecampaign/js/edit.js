@@ -250,7 +250,7 @@ $(() => {
     //edit
     // $(document).on('click', '.card-edit', function () {
 
-        // $(".modal-title").html('Editar nova Integração com ActiveCampaign');
+        // $(".modal-title").html('Editar Integração com ActiveCampaign');
         // $("#bt_integration").addClass('btn-update');
         // $("#bt_integration").removeClass('btn-save');
         // $("#bt_integration").text('Atualizar');

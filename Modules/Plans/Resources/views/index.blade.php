@@ -61,14 +61,20 @@
 <!-- Modal padrão para adicionar Adicionar e Editar -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_plan" role="dialog" tabindex="-1">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10" id="conteudo_modal_add">
-            <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title-plan"></h4>
-                <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a>
+        <div class="modal-content" id="conteudo_modal_add">
+            <div class="modal-header simple-border-bottom mb-10" align="center" style="display: block;">
+                <div class="row">
+                    <div class="col-11">
+                        <h4 class="modal-title bold" id="modal-title-plan"></h4>
+                    </div>
+                    <div class="col-1" align="right">
+                        <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
+                            <i class="material-icons md-16">close</i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div id="modal-add-plan-body" class="modal-body" style='min-height: 100px'>
+            <div id="modal-add-plan-body" class="modal-body px-0 pb-0" style='min-height: 100px'>
                 @include('plans::create')
                 @include('plans::edit')
             </div>
@@ -76,7 +82,7 @@
                 <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                     Fechar
                 </a>
-                <button id="btn-modal" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">
+                <button id="btn-modal-plan" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-lg" data-dismiss="modal">
                     <i class="material-icons btn-fix"> save </i> Salvar
                 </button>
             </div>

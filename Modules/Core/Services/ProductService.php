@@ -12,6 +12,7 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleAdditionalCustomerInformation;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductService
@@ -26,12 +27,12 @@ class ProductService
         $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
-        if (!empty($projectId) && !empty($project->shopify_id)) {
+        if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
             return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)->get();
         } else {
             return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)
-                ->where('shopify', 0)->get();
+                ->whereNull('shopify_variant_id')->get();
         }
     }
 
@@ -48,7 +49,7 @@ class ProductService
                 $saleModel = new Sale();
                 $sale = $saleModel->with([
                     'productsPlansSale.tracking',
-                    'productsPlansSale.product',
+                    'productsPlansSale.product'                    
                 ])->find($saleParam);
             } else {
                 if (is_string($saleParam)) {
@@ -56,7 +57,7 @@ class ProductService
                     $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
                     $sale = $saleModel->with([
                         'productsPlansSale.tracking',
-                        'productsPlansSale.product',
+                        'productsPlansSale.product'
                     ])->find($saleId);
                 }
             }
@@ -65,6 +66,7 @@ class ProductService
         $productsSale = collect();
 
         if (!empty($sale)) {
+            $photo = '';
             foreach ($sale->productsPlansSale as $productsPlanSale) {
                 $product = $productsPlanSale->product->toArray();
                 $tracking = $productsPlanSale->tracking;
@@ -88,11 +90,14 @@ class ProductService
                     $product['tracking_status_enum'] = 'Não Informado';
                     $product['tracking_created_at'] = '';
                 }
-
-                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
-
+                
+                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';                
+                $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
+                ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
+                ->where('product_id',$productsPlanSale->product_id)->orderBy('line','asc')->orderBy('order','asc')->get();
+                $product['sale_id'] = $productsPlanSale->sale_id;
                 $productsSale->add((object) $product);
-            }
+            }         
         }
 
         return $productsSale;
