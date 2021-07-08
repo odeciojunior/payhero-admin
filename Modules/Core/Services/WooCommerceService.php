@@ -33,6 +33,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ImportWooCommerceOrders;
 use App\Jobs\ProcessWooCommerceOrderNotes;
+use App\Jobs\ProcessWooCommerceSaveProductSku;
 
 class WooCommerceService
 {
@@ -205,12 +206,17 @@ class WooCommerceService
             $data = [
                 'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
             ];
-    
-            try{
-                $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-            }catch(Exception $e){
-                //Log::debug($e);
-            }
+            
+            //Write SKU back to WooCommerce
+
+            ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
+            
+            // try{
+            //     $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+            // }catch(Exception $e){
+
+            //     //Log::debug($e);
+            // }
         }
 
 

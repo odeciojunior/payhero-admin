@@ -334,7 +334,7 @@ class SaleService
                 'transactions',
                 'notazzInvoices',
                 'affiliate',
-                'saleRefundHistory',
+                'saleRefundHistory'
             ]
         )->find(current(Hashids::connection('sale_id')->decode($saleId)));
 

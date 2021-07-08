@@ -11,65 +11,50 @@ use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Jobs\ProcessWooCommercePostbackTracking;
 
-class ProcessWooCommerceOrderNotes implements ShouldQueue
+class ProcessWooCommerceSaveProductSku implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
-    
     private $projectId;
+    private $productId;
+    private $variationId;
     private $data;
+    private $tries;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(int $projectId, array $data)
+    public function __construct(int $projectId, int $productId, int $variationId, array $data, int $tries=1)
     {
         $this->projectId = $projectId;
+        $this->productId = $productId;
+        $this->variationId = $variationId;
         $this->data = $data;
+        $this->tries = $tries;
     }
 
     public function handle()
     {
         try{
             
-            
-            
             $integration = WooCommerceIntegration::where('project_id',$this->projectId)->first();
-            
-            
             $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
             
-            $notes = $service->woocommerce->get('orders/'.$this->data['id'].'/notes');
+            $service->woocommerce->put('products/'.$this->productId.'/variations/'.$this->variationId.'/', $this->data);
             
-            foreach($notes as $note){
-                $trackingStr = 'Tracking number: ';
-                
-                if(strpos($note->note, $trackingStr)){
-                    
-                    $code = substr($note->note, strpos($note->note, $trackingStr)+strlen($trackingStr));
-                    $code = substr($code, 0, strpos($code, "\n"));
-
-                    
-                    $this->data['correios_tracking_code'] = $code;
-                    
-                    
-
-                    ProcessWooCommercePostbackTracking::dispatch($this->projectId, $this->data);
-
-
-                }
-            }
-            
-            // Log::debug($notes);
 
         }catch(Exception $e){
             
-            
+            if($this->tries > 0){
+                $tries = --$this->tries;
+                $this->dispatch($this->projectId, $this->productId, $this->variationId, $this->data, $tries);
+            }else{
+                report($e);
+            }
             //
         }
 

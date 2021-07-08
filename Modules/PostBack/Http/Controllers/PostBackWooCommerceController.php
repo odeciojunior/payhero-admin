@@ -2,7 +2,7 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-// use App\Jobs\ProcessWooCommercePostbackJob;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,11 +15,9 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Sale;
 use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ProcessWooCommerceOrderNotes;
-
-use function GuzzleHttp\json_decode;
+use App\Jobs\ProcessWooCommerceProductCreatePostBack;
 
 /**
  * Class PostBackWooCommerceController
@@ -27,10 +25,10 @@ use function GuzzleHttp\json_decode;
  */
 class PostBackWooCommerceController extends Controller
 {
+    
     public function postBackProductCreate(Request $request)
-    {
+    {   
 
-        
         return $this->createProduct($request);
     }
 
@@ -63,7 +61,7 @@ class PostBackWooCommerceController extends Controller
         if (empty($product->name) || empty($product->id) || empty($product->price) ) {
             return response()->json(
                 [
-                    'message' => 'invalid data',
+                    'message' => 'invalid data 2',
                 ],
                 200
             );
@@ -76,6 +74,7 @@ class PostBackWooCommerceController extends Controller
                     $description .= $attribute['option'] . ' ';
             }
         }
+        //$request->_description = $description;
 
         $user = UserProject::with('user')
                 ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
@@ -97,40 +96,23 @@ class PostBackWooCommerceController extends Controller
                 200
             );
         }
+        $_request = [
+            'project_id' => hashids_decode($request->project_id),
+            'id' => $request->id,
+            'variations' => $request->variations,
+            'attributes' => $request->attributes,
+            'name' => $request->name,
+            'price' => $request->price,
+            'images' => $request->images,
+            'parent_id' => $request->parent_id,
+            'sku' => $request->sku,
+            'description' => $description
+        ];
+
+        $_request = (object)$_request;
 
 
-
-        $wooCommerceService = new WooCommerceService(
-            $wooCommerceIntegration->url_store,
-            $wooCommerceIntegration->token_user,
-            $wooCommerceIntegration->token_pass
-        );
-        
-        $variationId = !empty($product->parent_id) ? $product->id : null;
-
-        $sku = $wooCommerceService->createProduct(
-            $wooCommerceIntegration->project_id,
-            $wooCommerceIntegration->user_id,
-            $product,
-            $description,
-            $variationId
-        );
-
-        if(!empty($sku)){
-
-            $data = [
-                'sku' => $sku
-            ];
-            if (empty($product->parent_id) && empty($product->variations)) {
-                $wooCommerceService->woocommerce->put('products/' . $product->id, $data);
-            } else {
-                $wooCommerceService->woocommerce->put(
-                    'products/' . $product->parent_id . '/variations/' . $product->id,
-                    $data
-                );
-            }
-
-        }
+        ProcessWooCommerceProductCreatePostBack::dispatch($_request);
 
 
         return response()->json(
