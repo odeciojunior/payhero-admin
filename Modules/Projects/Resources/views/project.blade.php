@@ -286,6 +286,55 @@
 
                     <!-- Modal para integração com woocommerce -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical"
+                         id="modal-woocom-integration-apikeys" aria-hidden="true" aria-labelledby="exampleModalTitle"
+                         role="dialog" tabindex="-1">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                                
+
+                                <div class="modal-body p-10 ">
+                                    <div class='col-md-12 col-sm-12 col-12'>
+
+                                        <h4>Atualizar chaves de acesso REST API</h4>
+                                    </div>
+
+                                    <div class='col-md-10 col-sm-12 col-12'>
+                                        <label class="control-label"> Consumer key </label>
+                                        <input class="form-control" id="consumer_k"  type='text'   class="form-control">
+                                        
+                                    </div>
+                                
+                                    <div class='col-md-10 col-sm-12 col-12 mt-20'>
+                                        <label class="control-label"> Consumer secret </label>
+                                        <input class="form-control" id="consumer_s"  type='text'   class="form-control">
+                                        
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
+                                            Cancelar
+                                        </button>
+                                        <button id="bt-modal-woocommerce-apikeys" type="button"
+                                                class="btn btn-success" style="width: 20%;">Confirmar
+                                        </button>
+                                    </div>
+
+                            </div>               
+                        </div>               
+                    </div>               
+                    
+                    
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
                          id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">

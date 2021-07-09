@@ -35,9 +35,14 @@ Route::group(
             'as'   => 'woocommerce.synchronize.trackings',
         ])->middleware('throttle:60,1');
 
-        Route::post('/apps/woocommerce/synchronize/templates', [
-            'uses' => 'WooCommerceApiController@synchronizeTemplates',
-            'as'   => 'woocommerce.synchronize.template',
+        Route::post('/apps/woocommerce/keys/update', [
+            'uses' => 'WooCommerceApiController@keysUpdate',
+            'as'   => 'woocommerce.keys.update',
+        ]);
+
+        Route::post('/apps/woocommerce/keys/get', [
+            'uses' => 'WooCommerceApiController@keysGet',
+            'as'   => 'woocommerce.keys.get',
         ]);
 
         Route::post('/apps/woocommerce/updatetoken', [
