@@ -33,13 +33,6 @@ class Whatsapp2Service
      */
     private $integrationId;
 
-    /**
-     * DigitalManagerService constructor.
-     * @param $urlCheckout
-     * @param $urlOrder
-     * @param $apiToken
-     * @param $integrationId
-     */
     function __construct($urlCheckout, $urlOrder, $apiToken, $integrationId)
     {
         $this->urlCheckout = $urlCheckout;
@@ -48,13 +41,12 @@ class Whatsapp2Service
         $this->integrationId = $integrationId;
     }
 
-    /**
-     * @param $data
-     * @param $url
-     * @return array
-     */
-    private function sendPost($data, $url)
+    private function sendPost($data, $url): array
     {
+        /*if (!FoxUtils::isProduction()) {
+            return ['code' => 403, 'result' => "Funcionalidade habilitada somente em ambiente de produção!"];
+        }*/
+
         $data = json_encode($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -171,7 +163,22 @@ class Whatsapp2Service
 
                 $return = $this->sendPost($data, $this->urlOrder);
 
-                $this->saveSentData($data, $return, $eventSale, $sale->id);
+                if (isset($return['code']) && $return['code'] == 200) {
+                    $sentStatus = 2;
+                } else {
+                    $sentStatus = 1;
+                }
+                Whatsapp2Sent::create(
+                    [
+                        'data' => json_encode($data),
+                        'response' => json_encode($return),
+                        'sent_status' => $sentStatus,
+                        'instance_id' => $sale->id,
+                        'instance' => 'sale',
+                        'event_sale' => $eventSale,
+                        'whatsapp2_integration_id' => $this->integrationId,
+                    ]
+                );
 
                 return $return;
             }
@@ -183,10 +190,6 @@ class Whatsapp2Service
     public function sendPixSaleExpired($sale)
     {
         try {
-            /*if (!FoxUtils::isProduction()) {
-                return;
-            }*/
-
             $sale->setRelation('customer', $sale->customer);
             $sale->load('plansSales', 'plansSales.plan', 'delivery', 'checkout');
 
@@ -217,14 +220,13 @@ class Whatsapp2Service
             $data = [
                 'type' => 'order',
                 'api_token' => $this->apiToken,
-                'payment_type' => (new Sale())->present()->getPaymentType($sale->payment_method),
+                'payment_type' => 'pix',
                 'order' => [
-                    'token' => Hashids::encode($sale->checkout_id),
+                    'token' => hashids_encode($sale->checkout_id),
                     'financial_status' => Whatsapp2Integration::STATUS_CANCELLED,
                     'gateway' => 'cloudfox',
-                    'checkout_url' => $link,
+                    'billet_url' => $link,
                     'id' => $sale->checkout_id,
-                    'status' => Whatsapp2Integration::STATUS_CANCELLED,
                     'values' => ['total' => $totalValue],
                     'costumer' => [
                         'name' => $sale->customer->name,
@@ -248,30 +250,25 @@ class Whatsapp2Service
 
             $return = $this->sendPost($data, $this->urlOrder);
 
-            $this->saveSentData($data, $return, Whatsapp2Integration::STATUS_CANCELLED, $sale->id);
+            if (isset($return['code']) && $return['code'] == 200) {
+                $sentStatus = 2;
+            } else {
+                $sentStatus = 1;
+            }
+            Whatsapp2Sent::create(
+                [
+                    'data' => json_encode($data),
+                    'response' => json_encode($return),
+                    'sent_status' => $sentStatus,
+                    'instance_id' => $sale->id,
+                    'instance' => 'sale',
+                    'event_sale' => 4,
+                    'whatsapp2_integration_id' => $this->integrationId,
+                ]
+            );
         } catch (Exception $e) {
             report($e);
         }
     }
 
-    private function saveSentData($data, $return, $eventSale, $saleId)
-    {
-        if (isset($return['code']) && $return['code'] == 200) {
-            $sentStatus = 2;
-        } else {
-            $sentStatus = 1;
-        }
-
-        Whatsapp2Sent::create(
-            [
-                'data' => json_encode($data),
-                'response' => json_encode($return),
-                'sent_status' => $sentStatus,
-                'instance_id' => $saleId,
-                'instance' => 'sale',
-                'event_sale' => $eventSale,
-                'whatsapp2_integration_id' => $this->integrationId,
-            ]
-        );
-    }
 }

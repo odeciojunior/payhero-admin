@@ -24,11 +24,10 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $sale = Sale::find(1073362);
-        $whatsapp2Integration = Whatsapp2Integration::where('id', 347)
+        $sale = Sale::find(1101848);
+        $whatsapp2Integration = Whatsapp2Integration::where('project_id', 2546)
             ->where('pix_expired', 1)
             ->first();
-
         if (!empty($whatsapp2Integration)) {
             $whatsapp2Service = new Whatsapp2Service(
                 $whatsapp2Integration->url_checkout,
