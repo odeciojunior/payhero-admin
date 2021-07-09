@@ -26,7 +26,7 @@ class AddColumnPixExpiredTableWhatsapp2Integrations extends Migration
     public function down()
     {
         Schema::table('whatsapp2_integrations', function (Blueprint $table) {
-            $table->dropColumn('pix_expired');
+            $table->dropColumn(['pix_expired']);
         });
     }
 }
