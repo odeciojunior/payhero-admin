@@ -43,9 +43,9 @@ class Whatsapp2Service
 
     private function sendPost($data, $url): array
     {
-        /*if (!FoxUtils::isProduction()) {
+        if (!FoxUtils::isProduction()) {
             return ['code' => 403, 'result' => "Funcionalidade habilitada somente em ambiente de produção!"];
-        }*/
+        }
 
         $data = json_encode($data);
         $ch = curl_init();
