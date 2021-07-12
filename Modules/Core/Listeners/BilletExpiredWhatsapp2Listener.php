@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Listeners;
-
 
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -25,7 +23,8 @@ class BilletExpiredWhatsapp2Listener implements ShouldQueue
                 ->first();
 
             if (!empty($whatsapp2Integration)) {
-                $whatsapp2Service = new Whatsapp2Service($whatsapp2Integration->url_checkout, $whatsapp2Integration->url_order, $whatsapp2Integration->api_token, $whatsapp2Integration->id);
+                $whatsapp2Service = new Whatsapp2Service($whatsapp2Integration->url_checkout,
+                    $whatsapp2Integration->url_order, $whatsapp2Integration->api_token, $whatsapp2Integration->id);
                 $sale = $event->sale;
                 $sale->setRelation('customer', $event->sale->customer);
                 $sale->load('plansSales.plan', 'delivery', 'checkout');
