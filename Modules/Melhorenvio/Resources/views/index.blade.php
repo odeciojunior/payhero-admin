@@ -24,7 +24,7 @@
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-add-1 text-white" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" id="button-information" data-target='#modal_explicacao'
+                    <a target="_blank" href="{{route('melhorenvio.tutorial')}}"
                        class="btn btn-floating"
                        style="background-color: #2E85EC;position: relative;float: right;color: white;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-question-1 white font-size-30" aria-hidden="true"></i>
@@ -86,17 +86,6 @@
                     </div>
                 </div>
             {{-- End Modal  --}}
-
-            <!-- Modal Explicação -->
-            <div class="modal fade modal-3d-flip-vertical" id="modal_explicacao" aria-hidden="true"
-                 aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" id="conteudo_modal_explicacao">
-                        ooi
-                    </div>
-                </div>
-            </div>
-            <!-- End Modal -->
 
         </div>
         @include('melhorenvio::not-integration')
