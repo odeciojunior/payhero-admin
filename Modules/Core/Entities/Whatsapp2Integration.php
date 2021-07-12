@@ -52,6 +52,7 @@ class Whatsapp2Integration extends Model
         'credit_card_paid',
         'abandoned_cart',
         'pix_expired',
+        'pix_paid',
         'deleted_at',
         'created_at',
         'updated_at',

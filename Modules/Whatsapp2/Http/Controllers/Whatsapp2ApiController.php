@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Whatsapp2Integration;
-use Modules\Core\Services\ProjectService;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Modules\Whatsapp2\Transformers\Whatsapp2Resource;
 use Spatie\Activitylog\Models\Activity;
@@ -110,6 +109,7 @@ class Whatsapp2ApiController extends Controller
                 'credit_card_paid' => empty($data['credit_card_paid']) ? 0 : $data['credit_card_paid'],
                 'abandoned_cart' => empty($data['abandoned_cart']) ? 0 : $data['abandoned_cart'],
                 'pix_expired' => empty($data['pix_expired']) ? 0 : $data['pix_expired'],
+                'pix_paid' => empty($data['pix_paid']) ? 0 : $data['pix_paid'],
                 'project_id' => $projectId,
                 'user_id' => auth()->user()->account_owner_id,
             ]);
@@ -122,46 +122,29 @@ class Whatsapp2ApiController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function edit($id)
+    public function edit($id): JsonResponse
     {
         try {
-            if (!empty($id)) {
-                $whatsapp2IntegrationModel = new Whatsapp2Integration();
-                $projectService = new ProjectService();
-
-                activity()->on($whatsapp2IntegrationModel)->tap(function (Activity $activity) use ($id) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar configurações da integração whatsapp 2.0');
-
-                $projects = $projectService->getMyProjects();
-
-                $projectId = current(Hashids::decode($id));
-                $integration = $whatsapp2IntegrationModel->where('project_id', $projectId)->first();
-
-                if ($integration) {
-                    return response()->json(['projects' => $projects, 'integration' => $integration]);
-                } else {
-                    return response()->json([
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    ], 400);
-                }
-            } else {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
+            if (empty($id)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
             }
+
+            activity()->on((new Whatsapp2Integration()))->tap(function (Activity $activity) use ($id) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = hashids_decode($id);
+            })->log('Visualizou tela editar configurações da integração SAK');
+
+            $integration = Whatsapp2Integration::where('project_id', hashids_decode($id))->first();
+
+            if ($integration) {
+                return response()->json(['integration' => $integration]);
+            }
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar Integração Whatsapp 2.0 (Whatsapp2Controller - edit)');
             report($e);
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
     }
 
@@ -169,7 +152,6 @@ class Whatsapp2ApiController extends Controller
     {
         try {
             $data = $request->all();
-            dd(hashids_decode($id));
             $whatsapp2Integration = Whatsapp2Integration::find(hashids_decode($id));
 
             if (empty($whatsapp2Integration)) {
@@ -195,6 +177,7 @@ class Whatsapp2ApiController extends Controller
                 'credit_card_paid' => empty($data['credit_card_paid']) ? 0 : $data['credit_card_paid'],
                 'abandoned_cart' => empty($data['abandoned_cart']) ? 0 : $data['abandoned_cart'],
                 'pix_expired' => empty($data['pix_expired']) ? 0 : $data['pix_expired'],
+                'pix_paid' => empty($data['pix_paid']) ? 0 : $data['pix_paid'],
             ]);
             return response()->json(['message' => 'Integração atualizada com sucesso!']);
         } catch (Exception $e) {

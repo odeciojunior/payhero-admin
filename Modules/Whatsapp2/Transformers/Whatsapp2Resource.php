@@ -7,12 +7,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class Whatsapp2Resource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param \Illuminate\Http\Request
-     * @return array
-     */
     public function toArray($request)
     {
         return [
@@ -29,6 +23,7 @@ class Whatsapp2Resource extends JsonResource
             'credit_card_paid' => $this->credit_card_paid,
             'abandoned_cart' => $this->abandoned_cart,
             'pix_expired' => $this->pix_expired,
+            'pix_paid' => $this->pix_paid,
             'created_at' => $this->created_at->format('d/m/Y'),
         ];
     }

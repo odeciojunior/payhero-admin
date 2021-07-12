@@ -181,6 +181,10 @@ $(document).ready(function () {
 
                 $("#pix_expired_edit").val(response.data.pix_expired);
                 $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
+
+                $("#pix_paid_edit").val(response.data.pix_paid);
+                console.log(response.data)
+                $("#pix_paid_edit").prop("checked", $("#pix_paid_edit").val() == "1");
             },
         });
     });

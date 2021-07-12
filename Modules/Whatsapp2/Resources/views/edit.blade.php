@@ -77,13 +77,12 @@
             </div>
         </div>
         <div class="row mt-20">
-
             <div class="col-6">
                 <div class="switch-holder">
-                    <label for="token" class='mb-10'>Carrinho abandonado:</label>
+                    <label for="token" class='mb-10'>Pix Pago:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" name="abandoned_cart" id="abandoned_cart_edit" class='check' value='0'>
+                        <input type="checkbox" value='1' name="pix_paid" id="pix_paid_edit" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -94,6 +93,18 @@
                     <br>
                     <label class="switch">
                         <input type="checkbox" value='1' name="pix_expired" id="pix_expired_edit" class='check' checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-20">
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Carrinho abandonado:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" name="abandoned_cart" id="abandoned_cart_edit" class='check' value='0'>
                         <span class="slider round"></span>
                     </label>
                 </div>
