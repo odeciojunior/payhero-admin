@@ -18,7 +18,7 @@ $(() => {
                     $('#content').html('');
 
                     for (let integration of resp.data){
-                        let data =`<div class="col-sm-6 col-md-4 col-lg-3 integration-container">
+                        let data =`<div class="col-sm-6 col-md-4 col-lg-3" id="integration-${integration.id}">
                                        <div class="card shadow">
                                            <img class="card-img-top img-fluid w-full" src="/modules/global/img/melhorenvio-mono.png" alt=""/>
                                            ${ !integration.completed
@@ -77,12 +77,17 @@ $(() => {
 
     $(document).on('click', '.btn-delete', function (){
         let id = $(this).data('id');
-        let parent = $(this).closest('.integration-container');
+        $('#btn-delete-confirm').data('id', id);
+        $('#modal-delete-integration').modal('show');
+    });
+
+    $('#btn-delete-confirm').on('click', function (){
+        let id = $(this).data('id');
         $.ajax({
             method: 'POST',
             url: "/api/apps/melhorenvio/" + id,
             data: {
-              _method: 'DELETE'
+                _method: 'DELETE'
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -90,7 +95,7 @@ $(() => {
             },
             success: resp => {
 
-                parent.remove();
+                $('#integration-'+id).remove();
                 if($('.integration-container').length === 0){
                     $('#no-integration-found').show();
                 }
@@ -101,7 +106,7 @@ $(() => {
                 errorAjaxResponse(resp)
             }
         });
-    })
+    });
 
     $('#btn-save').on('click', function () {
 
