@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Plans\Http\Controllers\PlansApiController;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Whatsapp2Integration;
+use Modules\Core\Services\Whatsapp2Service;
 
 class GenericCommand extends Command
 {
@@ -25,7 +24,20 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        $sale = Sale::find(1101848);
+        $whatsapp2Integration = Whatsapp2Integration::where('project_id', 2546)
+            ->where('pix_expired', 1)
+            ->first();
+        if (!empty($whatsapp2Integration)) {
+            $whatsapp2Service = new Whatsapp2Service(
+                $whatsapp2Integration->url_checkout,
+                $whatsapp2Integration->url_order,
+                $whatsapp2Integration->api_token,
+                $whatsapp2Integration->id
+            );
 
+            $whatsapp2Service->sendPixSaleExpired($sale);
+        }
     }
 }
 
