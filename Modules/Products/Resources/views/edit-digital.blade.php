@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!!  asset('/modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=06') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=07') }}">
     @endpush
 
     <!-- Page -->
@@ -58,7 +58,7 @@
                                 <div class="col-12 col-md-5 div-expiration-time">
                                     <label for="url_expiration_time">Expiração do link</label>
                                     <div class="form-group input-group">
-                                        <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" min="0" maxlength="5" data-mask="0#">
+                                        <input name="url_expiration_time" type="text" class="form-control" id="url_expiration_time" min="0" maxlength="3" data-mask="0#">
                                         <div class="input-group-append">
                                             <span class="input-group-text font-weight-bold">HORA(S)</span>
                                         </div>
@@ -128,7 +128,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/products.js?v=14') }}"></script>
+        <script src="{{ asset('modules/products/js/products.js?v=15') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

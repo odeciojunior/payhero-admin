@@ -1498,7 +1498,7 @@ class ShopifyService
 
         $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
         if ($shippingValue <= 0) {
-            $shippingTitle = 'Free Shipping';
+            $shippingTitle = 'Frete Grátis para Todo Brasil';
         } else {
             $shippingTitle = 'Standard Shipping';
             $totalValue += $shippingValue;
@@ -1647,7 +1647,6 @@ class ShopifyService
             $orderData['shipping_address'] = $shippingAddress;
 
             $this->sendData = $orderData;
-            //            $order              = $this->client->getOrderManager()->create($orderData);
 
             $order = $this->client->post(
                 'orders',
@@ -1655,7 +1654,7 @@ class ShopifyService
                     'order' => $orderData,
                 ]
             );
-            //            $this->receivedData = $this->convertToArray($order);
+
             $this->receivedData = $order;
 
             if (FoxUtils::isEmpty($order['order']['id'])) {

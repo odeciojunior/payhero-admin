@@ -206,46 +206,23 @@ class WithdrawalsApiController
             foreach ($transactions as $transaction) {
                 $total_withdrawal += $transaction->value;
 
-                if(empty($transaction->sale->flag)){
+                if (!$transaction->sale->flag || empty($transaction->sale->flag)) {
+//                    $transaction->sale->flag = $transaction->sale->present()->getFlagPaymentMethod();
                     $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
-                if (!$transaction->gateway_transferred) {
+                if (!empty($transaction->gateway_transferred_at)) {
+                    $date = \Carbon\Carbon::parse($transaction->gateway_transferred_at)->format('d/m/Y');
+                    $this->updateArrayBrands($arrayBrands, $transaction, true, $date);
+                }
+                else {
                     $this->updateArrayBrands($arrayBrands, $transaction, false);
-                } else {
-                    $this->updateArrayBrands($arrayBrands, $transaction, true, $transaction->gateway_transferred_at);
                 }
             }
 
             $arrayTransactions = [];
 
             foreach ($arrayBrands as $arrayBrand) {
-//                if ($arrayBrand['liquidated'] == true and empty($arrayBrand['date'])) {
-//                    $subSeller = $subsellerGetnetId;
-//
-//                    $getNetBackOfficeService = new GetnetBackOfficeService();
-//
-//                    $getNetBackOfficeService->setStatementSubSellerId($subSeller)
-//                        ->setStatementSaleHashId($arrayBrand['hash_id']);
-//
-//
-//                    $originalResult = $getNetBackOfficeService->getStatement();
-//
-//                    $gatewaySale = json_decode($originalResult);
-//                    if (!empty($gatewaySale->list_transactions[0]) &&
-//                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
-//                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-//                    ) {
-//                        $date = str_replace(
-//                            'T',
-//                            ' ',
-//                            $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
-//                        );
-//                        $date = date("d/m/Y", strtotime($date));
-//
-//                        $arrayBrand['date'] = $date;
-//                    }
-//                }
 
                 $arrayTransactions[] = [
                     'brand' => $arrayBrand['brand'],
@@ -276,17 +253,16 @@ class WithdrawalsApiController
         if (array_key_exists($transaction->sale->flag, $arrayBrands)) {
             if (!$isLiquidated) {
                 $arrayBrands[$transaction->sale->flag]['liquidated'] = false;
+                $arrayBrands[$transaction->sale->flag]['date'] = null;
             }
-
             $arrayBrands[$transaction->sale->flag]['value'] += $transaction->value;
         } else {
             $arrayBrands[$transaction->sale->flag] = [
                 'brand' => $transaction->sale->flag,
                 'value' => $transaction->value,
                 'liquidated' => $isLiquidated,
-                'date' => $date ? with(new Carbon($date))->format('d/m/Y'): '-',
-                'hash_id' => $transaction->sale->hash_id,
-
+                'date' => $date,
+                'gateway_order_id' => $transaction->sale->gateway_order_id,
             ];
         }
     }

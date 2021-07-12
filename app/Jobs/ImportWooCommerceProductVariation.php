@@ -45,9 +45,6 @@ class ImportWooCommerceProductVariation implements ShouldQueue
 
                 $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $woocommerce->verifyPermissions();
-                
-
                 $woocommerce->importProductVariation(
                     $this->variation,
                     $this->_product,

@@ -114,6 +114,7 @@ $(() => {
                 } else {
                     $("#data-table-projects").hide();
                     $("#project-empty").show();
+                    // $("#project-empty").removeClass('d-none').addClass('show-empty');
                     $("#btn-config").css({ visibility: "hidden" });
                 }
 

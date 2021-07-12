@@ -2,7 +2,7 @@
 
 @endpush
 <div class="modal hide fade in example-modal-lg" id="modal_detalhes_transacao" aria-hidden="true" aria-labelledby="exampleModalTitle"
-     role="dialog" tabindex="-1" data-keyboard="false" data-backdrop = "static">
+     role="dialog" tabindex="-1" data-keyboard="false" >
 
     <div class="modal-dialog modal-simple modal-sidebar modal-lg" style="height: 100vh;">
         <div id='modal-transactionsDetails' class="modal-content p-20 " style="width: 500px;">

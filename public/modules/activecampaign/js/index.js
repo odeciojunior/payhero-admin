@@ -108,7 +108,7 @@ $(document).ready(function () {
 
 // <a href="/projects/${project.id}" class="stretched-link"></a>
 
-        // $(".modal-title").html('Editar nova Integração com ActiveCampaign');
+        // $(".modal-title").html('Editar Integração com ActiveCampaign');
         // $("#bt_integration_add").addClass('btn-update');
         // $("#bt_integration_add").removeClass('btn-save');
         // $("#bt_integration_add").text('Atualizar');

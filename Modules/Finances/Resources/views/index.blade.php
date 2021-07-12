@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=06'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=08'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -105,7 +105,7 @@
                                             <div class="col-sm-3">
                                                 <div id="div-available-money" class="price-holder pointer pl-10">
                                                     <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
-                                                    <h4 class="price saldoDisponivel"></h4>
+                                                    <h4 class="number saldoDisponivel"></h4>
                                                 </div>
                                                 <div class="s-border-left green"></div>
                                             </div>
@@ -183,7 +183,7 @@
                                         <div class="card-body">
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Saldo Pendente </h5>
-                                                <h4 class="saldoPendente"></h4>
+                                                <h4 class="number saldoPendente"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right yellow"></div>
@@ -192,7 +192,7 @@
                                         <div class="card-body">
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Saldo Bloqueado </h5>
-                                                <h4 class="saldoBloqueado"></h4>
+                                                <h4 class="number saldoBloqueado"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right red"></div>
@@ -201,7 +201,7 @@
                                         <div class="card-body">
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Saldo Total </h5>
-                                                <h4 class="saltoTotal"></h4>
+                                                <h4 class="number saltoTotal"></h4>
                                             </div>
                                         </div>
                                         <div class="s-border-right blue"></div>
@@ -210,10 +210,10 @@
                                         <div class="card-body">
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Débitos pendentes </h5>
-                                                <h4 class="saldoDebito" id="debit-value">
+                                                <h4 class="number saldoDebito" id="debit-value">
 {{--                                                    <span class="currency font-size-30 bold debit-balance" style="color: #E61A1A;">- R$</span>--}}
-                                                    <span style="color:#959595">R$ </span>
-                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>
+{{--                                                    <span style="color:#959595">R$ </span>--}}
+{{--                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>--}}
                                                 </h4>
                                             </div>
                                         </div>
@@ -694,8 +694,8 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=58') }}"></script>
-            <script src="{{ asset('modules/finances/js/settings.js?v=62') }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v=65') }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v=63') }}"></script>
         @endpush
     </div>
 
