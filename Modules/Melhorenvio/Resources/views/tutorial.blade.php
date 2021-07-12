@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tutorial Melhor Envio (Homologação)</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/melhorenvio/css/tutorial.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/melhorenvio/css/tutorial.css?v='.uniqid()) }}">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
             </div>
         </li>
         <li> Preencha dos dados e clique no botão <b>CADASTRAR APLICATIVO</b>. Você pode preencher os dados da
-            maneira que desejar, mas é importante que URL de callback seja a mesma da imagem abaixo.
+            maneira que desejar, mas é importante que URL de callback seja <span class="url-container">{{route('melhorenvio.finish')}}</span>.
             <div class="img-container">
                 <img src="{{ asset('modules/melhorenvio/img/step-2a.jpg') }}" alt="Imagem 1 do passo 2">
                 <img src="{{ asset('modules/melhorenvio/img/step-2b.jpg') }}" alt="Imagem 2 do passo 2">
