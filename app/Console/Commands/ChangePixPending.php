@@ -35,7 +35,6 @@ class ChangePixPending extends Command
     {
         $pixService = new PixService();
         $pixService->changePixPending();
-        $this->line('feitoo');
     }
 
 }
