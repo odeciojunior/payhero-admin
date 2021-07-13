@@ -42,9 +42,10 @@ class UpdateDnsFromDomains extends Command
 
         foreach ($domains as $domain) {
             $this->line('Atualizando dominio :' . $domain->name);
-            if (empty($domain->cloudflare_domain_id) || empty($checkoutDns->cloudflare_record_id)) {
+            if (empty($domain->cloudflare_domain_id)) {
                 continue;
             }
+
             $checkoutDns = $domain->domainsRecords->where('name', 'checkout')->first();
             $trackingDns = $domain->domainsRecords->where('name', 'tracking')->first();
             $affiliateDns = $domain->domainsRecords->where('name', 'affiliate')->first();
