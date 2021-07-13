@@ -71,7 +71,7 @@ $(document).ready(function () {
                     if (response.data.support_phone != '') {
                         $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
                     }
-                    
+
 
                     $('.release_days').html(`<strong>Dias para liberar dinheiro: <span class='green-gradient'>${response.data.billet_release_days}</span> dias</strong>`);
                 } else {
@@ -131,6 +131,7 @@ $(document).ready(function () {
     $(document).on('click', '#btn-store-affiliation', function () {
         loadingOnScreen();
         let type = $('#btn-affiliation').data('type');
+        $("#btn-affiliation").hide();
         $.ajax({
             method: "POST",
             url: "/api/affiliates",
@@ -147,6 +148,7 @@ $(document).ready(function () {
             error: (response) => {
                 $('#modal_store_affiliate').modal('hide');
                 loadingOnScreenRemove();
+                $("#btn-affiliation").show();
                 errorAjaxResponse(response);
             },
             success: (response) => {

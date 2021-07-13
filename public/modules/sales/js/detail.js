@@ -51,6 +51,15 @@ $(() => {
         alertCustom("success", "Link copiado!");
     });
 
+    $(document).on("click", ".btn-copy-custom-text", function () {
+        let temp = $("<input>");
+        $("#nav-tabContent").append(temp);
+        temp.val($(this).attr("link")).select();
+        document.execCommand("copy");
+        temp.remove();
+        alertCustom("success", "Link copiado!");
+    });
+
     $(".btn-edit-client").on("click", function () {
         let container = $(this).parent();
         container
@@ -418,7 +427,7 @@ $(() => {
 
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
         if (
-            sale.installment_tax_value !== "0,00" &&
+            parseFloat(sale.installment_tax_value.replace(/[^\d]/g, "")) !== 0 &&
             sale.user_sale_type == "producer"
         ) {
             $("#taxa-installment-value").html(sale.installment_tax_value);
@@ -458,7 +467,12 @@ $(() => {
             $(".automatic-discount-value").hide();
             $(".text-discount").hide();
         }
-        $("#total-value").html(sale.total_paid_value);
+
+        if (sale.status_name != 'refunded') {
+            $("#total-value").html(sale.total);
+        } else {
+            $("#total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+        }
 
         if (sale.refund_value != "0,00" && sale.status == 8) {
             $(".text-partial-refund").show();
@@ -482,7 +496,13 @@ $(() => {
         $("#taxareal-value").html(sale.taxaReal ? sale.taxaReal : "");
 
         $("#tax-value-total").html(`Valor total: `);
-        $("#tax-value-total-value").html(sale.total);
+
+        if (sale.status_name != 'refunded') {
+            $("#tax-value-total-value").html(sale.total);
+        } else {
+            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+        }
+
 
         $("#tax-percentage").html(`Taxa (${sale.percentage_rate}%)`);
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
@@ -726,11 +746,11 @@ $(() => {
             sale.status == 1 &&
             sale.userPermissionRefunded
         ) {
-            $("#div_refund_billet").html(
+            /*$("#div_refund_billet").html(
                 '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
                     sale.id +
                     ">Estornar boleto</button>"
-            );
+            );*/
         } else {
             $("#div_refund_billet").html("");
         }
@@ -1002,6 +1022,7 @@ $(() => {
         $("#data-tracking-products").html("");
         let div = "";
         let photo = "/modules/global/img/produto.png";
+        console.log(products);
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -1010,14 +1031,101 @@ $(() => {
                         <div class="col-lg-2">
                             <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-md-5 col-lg-6">
                             <h4 class="table-title mb-0">${value.name}</h4>
                             <small>${value.description}</small>
                         </div>
-                        <div class="col-lg-3 text-right">
+                        <div class="col-md-3 col-lg-2 text-right">
                             <p class="sm-text text-muted">${value.amount}x</p>
                         </div>
                     </div>`;
+            if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
+                div+= `<!-- Customer additional information -->
+                    <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
+                        <div class="panel panel-custom-product">
+                            <div class="panel-heading" id="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tab">
+                                <a class="panel-title" data-toggle="collapse" href="#sale-custom-product-${value.sale_id}${value.id}${index}"
+                                data-parent="#custom-product-accordion${value.id}" aria-expanded="true"
+                                aria-controls="exampleCollapseDefaultOne">
+                                    <strong>Personalizações enviadas pelo cliente</strong>
+                                </a>
+                            </div>
+                            <div class="panel-collapse collapse" id="sale-custom-product-${value.sale_id}${value.id}${index}"
+                                aria-labelledby="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tabpanel" style="">
+                                <div class="panel-body">`;
+                                var file_name = null;
+                                    line_temp = 0;
+                                    $.each(value.custom_products, function (index2,custom) {
+                                        if(line_temp != custom.line){
+                                            div+=`<hr/>`;
+                                            line_temp = custom.line;
+                                        }
+                                        div+=`<div class="row mt-2">`;
+                                        
+                                        if(typeof custom.type_enum != 'undefined'){
+                                            if(custom.type_enum!='Text'){
+                                                file_name = custom.file_name.substr(-20);                                            
+                                            }
+                                            switch(custom.type_enum){
+                                                case 'Text':
+                                                    div+=`
+                                                        <div class="col-md-3">
+                                                            <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon"> 
+                                                        </div>
+                                                        <div class="col-md-6 px-0 py-13">                                                            
+                                                            <h5>${custom.value}</h5>
+                                                        </div>
+                                                        <div class="col-md-3 pl-0 py-11" align="right">                                                            
+                                                            <a role="button" class="copy_link btn-copy-custom-text" style="cursor: pointer;"  link="${custom.value}" title="Copiar link">
+                                                                <span class="material-icons icon-copy-1"> content_copy </span>
+                                                            </a>
+                                                        </div>`;
+                                                break;
+                                                case 'File':
+                                                    div+=`
+                                                    <div class="col-md-3">
+                                                        <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" /> 
+                                                    </div>
+                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                        <h5>${file_name}</h5>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                        <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Arquivo" target="_blank">
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                        </a>
+                                                    </div>`;                                                    
+                                                break;
+                                                case 'Image':
+                                                    div+=`
+                                                    <div class="col-md-3">
+                                                        <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon"> 
+                                                    </div>
+                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                        <h5>${file_name}</h5>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                        <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Imagem"  target="_blank">
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                        </a>
+                                                    </div>`;
+                                                break;
+                                            }
+                                            
+                                        }
+                                        
+                                        div+=`</div>`;
+                                        
+                                    });
+                                
+                div+= `             
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Customer additional information -->
+                `;
+            }
+                    
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code

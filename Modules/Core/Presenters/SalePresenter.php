@@ -42,6 +42,24 @@ class SalePresenter extends Presenter
     }
 
     /**
+     * @return array
+     */
+    public function getHotzappPlansList()
+    {
+        $plans = [];
+
+        foreach ($this->plansSales as $planSale) {
+            $plans[] = [
+                "price" => $planSale->plan()->first()->price,
+                "quantity" => $planSale->amount,
+                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
+            ];
+        }
+
+        return $plans;
+    }
+
+    /**
      * @return string
      */
     public function getShopifyDiscount()
@@ -168,7 +186,7 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product = $productPlan->product()->first()->toArray();
+                $product = clone($productPlan->product()->first()->toArray());
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $productsSale[] = $product;
             }

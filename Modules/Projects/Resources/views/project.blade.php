@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=10') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
     <style>
         @font-face {
@@ -286,6 +286,55 @@
 
                     <!-- Modal para integração com woocommerce -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical"
+                         id="modal-woocom-integration-apikeys" aria-hidden="true" aria-labelledby="exampleModalTitle"
+                         role="dialog" tabindex="-1">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                                
+
+                                <div class="modal-body p-10 ">
+                                    <div class='col-md-12 col-sm-12 col-12'>
+
+                                        <h4>Atualizar chaves de acesso REST API</h4>
+                                    </div>
+
+                                    <div class='col-md-10 col-sm-12 col-12'>
+                                        <label class="control-label"> Consumer key </label>
+                                        <input class="form-control" id="consumer_k"  type='text'   class="form-control">
+                                        
+                                    </div>
+                                
+                                    <div class='col-md-10 col-sm-12 col-12 mt-20'>
+                                        <label class="control-label"> Consumer secret </label>
+                                        <input class="form-control" id="consumer_s"  type='text'   class="form-control">
+                                        
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
+                                            Cancelar
+                                        </button>
+                                        <button id="bt-modal-woocommerce-apikeys" type="button"
+                                                class="btn btn-success" style="width: 20%;">Confirmar
+                                        </button>
+                                    </div>
+
+                            </div>               
+                        </div>               
+                    </div>               
+                    
+                    
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
                          id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -338,6 +387,15 @@
                                                 <label class="text-left" for="opt_track" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar códigos de rastreio com WooCommerce</label>
                                             </div>
+
+                                            <div class="switch-holder" style="margin-top:4px">
+                                                <label class="switch" style="top:3px">
+                                                    <input type="checkbox" id="opt_webhooks" name="product_amount_selector" class="check" value="1">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
+                                                    Sincronizar webhooks com WooCommerce</label>
+                                            </div>
                                             
                                         </p>
                                     </div>
@@ -358,7 +416,7 @@
         </div>
     </div>
 
-    @push('scripts')
+    @push('scripts')    
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
@@ -376,7 +434,7 @@
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
+        <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
     @endpush
 @endsection
-

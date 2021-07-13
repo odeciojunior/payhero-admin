@@ -20,7 +20,6 @@ use Vinkla\Hashids\Facades\Hashids;
  *
  * @property integer $id
  * @property int $owner_id
- * @property int $company_id
  * @property integer $affiliate_id
  * @property integer $customer_id
  * @property integer $delivery_id
@@ -43,7 +42,6 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property int $installments_amount
  * @property string $installments_value
  * @property string $flag
- * @property boolean $api_flag
  * @property string $boleto_link
  * @property string $boleto_digitable_line
  * @property string $boleto_due_date
@@ -70,7 +68,6 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
- * @property Company $company
  * @property Collection $plansSales
  * @property Collection $transactions
  * @property Collection $productsPlansSale
@@ -145,7 +142,6 @@ class Sale extends Model
      */
     protected $fillable = [
         'owner_id',
-        'company_id',
         'affiliate_id',
         'customer_id',
         'delivery_id',
@@ -170,7 +166,6 @@ class Sale extends Model
         'installments_amount',
         'installments_value',
         'flag',
-        'api_flag',
         'boleto_link',
         'boleto_digitable_line',
         'boleto_due_date',
@@ -236,11 +231,6 @@ class Sale extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\User', 'owner_id');
-    }
-
-    public function company()
-    {
-        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function plansSales(): HasMany
@@ -314,6 +304,11 @@ class Sale extends Model
     public function blockReasonsSale(): HasMany
     {
         return $this->hasMany(BlockReasonSale::class);
+    }
+
+    public function additionalCustomerInformation(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\SaleAdditionalCustomerInformation');
     }
 
     public function getHashIdAttribute()

@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=02') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=08') }}">
 @endpush
 

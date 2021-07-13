@@ -206,7 +206,7 @@ class WooCommerceApiController extends Controller
                     'token_user' => $dataRequest['token_user'],
                     'token_pass' => $dataRequest['token_pass'],
                     'url_store' => $urlStore,
-                    'user_id' => auth()->user()->id,
+                    'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $projectCreated->id,
                     'status' => 1,
                 ]
@@ -295,6 +295,7 @@ class WooCommerceApiController extends Controller
     {
         $doProducts = $request->opt_prod;
         $doTrackingCodes = $request->opt_track;
+        $doWebhooks = $request->opt_webhooks;
 
         $projectId = current(Hashids::decode($request->projectId));
         
@@ -302,16 +303,48 @@ class WooCommerceApiController extends Controller
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
         
-        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
+        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
         
     }
 
-    public function undoIntegration(Request $request)
+    public function keysUpdate(Request $request)
     {
+        try{
+            $projectId = current(Hashids::decode($request->projectId));
+            
+            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+    
+            $integration->token_user = $request->consumer_key;
+            $integration->token_pass = $request->consumer_secret;
+            $integration->save();
+            
+            return '{"status":true}';
+
+        }catch(Exception $e){
+            
+            return '{"status":false}';
+        }
+
+        return $request;
     }
 
-    public function reIntegration(Request $request)
+    public function keysGet(Request $request)
     {
+        try{
+            $projectId = current(Hashids::decode($request->projectId));
+            
+            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+    
+            $consumer_k = substr($integration->token_user, 0, 10);
+            $consumer_s = substr($integration->token_pass, 0, 10);
+            
+            
+            return '{"status":"true", "consumer_s":"'.$consumer_s.'", "consumer_k":"'.$consumer_k.'"}';
+
+        }catch(Exception $e){
+            
+            return '{"status":"false"}';
+        }
     }
 
     public function synchronizeTrackings(Request $request)

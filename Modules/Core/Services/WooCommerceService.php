@@ -32,6 +32,8 @@ use Automattic\WooCommerce\Client;
 use Modules\Core\Entities\WooCommerceIntegration;
 use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ImportWooCommerceOrders;
+use App\Jobs\ProcessWooCommerceOrderNotes;
+use App\Jobs\ProcessWooCommerceSaveProductSku;
 
 class WooCommerceService
 {
@@ -204,12 +206,17 @@ class WooCommerceService
             $data = [
                 'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
             ];
-    
-            try{
-                $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-            }catch(Exception $e){
-                //Log::debug($e);
-            }
+            
+            //Write SKU back to WooCommerce
+
+            ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
+            
+            // try{
+            //     $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
+            // }catch(Exception $e){
+
+            //     //Log::debug($e);
+            // }
         }
 
 
@@ -230,7 +237,9 @@ class WooCommerceService
 
         $_product->price = empty($_product->price)?1:$_product->price;
 
-        $productExists = $productModel->where('shopify_variant_id', $shopifyVariantId)->first();
+        $productExists = $productModel
+            ->where('project_id', $projectId)
+            ->where('shopify_variant_id', $shopifyVariantId)->first();
 
         if(!empty($productExists)){
             
@@ -276,23 +285,26 @@ class WooCommerceService
 
             $planExists = $planModel->where('shopify_variant_id', $shopifyVariantId)->first();
             
-            if($planExists->name != $_product->name){
-                $planExists->name = $_product->name;
-                $newValues = true;
-            }
-            
-            if($planExists->description != mb_substr($description, 0, 100) ){
-                $planExists->description = mb_substr($description, 0, 100);
-                $newValues = true;
-            }
-            
-            if($planExists->price != $_product->price){
-                $planExists->price = $_product->price;
-                $newValues = true;
-            }
-            
-            if($newValues == true){
-                $planExists->save();
+            if(!empty($planExists)){
+
+                if($planExists->name != $_product->name){
+                    $planExists->name = $_product->name;
+                    $newValues = true;
+                }
+                
+                if($planExists->description != mb_substr($description, 0, 100) ){
+                    $planExists->description = mb_substr($description, 0, 100);
+                    $newValues = true;
+                }
+                
+                if($planExists->price != $_product->price){
+                    $planExists->price = $_product->price;
+                    $newValues = true;
+                }
+                
+                if($newValues == true){
+                    $planExists->save();
+                }
             }
 
             return false;
@@ -456,7 +468,7 @@ class WooCommerceService
 
     
 
-    public function commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes){       
+    public function commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks){       
 
         //starts to sync, freezes this action for 45 minutes 
 
@@ -468,12 +480,16 @@ class WooCommerceService
         $this->pass = $integration->token_pass;
         $this->verifyPermissions();
         
-        if($doProducts == 'true'){
+        if($doWebhooks == 'true'){
             $this->deleteHooks($projectId, true);
     
             $hashedProjectId = Hashids::encode($projectId);
     
             $this->createHooks($hashedProjectId);
+        }
+
+        if($doProducts == 'true'){
+            
             
             $this->fetchProducts($projectId, $integration->user_id);
         }
@@ -493,16 +509,19 @@ class WooCommerceService
     {
         
         foreach($orders as $order){
+
+            $data = array();
+            foreach($order->line_items as $item){
+                $line_items[] = [
+                    'sku'=> $item->sku,
+                    'name'=> $item->name,
+                    'quantity'=> $item->quantity,
+                ];
+            }
+
             if(!empty($order->correios_tracking_code)){
                 
-                $data = array();
-                foreach($order->line_items as $item){
-                    $line_items[] = [
-                        'sku'=> $item->sku,
-                        'name'=> $item->name,
-                        'quantity'=> $item->quantity,
-                    ];
-                }
+                
                 $data = [
                     'id'=>$order->id,
                     'correios_tracking_code' => $order->correios_tracking_code,
@@ -511,17 +530,27 @@ class WooCommerceService
                 
                 ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
                 
+            }else{
+
+                // Check the notes for aliexpress codes
+                $data = [
+                    'id'=>$order->id,
+                    'correios_tracking_code' => '?',
+                    'line_items' => $line_items
+                ];
+                ProcessWooCommerceOrderNotes::dispatch($projectId, $data);
+
             }
         }
         return;
     }
 
-    public function syncProducts($projectId, $integration, $doProducts, $doTrackingCodes)
+    public function syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks)
     {
         
         if(empty($integration->synced_at)){
 
-            $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
+            $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
             return '{"status":true,"msg":""}';
 
@@ -536,7 +565,7 @@ class WooCommerceService
 
             }else{
 
-                $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes);
+                $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
                 return '{"status":true,"msg":""}';
 

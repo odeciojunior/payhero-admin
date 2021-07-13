@@ -18,10 +18,10 @@
     }
 
     .slider::before {
-        height: 19px;
-        width: 19px;
-        left: -5px;
-        top: -3px;
+        height: 22px;
+        width: 22px;
+        left: -3px;
+        top: 2px;
     }
 
     .font-text {

@@ -245,7 +245,7 @@ class ShopifyApiController extends Controller
                     'token' => $dataRequest['token'],
                     'shared_secret' => '',
                     'url_store' => $urlStore . '.myshopify.com',
-                    'user_id' => auth()->user()->id,
+                    'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $projectCreated->id,
                     'status' => 1,
                 ]
@@ -803,15 +803,21 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function updateToken(Request $request)
+    public function updateToken(Request $request): JsonResponse
     {
         try {
             $data = $request->all();
-            $shopifyIntegrationModel = new ShopifyIntegration();
-            $projectModel = new Project();
 
+            if (empty($data['token']) || 0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $data['token'])) {
+                return response()->json(
+                    ['message' => 'Token inválido, o token de acesso deve ter entre 10 e 100 letras e números'],
+                    400
+                );
+            }
 
-            if (empty($data['token'])) {
+            $project = Project::find(hashids_decode($data['project_id']));
+
+            if (empty($project)) {
                 return response()->json(
                     [
                         'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
@@ -820,34 +826,14 @@ class ShopifyApiController extends Controller
                 );
             }
 
-            if (strlen($data['token']) < 10) {
-                return response()->json(
-                    ['message' => 'Token inválido, o token de acesso deve ter entre 10 e 100 caracteres'],
-                    400
-                );
-            }
-
-
-            $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->find($projectId);
-
-            if (empty($projectId)) {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
-                    ],
-                    400
-                );
-            }
-
-            activity()->on($shopifyIntegrationModel)->tap(
+            activity()->on((new ShopifyIntegration()))->tap(
                 function (Activity $activity) {
                     $activity->log_name = 'updated';
                 }
             )->log('Atualizou token de integração do shopify para o projeto ' . $project->name);
 
 
-            $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+            $integration = ShopifyIntegration::where('project_id', $project->id)->first();
 
             $shopify = new ShopifyService($integration->url_store, $data['token']);
 

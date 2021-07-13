@@ -9,16 +9,12 @@ namespace Modules\Core\Services;
  */
 class CloudflareErrorsService
 {
-    /**
-     * @param $e
-     * @return string
-     */
     public static function formatErrorException($e)
     {
         $message = '';
         $response = '';
 
-        if (!empty($e->getResponse())) {
+        if (method_exists($e, 'getResponse') && !empty($e->getResponse())) {
             $response = json_decode($e->getResponse()->getBody()->getContents(), true);
         }
 

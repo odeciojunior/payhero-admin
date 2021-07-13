@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Services\CloudFlareService;
+
+class UpdateDnsFromDomains extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'updatedns';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle()
+    {
+        $domains = Domain::with([
+            'domainsRecords' => function ($query) {
+                $query->whereIn('name', ['checkout', 'affiliate', 'tracking']);
+            }
+        ])->get();
+
+        foreach ($domains as $domain) {
+            $this->line('Atualizando dominio :' . $domain->name);
+            $checkoutDns = $domain->domainsRecords->where('name', 'checkout')->first();
+            $trackingDns = $domain->domainsRecords->where('name', 'tracking')->first();
+            $affiliateDns = $domain->domainsRecords->where('name', 'affiliate')->first();
+
+            $cloudFlareService = new CloudFlareService();
+
+            if (!empty($checkoutDns)) {
+                $this->line('Atualizando dns :' . $checkoutDns->name);
+
+                $response = $cloudFlareService->updateRecordDetails(
+                    $domain->cloudflare_domain_id,
+                    $checkoutDns->cloudflare_record_id,
+                    [
+                        'type' => $checkoutDns->type,
+                        'name' => $checkoutDns->name,
+                        'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
+                        'proxied' => true
+                    ]
+                );
+
+
+                if ($response) {
+                    $checkoutDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                }
+            }
+            if (!empty($trackingDns)) {
+                $this->line('Atualizando dns :' . $trackingDns->name);
+
+                $response = $cloudFlareService->updateRecordDetails(
+                    $domain->cloudflare_domain_id,
+                    $trackingDns->cloudflare_record_id,
+                    [
+                        'type' => $trackingDns->type,
+                        'name' => $trackingDns->name,
+                        'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
+                        'proxied' => true
+                    ]
+                );
+
+                if ($response) {
+                    $trackingDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                }
+            }
+            if (!empty($affiliateDns)) {
+                $this->line('Atualizando dns :' . $affiliateDns->name);
+
+                $response = $cloudFlareService->updateRecordDetails(
+                    $domain->cloudflare_domain_id,
+                    $affiliateDns->cloudflare_record_id,
+                    [
+                        'type' => $affiliateDns->type,
+                        'name' => $affiliateDns->name,
+                        'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
+                        'proxied' => true
+                    ]
+                );
+
+                if ($response) {
+                    $affiliateDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                }
+            }
+        }
+    }
+}
