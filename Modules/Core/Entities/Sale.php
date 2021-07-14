@@ -253,6 +253,11 @@ class Sale extends Model
         return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
     }
 
+    public function productsSaleApi(): HasMany
+    {
+        return $this->hasMany(ProductSaleApi::class);
+    }
+
     public function gateway(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Gateway');
