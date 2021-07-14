@@ -25,13 +25,10 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
-        //command executa duas horas antes por causa do fuso horário
+        $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         // snapshot for horizon metrics
         $schedule->command('horizon:snapshot')->everyFifteenMinutes();
-
-        // transfer money from transactions for user companies
-//        $schedule->command('verify:transfers')->dailyAt('05:00');
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
@@ -112,7 +109,7 @@ class Kernel extends ConsoleKernel
         /** Pix Expired */
         $schedule->command('change:pixpending')->everyMinute();
 
-//        /** Check GatewayTax invitations Diogo */
+        /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
     }
 
