@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
+        // remove regras do white/black list que expiraram
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         // snapshot for horizon metrics
