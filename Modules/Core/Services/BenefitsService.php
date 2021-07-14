@@ -26,7 +26,6 @@ class BenefitsService
         }
 
         self::updateUserCashback($user);
-        self::updateUserGetFaster($user);
     }
 
     private static function updateUserCashback(User $user)
@@ -54,7 +53,6 @@ class BenefitsService
         // User only has cashback if it has full installment tax (at this time 2.99%)
         // and account score greater than or equal 6
         if ($fullInstallmentTax && $user->account_score >= 6) {
-
             if ($user->level >= 3) {
                 $user->installment_cashback = 1;
                 $cashback1->enabled = 0;
@@ -68,7 +66,6 @@ class BenefitsService
                 $cashback1->enabled = 0;
                 $cashback2->enabled = 0;
             }
-
         } else {
             $user->installment_cashback = 0;
             $cashback1->enabled = 0;
@@ -85,20 +82,6 @@ class BenefitsService
         $cashback1->save();
         $cashback2->save();
         $user->save();
-    }
-
-    private static function updateUserGetFaster(User $user)
-    {
-        $benefits = $user->benefits;
-
-        $getFaster = !!$benefits->where('name', 'get_faster')
-            ->where('enabled', 1)
-            ->count();
-
-        if ($user->get_faster != $getFaster) {
-            $user->get_faster = $getFaster;
-            $user->save();
-        }
     }
 
     public function getUserBenefits(User $user): array

@@ -271,9 +271,9 @@ $(() => {
 
         let company_selected = null;
         for (let company of companies) {
-            if(company.id == userProject.company_id) company_selected = company;
+            if (company.id == userProject.company_id) company_selected = company;
             if (company.id == userProject.company_id || company.capture_transaction_enabled) {
-                if(company.id === userProject.company_id) company_selected = company;
+                if (company.id === userProject.company_id) company_selected = company;
                 $('#update-project #companies').append(
                     `<option value="${company.id}"
                     ${(company.id === userProject.company_id ? 'selected' : '')}
@@ -290,11 +290,11 @@ $(() => {
 
             let pix_element = $("#pix")
 
-            if(company_selected.has_pix_key) {
-                $("#pix option[value='1']").prop("disabled",false).css("backgroundColor", "white").html('Sim')
-            }else{
+            if (company_selected.has_pix_key) {
+                $("#pix option[value='1']").prop("disabled", false).css("backgroundColor", "white").html('Sim')
+            } else {
                 pix_element.val(0);
-                $("#pix option[value='1']").prop("disabled",true).css("backgroundColor", "grey").html('Sim (A empresa selecionada não possui a chave do PIX)')
+                $("#pix option[value='1']").prop("disabled", true).css("backgroundColor", "grey").html('Sim (A empresa selecionada não possui a chave do PIX)')
             }
 
         }
@@ -303,10 +303,10 @@ $(() => {
             let company_sel = null;
 
             for (let company of companies) {
-                if(company.id === $(this).val()) company_sel = company;
+                if (company.id === $(this).val()) company_sel = company;
             }
 
-            if(company_sel)
+            if (company_sel)
                 validateInputPixInCheckout(company_sel);
         })
 
@@ -767,8 +767,8 @@ $(() => {
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
 
-        formData.set('finalizing_purchase_config_toogle',$('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
-        formData.set('checkout_notification_config_toogle',$('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
+        formData.set('finalizing_purchase_config_toogle', $('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
+        formData.set('checkout_notification_config_toogle', $('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
 
         if (!verify) {
             $.ajax({
@@ -957,44 +957,59 @@ $(() => {
 
     });
 
+    function validToken() {
+        const shopifyToken = $('#shopify-token').val();
+        const regex = new RegExp('^([a-zA-Z0-9_]{10,100})$');
+
+        if (regex.exec(shopifyToken) == null) {
+            alertCustom('error', 'O token deve ter entre 10 e 100 letras e números');
+            return false;
+        }
+
+        return true;
+    }
+
     let btnTokenClick = "enable click";
     $('.btn-edit-token').on('click', function (event) {
         event.preventDefault();
+
         if (btnTokenClick == "enable click") {
             btnTokenClick = "update click";
             $('#shopify-token').prop("disabled", false);
             $('.btn-edit-token').text('Salvar').addClass('bg-grey-700');
-        } else {
-            if ($('#shopify-token').val() == '') {
-                alertCustom('error', 'Token inválido');
-                return false;
-            }
-            loadingOnScreen();
-            $.ajax({
-                method: 'POST',
-                url: '/api/apps/shopify/updatetoken',
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                data: {
-                    project_id: projectId,
-                    token: $('#shopify-token').val(),
-                },
-                error: function (response) {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: function (response) {
-                    loadingOnScreenRemove();
-                    btnTokenClick = "enable click";
-                    $('#shopify-token').prop("disabled", true);
-                    $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
-                    alertCustom('success', response.message);
-                }
-            });
+            return;
         }
+
+        if (!validToken()) {
+            return false;
+        }
+
+        loadingOnScreen();
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/updatetoken',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+                token: $('#shopify-token').val(),
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                loadingOnScreenRemove();
+                btnTokenClick = "enable click";
+                $('#shopify-token').prop("disabled", true);
+                $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
+                alertCustom('success', response.message);
+            }
+        });
+
     });
 
     $('#bt-shopify-verify-permissions').on('click', function (event) {
@@ -1203,24 +1218,24 @@ $(() => {
     })
 
 
-        $('#slick-tabs').slick({
-            infinite: false,
-            speed: 300,
-            slidesToShow: 7,
-            variableWidth: true,
-            nextArrow: false,
-            prevArrow: false,
+    $('#slick-tabs').slick({
+        infinite: false,
+        speed: 300,
+        slidesToShow: 7,
+        variableWidth: true,
+        nextArrow: false,
+        prevArrow: false,
 
-            responsive: [
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                    }
-                },
-            ]
-        });
+        responsive: [
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+        ]
+    });
 
     let firstCategory = [
         "tab-domains",
@@ -1267,7 +1282,7 @@ $(() => {
         }
     })
 
-    $('.slick-track').on('click', function() {
+    $('.slick-track').on('click', function () {
         $('.nav-tabs-horizontal .tab-pane').removeClass('active show');
     });
 
@@ -1278,32 +1293,32 @@ $(() => {
         }));
     }
 
-    let pix_account_element =  $("#pix_discount");
-    let credit_card_discount_element =  $("#credit_card_discount");
-    let billet_discount_element =  $("#billet_discount");
+    let pix_account_element = $("#pix_discount");
+    let credit_card_discount_element = $("#credit_card_discount");
+    let billet_discount_element = $("#billet_discount");
 
-    if(pix_account_element.val() < 1) {
+    if (pix_account_element.val() < 1) {
         setZetoToPixDiscount(pix_account_element);
     }
-    if(credit_card_discount_element.val() < 1) {
+    if (credit_card_discount_element.val() < 1) {
         setZetoToPixDiscount(credit_card_discount_element);
     }
-    if(billet_discount_element.val() < 1) {
+    if (billet_discount_element.val() < 1) {
         setZetoToPixDiscount(billet_discount_element);
     }
 
     pix_account_element.on("change", function () {
-        if($(this).val() < 1) {
+        if ($(this).val() < 1) {
             setZetoToPixDiscount(pix_account_element);
         }
     })
     credit_card_discount_element.on("change", function () {
-        if($(this).val() < 1) {
+        if ($(this).val() < 1) {
             setZetoToPixDiscount(credit_card_discount_element);
         }
     })
     billet_discount_element.on("change", function () {
-        if($(this).val() < 1) {
+        if ($(this).val() < 1) {
             setZetoToPixDiscount(billet_discount_element);
         }
     })

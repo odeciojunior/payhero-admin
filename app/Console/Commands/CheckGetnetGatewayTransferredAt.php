@@ -54,19 +54,24 @@ class CheckGetnetGatewayTransferredAt extends Command
         $transactionsCount = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
-            ->where('gateway_id', Gateway::GERENCIANET_PRODUCTION_ID)
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->count();
 
         $transactions = $transactionModel->with('sale')
             ->whereNotNull('withdrawal_id')
             ->whereNull('gateway_transferred_at')
-            ->where('gateway_id', Gateway::GERENCIANET_PRODUCTION_ID)
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->orderBy('id', 'desc');
 
-        $transactions->chunk(50, function ($transactions) use ($getnetService, $transactionsCount) {
-            foreach ($transactions as $transaction) {
+//        $transactions->chunk(200, function ($transactions) use ($getnetService, $transactionsCount) {
+            $i = 0;
+            foreach ($transactions->cursor() as $transaction) {
+                if ($i == 4) {
+                    sleep(1);
+                    $i = 0;
+                }
                 try {
-                    $this->line($transactionsCount . ' Atualizando a transação: ' . $transaction->id );
+                    $this->line('Começando withdrawal id: ' . $transaction->withdrawal_id . '  Count: ' . $transactionsCount . ' Atualizando a transação: ' . $transaction->id . "Count: ". $i );
 
                     if (empty($transaction->company_id)) {
                         continue;
@@ -78,13 +83,13 @@ class CheckGetnetGatewayTransferredAt extends Command
 
                         if($transaction->gateway_transferred === 1) {
                             $transaction->update([
-                                                     'gateway_transferred_at' => $transaction->gateway_released_at //date transferred
-                                                 ]);
+                                'gateway_transferred_at' => $transaction->gateway_released_at //date transferred
+                            ]);
                         }
 
                     }
                     else {
-
+                        $i ++;
                         if (FoxUtils::isProduction()) {
                             $subsellerId = $transaction->company->subseller_getnet_id;
                         } else {
@@ -106,9 +111,9 @@ class CheckGetnetGatewayTransferredAt extends Command
 
 
                             $transaction->update([
-                                                     'gateway_transferred_at' => $date, //date transferred
-                                                     'gateway_transferred' => 1
-                                                 ]);
+                                 'gateway_transferred_at' => $date, //date transferred
+                                 'gateway_transferred' => 1
+                             ]);
 
 
                         }
@@ -118,6 +123,6 @@ class CheckGetnetGatewayTransferredAt extends Command
                     report($e);
                 }
             }
-        });
+//        });
     }
 }

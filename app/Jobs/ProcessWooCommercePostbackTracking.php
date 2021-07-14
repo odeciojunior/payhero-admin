@@ -71,7 +71,6 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
                     $trackingCode = $this->postback["correios_tracking_code"];
                     if (!empty($trackingCode)) {
 
-
                         //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
                         $products = $saleProducts->where('shopify_variant_id', $line_item["sku"])
                             ->where('amount', $line_item["quantity"])
@@ -84,11 +83,7 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
                         }
                         if ($products->count()) {
                             foreach ($products as $product) {
-                                $productPlanSale = $sale->productsPlansSale->find(
-                                    $product->product_plan_sale_id
-                                );   
-
-                                $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
+                                $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
                             }
                         }
                     }

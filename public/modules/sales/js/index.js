@@ -174,6 +174,12 @@ $(document).ready(function () {
     }
 
     function getFilters(urlParams = false) {
+        let transaction = $("#transaction").val().replace('#', '');
+        let date_range = $("#date_range").val();
+        if (transaction.length > 0){
+            date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
+        }
+
         let data = {
             'project': $("#projeto").val(),
             'payment_method': $("#forma").val(),
@@ -181,8 +187,8 @@ $(document).ready(function () {
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
             'date_type': $("#date_type").val(),
-            'date_range': $("#date_range").val(),
-            'transaction': $("#transaction").val().replace('#', ''),
+            'date_range': date_range,
+            'transaction': transaction,
             'cashback': $("#cashback").val(),
             'plan': $('#plan').val(),
             'coupon': $("#cupom").val(),
@@ -421,7 +427,7 @@ $(document).ready(function () {
                                         start_date[1]
                                     +" </small>";
                         }
-                        
+
                         let end_date='';
                         if (value.end_date) {
                             end_date=value.end_date.split(/\s/g);//data final
@@ -431,7 +437,7 @@ $(document).ready(function () {
                                         end_date[1]
                                     +" </small>";
                         }
-                        
+
                         let tableClass = "";
                         if (
                             value.has_shopify_integration != null &&
@@ -517,7 +523,7 @@ $(document).ready(function () {
                                         value.user_sale_type == "producer"
                                             ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
                                             : ""
-                                    } 
+                                    }
                                     <br> <small class="gray font-size-12">${value.project}</small></td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${
                                         value.client

@@ -188,7 +188,14 @@ $(document).ready(function () {
 
         }
         if (type_enum == 2) {
-            if ($.trim($('#url_expiration_time').val()) === '') {
+            let expiration_time = $.trim($('#url_expiration_time').val());
+            if (parseInt(expiration_time) >= 168) {
+                alertCustom('error', 'Expiração do link deve ser menor que 1 semana (168 HORAS)');
+                ver = false;
+            }
+
+            if (expiration_time === '') {
+
                 alertCustom('error', 'Preencha o campo Tempo de expiração da url');
                 ver = false;
                 $("#url_expiration_time").focus();

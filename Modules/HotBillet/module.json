@@ -1,0 +1,13 @@
+{
+    "name": "HotBillet",
+    "alias": "hotbillet",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\HotBillet\\Providers\\HotBilletServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

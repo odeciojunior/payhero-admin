@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=10')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=10')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 
 @endpush
