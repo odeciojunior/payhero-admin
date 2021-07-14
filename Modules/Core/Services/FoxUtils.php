@@ -238,7 +238,7 @@ class FoxUtils
 
     public static function removeSpecialChars($string)
     {
-        return preg_replace('/([^a-zà-úA-ZÀ-Ú0-9 ]|[äåæËÎÏÐðÑ×÷ØÝÞßÆøÆø])/u', "", $string);
+        return preg_replace('/[^\w\p{Latin}]+/u', "", $string);
     }
 
     /**
