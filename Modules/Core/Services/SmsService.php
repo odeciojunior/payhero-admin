@@ -39,7 +39,6 @@ class SmsService
 
             return true;
         } catch (Exception $e) {
-            Log::warning('erro ao enviar sms');
             report($e);
 
             return false;

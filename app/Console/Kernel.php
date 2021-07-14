@@ -25,9 +25,15 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
+        // manager
         // remove regras do white/black list que expiraram
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
+        $schedule->command('check:systems')->everyTenMinutes();
+
+        //checkout
+
+        // sirius
         // snapshot for horizon metrics
         $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
