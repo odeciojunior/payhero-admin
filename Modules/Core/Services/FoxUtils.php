@@ -739,9 +739,8 @@ class FoxUtils
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
             return $httpCode == 200;
-
         }catch(Exception $e){
             return false;
-        }        
+        }
     }
 }
