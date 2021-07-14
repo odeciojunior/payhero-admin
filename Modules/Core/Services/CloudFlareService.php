@@ -969,11 +969,31 @@ class CloudFlareService
         try {
             $this->getSendgridService()->deleteLinkBrand($domain->name);
             $this->getSendgridService()->deleteZone($domain->name);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->deleteZone($domain->name);
-
         }
 
         $this->deleteZone($domain->name);
+    }
+
+    public function setSecurityLevel(string $zoneId, string $level): bool
+    {
+        if (!in_array($level, ['off', 'essentially_off', 'low', 'medium', 'high', 'under_attack'])) {
+            return false;
+        }
+        $return = $this->adapter->patch(
+            'zones/' . $zoneId . '/settings/security_level',
+            [
+                'value' => $level,
+            ]
+        );
+
+        $body = json_decode($return->getBody());
+
+        if ($body->success) {
+            return true;
+        }
+
+        return false;
     }
 }

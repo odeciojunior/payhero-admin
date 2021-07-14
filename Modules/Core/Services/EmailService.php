@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
 use SendGrid;
 use SendGrid\Mail\Mail;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Domain;
-use Carbon\Carbon;
 
 /**
  * Class EmailService
@@ -34,8 +34,9 @@ class EmailService
                 ]
             );
 
-            if (env('APP_ENV') == 'local')
+            if (env('APP_ENV') == 'local') {
                 $to = env('APP_EMAIL_TEST');
+            }
 
             $email = new Mail();
             $email->setFrom("help@cloudfox.net", "Cloudfox");
@@ -258,6 +259,27 @@ class EmailService
             report($e);
 
             return false;
+        }
+    }
+
+    public function sendEmailUnderAttack($systemsStatus)
+    {
+        $emailList = [
+            'julioleichtweis@gmail.com',
+            'felixlorram@gmail.com',
+            'jeanvcastro1@gmail.com',
+            'murillogomes@cloudfox.net',
+        ];
+
+        foreach ($emailList as $email) {
+            (new SendgridService())->sendEmail(
+                'help@cloudfox.net',
+                'CloudFox',
+                $email,
+                'Admin/Dev',
+                'd-d2cc6518bd8d4a88b5e4d58bb25711e6',
+                $systemsStatus
+            );
         }
     }
 }
