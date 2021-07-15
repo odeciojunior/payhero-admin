@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
+        $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
+
         //checkout
 
         // sirius
