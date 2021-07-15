@@ -118,6 +118,8 @@ class Kernel extends ConsoleKernel
 
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+
+        $schedule->command('check:sales-refunded')->dailyAt('16:00');
     }
 
     /**
