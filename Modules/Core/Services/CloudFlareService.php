@@ -28,10 +28,10 @@ use stdClass;
 class CloudFlareService
 {
     const shopifyIp = '23.227.38.65';
-    const checkoutIp = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
+    const checkoutIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
     const sacIp = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
-    const affiliateIp = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
-    const adminIp = 'cloudfoxsuit-admin-balance-942137392.us-east-1.elb.amazonaws.com';
+    const affiliateIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
+    const adminIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
 
     /**
      * @var APIKey
@@ -969,11 +969,31 @@ class CloudFlareService
         try {
             $this->getSendgridService()->deleteLinkBrand($domain->name);
             $this->getSendgridService()->deleteZone($domain->name);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->deleteZone($domain->name);
-
         }
 
         $this->deleteZone($domain->name);
+    }
+
+    public function setSecurityLevel(string $zoneId, string $level): bool
+    {
+        if (!in_array($level, ['off', 'essentially_off', 'low', 'medium', 'high', 'under_attack'])) {
+            return false;
+        }
+        $return = $this->adapter->patch(
+            'zones/' . $zoneId . '/settings/security_level',
+            [
+                'value' => $level,
+            ]
+        );
+
+        $body = json_decode($return->getBody());
+
+        if ($body->success) {
+            return true;
+        }
+
+        return false;
     }
 }

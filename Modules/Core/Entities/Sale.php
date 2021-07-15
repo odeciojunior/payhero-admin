@@ -9,6 +9,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
@@ -298,9 +299,6 @@ class Sale extends Model
         return $this->hasMany(GetnetChargeback::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function blockReasonsSale(): HasMany
     {
         return $this->hasMany(BlockReasonSale::class);
@@ -311,22 +309,28 @@ class Sale extends Model
         return $this->hasMany('Modules\Core\Entities\SaleAdditionalCustomerInformation');
     }
 
+    public function cashback(): HasOne
+    {
+        return $this->hasOne(Cashback::class);
+    }
+
+    public function trackings(): HasMany
+    {
+        return $this->hasMany(Tracking::class);
+    }
+
+    public function pixCharges(): HasMany
+    {
+        return $this->hasMany(PixCharge::class, 'sale_id');
+    }
+
     public function getHashIdAttribute()
     {
         return Hashids::connection('sale_id')->encode($this->id);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function cashback()
-    {
-        return $this->hasOne(Cashback::class);
-    }
-
     public function getValidTrackingForRedis(): int
     {
-
         $saleIsChargeback = $this->status == 4;
         $saleIsDigitalProduct = empty($this->delivery_id);
         $trackingNotRequired = !!$this->transactions
@@ -335,13 +339,5 @@ class Sale extends Model
             ->count();
 
         return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function pixCharges()
-    {
-        return $this->hasMany( PixCharge::class, 'sale_id');
     }
 }

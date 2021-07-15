@@ -44,6 +44,7 @@ use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
+use Modules\Core\Listeners\HotBilletPixExpiredListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
 use Modules\Core\Listeners\NotifySalesExportedListener;
@@ -57,6 +58,7 @@ use Modules\Core\Listeners\NotifyWithdrawalsExportedListener;
 use Modules\Core\Listeners\PixExpiredSendEmailListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
+use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
 use Modules\Core\Listeners\SendEmailListener;
@@ -68,7 +70,6 @@ use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
-use Modules\Core\Listeners\HotBilletPixExpiredListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
 /**
@@ -179,6 +180,7 @@ class EventServiceProvider extends ServiceProvider
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
+            SakPixExpiredListener::class,
         ]
     ];
 
