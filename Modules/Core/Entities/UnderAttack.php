@@ -52,14 +52,15 @@ class UnderAttack extends Model
 
     protected $fillable = [
         'domain_id',
-        'removed_at',
-        'created_at',
-        'updated_at',
         'user_id',
+        'type',
         'percentage_card_refused',
         'start_date_card_refused',
         'end_date_card_refused',
         'total_refused',
+        'removed_at',
+        'created_at',
+        'updated_at',
     ];
 
     public function domain(): BelongsTo

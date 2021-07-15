@@ -1464,4 +1464,14 @@ class SaleService
             report($e);
         }
     }
+
+    public function verifyIfUserHasSalesByDate(Carbon $date, int $user_id): bool
+    {
+        $sale = Sale::where('owner_id', $user_id)
+            ->whereDate('start_date', '>=', $date)
+            ->where('status', Sale::STATUS_APPROVED)
+            ->count();
+
+        return $sale >= 1;
+    }
 }
