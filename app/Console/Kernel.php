@@ -31,6 +31,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:systems')->everyTenMinutes();
 
+        $schedule->command('check:underattack')->everyThirtyMinutes();
+
         //checkout
 
         // sirius
