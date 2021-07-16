@@ -290,6 +290,8 @@ $(document).ready(function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
+        formData.set('receipt', $('#modal-edit-shipping .shipping-receipt').is(':checked') ? 1 : 0);
+        formData.set('own_hand', $('#modal-edit-shipping .shipping-ownhand').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
 
         $.ajax({
