@@ -112,7 +112,7 @@ class GetnetBackOfficeService extends GetnetService
      * @method GET
      * @return bool|string
      */
-    public function getStatement()
+    public function getStatement($orderId = null)
     {
         if (empty($this->getStatementDateField()) && empty($this->getStatementSaleHashId())) {
             throw new LogicException('É obrigatório especificar um campo de data para a busca quando não é enviado um OrderId');
@@ -121,9 +121,17 @@ class GetnetBackOfficeService extends GetnetService
             throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_SCHEDULE . '", "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
-        $queryParameters = [
-            'seller_id' => $this->sellerId,
-        ];
+        if( empty($orderId)) {
+            $queryParameters = [
+                'seller_id' => $this->sellerId,
+            ];
+        }
+        else {
+            $queryParameters = [
+                'order_id' => $orderId,
+                'seller_id' => $this->sellerId,
+            ];
+        }
 
         if ($this->getStatementStartDate() && $this->getStatementEndDate()) {
 
