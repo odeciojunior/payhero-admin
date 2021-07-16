@@ -474,6 +474,7 @@ class SaleService
             'release_date' => $userTransaction->release_date != null ? $userTransaction->release_date->format(
                 'd/m/Y'
             ) : '',
+            'has_withdrawal' => $userTransaction->withdrawal_id,
             'affiliate_comission' => $affiliateComission,
             'refund_value' => FoxUtils::formatMoney(intval($sale->refund_value) / 100),
             'value_anticipable' => '0,00',
@@ -878,7 +879,7 @@ class SaleService
                         $integration->token_user,
                         $integration->token_pass
                     );
-                    
+
                     $service->cancelOrder($sale, 'Estorno');
                 }
             } catch (Exception $e) {
