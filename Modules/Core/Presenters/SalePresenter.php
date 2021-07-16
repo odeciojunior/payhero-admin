@@ -56,6 +56,25 @@ class SalePresenter extends Presenter
             ];
         }
 
+
+
+        return $plans;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHotBilletPlansList()
+    {
+        $plans = [];
+        foreach ($this->plansSales as $planSale) {
+            $plans[] = [
+                "price" => $planSale->plan()->first()->price,
+                "quantity" => $planSale->amount,
+                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
+                'id' => Hashids::encode($planSale->plan()->first()->id)
+            ];
+        }
         return $plans;
     }
 
