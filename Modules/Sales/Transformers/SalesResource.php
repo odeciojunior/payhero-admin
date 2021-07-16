@@ -100,8 +100,7 @@ class SalesResource extends JsonResource
             'has_contestation'         => $this->contestations->count() ? true : false,
             'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback'             => $this->cashback->value ?? false,
-            'has_withdrawal'           => !empty($this->details->has_withdrawal),
-            'withdrawal_id'            => $this->details->has_withdrawal
+            'has_withdrawal'           => !empty($this->details->has_withdrawal)
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         if (count($shopifyIntegrations) > 0) {
