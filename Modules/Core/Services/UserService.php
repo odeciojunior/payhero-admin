@@ -2,7 +2,11 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Entities\User;
 
 class UserService
@@ -233,5 +237,73 @@ class UserService
         }
 
         return false;
+    }
+
+    public function removePromotionalTax(PromotionalTax $promotionalTax) : void
+    {
+        try {
+            DB::beginTransaction();
+            $old_taxes = explode(",", $promotionalTax->old_tax);
+
+            foreach ($old_taxes as $old_tax) {
+                if (empty($old_tax)){
+                    continue;
+                }
+
+                $res = explode(":", $old_tax);
+                $company_id = $res[0];
+                $tax = $res[1];
+                $company = Company::where('user_id', $promotionalTax->user_id)->where('id', $company_id)->first();
+
+                if ($company) {
+                    $company->gateway_tax = $tax;
+                    $company->save();
+                }
+
+            }
+
+            $promotionalTax->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            report($e);
+           DB::rollback();
+        }
+    }
+
+    public function addExpirationDatePromotionalTax(PromotionalTax $promotionalTax): void
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = $promotionalTax->user;
+            $old_tax = '';
+
+            $date = Carbon::parse($promotionalTax->created_at);
+            $hasSale = (new SaleService())->verifyIfUserHasSalesByDate($date, $user->id);
+
+
+            if ($hasSale) {
+                foreach ($user->companies as $company) {
+                    $old_tax .= $company->id . ':' . $company->gateway_tax . ',';
+                    $company->gateway_tax = PromotionalTax::PROMOTIONAL_TAX;
+                    $company->update();
+                }
+
+                PromotionalTax::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'tax' => PromotionalTax::PROMOTIONAL_TAX,
+                        'old_tax' => $old_tax,
+                        'expiration' => Carbon::today()->addDays(30),
+                        'active' => true
+                    ]
+                );
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            report($e);
+            DB::rollback();
+        }
     }
 }
