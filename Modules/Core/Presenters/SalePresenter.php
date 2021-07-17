@@ -72,7 +72,7 @@ class SalePresenter extends Presenter
                 "price" => $planSale->plan()->first()->price,
                 "quantity" => $planSale->amount,
                 "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
-                'id' => Hashids::encode($planSale->plan()->first()->id)
+                'id' => hashids_encode($planSale->plan()->first()->id)
             ];
         }
         return $plans;
