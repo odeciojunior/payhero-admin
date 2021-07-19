@@ -25,15 +25,29 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
-        // manager
+        /** Manager */
         // remove regras do white/black list que expiraram
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         $schedule->command('check:systems')->everyTenMinutes();
 
-        //checkout
+        $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        // sirius
+        $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
+
+        //
+
+        $schedule->command('verify:promotional-tax')->dailyAt('23:30');
+
+        $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
+
+        //
+
+        //
+
+        /** checkout */
+
+        /** sirius */
         // snapshot for horizon metrics
         $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
@@ -118,6 +132,8 @@ class Kernel extends ConsoleKernel
 
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+
+        $schedule->command('check:sales-refunded')->dailyAt('16:00');
     }
 
     /**
