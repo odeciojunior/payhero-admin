@@ -374,4 +374,10 @@ $(document).ready(function () {
             }
         });
     }
+
+    //opens the creation modal automatically if it comes with the parameter in the url
+    if (window.location.href.includes('#add_checkout_api')) {
+        $('select[name="token_type_enum"]').val(4).change()
+        $('#modal-integrate').modal('show');
+    }
 });

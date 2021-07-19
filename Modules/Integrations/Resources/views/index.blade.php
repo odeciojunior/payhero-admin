@@ -196,7 +196,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v=s0') }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v='.uniqid()) }}"></script>
     @endpush
 
 @endsection
