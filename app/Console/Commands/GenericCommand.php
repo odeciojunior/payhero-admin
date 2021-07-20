@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Whatsapp2Integration;
-use Modules\Core\Services\Whatsapp2Service;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\TransactionsService;
 
 class GenericCommand extends Command
 {
@@ -13,30 +13,24 @@ class GenericCommand extends Command
 
     protected $description = 'Command description';
 
-    // private $cloudflareService;
-
-    // public function __construct()
-    // {
-    //     //parent::__construct();
-
-    //     //$this->cloudflareService = new CloudFlareService();
-    // }
-
     public function handle()
     {
-        $sale = Sale::find(1101848);
-        $whatsapp2Integration = Whatsapp2Integration::where('project_id', 2546)
-            ->where('pix_expired', 1)
-            ->first();
-        if (!empty($whatsapp2Integration)) {
-            $whatsapp2Service = new Whatsapp2Service(
-                $whatsapp2Integration->url_checkout,
-                $whatsapp2Integration->url_order,
-                $whatsapp2Integration->api_token,
-                $whatsapp2Integration->id
-            );
 
-            $whatsapp2Service->sendPixSaleExpired($sale);
+        $sales = Sale::with('transactions')
+            ->where('project_id', 3722)
+            ->where('status', Sale::STATUS_APPROVED)
+            ->whereBetween('end_date', ['2021-04-28 00:00:00', '2021-07-15 23:59:59'])
+            ->get();
+
+        $transactionService = new TransactionsService();
+
+        foreach ($sales as $sale) {
+
+            $transaction = $sale->transactions->where('type', Transaction::TYPE_PRODUCER)->first();
+            $transaction->tracking_required = false;
+            $transaction->save();
+
+            $transactionService->verifyAutomaticLiquidationTransactions($sale->id);
         }
     }
 }
