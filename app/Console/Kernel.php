@@ -26,20 +26,25 @@ class Kernel extends ConsoleKernel
         setlocale(LC_ALL, 'pt_BR');
 
         /** Manager */
-        // remove regras do white/black list que expiraram
-        $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
-
         $schedule->command('check:systems')->everyTenMinutes();
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
+        // remove regras do white/black list que expiraram
+        $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
+
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
 
-        //
+        $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
+
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-        $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
 
         //
 
