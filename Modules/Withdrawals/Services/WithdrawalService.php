@@ -50,9 +50,10 @@ class WithdrawalService
     {
         $withdrawalModel = new Withdrawal();
         $withdrawalStatus = [
-            $withdrawalModel->present()->getStatus('liquidating'),
-            $withdrawalModel->present()->getStatus('partially_liquidated'),
-            $withdrawalModel->present()->getStatus('transfered')
+            Withdrawal::STATUS_IN_REVIEW,
+            Withdrawal::STATUS_LIQUIDATING,
+            Withdrawal::STATUS_PARTIALLY_LIQUIDATED,
+            Withdrawal::STATUS_TRANSFERRED
         ];
 
         $isFirstUserWithdrawal = false;
