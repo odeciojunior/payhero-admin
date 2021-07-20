@@ -362,7 +362,9 @@ a.label {
 .powerzap_open_button_iframe {
     bottom: 30px !important;
 }
-
+.site-menubar-fold .page {
+    padding-bottom: 25px;
+}
 @media (max-width: 968px) {
     .site-menubar-fold .page {
         margin-bottom: 100px;
