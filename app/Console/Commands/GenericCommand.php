@@ -24,9 +24,8 @@ class GenericCommand extends Command
         $bar = $this->output->createProgressBar($trackings->count());
         $bar->start();
 
-        $this->line('Verificando códigos de rastreio...');
         foreach ($trackings as $t) {
-            //$service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
+            $service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
             $bar->advance();
         }
 
