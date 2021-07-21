@@ -99,6 +99,7 @@ $(document).ready(function () {
                     window.location = "/projects"
                 }
             });
+            return false;
         }
     });
 
