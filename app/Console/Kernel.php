@@ -35,6 +35,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
 
+        $schedule->command('getnet:check-refunded')->dailyAt('03:15');
+
         $schedule->command('getnet:update-confirm-date-debt-pending')->dailyAt('04:00');
 
         $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
