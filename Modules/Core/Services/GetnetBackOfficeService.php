@@ -8,7 +8,6 @@ use LogicException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class GetnetService
@@ -99,7 +98,7 @@ class GetnetBackOfficeService extends GetnetService
         return $this;
     }
 
-    public function getAuthorizationHeader()
+    public function getAuthorizationHeader(): array
     {
         return [
             'authorization: Bearer ' . $this->accessToken,
@@ -121,12 +120,9 @@ class GetnetBackOfficeService extends GetnetService
             throw new LogicException('O campo de data para a busca deve ser "' . self::STATEMENT_DATE_SCHEDULE . '", "' . self::STATEMENT_DATE_LIQUIDATION . '" ou "' . self::STATEMENT_DATE_TRANSACTION . '"');
         }
 
-        if( empty($orderId)) {
-            $queryParameters = [
-                'seller_id' => $this->sellerId,
-            ];
-        }
-        else {
+        if (empty($orderId)) {
+            $queryParameters = ['seller_id' => $this->sellerId];
+        } else {
             $queryParameters = [
                 'order_id' => $orderId,
                 'seller_id' => $this->sellerId,
@@ -134,7 +130,6 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         if ($this->getStatementStartDate() && $this->getStatementEndDate()) {
-
             $startDate = $this->getStatementStartDate()->format('Y-m-d');
             $endDate = $this->getStatementEndDate()->format('Y-m-d');
 
@@ -146,23 +141,19 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         if (!empty($this->getStatementSubSellerId())) {
-
             $queryParameters['subseller_id'] = $this->getStatementSubSellerId();
         }
 
         if (!empty($this->getStatementSaleHashId())) {
-
-            $sale = Sale::find(current(Hashids::connection('sale_id')->decode($this->getStatementSaleHashId())));
+            $sale = Sale::find(hashids_decode($this->getStatementSaleHashId(), 'sale_id'));
 
             if ($sale) {
-
                 $this->saleId = $sale->id;
                 $queryParameters['order_id'] = $sale->gateway_order_id;
             }
         }
 
         if (request('debug')) {
-
             echo '<pre>';
             print_r($queryParameters);
             echo '</pre>';
@@ -170,7 +161,6 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
-        //$url = 'v1/mgm/statement/get-paginated-statement?' . http_build_query($queryParameters);
         return $this->sendCurl($url, 'GET', null, null, false);
     }
 
