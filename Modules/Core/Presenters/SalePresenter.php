@@ -205,7 +205,10 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product = clone($productPlan->product()->first()->toArray());
+                $product = $productPlan->product()->first()->toArray();
+                if (is_object($productPlan->product()->first()->toArray())) {
+                    $product = clone($productPlan->product()->first()->toArray());
+                }
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $productsSale[] = $product;
             }
