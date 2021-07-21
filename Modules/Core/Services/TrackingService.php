@@ -136,11 +136,11 @@ class TrackingService
         $duplicatedQuery = DB::table('sales as d')
             ->join('trackings as t', 'd.id', '=', 't.sale_id')
             ->where('t.tracking_code', $trackingCode)
-            ->where('t.system_status_enum', '<>', Tracking::SYSTEM_STATUS_DUPLICATED)
+            ->where('t.system_status_enum', '!=', Tracking::SYSTEM_STATUS_DUPLICATED)
             ->where('d.id', '!=', $saleId)
             ->where(function ($query) use ($saleId) {
                 $query->whereNull('d.upsell_id')
-                    ->orWhere('d.upsell_id', $saleId);
+                    ->orWhere('d.upsell_id', '!=', $saleId);
             });
 
         if (!empty($sale->upsell_id)) {
