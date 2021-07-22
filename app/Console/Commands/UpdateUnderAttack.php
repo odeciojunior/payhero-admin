@@ -14,6 +14,11 @@ class UpdateUnderAttack extends Command
 
     protected $description = 'Card declined';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         try {

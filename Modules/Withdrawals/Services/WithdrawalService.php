@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -200,7 +201,7 @@ class WithdrawalService
 
             DB::commit();
             return true;
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             report($e);
 
