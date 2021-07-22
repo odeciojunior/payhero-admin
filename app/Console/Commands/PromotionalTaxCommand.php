@@ -13,6 +13,11 @@ class PromotionalTaxCommand extends Command
 
     protected $description = 'check if the promotional rate has expired';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         $this->addExpirationDatePromotionalTax();

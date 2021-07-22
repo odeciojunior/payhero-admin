@@ -13,6 +13,11 @@ class UpdateConfirmDateFromDebtPending extends Command
 
     protected $description = 'Atualiza os debitos pendentes';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         $getnetService = new GetnetBackOfficeService();

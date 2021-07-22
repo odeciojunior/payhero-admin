@@ -12,6 +12,11 @@ class VerifyExpiresWhiteBlackList extends Command
 
     protected $description = 'Remove regras do white/black list que expiraram';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         WhiteBlackList::where('expires_at', '<', Carbon::now()->toDateString())->delete();

@@ -18,6 +18,11 @@ class CheckWithdrawalsLiquidated extends Command
 
     protected $description = 'Command description';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
