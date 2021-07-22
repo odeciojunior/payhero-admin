@@ -38,8 +38,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         //se estiver rodando do ngrok, força uso do https
-        if(Str::contains(env('APP_URL'), 'ngrok')){
-            URL::forceScheme('https');
+        if (env("APP_ENV", "local") === 'homolog') {
+            \URL::forceScheme('https');
         }
     }
 
