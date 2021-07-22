@@ -58,6 +58,11 @@ $(document).ready(function () {
                     $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
+                if (response.melhorenvioIntegrations > 0) {
+                    $('#menv-bt').addClass('added');
+                    $('#menv-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
                 loadOnAny('.page', true);
             }
         });
@@ -83,7 +88,7 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
-                
+
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }

@@ -32,7 +32,7 @@ class AppsApiController extends Controller
             'reportanaIntegrations' => ReportanaIntegration::where('user_id', $accountOwnerId)->count(),
             'unicodropIntegrations' => UnicodropIntegration::where('user_id', $accountOwnerId)->count(),
             'smartfunnelIntegrations' => SmartfunnelIntegration::where('user_id', $accountOwnerId)->count(),
-            'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', auth()->user()->account_owner_id)->count(),
+            'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
         ]);
     }
 

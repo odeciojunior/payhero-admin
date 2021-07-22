@@ -128,8 +128,8 @@
 
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/melhorenvio" style='width: 270px;'>
-                            <a id="woocom-bt" href="/apps/melhorenvio" class="add-btn">
-                                <i id="woocom-icon" class="o-add-1" aria-hidden="true"></i></a>
+                            <a id="menv-bt" href="/apps/melhorenvio" class="add-btn">
+                                <i id="menv-icon" class="o-add-1" aria-hidden="true"></i></a>
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/melhorenvio.png') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">Melhor Envio</h5>
