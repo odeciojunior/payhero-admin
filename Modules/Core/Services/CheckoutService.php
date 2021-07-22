@@ -274,12 +274,7 @@ class CheckoutService
     }
 
     /**
-     * @param $url
-     * @param string $method
-     * @param null $data
-     * @return mixed
      * @throws Exception
-     * @description GET/POST/PUT/DELETE
      */
     private function runCurl($url, $method = 'GET', $data = null)
     {
@@ -305,9 +300,7 @@ class CheckoutService
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             $result = curl_exec($ch);
-            $response = json_decode($result);
-
-            return $response;
+            return json_decode($result);
         } catch (Exception $ex) {
             report($ex);
             throw $ex;
@@ -359,5 +352,19 @@ class CheckoutService
 
             return true;
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function releasePaymentGetnet($transactionId)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/releasepaymentgetnet';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
+        }
+
+        return $this->runCurl($url, 'POST', ['transaction_id' => $transactionId]);
     }
 }

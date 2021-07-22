@@ -35,6 +35,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
 
+        $schedule->command('getnet:check-refunded')->dailyAt('03:15');
+
+        $schedule->command('getnet:update-confirm-date-debt-pending')->dailyAt('04:00');
+
         $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
 
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
@@ -42,6 +46,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
+
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
