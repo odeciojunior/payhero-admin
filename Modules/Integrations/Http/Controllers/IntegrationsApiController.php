@@ -54,21 +54,31 @@ class IntegrationsApiController extends Controller
             if (empty($description)) {
                 return response()->json(['message' => 'Campo descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
+
+            $postback = $request->get('postback');
+            if (empty($postback)) {
+                return response()->json(['message' => 'Campo postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
+            }
+
             /** @var User $user */
             $apiTokenModel     = new ApiToken();
             $apiTokenPresenter = $apiTokenModel->present();
             $tokenTypeEnum     = $request->get('token_type_enum');
             $company           = Company::find(current(hashids()->decode($request->get('company_id'))));
+            
             if (empty($tokenTypeEnum)) {
                 return response()->json(['message' => 'O Tipo de Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
+            
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API && !$company) {
                 return response()->json(['message' => 'O campo Empresa é obrigatório para a integração Checkout API'], Response::HTTP_BAD_REQUEST);
             }
+            
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
             if (empty($scopes)) {
                 return response()->json(['message' => 'Tipo do token inválido!'], Response::HTTP_BAD_REQUEST);
             }
+
             $tokenIntegration = ApiToken::generateTokenIntegration($description, $scopes);
             /** @var ApiToken $token */
             $token = $apiTokenModel->create(
@@ -80,6 +90,7 @@ class IntegrationsApiController extends Controller
                     'scopes'                => json_encode($scopes, true),
                     'integration_type_enum' => $tokenTypeEnum,
                     'description'           => $description,
+                    'postback'              => $postback
                 ]
             );
 
