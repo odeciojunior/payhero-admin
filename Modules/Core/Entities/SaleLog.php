@@ -2,35 +2,42 @@
 
 namespace Modules\Core\Entities;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Illuminate\Support\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
 /**
- * @property integer $id
- * @property integer $sale_id
- * @property string $status_enum
+ * Modules\Core\Entities\SaleLog
+ *
+ * @property int $id
+ * @property int $sale_id
+ * @property int $status_enum
  * @property string $status
- * @property string $created_at
- * @property string $updated_at
- * @property Sale $sale
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read Sale $sale
+ * @method static Builder|SaleLog newModelQuery()
+ * @method static Builder|SaleLog newQuery()
+ * @method static Builder|SaleLog query()
+ * @method static Builder|SaleLog whereCreatedAt($value)
+ * @method static Builder|SaleLog whereId($value)
+ * @method static Builder|SaleLog whereSaleId($value)
+ * @method static Builder|SaleLog whereStatus($value)
+ * @method static Builder|SaleLog whereStatusEnum($value)
+ * @method static Builder|SaleLog whereUpdatedAt($value)
  */
 class SaleLog extends Model
 {
-    use LogsActivity;
-    /**
-     * The table associated with the model.
-     * @var string
-     */
     protected $table = 'sale_logs';
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+
     protected $keyType = 'integer';
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'sale_id',
         'status_enum',
@@ -38,29 +45,8 @@ class SaleLog extends Model
         'created_at',
         'updated_at',
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
-    /**
-     * @return BelongsTo
-     */
-    public function sale()
+    public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
     } 

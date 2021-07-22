@@ -14,6 +14,7 @@ use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
+use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Events\NotifyUserAchievementEvent;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Events\PixExpiredEvent;
@@ -71,6 +72,7 @@ use Modules\Core\Listeners\TicketMessageSendEmailListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
+use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -186,6 +188,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,
+        ],
+        NewChargebackEvent::class => [
+            UpdateSaleChargebackListener::class,
+//            CreateChargebackDebitListener::class,
+//            SendChargebackNotificationsListener::class,
+//            NotifyAntifraudChargebackListener::class,
         ]
     ];
 

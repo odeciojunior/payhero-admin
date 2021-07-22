@@ -224,6 +224,11 @@ class GetnetBackOfficeService extends GetnetService
         return $this->statementSubSellerId;
     }
 
+    public function getSaleId(): int
+    {
+        return $this->saleId;
+    }
+
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
         $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
@@ -350,12 +355,28 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * @return int
-     */
-    public function getSaleId(): int
+    public function getStatementWithoutSaveRequest(array $filters = [], int $page = null)
     {
-        return $this->saleId;
+        $queryParameters = $filters;
+        $queryParameters['seller_id'] = $this->sellerId;
+
+        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        return $this->sendCurlWithoutSaveRequest($url, 'GET');
     }
 
+    private function sendCurlWithoutSaveRequest(string $url, string $method, $data = null, $companyId = null)
+    {
+        $curl = curl_init($this->getUrlApi() . $url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        if (!is_null($data)) {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        return $result;
+    }
 }
