@@ -52,9 +52,10 @@ class CheckWithdrawalsReleased extends Command
                             $sale = $transaction->sale;
                             $orderId = $sale->gateway_order_id;
 
-                            $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                            $response = $getnetService
+                                ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
                                 ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
-                                ->getStatement($orderId);
+                                ->getStatement();
 
                             $gatewaySale = json_decode($response);
 
@@ -77,8 +78,7 @@ class CheckWithdrawalsReleased extends Command
                                     if (count($gatewaySale->list_transactions) == 0) {
                                         $response = $getnetService
                                             ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                                            ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
-                                            ->getStatement($orderId);
+                                            ->getStatement();
 
                                         $gatewaySale = json_decode($response);
 
