@@ -19,6 +19,17 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class EmailService
 {
+    public const EMAIL_HELP_CLOUDFOX = 'help@cloudfox.net';
+
+    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-ed70ee0df3a04153aa835e8e4f652434";
+
+    private SendgridService $sendgridService;
+
+    public function __construct()
+    {
+        $this->sendgridService = new SendgridService();
+    }
+
     /**
      * @param $to
      * @param $parameter
@@ -281,6 +292,18 @@ class EmailService
                 $systemsStatus
             );
         }
+    }
+
+    public function sendEmailChargeback($data, $user)
+    {
+        $this->sendgridService->sendEmail(
+            self::EMAIL_HELP_CLOUDFOX,
+            'CloudFox',
+            $user->email,
+            $user->name,
+            self::TEMPLATE_ID_EMAIL_CHARGEBACK,
+            $data
+        );
     }
 }
 

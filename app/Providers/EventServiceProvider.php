@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\SendChargebackNotificationsListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -192,7 +193,7 @@ class EventServiceProvider extends ServiceProvider
         NewChargebackEvent::class => [
             UpdateSaleChargebackListener::class,
 //            CreateChargebackDebitListener::class,
-//            SendChargebackNotificationsListener::class,
+            SendChargebackNotificationsListener::class,
 //            NotifyAntifraudChargebackListener::class,
         ]
     ];
