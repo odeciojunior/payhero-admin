@@ -286,7 +286,11 @@ $(() => {
             getDelivery(sale.delivery_id);
         }
 
-        getCheckout(sale.checkout_id);
+        if (!sale.api_flag) {
+            getCheckout(sale.checkout_id);
+        } else {
+            loadOnAny("#modal-saleDetails", true);
+        }
 
         getNotazz(sale.invoices);
     }
