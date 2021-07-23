@@ -9,6 +9,7 @@ use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
+use Modules\Core\Events\CheckTransactionReleasedEvent;
 use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
@@ -40,6 +41,7 @@ use Modules\Core\Listeners\BoletoPaidEmailNotifyUser;
 use Modules\Core\Listeners\BoletoPaidNotifyUser;
 use Modules\Core\Listeners\BoletoPaidPusherNotifyUser;
 use Modules\Core\Listeners\CheckSaleHasValidTrackingListener;
+use Modules\Core\Listeners\CheckTransactionReleasedListener;
 use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
@@ -181,6 +183,9 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
             SakPixExpiredListener::class,
+        ],
+        CheckTransactionReleasedEvent::class => [
+            CheckTransactionReleasedListener::class,
         ]
     ];
 

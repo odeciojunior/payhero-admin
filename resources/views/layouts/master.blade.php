@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=34') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=35') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')

@@ -15,6 +15,11 @@ class CheckUnderAttack extends Command
 
     protected $description = 'Verifica domínios que não estão sob ataque e atualiza no cloudflare';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
         try {
