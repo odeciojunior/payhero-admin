@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use LogicException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
@@ -378,5 +379,49 @@ class GetnetBackOfficeService extends GetnetService
         curl_close($curl);
 
         return $result;
+    }
+
+    public function requestAdjustment(AdjustmentRequest $adjustmentRequest): AdjustmentResponse
+    {
+        if ($adjustmentRequest->isValid()) {
+            $url = 'v1/mgm/adjustment/request-adjustments';
+            $response = $this->sendCurl($url, 'POST', $adjustmentRequest->formatToSendApi());
+            $response = json_decode($response);
+
+            $adjustmentResponse = new AdjustmentResponse();
+            $adjustmentResponse->code = $response->cod;
+            $adjustmentResponse->errorMessage = $response->msg_Erro;
+            $adjustmentResponse->errorCode = $response->cod_Erro;
+            $adjustmentResponse->isSuccess = is_null($response->msg_Erro);
+
+            if (
+                $adjustmentResponse->isSuccess &&
+                $adjustmentRequest->getTypeAdjustment() == AdjustmentRequest::DEBIT_ADJUSTMENT
+            ) {
+                $this->saveAdjustment($adjustmentRequest, $response);
+            }
+
+            return $adjustmentResponse;
+        } else {
+            throw new LogicException('Todos os parâmetros de AdjustmentRequest são obrigatórios');
+        }
+    }
+
+    private function saveAdjustment($adjustmentRequest, $response)
+    {
+        try {
+            PendingDebt::create(
+                [
+                    'type' => AdjustmentRequest::DEBIT_ADJUSTMENT,
+                    'sale_id' => $adjustmentRequest->getSaleId(),
+                    'request_date' => Carbon::parse($response->date_adjustment)->format('Y-m-d H:i:s'),
+                    'company_id' => $adjustmentRequest->getCompanyId(),
+                    'value' => $adjustmentRequest->getAmount(),
+                    'reason' => $adjustmentRequest->getDescription(),
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

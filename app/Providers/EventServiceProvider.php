@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Listeners\SendChargebackNotificationsListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -44,11 +43,13 @@ use Modules\Core\Listeners\BoletoPaidNotifyUser;
 use Modules\Core\Listeners\BoletoPaidPusherNotifyUser;
 use Modules\Core\Listeners\CheckSaleHasValidTrackingListener;
 use Modules\Core\Listeners\CheckTransactionReleasedListener;
+use Modules\Core\Listeners\CreateChargebackDebitListener;
 use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
+use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
 use Modules\Core\Listeners\NotifySalesExportedListener;
@@ -65,6 +66,7 @@ use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
+use Modules\Core\Listeners\SendChargebackNotificationsListener;
 use Modules\Core\Listeners\SendEmailListener;
 use Modules\Core\Listeners\SendEmailRegisteredListener;
 use Modules\Core\Listeners\SendSmsListener;
@@ -192,9 +194,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewChargebackEvent::class => [
             UpdateSaleChargebackListener::class,
-//            CreateChargebackDebitListener::class,
+            CreateChargebackDebitListener::class,
             SendChargebackNotificationsListener::class,
-//            NotifyAntifraudChargebackListener::class,
+            NotifyAntifraudChargebackListener::class,
         ]
     ];
 
