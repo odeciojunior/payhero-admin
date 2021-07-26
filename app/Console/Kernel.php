@@ -54,6 +54,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
 
+        $schedule->command('getnet:import-sale-contestations')->dailyAt('17:00');
+
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
