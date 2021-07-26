@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
 
+        $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
+
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');

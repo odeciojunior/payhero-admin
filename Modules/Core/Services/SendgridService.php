@@ -304,19 +304,9 @@ class SendgridService
         }
     }
 
-    /**
-     * @param $fromEmail
-     * @param $fromName
-     * @param $toEmail
-     * @param $toName
-     * @param $templateId
-     * @param $data
-     * @return bool
-     */
-    public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
+    public function sendEmail(string $fromEmail, string $fromName, string $toEmail, string $toName, string $templateId, array $data): bool
     {
         try {
-            //Em produção valida o e-mail e local marreta e-mail de teste
             if (env('APP_ENV') == 'production') {
                 if (!FoxUtils::validateEmail($toEmail)) {
                     return false;
