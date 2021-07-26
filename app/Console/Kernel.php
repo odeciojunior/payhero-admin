@@ -30,7 +30,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        // remove regras do white/black list que expiraram
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
@@ -59,10 +58,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-
-        //
-
-        //
+        /** End Manager */
 
         /** checkout */
 
