@@ -276,7 +276,7 @@ class CheckoutService
     /**
      * @throws Exception
      */
-    private function runCurl($url, $method = 'GET', $data = null)
+    public function runCurl($url, $method = 'GET', $data = null)
     {
         try {
             $this->internalApiToken = env('ADMIN_TOKEN');
