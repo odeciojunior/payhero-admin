@@ -23,7 +23,7 @@ class AddMelhorenvioColumnsToDeliveries extends Migration
 
         // drop the disused columns
         Schema::table('deliveries', function (Blueprint $table) {
-            $table->dropIndex('entregas_transportadora_foreign');
+            $table->dropForeign('entregas_transportadora_foreign');
             $table->dropColumn(['carrier_id', 'id_order_carrier', 'status_carrier', 'tracking_code']);
         });
     }
