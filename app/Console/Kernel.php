@@ -30,7 +30,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        // remove regras do white/black list que expiraram
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
@@ -41,6 +40,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
 
+        $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
+
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
@@ -50,14 +51,16 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
+
+        $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
+
+        $schedule->command('getnet:import-sale-contestations')->dailyAt('17:00');
+
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-
-        //
-
-        //
+        /** End Manager */
 
         /** checkout */
 

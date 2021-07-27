@@ -14,6 +14,7 @@ use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
+use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Events\NotifyUserAchievementEvent;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Events\PixExpiredEvent;
@@ -42,11 +43,13 @@ use Modules\Core\Listeners\BoletoPaidNotifyUser;
 use Modules\Core\Listeners\BoletoPaidPusherNotifyUser;
 use Modules\Core\Listeners\CheckSaleHasValidTrackingListener;
 use Modules\Core\Listeners\CheckTransactionReleasedListener;
+use Modules\Core\Listeners\CreateChargebackDebitListener;
 use Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
+use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
 use Modules\Core\Listeners\NotifySalesExportedListener;
@@ -63,6 +66,7 @@ use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
+use Modules\Core\Listeners\SendChargebackNotificationsListener;
 use Modules\Core\Listeners\SendEmailListener;
 use Modules\Core\Listeners\SendEmailRegisteredListener;
 use Modules\Core\Listeners\SendSmsListener;
@@ -71,6 +75,7 @@ use Modules\Core\Listeners\TicketMessageSendEmailListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
+use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -186,6 +191,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,
+        ],
+        NewChargebackEvent::class => [
+            UpdateSaleChargebackListener::class,
+            CreateChargebackDebitListener::class,
+            SendChargebackNotificationsListener::class,
+            NotifyAntifraudChargebackListener::class,
         ]
     ];
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
 
@@ -16,12 +17,15 @@ class GenericCommand extends Command
     {
         $service = new TrackingService();
 
-        $trackings = Tracking::select('trackings.product_plan_sale_id', 'trackings.tracking_code')
-            ->join('sales', 'sales.id', '=', 'trackings.sale_id')
-            ->where('sales.owner_id', 4125)
-            ->get();
+        $trackings = DB::select("select tracking_code, product_plan_sale_id
+                                          from trackings
+                                          where tracking_code in (
+                                              select tracking_code
+                                              from trackings
+                                              where system_status_enum = 5
+                                          )");
 
-        $bar = $this->output->createProgressBar($trackings->count());
+        $bar = $this->output->createProgressBar(count($trackings));
         $bar->start();
 
         foreach ($trackings as $t) {

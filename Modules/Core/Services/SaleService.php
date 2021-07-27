@@ -29,10 +29,6 @@ use Modules\Transfers\Services\GetNetStatementService;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class SaleService
- * @package Modules\Core\Services
- */
 class SaleService
 {
     public function getPaginatedSales($filters)
@@ -115,7 +111,7 @@ class SaleService
             }
 
             if (!empty($filters["client"]) && empty($filters["email_client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%'.$filters["client"].'%')->pluck('id');
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($customers) {
@@ -149,7 +145,7 @@ class SaleService
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($couponCode) {
-                        $querySale->where('cupom_code', 'LIKE', '%'.$couponCode.'%');
+                        $querySale->where('cupom_code', 'LIKE', '%' . $couponCode . '%');
                     }
                 );
             }
@@ -163,7 +159,7 @@ class SaleService
 
             // novo filtro
             if (!empty($filters["email_client"]) && empty($filters["client"])) {
-                $customers = $customerModel->where('email', 'LIKE', '%'.$filters["email_client"].'%')->pluck('id');
+                $customers = $customerModel->where('email', 'LIKE', '%' . $filters["email_client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($customers) {
@@ -174,10 +170,10 @@ class SaleService
 
             // novo filtro
             if (!empty($filters["email_client"]) && !empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%'.$filters["client"].'%')->where(
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->where(
                     'email',
                     'LIKE',
-                    '%'.$filters["email_client"].'%'
+                    '%' . $filters["email_client"] . '%'
                 )->pluck('id');
                 $transactions->whereHas(
                     'sale',
@@ -280,7 +276,7 @@ class SaleService
             $transactions->whereHas(
                 'sale',
                 function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )->selectRaw('transactions.*, sales.start_date')
                 ->orderByDesc('sales.start_date');
@@ -380,7 +376,7 @@ class SaleService
         //valor do produtor
         $value = $userTransaction->value;
         $cashbackValue = $sale->cashback->value ?? 0;
-        $comission = 'R$ '.substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         //valor do afiliado
         $affiliateComission = '';
@@ -390,7 +386,7 @@ class SaleService
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue = $affiliateTransaction->value;
-                $affiliateComission = 'R$ '.number_format($affiliateValue / 100, 2, ',', '.');
+                $affiliateComission = 'R$ ' . number_format($affiliateValue / 100, 2, ',', '.');
             }
         }
 
@@ -479,10 +475,8 @@ class SaleService
             'refund_value' => FoxUtils::formatMoney(intval($sale->refund_value) / 100),
             'value_anticipable' => '0,00',
             'total_paid_value' => FoxUtils::formatMoney($sale->total_paid_value),
-            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first(
-            )->refund_observation : null,
-            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first(
-                )->user_id,
+            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
+            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             'company_name' => $companyName
         ];
     }
@@ -493,7 +487,7 @@ class SaleService
 
         foreach ($sale->plansSales as $key => $planSale) {
             $itens[] = [
-                'id' => '#'.Hashids::encode($planSale->plan->id),
+                'id' => '#' . Hashids::encode($planSale->plan->id),
                 'title' => $planSale->plan->name,
                 'unit_price' => str_replace('.', '', $planSale->plan->price),
                 'quantity' => $planSale->amount,
@@ -590,7 +584,7 @@ class SaleService
                     $hasOrderId = empty($summary->order_id) ? false : true;
                     $isTransactionCredit = $details->transaction_sign == '+';
 
-                    $refundObservation = 'Estorno da venda: '.hashids_encode($sale->id, 'sale_id');
+                    $refundObservation = 'Estorno da venda: ' . hashids_encode($sale->id, 'sale_id');
 
                     if (
                         !is_null($details->subseller_rate_confirm_date) &&
@@ -934,7 +928,7 @@ class SaleService
                     'sale_id' => $sale->id,
                     'type' => PendingDebt::REVERSED,
                     'request_date' => Carbon::now(),
-                    'reason' => 'Estorno do boleto #'.Hashids::connection('sale_id')->encode($sale->id),
+                    'reason' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
                     'value' => $refundValue,
                 ]
             );
@@ -955,8 +949,8 @@ class SaleService
                 'subseller_id' => $subSellerId,
                 'type_adjustment' => 2,
                 'amount' => $refundValue,
-                'date_adjustment' => today()->addDay()->format('Y-m-d\TH:i:s').'Z',
-                'description' => 'Estorno do boleto #'.Hashids::connection('sale_id')->encode($sale->id),
+                'date_adjustment' => today()->addDay()->format('Y-m-d\TH:i:s') . 'Z',
+                'description' => 'Estorno do boleto #' . Hashids::connection('sale_id')->encode($sale->id),
             ];
 
             $response = $getnetService->sendCurl('v1/mgm/adjustment/request-adjustments', 'POST', $adjustmentData);
@@ -966,7 +960,7 @@ class SaleService
             if (!is_null($ajdustmentResponse->msg_Erro)) {
                 report(
                     new Exception(
-                        'Erro ao gerar um débito pendente no estorno de boleto da venda '.$sale->id.' - '.$ajdustmentResponse->msg_Erro
+                        'Erro ao gerar um débito pendente no estorno de boleto da venda ' . $sale->id . ' - ' . $ajdustmentResponse->msg_Erro
                     )
                 );
             }
@@ -1173,7 +1167,7 @@ class SaleService
             }
 
             if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%'.$filters["client"].'%')->pluck('id');
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereIn('sales.customer_id', $customers);
             }
 
@@ -1208,8 +1202,8 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
             $transactions->whereBetween(
-                'sales.'.$filters["date_type"],
-                [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']
+                'sales.' . $filters["date_type"],
+                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             )
                 ->whereIn('sales.status', $status)
                 ->selectRaw('transactions.*, sales.start_date')
@@ -1301,7 +1295,7 @@ class SaleService
             $transactions->whereHas(
                 'sale',
                 function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )->selectRaw('transactions.*, sales.start_date')
                 ->orderByDesc('sales.start_date');
@@ -1332,7 +1326,7 @@ class SaleService
 
             // Nome do Usuário
             if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%'.$filters["client"].'%')->pluck('id');
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($customers) {
@@ -1412,7 +1406,7 @@ class SaleService
         )
             ->whereBetween(
                 'start_date',
-                [$startDate->format('Y-m-d').' 00:00:00', $endDate->format('Y-m-d').' 23:59:59']
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             )
             ->where(
                 function ($query) use ($user) {
@@ -1437,7 +1431,7 @@ class SaleService
                 ]
             )->whereBetween(
                 'start_date',
-                [$startDate->format('Y-m-d').' 00:00:00', $endDate->format('Y-m-d').' 23:59:59']
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             )->where(
                 function ($query) use ($user) {
                     $query->where('owner_id', $user->id)
@@ -1474,5 +1468,23 @@ class SaleService
             ->count();
 
         return $sale >= 1;
+    }
+
+    public static function createSaleLog($saleId, $status)
+    {
+        try {
+            if (is_integer($saleId) && !empty($status)) {
+                $statusPresenter = (new Sale)->present()->getStatus($status);
+                SaleLog::create(
+                    [
+                        'sale_id' => $saleId,
+                        'status' => is_integer($status) ? $statusPresenter : $status,
+                        'status_enum' => is_integer($statusPresenter) ? $statusPresenter : $status,
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

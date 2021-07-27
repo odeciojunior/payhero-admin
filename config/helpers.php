@@ -35,7 +35,7 @@ if (!function_exists('foxutils')) {
 }
 
 if (!function_exists('builder2sql')) {
-    function builder2sql(\Illuminate\Database\Eloquent\Builder $query)
+    function builder2sql($query)
     {
         $bindings = array_map(function ($binding) {
             return is_numeric($binding) ? $binding : "'".$binding."'";

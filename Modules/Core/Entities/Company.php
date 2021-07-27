@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class Company
+ *
  * @package Modules\Core\Entities
  * @property int $id
  * @property int $user_id
@@ -68,6 +69,82 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $bank_document_status_badge
  * @property json $id_wall_result
  * @method CompanyPresenter present()
+ * @property int $order_priority
+ * @property int $active_flag
+ * @property int|null $has_pix_key
+ * @property string $pix_key_situation
+ * @property string|null $installment_tax
+ * @property string|null $extra_document
+ * @property string|null $id_wall_date_update
+ * @property string|null $transaction_rate
+ * @property int $block_checkout
+ * @property int|null $annual_income
+ * @property-read \Illuminate\Database\Eloquent\Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read int|null $affiliates_count
+ * @property-read int|null $company_documents_count
+ * @property-read string $id_code
+ * @property-read int|null $hotzapp_integrations_count
+ * @property-read int|null $invitations_count
+ * @property-read int|null $transactions_count
+ * @property-read int|null $transfers_count
+ * @property-read int|null $users_projects_count
+ * @property-read int|null $withdrawals_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Company newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Company newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Company onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Company query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccountDigit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccountType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereActiveFlag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAddressDocumentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAgency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAgencyDigit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereAnnualIncome($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereBankDocumentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereBlockCheckout($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereCaptureTransactionEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereCompanyType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereComplement($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereContractDocumentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocument($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssuer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssuerState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereExtraDocument($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereFantasyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereGatewayReleaseMoneyDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereGatewayTax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereGetNetStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereHasPixKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereIdWallDateUpdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereIdWallResult($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereInstallmentTax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereNeighborhood($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereOrderPriority($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company wherePixKeySituation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereStreet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereSubsellerGetnetHomologId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereSubsellerGetnetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereSupportEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereSupportTelephone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereTransactionRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Company whereZipCode($value)
+ * @method static \Illuminate\Database\Query\Builder|Company withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Company withoutTrashed()
+ * @mixin \Eloquent
  */
 class Company extends Model
 {
@@ -174,64 +251,62 @@ class Company extends Model
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Empresa '.$this->fantasy_name.' foi deletedo.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Empresa '.$this->fantasy_name.' foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Empresa '.$this->fantasy_name.' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = "Empresa {$this->fantasy_name} foi deletado.";
+                break;
+            case 'updated':
+                $activity->description = "Empresa {$this->fantasy_name}  foi atualizado.";
+                break;
+            case 'created':
+                $activity->description = "Empresa {$this->fantasy_name} foi criado.";
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }
 
-
-    public function affiliates()
+    public function affiliates(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
-    public function companyDocuments()
+    public function companyDocuments(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\CompanyDocument');
     }
 
-
-    public function hotzappIntegrations()
+    public function hotzappIntegrations(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
-
-    public function invitations()
+    public function invitations(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Invitation');
     }
 
-
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 
-
-    public function transfers()
+    public function transfers(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 
-    public function usersProjects()
+    public function usersProjects(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
-    public function withdrawals()
+    public function withdrawals(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Withdrawal');
     }
