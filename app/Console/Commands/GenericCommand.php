@@ -25,7 +25,7 @@ class GenericCommand extends Command
                                               where system_status_enum = 5
                                           )");
 
-        $bar = $this->output->createProgressBar($trackings->count());
+        $bar = $this->output->createProgressBar(count($trackings));
         $bar->start();
 
         foreach ($trackings as $t) {
