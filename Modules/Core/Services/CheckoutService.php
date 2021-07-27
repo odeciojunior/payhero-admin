@@ -276,7 +276,7 @@ class CheckoutService
     /**
      * @throws Exception
      */
-    private function runCurl($url, $method = 'GET', $data = null)
+    public function runCurl($url, $method = 'GET', $data = null)
     {
         try {
             $this->internalApiToken = env('ADMIN_TOKEN');
@@ -365,6 +365,10 @@ class CheckoutService
             $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
         }
 
-        return $this->runCurl($url, 'POST', ['transaction_id' => $transactionId]);
+        $data = [
+            'transaction_id' => hashids_encode($transactionId)
+        ];
+
+        return $this->runCurl($url, 'POST', $data);
     }
 }

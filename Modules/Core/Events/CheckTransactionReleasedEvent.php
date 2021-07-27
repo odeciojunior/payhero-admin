@@ -4,9 +4,9 @@ namespace Modules\Core\Events;
 
 class CheckTransactionReleasedEvent
 {
-    public int $transactionId;
+    public $transactionId;
 
-    public function __construct(int $transactionId)
+    public function __construct($transactionId)
     {
         $this->transactionId = $transactionId;
     }

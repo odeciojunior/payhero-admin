@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use LogicException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
@@ -224,6 +225,11 @@ class GetnetBackOfficeService extends GetnetService
         return $this->statementSubSellerId;
     }
 
+    public function getSaleId(): int
+    {
+        return $this->saleId;
+    }
+
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
         $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
@@ -350,12 +356,72 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * @return int
-     */
-    public function getSaleId(): int
+    public function getStatementWithoutSaveRequest(array $filters = [], int $page = null)
     {
-        return $this->saleId;
+        $queryParameters = $filters;
+        $queryParameters['seller_id'] = $this->sellerId;
+
+        $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+        return $this->sendCurlWithoutSaveRequest($url, 'GET');
     }
 
+    private function sendCurlWithoutSaveRequest(string $url, string $method, $data = null, $companyId = null)
+    {
+        $curl = curl_init($this->getUrlApi() . $url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        if (!is_null($data)) {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        return $result;
+    }
+
+    public function requestAdjustment(AdjustmentRequest $adjustmentRequest): AdjustmentResponse
+    {
+        if ($adjustmentRequest->isValid()) {
+            $url = 'v1/mgm/adjustment/request-adjustments';
+            $response = $this->sendCurl($url, 'POST', $adjustmentRequest->formatToSendApi());
+            $response = json_decode($response);
+
+            $adjustmentResponse = new AdjustmentResponse();
+            $adjustmentResponse->code = $response->cod;
+            $adjustmentResponse->errorMessage = $response->msg_Erro;
+            $adjustmentResponse->errorCode = $response->cod_Erro;
+            $adjustmentResponse->isSuccess = is_null($response->msg_Erro);
+
+            if (
+                $adjustmentResponse->isSuccess &&
+                $adjustmentRequest->getTypeAdjustment() == AdjustmentRequest::DEBIT_ADJUSTMENT
+            ) {
+                $this->saveAdjustment($adjustmentRequest, $response);
+            }
+
+            return $adjustmentResponse;
+        } else {
+            throw new LogicException('Todos os parâmetros de AdjustmentRequest são obrigatórios');
+        }
+    }
+
+    private function saveAdjustment($adjustmentRequest, $response)
+    {
+        try {
+            PendingDebt::create(
+                [
+                    'type' => AdjustmentRequest::DEBIT_ADJUSTMENT,
+                    'sale_id' => $adjustmentRequest->getSaleId(),
+                    'request_date' => Carbon::parse($response->date_adjustment)->format('Y-m-d H:i:s'),
+                    'company_id' => $adjustmentRequest->getCompanyId(),
+                    'value' => $adjustmentRequest->getAmount(),
+                    'reason' => $adjustmentRequest->getDescription(),
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
 }

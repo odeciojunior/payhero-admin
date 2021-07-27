@@ -42,7 +42,7 @@ body {
     }
 
     .mg-responsive {
-        margin: 0px 15px;
+        margin: 0px 10px;
     }
 }
 
@@ -60,7 +60,7 @@ body {
     }
 
     .mg-responsive {
-        margin: 0px 15px;
+        margin: 0px 10px;
     }
 
     .table td {
@@ -731,12 +731,12 @@ img.border-icon{
 }
 
 .py-13{
-    padding-top: 13px !important;    
-    padding-bottom: 13px !important;    
+    padding-top: 13px !important;
+    padding-bottom: 13px !important;
 }
 .py-11{
-    padding-top: 11px !important;    
-    padding-bottom: 11px !important;    
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
 }
 
 #form-update-plan .nav-tabs .nav-link:not(.active) {border-bottom-color: #c3c3c3;}
@@ -762,13 +762,13 @@ img.border-icon{
 #modal_add_plan .remove-custom-product{height: 43px;}
 #modal_add_plan .border-light-gray{border:1px solid #f4f4f4; background-color:#f4f4f4; height: 44px;}
 #modal_add_plan .btn-outline-secondary{height: 44px;border:1px solid #C4C4C4;}
-#modal_add_plan .btn-plus{color: #41DC8F;background-color: transparent;border-color: #41DC8F;}    
-#modal_add_plan .btn-plus:disabled{color: #333333;background-color: transparent;border-color: #333333;}    
+#modal_add_plan .btn-plus{color: #41DC8F;background-color: transparent;border-color: #41DC8F;}
+#modal_add_plan .btn-plus:disabled{color: #333333;background-color: transparent;border-color: #333333;}
 #modal_add_plan .btn-plus:disabled svg path{stroke:#333333;}
-#modal_add_plan .btn-plus:hover{background-color:transparent;}   
-#modal_add_plan .modal-content{border-radius: 12px;} 
+#modal_add_plan .btn-plus:hover{background-color:transparent;}
+#modal_add_plan .modal-content{border-radius: 12px;}
 #modal_add_plan #custom_products img{ border-radius: 8px;border: 1px solid #C4C4C4;}
-#modal_add_plan #custom_products .img-preview{width:47px;height:45px;float:left;background:url(/modules/global/img/produto.svg) no-repeat center center; 
+#modal_add_plan #custom_products .img-preview{width:47px;height:45px;float:left;background:url(/modules/global/img/produto.svg) no-repeat center center;
     background-size:contain; border-radius: 8px; margin-right: 10px;}
 #modal_add_plan #modal-add-plan-body .nav-tabs .nav-link:not(.active) {margin: 0px !important;}
 #modal_add_plan #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
