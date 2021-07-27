@@ -30,6 +30,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
+        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
