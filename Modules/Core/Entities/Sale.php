@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -371,6 +372,11 @@ class Sale extends Model
     public function pixCharges(): HasMany
     {
         return $this->hasMany(PixCharge::class, 'sale_id');
+    }
+
+    public function products(): HasManyThrough
+    {
+        return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');
     }
 
     public function getHashIdAttribute()
