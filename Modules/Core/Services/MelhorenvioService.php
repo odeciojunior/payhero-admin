@@ -272,6 +272,11 @@ class MelhorenvioService
 
         return $this->updateCredentials($result);
     }
+
+    public function getOrder(string $orderId): object
+    {
+        return $this->doRequest("/api/v2/me/orders/{$orderId}");
+    }
 }
 
 
