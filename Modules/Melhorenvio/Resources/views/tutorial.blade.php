@@ -74,7 +74,7 @@
                     Na usa conta no Sirius acesse: <span class="breadcrumb">Aplicativos > Melhor Envio</span> e Clique
                     no botão <img class="inline-img" src="{{ asset('modules/melhorenvio/img/step-3a.jpg') }}"
                                   alt="Botão adicionar integração"> para adicionar uma nova integração. Feito isso
-                    preencha com os dados do aplicativo criado no passo anterior e clique em <b>Realizar integração</b>.
+                    preencha com os dados do aplicativo criado no passo anterior e clique em <span class="btn green">Realizar integração</span>.
                     <div class="img-container">
                         <img src="{{ asset('modules/melhorenvio/img/step-3b.jpg') }}" alt="Imagem 2 do passo 3">
                     </div>
