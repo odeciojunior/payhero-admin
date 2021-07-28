@@ -155,16 +155,14 @@ class WooCommerceService
             $description = '';
             if(empty($_product->variations)){
 
-                $created = $this->createProduct($projectId, $userId, $_product, $description);
+                $this->createProduct($projectId, $userId, $_product, $description);
 
-                if($created == true){
-                    
-                    $data = [
+                $data = [
                         'sku' => $_product->id.'-'.$hashedProjectId.'-'
                     ];
                     $this->woocommerce->put('products/'.$_product->id, $data);
                     
-                }
+                
 
 
             }else{
@@ -199,25 +197,17 @@ class WooCommerceService
         $_product->price = $variation->price;
         $_product->images[0]->src = $variation->image->src;
 
-        $created = $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
+        $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
 
-        if($created == true){
+        
 
-            $data = [
-                'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
-            ];
+        $data = [
+            'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
+        ];
+        
+        ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
             
-            //Write SKU back to WooCommerce
-
-            ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
-            
-            // try{
-            //     $this->woocommerce->put('products/'.$_product->id.'/variations/'.$variation->id.'/', $data);
-            // }catch(Exception $e){
-
-            //     //Log::debug($e);
-            // }
-        }
+          
 
 
     }

@@ -15,7 +15,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TransactionsService
 {
 
-    public function verifyAutomaticLiquidationTransactions()
+    public function verifyAutomaticLiquidationTransactions($saleId = null)
     {
         try {
             // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
@@ -42,6 +42,10 @@ class TransactionsService
                         });
                     });
             });
+
+        if ($saleId) {
+            $transactions->where('sale_id', $saleId);
+        }
 
         $transactions->chunkById(100, function ($transactions) use ($getnetService) {
             foreach ($transactions as $transaction) {

@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Plans\Http\Controllers\PlansApiController;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
 {
@@ -14,18 +13,27 @@ class GenericCommand extends Command
 
     protected $description = 'Command description';
 
-    // private $cloudflareService;
-
-    // public function __construct()
-    // {
-    //     //parent::__construct();
-
-    //     //$this->cloudflareService = new CloudFlareService();
-    // }
-
     public function handle()
     {
+        $service = new TrackingService();
 
+        $trackings = DB::select("select tracking_code, product_plan_sale_id
+                                          from trackings
+                                          where tracking_code in (
+                                              select tracking_code
+                                              from trackings
+                                              where system_status_enum = 5
+                                          )");
+
+        $bar = $this->output->createProgressBar(count($trackings));
+        $bar->start();
+
+        foreach ($trackings as $t) {
+            $service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
+            $bar->advance();
+        }
+
+        $bar->finish();
     }
 }
 

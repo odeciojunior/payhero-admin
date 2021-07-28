@@ -3,9 +3,9 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\UserProjectsPresenter;
@@ -97,26 +97,18 @@ class UserProject extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @return BelongsTo
-     */
-    public function company()
+
+    public function company(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }

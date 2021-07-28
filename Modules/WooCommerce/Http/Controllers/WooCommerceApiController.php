@@ -307,12 +307,44 @@ class WooCommerceApiController extends Controller
         
     }
 
-    public function undoIntegration(Request $request)
+    public function keysUpdate(Request $request)
     {
+        try{
+            $projectId = current(Hashids::decode($request->projectId));
+            
+            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+    
+            $integration->token_user = $request->consumer_key;
+            $integration->token_pass = $request->consumer_secret;
+            $integration->save();
+            
+            return '{"status":true}';
+
+        }catch(Exception $e){
+            
+            return '{"status":false}';
+        }
+
+        return $request;
     }
 
-    public function reIntegration(Request $request)
+    public function keysGet(Request $request)
     {
+        try{
+            $projectId = current(Hashids::decode($request->projectId));
+            
+            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+    
+            $consumer_k = substr($integration->token_user, 0, 10);
+            $consumer_s = substr($integration->token_pass, 0, 10);
+            
+            
+            return '{"status":"true", "consumer_s":"'.$consumer_s.'", "consumer_k":"'.$consumer_k.'"}';
+
+        }catch(Exception $e){
+            
+            return '{"status":"false"}';
+        }
     }
 
     public function synchronizeTrackings(Request $request)

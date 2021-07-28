@@ -89,9 +89,28 @@ class PostBackWooCommerceController extends Controller
                 ->first();
 
         if(!empty($ifProductExists)){
+
+            $wooCommerceService = new WooCommerceService(
+                $wooCommerceIntegration->url_store,
+                $wooCommerceIntegration->token_user,
+                $wooCommerceIntegration->token_pass
+            );
+            $data = [
+                'sku' => $tmpSku
+            ];
+            $productId = explode('-',$tmpSku);
+            if(empty($product->parent_id)){
+
+                $wooCommerceService->woocommerce->put('products/' . $productId[0], $data);
+            }else{
+                
+                $wooCommerceService->woocommerce->put('products/'.$product->id.'/variations/'.$productId[0].'/', $data);
+
+            }
+            
             return response()->json(
                 [
-                    'message' => 'product already exists',
+                    'message' => 'product already exists, sku updated',
                 ],
                 200
             );
@@ -197,6 +216,13 @@ class PostBackWooCommerceController extends Controller
                     $newValues['status'] = '1';
                     
                     Plan::create($newValues);
+
+                    return response()->json(
+                        [
+                            'message' => 'product updated',
+                        ],
+                        200
+                    );
                 }
 
             }else{
@@ -204,18 +230,15 @@ class PostBackWooCommerceController extends Controller
                 // Criar produto
                 return $this->createProduct($request);
 
+
+                
                 
             }
 
 
         }
 
-        return response()->json(
-            [
-                'message' => 'success',
-            ],
-            200
-        );
+        
     }
 
     /**

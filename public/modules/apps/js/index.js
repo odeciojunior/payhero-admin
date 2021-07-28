@@ -45,10 +45,6 @@ $(document).ready(function () {
                     $('#whatsapp2-bt').addClass('added');
                     $('#whatsapp2-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
-                if (response.hotsacIntegrations > 0) {
-                    $('#hotsac-bt').addClass('added');
-                    $('#hotsac-icon').removeClass('o-add-1').addClass('o-checkmark-1');
-                }
                 if (response.reportanaIntegrations > 0) {
                     $('#reportana-bt').addClass('added');
                     $('#reportana-icon').removeClass('o-add-1').addClass('o-checkmark-1');
@@ -62,9 +58,10 @@ $(document).ready(function () {
                     $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
-                // if (response.notazzIntegrations == 0) {
-                //     $('.div-notazz-integration').remove();
-                // }
+                if (response.melhorenvioIntegrations > 0) {
+                    $('#menv-bt').addClass('added');
+                    $('#menv-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
 
                 loadOnAny('.page', true);
             }
@@ -91,7 +88,7 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
-                
+
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }

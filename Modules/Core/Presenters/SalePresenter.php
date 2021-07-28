@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\FoxUtilsService;
 
 /**
  * Class SalePresenter
@@ -56,6 +57,24 @@ class SalePresenter extends Presenter
             ];
         }
 
+
+        return $plans;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHotBilletPlansList()
+    {
+        $plans = [];
+        foreach ($this->plansSales as $planSale) {
+            $plans[] = [
+                "price" => $planSale->plan()->first()->price,
+                "quantity" => $planSale->amount,
+                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
+                'id' => hashids_encode($planSale->plan()->first()->id)
+            ];
+        }
         return $plans;
     }
 
@@ -71,6 +90,7 @@ class SalePresenter extends Presenter
             '.'
         ) : '0,00';
     }
+
     /**
      * @return string|string[]
      */
@@ -84,6 +104,7 @@ class SalePresenter extends Presenter
             return '';
         }
     }
+
     /**
      * @return false|string
      */
@@ -186,7 +207,10 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product = clone($productPlan->product()->first()->toArray());
+                $product = $productPlan->product()->first()->toArray();
+                if (is_object($productPlan->product()->first()->toArray())) {
+                    $product = clone($productPlan->product()->first()->toArray());
+                }
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $productsSale[] = $product;
             }
@@ -243,7 +267,7 @@ class SalePresenter extends Presenter
         if (is_numeric($paymentType)) {
             switch ($paymentType) {
                 case 1:
-                case 3:                
+                case 3:
                     return 'Cartão';
                 case 2:
                     return 'Boleto';
@@ -266,8 +290,8 @@ class SalePresenter extends Presenter
             switch ($paymentType) {
                 case 1:
                     return 'generico';
-                case 3:              
-                    return 'debito';  
+                case 3:
+                    return 'debito';
                 case 2:
                     return 'boleto';
                 case 4:
@@ -275,5 +299,30 @@ class SalePresenter extends Presenter
             }
         }
         return null;
+    }
+
+    public function getFormattedSubTotal()
+    {
+        return substr_replace($this->getSubTotal(), ',', strlen($this->getSubTotal()) - 2, 0);
+    }
+
+    public function getFormattedDiscount()
+    {
+        $discount = preg_replace("/[^0-9]/", "", $this->shopify_discount);
+
+        if (empty($discount)) {
+            return '';
+        } else {
+            return substr_replace($discount, ',', strlen($discount) - 2, 0);
+        }
+    }
+
+    public function getTotalPaidValueWithoutInstallmentTax()
+    {
+        $val = foxutils()->onlyNumbers($this->sub_total) + foxutils()->onlyNumbers($this->shipment_value);
+        if (!empty($this->shopify_discount)) {
+            $val -= foxutils()->onlyNumbers($this->shopify_discount);
+        }
+        return substr_replace($val, ',', strlen($val) - 2, 0);
     }
 }

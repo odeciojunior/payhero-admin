@@ -79,17 +79,6 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
-                        <div class="card app-integration" data-url="/apps/hotsac" style='width: 270px;'>
-                            <a id="hotsac-bt" href="/apps/hotsac" class="add-btn">
-                                <i id="hotsac-icon" class="o-add-1" aria-hidden="true"></i></a>
-                            <img class="card-img-top card-img-controll px-10 pt-10 pb-40" src="{!! asset('modules/global/img/hotsac.png') !!}" alt="" align="middle">
-                            <div class="card-body">
-                                <h5 class="card-title">HotSac</h5>
-                                <p class="card-text sm">Integre seus projetos com HotSac </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/reportana" style='width: 270px;'>
                             <a id="reportana-bt" href="/apps/reportana" class="add-btn">
                                 <i id="reportana-icon" class="o-add-1" aria-hidden="true"></i></a>
@@ -125,7 +114,6 @@
                         </div>
                     </div>
 
-
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/woocommerce" style='width: 270px;'>
                             <a id="woocom-bt" href="/apps/woocommerce" class="add-btn">
@@ -138,6 +126,17 @@
                         </div>
                     </div>
 
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration" data-url="/apps/melhorenvio" style='width: 270px;'>
+                            <a id="menv-bt" href="/apps/melhorenvio" class="add-btn">
+                                <i id="menv-icon" class="o-add-1" aria-hidden="true"></i></a>
+                            <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/melhorenvio.png') !!}" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">Melhor Envio</h5>
+                                <p class="card-text sm">Integre seus projetos com Melhor Envio </p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/hotbillet" style='width: 270px;'>
@@ -150,7 +149,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/integrations" style='width:270px;'>
                             <a id="tool_integrations-bt" href="/integrations" class="add-btn">
@@ -163,7 +162,7 @@
                         </div>
                     </div>
 
-                    
+
                     {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/digitalmanager" style='width: 270px;'>
                             <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="o-add-1" aria-hidden="true"></i></a>

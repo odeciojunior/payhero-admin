@@ -808,20 +808,32 @@
 
                 <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
                     <div class='row justify-left mx-20 mt-30'>
-
                         <div class='col-md-4 pt-20 mb-40'>
                             <a id="product" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration">
                                 <span class="o-reload-1 font-size-16"></span>
                                 <span class="gray"> Sincronizar dados com WooCommerce </span>
                             </a>
                         </div>
-
                     </div>
-
-
+                    
                     <hr>
-                </div>
+                    
+                    <div class='row justify-left mx-20 mt-30'>
 
+                        <div class='col-md-4 pt-20 mb-40'>
+                        
+                            <a  role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration-apikeys">
+                                <span class="fa fa-key font-size-16"></span>
+
+                                Chaves de acesso REST API
+                            </a>
+                        </div>
+
+                        
+                    </div>
+                    <hr>
+
+                </div>
 
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
                     <div class='my-30 mx-30'>
