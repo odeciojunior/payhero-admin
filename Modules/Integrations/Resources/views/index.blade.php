@@ -5,15 +5,12 @@
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
         <style>
-            .o-arrow-right-1 {
-                font-size: 30px;
-            }
-
-            .o-arrow-right-1::before {
-                transform: rotate(180deg);
-            }
             .gray:hover{
                 color:#a1a1a1 !important;
+            }
+
+            a o-arrow-right {
+                color: inherit;
             }
         </style>
     @endpush
@@ -23,12 +20,14 @@
                 <i class="o-add-1" aria-hidden="true"></i>
             </button>
             <h1 class="page-title my-10" style="min-height: 28px">
-                <a class="gray" href="/apps">
-                    <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Integrações
-                </a>
+                <span class="">
+                    <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
+                </span>
+                <span class="gray" style="line-height: 40px; margin-left: ">
+                    API Sirius
+                </span>
             </h1>
-            <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
+            <p id='text-info' style="margin-top: 12px;">Use nosso checkout API ou faça integrações externas.</p>
             <br>
             <div class="card shadow p-20 mb-0" id='card-integration-data' style='display:none;'>
                 <div class="row justify-content-center">
@@ -69,16 +68,33 @@
                     <h4 class="big gray" style='width:100%'>Você ainda não cadastrou integrações!</h4>
                 </div>
             </div>
+
+            <div class="mb-30">
+                <div class="row">
+                    <div class="col-9">
+
+                    </div>
+                    <div class="col-3">
+                        <a href="" class="font-weight-bold">
+                            Acesse a documentação da API
+                            <span class="o-arrow-right-1 ml-2" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="card shadow" id='card-table-integrate' data-plugin="matchHeight" style='display:none;'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
-                            <th>Descrição</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Token</th>
-                            <th>Antifraude</th>
-                            <th></th>
+                            <tr>
+                                <td class="table-title">Descrição</td>
+                                <td class="table-title">Tipo</td>
+                                <td class="table-title">Status</td>
+                                <td class="table-title">Token</td>
+                                <td class="table-title">Antifraude</td>
+                                <td class="table-title"></td>
+                            </tr>
                         </thead>
                         <tbody id='table-body-integrates'>
                             {{-- js integrates carrega  --}}
@@ -89,28 +105,37 @@
             <ul id="pagination-integrates" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
-            <div class="modal fade modal-3d-flip-vertical" id="modal-integrate" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div id='mainModalBody' class="modal-dialog modal-simple">
+
+            <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-integrate" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
                     <div id="modal-create-integration" class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center">Nova Integração</h4>
+                        
+                        <div class="modal-header simple-border-bottom mb-10">
+                            <div class="row">
+                                <div class="col-11">
+                                    <h4 class="modal-title bold" id="modal-title-plan"><span class="ml-15">Nova Integração </span></h4>
+                                </div>
+                                <div class="col-1" align="right">
+                                    <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div id="modal-reverse-body" class="modal-body">
-                            <div id="body-modal">
+
+                        <div id="modal-reverse-body" class="modal-body px-0 pb-0">
+                            <div id="body-modal" class="container-fluid p-15">
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label for="description">Descrição</label>
-                                        <input name="description" type="text" class="form-control input-pad" id="description" placeholder="Descrição">
+                                        <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label for="token_type_enum">Tipo de Integração</label>
                                         <div id="enum-list">
-                                            <select name="token_type_enum" class="form-control select-pad select-enum-list">
+                                            <select name="token_type_enum" class="form-control select-enum-list">
                                                 <option value="2">Acesso Pessoal</option>
                                                 <option value="3">Integração Externa</option>
                                                 <option value="4">Checkout API</option>
@@ -121,7 +146,7 @@
                                 <div class="row companies-container d-none">
                                     <div class="form-group col-sm-12 col-md">
                                         <label for="empresa">Empresa</label>
-                                        <select name="company_id" id="companies" class="form-control select-pad">
+                                        <select name="company_id" id="companies" class="form-control">
                                             <option value="">Todas empresas</option>
                                         </select>
                                     </div>
@@ -129,16 +154,15 @@
                                 <div class="row postback-container d-none">
                                     <div class="form-group col-sm-12 col-md">
                                         <label for="postback">Postback</label>
-                                        <input name="postback" type="text" class="form-control input-pad" id="postback" placeholder="Postback">
+                                        <input name="postback" type="text" class="form-control" id="postback" placeholder="Postback">
                                         <small class="text-muted">Insira uma url válida para receber as notificações referentes a integração</small>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 35px">
-                                    <div class="form-group col-12 text-right">
-                                        <button id="btn-save-integration" type="button" class="btn btn-primary">Gerar Token</button>
-                                    </div>
-                                </div>
                             </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button id="btn-save-integration" type="button" class="btn btn-lg btn-primary">Gerar Token</button>
                         </div>
                     </div>
                 </div>

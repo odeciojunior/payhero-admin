@@ -772,3 +772,17 @@ img.border-icon{
 #modal_add_plan #modal-add-plan-body .nav-tabs .nav-link {margin: 0px !important;}
 #modal_add_plan .edit-input{background-color: #F4F4F4;}
 #modal_add_plan .edit-input:focus{background-color: #FFFFFF;}
+
+.modal-new-layout .modal-content {
+    border-radius: 12px;
+}
+.modal-new-layout .modal-header {
+    display: block;
+    text-align: center;
+}
+.modal-new-layout .modal-footer {
+    justify-content: center;
+}
+.modal-new-layout select.form-control {
+    padding: .429rem 1rem !important;
+}

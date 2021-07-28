@@ -53,5 +53,6 @@
     "Whatsapp2": true,
     "Withdrawals": true,
     "WooCommerce": true,
-    "HotBillet": true
+    "HotBillet": true,
+    "ApiSirius": true
 }

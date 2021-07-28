@@ -106,8 +106,11 @@ $(document).ready(function () {
                 }
             dados += '</td>';
             //-----------------------------------
-            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
-            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button></td>';
+            dados += '<td class="text-center">';
+                dados += '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Editar integração"><span class="o-edit-1"></span></button>';
+                dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
+                dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button>';
+            dados += '</td>';
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
         });
