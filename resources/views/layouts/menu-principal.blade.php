@@ -211,7 +211,7 @@
                 </a>
             </li>
         @endhasanyrole
-        @hasanyrole('attendance|finantial')
+        @unlessrole('attendance')
             @if(!auth()->user()->show_old_finances)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
