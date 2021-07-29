@@ -196,9 +196,9 @@ class LoginController extends Controller
             auth()->loginUsingId($user->id);
 
 
-            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')) {
                 return response()->redirectTo('/dashboard');
-            } else {
+            }else{
                 return response()->redirectTo('/sales');
             }
 

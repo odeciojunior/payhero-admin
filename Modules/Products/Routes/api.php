@@ -13,11 +13,11 @@ Route::group(
         Route::post('/products/userproducts', 'ProductsApiController@getProducts')->name('api.products.getproducts')
              ->middleware('role:account_owner|admin');
         Route::post('/products/getsignedurl', 'ProductsApiController@getSignedUrl')->name('api.products.getsignedurl')
-             ->middleware('role:account_owner|admin|attendance');
+             ->middleware('role:account_owner|admin|attendance|finantial');
         Route::post('/products/verifyproductinplan', 'ProductsApiController@verifyProductInPlan')->name('api.products.verifyproductinplan')
              ->middleware('role:account_owner|admin');
         Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')
-             ->name('api.products.saleproducts')->middleware('role:account_owner|admin|attendance');
+             ->name('api.products.saleproducts')->middleware('role:account_owner|admin|attendance|finantial');
     }
 );
 

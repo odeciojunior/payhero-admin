@@ -9,8 +9,8 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-        Route::get('/', 'FinancesController@index')->name('finances')->middleware('role:account_owner|admin');
-        Route::get('/download/{filename}', 'FinancesController@download')->middleware('role:account_owner|admin');
+        Route::get('/', 'FinancesController@index')->name('finances')->middleware('role:account_owner|admin|finantial');
+        Route::get('/download/{filename}', 'FinancesController@download')->middleware('role:account_owner|admin|finantial');
     }
 );
 
@@ -21,7 +21,7 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-        Route::get('/', 'FinancesController@oldIndex')->name('old-finances')->middleware('role:account_owner|admin');
+        Route::get('/', 'FinancesController@oldIndex')->name('old-finances')->middleware('role:account_owner|admin|finantial');
     }
 );
 

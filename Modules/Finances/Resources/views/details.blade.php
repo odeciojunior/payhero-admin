@@ -57,8 +57,8 @@
                         </div>
                 </div>
 
-                <div class="align-self-end mr-auto mb-5" id="btn_exports">
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                <div class="align-self-end mr-auto mb-5" id="btn_exports">                    
+                    @hasanyrole('account_owner|admin')
                         <div class="col-12 text-right">
                             <div class="justify-content-end align-items-center">
                                 <div class="p-2 d-flex justify-content-end align-items-center" id="">
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endhasanyrole
                 </div>
 
                 <div id="loading-ajax-transfer">

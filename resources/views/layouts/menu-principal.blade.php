@@ -112,8 +112,8 @@
 </nav>
 {{--SIDE BAR--}}
 <div class="site-menubar">
-    <ul class="site-menu" style="margin-top:10px">
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+    <ul class="site-menu" style="margin-top:10px">        
+        @hasanyrole('account_owner|admin|finantial')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
                     <span class="bg-menu">
@@ -122,8 +122,8 @@
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @endhasanyrole
+        @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub disabled">
                 <a class="disabled" href="{{ route('showcase') }}">
                     <span class="bg-menu">
@@ -132,8 +132,9 @@
                     <span class="site-menu-title">Vitrine (em breve)</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+        @endhasanyrole
+        
+        @hasanyrole('account_owner|admin|attendance|finantial')
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
@@ -149,6 +150,7 @@
                             <span class="site-menu-title">Visão geral</span>
                         </a>
                     </li>
+                    @unlessrole('finantial')
                     <li class="site-menu-item">
                         <a href="{{ route('recovery.index') }}">
                             <span class="bg-menu"></span>
@@ -167,19 +169,19 @@
                             <span class="site-menu-title">Rastreamentos</span>
                         </a>
                     </li>
-
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+                    @endunlessrole
+                    @hasanyrole('account_owner|admin|attendance')                    
                         <li class="site-menu-item">
                             <a href="{{ route('contestations.index') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Contestações</span>
                             </a>
                         </li>
-                    @endif
+                    @endhasanyrole
                 </ul>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @endhasanyrole        
+        @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
@@ -188,8 +190,8 @@
                     <span class="site-menu-title">Projetos</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @endhasanyrole
+        @hasanyrole('account_owner|admin')        
             <li class="site-menu-item has-sub">
                 <a href="{{ route('products.index') }}" id="products-link">
                     <span class="bg-menu">
@@ -198,8 +200,8 @@
                     <span class="site-menu-title">Produtos</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+        @endhasanyrole
+        @hasanyrole('account_owner|admin|attendance')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <span class="bg-menu">
@@ -208,8 +210,8 @@
                     <span class="site-menu-title">Atendimento</span>
                 </a>
             </li>
-        @endif
-        @if(!auth()->user()->hasRole('attendance'))
+        @endhasanyrole
+        @hasanyrole('attendance|finantial')
             @if(!auth()->user()->show_old_finances)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
@@ -244,8 +246,8 @@
                     </ul>
                 </li>
             @endif
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+        @endhasanyrole       
+        @hasanyrole('account_owner|admin|attendance|finantial')
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
                     <span class="bg-menu">
@@ -255,31 +257,33 @@
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                    @hasanyrole('account_owner|admin|finantial')
                         <li class="site-menu-item has-sub">
                             <a href="{!! route('reports.index') !!}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Vendas</span>
                             </a>
                         </li>
+                    @endhasanyrole
+                    @hasanyrole('account_owner|admin')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.checkouts') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Acessos</span>
                             </a>
                         </li>
-                    @endif
-
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+                    @endhasanyrole
+                    
+                    @hasanyrole('account_owner|admin|attendance')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.coupons') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Cupons de desconto</span>
                             </a>
                         </li>
-                    @endif
-
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                    @endhasanyrole
+                    
+                    @hasanyrole('account_owner|admin|finantial')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.pending') }}">
                                 <span class="bg-menu"></span>
@@ -293,39 +297,39 @@
                                 <span class="site-menu-title">Saldo bloqueado</span>
                             </a>
                         </li>
-                    @endif
+                    @endhasanyrole
                 </ul>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @endhasanyrole
+        @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
-    <span class="bg-menu">
-        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
-    </span>
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+                    </span>
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @endhasanyrole        
+        @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('apps') }}" id='apps-link'>
-    <span class="bg-menu">
-        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
-    </span>
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+                    </span>
                     <span class="site-menu-title">Aplicativos</span>
                 </a>
             </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner'))
+        @endhasanyrole
+        @hasanyrole('account_owner')        
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
-    <span class="bg-menu">
-        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
-    </span>
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
+                    </span>
                     <span class="site-menu-title">Convites</span>
                 </a>
             </li>
-        @endif
+        @endhasanyrole
     </ul>
 </div>

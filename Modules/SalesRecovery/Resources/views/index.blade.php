@@ -40,7 +40,7 @@
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>
                 </div>
-                @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                @hasanyrole('account_owner|admin')                
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                @endhasanyrole
             </div>
         </div>
         <div id='project-not-empty' style='display:none'>

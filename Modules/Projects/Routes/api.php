@@ -12,7 +12,7 @@ Route::group(
 
         Route::apiResource('/projects', 'ProjectsApiController')
              ->only('index', 'create', 'store', 'edit', 'destroy', 'update', 'show')
-             ->middleware('role:account_owner|admin|attendance');
+             ->middleware('role:account_owner|admin|attendance|finantial');
 
         // Verificação de telefone de suporte
         Route::post('/projects/{projectId}/verifysupportphone', 'ProjectsApiController@verifySupportphone')

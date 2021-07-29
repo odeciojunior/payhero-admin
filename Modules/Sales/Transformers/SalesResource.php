@@ -102,7 +102,11 @@ class SalesResource extends JsonResource
             'has_cashback'             => $this->cashback->value ?? false,
             'has_withdrawal'           => !empty($this->details->has_withdrawal)
         ];
-        $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+
+        $shopifyIntegrations = [];
+        if(!empty($this->project)){
+            $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+        }
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         } else {

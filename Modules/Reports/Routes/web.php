@@ -12,7 +12,7 @@
 */
 
 Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
-    Route::get('/sales', 'ReportsController@index')->name('reports.index')->middleware('role:account_owner|admin');
+    Route::get('/sales', 'ReportsController@index')->name('reports.index')->middleware('role:account_owner|admin|finantial');
 
     Route::get('/checkouts', 'ReportsController@checkouts')->name('reports.checkouts')->middleware('role:account_owner|admin');
 
@@ -20,11 +20,11 @@ Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/getsalesbyorigin', 'ReportsController@getSalesByOrigin')->name('reports.salesbyorigin')->middleware('role:account_owner|admin');
 
     Route::get('/projections', 'ReportsController@projections')->name('reports.projections')->middleware('role:account_owner|admin');
-    Route::get('/pending', 'ReportsController@pending')->name('reports.pending')->middleware('role:account_owner|admin');
+    Route::get('/pending', 'ReportsController@pending')->name('reports.pending')->middleware('role:account_owner|admin|finantial');
 
     Route::get('/coupons', 'ReportsController@coupons')->name('reports.coupons')->middleware('role:account_owner|admin|attendance');
 
-    Route::get('/blockedbalance', 'ReportsController@blockedbalance')->name('reports.blockedbalance')->middleware('role:account_owner|admin');
+    Route::get('/blockedbalance', 'ReportsController@blockedbalance')->name('reports.blockedbalance')->middleware('role:account_owner|admin|finantial');
 });
 
 

@@ -37,7 +37,7 @@ Route::group(
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
             ->only('index', 'show', 'store', 'update', 'destroy')
             ->names('api.withdrawals_settings')
-            ->middleware('role:account_owner|admin');
+            ->middleware('role:account_owner|admin|finantial');
 
         Route::get('/withdrawals/settings/{companyId}/{settingsId}', 'WithdrawalsSettingsApiController@show');
     }

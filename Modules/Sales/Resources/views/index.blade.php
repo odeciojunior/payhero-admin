@@ -55,8 +55,8 @@
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
                         <h1 class="page-title">Vendas</h1>
-                    </div>
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                    </div>                    
+                    @hasanyrole('account_owner|admin|finantial')
                         <div class="col-6 text-right">
                             <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                                 <div class="p-2 d-flex justify-content-end align-items-center">
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endhasanyrole
                 </div>
             </div>
 
@@ -240,7 +240,7 @@
                     </div>
                     <!-- Resumo -->
                     <div class="fixhalf"></div>
-                    @if(!auth()->user()->hasRole('attendance'))
+                    @hasanyrole('attendance|finantial')                    
                         <div class="row justify-content-center">
                             <div class="col-md-3">
                                 <div class="card shadow" style='display:block;'>
@@ -291,7 +291,7 @@
                             </div>
 
                         </div>
-                    @endif
+                    @endhasanyrole
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
                     <div class="col-lg-12 p-0 pb-10">
