@@ -30,9 +30,9 @@ class IntegrationsApiController extends Controller
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
-                                           ->where('user_id', auth()->user()->account_owner_id)
-                                           ->latest()
-                                           ->paginate();
+                                            ->where('user_id', auth()->user()->account_owner_id)
+                                            ->latest()
+                                            ->paginate();
 
             return new ApiTokenCollection($tokens);
         } catch (Exception $ex) {
@@ -52,27 +52,29 @@ class IntegrationsApiController extends Controller
         try {
             $description = $request->get('description');
             if (empty($description)) {
-                return response()->json(['message' => 'Campo descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['message' => 'O campo Descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
 
-            $postback = $request->get('postback');
-            if (empty($postback)) {
-                return response()->json(['message' => 'Campo postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
+            $tokenTypeEnum = $request->get('token_type_enum');
+            if (empty($tokenTypeEnum)) {
+                return response()->json(['message' => 'O Tipo de Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
+            }
+            
+            if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
+                $company = Company::find(current(hashids()->decode($request->get('company_id'))));
+                if (!$company) {
+                    return response()->json(['message' => 'O campo Empresa é obrigatório para a integração Checkout API'], Response::HTTP_BAD_REQUEST);
+                }
+                
+                $postback = $request->get('postback');
+                if (empty($postback)) {
+                    return response()->json(['message' => 'O campo Postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
+                }
             }
 
             /** @var User $user */
             $apiTokenModel     = new ApiToken();
             $apiTokenPresenter = $apiTokenModel->present();
-            $tokenTypeEnum     = $request->get('token_type_enum');
-            $company           = Company::find(current(hashids()->decode($request->get('company_id'))));
-            
-            if (empty($tokenTypeEnum)) {
-                return response()->json(['message' => 'O Tipo de Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
-            }
-            
-            if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API && !$company) {
-                return response()->json(['message' => 'O campo Empresa é obrigatório para a integração Checkout API'], Response::HTTP_BAD_REQUEST);
-            }
             
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
             if (empty($scopes)) {
@@ -84,13 +86,13 @@ class IntegrationsApiController extends Controller
             $token = $apiTokenModel->create(
                 [
                     'user_id'               => auth()->user()->account_owner_id,
-                    'company_id'            => $company->id,
+                    'company_id'            => $tokenTypeEnum == 4 ? $company->id : null,
                     'token_id'              => $tokenIntegration->token->getKey(),
                     'access_token'          => $tokenIntegration->accessToken,
                     'scopes'                => json_encode($scopes, true),
                     'integration_type_enum' => $tokenTypeEnum,
                     'description'           => $description,
-                    'postback'              => $postback
+                    'postback'              => $postback ?? null
                 ]
             );
 
@@ -100,6 +102,69 @@ class IntegrationsApiController extends Controller
             report($ex);
 
             return response()->json(['message' => 'Ocorreu um erro ao salvar.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param string $id
+     */
+    public function show($encodedId)
+    {
+        try {
+            $apiTokenModel = new ApiToken();
+            $apiToken = $apiTokenModel->newQuery()->find(current(Hashids::decode($encodedId)));
+
+            return response()->json([
+                'description' => $apiToken->description,
+                'token_type_enum' => $apiToken->integration_type_enum,
+                'postback' => $apiToken->postback
+            ], 200);
+        } catch (Exception $ex) {
+            Log::debug($ex);
+
+            return redirect()->back()->with('error', 'Ocorreu um erro ao excluir.');
+        }
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     * @param string $encodedId
+     * @return Response
+     */
+    public function update(Request $request, $encodedId)
+    {
+        try {
+            $apiTokenModel = new ApiToken();
+            $apiToken = $apiTokenModel->newQuery()->find(current(Hashids::decode($encodedId)));
+
+            if ($apiToken->user_id !== auth()->user()->account_owner_id) {
+                return response()->json(['message' => 'Ocorreu um erro ao editar.'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $description = $request->get('description');
+            if (empty($description)) {
+                return response()->json(['message' => 'O campo Descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $tokenTypeEnum = $request->get('token_type_enum');            
+            if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
+                $postback = $request->get('postback');                
+                if (empty($postback)) {
+                    return response()->json(['message' => 'O campo Postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
+                }
+            }
+            
+            $apiToken->update([
+                'description' => $description,
+                'postback' => $postback ?? null,
+            ]);
+
+            return response()->json(['message' => 'Integração editada com sucesso'], Response::HTTP_OK);
+        } catch (Exception $ex) {
+            Log::debug($ex);
+
+            return redirect()->back()->with('error', 'Ocorreu um erro ao excluir.');
         }
     }
 

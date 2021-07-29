@@ -22,7 +22,7 @@ class ApiTokenResource extends JsonResource
     /**
      * @var string
      */
-    private $format = 'd/m/Y H:i:s';
+    private $format = 'd/m/Y';
 
     /**
      * Transform the resource into an array.
@@ -36,15 +36,15 @@ class ApiTokenResource extends JsonResource
         $this->defineTimezone();
         $token = $this->resource->token;
         $revoked = $token->revoked ?? null;
-        if ($this->resource->company) {
-            $antifraudUrl = env('CHECKOUT_URL') . '/api/v1/antifraud/' . hashids()->encode($this->resource->company->id);
+        if ($this->resource->user) {
+            $antifraudUrl = env('CHECKOUT_URL') . '/api/v1/antifraud/' . hashids()->encode($this->resource->user->id);
             $antifraudUrl = 'https://' . str_replace(['http://', 'https://'], '', $antifraudUrl);
         }
 
         return [
             'id_code'          => Hashids::encode($this->resource->id),
             'access_token'     => $this->resource->access_token,
-            'antifraud_url'    => $this->resource->company ? $antifraudUrl : "",
+            'antifraud_url'    => $this->resource->user ? $antifraudUrl : "",
             'status'           => $this->resource->present()->status(),
             'revoked'          => $revoked,
             'register_date'    => $this->getFormatDate($this->resource->created_at),
