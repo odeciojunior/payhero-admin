@@ -4,123 +4,23 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
-        <style>
-            .gray:hover{
-                color:#a1a1a1 !important;
-            }
-
-            a o-arrow-right {
-                color: inherit;
-            }
-
-            #card-integration-data .card .title {
-                font-size: 16px;
-                font-weight: 400;
-            }
-            #card-integration-data .card .number {
-                margin-bottom: 0;
-                font-size: 24px;
-                font-weight: 700;
-                color: #5D5D5D;
-            }
-
-            #content-script .input-group .input-group-text {
-                font-size: 16px;
-                font-weight: 700;
-                border-color: #2E85EC;
-                border-top-left-radius: 8px;
-                border-bottom-left-radius: 8px; 
-            }
-            #content-script .input-group .form-control[readonly] {
-                background-color: #ffffff;
-                border-color: #ffffff;
-                border-right: 1px solid #F4F4F4;
-                font-size: 16px;
-            }
-            #content-script .input-group .btn {
-                border-top-right-radius: 8px;
-                border-bottom-right-radius: 8px; 
-                padding-left: 8px;
-                padding-right: 8px;
-                color: #3D4456;
-            }
-            #content-script .input-group .btn:hover {
-                color: inherit;
-            }
-
-            .table td {
-                padding: 18px 25px !important;
-            }
-            .table thead > tr > td {
-                padding: 25px !important;
-            }
-            
-            .table td .description {
-                font-size: 16px;
-                font-weight: 700;
-                color: #5D5D5D;
-                margin: 0;
-            }
-            .table td small {
-                font-size: 12px;
-                font-weight: 400;
-                color: #B9B9B9;
-            }
-            .table td .input-group .form-control:not(:last-child) {
-                border-top-left-radius: 8px;
-                border-bottom-left-radius: 8px; 
-                font-size: 16px;
-            }
-            .table td .input-group .form-control {
-                border-color: #CECECE;
-            }
-            .table td .input-group .btn {
-                border: 1px solid #CECECE;
-                border-top-right-radius: 8px;
-                border-bottom-right-radius: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                color: #3D4456;
-            }
-            .table td .input-group .btn:hover {
-                color: inherit;
-            }
-            td .badge {
-                font-size: 14px;
-                padding: 10px 24px;
-            }
-            td .badge.badge-personal {
-                background-color: #9E00D6;
-            }
-            td .badge.badge-warning {
-                background-color: #FF9900;
-            }
-
-            .table td .btn.pointer {
-                padding-left: .5rem; 
-                padding-right: .5rem;
-            }
-
-            .btn:not(:disabled):not(.disabled):active:focus {
-                box-shadow: none !important;
-            }
-        </style>
     @endpush
-    <div class="page">
+    <div class="page new-layout">
         <div style="display: none" class="page-header container">
-            <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="o-add-1" aria-hidden="true"></i>
-            </button>
-            <h1 class="page-title my-10" style="min-height: 28px">
-                <span class="">
-                    <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
-                </span>
-                <span class="" style="line-height: 40px;">
-                    API Sirius
-                </span>
-            </h1>
-            <p id='text-info' style="margin-top: 12px;">Use nosso checkout API ou faça integrações externas.</p>
-            <br>
+            <div class="d-flex justify-content-between align-items-center mb-30">
+                <div>
+                    <h1 class="page-title my-10" style="min-height: 28px">
+                        <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
+                        <span style="line-height: 40px;">API Sirius</span>
+                    </h1>
+                    <p id='text-info' style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas.</p>
+                </div>
+                <div>
+                    <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
+                        <i class="o-add-1" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
 
             <div class="" id='card-integration-data' style='display:none;'>
                 <div class="row justify-content-center">
@@ -213,53 +113,45 @@
             <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-integrate" role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
                     <div id="modal-create-integration" class="modal-content">                        
-                        <div class="modal-header simple-border-bottom mb-10">
-                            <div class="row">
-                                <div class="col-11">
-                                    <h4 class="modal-title bold" id="modal-title-plan"><span class="ml-15">Nova Integração </span></h4>
-                                </div>
-                                <div class="col-1" align="right">
-                                    <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
-                                        <i class="material-icons md-16">close</i>
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="modal-header simple-border-bottom">
+                            <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span class="ml-15">Nova Integração</span></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons md-22">close</i>
+                            </button>
                         </div>
 
-                        <div id="modal-reverse-body" class="modal-body px-0 pb-0">
-                            <div id="body-modal" class="container-fluid p-15">
-                                <div class="row">
-                                    <div class="form-group col-12">
-                                        <label for="description">Descrição</label>
-                                        <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
-                                    </div>
+                        <div id="modal-reverse-body" class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="description">Nome da integração</label>
+                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração">
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-12">
-                                        <label for="token_type_enum">Tipo de Integração</label>
-                                        <div id="enum-list">
-                                            <select name="token_type_enum" class="form-control select-enum-list">
-                                                <option value="2">Acesso Pessoal</option>
-                                                <option value="3">Integração Externa</option>
-                                                <option value="4">Checkout API</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row companies-container d-none">
-                                    <div class="form-group col-sm-12 col-md">
-                                        <label for="empresa">Empresa</label>
-                                        <select name="company_id" id="companies" class="form-control">
-                                            <option value="">Todas empresas</option>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="token_type_enum">Tipo de Integração</label>
+                                    <div id="enum-list">
+                                        <select name="token_type_enum" class="form-control form-control-lg select-enum-list">
+                                            <option value="2">Acesso Pessoal</option>
+                                            <option value="3">Integração Externa</option>
+                                            <option value="4">Checkout API</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row postback-container d-none">
-                                    <div class="form-group col-sm-12 col-md">
-                                        <label for="postback">Postback</label>
-                                        <input name="postback" type="text" class="form-control" id="postback" placeholder="Postback">
-                                        <small class="text-muted">Insira uma url válida para receber as notificações referentes a integração</small>
-                                    </div>
+                            </div>
+                            <div class="row companies-container d-none">
+                                <div class="form-group col-sm-12 col-md">
+                                    <label for="empresa">Empresa</label>
+                                    <select name="company_id" id="companies" class="form-control form-control-lg">
+                                        <option value="">Todas empresas</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row postback-container d-none">
+                                <div class="form-group col-sm-12 col-md">
+                                    <label for="postback">Postback</label>
+                                    <input name="postback" type="text" class="form-control form-control-lg" id="postback" placeholder="Insira a URL de postback">
+                                    <small class="text-muted">Insira uma URL válida para receber as notificações referentes a integração</small>
                                 </div>
                             </div>
                         </div>
@@ -277,40 +169,32 @@
     <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-edit-integration" role="dialog" tabindex="-1">
         <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
             <div id="modal-create-integration" class="modal-content">                        
-                <div class="modal-header simple-border-bottom mb-10">
-                    <div class="row">
-                        <div class="col-11">
-                            <h4 class="modal-title bold" id="modal-title-plan"><span class="ml-15">Editar Integração </span></h4>
-                        </div>
-                        <div class="col-1" align="right">
-                            <a id="modal-button-close" class="pointer close btn-close-add-plan" role="button" data-dismiss="modal" aria-label="Close">
-                                <i class="material-icons md-16">close</i>
-                            </a>
-                        </div>
-                    </div>
+                <div class="modal-header simple-border-bottom">
+                    <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span class="ml-15">Editar Integração</span></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons md-22">close</i>
+                    </button>
                 </div>
 
-                <div id="modal-reverse-body" class="modal-body px-0 pb-0">
-                    <div id="body-modal" class="container-fluid p-15">
-                        <div class="row">
-                            <div class="form-group col-12">
-                                <label for="description">Descrição</label>
-                                <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
-                            </div>
+                <div id="modal-reverse-body" class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="description">Nome da integração</label>
+                            <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração">
                         </div>
-                        <div class="row postback-container" style="display: none;">
-                            <div class="form-group col-sm-12 col-md">
-                                <label for="postback">Postback</label>
-                                <input name="postback" type="text" class="form-control" id="postback" placeholder="Postback">
-                                <small class="text-muted">Insira uma url válida para receber as notificações referentes a integração</small>
-                            </div>
+                    </div>
+                    <div class="row postback-container" style="display: none;">
+                        <div class="form-group col-sm-12 col-md">
+                            <label for="postback">Postback</label>
+                            <input name="postback" type="text" class="form-control form-control-lg" id="postback" placeholder="Insira a URL de postback">
+                            <small class="text-muted">Insira uma URL válida para receber as notificações referentes a integração</small>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <input type="hidden" name="token_type_enum">
-                    <button id="btn-edit-integration" type="button" class="btn btn-lg btn-primary">Salvar</button>
+                    <button id="btn-edit-integration" type="button" class="btn btn-lg btn-primary">Atualizar</button>
                 </div>
             </div>
         </div>
