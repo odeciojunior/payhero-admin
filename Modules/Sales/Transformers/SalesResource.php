@@ -107,6 +107,7 @@ class SalesResource extends JsonResource
         if(!empty($this->project)){
             $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         }
+        
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         } else {
