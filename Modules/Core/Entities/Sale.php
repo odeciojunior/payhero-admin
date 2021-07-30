@@ -400,12 +400,4 @@ class Sale extends Model
 
         return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
-
-    /**
-     * @return HasMany
-     */
-    public function pixCharges()
-    {
-        return $this->hasMany( PixCharge::class, 'sale_id');
-    }
 }
