@@ -24,7 +24,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/companies/{companiId}/getdocuments', 'CompaniesApiController@getDocuments');
 
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')
-        ->middleware('role:account_owner|admin|finantial');
+        ->middleware('role:account_owner|admin|attendance|finantial');
 
     Route::post('/companies/updateorder', 'CompaniesApiController@updateOrder');
     Route::post('/companies/{company_id}/updatetax', 'CompaniesApiController@updateTax');

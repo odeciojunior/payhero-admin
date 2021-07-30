@@ -40,7 +40,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                @if(!auth()->user()->hasRole('attendance'))
+                @hasanyrole('attendance|finantial')                
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                         <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações"
                               id='notification'
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                     </li>
-                @endif
+                @endhasanyrole
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                        data-animation="scale-up" role="button">

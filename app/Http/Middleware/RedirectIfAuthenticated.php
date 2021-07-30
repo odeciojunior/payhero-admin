@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')) {
                 return redirect('/dashboard');
             } else {
                 return redirect('/sales');

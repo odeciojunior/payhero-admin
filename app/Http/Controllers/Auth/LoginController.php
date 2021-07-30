@@ -217,7 +217,7 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')) {
             return '/dashboard';
         } else {
             return '/sales';

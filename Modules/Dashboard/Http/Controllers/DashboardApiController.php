@@ -644,12 +644,9 @@ class DashboardApiController extends Controller
             $user = auth()->user();
 
             if (!($user->id == $user->account_owner_id)) {
-                return \response()->json(
-                    [
-                        'message' => 'Usuário não é o dono da conta'
-                    ],
-                    Response::HTTP_UNAUTHORIZED
-                );
+                return \response()->json([
+                    'message' => 'Usuário não é o dono da conta'
+                ]);
             }
 
             $dashboardNotifications = DashboardNotification::where([
