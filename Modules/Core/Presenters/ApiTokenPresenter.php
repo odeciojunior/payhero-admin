@@ -24,7 +24,7 @@ class ApiTokenPresenter extends Presenter
         "integration_type_enum" => [
             1 => 'admin',        //'Admin',
             2 => 'personal',     //'Acesso Pessoal',
-            3 => 'external',     //'Integração Externa',
+            3 => 'external',     //'Integração Externa (Profitfy)',
             4 => 'checkout_api', //'Checkout API',
         ],
     ];
@@ -41,7 +41,7 @@ class ApiTokenPresenter extends Presenter
                   ApiToken::TOKEN_SCOPE_PRODUCT,
                   ApiToken::TOKEN_SCOPE_CLIENT,
         ],
-        3 => [  //'external',
+        3 => [  //'Integração Externa (Profitfy)',
                 ApiToken::TOKEN_SCOPE_SALE,
                 ApiToken::TOKEN_SCOPE_PRODUCT,
         ],

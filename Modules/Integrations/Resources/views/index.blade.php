@@ -40,7 +40,7 @@
 
                     <div class="col-md-3 col-sm-12">
                         <div class="card shadow p-20">
-                            <p class="">Posts recebidos</h3>
+                            <p class="">Posts recebidos</p>
                             <p id='posts_received' class="number"></p>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3 text-right">
+                    <div class="col-12 col-md-3 text-right px-0">
                         <a href="" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
                             <span>Acesse a documentação da API</span>
                             <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
@@ -112,7 +112,7 @@
             <!-- Modal para criar integração -->
             <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-integrate" role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
-                    <div id="modal-create-integration" class="modal-content">                        
+                    <div id="modal-create-integration" class="modal-content">
                         <div class="modal-header simple-border-bottom">
                             <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span class="ml-15">Nova Integração</span></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -124,7 +124,7 @@
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="description">Nome da integração</label>
-                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração">
+                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração" value="Profitfy">
                                 </div>
                             </div>
                             <div class="row">
@@ -132,8 +132,7 @@
                                     <label for="token_type_enum">Tipo de Integração</label>
                                     <div id="enum-list">
                                         <select name="token_type_enum" class="form-control form-control-lg select-enum-list">
-                                            <option value="2">Acesso Pessoal</option>
-                                            <option value="3">Integração Externa</option>
+                                            <option value="3">Profitfy (Integração Externa)</option>
                                             <option value="4">Checkout API</option>
                                         </select>
                                     </div>
@@ -168,7 +167,7 @@
     <!-- Modal para editar integração -->
     <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-edit-integration" role="dialog" tabindex="-1">
         <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
-            <div id="modal-create-integration" class="modal-content">                        
+            <div id="modal-create-integration" class="modal-content">
                 <div class="modal-header simple-border-bottom">
                     <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span class="ml-15">Editar Integração</span></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -199,7 +198,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal padrão para excluir -->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical modal-new-layout" id="modal-delete-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -209,7 +208,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                
+
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
                         <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
@@ -217,7 +216,7 @@
                     <h3 class="black"> Você tem certeza? </h3>
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
-                
+
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id='btn-cancel-integration' type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                         <b>Cancelar</b>

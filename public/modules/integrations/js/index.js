@@ -1,14 +1,12 @@
 $(document).ready(function () {
     let integrationTypeEnum = {
-        admin: 'Admin',
-        personal: 'Acesso Pessoal',
-        external: 'Integração Externa',
+        external: 'Profitfy',
         checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
         admin: 'default',
-        personal: 'personal',
-        external: 'warning',
+        personal: 'default',
+        external: 'success',
         checkout_api: 'primary'
     };
     let status = {
@@ -51,7 +49,7 @@ $(document).ready(function () {
                     updateIntegrationTableData(response);
                     pagination(response, 'integrates');
                 }
-                
+
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
@@ -77,7 +75,7 @@ $(document).ready(function () {
             $("#content-script").hide();
             $("#input-url-antifraud").val('');
         }
-        
+
         $.each(response.data, function (index, value) {
             let disabled = ('active' !== value.status) ? ' disabled' : '';
             dados = '';
@@ -87,11 +85,11 @@ $(document).ready(function () {
                     dados += '<p class="description mb-0 mr-1">' + value.description + '</p>';
                     dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
                 dados += '</td>';
-            
+
                 dados += '<td class="text-center">';
                     dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
                 dados += '</td>';
-            
+
                 dados += '<td style="vertical-align: middle;">';
                     dados += '<div class="input-group input-group-lg">';
                         dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
@@ -102,7 +100,7 @@ $(document).ready(function () {
                         dados += '</div>';
                     dados += '</div>';
                 dados += '</td>';
-                
+
                 dados += '<td class="text-center">';
                     dados += '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Editar integração"><span class="o-edit-1"></span></button>';
                     dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
@@ -117,7 +115,7 @@ $(document).ready(function () {
         $("#integrations_active").html('' + response.resume.active + '');
         $("#posts_received").html('' + response.resume.received + '');
         $("#posts_sent").html('' + response.resume.sent + '');
-    }    
+    }
 
     // Obtem os dados da integração
     function getIntegration() {
@@ -162,7 +160,7 @@ $(document).ready(function () {
     }
 
     // Edita os dados da integração
-    function editIntegration(integration_id) {        
+    function editIntegration(integration_id) {
         $('#btn-edit-integration').unbind('click');
         $('#btn-edit-integration').on('click', function () {
             let description = $('#modal-edit-integration').find('input[name="description"]').val();
@@ -413,11 +411,19 @@ $(document).ready(function () {
         let type = e.target.value;
         let companiesContainer = $('.companies-container');
         let postbackContainer = $('.postback-container');
+        let descriptionInput =  $('#description');
+
+        descriptionInput.val('')
+
         // type = 4 is Checkout API type
         if (type == 4) {
             companiesContainer.addClass('d-flex').removeClass('d-none');
             postbackContainer.addClass('d-flex').removeClass('d-none');
         } else {
+            //type = 3 is Profitfy (External Integration)
+            if(type == 3) {
+                descriptionInput.val('Profitfy');
+            }
             companiesContainer.addClass('d-none').removeClass('d-flex');
             postbackContainer.addClass('d-none').removeClass('d-flex');
         }

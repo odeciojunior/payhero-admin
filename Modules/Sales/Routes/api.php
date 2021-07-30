@@ -38,6 +38,6 @@ Route::apiResource('sales', 'SalesApiController')
 
 
 Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'prefix' => 'profitfy',], function () {
-    Route::get('/orders', 'SalesApiController@indexExternal');
-    Route::get('/orders/{saleId}', 'SalesApiController@showExternal');
+    Route::get('/orders', 'ProfitfyApiController@index');
+    Route::get('/orders/{saleId}', 'ProfitfyApiController@show');
 });
