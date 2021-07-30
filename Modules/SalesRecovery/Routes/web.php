@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'role:account_owner|admin|attendancel'],
+        'middleware' => ['web', 'auth', 'role:account_owner|admin|attendance'],
     ],
     function() {
         Route::resource('recovery', 'SalesRecoveryController')->only('index')
