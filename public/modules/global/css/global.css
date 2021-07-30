@@ -875,6 +875,24 @@ img.border-icon{
     box-shadow: none !important;
 }
 
+.new-layout .card {
+    margin-bottom: 30px;
+}
+@media (max-width: 767px) {
+    .new-layout #content-script .input-group-prepend {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .new-layout #content-script .input-group-prepend .input-group-text {
+        border-radius: 8px;
+    }
+    .new-layout #content-script .form-control {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    } 
+}
+
 .modal-new-layout .modal-content {
     border-radius: 12px;
 }

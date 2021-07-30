@@ -71,10 +71,10 @@ $(document).ready(function () {
         $("#table-body-integrates").html('');
 
         if (response.data.length > 0 && (response.data.findIndex((e) => e.integration_type == 'checkout_api') != -1)) {
-            $("#script-antifraud").show();
+            $("#content-script").show();
             $("#input-url-antifraud").val(response.data[0].antifraud_url);
         } else {
-            $("#script-antifraud").hide();
+            $("#content-script").hide();
             $("#input-url-antifraud").val('');
         }
         
