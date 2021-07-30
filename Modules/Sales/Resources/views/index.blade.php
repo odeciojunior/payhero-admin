@@ -240,7 +240,7 @@
                     </div>
                     <!-- Resumo -->
                     <div class="fixhalf"></div>
-                    @hasanyrole('attendance|finantial')                    
+                    @unlessrole('attendance|finantial')                    
                         <div class="row justify-content-center">
                             <div class="col-md-3">
                                 <div class="card shadow" style='display:block;'>
@@ -291,7 +291,7 @@
                             </div>
 
                         </div>
-                    @endhasanyrole
+                    @endunlessrole
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
                     <div class="col-lg-12 p-0 pb-10">
