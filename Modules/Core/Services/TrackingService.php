@@ -129,6 +129,7 @@ class TrackingService
         }
 
         $saleId = $productPlanSale->sale_id;
+        $upsellId = $productPlanSale->upsell_id;
         $customerId = $productPlanSale->customer_id;
         $deliveryId = $productPlanSale->delivery_id;
 
@@ -136,18 +137,19 @@ class TrackingService
         $duplicatedQuery = DB::table('sales as d')
             ->join('trackings as t', 'd.id', '=', 't.sale_id')
             ->where('t.tracking_code', $trackingCode)
-            ->where('t.system_status_enum', '<>', Tracking::SYSTEM_STATUS_DUPLICATED)
+            ->where('t.system_status_enum', '!=', Tracking::SYSTEM_STATUS_DUPLICATED)
             ->where('d.id', '!=', $saleId)
             ->where(function ($query) use ($saleId) {
                 $query->whereNull('d.upsell_id')
-                    ->orWhere('d.upsell_id', $saleId);
+                    ->orWhere('d.upsell_id', '!=', $saleId);
             });
 
-        if (!empty($sale->upsell_id)) {
-            $duplicatedQuery->where(function ($query) use ($sale) {
-                $query->whereNull('d.upsell_id')
-                    ->orWhere('d.upsell_id', '!=', $sale->upsell_id);
-            });
+        if (!empty($upsellId)) {
+            $duplicatedQuery->where('d.id', '!=', $upsellId)
+                ->where(function ($query) use ($upsellId) {
+                    $query->whereNull('d.upsell_id')
+                        ->orWhere('d.upsell_id', '!=', $upsellId);
+                });
         }
 
         $duplicatedQuery->where(function ($query) use ($deliveryId, $customerId) {
@@ -173,6 +175,7 @@ class TrackingService
                 DB::raw('products_plans_sales.*'),
                 's.delivery_id',
                 's.customer_id',
+                's.upsell_id',
             ])->join('sales as s', 'products_plans_sales.sale_id', '=', 's.id')
                 ->find($productPlanSaleId);
 

@@ -4,77 +4,126 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
-use Barryvdh\LaravelIdeHelper\Eloquent;
-use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Modules\Core\Entities\Sale
  *
- * @property integer $id
- * @property int $owner_id
- * @property integer $affiliate_id
- * @property integer $customer_id
- * @property integer $delivery_id
- * @property integer $shipping_id
- * @property int $project_id
- * @property integer $checkout_id
- * @property string $payment_form
- * @property int $payment_method
- * @property float $total_paid_value
- * @property float $shipment_value
- * @property string $start_date
- * @property DateTime $date_refunded
- * @property string $end_date
- * @property string $gateway_transaction_id
- * @property string gateway_order_id
- * @property string $gateway_id
- * @property int $status
- * @property string $gateway_status
- * @property int $upsell_id
- * @property int $installments_amount
- * @property string $installments_value
- * @property string $flag
- * @property string $boleto_link
- * @property string $boleto_digitable_line
- * @property string $boleto_due_date
- * @property string $cupom_code
- * @property string $shopify_order
- * @property string $shopify_discount
- * @property string $dolar_quotation
- * @property boolean $first_confirmation
+ * @property int $id
+ * @property int|null $owner_id
+ * @property int|null $gateway_id
+ * @property int|null $checkout_id
+ * @property int|null $project_id
+ * @property int|null $affiliate_id
+ * @property int $customer_id
+ * @property int|null $customer_card_id
+ * @property int|null $delivery_id
+ * @property int|null $shipping_id
+ * @property int|null $upsell_id
  * @property int $attempts
- * @property string $gateway_card_flag
- * @property float $gateway_tax_percent
- * @property integer $gateway_tax_value
- * @property boolean $has_valid_tracking
- * @property boolean $has_order_bump
- * @property string $observation
- * @property string $created_at
- * @property string $deleted_at
- * @property string $updated_at
- * @property Checkout $checkout
- * @property Project $project
- * @property Shipping $shipping
- * @property Affiliate $affiliate
- * @property Customer $customer
- * @property Delivery $delivery
- * @property SaleRefundHistory $saleRefundHistory
- * @property User $user
- * @property Collection $plansSales
- * @property Collection $transactions
- * @property Collection $productsPlansSale
- * @property Tracking $tracking
- * @property Collection $upsells
- * @method SalePresenter present()
- * @mixin Eloquent
+ * @property string|null $payment_form
+ * @property int|null $payment_method
+ * @property string|null $total_paid_value
+ * @property int|null $real_total_paid_value
+ * @property int|null $recovery_discount_percent
+ * @property int|null $original_total_paid_value
+ * @property string|null $sub_total
+ * @property string $shipment_value
+ * @property string $start_date
+ * @property string|null $end_date
+ * @property string|null $date_refunded
+ * @property string|null $gateway_transaction_id
+ * @property string|null $gateway_order_id
+ * @property string|null $flag
+ * @property string|null $gateway_card_flag
+ * @property int|null $status
+ * @property string|null $gateway_status
+ * @property string|null $gateway_tax_percent
+ * @property int|null $gateway_tax_value
+ * @property string|null $gateway_billet_identificator
+ * @property int|null $installments_amount
+ * @property int|null $real_installments_amount
+ * @property string|null $installments_value
+ * @property int|null $real_installments_value
+ * @property string|null $installment_tax_value
+ * @property string|null $boleto_link
+ * @property string|null $boleto_digitable_line
+ * @property string|null $boleto_due_date
+ * @property string|null $cupom_code
+ * @property string|null $shopify_order
+ * @property string|null $woocommerce_order
+ * @property string|null $shopify_discount
+ * @property string|null $dolar_quotation
+ * @property int $first_confirmation
+ * @property int $automatic_discount
+ * @property int|null $interest_total_value
+ * @property int $refund_value
+ * @property int $is_chargeback
+ * @property int $is_chargeback_recovered
+ * @property int $has_valid_tracking
+ * @property int $has_order_bump
+ * @property string|null $observation
+ * @property string|null $antifraud_warning_level
+ * @property string|null $antifraud_observation
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Collection|Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read Collection|SaleAdditionalCustomerInformation[] $additionalCustomerInformation
+ * @property-read int|null $additional_customer_information_count
+ * @property-read Affiliate|null $affiliate
+ * @property-read Collection|BlockReasonSale[] $blockReasonsSale
+ * @property-read int|null $block_reasons_sale_count
+ * @property-read Cashback|null $cashback
+ * @property-read Checkout|null $checkout
+ * @property-read Collection|SaleContestation[] $contestations
+ * @property-read int|null $contestations_count
+ * @property-read Customer $customer
+ * @property-read Delivery|null $delivery
+ * @property-read Gateway|null $gateway
+ * @property-read mixed $hash_id
+ * @property-read string $id_code
+ * @property-read Collection|NotazzInvoice[] $notazzInvoices
+ * @property-read int|null $notazz_invoices_count
+ * @property-read Collection|PixCharge[] $pixCharges
+ * @property-read int|null $pix_charges_count
+ * @property-read Collection|PlanSale[] $plansSales
+ * @property-read int|null $plans_sales_count
+ * @property-read Collection|ProductPlanSale[] $productsPlansSale
+ * @property-read int|null $products_plans_sale_count
+ * @property-read Project|null $project
+ * @property-read Collection|SaleGatewayRequest[] $saleGatewayRequests
+ * @property-read int|null $sale_gateway_requests_count
+ * @property-read Collection|SaleLog[] $saleLogs
+ * @property-read int|null $sale_logs_count
+ * @property-read Collection|SaleRefundHistory[] $saleRefundHistory
+ * @property-read int|null $sale_refund_history_count
+ * @property-read Collection|SaleWhiteBlackListResult[] $saleWhiteBlackListResult
+ * @property-read int|null $sale_white_black_list_result_count
+ * @property-read Shipping|null $shipping
+ * @property-read Collection|Ticket[] $tickets
+ * @property-read int|null $tickets_count
+ * @property-read Collection|Tracking[] $tracking
+ * @property-read int|null $tracking_count
+ * @property-read Collection|Tracking[] $trackings
+ * @property-read int|null $trackings_count
+ * @property-read Collection|Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read Collection|Sale[] $upsells
+ * @property-read int|null $upsells_count
+ * @property-read User|null $user
  */
 class Sale extends Model
 {
@@ -190,7 +239,9 @@ class Sale extends Model
         'has_valid_tracking',
         'has_order_bump',
         'observation',
-        'original_total_paid_value'
+        'original_total_paid_value',
+        'antifraud_warning_level',
+        'antifraud_observation',
     ];
 
     public function checkout(): BelongsTo
@@ -303,9 +354,6 @@ class Sale extends Model
         return $this->hasMany(GetnetChargeback::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function blockReasonsSale(): HasMany
     {
         return $this->hasMany(BlockReasonSale::class);
@@ -316,22 +364,33 @@ class Sale extends Model
         return $this->hasMany('Modules\Core\Entities\SaleAdditionalCustomerInformation');
     }
 
+    public function cashback(): HasOne
+    {
+        return $this->hasOne(Cashback::class);
+    }
+
+    public function trackings(): HasMany
+    {
+        return $this->hasMany(Tracking::class);
+    }
+
+    public function pixCharges(): HasMany
+    {
+        return $this->hasMany(PixCharge::class, 'sale_id');
+    }
+
+    public function products(): HasManyThrough
+    {
+        return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');
+    }
+
     public function getHashIdAttribute()
     {
         return Hashids::connection('sale_id')->encode($this->id);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function cashback()
-    {
-        return $this->hasOne(Cashback::class);
-    }
-
     public function getValidTrackingForRedis(): int
     {
-
         $saleIsChargeback = $this->status == 4;
         $saleIsDigitalProduct = empty($this->delivery_id);
         $trackingNotRequired = !!$this->transactions

@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Whatsapp2Integration;
-use Modules\Core\Services\Whatsapp2Service;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
 {
@@ -13,31 +13,27 @@ class GenericCommand extends Command
 
     protected $description = 'Command description';
 
-    // private $cloudflareService;
-
-    // public function __construct()
-    // {
-    //     //parent::__construct();
-
-    //     //$this->cloudflareService = new CloudFlareService();
-    // }
-
     public function handle()
     {
-        $sale = Sale::find(1101848);
-        $whatsapp2Integration = Whatsapp2Integration::where('project_id', 2546)
-            ->where('pix_expired', 1)
-            ->first();
-        if (!empty($whatsapp2Integration)) {
-            $whatsapp2Service = new Whatsapp2Service(
-                $whatsapp2Integration->url_checkout,
-                $whatsapp2Integration->url_order,
-                $whatsapp2Integration->api_token,
-                $whatsapp2Integration->id
-            );
+        $service = new TrackingService();
 
-            $whatsapp2Service->sendPixSaleExpired($sale);
+        $trackings = DB::select("select tracking_code, product_plan_sale_id
+                                          from trackings
+                                          where tracking_code in (
+                                              select tracking_code
+                                              from trackings
+                                              where system_status_enum = 5
+                                          )");
+
+        $bar = $this->output->createProgressBar(count($trackings));
+        $bar->start();
+
+        foreach ($trackings as $t) {
+            $service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
+            $bar->advance();
         }
+
+        $bar->finish();
     }
 }
 

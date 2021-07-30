@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
@@ -96,7 +97,7 @@ class ShippingApiController extends Controller
                     }
                     if ($shippingValidated['pre_selected'] && $shippingValidated['status']) {
                         $shippings = $shippingModel->where([
-                            'project_id'   => $shippingValidated['project_id'],
+                            'project_id' => $shippingValidated['project_id'],
                             'pre_selected' => 1,
                         ])->first();
                         if ($shippings) {
@@ -107,6 +108,14 @@ class ShippingApiController extends Controller
                     if (empty($shippingValidated['rule_value'])) {
                         $shippingValidated['rule_value'] = 0;
                     }
+
+                    if (Str::contains($shippingValidated['type'], 'melhorenvio')) {
+                        $hashid = str_replace('melhorenvio-', '', $shippingValidated['type']);
+                        $melhorenvioId = hashids_decode($hashid);
+                        $shippingValidated['melhorenvio_integration_id'] = $melhorenvioId;
+                        $shippingValidated['type'] = 'melhorenvio';
+                    }
+
                     $shippingValidated['type_enum'] = $shippingModel->present()->getTypeEnum($shippingValidated['type']);
 
                     $applyPlanArray = $this->getDecodedPlanIds($shippingValidated['apply_on_plans']);
@@ -288,7 +297,12 @@ class ShippingApiController extends Controller
                         return response()->json(['message' => 'Impossível editar, existem planos que ficarão sem nenhum frete vinculado!'], 400);
                     }
 
+                    if (Str::contains($requestValidated['type'], 'melhorenvio')) {
+                        $requestValidated['type'] = 'melhorenvio';
+                    }
+
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
+
                     $shippingUpdated = $shipping->update($requestValidated);
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
@@ -300,7 +314,7 @@ class ShippingApiController extends Controller
                         if (count($sp) == 0) {
                             $shipp = $shippingModel->where([
                                 'project_id' => $shipping->project_id,
-                                'status'     => 1
+                                'status' => 1
                             ])->first();
                             $shipp->update(['pre_selected' => 1]);
                         }

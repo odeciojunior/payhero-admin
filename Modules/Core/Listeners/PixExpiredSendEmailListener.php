@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Listeners;
 
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Events\PixExpiredEvent;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -41,6 +42,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
         try {
             $projectModel = new Project();
             $domainModel = new Domain();
+            $checkoutModel = new Checkout();
             $projectNotificationModel = new ProjectNotification();
             $saleService = new SaleService();
             $sendGridService = new SendgridService();
@@ -48,6 +50,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $domainPresent = $domainModel->present();
 
             $project = $projectModel->find($event->sale->project_id);
+            $checkout = $checkoutModel->find($event->sale->checkout_id);
             $domain = $domainModel->where('project_id', $project->id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
 
@@ -110,6 +113,9 @@ class PixExpiredSendEmailListener implements ShouldQueue
             if (empty($projectNotificationEmail)) {
                 return false;
             }
+
+            $checkout->email_sent_amount++;
+            $checkout->save();
 
             $message = json_decode($projectNotificationEmail->message);
             $subjectMessage = $projectNotificationService->formatNotificationData(

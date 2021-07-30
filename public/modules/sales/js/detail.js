@@ -713,7 +713,7 @@ $(() => {
         }
 
         if (
-            (sale.payment_method == 1 || sale.payment_method == 3 || sale.payment_method == 4 ) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal) ) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
@@ -1065,21 +1065,21 @@ $(() => {
                                             line_temp = custom.line;
                                         }
                                         div+=`<div class="row mt-2">`;
-                                        
+
                                         if(typeof custom.type_enum != 'undefined'){
                                             if(custom.type_enum!='Text'){
-                                                file_name = custom.file_name.substr(-20);                                            
+                                                file_name = custom.file_name.substr(-20);
                                             }
                                             switch(custom.type_enum){
                                                 case 'Text':
                                                     div+=`
                                                         <div class="col-md-3">
-                                                            <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon"> 
+                                                            <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon">
                                                         </div>
-                                                        <div class="col-md-6 px-0 py-13">                                                            
+                                                        <div class="col-md-6 px-0 py-13">
                                                             <h5>${custom.value}</h5>
                                                         </div>
-                                                        <div class="col-md-3 pl-0 py-11" align="right">                                                            
+                                                        <div class="col-md-3 pl-0 py-11" align="right">
                                                             <a role="button" class="copy_link btn-copy-custom-text" style="cursor: pointer;"  link="${custom.value}" title="Copiar link">
                                                                 <span class="material-icons icon-copy-1"> content_copy </span>
                                                             </a>
@@ -1088,40 +1088,40 @@ $(() => {
                                                 case 'File':
                                                     div+=`
                                                     <div class="col-md-3">
-                                                        <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" /> 
+                                                        <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" />
                                                     </div>
-                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                    <div class="col-md-6 px-0 py-13">
                                                         <h5>${file_name}</h5>
                                                     </div>
-                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                    <div class="col-md-3 pl-0 py-11" align="right">
                                                         <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Arquivo" target="_blank">
-                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
-                                                    </div>`;                                                    
+                                                    </div>`;
                                                 break;
                                                 case 'Image':
                                                     div+=`
                                                     <div class="col-md-3">
-                                                        <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon"> 
+                                                        <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon">
                                                     </div>
-                                                    <div class="col-md-6 px-0 py-13">                                                        
+                                                    <div class="col-md-6 px-0 py-13">
                                                         <h5>${file_name}</h5>
                                                     </div>
-                                                    <div class="col-md-3 pl-0 py-11" align="right">                                                        
+                                                    <div class="col-md-3 pl-0 py-11" align="right">
                                                         <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Imagem"  target="_blank">
-                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" /> 
+                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
                                                     </div>`;
                                                 break;
                                             }
-                                            
+
                                         }
-                                        
+
                                         div+=`</div>`;
-                                        
+
                                     });
-                                
-                div+= `             
+
+                div+= `
                                 </div>
                             </div>
                         </div>
@@ -1129,7 +1129,7 @@ $(() => {
                     <!-- End Customer additional information -->
                 `;
             }
-                    
+
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code

@@ -33,6 +33,11 @@ class ImportShopifyProductsStore implements ShouldQueue
         $this->allOnQueue('long');
     }
 
+    public function tags()
+    {
+        return ['import-shopify-products-store'];
+    }
+
     public function handle()
     {
         $shopifyService = new ShopifyService($this->shopifyIntegrantion->url_store, $this->shopifyIntegrantion->token);

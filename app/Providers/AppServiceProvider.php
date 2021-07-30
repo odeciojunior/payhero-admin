@@ -5,7 +5,9 @@ namespace App\Providers;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\TicketMessage;
@@ -34,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
         TicketMessage::observe(TicketMessageObserver::class);
 
         Paginator::useBootstrap();
+
+        //se estiver rodando do ngrok, força uso do https
+        if (env("APP_ENV", "local") === 'homolog') {
+            \URL::forceScheme('https');
+        }
     }
 
     /**

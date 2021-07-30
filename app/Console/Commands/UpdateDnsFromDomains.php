@@ -38,15 +38,23 @@ class UpdateDnsFromDomains extends Command
             'domainsRecords' => function ($query) {
                 $query->whereIn('name', ['checkout', 'affiliate', 'tracking']);
             }
-        ])->get();
+        ])->orderByDesc('id')->get();
 
+        $cloudFlareService = new CloudFlareService();
+        $count = 0;
         foreach ($domains as $domain) {
             $this->line('Atualizando dominio :' . $domain->name);
+            if (empty($domain->cloudflare_domain_id)) {
+                continue;
+            }
+
+            if ($count++ % 100 == 0) {
+                $cloudFlareService = new CloudFlareService();
+            }
+
             $checkoutDns = $domain->domainsRecords->where('name', 'checkout')->first();
             $trackingDns = $domain->domainsRecords->where('name', 'tracking')->first();
             $affiliateDns = $domain->domainsRecords->where('name', 'affiliate')->first();
-
-            $cloudFlareService = new CloudFlareService();
 
             if (!empty($checkoutDns)) {
                 $this->line('Atualizando dns :' . $checkoutDns->name);

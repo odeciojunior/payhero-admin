@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ShippingPresenter;
 use App\Traits\LogsActivity;
@@ -20,6 +21,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $value
  * @property string $type
  * @property string $zip_code_origin
+ * @property integer|null $melhorenvio_integration_id
+ * @property boolean $receipt
+ * @property boolean $own_hand
  * @property boolean $status
  * @property boolean $pre_selected
  * @property string $apply_on_plans
@@ -27,7 +31,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Project $project
- * @property Sale[] $sales
+ * @property Collection $sales
+ * @property MelhorenvioIntegration $melhorenvioIntegration
  */
 class Shipping extends Model
 {
@@ -57,6 +62,9 @@ class Shipping extends Model
         'type',
         'type_enum',
         'zip_code_origin',
+        'melhorenvio_integration_id',
+        'receipt',
+        'own_hand',
         'status',
         'rule_value',
         'pre_selected',
@@ -122,5 +130,13 @@ class Shipping extends Model
     public function sales()
     {
         return $this->hasMany('Modules\Core\Entities\Sale');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function melhorenvioIntegration()
+    {
+        return $this->belongsTo(MelhorenvioIntegration::class);
     }
 }

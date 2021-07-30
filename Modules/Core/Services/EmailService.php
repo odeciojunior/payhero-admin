@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
 use SendGrid;
 use SendGrid\Mail\Mail;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Domain;
-use Carbon\Carbon;
 
 /**
  * Class EmailService
@@ -19,6 +19,21 @@ use Carbon\Carbon;
  */
 class EmailService
 {
+    public const EMAIL_HELP_CLOUDFOX = 'help@cloudfox.net';
+
+    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-ed70ee0df3a04153aa835e8e4f652434";
+    public const TEMPLATE_ID_EMAIL_UNDER_ATTACK = "d-d2cc6518bd8d4a88b5e4d58bb25711e6";
+    public const TEMPLATE_ID_EMAIL_CLIENT_SALE_BOLETO = "d-c521a65b247645a9b5f7be6b9b0db262";
+    public const TEMPLATE_ID_EMAIL_CLIENT_SALE_CREDIT_CARD = "d-b80c0854a9d342428532d8d4b0e2f654";
+
+
+    private SendgridService $sendgridService;
+
+    public function __construct()
+    {
+        $this->sendgridService = new SendgridService();
+    }
+
     /**
      * @param $to
      * @param $parameter
@@ -34,8 +49,9 @@ class EmailService
                 ]
             );
 
-            if (env('APP_ENV') == 'local')
+            if (env('APP_ENV') == 'local') {
                 $to = env('APP_EMAIL_TEST');
+            }
 
             $email = new Mail();
             $email->setFrom("help@cloudfox.net", "Cloudfox");
@@ -259,6 +275,57 @@ class EmailService
 
             return false;
         }
+    }
+
+    public function sendEmailUnderAttack($systemsStatus)
+    {
+        $emailList = [
+            'julioleichtweis@gmail.com',
+            'felixlorram@gmail.com',
+            'jeanvcastro1@gmail.com',
+            'murillogomes@cloudfox.net',
+        ];
+
+        foreach ($emailList as $email) {
+            (new SendgridService())->sendEmail(
+                'help@cloudfox.net',
+                'CloudFox',
+                $email,
+                'Admin/Dev',
+                'd-d2cc6518bd8d4a88b5e4d58bb25711e6',
+                $systemsStatus
+            );
+        }
+    }
+
+    public function sendEmailChargeback(Sale $sale)
+    {
+        $salePresenter = $sale->present();
+
+        if (empty($sale->user)) {
+            $sale->load(['user']);
+        }
+
+        $user = $sale->user;
+
+        $data = [
+            'transaction' => hashids_encode($sale->id, 'sale_id'),
+            'products' => $salePresenter->getProducts(),
+            'subtotal' => $salePresenter->getFormattedSubTotal(),
+            'shipment_value' => $salePresenter->getFormattedShipmentValue(),
+            'discount' => $salePresenter->getFormattedDiscount(),
+            'project_contact' => self::EMAIL_HELP_CLOUDFOX,
+            'total_value' => $salePresenter->getTotalPaidValueWithoutInstallmentTax(),
+        ];
+
+        $this->sendgridService->sendEmail(
+            self::EMAIL_HELP_CLOUDFOX,
+            'CloudFox',
+            $user->email,
+            $user->name,
+            self::TEMPLATE_ID_EMAIL_CHARGEBACK,
+            $data
+        );
     }
 }
 

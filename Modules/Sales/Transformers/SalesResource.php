@@ -28,7 +28,7 @@ class SalesResource extends JsonResource
         }
 
         $thankPageUrl = '';
-        $thankLabelText = 'Link página de obrigado:';        
+        $thankLabelText = 'Link página de obrigado:';
         if (isset($this->project->domains[0]->name)) {
             $urlCheckout = "https://checkout.{$this->project->domains[0]->name}/order/";
             if(config('app.env')=='homolog'){
@@ -40,6 +40,9 @@ class SalesResource extends JsonResource
             $thankLabelText = 'Link página de Qrcode:';
         }
 
+        //dd($this->details->has_withdrawal);
+        //dd(!empty($this->trasaction->withdrawal_id));
+
         $data = [
             //hide ids
             'id'                       => Hashids::connection('sale_id')->encode($this->id),
@@ -49,7 +52,7 @@ class SalesResource extends JsonResource
             'client_id'                => Hashids::encode($this->customer_id),
             //sale
             'payment_method'           => $this->payment_method,
-            'flag'                     => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(), 
+            'flag'                     => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(),
             'start_date'               => $this->start_date,
             'hours'                    => $this->hours,
             'status'                   => $this->status,
@@ -97,7 +100,8 @@ class SalesResource extends JsonResource
             'has_contestation'         => $this->contestations->count() ? true : false,
             'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback'             => $this->cashback->value ?? false,
-            'api_flag'                 => $this->api_flag
+            'api_flag'                 => $this->api_flag,
+            'has_withdrawal'           => !empty($this->details->has_withdrawal)
         ];
 
         $shopifyIntegrations = $this->project ? $this->project->shopifyIntegrations->where('status', 2) : [];

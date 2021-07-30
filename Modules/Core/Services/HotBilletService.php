@@ -81,7 +81,7 @@ class HotBilletService
             'payment_method' => 'pix',
             'financial_status' => 'expired',
             'risk_level' => '',
-            'line_items' => $sale->present()->getHotzappPlansList(),
+            'line_items' => $sale->present()->getHotBilletPlansList(),
         ];
 
         self::sendPost($data);

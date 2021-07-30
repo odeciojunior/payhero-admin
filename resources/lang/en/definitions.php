@@ -84,6 +84,7 @@ return [
                 'static' => 'Estático',
                 'sedex' => 'SEDEX - Calculado automaticamente',
                 'pac' => 'PAC - Calculado automaticamente',
+                'melhorenvio' => 'Melhor Envio - Integração com a API'
             ],
         ],
         "plan" => [

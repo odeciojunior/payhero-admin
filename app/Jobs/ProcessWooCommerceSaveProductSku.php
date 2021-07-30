@@ -53,7 +53,7 @@ class ProcessWooCommerceSaveProductSku implements ShouldQueue
                 $tries = --$this->tries;
                 $this->dispatch($this->projectId, $this->productId, $this->variationId, $this->data, $tries);
             }else{
-                report($e);
+                //report($e);
             }
             //
         }
