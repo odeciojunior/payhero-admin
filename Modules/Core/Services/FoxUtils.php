@@ -759,4 +759,9 @@ class FoxUtils
 
         return $headers;
     }
+
+    public static function floatFormat($value)
+    {
+        return substr_replace($value, '.', strlen($value) - 2, 0);
+    }
 }

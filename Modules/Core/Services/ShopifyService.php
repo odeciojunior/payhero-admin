@@ -1529,7 +1529,7 @@ class ShopifyService
             "total_price" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
         ];
 
-        if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+        if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
             //cartao
 
             $orderData += [
@@ -1539,12 +1539,12 @@ class ShopifyService
                         "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                         "kind" => "sale",
                         "status" => "success",
-                        "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        "amount" => foxutils()->floatFormat($totalValue),
                     ],
                 ],
             ];
         } else {
-            if ($sale->payment_method == 2) {
+            if ($sale->payment_method == Sale::BOLETO_PAYMENT || $sale->payment_method == Sale::PIX_PAYMENT) {
                 //boleto
 
                 $orderData += [
@@ -1555,7 +1555,7 @@ class ShopifyService
                             "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                             "kind" => "sale",
                             "status" => $sale->status == 1 ? "success" : "pending",
-                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                            "amount" => foxutils()->floatFormat($totalValue),
                         ],
                     ],
                 ];
