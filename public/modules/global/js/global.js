@@ -698,6 +698,14 @@ $(document).ready(function () {
             $(this).parents('.site-menu-item.has-sub').find('> a').addClass('menu-active')
         }
     });
+
+    // Disable page scroll when a modal is open
+    $(document).on('shown.bs.modal', function (e) {
+        document.querySelector('body').style.overflowY = 'hidden';
+    });
+    $(document).on('hidden.bs.modal', function (e) {
+        document.querySelector('body').style.overflowY = 'unset';
+    });
 })
 
 function verifyAccountFrozen() {

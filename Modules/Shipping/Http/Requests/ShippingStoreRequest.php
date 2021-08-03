@@ -3,6 +3,7 @@
 namespace Modules\Shipping\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class ShippingStoreRequest extends FormRequest
 {
@@ -12,14 +13,19 @@ class ShippingStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $isStatic = $this->get('type') == 'static';
+        $isMenv = Str::contains($this->get('type'), 'melhorenvio');
+
         return [
             "type"               => "required|string",
             "name"               => "required|string|max:60",
-            "information"        => "required|string|max:100",
-            "value"              => $this->get('type') == 'static' ? "required|max:8" : "",
-            "zip_code_origin"    => $this->get('type') != 'static' ? "required|min:9" : "",
+            "information"        => $isMenv ? "" : "required|string|max:100",
+            "value"              => $isStatic ? "required|max:8" : "",
+            "zip_code_origin"    => $isStatic ? "" : "required|min:9",
             "status"             => "nullable",
             "pre_selected"       => "nullable",
+            'receipt'            => 'nullable',
+            'own_hand'           => 'nullable',
             "rule_value"         => "nullable",
             "apply_on_plans"     => "required|array",
             "not_apply_on_plans" => "sometimes|required|array"

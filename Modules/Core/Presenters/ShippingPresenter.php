@@ -65,6 +65,8 @@ class ShippingPresenter extends Presenter
                     return "sedex";
                 case 3:
                     return "pac";
+                case 4:
+                    return "melhorenvio";
             }
         } else {
             switch ($type) {
@@ -74,6 +76,8 @@ class ShippingPresenter extends Presenter
                     return 2;
                 case "pac":
                     return 3;
+                case "melhorenvio":
+                    return 4;
             }
         }
 

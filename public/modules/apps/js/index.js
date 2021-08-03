@@ -62,9 +62,15 @@ $(document).ready(function () {
                     $('#woocom-bt').addClass('added');
                     $('#woocom-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
+                
                 if (response.hotbilletIntegrations > 0) {
                     $('#hotbillet-bt').addClass('added');
                     $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
+                if (response.melhorenvioIntegrations > 0) {
+                    $('#menv-bt').addClass('added');
+                    $('#menv-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
                 loadOnAny('.page', true);
@@ -92,7 +98,7 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
-                
+
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }

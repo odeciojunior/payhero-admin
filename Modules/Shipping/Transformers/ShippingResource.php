@@ -33,8 +33,8 @@ class ShippingResource extends JsonResource
                     $plan = $planModel->find($value);
                     if (!empty($plan)) {
                         $applyPlanArray[] = [
-                            'id'          => Hashids::encode($plan->id),
-                            'name'        => $plan->name,
+                            'id' => Hashids::encode($plan->id),
+                            'name' => $plan->name,
                             'description' => $plan->description,
                         ];
                     }
@@ -51,8 +51,8 @@ class ShippingResource extends JsonResource
                     $plan = $planModel->find($value);
                     if (!empty($plan)) {
                         $notApplyPlanArray[] = [
-                            'id'          => Hashids::encode($plan->id),
-                            'name'        => $plan->name,
+                            'id' => Hashids::encode($plan->id),
+                            'name' => $plan->name,
                             'description' => $plan->description,
                         ];
                     }
@@ -61,22 +61,25 @@ class ShippingResource extends JsonResource
         }
 
         return [
-            'id_code'                 => Hashids::encode($this->id),
-            'shipping_id'             => Hashids::encode($this->id),
-            'name'                    => $this->name,
-            'information'             => $this->information,
-            'value'                   => $this->value == null || $this->type_enum != 1 ? 'Calculado automaticamente' : $this->value,
-            'type'                    => $this->present()->getTypeEnum($this->type_enum),
-            'type_name'               => Lang::get('definitions.enum.shipping.type.' . $this->present()->getTypeEnum($this->type_enum)),
-            'type_enum'               => $this->type_enum,
-            'zip_code_origin'         => $this->zip_code_origin,
-            'status'                  => $this->status,
-            'rule_value'              => number_format(($this->rule_value ?? 0) / 100, 2, ',', '.'),
-            'status_translated'       => Lang::get('definitions.enum.shipping.status.' . $this->present()->getStatus($this->status)),
-            'pre_selected'            => $this->pre_selected,
+            'id_code' => Hashids::encode($this->id),
+            'shipping_id' => Hashids::encode($this->id),
+            'name' => $this->name,
+            'information' => $this->type_enum !== 4 ? $this->information : 'Calculado automaticamente',
+            'value' => $this->value == null || $this->type_enum != 1 ? 'Calculado automaticamente' : $this->value,
+            'type' => $this->present()->getTypeEnum($this->type_enum),
+            'type_name' => Lang::get('definitions.enum.shipping.type.' . $this->present()->getTypeEnum($this->type_enum)),
+            'type_enum' => $this->type_enum,
+            'zip_code_origin' => $this->zip_code_origin,
+            'melhorenvio_integration_id' => Hashids::encode($this->melhorenvio_integration_id),
+            'status' => $this->status,
+            'rule_value' => number_format(($this->rule_value ?? 0) / 100, 2, ',', '.'),
+            'status_translated' => Lang::get('definitions.enum.shipping.status.' . $this->present()->getStatus($this->status)),
+            'pre_selected' => $this->pre_selected,
             'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->present()->getPreSelectedStatus($this->pre_selected)),
-            'apply_on_plans'          => $applyPlanArray,
-            'not_apply_on_plans'      => $notApplyPlanArray,
+            'receipt' => $this->receipt,
+            'own_hand' => $this->own_hand,
+            'apply_on_plans' => $applyPlanArray,
+            'not_apply_on_plans' => $notApplyPlanArray,
         ];
     }
 }

@@ -227,6 +227,7 @@ return [
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'GeoIP'        => \Torann\GeoIP\Facades\GeoIP::class,
         'PDF'          => Barryvdh\DomPDF\Facade::class,
+        'Melhorenvio' => \Modules\Melhorenvio\Facades\MelhorenvioFacade::class
     ],
 
 ];

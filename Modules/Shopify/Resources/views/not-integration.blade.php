@@ -1,6 +1,5 @@
-<div id="no-integration-found" class='justify-content-center' style="display:none;
-                                                                height: 100%; 
-                                                                width: 100%; 
+<div id="no-integration-found" class='justify-content-center' style="height: 100%;
+                                                                width: 100%;
                                                                 position: absolute;
                                                                 display: -webkit-flex;
                                                                 display: flex;

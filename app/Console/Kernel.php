@@ -30,6 +30,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
+        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+
+        $schedule->command('updateTransactionsReleaseDate')->hourly();
+
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
         $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
@@ -63,6 +67,9 @@ class Kernel extends ConsoleKernel
         /** End Manager */
 
         /** checkout */
+        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
+
+        /** End Checkout */
 
         /** sirius */
         // snapshot for horizon metrics
