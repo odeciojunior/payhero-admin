@@ -86,7 +86,7 @@ class CheckLiquidationTransactionsCloudfox extends Command
                         if ($detail->release_status == 'N' and $detail->transaction_sign = '+') {
                             $orderId = $list_transaction->summary->order_id;
                             $sale = Sale::where('gateway_order_id', $orderId)->first();
-                            $transaction = Transaction::where('user_id', $sale->owner_id)->first();
+                            $transaction = Transaction::where('user_id', $sale->owner_id)->where('sale_id', $sale->id)->first();
 
                             $transactionCloudfox = TransactionCloudfox::create(
                                 [
