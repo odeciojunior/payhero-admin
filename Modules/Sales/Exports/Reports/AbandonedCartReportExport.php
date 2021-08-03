@@ -12,10 +12,12 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Log;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
+use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
@@ -166,6 +168,8 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     }
                     $lastSale = $currentSale;
                 }
+
+                report(new Exception('Chegou aqui!' . $this->user->name));
 
                 $sendGridService = new SendgridService();
                 $userName = $this->user->name;
