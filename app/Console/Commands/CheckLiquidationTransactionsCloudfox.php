@@ -77,14 +77,14 @@ class CheckLiquidationTransactionsCloudfox extends Command
             foreach ($gatewaySale->list_transactions as $list_transaction) {
                 if (
                     isset($list_transaction) &&
-                    isset($list_transaction[0]) &&
-                    isset($list_transaction[0]->details) &&
-                    isset($list_transaction[0]->details[0]) &&
-                    isset($list_transaction[0]->details[0]->release_status)
+                    isset($list_transaction->details) &&
+                    isset($list_transaction->details[0]) &&
+                    isset($list_transaction->details[0]->release_status)
+
                 ) {
-                    foreach ($list_transaction[0]->details as $detail) {
+                    foreach ($list_transaction->details as $detail) {
                         if ($detail->release_status == 'N' and $detail->transaction_sign = '+') {
-                            $orderId = $list_transaction[0]->summary[0]->order_id;
+                            $orderId = $list_transaction->summary->order_id;
                             $sale = Sale::where('gateway_order_id', $orderId)->first();
                             $transaction = Transaction::where('user_id', $sale->owner_id)->first();
 
@@ -114,7 +114,7 @@ class CheckLiquidationTransactionsCloudfox extends Command
                         }
                     }
                 }else {
-                    $orderId = $list_transaction[0]->summary[0]->order_id;
+                    $orderId = $list_transaction->summary->order_id;
                     $sale = Sale::where('gateway_order_id', $orderId)->first();
                     if (isset($list_transaction)) {
                         $errorGetnet = 'Erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
