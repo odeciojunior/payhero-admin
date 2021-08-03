@@ -169,18 +169,23 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     $lastSale = $currentSale;
                 }
 
-                $sendGridService = new SendgridService();
-                $userName = $this->user->name;
-                $userEmail = $this->user->email;
-                $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
+                try {
+                    $sendGridService = new SendgridService();
+                    $userName = $this->user->name;
+                    $userEmail = $this->user->email;
+                    $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
-                $data = [
-                    'name' => $userName,
-                    'report_name' => 'Relatório de Recuperação',
-                    'download_link' => $downloadLink,
-                ];
+                    $data = [
+                        'name' => $userName,
+                        'report_name' => 'Relatório de Recuperação',
+                        'download_link' => $downloadLink,
+                    ];
 
-                $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+                    $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+
+                } catch (\Exception $e) {
+                    report($e);
+                }
             },
         ];
     }
