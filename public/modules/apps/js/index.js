@@ -58,6 +58,15 @@ $(document).ready(function () {
                     $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
+                if (response.woocommerceIntegrations > 0) {
+                    $('#woocom-bt').addClass('added');
+                    $('#woocom-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+                if (response.hotbilletIntegrations > 0) {
+                    $('#hotbillet-bt').addClass('added');
+                    $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
                 loadOnAny('.page', true);
             }
         });

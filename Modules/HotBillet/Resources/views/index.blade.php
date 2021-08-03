@@ -1,12 +1,19 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/hotbillet/css/index.css') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
-    <style>
+    {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}"> --}}
+     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+     <style>
+        .o-arrow-right-1 {
+            font-size: 30px;
+        }
+
+        .o-arrow-right-1::before {
+            transform: rotate(180deg);
+        }
         .gray:hover{
             color:#a1a1a1 !important;
         }
-    </style>
+     </style>
 @endpush
 @section('content')
     <div class='page'>
