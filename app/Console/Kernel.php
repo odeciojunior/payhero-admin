@@ -67,6 +67,9 @@ class Kernel extends ConsoleKernel
         /** End Manager */
 
         /** checkout */
+        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
+
+        /** End Checkout */
 
         /** sirius */
         // snapshot for horizon metrics
