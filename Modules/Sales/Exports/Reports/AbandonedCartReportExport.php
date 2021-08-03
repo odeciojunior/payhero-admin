@@ -169,8 +169,6 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     $lastSale = $currentSale;
                 }
 
-                report(new Exception('Chegou aqui!' . $this->user->name));
-
                 $sendGridService = new SendgridService();
                 $userName = $this->user->name;
                 $userEmail = $this->user->email;
