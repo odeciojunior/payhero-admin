@@ -44,7 +44,7 @@
                              alt="logo facebook">
                         <div style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
-                    <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-2">
+                    <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-1">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
                              class="rounded-circle img-fluid logo-pixels  logo-pixels-edit"
                              data-value="outbrain"
@@ -64,6 +64,13 @@
                              data-value="pinterest"
                              alt="logo pinterest">
                         <div style="font: normal normal normal 11px Muli;">Pinterest</div>
+                    </div>
+                    <div class="col-lg-2 col-6 mt-30 mr-30">
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-edit"
+                             data-value="uol_ads"
+                             alt="logo uol ads">
+                        <div style="font: normal normal normal 11px Muli;">UOL Ads</div>
                     </div>
                 </div>
             </div>
