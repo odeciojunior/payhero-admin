@@ -101,6 +101,8 @@ class CheckLiquidationTransactionsCloudfox extends Command
                                 ]
                             );
 
+                            $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+
                             $data = [
                                 'gateway_transaction_id' => $sale->gateway_transaction_id,
                                 'plan_id' => Hashids::encode($sale->plansSales->first()->id),
