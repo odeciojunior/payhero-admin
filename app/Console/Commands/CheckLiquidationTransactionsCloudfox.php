@@ -71,7 +71,6 @@ class CheckLiquidationTransactionsCloudfox extends Command
                 ->getStatement();
 
             $gatewaySale = json_decode($response);
-            dd($gatewaySale);
 
             foreach ($gatewaySale->list_transactions as $list_transaction) {
                 if (
@@ -113,7 +112,6 @@ class CheckLiquidationTransactionsCloudfox extends Command
                             ];
 
                             $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
-
                             dd($responseCheckout);
                         }
                     }
