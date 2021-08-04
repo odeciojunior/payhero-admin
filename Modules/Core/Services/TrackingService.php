@@ -157,6 +157,8 @@ class TrackingService
                 ->orWhere('d.delivery_id', '!=', $deliveryId);
         })->whereIn('d.status', [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE]);
 
+        $sql = builder2sql($duplicatedQuery);
+
         if ($duplicatedQuery->exists()) {
             $systemStatusEnum = Tracking::SYSTEM_STATUS_DUPLICATED;
         }
@@ -170,6 +172,7 @@ class TrackingService
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
+            $trackingCode = strtoupper($trackingCode);
 
             $productPlanSale = ProductPlanSale::select([
                 DB::raw('products_plans_sales.*'),
