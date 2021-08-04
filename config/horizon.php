@@ -191,7 +191,7 @@ return [
                 'queue' => ['high', 'default', 'low'],
                 'balance' => 'false',
                 'processes' => 1,
-                'tries' => 1,
+                'tries' => 3,
                 'timeout' => 3600,
                 'delay' => 1,
             ],
