@@ -15,7 +15,6 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property int $company_id
  * @property int $user_id
  * @property string $value
- * @property int $type
  * @property string $status
  * @property int $status_enum
  * @property string $release_date
@@ -60,7 +59,6 @@ class TransactionCloudfox extends Model
         'company_id',
         'user_id',
         'value',
-        'type',
         'status',
         'status_enum',
         'release_date',

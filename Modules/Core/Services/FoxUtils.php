@@ -764,4 +764,19 @@ class FoxUtils
     {
         return substr_replace($value, '.', strlen($value) - 2, 0);
     }
+
+    public static function saveFileS3($s3DiskName, $pathToSave, $filePathLocal, $nameFile)
+    {
+        $s3drive = Storage::disk($s3DiskName);
+
+        $s3drive->putFileAs(
+            $pathToSave,
+            new File(storage_path($filePathLocal)),
+            $nameFile,
+            'public'
+        );
+
+        $urlPath = $s3drive->url($pathToSave.$nameFile);
+        dd($urlPath);
+    }
 }
