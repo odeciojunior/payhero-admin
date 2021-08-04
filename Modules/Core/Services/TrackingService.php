@@ -157,8 +157,6 @@ class TrackingService
                 ->orWhere('d.delivery_id', '!=', $deliveryId);
         })->whereIn('d.status', [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE]);
 
-        $sql = builder2sql($duplicatedQuery);
-
         if ($duplicatedQuery->exists()) {
             $systemStatusEnum = Tracking::SYSTEM_STATUS_DUPLICATED;
         }
