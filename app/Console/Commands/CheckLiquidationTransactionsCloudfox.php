@@ -105,12 +105,14 @@ class CheckLiquidationTransactionsCloudfox extends Command
 
                             $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
 
-                            $data = [
-                                'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
-                            ];
+                            if (!empty($transactionCloudfox->release_date)) {
+                                $data = [
+                                    'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
+                                ];
 
-                            $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
-                            dd($responseCheckout);
+                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                //dd($responseCheckout);
+                            }
                         }
                     }
                 }else {
