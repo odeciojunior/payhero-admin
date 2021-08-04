@@ -355,7 +355,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 400);
         }
     }
 

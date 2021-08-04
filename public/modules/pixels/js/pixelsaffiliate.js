@@ -11,6 +11,7 @@ const srcPlatforms = {
     'outbrain': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain',
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
+    'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads'
 }
 
 $(function () {
@@ -567,6 +568,9 @@ $(function () {
                 break;
             case "outbrain":
                 inputPlatform.attr("placeholder", '00de2748d47f2asdl39877mash');
+                break;
+            case 'uol_ads':
+                inputPlatform.attr("placeholder", 'hutu27');
                 break;
             default:
                 inputPlatform.attr("placeholder", 'Código');
