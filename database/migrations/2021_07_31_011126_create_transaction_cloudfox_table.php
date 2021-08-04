@@ -21,6 +21,7 @@ class CreateTransactionCloudfoxTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
 
             $table->string('value');
+            $table->string('value_total');
             $table->string('status')->default('paid');
             $table->integer('status_enum')->default(2);
 

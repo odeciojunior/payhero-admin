@@ -95,6 +95,7 @@ class CheckLiquidationTransactionsCloudfox extends Command
                                         'company_id' => $company->id,
                                         'user_id' => $company->user_id,
                                         'value' => $detail->subseller_rate_amount,
+                                        'value_total' => $detail->installment_amount,
                                         'status' => 'paid',
                                         'status_enum' => 2,
                                         'release_date' => now()->format('Y-m-d')
@@ -105,9 +106,6 @@ class CheckLiquidationTransactionsCloudfox extends Command
                             $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
 
                             $data = [
-                                'gateway_transaction_id' => $sale->gateway_transaction_id,
-                                'plan_id' => Hashids::encode($sale->plansSales->first()->id),
-                                'value' => $detail->subseller_rate_amount,
                                 'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
                             ];
 
