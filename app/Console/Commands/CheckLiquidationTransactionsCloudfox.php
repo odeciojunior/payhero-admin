@@ -113,6 +113,7 @@ class CheckLiquidationTransactionsCloudfox extends Command
                             ];
 
                             $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+
                             dd($responseCheckout);
                         }
                     }
