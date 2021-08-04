@@ -59,6 +59,7 @@ class CheckWithdrawalsReleased extends Command
 
                             $gatewaySale = json_decode($response);
 
+                            dd($gatewaySale->list_transactions);
                             if (
                                 isset($gatewaySale->list_transactions) &&
                                 isset($gatewaySale->list_transactions[0]) &&

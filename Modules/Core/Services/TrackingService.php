@@ -217,7 +217,7 @@ class TrackingService
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
-                if ($oldTrackingCode != $trackingCode) {
+                if (strtoupper($oldTrackingCode) != strtoupper($trackingCode)) {
                     //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::select('product_plan_sale_id as id')
                         ->where('tracking_code', $oldTrackingCode)
