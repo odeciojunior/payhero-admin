@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -79,7 +80,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string|null $transaction_rate
  * @property int $block_checkout
  * @property int|null $annual_income
- * @property-read \Illuminate\Database\Eloquent\Collection|Activity[] $activities
+ * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read int|null $affiliates_count
  * @property-read int|null $company_documents_count
@@ -90,61 +91,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property-read int|null $transfers_count
  * @property-read int|null $users_projects_count
  * @property-read int|null $withdrawals_count
- * @method static \Illuminate\Database\Eloquent\Builder|Company newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Company newQuery()
- * @method static \Illuminate\Database\Query\Builder|Company onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Company query()
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccountDigit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAccountType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereActiveFlag($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAddressDocumentStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAgency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAgencyDigit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereAnnualIncome($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereBalance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereBank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereBankDocumentStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereBlockCheckout($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereCaptureTransactionEnabled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereCompanyType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereComplement($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereContractDocumentStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocument($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssueDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssuer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereDocumentIssuerState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereExtraDocument($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereFantasyName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereGatewayReleaseMoneyDays($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereGatewayTax($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereGetNetStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereHasPixKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereIdWallDateUpdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereIdWallResult($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereInstallmentTax($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereNeighborhood($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereOrderPriority($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company wherePixKeySituation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereStreet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereSubsellerGetnetHomologId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereSubsellerGetnetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereSupportEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereSupportTelephone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereTransactionRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Company whereZipCode($value)
- * @method static \Illuminate\Database\Query\Builder|Company withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Company withoutTrashed()
- * @mixin \Eloquent
  */
 class Company extends Model
 {
