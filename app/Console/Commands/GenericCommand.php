@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
+use Spatie\Permission\Models\Permission;
 
 class GenericCommand extends Command
 {
