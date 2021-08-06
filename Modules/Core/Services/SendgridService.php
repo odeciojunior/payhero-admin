@@ -335,6 +335,11 @@ class SendgridService
                 $status = "error";
             }
 
+            if(isset($data['report_name']) && $data['report_name'] == 'Relatório de Recuperação'){
+                $message = 'Já chegou até aqui, porque não avança!? status: ' . $statusCode;
+                report(new Exception($message));
+            }
+
             SentEmail::create(
                 [
                     'from_email' => $fromEmail,
