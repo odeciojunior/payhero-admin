@@ -12,12 +12,10 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\Log;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
-use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
@@ -111,7 +109,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         $checkout = $row;
         $checkoutService = new CheckoutService();
 
-        return [
+        $cart = [
             'date' => with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s'),
             'project' => $checkout->project->name,
             'client' => $checkout->client_name,
@@ -120,6 +118,11 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'link' => $checkout->present()->getCheckoutLink($checkout->project->domains->first()),
             'whatsapp_link' => "https://api.whatsapp.com/send?phone=+55" . preg_replace('/[^0-9]/', '', $checkout->client_telephone) . '&text=Olá ' . explode(' ', $checkout->name)[0],
         ];
+
+        //remove caracteres indesejados em todos os campos
+        return array_map(function($item) {
+            return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
+        }, $cart);
     }
 
     public function headings(): array
@@ -171,7 +174,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
                 $sendGridService = new SendgridService();
                 $userName = $this->user->name;
-                $userEmail = $this->user->email;
+                $userEmail = $this->email;
                 $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
                 $data = [
