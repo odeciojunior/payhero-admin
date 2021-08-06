@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+//'role:account_owner|admin|attendance|finantial'
 Route::group(
     [
-        'middleware' => ['auth:api', 'role:account_owner|admin|attendance|finantial', 'scopes:admin'],
+        'middleware' => ['auth:api', 'permission:sales', 'scopes:admin'],
         'prefix'     => 'sales',
     ],
     function() {

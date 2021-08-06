@@ -33,12 +33,9 @@ class NewRoleCustomUserTableRoles extends Migration
         Permission::create(['name'=>'dashboard']);
         Permission::create(['name'=>'sales']);
         Permission::create(['name'=>'sales_reverse_transaction']);
-        Permission::create(['name'=>'recovery']);
         Permission::create(['name'=>'sales_recovery']);
-        Permission::create(['name'=>'trackings']);
         Permission::create(['name'=>'sales_trackings']);
-        Permission::create(['name'=>'sales_trackings_manager']);
-        Permission::create(['name'=>'contestations']);
+        Permission::create(['name'=>'sales_trackings_manager']);        
         Permission::create(['name'=>'sales_contestations']);
         Permission::create(['name'=>'sales_contestations_send_documents']);
         Permission::create(['name'=>'projects']);

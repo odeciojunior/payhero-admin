@@ -5,8 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\TrackingService;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class GenericCommand extends Command
 {
@@ -16,6 +17,10 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        $role = Role::find(5);
+        $role->givePermissionTo('sales');
+
+        /*
         $service = new TrackingService();
 
         $trackings = DB::select("select tracking_code, product_plan_sale_id
@@ -34,7 +39,7 @@ class GenericCommand extends Command
             $bar->advance();
         }
 
-        $bar->finish();
+        $bar->finish();*/
     }
 }
 

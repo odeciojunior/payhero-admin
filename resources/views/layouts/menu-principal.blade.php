@@ -134,7 +134,10 @@
             </li>
         @endhasanyrole
         
-        @hasanyrole('account_owner|admin|attendance|finantial')
+        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
+        <!-- auth()->user()->hasanyrole('account_owner|admin|attendance|finantial') ||  -->
+        @if(auth()->user()->can('sales'))
+        
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
@@ -180,7 +183,8 @@
                     @endhasanyrole
                 </ul>
             </li>
-        @endhasanyrole        
+        @endif
+        endhasanyrole        
         @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
