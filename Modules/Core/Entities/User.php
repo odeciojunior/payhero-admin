@@ -74,6 +74,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
+ * @property string $mkt_information
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -165,6 +166,7 @@ class User extends Authenticable
         'ignore_automatic_benefits_updates',
         'total_commission_value',
         'show_old_finances',
+        'mkt_information',
         'created_at',
         'updated_at',
         'deleted_at',
