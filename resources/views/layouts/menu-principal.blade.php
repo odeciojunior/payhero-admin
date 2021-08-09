@@ -113,7 +113,9 @@
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">        
-        @hasanyrole('account_owner|admin|finantial')
+        <!-- hasanyrole('account_owner|admin|finantial') -->
+        
+        @can('dashboard')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
                     <span class="bg-menu">
@@ -122,7 +124,8 @@
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
             </li>
-        @endhasanyrole
+        @endcan
+        
         @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub disabled">
                 <a class="disabled" href="{{ route('showcase') }}">
@@ -134,10 +137,8 @@
             </li>
         @endhasanyrole
         
-        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
-        <!-- auth()->user()->hasanyrole('account_owner|admin|attendance|finantial') ||  -->
-        @if(auth()->user()->can('sales'))
-        
+        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->        
+        @can('sales')
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
@@ -153,39 +154,46 @@
                             <span class="site-menu-title">Visão geral</span>
                         </a>
                     </li>
-                    @unlessrole('finantial')
+                    <!-- unlessrole('finantial') -->
+                    @can('sales_recovery')
                     <li class="site-menu-item">
                         <a href="{{ route('recovery.index') }}">
                             <span class="bg-menu"></span>
                             <span class="site-menu-title">Recuperação</span>
                         </a>
                     </li>
-                    {{--                     <li class="site-menu-item">
-                                            <a href="{{ route('antifraud.index') }}">
-                                                <span class="bg-menu"></span>
-                                                <span class="site-menu-title">Antifraude</span>
-                                            </a>
-                                        </li> --}}
+                    @endcan
+                    {{--
+                    <li class="site-menu-item">
+                        <a href="{{ route('antifraud.index') }}">
+                            <span class="bg-menu"></span>
+                            <span class="site-menu-title">Antifraude</span>
+                        </a>
+                    </li> 
+                    --}}
+                    @can('sales_trackings')
                     <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
                             <span class="bg-menu"></span>
                             <span class="site-menu-title">Rastreamentos</span>
                         </a>
                     </li>
-                    @endunlessrole
-                    @hasanyrole('account_owner|admin|attendance')                    
+                    @endcan
+                    <!-- hasanyrole('account_owner|admin|attendance') -->
+                    @can('sales_contestations')
                         <li class="site-menu-item">
                             <a href="{{ route('contestations.index') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Contestações</span>
                             </a>
                         </li>
-                    @endhasanyrole
+                    @endcan
                 </ul>
             </li>
-        @endif
-        endhasanyrole        
-        @hasanyrole('account_owner|admin')
+        @endcan         
+        
+        <!-- hasanyrole('account_owner|admin') -->
+        @can('projects')
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
@@ -194,8 +202,9 @@
                     <span class="site-menu-title">Projetos</span>
                 </a>
             </li>
-        @endhasanyrole
-        @hasanyrole('account_owner|admin')        
+        @endcan
+        <!-- hasanyrole('account_owner|admin')         -->
+        @can('products')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('products.index') }}" id="products-link">
                     <span class="bg-menu">
@@ -204,8 +213,9 @@
                     <span class="site-menu-title">Produtos</span>
                 </a>
             </li>
-        @endhasanyrole
-        @hasanyrole('account_owner|admin|attendance')
+        @endcan
+        <!-- hasanyrole('account_owner|admin|attendance') -->
+        @can('attendance')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <span class="bg-menu">
@@ -214,8 +224,9 @@
                     <span class="site-menu-title">Atendimento</span>
                 </a>
             </li>
-        @endhasanyrole
-        @unlessrole('attendance')
+        @endcan        
+        <!-- unlessrole('attendance') -->
+        @can('finances')
             @if(!auth()->user()->show_old_finances)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
@@ -250,7 +261,8 @@
                     </ul>
                 </li>
             @endif
-        @endhasanyrole       
+        @endcan   
+           
         @hasanyrole('account_owner|admin|attendance|finantial')
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
@@ -261,51 +273,60 @@
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
-                    @hasanyrole('account_owner|admin|finantial')
+                    <!-- hasanyrole('account_owner|admin|finantial') -->
+                    @can('report_sales')
                         <li class="site-menu-item has-sub">
                             <a href="{!! route('reports.index') !!}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Vendas</span>
                             </a>
                         </li>
-                    @endhasanyrole
-                    @hasanyrole('account_owner|admin')
+                    @endcan
+                    
+                    <!-- hasanyrole('account_owner|admin') -->
+                    @can('report_checkouts')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.checkouts') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Acessos</span>
                             </a>
                         </li>
-                    @endhasanyrole
+                    @endcan
                     
-                    @hasanyrole('account_owner|admin|attendance')
+                    <!-- hasanyrole('account_owner|admin|attendance') -->
+                    @can('report_coupons')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.coupons') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Cupons de desconto</span>
                             </a>
                         </li>
-                    @endhasanyrole
+                    @endcan
                     
-                    @hasanyrole('account_owner|admin|finantial')
+                    <!-- hasanyrole('account_owner|admin|finantial') -->
+                    @can('report_pending')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.pending') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Saldo pendente</span>
                             </a>
                         </li>
-
+                    @endcan
+                    
+                    @can('report_blocked_balance')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.blockedbalance') }}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">Saldo bloqueado</span>
                             </a>
                         </li>
-                    @endhasanyrole
+                    @endcan
                 </ul>
             </li>
         @endhasanyrole
-        @hasanyrole('account_owner|admin')
+           
+        <!-- hasanyrole('account_owner|admin') -->
+        @can('affiliates')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
                     <span class="bg-menu">
@@ -314,8 +335,9 @@
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
             </li>
-        @endhasanyrole        
-        @hasanyrole('account_owner|admin')
+        @endcan        
+        <!-- hasanyrole('account_owner|admin') -->
+        @can('apps')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('apps') }}" id='apps-link'>
                     <span class="bg-menu">
@@ -324,8 +346,9 @@
                     <span class="site-menu-title">Aplicativos</span>
                 </a>
             </li>
-        @endhasanyrole
-        @hasanyrole('account_owner')        
+        @endcan
+        <!-- hasanyrole('account_owner')         -->
+        @can('invitations')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
                     <span class="bg-menu">
@@ -334,6 +357,6 @@
                     <span class="site-menu-title">Convites</span>
                 </a>
             </li>
-        @endhasanyrole
+        @endcan
     </ul>
 </div>

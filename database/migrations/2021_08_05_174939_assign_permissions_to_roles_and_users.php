@@ -47,9 +47,9 @@ class AssignPermissionsToRolesAndUsers extends Migration
                         'sales',
                         'sales_recovery',
                         'sales_trackings',
-                        'sales_trackings_manager',                        
+                        'sales_trackings_manage',                        
                         'sales_contestations',
-                        'sales_contestations_send_documents',
+                        'sales_contestations_manage',
                         'attendance',
                         'attendance_manage',
                         'report_coupons'
@@ -67,7 +67,7 @@ class AssignPermissionsToRolesAndUsers extends Migration
                 case 'finantial': //customer
                     $permissions['finantial'] = [
                         'dashboard',
-                        'sales',
+                        'sales',                        
                         'finances',
                         'finances_manage',
                         'report_sales', 

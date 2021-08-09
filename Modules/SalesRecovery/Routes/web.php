@@ -2,12 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-/**
- * Private Routes
- */
+// role:account_owner|admin|attendance
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'role:account_owner|admin|attendance'],
+        'middleware' => ['web', 'auth', 'permission:sales_recovery'],
     ],
     function() {
         Route::resource('recovery', 'SalesRecoveryController')->only('index')

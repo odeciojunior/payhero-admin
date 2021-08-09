@@ -22,13 +22,13 @@ Route::group(
             'as'   => 'sales.resume',
             'uses' => 'SalesApiController@resume',
         ]);
-        Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
-        Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet');
-        Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify');
-        Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation');
+        Route::post('/refund/{transaction_id}', 'SalesApiController@refund')->middleware('permission:sales_manage');
+        Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet')->middleware('permission:sales_manage');
+        Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify')->middleware('permission:sales_manage');
+        Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation')->middleware('permission:sales_manage');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
         Route::get('/user-plans', 'SalesApiController@getPlans');
-        Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation');
+        Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation')->middleware('permission:sales_manage');
     }
 );
 

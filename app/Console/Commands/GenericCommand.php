@@ -17,8 +17,10 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $role = Role::find(5);
-        $role->givePermissionTo('sales');
+        $user = User::find(4990);
+        foreach($user->permissions as $permission){
+            $this->info($permission->name);
+        }
 
         /*
         $service = new TrackingService();

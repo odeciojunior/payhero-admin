@@ -31,6 +31,7 @@
                                 </div>
                             </div>
                         </div>
+                        @can('sales_trackings_manager')
                         <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                             <div class="d-flex align-items-center">
                                 <span class="o-download-cloud-1 mr-2"></span>
@@ -49,6 +50,7 @@
                                       style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
                             </div>
                         </div>
+                        @endcan
                     </div>
                 </div>
             </div>

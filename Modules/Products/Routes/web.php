@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+//role:account_owner|admin
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'role:account_owner|admin'],
+        'middleware' => ['web', 'auth', 'permission:products'],
     ],
     function() {
         Route::resource('/products', 'ProductsController')->only('index', 'edit');

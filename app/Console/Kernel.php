@@ -11,21 +11,18 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
  */
 class Kernel extends ConsoleKernel
 {
-    /**
-     * @var array
-     */
     protected $commands = [
         //
     ];
 
-    /**
-     * @param Schedule $schedule
-     */
     protected function schedule(Schedule $schedule)
     {
         setlocale(LC_ALL, 'pt_BR');
 
-        /** Manager */
+        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
+
+        $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
+
         $schedule->command('check:systems')->everyTenMinutes();
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
@@ -64,12 +61,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-        /** End Manager */
-
-        /** checkout */
-        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
-
-        /** End Checkout */
 
         /** sirius */
         // snapshot for horizon metrics
@@ -163,10 +154,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:liquidation-transaction-cloudfox')->dailyAt('22:00');
     }
 
-    /**
-     * Register the commands for the application.
-     * @return void
-     */
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');
