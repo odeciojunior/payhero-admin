@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\GatewayPostback;
 
@@ -9,13 +10,16 @@ class ProcessGatewayPostbacksCommand extends Command
 {
     protected $signature = 'gatewaypostbacks:process';
 
-    protected $description = 'Verifica os postbacks dos gateways';
+    protected $description = 'Verifica os postbacks dos gateways GETNET, ASAAS';
 
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * @throws Exception
+     */
     public function handle()
     {
         $this->processPostBackGetnet();
@@ -24,29 +28,40 @@ class ProcessGatewayPostbacksCommand extends Command
 
     private function processPostBackGetnet()
     {
-        $postbacks = GatewayPostback::where('processed_flag', false)
-            ->where('gateway_id', 15)
-            ->orderBy('id', 'desc')
-            ->limit(100)
-            ->get();
-        $url = getenv('CHECKOUT_URL') . '/api/postback/process/getnet';
+        try {
+            $postbacks = GatewayPostback::where('processed_flag', false)
+                ->where('gateway_id', 15)
+                ->orderBy('id', 'desc')
+                ->limit(100)
+                ->get();
+            $url = getenv('CHECKOUT_URL') . '/api/postback/process/getnet';
 
-        foreach ($postbacks as $postback) {
-            $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback->id)]);
+            foreach ($postbacks as $postback) {
+                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback->id)]);
+            }
+        } catch (Exception $e) {
+            report($e);
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function processPostbackAsaas()
     {
-        $postbacks = GatewayPostback::where('processed_flag', false)
-            ->where('gateway_id', 8)
-            ->orderBy('id', 'asc')
-            ->limit(100)
-            ->get();
-        $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
+        try {
+            $postbacks = GatewayPostback::where('processed_flag', false)
+                ->where('gateway_id', 8)
+                ->orderBy('id', 'asc')
+                ->limit(100)
+                ->get();
+            $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
 
-        foreach ($postbacks as $postback) {
-            $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback->id)]);
+            foreach ($postbacks as $postback) {
+                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback->id)]);
+            }
+        } catch (Exception $e) {
+            report($e);
         }
     }
 
