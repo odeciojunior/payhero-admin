@@ -106,7 +106,6 @@ class ProjectsApiController extends Controller
     public function store(ProjectStoreRequest $request): JsonResponse
     {
         try {
-
             $requestValidated = $request->validated();
 
             $projectModel = new Project();
@@ -174,7 +173,8 @@ class ProjectsApiController extends Controller
                     $img->save($photo->getPathname());
 
                     $amazonPath = $amazonFileService
-                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
+                        ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            $photo);
                     $project->update(['photo' => $amazonPath]);
                 } catch (Exception $e) {
                     report($e);
@@ -226,8 +226,7 @@ class ProjectsApiController extends Controller
     public function edit($id): JsonResponse
     {
         try {
-
-            $user= User::with('companies')->find(auth()->user()->account_owner_id);
+            $user = User::with('companies')->find(auth()->user()->account_owner_id);
 
             $project = Project::with(
                 [
@@ -522,12 +521,8 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
             }
 
-            $projectModel = new Project();
-            $usersProjects = new UserProject();
-            $saleModel = new Sale();
-            $usersProjectsPresent = $usersProjects->present();
             $userId = auth()->user()->account_owner_id;
-            $id = current(Hashids::decode($id));
+            $id = hashids_decode($id);
 
             $project = Project::where('id', $id)
                 ->where('status', Project::STATUS_ACTIVE)
@@ -540,51 +535,55 @@ class ProjectsApiController extends Controller
                     ]
                 )->first();
 
-            $project->chargeback_count = $saleModel->where('project_id', $project->id)
-                ->where('status', $saleModel->present()->getStatus('charge_back'))
+            if (empty($project)) {
+                return response()->json(['message' => 'Projeto não encontrado!'], 400);
+            }
+
+            $project->chargeback_count = Sale::where('project_id', $project->id)
+                ->where('status', Sale::STATUS_CHARGEBACK)
                 ->count();
 
-            $project->without_tracking = $saleModel->where('project_id', $project->id)
+            $project->without_tracking = Sale::where('project_id', $project->id)
                 ->where('has_valid_tracking', false)
                 ->whereNotNull('delivery_id')
-                ->where('status', $saleModel->present()->getStatus('approved'))
+                ->where('status', Sale::STATUS_APPROVED)
                 ->count();
 
-            $project->approved_sales = $saleModel->where('project_id', $project->id)
-                ->where('status', $saleModel->present()->getStatus('approved'))
+            $project->approved_sales = Sale::where('project_id', $project->id)
+                ->where('status', Sale::STATUS_APPROVED)
                 ->count();
 
             $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
                 ->whereHas(
                     'sale',
-                    function ($query) use ($saleModel, $project) {
-                        $query->where('status', $saleModel->present()->getStatus('approved'));
+                    function ($query) use ($project) {
+                        $query->where('status', Sale::STATUS_APPROVED);
                         $query->where('project_id', $project->id);
                     }
                 )
                 ->sum('value');
 
-            $project->open_tickets = $saleModel->where('project_id', $project->id)
+            $project->open_tickets = Sale::where('project_id', $project->id)
                 ->whereHas(
                     'tickets',
                     function ($query) {
-                        $query->where('ticket_status_enum', (new Ticket())->present()->getTicketStatusEnum('open'));
+                        $query->where('ticket_status_enum', Ticket::STATUS_OPEN);
                     }
                 )
                 ->count();
 
             $producer = User::whereHas(
                 'usersProjects',
-                function ($query) use ($project, $usersProjectsPresent) {
+                function ($query) use ($project) {
                     $query->where('project_id', $project->id)
-                        ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
+                        ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM);
                 }
             )->first();
 
             $project->producer = $producer->name ?? '';
 
             if (Gate::allows('show', [$project])) {
-                activity()->on($projectModel)->tap(
+                activity()->on((new Project()))->tap(
                     function (Activity $activity) use ($id) {
                         $activity->log_name = 'visualization';
                         $activity->subject_id = $id;

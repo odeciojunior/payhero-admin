@@ -149,6 +149,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
 
         $schedule->command('check:sales-refunded')->dailyAt('16:00');
+
+        /** Libera o dinheiro da azx */
+        $schedule->command('check:liquidation-transaction-cloudfox')->dailyAt('22:00');
     }
 
     protected function commands()

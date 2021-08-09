@@ -63,6 +63,7 @@ return [
                 'taboola' => 'Taboola',
                 'outbrain' => 'Outbrain',
                 'pinterest' => 'Pinterest',
+                'uol_ads' => 'UOL Ads'
             ],
         ],
         "discount_coupon" => [

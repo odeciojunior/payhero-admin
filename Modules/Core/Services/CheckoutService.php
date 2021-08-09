@@ -371,4 +371,20 @@ class CheckoutService
 
         return $this->runCurl($url, 'POST', $data);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function releaseCloudfoxPaymentGetnet($data)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/releasecloudfoxpaymentgetnet';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasecloudfoxpaymentgetnet';
+        }
+
+        return $this->runCurl($url, 'POST', $data);
+    }
+
+
 }
