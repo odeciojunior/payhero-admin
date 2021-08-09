@@ -14,6 +14,18 @@ class GatewayPostback extends Model
     use PresentableTrait;
     use SoftDeletes;
 
+    public const GATEWAY_PAGARME_ENUM = 1;
+    public const GATEWAY_ZOOP_ENUM = 2;
+    public const GATEWAY_CIELO_ENUM = 3;
+    public const GATEWAY_PAGHIPER_ENUM = 4;
+    public const GATEWAY_MERCADO_PAGO_ENUM = 5;
+    public const GATEWAY_ASAAS_ENUM = 6;
+    public const GATEWAY_JUNO_ENUM = 7;
+    public const GATEWAY_GETNET_ENUM = 8;
+    public const GATEWAY_BRASPAG_ENUM = 9;
+    public const GATEWAY_GERENCIANET_ENUM = 10;
+
+
     protected $keyType = 'integer';
 
     protected $dates = ['deleted_at'];
