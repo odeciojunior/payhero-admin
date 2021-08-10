@@ -15,8 +15,10 @@ Route::group(
         Route::post('project/{projectId}/domains', 'DomainsApiController@store')->middleware('permission:projects_manage');
         Route::delete('project/{projectId}/domains/{domainId}', 'DomainsApiController@destroy')->middleware('permission:projects_manage');
 
+
+        Route::get('project/{projectId}/domain/{domainId}/records', 'DomainRecordsApiController@index');        
         Route::apiResource('project/{projectId}/domain/{domainId}/records', 'DomainRecordsApiController')
-             ->names('api.domainrecords')->middleware('permission:projects_manage');
+        ->except(['index'])->names('api.domainrecords')->middleware('permission:projects_manage');
 
         Route::get('project/{projectId}/domain/{domainId}/recheck', 'DomainsApiController@recheckOnly')
              ->name('api.domain.recheck')->middleware('permission:projects_manage');
