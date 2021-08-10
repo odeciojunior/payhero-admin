@@ -34,6 +34,20 @@ class TransactionCloudfox extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+
+    const STATUS_TRANSFERRED = 1;
+    const STATUS_PAID = 2;
+    const STATUS_PENDING = 3;
+    const STATUS_CHARGEBACK = 4;
+    const STATUS_CANCELED = 5;
+    const STATUS_REFUNDED = 6;
+    const STATUS_REFUSED = 7;
+    const STATUS_PENDING_ANTIFRAUD = 8;
+    const STATUS_CANCELED_ANTIFRAUD = 9;
+    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_ANTICIPATED = 12;
+    const STATUS_BILLET_REFUNDED = 13;
+
     /**
      * The table associated with the model.
      *
