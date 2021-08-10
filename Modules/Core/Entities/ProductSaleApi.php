@@ -13,7 +13,7 @@ use App\Traits\LogsActivity;
  * @property int $sale_id
  * @property string $item_id
  * @property string $name
- * @property float $price
+ * @property string $price
  * @property int $quantity
  * @property string $product_type
  * @property Sale $sale

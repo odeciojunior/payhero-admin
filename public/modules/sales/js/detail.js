@@ -287,8 +287,12 @@ $(() => {
         }
 
         if (!sale.api_flag) {
+            $(".dados-checkout").css("display", "block");
+            
             getCheckout(sale.checkout_id);
         } else {
+            $(".dados-checkout").css("display", "none");
+
             loadOnAny("#modal-saleDetails", true);
         }
 
@@ -1016,8 +1020,22 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                renderProducts(response.data, sale);
+                if (!sale.api_flag) {
+                    renderProducts(response.data, sale);
+                } else {
+                    renderProductsApi(response.data, sale);
+                }
             },
+        });
+    }
+
+    function renderProductsApi(products, sale) {
+        $("#table-product").html("");
+        $("#data-tracking-products").html("");
+        let div = "";
+        
+        $.each(products, function (index, value) {
+
         });
     }
 
@@ -1026,7 +1044,7 @@ $(() => {
         $("#data-tracking-products").html("");
         let div = "";
         let photo = "/modules/global/img/produto.png";
-        console.log(products);
+        //console.log(products);
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -1043,7 +1061,7 @@ $(() => {
                             <p class="sm-text text-muted">${value.amount}x</p>
                         </div>
                     </div>`;
-            if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
+            if(typeof value.custom_products != 'undefined' && value.custom_products.length>0) {
                 div+= `<!-- Customer additional information -->
                     <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
                         <div class="panel panel-custom-product">

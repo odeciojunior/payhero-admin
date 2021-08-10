@@ -334,49 +334,54 @@
                             <br>
                         </div>
                         <div id="details-boleto" style="display:none">
-                        <span id="boleto-link" class="table-title gray">Link para o boleto:
-                            <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                <span class="material-icons icon-copy-1"> content_copy </span>
-                            </a>
-                        </span>
+                            <span id="boleto-link" class="table-title gray">Link para o boleto:
+                                <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
+                                </a>
+                            </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
-                            <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
-                               title='Copiar link'>
+                            <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''title='Copiar link'>
                                 <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
-                        </span>
+                            </span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
                         </div>
-                        <span id="checkout-ip" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-operational-system" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-browser" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
-                        <br>
-                        <span id="thank-page-url" class="table-title gray" style="display:none"></span>
-                        <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;"
-                           link="" title="Copiar link">
-                            <span class="material-icons icon-copy-1"> content_copy </span>
-                        </a>
-                        <br>
-                        <h4> Conversão </h4>
-                        <span id="checkout-src" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-source" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-medium" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-campaign" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-term" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-content" class="table-title gray"></span>
-                        <br>
+
+                        <div class="dados-checkout">
+                            <span id="checkout-ip" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-operational-system" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-browser" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
+                            <br>
+                            <span id="thank-page-url" class="table-title gray" style="display:none"></span>
+                            <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;" link="" title="Copiar link">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
+                            </a>
+                            <br>
+                        </div>
+
+                        <div class="dados-checkout">
+                            <h4> Conversão </h4>
+                            <span id="checkout-src" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-source" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-medium" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-campaign" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-term" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-content" class="table-title gray"></span>
+                            <br>
+                        </div>
+
                         <div id='div_notazz_invoice' style='display:none;'>
                             <br>
                             <h4> Integração Notazz </h4>

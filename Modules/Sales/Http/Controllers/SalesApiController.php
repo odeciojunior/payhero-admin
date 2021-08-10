@@ -264,11 +264,7 @@ class SalesApiController extends Controller
                     $activity->subject_id = $saleId;
                 }
             )->log('Reenviou email para a venda: #' . $request->input('sale'));
-            EmailService::clientSale(
-                $sale->customer,
-                $sale,
-                $sale->project
-            );
+            EmailService::clientSale( $sale->customer, $sale, $sale->project );
             return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
