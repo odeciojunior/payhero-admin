@@ -62,9 +62,10 @@ class SalesApiController extends Controller
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
+                    $activity->subject_id = hashids_decode($id, 'sale_id');
                 }
             )->log('Visualizou detalhes da venda #' . $id);
+
             $sale = (new SaleService())->getSaleWithDetails($id);
             if (!empty($sale->affiliate)) {
                 $users = [
