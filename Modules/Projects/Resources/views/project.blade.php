@@ -292,7 +292,7 @@
 
                             <div class="modal-content">
                                 <div class="modal-header text-center">
-                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                    <a class="pointer close" role="button" data-dismiss="modal"
                                        aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
@@ -341,7 +341,7 @@
 
                             <div class="modal-content">
                                 <div class="modal-header text-center">
-                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                    <a class="pointer close" role="button" data-dismiss="modal"
                                        aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
