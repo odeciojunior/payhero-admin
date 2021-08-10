@@ -23,7 +23,7 @@ class SalesResource extends JsonResource
     {
         $user = auth()->user();
         $userPermissionRefunded = false;
-        if ($user->hasRole('admin') || $user->hasRole('account_owner') || $user->hasPermissionTo('refund')) {
+        if ($user->hasPermissionTo('sales_manage')) {
             $userPermissionRefunded = true;
         }
 

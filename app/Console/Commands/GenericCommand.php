@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\TrackingService;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class GenericCommand extends Command
@@ -17,10 +18,10 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $user = User::find(4990);
-        foreach($user->permissions as $permission){
-            $this->info($permission->name);
-        }
+        $role = Role::where('name','account_owner')->first();        
+        
+        $user = User::find(26);
+        $user->syncPermissions($role->permissions->pluck('name'));
 
         /*
         $service = new TrackingService();

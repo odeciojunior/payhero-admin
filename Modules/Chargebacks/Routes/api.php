@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 // role:attendance|account_owner|admin
 Route::group(
     [
-        'middleware' => ['auth:api', 'permission:sales_contestations'],
+        'middleware' => ['auth:api', 'permission:contestations'],
         'prefix' => 'contestations'
     ],
     function() {
@@ -15,7 +15,7 @@ Route::group(
         Route::get('/get-contestation-files/{salecontestation}', 'ContestationsApiController@getContestationFiles')->name('contestations.getContestationFiles');
 
         Route::post('/send-files', 'ContestationsApiController@sendContestationFiles')->name('contestations.sendContestationFiles')
-        ->middleware('permission:sales_contestations_manage');
+        ->middleware('permission:contestations_manage');
         Route::get('/{contestationfile}/removefile', 'ContestationsApiController@removeContestationFiles')->name('contestations.removeContestationFiles');
         Route::post('/update-is-file-completed', 'ContestationsApiController@updateIsFileCompleted')->name('users.updateIsFileCompleted');
 

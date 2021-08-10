@@ -10,6 +10,6 @@ Route::group(
         // Route::apiResource('/customers', 'CustomersApiController')->only('show', 'update')->names('api.customer')
         //  ->middleware('permission:sales');
         Route::get('/customers/{id}','CustomersApiController@show');
-        Route::put('/customers/update','CustomersApiController@update')->middleware('permission:sales_manage');
+        Route::put('/customers/update','CustomersApiController@update')->middleware('permission:sales_manage|trackings_manage');
     }
 );

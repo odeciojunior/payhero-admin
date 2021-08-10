@@ -45,11 +45,11 @@ class AssignPermissionsToRolesAndUsers extends Migration
                 case 'attendance': //customer
                     $permissions['attendance'] = [
                         'sales',
-                        'sales_recovery',
-                        'sales_trackings',
-                        'sales_trackings_manage',                        
-                        'sales_contestations',
-                        'sales_contestations_manage',
+                        'recovery',
+                        'trackings',
+                        'trackings_manage',                        
+                        'contestations',
+                        'contestations_manage',
                         'attendance',
                         'attendance_manage',
                         'report_coupons'
@@ -72,7 +72,7 @@ class AssignPermissionsToRolesAndUsers extends Migration
                         'finances_manage',
                         'report_sales', 
                         'report_pending',
-                        'report_blocked_balance'
+                        'report_blockedbalance'
                     ];
                     $role->syncPermissions($permissions['finantial']); 
                 break;

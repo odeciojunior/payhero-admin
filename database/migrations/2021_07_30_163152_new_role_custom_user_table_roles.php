@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\User;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use Slince\Shopify\Manager\Refund\Refund;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -16,28 +17,31 @@ class NewRoleCustomUserTableRoles extends Migration
      * @return void
      */
     public function up()
-    {
+    {        
         Role::create(['name' => 'custom']);        
-
+        
         $userAdmin = User::create(
             [
                 'name'           => "Manager custom",
                 'email'          => "custom@cloudfox.net",
                 'email_verified' => "1",
                 'password'       => bcrypt('P0Rj7mvP0RIO@&F^mPLX#T'),
-            ]
-        );
-        
+                ]
+            );
+            
         $userAdmin->assignRole('custom');
+                    
+        $refund = Permission::find(1);
+        $refund->name ='sales_manage';
+        $refund->update();
         
         Permission::create(['name'=>'dashboard']);
-        Permission::create(['name'=>'sales']);
-        Permission::create(['name'=>'sales_reverse_transaction']);
-        Permission::create(['name'=>'sales_recovery']);
-        Permission::create(['name'=>'sales_trackings']);
-        Permission::create(['name'=>'sales_trackings_manager']);        
-        Permission::create(['name'=>'sales_contestations']);
-        Permission::create(['name'=>'sales_contestations_send_documents']);
+        Permission::create(['name'=>'sales']);        
+        Permission::create(['name'=>'recovery']);
+        Permission::create(['name'=>'trackings']);
+        Permission::create(['name'=>'trackings_manage']);
+        Permission::create(['name'=>'contestations']);
+        Permission::create(['name'=>'contestations_manage']);
         Permission::create(['name'=>'projects']);
         Permission::create(['name'=>'projects_manage']);
         Permission::create(['name'=>'products']);
@@ -50,7 +54,7 @@ class NewRoleCustomUserTableRoles extends Migration
         Permission::create(['name'=>'report_checkouts']);
         Permission::create(['name'=>'report_coupons']);
         Permission::create(['name'=>'report_pending']);
-        Permission::create(['name'=>'report_blocked_balance']);
+        Permission::create(['name'=>'report_blockedbalance']);
         Permission::create(['name'=>'affialiates']);
         Permission::create(['name'=>'affialiates_manage']);
         Permission::create(['name'=>'apps']);

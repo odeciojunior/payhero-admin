@@ -17,7 +17,8 @@ Route::group(
     ],
     function() {
 
+        //role:account_owner|admin|attendance
         Route::Resource('/attendance', 'AttendanceController')
-             ->only('index')->middleware('role:account_owner|admin|attendance')->names('attendance');
+             ->only('index')->middleware('permission:attendance')->names('attendance');
     }
 );

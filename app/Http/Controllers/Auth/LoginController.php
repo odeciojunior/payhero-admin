@@ -195,14 +195,25 @@ class LoginController extends Controller
 
             auth()->loginUsingId($user->id);
 
+            //auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')            
 
-            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')) {
+            if (auth()->user()->can('dashboard')) {
                 return response()->redirectTo('/dashboard');
-            }else{
+            }elseif (auth()->user()->can('sales')) {
                 return response()->redirectTo('/sales');
+            }else{
+                $permissions =  auth()->user()->permissions->pluck('name');
+                foreach($permissions as $permission){
+                    $route = explode('_',$permission);
+                    $redirect = $route['0'];
+                    if(count($route) > 1){
+                        if($route['0']=='report'){
+                            $redirect= $route['0'].'/'.$route['1'];
+                        }
+                    }
+                    return response()->redirectTo("/{$redirect}");
+                }
             }
-
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possivel autenticar o usuário.',

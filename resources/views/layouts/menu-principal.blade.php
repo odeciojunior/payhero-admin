@@ -138,7 +138,7 @@
         @endhasanyrole
         
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->        
-        @can('sales')
+        @if(auth()->user()->hasAnyPermission(['sales','recovery','trackings','contestations']))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
@@ -148,14 +148,16 @@
                     <span class="site-menu-arrow"></span>
                 </a>
                 <ul class="site-menu-sub">
+                    @can('sales')
                     <li class="site-menu-item">
                         <a href="{!! route('sales.index') !!}">
                             <span class="bg-menu"></span>
                             <span class="site-menu-title">Visão geral</span>
                         </a>
                     </li>
+                    @endcan
                     <!-- unlessrole('finantial') -->
-                    @can('sales_recovery')
+                    @can('recovery')
                     <li class="site-menu-item">
                         <a href="{{ route('recovery.index') }}">
                             <span class="bg-menu"></span>
@@ -171,7 +173,7 @@
                         </a>
                     </li> 
                     --}}
-                    @can('sales_trackings')
+                    @can('trackings')
                     <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
                             <span class="bg-menu"></span>
@@ -180,7 +182,7 @@
                     </li>
                     @endcan
                     <!-- hasanyrole('account_owner|admin|attendance') -->
-                    @can('sales_contestations')
+                    @can('contestations')
                         <li class="site-menu-item">
                             <a href="{{ route('contestations.index') }}">
                                 <span class="bg-menu"></span>
@@ -190,7 +192,7 @@
                     @endcan
                 </ul>
             </li>
-        @endcan         
+        @endif         
         
         <!-- hasanyrole('account_owner|admin') -->
         @can('projects')
@@ -313,7 +315,7 @@
                         </li>
                     @endcan
                     
-                    @can('report_blocked_balance')
+                    @can('report_blockedbalance')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.blockedbalance') }}">
                                 <span class="bg-menu"></span>

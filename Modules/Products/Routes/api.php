@@ -19,6 +19,6 @@ Route::group(
 
           //role:account_owner|admin|attendance|finantial
           Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')->name('api.products.saleproducts')
-               ->middleware('permission:sales');
+               ->middleware('permission:sales|trackings');
      }
 );
