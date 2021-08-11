@@ -62,7 +62,7 @@ $(document).ready(function () {
                     $('#woocom-bt').addClass('added');
                     $('#woocom-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
-                
+
                 if (response.hotbilletIntegrations > 0) {
                     $('#hotbillet-bt').addClass('added');
                     $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');
@@ -102,14 +102,13 @@ $(document).ready(function () {
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }
-                $("#project-not-empty").show();
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    updateUsedApps();
-                }else{
+                if (response.data.length) {
                     $("#project-not-empty").show();
                     $("#project-empty").hide();
-
+                    updateUsedApps();
+                } else{
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
 
                 loadingOnScreenRemove()
