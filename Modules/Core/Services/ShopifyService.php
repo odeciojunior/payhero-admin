@@ -2202,8 +2202,9 @@ class ShopifyService
             return $this->client->getFulfillmentManager()->findAll($orderId);
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            report($e);
-            Log::error('Erro ao buscar fulfillments no shopify com a order ' . $orderId);
+            (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e);
+
+            return null;
         }
     }
 
