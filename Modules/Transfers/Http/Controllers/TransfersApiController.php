@@ -118,6 +118,7 @@ class TransfersApiController
         try {
 
             $dataRequest = request()->all();
+            request()->merge(['sale' => str_replace('#', '', $dataRequest['sale'])]);
             $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($dataRequest);
             $filters = $filtersAndStatement['filters'];
             $result = json_decode($filtersAndStatement['statement']);
