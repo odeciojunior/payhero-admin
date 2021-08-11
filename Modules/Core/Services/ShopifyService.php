@@ -42,57 +42,29 @@ class ShopifyService
         'templates/cart.liquid',
     ];
     public const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
-    /**
-     * @var string
-     */
+
     private $cacheDir;
-    /**
-     * @var PublicAppCredential
-     */
+
     private $credential;
-    /**
-     * @var Client
-     */
+
     private $client;
-    /**
-     * @var
-     */
+
     private $theme;
-    /**
-     * @var int
-     */
+
     private $saleId;
-    /**
-     * @var array
-     */
+
     private $sendData = [];
-    /**
-     * @var array
-     */
+
     private $receivedData = [];
-    /**
-     * @var array
-     */
+
     private $exceptions = [];
-    /**
-     * @var string
-     */
+
     private $method;
-    /**
-     * @var string
-     */
+
     private $project = "admin";
-    /**
-     * @var bool
-     */
+
     private $skipToCart = false;
 
-    /**
-     * ShopifyService constructor.
-     * @param string $urlStore
-     * @param string $token
-     * @param bool $getThemes
-     */
     public function __construct(string $urlStore, string $token, $getThemes = true)
     {
         if (!$this->cacheDir) {
