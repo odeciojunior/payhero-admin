@@ -14,7 +14,6 @@ use Nwidart\Modules\Collection;
  * @property string $access_token
  * @property string $refresh_token
  * @property string $expiration
- * @property string $zipcode
  * @property boolean $completed
  * @property string $created_at
  * @property string $updated_at
