@@ -41,7 +41,7 @@
         <div class="modal-content p-10" id="conteudo_modal_add">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-event"></h4>
-                <a id="modal-button-close" class="close-card pointer close btn-close-add-event" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close btn-close-add-event" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -71,7 +71,7 @@
         <div class="modal-content p-10" id="content-modal-event-error">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-event-error"></h4>
-                <a id="modal-button-close" class="close-card pointer close btn-close-add-event" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close btn-close-add-event" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -94,7 +94,7 @@
         <div class="modal-content p-10" id="conteudo_modal_add">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title-details"></h4>
-                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -109,7 +109,7 @@
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>

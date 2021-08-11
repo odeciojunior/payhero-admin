@@ -49,9 +49,6 @@
                 <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
-                {{-- <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a> --}}
             </div>
             <div style='min-height: 100px'>
                 @include('affiliates::createlink')

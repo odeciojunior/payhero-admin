@@ -152,6 +152,11 @@ class Kernel extends ConsoleKernel
 
         /** Libera o dinheiro da azx */
         $schedule->command('check:liquidation-transaction-cloudfox')->dailyAt('22:00');
+
+        /** Libera o dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('23:00');
+        /** Confirma a transferencia do dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('23:30');
     }
 
     protected function commands()
