@@ -14,14 +14,14 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CheckLiquidationTransactionsCloudfox extends Command
+class CheckWithdrawalsReleasedCloudfox extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:liquidation-transaction-cloudfox';
+    protected $signature = 'getnet:check-withdrawals-released-cloudfox';
 
     /**
      * The console command description.
