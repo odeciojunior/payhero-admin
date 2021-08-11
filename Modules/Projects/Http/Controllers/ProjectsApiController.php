@@ -3,6 +3,7 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -46,37 +47,51 @@ class ProjectsApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $projectModel = new Project();
-            $projectService = new ProjectService();
-            $pagination = $request->input('select') ?? false;
-            $affiliation = true;
 
-            if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
-                $affiliation = false;
-            }
+            $user = auth()->user();
 
-            if (!$pagination) {
-                activity()->on($projectModel)->tap(
-                    function (Activity $activity) {
-                        $activity->log_name = 'visualization';
-                    }
-                )->log('Visualizou tela todos os projetos');
-            }
+            $hasCompany = Company::where('user_id', $user->id)->exists();
 
-            if (!empty($request->input('status')) && $request->input('status') == 'active') {
-                $projectStatus = [$projectModel->present()->getStatus('active')];
-            } else {
-                if (auth()->user()->deleted_project_filter) {
-                    $projectStatus = [
-                        $projectModel->present()->getStatus('active'),
-                        $projectModel->present()->getStatus('disabled'),
-                    ];
-                } else {
-                    $projectStatus = [$projectModel->present()->getStatus('active')];
+            if ($hasCompany) {
+                $projectModel = new Project();
+                $projectService = new ProjectService();
+                $pagination = $request->input('select') ?? false;
+                $affiliation = true;
+
+                if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
+                    $affiliation = false;
                 }
+
+                if (!$pagination) {
+                    activity()->on($projectModel)->tap(
+                        function (Activity $activity) {
+                            $activity->log_name = 'visualization';
+                        }
+                    )->log('Visualizou tela todos os projetos');
+                }
+
+                if (!empty($request->input('status')) && $request->input('status') == 'active') {
+                    $projectStatus = [$projectModel->present()->getStatus('active')];
+                } else {
+                    if ($user->deleted_project_filter) {
+                        $projectStatus = [
+                            $projectModel->present()->getStatus('active'),
+                            $projectModel->present()->getStatus('disabled'),
+                        ];
+                    } else {
+                        $projectStatus = [$projectModel->present()->getStatus('active')];
+                    }
+                }
+
+                return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
+            } else {
+                return response()->json([
+                    'data' => [],
+                    'no_company' => true,
+                    'message' => 'Nenhuma empresa cadastrada!'
+                ]);
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             report($e);
 
