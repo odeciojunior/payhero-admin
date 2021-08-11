@@ -64,25 +64,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-30">
-                        <div class="input-group col-12">
-                            <label for="client-id">Client ID</label>
-                            <div class="d-flex input-group">
-                                <input type="text" class="input-pad" name="client_id"
-                                       id="client-id"
-                                       placeholder="Client ID (fornecido após cadastro do app)">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-30">
-                        <div class="input-group col-12">
-                            <label for="client_id">Client Secret</label>
-                            <div class="d-flex input-group">
-                                <input type="text" class="input-pad" id="client-secret"
-                                       placeholder="Client Secret (fornecido após cadastro do app)">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 15px">
                     <button id="btn-save" class="btn btn-success">Realizar integração</button>

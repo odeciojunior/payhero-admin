@@ -11,8 +11,6 @@ use Nwidart\Modules\Collection;
  * @property integer $id
  * @property integer $user_id
  * @property string $name
- * @property string $client_id
- * @property string $client_secret
  * @property string $access_token
  * @property string $refresh_token
  * @property string $expiration
@@ -31,8 +29,6 @@ class MelhorenvioIntegration extends Model
         'id',
         'user_id',
         'name',
-        'client_id',
-        'client_secret',
         'access_token',
         'refresh_token',
         'expiration',

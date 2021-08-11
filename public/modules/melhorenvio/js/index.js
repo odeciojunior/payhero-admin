@@ -111,10 +111,8 @@ $(() => {
     $('#btn-save').on('click', function () {
 
         let name = $('#name').val();
-        let client_id = $('#client-id').val();
-        let client_secret = $('#client-secret').val();
 
-        if (name && client_id && client_secret) {
+        if (name) {
 
             loadingOnScreen();
 
@@ -127,8 +125,6 @@ $(() => {
                 },
                 data: {
                     name,
-                    client_id,
-                    client_secret,
                 },
                 success: resp => {
                     window.location.href = resp.url;
