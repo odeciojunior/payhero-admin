@@ -8,7 +8,8 @@ Route::group(
     ],
     function() {
         Route::resource('/products', 'ProductsController')->only('index', 'edit');
-        Route::get('/products/create/{type}', 'ProductsController@create');
+        Route::get('/products/create/{type}', 'ProductsController@create')
+        ->middleware('permission:products_manage');
     }
 );
 

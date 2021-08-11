@@ -55,8 +55,8 @@ class NewRoleCustomUserTableRoles extends Migration
         Permission::create(['name'=>'report_coupons']);
         Permission::create(['name'=>'report_pending']);
         Permission::create(['name'=>'report_blockedbalance']);
-        Permission::create(['name'=>'affialiates']);
-        Permission::create(['name'=>'affialiates_manage']);
+        Permission::create(['name'=>'affiliates']);
+        Permission::create(['name'=>'affiliates_manage']);
         Permission::create(['name'=>'apps']);
         Permission::create(['name'=>'apps_manage']);
         Permission::create(['name'=>'invitations']);

@@ -13,11 +13,11 @@ Route::group(
          */
         Route::get('/finances/getbalances', 'FinancesApiController@getBalances')
             ->name('api.finances.balances')
-            ->middleware('role:account_owner|admin|finantial');
+            ->middleware('permission:finances');
 
         Route::post('/finances/export', 'FinancesApiController@export')
             ->name('api.finances.export')
-            ->middleware('role:account_owner|admin|finantial');
+            ->middleware('permission:finances_manage');
 
         /**
          * Old routes before getnet

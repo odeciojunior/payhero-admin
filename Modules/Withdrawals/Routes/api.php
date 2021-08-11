@@ -21,9 +21,8 @@ Route::group(
         /**
          * News routes after Getnet
          */
-        Route::apiResource('/withdrawals', 'WithdrawalsApiController')
-            ->only('index', 'store')
-            ->names('api.withdrawals');
+        Route::get('/withdrawals', 'WithdrawalsApiController@index');
+        Route::post('/withdrawals', 'WithdrawalsApiController@store')->middleware('permission:finances_manage');
 
         Route::post('/withdrawals/getaccountinformation', 'WithdrawalsApiController@getAccountInformation');
 
@@ -34,10 +33,14 @@ Route::group(
         Route::get('/withdrawals/get-transactions-by-brand/{withdrawal_id}', 'WithdrawalsApiController@getTransactionsByBrand');
         Route::post('/withdrawals/get-transactions/{withdrawal_id}', 'WithdrawalsApiController@getTransactions');
 
+        
+        Route::get('/withdrawals/settings', 'WithdrawalsSettingsApiController@index');
+        Route::get('/withdrawals/settings/{settingsId}', 'WithdrawalsSettingsApiController@show');
+        
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
-            ->only('index', 'show', 'store', 'update', 'destroy')
+            ->only('store', 'update', 'destroy')
             ->names('api.withdrawals_settings')
-            ->middleware('role:account_owner|admin|finantial');
+            ->middleware('permission:finances_manage');
 
         Route::get('/withdrawals/settings/{companyId}/{settingsId}', 'WithdrawalsSettingsApiController@show');
     }

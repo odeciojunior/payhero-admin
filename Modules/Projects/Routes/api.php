@@ -8,7 +8,7 @@ Route::group(
      ],
      function () {
           Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
-               ->middleware('role:account_owner|admin|attendance');
+               ->middleware('permission:projects|apps');
 
           //role:account_owner|admin|attendance|finantial
           Route::get('/projects', 'ProjectsApiController@index');          

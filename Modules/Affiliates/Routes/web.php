@@ -16,7 +16,7 @@ Route::group(['middleware' => ['web', 'auth']], function() {
         ->name('affiliates.index');
 
     Route::get('/affiliates', 'AffiliatesController@projectAffiliates')
-         ->name('projectaffiliates');
+         ->name('projectaffiliates')->middleware('permission:affiliates');
 });
 
 //Route::prefix('affiliates')->group(function() {

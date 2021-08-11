@@ -18,7 +18,12 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
+
+        Route::get('/project/{projectId}/projectnotification', 'ProjectNotificationApiController@index');
+        Route::get('/project/{projectId}/projectnotification/{id}', 'ProjectNotificationApiController@show');
+        Route::get('/project/{projectId}/projectnotification/{id}/edit', 'ProjectNotificationApiController@edit');
+
         Route::apiResource('/project/{projectId}/projectnotification', 'ProjectNotificationApiController')
-            ->only('index', 'store', 'update', 'destroy', 'show', 'edit');
+            ->only('store', 'update', 'destroy')->middleware('permission:projects_manage');
     }
 );

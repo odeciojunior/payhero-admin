@@ -291,9 +291,19 @@ $(document).ready(function () {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
                 },
-                error: function (response) {
-                    loadingOnScreenRemove()
-                },
+                error: function (_error3) {
+                    function error() {
+                        return _error3.apply(this, arguments);
+                    }
+    
+                    error.toString = function () {
+                        return _error3.toString();
+                    };
+    
+                    return error;
+                }(function (response) {
+                    errorAjaxResponse(response);
+                }),
                 success: function (response) {
 
                     loadReviews();

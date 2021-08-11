@@ -265,7 +265,8 @@
             @endif
         @endcan   
            
-        @hasanyrole('account_owner|admin|attendance|finantial')
+        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
+        @if(auth()->user()->hasAnyPermission(['report_sales','report_checkouts','report_coupons','report_pending','report_blockedbalance']))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
                     <span class="bg-menu">

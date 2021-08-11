@@ -76,7 +76,10 @@ class SalesApiController extends Controller
                     $sale->owner_id,
                 ];
             }
-            if (!in_array(auth()->user()->account_owner_id, $users)) {
+            // if (!in_array(auth()->user()->account_owner_id, $users)) {
+            //     return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
+            // }
+            if(!auth()->user()->hasAnyPermission('sales_manage','finances_manage','trackings_manage','report_pending')){
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
             return new SalesResource($sale);
