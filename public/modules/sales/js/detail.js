@@ -990,7 +990,7 @@ $(() => {
         $("#client-telephone")
             .val(client.telephone)
             .attr("client", client.code)
-            .mask("+0#");
+            .mask('+00 (00) 00000-0000');
         $("#client-email").val(client.email).attr("client", client.code);
         $("#client-document").text("CPF: " + client.document);
         $("#client-whatsapp").attr("href", client.whatsapp_link);
