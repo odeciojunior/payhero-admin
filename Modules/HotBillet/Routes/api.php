@@ -17,10 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        'middleware' => ['auth:api', 'scopes:admin','permission:apps'],
     ],
     function() {
+        Route::get('/apps/hotbillet', 'HotBilletApiController@index');
+        Route::get('/apps/hotbillet/{id}', 'HotBilletApiController@show');
+        Route::get('/apps/hotbillet/{id}/edit', 'HotBilletApiController@edit');
+
         Route::apiResource('/apps/hotbillet', 'HotBilletApiController')
-            ->only('index', 'show', 'store', 'edit', 'update', 'destroy');
+            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
     }
 );

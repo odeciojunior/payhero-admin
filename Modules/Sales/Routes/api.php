@@ -36,7 +36,7 @@ Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
      ->middleware(['auth:api', 'scopes:admin']);
 
-
+//rotas consumida por terceiros: profitfy
 Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'prefix' => 'profitfy',], function () {
     Route::get('/orders', 'SalesApiController@indexExternal');
     Route::get('/orders/{saleId}', 'SalesApiController@showExternal');

@@ -11,12 +11,12 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:affiliates']], function() {
     Route::get('/affiliates/{projectId}', 'AffiliatesController@index')
         ->name('affiliates.index');
 
     Route::get('/affiliates', 'AffiliatesController@projectAffiliates')
-         ->name('projectaffiliates')->middleware('permission:affiliates');
+         ->name('projectaffiliates');
 });
 
 //Route::prefix('affiliates')->group(function() {
