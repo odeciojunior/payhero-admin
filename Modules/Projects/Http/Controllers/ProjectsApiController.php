@@ -50,7 +50,7 @@ class ProjectsApiController extends Controller
 
             $user = auth()->user();
 
-            $hasCompany = Company::where('user_id', $user->id)->exists();
+            $hasCompany = Company::where('user_id', $user->account_owner_id)->exists();
 
             if ($hasCompany) {
                 $projectModel = new Project();
