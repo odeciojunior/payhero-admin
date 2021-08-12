@@ -27,11 +27,12 @@
             </div>
         </div>
         @include('projects::empty')
+        @include('projects::empty-company')
         <div class="page-content container">
             <div id="data-table-projects" class="row" style="margin-top: 30px">
             </div>
         </div>
-        
+
     </div>
     <!-- Modal add integração -->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config"
@@ -65,7 +66,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{asset('modules/projects/js/index.js?v=' . random_int(100, 10000))}}"></script>
+        <script src="{{asset('modules/projects/js/index.js?v='.uniqid())}}"></script>
     @endpush
 
 @endsection

@@ -1280,46 +1280,48 @@ class ShopifyService
         }
     }
 
-    /**
-     * @param null $webhookId
-     * @return array|Webhook|Webhook[]
-     */
     public function getShopWebhook($webhookId = null)
     {
-        if (!empty($this->client)) {
-            if ($webhookId) {
-                return $this->client->getWebhookManager()->find($webhookId);
-            } else {
-                return $this->client->getWebhookManager()->findAll();
+        try {
+            if (empty($this->client)) {
+                return [];
             }
-        } else {
+
+            if (!empty($webhookId)) {
+                return $this->client->getWebhookManager()->find($webhookId);
+            }
+
+            return $this->client->getWebhookManager()->findAll();
+        } catch (Exception $e) {
+            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 423, 429, 503])) {
+                return [];
+            }
+
+            report($e);
             return [];
         }
     }
 
-    /**
-     * @param null $webhookId
-     * @return array|bool|Webhook[]
-     */
     public function deleteShopWebhook($webhookId = null)
     {
         try {
-            if (!empty($this->client)) {
-                if ($webhookId) {
-                    return $this->client->getWebhookManager()->remove($webhookId);
-                } else {
-                    $webhooks = $this->getShopWebhook();
-                    foreach ($webhooks as $webhook) {
-                        $this->client->getWebhookManager()->remove($webhook->getId());
-                    }
-
-                    return $this->client->getWebhookManager()->findAll();
-                }
-            } else {
+            if (empty($this->client)) {
                 return [];
             }
+
+            if (!empty($webhookId)) {
+                return $this->client->getWebhookManager()->remove($webhookId);
+            }
+
+            $webhooks = $this->getShopWebhook();
+            foreach ($webhooks as $webhook) {
+                $this->client->getWebhookManager()->remove($webhook->getId());
+            }
+
+            // return $this->client->getWebhookManager()->findAll();
+            return [];
         } catch (Exception $e) {
-            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 423, 429])) {
+            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 423, 429, 503])) {
                 return [];
             }
             throw $e;
@@ -1441,10 +1443,8 @@ class ShopifyService
                 "city" => $delivery->city ?? "-",
                 "company" => $client->document,
                 "country" => "Brasil",
-                "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
-                )->getReceiverFirstName(),
-                "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
-                )->getReceiverLastName(),
+                "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+                "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
                 "phone" => $client->present()->getTelephoneShopify(),
                 "province" => $delivery->state ?? "-",
                 "zip" => empty($delivery) ? "-" : FoxUtils::formatCEP($delivery->zip_code),
@@ -1456,10 +1456,8 @@ class ShopifyService
 
         // Endereço de Faturamento
         $billingAddress = [
-            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
-            )->getReceiverFirstName(),
-            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
-            )->getReceiverLastName(),
+            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
             "address1" => $address,
             "phone" => $client->present()->getTelephoneShopify(),
             "city" => $delivery->city ?? "-",
@@ -1486,10 +1484,8 @@ class ShopifyService
             "currency" => "BRL",
             "email" => $client->email,
             "phone" => $client->present()->getTelephoneShopify(),
-            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present(
-            )->getReceiverFirstName(),
-            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present(
-            )->getReceiverLastName(),
+            "first_name" => empty($delivery) ? $client->present()->getFirstName() : $delivery->present()->getReceiverFirstName(),
+            "last_name" => empty($delivery) ? $client->present()->getLastName() : $delivery->present()->getReceiverLastName(),
             "buyer_accepts_marketing" => false,
             "line_items" => $items,
             "shipping_address" => $shippingAddress,
@@ -2202,8 +2198,9 @@ class ShopifyService
             return $this->client->getFulfillmentManager()->findAll($orderId);
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            report($e);
-            Log::error('Erro ao buscar fulfillments no shopify com a order ' . $orderId);
+            (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e);
+
+            return null;
         }
     }
 

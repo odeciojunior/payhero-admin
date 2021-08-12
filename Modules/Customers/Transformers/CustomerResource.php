@@ -2,33 +2,18 @@
 
 namespace Modules\Customers\Transformers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * Class ClientResource
- * @property mixed name
- * @property mixed document
- * @property mixed email
- * @property mixed telephone
- * @property mixed id_code
- * @package Modules\Customers\Transformers
- */
 class CustomerResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     * @param Request
-     * @return array
-     */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
-            'code'          => $this->id_code,
-            'name'          => $this->name,
-            'document'      => $this->document,
-            'email'         => $this->present()->getEmail(),
-            'telephone'     => $this->telephone,
+            'code' => $this->id_code,
+            'name' => $this->name,
+            'document' => foxutils()->mask($this->document, '###.###.###-##'),
+            'email' => $this->present()->getEmail(),
+            'telephone' => foxutils()->getTelephone($this->telephone),
             'whatsapp_link' => $this->present()->getWhatsappLink(),
         ];
     }
