@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-            <div id="project-not-empty">
+            <div id="project-not-empty" style="display:none;">
                 <div class="page-content container">
                     <div class="mb-15">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
