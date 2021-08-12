@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/notazz/",
+            url: "/api/apps/notazz",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
