@@ -29,34 +29,29 @@ class CustomersApiController extends Controller
         $sale = Sale::find(current(hashids()->connection('sale_id')->decode($saleId)));
 
         try {
-            if (!empty($id)) {
-                $customerModel = new Customer();
-
-                $customer = $customerModel->find(current(Hashids::decode($id)));
-
-                if (!empty($customer)) {
-                    if ($sale && $sale->status === Sale::STATUS_CANCELED_ANTIFRAUD) {
-                        return new FraudsterCustomerResource($customer);
-                    }
-                    return new CustomerResource($customer);
-                } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, cliente não encontrado',
-                                            ], 400);
-                }
-            } else {
-                // Hash invalido
+            if (empty($id)) {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, cliente não encontrado',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, cliente não encontrado',
+                ], 400);
             }
+            $customer = Customer::find(hashids_decode($id));
+
+            if (empty($customer)) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, cliente não encontrado',
+                ], 400);
+            }
+            if ($sale && $sale->status === Sale::STATUS_CANCELED_ANTIFRAUD) {
+                return new FraudsterCustomerResource($customer);
+            }
+            return new CustomerResource($customer);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar cliente, (ClientApiController - show)');
+            Log::warning('Erro ao buscar cliente, (CustomersApiController - show)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, cliente não encontrado',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, cliente não encontrado',
+            ], 400);
         }
     }
 
@@ -96,7 +91,7 @@ class CustomersApiController extends Controller
                 return response()->json(['message' => 'Os dados informados são inválidos!'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao atualizar cliente, (ClientApiController - update)');
+            Log::warning('Erro ao atualizar cliente, (CustomersApiController - update)');
             report($e);
 
             return response()->json(['message' => 'Erro ao alterar dados do cliente!'], 400);
