@@ -10,6 +10,9 @@ $(document).ready(function () {
     index();
 
     function index() {
+
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/apps/notazz/",
@@ -19,7 +22,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             error: function error(response) {
-                // loadingOnScreenRemove();
+                loadingOnScreenRemove();
                 alertCustom("error", "Ocorreu algum erro");
             },
             success: function success(response) {
@@ -353,6 +356,7 @@ $(document).ready(function () {
                         });
                     });
                 }
+                loadingOnScreenRemove();
             },
         });
     }

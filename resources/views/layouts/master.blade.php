@@ -74,9 +74,7 @@
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
 
-{{-- loading --}}
-<div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
-</div>
+@include("layouts.loading")
 
 @include("layouts.menu-principal")
 
