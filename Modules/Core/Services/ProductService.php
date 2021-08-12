@@ -43,13 +43,15 @@ class ProductService
             $sale->loadMissing([
                 'productsPlansSale.tracking',
                 'productsPlansSale.product',
+                'productsSaleApi'
             ]);
         } else {
             if (is_int($saleParam)) {
                 $saleModel = new Sale();
                 $sale = $saleModel->with([
                     'productsPlansSale.tracking',
-                    'productsPlansSale.product'                    
+                    'productsPlansSale.product',
+                    'productsSaleApi'
                 ])->find($saleParam);
             } else {
                 if (is_string($saleParam)) {
@@ -57,7 +59,8 @@ class ProductService
                     $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
                     $sale = $saleModel->with([
                         'productsPlansSale.tracking',
-                        'productsPlansSale.product'
+                        'productsPlansSale.product',
+                        'productsSaleApi'
                     ])->find($saleId);
                 }
             }
@@ -66,38 +69,51 @@ class ProductService
         $productsSale = collect();
 
         if (!empty($sale)) {
-            $photo = '';
-            foreach ($sale->productsPlansSale as $productsPlanSale) {
-                $product = $productsPlanSale->product->toArray();
-                $tracking = $productsPlanSale->tracking;
+            if ( !$sale->api_flag ) {
+                foreach ($sale->productsPlansSale as $productsPlanSale) {
+                    $product = $productsPlanSale->product->toArray();
+                    $tracking = $productsPlanSale->tracking;
 
-                $product['product_plan_sale_id'] = $productsPlanSale->id;
-                $product['sale_status'] = $sale->status;
-                $product['amount'] = $productsPlanSale->amount;
+                    $product['product_plan_sale_id'] = $productsPlanSale->id;
+                    $product['sale_status'] = $sale->status;
+                    $product['amount'] = $productsPlanSale->amount;
 
-                if (!empty($tracking)) {
-                    $trackingCode = $tracking->tracking_code == "CLOUDFOX000XX"
-                        ? ''
-                        : $tracking->tracking_code;
-                    $product['tracking_id'] = Hashids::encode($tracking->id);
-                    $product['tracking_code'] = $trackingCode;
-                    $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
-                            ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
-                    $product['tracking_created_at'] = Carbon::parse($tracking->created_at)->format('d/m/Y H:i:s');
-                } else {
+                    if (!empty($tracking)) {
+                        $trackingCode = $tracking->tracking_code == "CLOUDFOX000XX" ? '' : $tracking->tracking_code;
+                        $product['tracking_id'] = Hashids::encode($tracking->id);
+                        $product['tracking_code'] = $trackingCode;
+                        $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
+                        $product['tracking_created_at'] = Carbon::parse($tracking->created_at)->format('d/m/Y H:i:s');
+                    } else {
+                        $product['tracking_id'] = '';
+                        $product['tracking_code'] = '';
+                        $product['tracking_status_enum'] = 'Não Informado';
+                        $product['tracking_created_at'] = '';
+                    }
+                    
+                    $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';                
+                    $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
+                    ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
+                    ->where('product_id',$productsPlanSale->product_id)->orderBy('line','asc')->orderBy('order','asc')->get();
+                    $product['sale_id'] = $productsPlanSale->sale_id;
+                    $productsSale->add((object) $product);
+                }
+            } else {
+                foreach ($sale->productsSaleApi as $productsApi) {
+                    $product = $productsApi->toArray();
+
                     $product['tracking_id'] = '';
                     $product['tracking_code'] = '';
                     $product['tracking_status_enum'] = 'Não Informado';
                     $product['tracking_created_at'] = '';
+
+                    $product['sale_status'] = $sale->status;
+                    $product['amount'] = $productsApi->quantity;
+                    $product['sale_id'] = $productsApi->sale_id;
+
+                    $productsSale->add((object) $product);
                 }
-                
-                $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';                
-                $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
-                ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
-                ->where('product_id',$productsPlanSale->product_id)->orderBy('line','asc')->orderBy('order','asc')->get();
-                $product['sale_id'] = $productsPlanSale->sale_id;
-                $productsSale->add((object) $product);
-            }         
+            }      
         }
 
         return $productsSale;

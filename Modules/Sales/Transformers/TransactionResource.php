@@ -16,7 +16,7 @@ class TransactionResource extends JsonResource
         $sale = $this->sale;
 
         if (!$sale->api_flag) {
-            $project = $sale->project->name;
+            $project = $sale->project ? $sale->project->name : '';
             $product = (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : '');
         } else {
             $project = 'Integração';

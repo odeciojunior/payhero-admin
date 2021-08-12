@@ -745,10 +745,15 @@ $(() => {
         }
 
         if (sale.status == 2 || sale.status == 1) {
-            $("#saleReSendEmail").show();
+            if ( !sale.api_flag ) {
+                $("#saleReSendEmail").show();
+            } else {
+                $("#saleReSendEmail").hide();    
+            }
         } else {
             $("#saleReSendEmail").hide();
         }
+
         if (
             sale.payment_method == 2 &&
             sale.status == 1 &&
@@ -1023,20 +1028,30 @@ $(() => {
                 if (!sale.api_flag) {
                     renderProducts(response.data, sale);
                 } else {
-                    renderProductsApi(response.data, sale);
+                    renderProductsApi(response.data);
                 }
             },
         });
     }
 
-    function renderProductsApi(products, sale) {
+    function renderProductsApi(products) {        
         $("#table-product").html("");
         $("#data-tracking-products").html("");
-        let div = "";
         
+        let div = "";        
         $.each(products, function (index, value) {
-
+            div += '<div class="row align-items-baseline justify-content-between mb-15">';
+                div += '<div class="col-md-8 col-lg-6">';
+                    div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
+                    div += '<small>' + value.description + '</small>';
+                div += '</div>';
+                div += '<div class="col-md-4 col-lg-2 text-right">';
+                    div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
+                div += '</div>';
+            div += '</div>';
         });
+
+        $("#table-product").html(div);
     }
 
     function renderProducts(products, sale) {

@@ -295,7 +295,8 @@
                         </div>
                         <div id="saleReSendEmail" class="mb-20">
                             <a class="pointer d-inline-flex align-items-center" id="btnSaleReSendEmail">
-                                <i class="material-icons">email</i><b class="ml-2">Reenviar e-mail</b></a>
+                                <i class="material-icons">email</i><b class="ml-2">Reenviar e-mail</b>
+                            </a>
                         </div>
                         <div id='div_delivery' style='display:none;'>
                             <h4 class='delivery-title'> Entrega </h4>

@@ -148,6 +148,13 @@
                             </div>
                             <div class="row postback-container d-none">
                                 <div class="form-group col-sm-12 col-md">
+                                    <label for="email">Email</label>
+                                    <input name="email" type="text" class="form-control form-control-lg" id="email" placeholder="Insira a email">
+                                    <small class="text-muted">Insir uma email válido para enviar avisos referentes a integração</small>
+                                </div>
+                            </div>
+                            <div class="row postback-container d-none">
+                                <div class="form-group col-sm-12 col-md">
                                     <label for="postback">Postback</label>
                                     <input name="postback" type="text" class="form-control form-control-lg" id="postback" placeholder="Insira a URL de postback">
                                     <small class="text-muted">Insira uma URL válida para receber as notificações referentes a integração</small>
