@@ -170,6 +170,7 @@ class TrackingService
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
+            $trackingCode = strtoupper($trackingCode);
 
             $productPlanSale = ProductPlanSale::select([
                 DB::raw('products_plans_sales.*'),
@@ -214,7 +215,7 @@ class TrackingService
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
-                if ($oldTrackingCode != $trackingCode) {
+                if (strtoupper($oldTrackingCode) != strtoupper($trackingCode)) {
                     //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::select('product_plan_sale_id as id')
                         ->where('tracking_code', $oldTrackingCode)
@@ -292,7 +293,9 @@ class TrackingService
                             ->where('tracking_required', true);
                     }
                     $queryTransaction->where('type', Transaction::TYPE_PRODUCER)
-                        ->whereNull('invitation_id');
+                        ->whereNull('invitation_id')
+                        ->where('is_waiting_withdrawal', 0)
+                        ->whereNull('withdrawal_id');
                 });
             }
         });

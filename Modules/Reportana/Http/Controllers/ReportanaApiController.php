@@ -89,12 +89,6 @@ class ReportanaApiController extends Controller
 
             $projectId = current(Hashids::decode($data['project_id']));
             if (!empty($projectId)) {
-                $integration = $reportanaIntegrationModel->where('project_id', $projectId)->first();
-                if ($integration) {
-                    return response()->json([
-                                                'message' => 'Projeto já integrado',
-                                            ], 400);
-                }
                 if (empty($data['url_api'])) {
                     return response()->json(['message' => 'URl API é obrigatório!'], 400);
                 }
@@ -117,7 +111,7 @@ class ReportanaApiController extends Controller
                     $data['abandoned_cart'] = 0;
                 }
 
-                $integrationCreated = $reportanaIntegrationModel->create([
+                $integrationCreated = $reportanaIntegrationModel->firstOrCreate([
                     'url_api'             => $data['url_api'],
                     'billet_generated'    => $data['boleto_generated'],
                     'billet_paid'         => $data['boleto_paid'],

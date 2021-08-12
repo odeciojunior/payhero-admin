@@ -6,24 +6,22 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\TransactionCloudfox;
-use Modules\Core\Events\CheckTransactionReleasedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CheckLiquidationTransactionsCloudfox extends Command
+class CheckWithdrawalsReleasedCloudfox extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:liquidation-transaction-cloudfox';
+    protected $signature = 'getnet:check-withdrawals-released-cloudfox';
 
     /**
      * The console command description.
@@ -88,36 +86,40 @@ class CheckLiquidationTransactionsCloudfox extends Command
                             $sale = Sale::where('gateway_order_id', $orderId)->first();
                             $transaction = Transaction::where('user_id', $sale->owner_id)->where('sale_id', $sale->id)->first();
 
-                            $transactionCloudfox = TransactionCloudfox::create(
-                                [
-                                    'sale_id' => $sale->id,
-                                    'gateway_id' => $transaction->gateway_id,
-                                    'company_id' => $company->id,
-                                    'user_id' => $transaction->user_id,
-                                    'value' => $detail->subseller_rate_amount,
-                                    'status' => 'paid',
-                                    'status_enum' => 2,
-                                    'release_date' => now()->format('Y-m-d')
-                                ]
-                            );
+                            $transactionCloudfox = TransactionCloudfox::where('sale_id', $sale->id)->first();
+                            if (empty($transactionCloudfox)) {
+                                $transactionCloudfox = TransactionCloudfox::create(
+                                    [
+                                        'sale_id' => $sale->id,
+                                        'gateway_id' => $transaction->gateway_id,
+                                        'company_id' => $company->id,
+                                        'user_id' => $company->user_id,
+                                        'value' => $detail->subseller_rate_amount,
+                                        'value_total' => $detail->installment_amount,
+                                        'status' => 'paid',
+                                        'status_enum' => 2,
+                                        'release_date' => now()->format('Y-m-d')
+                                    ]
+                                );
+                            }
 
                             $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
 
-                            $data = [
-                                'gateway_transaction_id' => $sale->gateway_transaction_id,
-                                'plan_id' => Hashids::encode($sale->plansSales->first()->id),
-                                'value' => $detail->subseller_rate_amount,
-                                'transaction_cloudfox_id' => hashids_encode($transactionCloudfox->id)
-                            ];
+                            if (!empty($transactionCloudfox->release_date)) {
+                                $data = [
+                                    'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
+                                ];
 
-                            //(new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                //dd($responseCheckout);
+                            }
                         }
                     }
                 }else {
                     $orderId = $list_transaction->summary->order_id;
                     $sale = Sale::where('gateway_order_id', $orderId)->first();
                     if (isset($list_transaction)) {
-                        $errorGetnet = 'Erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
+                        $errorGetnet = 'Comissão da cloudfox, erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
 
                         if (count($gatewaySale->list_transactions) == 0) {
                             $response = $getnetService
@@ -133,7 +135,7 @@ class CheckLiquidationTransactionsCloudfox extends Command
                                 && isset($gatewaySale->list_transactions[0]->summary->reason_message)
                                 && $gatewaySale->list_transactions[0]->summary->reason_message == 'CANCELADA NAO CONFIRMADA'
                             ) {
-                                $errorGetnet = 'Venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
+                                $errorGetnet = 'Comissão da cloudfox, venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
                             }
                         }
                         $this->warn($errorGetnet);
