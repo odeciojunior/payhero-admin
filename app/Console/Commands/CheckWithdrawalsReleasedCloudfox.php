@@ -121,7 +121,7 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                         'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
                                     ];
 
-                                //$responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
                                 //dd($responseCheckout);
                                 }
                         }
