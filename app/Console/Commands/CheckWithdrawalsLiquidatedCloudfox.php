@@ -23,53 +23,57 @@ class CheckWithdrawalsLiquidatedCloudfox extends Command
 
     public function handle()
     {
-        $transactionsCloudfox = TransactionCloudfox::with('sale', 'company')
-            ->whereNotNull('gateway_released_at')->whereNull('gateway_transferred_at');
+        try {
+            $transactionsCloudfox = TransactionCloudfox::with('sale', 'company')
+                ->whereNotNull('gateway_released_at')->whereNull('gateway_transferred_at');
 
-        $company = Company::find(2);
+            $company = Company::find(2);
 
-        $total = $transactionsCloudfox->count();
-        $bar = $this->output->createProgressBar($total);
-        $bar->start();
+            $total = $transactionsCloudfox->count();
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
 
 
-        $transactionsCloudfox->chunkById(100, function ($transactionsCloudfox)  use ($bar, $company){
+            $transactionsCloudfox->chunkById(100, function ($transactionsCloudfox)  use ($bar, $company){
 
-            $getnetService = new GetnetBackOfficeService();
+                $getnetService = new GetnetBackOfficeService();
 
-            foreach ($transactionsCloudfox as $transactionCloudfox) {
+                foreach ($transactionsCloudfox as $transactionCloudfox) {
 
-                $sale = $transactionCloudfox->sale;
-                $orderId = $sale->gateway_order_id;
+                    $sale = $transactionCloudfox->sale;
+                    $orderId = $sale->gateway_order_id;
 
-                $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                    ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
-                    ->getStatement($orderId);
+                    $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                        ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
+                        ->getStatement($orderId);
 
-                $gatewaySale = json_decode($response);
+                    $gatewaySale = json_decode($response);
 
-                if (
-                    !empty($gatewaySale->list_transactions[0]) &&
-                    !empty($gatewaySale->list_transactions[0]->details[0]) &&
-                    !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-                ) {
+                    if (
+                        !empty($gatewaySale->list_transactions[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]) &&
+                        !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
+                    ) {
 
-                    $date = Carbon::parse($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                        $date = Carbon::parse($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
 
-                    if (empty($transactionCloudfox->gateway_transferred_at)) {
-                        $transactionCloudfox->update([
-                                                 'status' => 'transfered',
-                                                 'status_enum' => TransactionCloudfox::STATUS_TRANSFERRED,
-                                                 'gateway_transferred' => true,
-                                                 'gateway_transferred_at' => $date
-                                             ]);
+                        if (empty($transactionCloudfox->gateway_transferred_at)) {
+                            $transactionCloudfox->update([
+                                                     'status' => 'transfered',
+                                                     'status_enum' => TransactionCloudfox::STATUS_TRANSFERRED,
+                                                     'gateway_transferred_at' => $date
+                                                 ]);
+                        }
                     }
+                    $bar->advance();
                 }
-                $bar->advance();
-            }
-        });
+            });
 
-        $bar->finish();
+            $bar->finish();
+
+        } catch (Exception $e) {
+            report($e);
+        }
 
     }
 }
