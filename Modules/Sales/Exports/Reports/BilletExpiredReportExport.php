@@ -76,21 +76,19 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
-        if (!empty($this->filters['project'])) {
+        if (!empty($this->filters['project']) && $this->filters['project'] !== "all") {
             $projectId = FoxUtils::decodeHash($this->filters['project']);
             $salesExpired->where('sales.project_id', $projectId);
         } else {
-            $userProjects = $userProjectsModel->where([
-                                                          ['user_id', $this->user->account_owner_id],
-                                                          [
-                                                              'type_enum',
-                                                              $userProjectsModel->present()
-                                                                                ->getTypeEnum('producer'),
-                                                          ],
-                                                      ])->pluck('project_id')->toArray();
-
+            $userProjects = UserProject::select('project_id')
+                ->where('user_id', $this->user->id)
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->get()
+                ->pluck('project_id')
+                ->toArray();
             $salesExpired->whereIn('sales.project_id', $userProjects);
         }
+
         if (!empty($this->filters['client_document'])) {
             $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
@@ -186,7 +184,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
             //remove caracteres indesejados em todos os campos
             $saleData[] = array_map(function($item) {
-                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]\s_-]/u', '', $item);
+                return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
             }, $data);
         }
 
@@ -281,7 +279,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 }
                 $sendGridService = new SendgridService();
                 $userName        = $this->user->name;
-                $userEmail       = $this->user->email;
+                $userEmail       = $this->email;
                 $downloadLink    = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
                 $data = [

@@ -57,6 +57,8 @@ class Checkout extends Model
     const STATUS_RECOVERED = 3;
     const STATUS_SALE_FINALIZED = 4;
 
+    public const CHECKOUT_ONE_STEP = 2;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

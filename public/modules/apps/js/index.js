@@ -58,6 +58,16 @@ $(document).ready(function () {
                     $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
+                if (response.woocommerceIntegrations > 0) {
+                    $('#woocom-bt').addClass('added');
+                    $('#woocom-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
+                if (response.hotbilletIntegrations > 0) {
+                    $('#hotbillet-bt').addClass('added');
+                    $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
                 if (response.melhorenvioIntegrations > 0) {
                     $('#menv-bt').addClass('added');
                     $('#menv-icon').removeClass('o-add-1').addClass('o-checkmark-1');
@@ -74,7 +84,7 @@ $(document).ready(function () {
         loadingOnScreen()
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true',
+            url: '/api/projects?select=true&status=active',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -92,14 +102,13 @@ $(document).ready(function () {
                 if(verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }
-                $("#project-not-empty").show();
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    updateUsedApps();
-                }else{
+                if (response.data.length) {
                     $("#project-not-empty").show();
                     $("#project-empty").hide();
-
+                    updateUsedApps();
+                } else{
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
 
                 loadingOnScreenRemove()

@@ -52,6 +52,7 @@ return [
                 'taboola' => 'Taboola',
                 'outbrain' => 'Outbrain',
                 'pinterest' => 'Pinterest',
+                'uol_ads' => 'UOL Ads'
             ],
         ],
         "domain"                   => [

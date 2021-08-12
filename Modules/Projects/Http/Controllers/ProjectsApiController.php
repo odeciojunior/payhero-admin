@@ -3,6 +3,7 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -46,37 +47,51 @@ class ProjectsApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $projectModel = new Project();
-            $projectService = new ProjectService();
-            $pagination = $request->input('select') ?? false;
-            $affiliation = true;
 
-            if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
-                $affiliation = false;
-            }
+            $user = auth()->user();
 
-            if (!$pagination) {
-                activity()->on($projectModel)->tap(
-                    function (Activity $activity) {
-                        $activity->log_name = 'visualization';
-                    }
-                )->log('Visualizou tela todos os projetos');
-            }
+            $hasCompany = Company::where('user_id', $user->account_owner_id)->exists();
 
-            if (!empty($request->input('status')) && $request->input('status') == 'active') {
-                $projectStatus = [$projectModel->present()->getStatus('active')];
-            } else {
-                if (auth()->user()->deleted_project_filter) {
-                    $projectStatus = [
-                        $projectModel->present()->getStatus('active'),
-                        $projectModel->present()->getStatus('disabled'),
-                    ];
-                } else {
-                    $projectStatus = [$projectModel->present()->getStatus('active')];
+            if ($hasCompany) {
+                $projectModel = new Project();
+                $projectService = new ProjectService();
+                $pagination = $request->input('select') ?? false;
+                $affiliation = true;
+
+                if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
+                    $affiliation = false;
                 }
+
+                if (!$pagination) {
+                    activity()->on($projectModel)->tap(
+                        function (Activity $activity) {
+                            $activity->log_name = 'visualization';
+                        }
+                    )->log('Visualizou tela todos os projetos');
+                }
+
+                if (!empty($request->input('status')) && $request->input('status') == 'active') {
+                    $projectStatus = [$projectModel->present()->getStatus('active')];
+                } else {
+                    if ($user->deleted_project_filter) {
+                        $projectStatus = [
+                            $projectModel->present()->getStatus('active'),
+                            $projectModel->present()->getStatus('disabled'),
+                        ];
+                    } else {
+                        $projectStatus = [$projectModel->present()->getStatus('active')];
+                    }
+                }
+
+                return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
+            } else {
+                return response()->json([
+                    'data' => [],
+                    'no_company' => true,
+                    'message' => 'Nenhuma empresa cadastrada!'
+                ]);
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             report($e);
 
@@ -106,7 +121,6 @@ class ProjectsApiController extends Controller
     public function store(ProjectStoreRequest $request): JsonResponse
     {
         try {
-
             $requestValidated = $request->validated();
 
             $projectModel = new Project();
@@ -174,7 +188,8 @@ class ProjectsApiController extends Controller
                     $img->save($photo->getPathname());
 
                     $amazonPath = $amazonFileService
-                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
+                        ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main',
+                            $photo);
                     $project->update(['photo' => $amazonPath]);
                 } catch (Exception $e) {
                     report($e);
@@ -226,8 +241,7 @@ class ProjectsApiController extends Controller
     public function edit($id): JsonResponse
     {
         try {
-
-            $user= User::with('companies')->find(auth()->user()->account_owner_id);
+            $user = User::with('companies')->find(auth()->user()->account_owner_id);
 
             $project = Project::with(
                 [
@@ -522,12 +536,8 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
             }
 
-            $projectModel = new Project();
-            $usersProjects = new UserProject();
-            $saleModel = new Sale();
-            $usersProjectsPresent = $usersProjects->present();
             $userId = auth()->user()->account_owner_id;
-            $id = current(Hashids::decode($id));
+            $id = hashids_decode($id);
 
             $project = Project::where('id', $id)
                 ->where('status', Project::STATUS_ACTIVE)
@@ -540,51 +550,55 @@ class ProjectsApiController extends Controller
                     ]
                 )->first();
 
-            $project->chargeback_count = $saleModel->where('project_id', $project->id)
-                ->where('status', $saleModel->present()->getStatus('charge_back'))
+            if (empty($project)) {
+                return response()->json(['message' => 'Projeto não encontrado!'], 400);
+            }
+
+            $project->chargeback_count = Sale::where('project_id', $project->id)
+                ->where('status', Sale::STATUS_CHARGEBACK)
                 ->count();
 
-            $project->without_tracking = $saleModel->where('project_id', $project->id)
+            $project->without_tracking = Sale::where('project_id', $project->id)
                 ->where('has_valid_tracking', false)
                 ->whereNotNull('delivery_id')
-                ->where('status', $saleModel->present()->getStatus('approved'))
+                ->where('status', Sale::STATUS_APPROVED)
                 ->count();
 
-            $project->approved_sales = $saleModel->where('project_id', $project->id)
-                ->where('status', $saleModel->present()->getStatus('approved'))
+            $project->approved_sales = Sale::where('project_id', $project->id)
+                ->where('status', Sale::STATUS_APPROVED)
                 ->count();
 
             $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
                 ->whereHas(
                     'sale',
-                    function ($query) use ($saleModel, $project) {
-                        $query->where('status', $saleModel->present()->getStatus('approved'));
+                    function ($query) use ($project) {
+                        $query->where('status', Sale::STATUS_APPROVED);
                         $query->where('project_id', $project->id);
                     }
                 )
                 ->sum('value');
 
-            $project->open_tickets = $saleModel->where('project_id', $project->id)
+            $project->open_tickets = Sale::where('project_id', $project->id)
                 ->whereHas(
                     'tickets',
                     function ($query) {
-                        $query->where('ticket_status_enum', (new Ticket())->present()->getTicketStatusEnum('open'));
+                        $query->where('ticket_status_enum', Ticket::STATUS_OPEN);
                     }
                 )
                 ->count();
 
             $producer = User::whereHas(
                 'usersProjects',
-                function ($query) use ($project, $usersProjectsPresent) {
+                function ($query) use ($project) {
                     $query->where('project_id', $project->id)
-                        ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
+                        ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM);
                 }
             )->first();
 
             $project->producer = $producer->name ?? '';
 
             if (Gate::allows('show', [$project])) {
-                activity()->on($projectModel)->tap(
+                activity()->on((new Project()))->tap(
                     function (Activity $activity) use ($id) {
                         $activity->log_name = 'visualization';
                         $activity->subject_id = $id;

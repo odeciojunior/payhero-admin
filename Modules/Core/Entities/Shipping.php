@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ShippingPresenter;
-use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -38,22 +38,20 @@ class Shipping extends Model
 {
     use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity;
 
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+    public const TYPE_STATIC_ENUM = 1;
+    public const TYPE_SEDEX_ENUM = 2;
+    public const TYPE_PAC_ENUM = 3;
+    public const TYPE_MELHORENVIO_ENUM = 4;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 0;
+
     protected $keyType = 'integer';
-    /**
-     * @var array
-     */
+
     protected $appends = ['id_code'];
-    /**
-     * @var string
-     */
+
     protected $presenter = ShippingPresenter::class;
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'project_id',
         'name',
@@ -80,13 +78,7 @@ class Shipping extends Model
         'not_apply_on_plans' => []
     ];
 
-    /**
-     * @var bool
-     */
     protected static $logFillable = true;
-    /**
-     * @var bool
-     */
     protected static $logUnguarded = true;
     /**
      * Registra apenas os atributos alterados no log
@@ -99,43 +91,34 @@ class Shipping extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Frete ' . $this->name . ' foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Frete ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Frete ' . $this->name . ' foi criado.';
-        } else {
-            $activity->description = $eventName;
+        switch ($eventName) {
+            case 'deleted':
+                $activity->description = 'Frete ' . $this->name . ' foi deletado.';
+                break;
+            case 'updated':
+                $activity->description = 'Frete ' . $this->name . ' foi atualizado.';
+                break;
+            case 'created':
+                $activity->description = 'Frete ' . $this->name . ' foi criado.';
+                break;
+            default:
+                $activity->description = $eventName;
         }
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function project()
+    public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo(Project::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function sales()
+    public function sales(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany(Sale::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function melhorenvioIntegration()
+    public function melhorenvioIntegration(): BelongsTo
     {
         return $this->belongsTo(MelhorenvioIntegration::class);
     }

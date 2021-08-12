@@ -379,6 +379,14 @@ class Sale extends Model
         return $this->hasMany(PixCharge::class, 'sale_id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function saleInformations(): HasMany
+    {
+        return $this->hasMany(SaleInformation::class);
+    }
+
     public function products(): HasManyThrough
     {
         return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');
