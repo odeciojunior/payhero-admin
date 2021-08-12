@@ -142,7 +142,7 @@
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
                                     <select name="company_id" id="companies" class="form-control form-control-lg">
-                                        <option value="">Todas empresas</option>
+                                        <option value="">Selecione a empresa</option>
                                     </select>
                                 </div>
                             </div>
