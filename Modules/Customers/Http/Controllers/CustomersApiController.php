@@ -3,7 +3,6 @@
 namespace Modules\Customers\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -13,17 +12,9 @@ use Modules\Customers\Transformers\CustomerResource;
 use Modules\Customers\Transformers\FraudsterCustomerResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class ClientApiController
- * @package Modules\Customers\Http\Controllers
- */
 class CustomersApiController extends Controller
 {
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return JsonResponse|CustomerResource|FraudsterCustomerResource
-     */
+
     public function show($id, $saleId = null)
     {
         $sale = Sale::find(current(hashids()->connection('sale_id')->decode($saleId)));
@@ -72,8 +63,8 @@ class CustomersApiController extends Controller
                         $column = 'email';
                     } else {
                         return response()->json([
-                                                    'message' => 'Os dados informados são inválidos',
-                                                ], 400);
+                            'message' => 'Os dados informados são inválidos',
+                        ], 400);
                     }
                 }
 

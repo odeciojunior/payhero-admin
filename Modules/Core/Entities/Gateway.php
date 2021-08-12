@@ -87,7 +87,7 @@ class Gateway extends Model
      */
     public function gatewayFlags()
     {
-        return $this->hasMany('ModulesCoreEntities\GatewayFlag');
+        return $this->hasMany('Modules\Core\Entities\GatewayFlag');
     }
 
     /**
@@ -95,7 +95,7 @@ class Gateway extends Model
      */
     public function gatewayPostbacks()
     {
-        return $this->hasMany('ModulesCoreEntities\GatewayPostback');
+        return $this->hasMany('Modules\Core\Entities\GatewayPostback');
     }
 
     /**
@@ -103,7 +103,7 @@ class Gateway extends Model
      */
     public function saleGatewayRequests()
     {
-        return $this->hasMany('ModulesCoreEntities\SaleGatewayRequest');
+        return $this->hasMany('Modules\Core\Entities\SaleGatewayRequest');
     }
 
     /**
@@ -111,6 +111,6 @@ class Gateway extends Model
      */
     public function sales()
     {
-        return $this->hasMany('ModulesCoreEntities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 }
