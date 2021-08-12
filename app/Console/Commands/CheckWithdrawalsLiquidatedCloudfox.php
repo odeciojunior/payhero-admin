@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
