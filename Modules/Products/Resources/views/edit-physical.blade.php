@@ -43,7 +43,7 @@
                                     <label for="description">Descrição</label>
                                     <textarea style="height: 140px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
-                                <div class="form-group col-12" id="sku" style="display: none">
+                                <div class="form-group col-12" id="sku" style="display: none !important;">
                                     <label>SKU</label>
                                     <input type="text" class="input-pad gray mb-2" readonly/>
                                     <p> Editável somente no Shopify. </p>
