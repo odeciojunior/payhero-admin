@@ -47,78 +47,83 @@ class CheckWithdrawalsReleasedCloudfox extends Command
      */
     public function handle()
     {
-        $getnetService = new GetnetBackOfficeService();
-        $data = Carbon::createFromFormat('d/m/Y', '30/07/2021');
-        $company = Company::find(2);
+        try {
 
-        $aux = 0;
-        while ($data->lessThan(Carbon::now())) {
-            if ($aux == 4) {
-                $getnetService = new GetnetBackOfficeService();
-                $aux = 0;
-            }
-            $aux++;
+            $query = "select t.id as transaction_id, t.gateway_id, t.user_id, t.status, t.status_enum, s.id as sale_id, s.gateway_id,
+             s.owner_id, s.created_at, tc.id as transaction_cloudfox_id, tc.release_date, tc.gateway_released_at
+            from transactions as t  inner join sales as s on s.id = t.sale_id
+            left join transaction_cloudfox as tc on s.id = tc.sale_id
+            where s.created_at >= '2021-07-30 15:41:28' and s.gateway_id = 15 and s.owner_id = t.user_id
+                        and (t.status_enum = 2 or t.status_enum = 1)
+                        and tc.gateway_released_at is null
+            order by s.id asc";
 
-            $startDate = $data;
-            $endDate = Carbon::parse($startDate)->addDays(30);
-            $statementDateField = 'schedule';
+            $dbResults = DB::select($query);
 
-            $response = $getnetService
-                ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
-                ->setStatementStartDate($startDate)
-                ->setStatementEndDate($endDate)
-                ->setStatementDateField($statementDateField)
-                ->getStatement();
+            $getnetService = new GetnetBackOfficeService();
+            $company = Company::find(2);
+            $aux = 0;
 
-            $gatewaySale = json_decode($response);
+            foreach ($dbResults as $dbResult) {
 
-            foreach ($gatewaySale->list_transactions as $list_transaction) {
+                if ($aux == 100) {
+                    $getnetService = new GetnetBackOfficeService();
+                    $aux = 0;
+                }
+                $aux++;
+
+                $transaction = Transaction::with('sale')->find($dbResult->transaction_id);
+                $sale = $transaction->sale;
+                $orderId = $sale->gateway_order_id;
+
+                $response = $getnetService
+                    ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
+                    ->getStatement();
+
+                $gatewaySale = json_decode($response);
+
                 if (
-                    isset($list_transaction) &&
-                    isset($list_transaction->details) &&
-                    isset($list_transaction->details[0]) &&
-                    isset($list_transaction->details[0]->release_status)
-
+                    isset($gatewaySale->list_transactions) &&
+                    isset($gatewaySale->list_transactions[0]) &&
+                    isset($gatewaySale->list_transactions[0]->details) &&
+                    isset($gatewaySale->list_transactions[0]->details[0]) &&
+                    isset($gatewaySale->list_transactions[0]->details[0]->release_status)
                 ) {
-                    foreach ($list_transaction->details as $detail) {
+                    foreach ($gatewaySale->list_transactions[0]->details as $detail) {
                         if ($detail->release_status == 'N' and $detail->transaction_sign = '+') {
-                            $orderId = $list_transaction->summary->order_id;
-                            $sale = Sale::where('gateway_order_id', $orderId)->first();
-                            $transaction = Transaction::where('user_id', $sale->owner_id)->where('sale_id', $sale->id)->first();
 
                             $transactionCloudfox = TransactionCloudfox::where('sale_id', $sale->id)->first();
                             if (empty($transactionCloudfox)) {
-                                $transactionCloudfox = TransactionCloudfox::create(
-                                    [
-                                        'sale_id' => $sale->id,
-                                        'gateway_id' => $transaction->gateway_id,
-                                        'company_id' => $company->id,
-                                        'user_id' => $company->user_id,
-                                        'value' => $detail->subseller_rate_amount,
-                                        'value_total' => $detail->installment_amount,
-                                        'status' => 'paid',
-                                        'status_enum' => 2,
-                                        'release_date' => now()->format('Y-m-d')
-                                    ]
-                                );
+                                    $transactionCloudfox = TransactionCloudfox::create(
+                                        [
+                                            'sale_id' => $sale->id,
+                                            'gateway_id' => $transaction->gateway_id,
+                                            'company_id' => $company->id,
+                                            'user_id' => $company->user_id,
+                                            'value' => $detail->subseller_rate_amount,
+                                            'value_total' => $detail->installment_amount,
+                                            'status' => 'paid',
+                                            'status_enum' => 2,
+                                            'release_date' => now()->format('Y-m-d')
+                                        ]
+                                    );
                             }
 
                             $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
 
-                            if (!empty($transactionCloudfox->release_date)) {
-                                $data = [
-                                    'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
-                                ];
+                                if (!empty($transactionCloudfox->release_date)) {
+                                    $data = [
+                                        'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
+                                    ];
 
-                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                //$responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
                                 //dd($responseCheckout);
-                            }
+                                }
                         }
                     }
                 }else {
-                    $orderId = $list_transaction->summary->order_id;
-                    $sale = Sale::where('gateway_order_id', $orderId)->first();
-                    if (isset($list_transaction)) {
+                    if (isset($gatewaySale->list_transactions)) {
                         $errorGetnet = 'Comissão da cloudfox, erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
 
                         if (count($gatewaySale->list_transactions) == 0) {
@@ -145,86 +150,11 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                     $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
                 }
             }
-        }
 
-//        $transactions = Transaction::with('sale', 'company')
-//            ->whereHas('sale', function($query) {
-//                $query->where('owner_id', 'user_id');
-//        } )
-//        ->where('status_enum', Transaction::STATUS_PAID)
-//        ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
-//        //->where('created_at', '=', Carbon::now()->format('Y-m-d'))
-//        ->where('created_at', '>',  '2021-08-30 15:41:28')
-//        ->orderBy('id');
-//
-//        $company = Company::find(2);
-//
-//        $transactions->chunk(200, function ($transactions) use($company) {
-//            $getnetService = new GetnetBackOfficeService();
-//            foreach ($transactions as $transaction) {
-//
-//                $sale = $transaction->sale;
-//                $orderId = $sale->gateway_order_id;
-//
-//                $response = $getnetService
-//                    ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-//                    ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
-//                    ->getStatement();
-//
-//                $gatewaySale = json_decode($response);
-//
-//                if (
-//                    isset($gatewaySale->list_transactions) &&
-//                    isset($gatewaySale->list_transactions[0]) &&
-//                    isset($gatewaySale->list_transactions[0]->details) &&
-//                    isset($gatewaySale->list_transactions[0]->details[0]) &&
-//                    isset($gatewaySale->list_transactions[0]->details[0]->release_status)
-//                ) {
-//                    foreach ($gatewaySale->list_transactions[0]->details as $detail) {
-//                        if ($detail->release_status == 'N' and $detail->transaction_sign = '+') {
-//                            $transactionCloudfox = TransactionCloudfox::create(
-//                                [
-//                                    'sale_id' => $sale->id,
-//                                    'gateway_id' => $transaction->gateway_id,
-//                                    'company_id' => $company->id,
-//                                    'user_id' => $transaction->user_id,
-//                                    'value' => $detail->subseller_rate_amount,
-//                                    'status' => 'paid',
-//                                    'status_enum' => 2,
-//                                ]
-//                            );
-//
-//                            (new CheckoutService())->releaseCloudfoxPaymentGetnet($event->transactionId);
-//                        } else {
-//                            if (isset($gatewaySale->list_transactions)) {
-//                                $errorGetnet = 'Erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
-//
-//                                if (count($gatewaySale->list_transactions) == 0) {
-//                                    $response = $getnetService
-//                                        ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-//                                        ->getStatement();
-//
-//                                    $gatewaySale = json_decode($response);
-//
-//                                    if (
-//                                        isset($gatewaySale->list_transactions)
-//                                        && isset($gatewaySale->list_transactions[0])
-//                                        && isset($gatewaySale->list_transactions[0]->summary)
-//                                        && isset($gatewaySale->list_transactions[0]->summary->reason_message)
-//                                        && $gatewaySale->list_transactions[0]->summary->reason_message == 'CANCELADA NAO CONFIRMADA'
-//                                    ) {
-//                                        $errorGetnet = 'Venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
-//                                    }
-//                                }
-//                                $this->warn($errorGetnet);
-//                                report(new Exception($errorGetnet));
-//                            }
-//                            $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        } catch ( Exception $e) {
+            report($e);
+
+        }
     }
 
     private function tryFixGatewayOrderIdAndGatewayTransactionId(Sale $sale)
