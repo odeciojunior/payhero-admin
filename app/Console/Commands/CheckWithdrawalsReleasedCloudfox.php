@@ -61,7 +61,6 @@ class CheckWithdrawalsReleasedCloudfox extends Command
             $dbResults = DB::select($query);
 
             $total = count($dbResults);
-            dd($total);
             $bar = $this->output->createProgressBar($total);
             $bar->start();
 
