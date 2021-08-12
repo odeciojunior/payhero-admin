@@ -60,6 +60,11 @@ class CheckWithdrawalsReleasedCloudfox extends Command
 
             $dbResults = DB::select($query);
 
+            $total = count($dbResults);
+            dd($total);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
             $getnetService = new GetnetBackOfficeService();
             $company = Company::find(2);
             $aux = 0;
@@ -149,8 +154,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
 
                     $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
                 }
+                $bar->advance();
             }
 
+            $bar->finish();
         } catch ( Exception $e) {
             report($e);
 
