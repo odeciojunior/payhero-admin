@@ -1,4 +1,4 @@
-<div id="company-empty" class="content-error text-center" style="display:none;
+<div id="company-empty" class="content-error text-center" style="display:none !important;
                                                                 height: 100%;
                                                                 width: 100%;
                                                                 position: absolute;
