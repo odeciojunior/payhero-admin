@@ -1010,6 +1010,9 @@ $(() => {
     }
 
     function getProducts(sale) {
+        $("#table-product").html("");
+        $("#data-tracking-products").html("");
+        
         $.ajax({
             method: "GET",
             url: "/api/products/saleproducts/" + sale.id,
@@ -1032,17 +1035,17 @@ $(() => {
     }
 
     function renderProductsApi(products) {        
-        $("#table-product").html("");
-        $("#data-tracking-products").html("");
-        
         let div = "";        
         $.each(products, function (index, value) {
             div += '<div class="row align-items-baseline justify-content-between mb-15">';
-                div += '<div class="col-md-8 col-lg-6">';
+                div += '<div class="col-lg-2">';
+                    div += '<img src="/modules/global/img/produto.png" width="50px" style="border-radius: 6px;">';
+                div += '</div>';
+                div += '<div class="col-md-5 col-lg-6">';
                     div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
                     div += '<small>' + value.description + '</small>';
                 div += '</div>';
-                div += '<div class="col-md-4 col-lg-2 text-right">';
+                div += '<div class="col-md-3 col-lg-2 text-right">';
                     div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
                 div += '</div>';
             div += '</div>';
@@ -1052,8 +1055,6 @@ $(() => {
     }
 
     function renderProducts(products, sale) {
-        $("#table-product").html("");
-        $("#data-tracking-products").html("");
         let div = "";
         let photo = "/modules/global/img/produto.png";
         //console.log(products);
