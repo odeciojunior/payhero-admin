@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
 
             $dbResults = DB::select($query);
 
+            $total = count($dbResults);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
             $getnetService = new GetnetBackOfficeService();
             $company = Company::find(2);
             $aux = 0;
@@ -117,7 +122,7 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                         'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
                                     ];
 
-                                //$responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
                                 //dd($responseCheckout);
                                 }
                         }
@@ -149,8 +154,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
 
                     $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
                 }
+                $bar->advance();
             }
 
+            $bar->finish();
         } catch ( Exception $e) {
             report($e);
 
