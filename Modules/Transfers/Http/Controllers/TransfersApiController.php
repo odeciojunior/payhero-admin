@@ -116,11 +116,14 @@ class TransfersApiController
     public function accountStatementData(): JsonResponse
     {
         try {
-
             $dataRequest = request()->all();
 
-            if (!empty(request('sale'))){
+            if (!empty(request('sale'))) {
                 request()->merge(['sale' => str_replace('#', '', request('sale'))]);
+            }
+
+            if (!empty($dataRequest['sale'])) {
+                $dataRequest['sale'] = str_replace('#', '', $dataRequest['sale']);
             }
 
             $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($dataRequest);
@@ -130,10 +133,8 @@ class TransfersApiController
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
             }
-
             $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
             return response()->json($data);
-
         } catch (Exception $exception) {
             report($exception);
 
@@ -154,9 +155,7 @@ class TransfersApiController
 
     public function accountStatementDataExport(): JsonResponse
     {
-
         try {
-
             $dataRequest = \request()->all();
 
             activity()->tap(function (Activity $activity) {
@@ -167,11 +166,9 @@ class TransfersApiController
             $filename = 'finances_report_' . Hashids::encode($user->id) . '.xls';
 
             (new FinanceReportExport($dataRequest, $user, $filename))
-              ->queue($filename)->allOnQueue('high');
+                ->queue($filename)->allOnQueue('high');
 
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
-
-
         } catch (Exception $exception) {
             report($exception);
 
