@@ -104,6 +104,7 @@ return [
                 "refunded"             => "Estornado",
                 "partial_refund"       => "Estorno Parcial",
                 "in_review"            => "Revisão Antifraude",
+                "canceled_antifraud"   => "Cancelado Antifraude",
                 "system_error"         => "Erro de sistema",
                 "billet_refunded"      => "Estornado",
                 "chargeback_recovered" => "Recuperado",
