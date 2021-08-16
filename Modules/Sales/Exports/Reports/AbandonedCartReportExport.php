@@ -12,12 +12,10 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\Log;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
-use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
@@ -111,7 +109,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         $checkout = $row;
         $checkoutService = new CheckoutService();
 
-        return [
+        $cart = [
             'date' => with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s'),
             'project' => $checkout->project->name,
             'client' => $checkout->client_name,
@@ -120,6 +118,11 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'link' => $checkout->present()->getCheckoutLink($checkout->project->domains->first()),
             'whatsapp_link' => "https://api.whatsapp.com/send?phone=+55" . preg_replace('/[^0-9]/', '', $checkout->client_telephone) . '&text=Olá ' . explode(' ', $checkout->name)[0],
         ];
+
+        //remove caracteres indesejados em todos os campos
+        return array_map(function($item) {
+            return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
+        }, $cart);
     }
 
     public function headings(): array
@@ -169,23 +172,19 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     $lastSale = $currentSale;
                 }
 
-                try {
-                    $sendGridService = new SendgridService();
-                    $userName = $this->user->name;
-                    $userEmail = $this->user->email;
-                    $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
+                $sendGridService = new SendgridService();
+                $userName = $this->user->name;
+                $userEmail = $this->email;
+                $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
-                    $data = [
-                        'name' => $userName,
-                        'report_name' => 'Relatório de Recuperação',
-                        'download_link' => $downloadLink,
-                    ];
+                $data = [
+                    'name' => $userName,
+                    'report_name' => 'Relatório de Recuperação',
+                    'download_link' => $downloadLink,
+                ];
 
-                    $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+                $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
 
-                } catch (\Exception $e) {
-                    report($e);
-                }
             },
         ];
     }

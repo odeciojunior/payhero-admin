@@ -257,9 +257,9 @@
                          id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
-                            <div class="modal-content">
+                            <div class="modal-content p-10 s-border-radius">
                                 <div class="modal-header text-center">
-                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                    <a class="pointer close" role="button" data-dismiss="modal"
                                        aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
@@ -292,7 +292,7 @@
 
                             <div class="modal-content">
                                 <div class="modal-header text-center">
-                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                    <a class="pointer close" role="button" data-dismiss="modal"
                                        aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
@@ -341,7 +341,7 @@
 
                             <div class="modal-content">
                                 <div class="modal-header text-center">
-                                    <a class="close-card pointer close" role="button" data-dismiss="modal"
+                                    <a class="pointer close" role="button" data-dismiss="modal"
                                        aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>

@@ -184,7 +184,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
             //remove caracteres indesejados em todos os campos
             $saleData[] = array_map(function($item) {
-                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]\s_-]/u', '', $item);
+                return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
             }, $data);
         }
 
@@ -279,7 +279,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 }
                 $sendGridService = new SendgridService();
                 $userName        = $this->user->name;
-                $userEmail       = $this->user->email;
+                $userEmail       = $this->email;
                 $downloadLink    = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
                 $data = [

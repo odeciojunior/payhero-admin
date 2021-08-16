@@ -293,7 +293,9 @@ class TrackingService
                             ->where('tracking_required', true);
                     }
                     $queryTransaction->where('type', Transaction::TYPE_PRODUCER)
-                        ->whereNull('invitation_id');
+                        ->whereNull('invitation_id')
+                        ->where('is_waiting_withdrawal', 0)
+                        ->whereNull('withdrawal_id');
                 });
             }
         });
