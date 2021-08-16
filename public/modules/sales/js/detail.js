@@ -1039,7 +1039,7 @@ $(() => {
         $.each(products, function (index, value) {
             div += '<div class="row align-items-baseline justify-content-between mb-15">';
                 div += '<div class="col-lg-2">';
-                    div += '<img src="/modules/global/img/produto.png" width="50px" style="border-radius: 6px;">';
+                    div += '<img src="/modules/global/img/produto.svg" width="50px" style="border-radius: 6px;">';
                 div += '</div>';
                 div += '<div class="col-md-5 col-lg-6">';
                     div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
@@ -1056,7 +1056,7 @@ $(() => {
 
     function renderProducts(products, sale) {
         let div = "";
-        let photo = "/modules/global/img/produto.png";
+        let photo = "/modules/global/img/produto.svg";
         //console.log(products);
         $.each(products, function (index, value) {
             if (!value.photo) {
